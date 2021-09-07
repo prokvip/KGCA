@@ -27,10 +27,12 @@ TNode::~TNode()
 	if (m_pChildNode[0] != nullptr)
 	{
 		delete m_pChildNode[0];
+		m_pChildNode[0] = nullptr;
 	}
 	if (m_pChildNode[1] != nullptr)
 	{
 		delete m_pChildNode[1];
+		m_pChildNode[1] = nullptr;
 	}
 	std::cout << "Current :" << iDelData << "Delete!\n";
 }
@@ -67,6 +69,25 @@ void AddBinaryNode(TNode* pNode, int iValue)
 	}	
 }
 TNode* Find(TNode* pNode, int iFind);
+void DeleteAll(TNode* pNode)
+{
+	TNode* pLeft = nullptr;
+	TNode* pRight = nullptr;
+	if (pNode != nullptr)
+	{
+		pLeft = pNode->m_pChildNode[0];
+		pRight = pNode->m_pChildNode[1];
+		delete pNode;
+	}
+	if (pLeft != nullptr)
+	{
+		DeleteAll(pLeft);
+	}
+	if (pRight != nullptr)
+	{
+		DeleteAll(pRight);
+	}
+}
 
 int main()
 {
@@ -88,6 +109,8 @@ int main()
 		std::cout << "Not! Finder!\n";
 	}
 	delete g_pRoot;
+	g_pRoot = nullptr;
+	DeleteAll(g_pRoot);
 }
 
 TNode* Find(TNode* pNode, int iValue)
