@@ -3,19 +3,82 @@
 
 #include <iostream>
 #include <map>
+class THuman
+{
+public :
+    int m_iAge;
+    std::string m_szAdd;
+    std::string n_szTel;
+public:
+    void Set(int, std::string, std::string);
+};
+void THuman::Set(int age, std::string add, std::string tel)
+{
+    m_iAge = age;
+    m_szAdd = add;
+    n_szTel = tel;
+}
 int main()
 {
-    std::map<int, int > list;// 키,값 한쌍구축된 자료구조
-    list[9] = 1000;
-    list[1] = 2000;
-    list[6] = 3000;
-    list[3] = 4000;
-    std::map<int,int>::iterator iter = list.find(0);
+    std::map<std::string, THuman> map;// 키,값 한쌍구축된 자료구조
+    THuman h1, h2, h3, h4;
+    h1.Set(10, "서울", "010");
+    h2.Set(20, "수산", "010");
+    h3.Set(30, "부산", "010");
+    h4.Set(40, "대전", "010");
+    map["홍길동"] = h1;
+    map["박개동"] = h2;    
+    map.insert(std::make_pair("이기자", h3));
+    map.insert(std::make_pair("서리발", h4));
+    std::map<std::string, THuman>::iterator iter = map.find("이기자");
     
-    if (iter != list.end())
+    if (iter != map.end())
     {
-
+        std::string iKey    = iter->first;
+        THuman& data  = iter->second;
+        data.m_iAge = 99;
+        std::cout << iKey << "";
+        std::cout << data.m_iAge << "Hello World!\n";
+        map.erase(iter);
     }
+    map.clear();
+    std::cout << "Hello World!\n";
+
+    std::map<std::string, THuman*> map2;// 키,값 한쌍구축된 자료구조
+    THuman* p1 = new THuman;
+    THuman* p2 = new THuman;
+    THuman* p3 = new THuman;
+    THuman* p4 = new THuman;
+    p1->Set(10, "서울", "010");
+    p2->Set(20, "수산", "010");
+    p3->Set(30, "부산", "010");
+    p4->Set(40, "대전", "010");
+    map2["홍길동"] = p1;
+    map2["박개동"] = p2;
+    map2.insert(std::make_pair("이기자", p3));
+    map2.insert(std::make_pair("서리발", p4));
+    auto iter2 = map2.find("이기자");
+
+    if (iter2 != map2.end())
+    {
+        std::string iKey = iter2->first;
+        THuman* data = iter2->second;
+        data->m_iAge = 99;
+        std::cout << iKey << "";
+        std::cout << data->m_iAge << "Hello World!\n";
+        delete data;
+        data = nullptr;
+        map2.erase(iter2);
+    }
+    for (auto it = map2.begin();
+        it != map2.end();
+        it++)
+    {
+        THuman* data = it->second;
+        delete data;
+        it->second = nullptr;
+    }
+    map2.clear();
     std::cout << "Hello World!\n";
 }
 
