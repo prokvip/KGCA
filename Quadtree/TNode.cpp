@@ -24,6 +24,7 @@ bool		TNode::IsRect(TVector2 pos)
 }
 TNode::TNode(float x, float y, float w, float h)
 {
+	m_pParent = nullptr;
 	m_iDepth = 0;
 	this->m_tRect.wh = TVector2(w,h);
 	this->m_tRect.p0 = TVector2(x, y);

@@ -8,7 +8,8 @@ public:
 	std::vector<TVector2>  m_ObjectList;
 	TNode*		m_pChild[4];
 	int			m_iDepth;
-public:
+	TNode*		m_pParent;
+public:	
 	bool		AddObject(float fX, float fY);
 	bool		AddObject(TVector2 pos);
 	bool		IsRect(TVector2 pos);

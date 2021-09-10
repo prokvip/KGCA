@@ -10,13 +10,13 @@ int main()
         TQuadtree g_Quadtree;
         g_Quadtree.Init(100, 100);
         //srand(time(NULL));
-        /*for (int iObj = 0; iObj < 3; iObj++)
+        for (int iObj = 0; iObj < 3; iObj++)
         {
             TVector2 pos;
             pos.x = (float)(rand() % 100);
             pos.y = (float)(rand() % 100);
             g_Quadtree.AddObject(pos);
-        }*/
+        }
         TNode::g_iNewCounter--;
         g_Quadtree.Release();
     }

@@ -1,11 +1,10 @@
 #include "TQuadtree.h"
 bool    TQuadtree::Init(	int iWidth, 
 							int iHeight)
-{
+{	
 	m_iWidth = iWidth;
 	m_iHeight = iHeight;
-	m_pRootNode = new TNode(0, 0, iWidth, iHeight);	
-	TNode::g_iNewCounter++;
+	m_pRootNode = CreateNode(nullptr, 0, 0, iWidth, iHeight);
 	Buildtree(m_pRootNode);
 	return true;
 }
@@ -15,42 +14,29 @@ void TQuadtree::Buildtree(TNode* pNode)
 	if (pNode->m_tRect.wh.x >= 30.0f && 
 		pNode->m_tRect.wh.y >= 30.0f)
 	{
-		pNode->m_pChild[0] =
-			new TNode(pNode->m_tRect.p0.x,
-				pNode->m_tRect.p0.y,
-				pNode->m_tRect.wh.x / 2.0f,
-				pNode->m_tRect.wh.y / 2.0f);
-		pNode->m_pChild[0]->m_iDepth = pNode->m_iDepth + 1;
-		TNode::g_iNewCounter++;
+		pNode->m_pChild[0] = CreateNode(pNode, pNode->m_tRect.p0.x,
+			pNode->m_tRect.p0.y,
+			pNode->m_tRect.wh.x / 2.0f,
+			pNode->m_tRect.wh.y / 2.0f);		
 		Buildtree(pNode->m_pChild[0]);
-
-		pNode->m_pChild[1] =
-			new TNode(
-				pNode->m_pChild[0]->m_tRect.p1.x,
-				pNode->m_pChild[0]->m_tRect.p0.y,
-				pNode->m_pChild[0]->m_tRect.wh.x,
-				pNode->m_pChild[0]->m_tRect.wh.y);
-		pNode->m_pChild[1]->m_iDepth = pNode->m_iDepth + 1;
-		TNode::g_iNewCounter++;
+		
+		pNode->m_pChild[1] = CreateNode(pNode, pNode->m_pChild[0]->m_tRect.p1.x,
+			pNode->m_pChild[0]->m_tRect.p0.y,
+			pNode->m_pChild[0]->m_tRect.wh.x,
+			pNode->m_pChild[0]->m_tRect.wh.y);
 		Buildtree(pNode->m_pChild[1]);
-		pNode->m_pChild[2] =
-			new TNode(
-				pNode->m_pChild[0]->m_tRect.p1.x,
-				pNode->m_pChild[0]->m_tRect.p1.y,
-				pNode->m_pChild[0]->m_tRect.wh.x,
-				pNode->m_pChild[0]->m_tRect.wh.y);
-		pNode->m_pChild[2]->m_iDepth = pNode->m_iDepth + 1;
-		TNode::g_iNewCounter++;
+
+		pNode->m_pChild[2] = CreateNode(pNode, pNode->m_pChild[0]->m_tRect.p1.x,
+			pNode->m_pChild[0]->m_tRect.p1.y,
+			pNode->m_pChild[0]->m_tRect.wh.x,
+			pNode->m_pChild[0]->m_tRect.wh.y);
 		Buildtree(pNode->m_pChild[2]);
-		pNode->m_pChild[3] =
-			new TNode(
-				pNode->m_pChild[0]->m_tRect.p0.x,
-				pNode->m_pChild[0]->m_tRect.p1.y,
-				pNode->m_pChild[0]->m_tRect.wh.x,
-				pNode->m_pChild[0]->m_tRect.wh.y);
-		pNode->m_pChild[3]->m_iDepth = pNode->m_iDepth + 1;
-		TNode::g_iNewCounter++;
-		Buildtree(pNode->m_pChild[3]);
+		
+		pNode->m_pChild[3] = CreateNode(pNode, pNode->m_pChild[0]->m_tRect.p0.x,
+			pNode->m_pChild[0]->m_tRect.p1.y,
+			pNode->m_pChild[0]->m_tRect.wh.x,
+			pNode->m_pChild[0]->m_tRect.wh.y);
+		Buildtree(pNode->m_pChild[3]);		
 	}
 }
 TNode* TQuadtree::FindNode(TNode* pNode, TVector2 pos)
@@ -85,6 +71,17 @@ void TQuadtree::Release()
 {
 	delete m_pRootNode;
 	m_pRootNode = nullptr;
+}
+TNode* TQuadtree::CreateNode(TNode* pParent, float x, float y, float w, float h)
+{
+	TNode* pNode =	new TNode(x,y,w,h);
+	if (pParent != nullptr)
+	{
+		pNode->m_iDepth = pParent->m_iDepth + 1;
+		pNode->m_pParent = pParent;
+	}	
+	TNode::g_iNewCounter++;
+	return pNode;
 }
 TQuadtree::TQuadtree()
 {
