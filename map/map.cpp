@@ -6,7 +6,7 @@
 class THuman
 {
 public :
-    int m_iAge;
+    int m_iAge;+
     std::string m_szAdd;
     std::string n_szTel;
 public:
