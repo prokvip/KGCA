@@ -27,6 +27,12 @@
     <ClCompile Include="TStd.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="TVector.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="TObject.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TQuadtree.h">
@@ -36,6 +42,12 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="TNode.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="TVector.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="TObject.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

@@ -4,27 +4,10 @@
 #include <list>
 #include <map>
 #include <string>
-
+#include "TVector.h"
 using namespace std;
 
-struct TVector2
-{
-	float x;
-	float y;
-	TVector2  operator + (TVector2 p)
-	{
-		TVector2 ret;
-		ret.x = x + p.x;
-		ret.y = y + p.y;
-		return ret;
-	}
-	TVector2() {}
-	TVector2(float x, float y)
-	{
-		this->x = x;
-		this->y = y;
-	}
-};
+
 struct Rect
 {
 	float  x, y, w, h;

@@ -143,13 +143,17 @@
   <ItemGroup>
     <ClCompile Include="Sample.cpp" />
     <ClCompile Include="TNode.cpp" />
+    <ClCompile Include="TObject.cpp" />
     <ClCompile Include="TQuadtree.cpp" />
     <ClCompile Include="TStd.cpp" />
+    <ClCompile Include="TVector.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TNode.h" />
+    <ClInclude Include="TObject.h" />
     <ClInclude Include="TQuadtree.h" />
     <ClInclude Include="TStd.h" />
+    <ClInclude Include="TVector.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
