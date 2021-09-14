@@ -4,6 +4,7 @@ class TNode
 {
 public:
 	static      int g_iNewCounter;
+	int			m_iIndex;
 	TRect		m_tRect;
 	std::vector<TVector2>  m_ObjectList;
 	TNode*		m_pChild[4];

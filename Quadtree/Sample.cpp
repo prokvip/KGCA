@@ -2,7 +2,7 @@
 //
 
 #include "TQuadtree.h"
-
+#include <windows.h>
 
 int main()
 {
@@ -16,6 +16,15 @@ int main()
             pos.x = (float)(rand() % 100);
             pos.y = (float)(rand() % 100);
             g_Quadtree.AddObject(pos);
+        }
+
+        float fSec = 0.0f;
+        while (fSec < 10)
+        {
+            Sleep(10);// 1 /100
+            // 경과시간
+            g_Quadtree.Frame(10.0f / 1000.0f);                        
+            fSec += 10.0f / 1000.0f;
         }
         TNode::g_iNewCounter--;
         g_Quadtree.Release();

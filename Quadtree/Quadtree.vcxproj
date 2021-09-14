@@ -142,6 +142,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Sample.cpp" />
+    <ClCompile Include="TCollision.cpp" />
     <ClCompile Include="TNode.cpp" />
     <ClCompile Include="TObject.cpp" />
     <ClCompile Include="TQuadtree.cpp" />
@@ -149,6 +150,7 @@
     <ClCompile Include="TVector.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="TCollision.h" />
     <ClInclude Include="TNode.h" />
     <ClInclude Include="TObject.h" />
     <ClInclude Include="TQuadtree.h" />

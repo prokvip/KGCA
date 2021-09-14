@@ -3,6 +3,16 @@
 class TObject
 {
 public:
-	TVector2  m_Pos;
+	int      iNodeIndex;
+	TVector2 pos;	
+	float   mass;
+	TVector2 Velocity; //속도
+	TVector2 Acceleration; //가속도
+	TVector2 sumForces; //모든 힘 합산
+
+	Rect    rect;
+
+public:
+	TObject();
 };
 

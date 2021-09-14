@@ -4,6 +4,12 @@ struct TVector2
 {
 	float x;
 	float y;
+	TVector2  operator += (TVector2 p)
+	{
+		x += p.x;
+		y += p.y;
+		return *this;
+	}
 	TVector2  operator * (float s)
 	{
 		TVector2 ret;
@@ -31,6 +37,7 @@ struct TVector2
 	float   ProjectionPoint(TVector2 q1, TVector2 q2, TVector2 p);
 	TVector2 Normalize();
 	float    Length();
+	//bool     PointToRect(Rect desk) { return true; };
 public:
 	TVector2() {}
 	TVector2(float x, float y)

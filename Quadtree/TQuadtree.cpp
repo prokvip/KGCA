@@ -1,4 +1,29 @@
 #include "TQuadtree.h"
+
+void	TQuadtree::Frame(float time)
+{
+	//player.sumForces.x = 10.0f;
+	//player.sumForces.y = 0.0f;
+	//// F = MA, A =  F / M
+	//player.Acceleration.x = player.sumForces.x / player.mass;
+	//player.Acceleration.y = player.sumForces.y / player.mass;
+	//player.Velocity += player.Acceleration * time;
+	//player.pos += player.Velocity * time;
+	//TNode* pFind = FindPlayerNode(player.pos);
+	//if (pFind != nullptr)
+	//{
+	//	cout << pFind->m_iIndex << " ";
+	//}
+
+	player.Velocity.x = 10.0f;
+	player.Velocity.y = 0.0f;
+	player.pos += player.Velocity * time;
+	TNode* pFind = FindPlayerNode(player.pos);
+	if (pFind != nullptr)
+	{
+		cout << pFind->m_iIndex << " ";
+	}
+}
 bool    TQuadtree::Init(	int iWidth, 
 							int iHeight)
 {	
@@ -67,6 +92,15 @@ bool    TQuadtree::AddObject(TVector2 pos)
 	}
 	return false;
 }
+TNode*    TQuadtree::FindPlayerNode(TVector2 pos)
+{
+	TNode* pFindNode = FindNode(m_pRootNode, pos);
+	if (pFindNode != nullptr)
+	{
+		return pFindNode;
+	}
+	return nullptr;
+}
 void TQuadtree::Release()
 {
 	delete m_pRootNode;
@@ -80,6 +114,8 @@ TNode* TQuadtree::CreateNode(TNode* pParent, float x, float y, float w, float h)
 		pNode->m_iDepth = pParent->m_iDepth + 1;
 		pNode->m_pParent = pParent;
 	}	
+	pNode->m_iIndex = TNode::g_iNewCounter;
+	cout << pNode->m_iIndex << " ";
 	TNode::g_iNewCounter++;
 	return pNode;
 }
