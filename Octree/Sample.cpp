@@ -6,6 +6,15 @@
 
 int main()
 {
+    TRect a(TVector3(-10.0f, -10.0f, -10.0f), TVector3(10.0f, 10.0f, 10.0f));
+    TRect b(TVector3(-5.0f, -5.0f, -5.0f), TVector3(15.0f, 15.0f, 15.0f));
+    TRect rtUnion = TCollision::UnionRegion(a, b);
+    TRect rtIntersect;
+    if (TCollision::IntersectRegion(a, b, &rtIntersect))
+    {
+        cout << "충돌!\n";
+    }
+
     {
         TOctree g_Octree;
         g_Octree.Init(100, 100, 100);

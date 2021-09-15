@@ -23,9 +23,9 @@ bool TCollision::IntersectRegion(const TRect& r1, const TRect& r2, TRect* rtInte
 {
 	TRect rtUnion = UnionRegion(r1, r2);
 	
-	if (rtUnion.vSize.x < (r1.vSize.x + r2.vSize.x) &&
-		rtUnion.vSize.y < (r1.vSize.y + r2.vSize.y) &&
-		rtUnion.vSize.z < (r1.vSize.z + r2.vSize.z))
+	if (rtUnion.vSize.x > (r1.vSize.x + r2.vSize.x) &&
+		rtUnion.vSize.y > (r1.vSize.y + r2.vSize.y) &&
+		rtUnion.vSize.z > (r1.vSize.z + r2.vSize.z))
 	{
 		if (rtIntersect != nullptr)
 		{
@@ -36,13 +36,13 @@ bool TCollision::IntersectRegion(const TRect& r1, const TRect& r2, TRect* rtInte
 			rtIntersect->vMax.y = r1.vMax.y > r2.vMax.y ? r2.vMax.y : r1.vMax.y;
 			rtIntersect->vMax.z = r1.vMax.z > r2.vMax.z ? r2.vMax.z : r1.vMax.z;	
 
-			rtIntersect->vSize.x = rtIntersect->vMax.x - rtIntersect->vMin.x;
-			rtIntersect->vSize.y = rtIntersect->vMax.y - rtIntersect->vMin.y;
-			rtIntersect->vSize.z = rtIntersect->vMax.z - rtIntersect->vMin.z;
+			rtIntersect->vSize		= rtIntersect->vMax - rtIntersect->vMin;
+			rtIntersect->vCenter	= (rtIntersect->vMax + rtIntersect->vMin) / 2.0f;
 
 			rtIntersect->vPivot.x = rtIntersect->vMin.x;
 			rtIntersect->vPivot.y = rtIntersect->vMin.y;
 			rtIntersect->vPivot.z = rtIntersect->vMax.z;
+
 		}
 		return true;
 	}	

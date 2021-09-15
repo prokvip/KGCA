@@ -72,7 +72,7 @@ public:
 		TVector3 ret;
 		ret.x = x + p.x;
 		ret.y = y + p.y;
-		ret.z = y + p.z;
+		ret.z = z + p.z;
 		return ret;
 	}
 	TVector3  operator - (TVector3 p)
@@ -80,7 +80,7 @@ public:
 		TVector3 ret;
 		ret.x = x - p.x;
 		ret.y = y - p.y;
-		ret.y = z - p.z;
+		ret.z = z - p.z;
 		return ret;
 	}
 	TVector3  operator / (float fValue)
