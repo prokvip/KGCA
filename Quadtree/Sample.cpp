@@ -21,6 +21,7 @@ int main()
         float fSec = 0.0f;
         while (fSec < 10)
         {
+            _sleep(10);
             Sleep(10);// 1 /100
             // 경과시간
             g_Quadtree.Frame(10.0f / 1000.0f);                        
