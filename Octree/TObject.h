@@ -9,7 +9,7 @@ public:
 	TVector3	m_vVelocity; //속도
 	TVector3	m_vAcceleration; //가속도
 	TVector3	m_vForces; //모든 힘 합산
-	TRect		m_tRect;
+	TBox		m_tRect;
 public:
 	TObject();
 	TObject(TVector3 vPos, TVector3 rect);

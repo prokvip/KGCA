@@ -6,10 +6,10 @@
 
 int main()
 {
-    TRect a(TVector3(-10.0f, -10.0f, -10.0f), TVector3(10.0f, 10.0f, 10.0f));
-    TRect b(TVector3(-5.0f, -5.0f, -5.0f), TVector3(15.0f, 15.0f, 15.0f));
-    TRect rtUnion = TCollision::UnionRegion(a, b);
-    TRect rtIntersect;
+    TBox a(TVector3(-10.0f, -10.0f, -10.0f), TVector3(10.0f, 10.0f, 10.0f));
+    TBox b(TVector3(-5.0f, -5.0f, -5.0f), TVector3(15.0f, 15.0f, 15.0f));
+    TBox rtUnion = TCollision::UnionRegion(a, b);
+    TBox rtIntersect;
     if (TCollision::IntersectRegion(a, b, &rtIntersect))
     {
         cout << "충돌!\n";

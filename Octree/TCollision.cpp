@@ -1,7 +1,44 @@
 #include "TCollision.h"
-TRect TCollision::UnionRegion(const TRect& r1, const TRect& r2)
+//bool  TCollision2D::PointToPoint(TVector2 desk, TVector2 src)
+//{
+//	if (fabs(desk.x - src.x) < T_EPSILON)
+//	{
+//		if (fabs(desk.y - src.y) < T_EPSILON)
+//		{
+//			return true;
+//		}
+//	}
+//	return false;
+//}
+//bool  TCollision2D::LineToPoint(TLine desk, TVector2 p) 
+//{ 
+//	return true; 
+//};
+//bool  TCollision2D::LineToCircle(TLine desk, TCircle p)
+//{ 
+//	return true; 
+//};
+//bool  TCollision2D::RectToRect(TRect desk, TRect src) 
+//{ 
+//	return true; 
+//};
+//bool  TCollision2D::RectToPoint(TRect desk, TVector2 pos) 
+//{
+//	return true; 
+//};
+//TRect TCollision2D::UnionRegion(const TRect& r1, const TRect& r2)
+//{
+//	TRect rt;
+//	return rt;
+//}
+//bool  TCollision2D::IntersectRegion(const TRect& r1, const TRect& r2, TRect* rtIntersect)
+//{
+//	return true;
+//}
+
+TBox TCollision::UnionRegion(const TBox& r1, const TBox& r2)
 {
-	TRect rt;
+	TBox rt;
 	rt.vMin.x = r1.vMin.x < r2.vMin.x ? r1.vMin.x : r2.vMin.x;
 	rt.vMin.y = r1.vMin.y < r2.vMin.y ? r1.vMin.y : r2.vMin.y;
 	rt.vMin.z = r1.vMin.z < r2.vMin.z ? r1.vMin.z : r2.vMin.z;
@@ -19,9 +56,9 @@ TRect TCollision::UnionRegion(const TRect& r1, const TRect& r2)
 	rt.vPivot.z = rt.vMax.z;
 	return rt;
 }
-bool TCollision::IntersectRegion(const TRect& r1, const TRect& r2, TRect* rtIntersect)
+bool TCollision::IntersectRegion(const TBox& r1, const TBox& r2, TBox* rtIntersect)
 {
-	TRect rtUnion = UnionRegion(r1, r2);
+	TBox rtUnion = UnionRegion(r1, r2);
 	
 	if (rtUnion.vSize.x > (r1.vSize.x + r2.vSize.x) &&
 		rtUnion.vSize.y > (r1.vSize.y + r2.vSize.y) &&

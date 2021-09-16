@@ -17,6 +17,13 @@ struct TVector2
 		ret.y = y * s;
 		return ret;
 	}
+	TVector2  operator / (float fValue)
+	{
+		TVector2 ret;
+		ret.x = x / fValue;
+		ret.y = y / fValue;
+		return ret;
+	}
 	TVector2  operator + (TVector2 p)
 	{
 		TVector2 ret;

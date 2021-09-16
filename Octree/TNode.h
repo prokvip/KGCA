@@ -5,7 +5,7 @@ class TNode
 public:
 	static      int g_iNewCounter;
 	int			m_iIndex;
-	TRect		m_tRect;
+	TBox		m_tRect;
 	std::vector<int>  m_ObjectList;
 	TNode*		m_pChild[8];
 	int			m_iDepth;
