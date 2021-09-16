@@ -32,3 +32,14 @@ struct TRect
 		this->vMax = vMax;
 	}
 };
+struct TLine
+{
+	TVector3 vStart;
+	TVector3 vEnd;
+	TVector3 vDirection;
+};
+struct TSphere
+{
+	TVector3 vCenter;
+	float    fRadius;
+};

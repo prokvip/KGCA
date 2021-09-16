@@ -12,10 +12,10 @@ public:
 	//static bool IntersectRegion(const TRect& r1, const TRect& r2, TRect* rtIntersect);
 
 	// 3D - > Á÷°¢ÁÂÇ¥°è
-	static bool  LineToPoint(TRect desk, TRect src) { return true; };
-	static bool  LineToSphere(TRect desk, TRect src) { return true; };
+	static bool  LineToPoint(TLine desk, TVector3 src) { return true; };
+	static bool  LineToSphere(TLine desk, TSphere src) { return true; };
 	static bool  RectToRect(TRect desk, TRect src) { return true; };
-	static bool  RectToPoint(TRect desk, TVector3 pos) { return true; };
+	static bool  RectToPoint(TRect desk, TLine pos) { return true; };
 	static TRect UnionRegion(const TRect& r1, const TRect& r2);
 	static bool IntersectRegion(const TRect& r1, const TRect& r2, TRect* rtIntersect);
 };
