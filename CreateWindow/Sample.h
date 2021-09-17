@@ -1,6 +1,11 @@
 #pragma once
-#include "TWindow.h"
-class Sample : public TWindow
+#include "TCore.h"
+class Sample : public TCore
 {
+public:
+	bool	Init();
+	bool	Frame();
+	bool	Render();
+	bool	Release();
 };
 

@@ -12,11 +12,9 @@ public:
 		const WCHAR* strWindowTitle);	
 	LRESULT MsgProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 	bool	Run();
-	bool	GameInit();
-	bool	GameRun();
-		bool	GameFrame();
-		bool	GameRender();
-	bool	GameRelease();
+	virtual bool	GameInit();
+	virtual bool	GameRun();
+	virtual bool	GameRelease();
 public:
 	TWindow();
 };

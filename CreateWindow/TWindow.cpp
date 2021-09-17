@@ -69,13 +69,14 @@ bool	TWindow::Run()
 {
     GameInit();
     MSG msg;
-    // 기본 메시지 루프입니다:
-    //while (GetMessage(&msg, nullptr, 0, 0))
     while (m_bGameRun)
     {
-        if (PeekMessageW(&msg, m_hWnd, 0, 0, PM_REMOVE))
+        if (PeekMessageW(&msg, NULL, 0, 0, PM_REMOVE))
         {
-            if (msg.message == WM_QUIT) break;
+            if (msg.message == WM_QUIT)
+            {
+                break;
+            }
             TranslateMessage(&msg);
             DispatchMessage(&msg);
         }
@@ -89,21 +90,14 @@ bool	TWindow::Run()
 }
 bool	TWindow::GameRun()
 {
-    if (!GameFrame()) return false;
-    if (!GameRender()) return false;
     return true;
 }
 bool	TWindow::GameInit()
 {
     return true;
 }
-bool	TWindow::GameFrame() {
-    return true;
-}
-bool	TWindow::GameRender() {
-    return true;
-}
-bool	TWindow::GameRelease() {
+bool	TWindow::GameRelease() 
+{
     return true;
 }
 TWindow::TWindow() : m_bGameRun(true)
