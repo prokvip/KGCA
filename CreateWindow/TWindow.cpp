@@ -1,0 +1,113 @@
+#include "TWindow.h"
+#include <assert.h>
+TWindow* g_pWindow = nullptr;
+LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
+LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+{
+    // 메세지 핸들링
+    assert(g_pWindow);
+    return g_pWindow->MsgProc(hWnd, message, wParam, lParam);    
+}
+LRESULT  TWindow::MsgProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+{
+    switch (message)
+    {
+    case WM_DESTROY:
+        PostQuitMessage(0);
+        break;
+    default:
+        return DefWindowProc(hWnd, message, wParam, lParam);
+    }
+    return 0;
+}
+bool   TWindow::InitWindows(
+	HINSTANCE hInstance,
+	int nCmdShow,
+	const WCHAR* strWindowTitle)
+{
+	m_hInstance = hInstance;
+
+    WNDCLASSEXW wcex;
+    ZeroMemory(&wcex, sizeof(WNDCLASSEXW));
+    wcex.cbSize = sizeof(WNDCLASSEX);
+    wcex.style = CS_HREDRAW | CS_VREDRAW;
+    wcex.lpfnWndProc = WndProc;
+    wcex.hInstance = hInstance;
+    wcex.hbrBackground = CreateSolidBrush(RGB(133,143,108));
+    wcex.lpszClassName = L"KGCA";
+    wcex.hCursor = LoadCursor(nullptr, IDC_ARROW);
+    // 앞으로 이런 윈도우 생성할테니 등록해줘(운영체제)
+    if (!RegisterClassExW(&wcex))
+    {
+        return false;
+    }
+
+	// 윈도우 생성 함수
+	m_hWnd = CreateWindowEx(
+        0,
+        L"KGCA",
+        strWindowTitle,
+        WS_OVERLAPPEDWINDOW,
+        100,
+        100,
+        1024,
+        768,
+        NULL,
+        NULL,
+        hInstance,
+        NULL);
+    if (m_hWnd == NULL)
+    {
+        return false;
+    }
+    // WM_SHOW
+    ShowWindow(m_hWnd, nCmdShow);
+	return true;
+}
+
+bool	TWindow::Run()
+{
+    GameInit();
+    MSG msg;
+    // 기본 메시지 루프입니다:
+    //while (GetMessage(&msg, nullptr, 0, 0))
+    while (m_bGameRun)
+    {
+        if (PeekMessageW(&msg, m_hWnd, 0, 0, PM_REMOVE))
+        {
+            if (msg.message == WM_QUIT) break;
+            TranslateMessage(&msg);
+            DispatchMessage(&msg);
+        }
+        else
+        {
+            m_bGameRun = GameRun();            
+        }
+    }
+    GameRelease();
+	return true;
+}
+bool	TWindow::GameRun()
+{
+    if (!GameFrame()) return false;
+    if (!GameRender()) return false;
+    return true;
+}
+bool	TWindow::GameInit()
+{
+    return true;
+}
+bool	TWindow::GameFrame() {
+    return true;
+}
+bool	TWindow::GameRender() {
+    return true;
+}
+bool	TWindow::GameRelease() {
+    return true;
+}
+TWindow::TWindow() : m_bGameRun(true)
+{
+    g_pWindow = this;
+}
+   
