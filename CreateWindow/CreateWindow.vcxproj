@@ -143,11 +143,19 @@
   <ItemGroup>
     <ClInclude Include="Sample.h" />
     <ClInclude Include="TCore.h" />
+    <ClInclude Include="TDevice.h" />
+    <ClInclude Include="TInput.h" />
+    <ClInclude Include="TSound.h" />
+    <ClInclude Include="TTimer.h" />
     <ClInclude Include="TWindow.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Sample.cpp" />
     <ClCompile Include="TCore.cpp" />
+    <ClCompile Include="TDevice.cpp" />
+    <ClCompile Include="TInput.cpp" />
+    <ClCompile Include="TSound.cpp" />
+    <ClCompile Include="TTimer.cpp" />
     <ClCompile Include="TWindow.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

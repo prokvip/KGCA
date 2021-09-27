@@ -41,17 +41,19 @@ bool   TWindow::InitWindows(
     {
         return false;
     }
-
+    RECT rc = { 0, 0, 1024, 768 };
+    // 작업영역(  타이틀 바/경계선/메뉴/스크롤 바 등의 영역을 제외한 영역), 윈도우 스타일, 메뉴여부
+    AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW, FALSE);
 	// 윈도우 생성 함수
 	m_hWnd = CreateWindowEx(
         0,
         L"KGCA",
         strWindowTitle,
         WS_OVERLAPPEDWINDOW,
-        100,
-        100,
-        1024,
-        768,
+        0,
+        0,
+        rc.right-rc.left,
+        rc.bottom-rc.top,
         NULL,
         NULL,
         hInstance,
@@ -60,6 +62,10 @@ bool   TWindow::InitWindows(
     {
         return false;
     }
+    RECT m_rtWindow;
+    RECT m_rtClient;
+    GetWindowRect(m_hWnd, &m_rtWindow);
+    GetClientRect(m_hWnd, &m_rtClient);
     // WM_SHOW
     ShowWindow(m_hWnd, nCmdShow);
 	return true;
