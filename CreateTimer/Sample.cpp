@@ -3,6 +3,8 @@
 
 bool	Sample::Init()
 {    
+    //m_Timer.m_fSecPerFrame;
+    g_fSecPerFrame;
     return true;
 }
 bool	Sample::Frame()

@@ -1,4 +1,5 @@
 #pragma once
+#include "TStd.h"
 #include <d3d11.h>
 #include <dxgi.h>
 #include <assert.h>

@@ -1,5 +1,7 @@
 #include "TTimer.h"
 #include < tchar.h >
+float g_fSecPerFrame = 0.0f;
+
 bool TTimer::Init()
 {
 	QueryPerformanceCounter(&m_Frame);
@@ -12,6 +14,8 @@ bool TTimer::Frame()
 	m_fSecPerFrame =
 		static_cast<float>(m_Current.QuadPart - m_Frame.QuadPart)
 		/ static_cast<float>(m_Frequency.QuadPart);
+	g_fSecPerFrame = m_fSecPerFrame;
+
 	static float fpsTime = 0.0f;
 	m_iTmpCounter++;
 	fpsTime += m_fSecPerFrame;

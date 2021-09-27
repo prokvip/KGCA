@@ -155,6 +155,7 @@
     <ClInclude Include="TDevice.h" />
     <ClInclude Include="TInput.h" />
     <ClInclude Include="TSound.h" />
+    <ClInclude Include="TStd.h" />
     <ClInclude Include="TTimer.h" />
     <ClInclude Include="TWindow.h" />
   </ItemGroup>
