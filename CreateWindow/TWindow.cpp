@@ -62,12 +62,16 @@ bool   TWindow::InitWindows(
     {
         return false;
     }
-    RECT m_rtWindow;
-    RECT m_rtClient;
+   
     GetWindowRect(m_hWnd, &m_rtWindow);
     GetClientRect(m_hWnd, &m_rtClient);
+    
+   
+    
     // WM_SHOW
+    
     ShowWindow(m_hWnd, nCmdShow);
+
 	return true;
 }
 

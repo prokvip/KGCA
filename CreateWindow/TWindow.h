@@ -1,8 +1,12 @@
 #pragma once
 #include <windows.h>
-class TWindow
+#include "TDevice.h"
+class TWindow : public TDevice
 {
 public:
+	RECT m_rtWindow;
+	RECT m_rtClient;
+
 	HINSTANCE	m_hInstance;
 	HWND		m_hWnd;
 	bool		m_bGameRun;
