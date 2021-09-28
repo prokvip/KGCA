@@ -70,3 +70,5 @@ bool TInput::Release()
 {
     return true;
 }
+TInput::TInput() {}
+TInput::~TInput() {}

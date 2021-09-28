@@ -8,7 +8,7 @@ class TCore : public TWindow
 {
 public:
 	TTimer		m_Timer;
-	TInput		m_Input;
+	//TInput		m_Input;
 	TSound		m_Sound;
 private:
 	bool	GameInit()	override;

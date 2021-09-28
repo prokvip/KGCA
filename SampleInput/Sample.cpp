@@ -7,26 +7,11 @@ bool	Sample::Init()
 }
 bool	Sample::Frame()
 {
-    if (m_Input.GetKey(VK_LBUTTON)== KEY_PUSH)
+    if (g_Input.GetKey(VK_LBUTTON)== KEY_PUSH)
     {
         int kkkk = 0;
     }
-    if (m_Input.GetKey('W') == KEY_UP)
-    {
-        int kkkk = 0;
-    }
-    if (m_Input.GetKey('S') == KEY_PUSH)
-    {
-        int kkkk = 0;
-    }
-    if (m_Input.GetKey('A') == KEY_PUSH)
-    {
-        int kkkk = 0;
-    }
-    if (m_Input.GetKey('D') == KEY_PUSH)
-    {
-        int kkkk = 0;
-    }
+    
     return true;
 }
 bool	Sample::Render() 

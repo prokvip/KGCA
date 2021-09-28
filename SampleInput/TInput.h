@@ -8,8 +8,15 @@ enum  KeyState
 	KEY_PUSH,
 	KEY_HOLD,
 };
-class TInput
+class TInput : public TSingleton<TInput>
 {
+	friend class TSingleton<TInput>;
+//public:
+//	static TInput* Get()
+//	{
+//		static TInput gInput;
+//		return &gInput;
+//	}
 private:
 	DWORD	m_dwKeyState[256];
 	POINT   m_ptPos;
@@ -20,5 +27,10 @@ public:
 	bool	Frame();
 	bool	Render();
 	bool	Release();
+private:
+	TInput();
+public:
+	~TInput();
 };
 
+#define g_Input TInput::Get()

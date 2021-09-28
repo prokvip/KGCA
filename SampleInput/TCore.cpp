@@ -10,7 +10,7 @@ bool	TCore::GameInit()
     TDevice::SetDevice();
     // TODO : create Timer
     m_Timer.Init();
-    m_Input.Init();
+    g_Input.Init();
 
     Init();
     return true;
@@ -19,7 +19,7 @@ bool	TCore::GameFrame()
 {
     // TODO : Frame Timer
     m_Timer.Frame();
-    m_Input.Frame();
+    g_Input.Frame();
     Frame();
     return true;
 }
@@ -28,7 +28,7 @@ bool	TCore::GameRender()
     PreRender();   
         // TODO : Render Timer
         m_Timer.Render();
-        m_Input.Render();
+        g_Input.Render();
         Render();
     PostRender();    
     return true;
@@ -38,7 +38,7 @@ bool	TCore::GameRelease()
     Release();
     // TODO : Render Timer
     m_Timer.Release();
-    m_Input.Release();
+    g_Input.Release();
     CleanupDevice();
     return true;
 }
