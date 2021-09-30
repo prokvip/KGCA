@@ -6,6 +6,7 @@
 #include <vector>
 #include <list>
 #pragma comment	(lib, "TEngineCore.lib")
+
 extern float g_fSecPerFrame;
 extern HWND  g_hWnd;
 extern RECT  g_rtClient;
@@ -20,3 +21,7 @@ public:
 		return theSingle;
 	}
 };
+
+#define TBASIS_START int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nCmdShow ){ Sample gSample;
+#define TBASIS_WIN(x) if( !gSample.InitWindow( hInstance, nCmdShow,  L#x ) )	{	return 0;	}	ShowCursor ( TRUE );gSample.Run();	return 1; }
+#define TBASIS_RUN(x) TBASIS_START; TBASIS_WIN(x);

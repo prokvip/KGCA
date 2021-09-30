@@ -1,0 +1,6 @@
+// 정해진 출력 양식(반드시 정점 위치는 SV_POSITION에 저장해야 한다.)
+// 정해진 레지스터에서 정해진 레지스터로 저장한다.
+float4 VS(float3 p: POSITION, float4 c : COLOR  ) : SV_POSITION
+{
+	return float4(p,1.0f); // 스위즐링
+}

@@ -1,6 +1,6 @@
 ﻿// MagicSquare.cpp : 이 파일에는 'main' 함수가 포함됩니다. 거기서 프로그램 실행이 시작되고 종료됩니다.
 //
-
+#define _CRT_SECURE_NO_WARNINGS
 #include <iostream>
 // 1)배열 생성
 int   array[20][20];
@@ -24,6 +24,36 @@ int  InputData()
 void  Print(int iSize);
 int main()
 {
+    const char* tokenstring = "15.0 12.3";
+    float fp1;
+    float fp2;
+     sscanf(tokenstring, "%f%f", &fp1,&fp2);
+    //FILE* fp = fopen("ObjectData.txt", "rt");
+    //if (fp == NULL)
+    //{
+    //    return false;
+    //}
+    //char buffer[256] = { 0, };
+    //int iNumVertex = 0;
+    //fgets(buffer, 256, fp);
+    //sscanf(buffer, ("%d"), &iNumVertex);
+
+    //int index = 0;
+    //for (int iLine = 0; iLine < iNumVertex; iLine++)
+    //{
+    //    float a=0;
+    //    float b=0;
+    //    fgets(buffer, 256, fp);
+    //    sscanf(buffer, ("%f%f"), &a, &b);
+    //    sscanf(buffer, ("%f%f"),
+    //        &a, &b);
+    //    /*_stscanf_s(buffer, _T("%d %f %f %f %f %f %f %f"),
+    //        &index,
+    //        &v.pos.x, &v.pos.y, &v.pos.z,
+    //        &v.color.x, &v.color.y, &v.color.z, &v.color.w);*/
+    //    //m_VertexList.push_back(v);
+    //}
+    //fclose(fp);
     while (1)
     {
         int iSize = InputData();
