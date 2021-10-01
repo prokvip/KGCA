@@ -8,6 +8,7 @@
 #pragma comment	(lib, "TEngineCore.lib")
 
 extern float g_fSecPerFrame;
+extern float g_fGameTimer;
 extern HWND  g_hWnd;
 extern RECT  g_rtClient;
 

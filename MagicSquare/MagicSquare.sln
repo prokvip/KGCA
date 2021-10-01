@@ -61,6 +61,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VertexBuffer", "..\VertexBu
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VertexBuffer1", "..\VertexBuffer1\VertexBuffer1.vcxproj", "{07EDABCD-29CA-4A37-9316-77B1A11C76A4}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VertexTransform", "..\VertexTransform\VertexTransform.vcxproj", "{9DB9274A-A60E-4FC7-AEEE-21C120EE3E2E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -253,6 +255,14 @@ Global
 		{07EDABCD-29CA-4A37-9316-77B1A11C76A4}.Release|x64.Build.0 = Release|x64
 		{07EDABCD-29CA-4A37-9316-77B1A11C76A4}.Release|x86.ActiveCfg = Release|Win32
 		{07EDABCD-29CA-4A37-9316-77B1A11C76A4}.Release|x86.Build.0 = Release|Win32
+		{9DB9274A-A60E-4FC7-AEEE-21C120EE3E2E}.Debug|x64.ActiveCfg = Debug|x64
+		{9DB9274A-A60E-4FC7-AEEE-21C120EE3E2E}.Debug|x64.Build.0 = Debug|x64
+		{9DB9274A-A60E-4FC7-AEEE-21C120EE3E2E}.Debug|x86.ActiveCfg = Debug|Win32
+		{9DB9274A-A60E-4FC7-AEEE-21C120EE3E2E}.Debug|x86.Build.0 = Debug|Win32
+		{9DB9274A-A60E-4FC7-AEEE-21C120EE3E2E}.Release|x64.ActiveCfg = Release|x64
+		{9DB9274A-A60E-4FC7-AEEE-21C120EE3E2E}.Release|x64.Build.0 = Release|x64
+		{9DB9274A-A60E-4FC7-AEEE-21C120EE3E2E}.Release|x86.ActiveCfg = Release|Win32
+		{9DB9274A-A60E-4FC7-AEEE-21C120EE3E2E}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -284,6 +294,7 @@ Global
 		{581BB196-2046-4B6E-B494-C5E6B2F7A210} = {B8EA6385-0371-4EB1-B112-24764A4D9257}
 		{6D171539-D85D-40FF-BFDC-4A8745ABA8E8} = {B8EA6385-0371-4EB1-B112-24764A4D9257}
 		{07EDABCD-29CA-4A37-9316-77B1A11C76A4} = {B8EA6385-0371-4EB1-B112-24764A4D9257}
+		{9DB9274A-A60E-4FC7-AEEE-21C120EE3E2E} = {B8EA6385-0371-4EB1-B112-24764A4D9257}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {79E7C954-BD15-430C-A652-75E294D7190B}
