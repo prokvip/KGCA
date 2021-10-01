@@ -23,6 +23,9 @@ struct CB_DATA
 };
 class Sample : public TCore
 {
+	float				m_pSpeed;
+	TVector3			m_vCameraPos;
+	TVector3			m_vCameraTarget;
 	CB_DATA				m_cbData;
 	ID3DBlob*			m_pVSBlob = nullptr;
 	ID3D11Buffer*		m_pVertexBuffer;
@@ -30,11 +33,13 @@ class Sample : public TCore
 	ID3D11InputLayout*	m_pVertexLayout;
 	ID3D11VertexShader* m_pVS;
 	ID3D11PixelShader*  m_pPS;
+	std::vector< SimpleVertex> m_VertexList;
 public:
 	HRESULT		CreateConstantBuffer();
 	HRESULT		CreateVertexBuffer();
 	HRESULT		CreateVertexLayout();
 	HRESULT		LoadShader();
+	bool		LoadObject(std::wstring filename);
 public:
 	bool   Init();
 	bool   Frame();

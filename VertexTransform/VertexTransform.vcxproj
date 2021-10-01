@@ -158,6 +158,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Text Include="ObjectData.txt" />
     <Text Include="PixelShader.txt" />
     <Text Include="VertexShader.txt" />
   </ItemGroup>

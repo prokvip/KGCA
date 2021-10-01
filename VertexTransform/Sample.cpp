@@ -1,9 +1,43 @@
 #include "Sample.h"
 #include "TVector.h"
 TBASIS_RUN(SampleLibrary)
+bool  Sample::LoadObject(std::wstring filename)
+{
+    FILE* fp = nullptr;
+    _tfopen_s(&fp, filename.c_str(), _T("rt"));
+    if (fp == NULL)
+    {
+        return false;
+    }
+    TCHAR buffer[256] = { 0, };
+    int iVersion = 0;
+    _fgetts(buffer, 256, fp);
+    TCHAR tmp[256] = { 0, };
+    _stscanf_s(buffer, _T("%s%d"), tmp, _countof(tmp), &iVersion);
 
+    int iNumVertex = 0;
+    _fgetts(buffer, 256, fp);
+    _stscanf_s(buffer, _T("%d"), &iNumVertex);
+
+    int index = 0;
+    for (int iLine = 0; iLine < iNumVertex; iLine++)
+    {
+        SimpleVertex v;
+        _fgetts(buffer, 256, fp);
+        _stscanf_s(buffer, _T("%d %f %f %f %f %f %f %f"),
+            &index,
+            &v.pos.x, &v.pos.y, &v.pos.z,
+            &v.color.x, &v.color.y, &v.color.z, &v.color.w);
+        m_VertexList.push_back(v);
+    }
+    fclose(fp);
+    return true;
+}
 Sample::Sample()
 {
+    m_pSpeed = 3.0f;
+    m_vCameraPos = { 3,3, -5.0f };
+    m_vCameraTarget = { 0,0,0.0f };
     m_pVertexBuffer = nullptr;
     m_pVertexLayout = nullptr;
     m_pVS = nullptr;
@@ -31,25 +65,17 @@ HRESULT Sample::CreateVertexBuffer()
     //  x = -1.0f ~ 1.0f
     //  y = -1.0f ~ 1.0f
     //  z = 0 ~ 1
-    // 시스템 메모리
-    SimpleVertex v[6];
-    v[0].pos.x = -0.5f; v[0].pos.y = 0.5f; v[0].pos.z = 0.5f;
-    v[1].pos.x =  0.5f; v[1].pos.y = 0.5f; v[1].pos.z = 0.5f;
-    v[2].pos.x =  0.5f; v[2].pos.y = -0.5f; v[2].pos.z = 0.5f;
+    // 시스템 메모리   
 
-    v[3].pos.x = -0.5f; v[3].pos.y = 0.5f; v[3].pos.z = 0.5f;
-    v[4].pos.x = 0.5f; v[4].pos.y = -0.5f; v[4].pos.z = 0.5f;
-    v[5].pos.x = -0.5f; v[5].pos.y = -0.5f; v[5].pos.z = 0.5f;
-    UINT numVertex = sizeof(v) / sizeof(v[0]);
-    // 그래픽 카드 메모리로 보내야 한다.
+     // 그래픽 카드 메모리로 보내야 한다.
     D3D11_BUFFER_DESC bd;
     ZeroMemory(&bd, sizeof(D3D11_BUFFER_DESC));
-    bd.ByteWidth    = sizeof(SimpleVertex)* numVertex;
-    bd.Usage    = D3D11_USAGE_DEFAULT;
+    bd.ByteWidth = sizeof(SimpleVertex) * m_VertexList.size();
+    bd.Usage = D3D11_USAGE_DEFAULT;
     bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
     D3D11_SUBRESOURCE_DATA data;
     ZeroMemory(&data, sizeof(D3D11_SUBRESOURCE_DATA));
-    data.pSysMem= v;
+    data.pSysMem = &m_VertexList.at(0);
     hr = m_pd3dDevice->CreateBuffer(&bd, &data, &m_pVertexBuffer);
     if (FAILED(hr)) return hr;
     return hr;
@@ -129,6 +155,7 @@ HRESULT Sample::LoadShader()
 
 bool Sample::Init()
 {
+    LoadObject(L"ObjectData.txt");
     CreateConstantBuffer();
     CreateVertexBuffer();
     LoadShader();
@@ -138,16 +165,33 @@ bool Sample::Init()
 
 bool Sample::Frame()
 {
+    if (g_Input.GetKey('W') >= KEY_PUSH)
+    {
+        m_vCameraPos.z += m_pSpeed * g_fSecPerFrame;
+    }
+    if (g_Input.GetKey('S') >= KEY_HOLD)
+    {
+        m_vCameraPos.z -= m_pSpeed * g_fSecPerFrame;
+    }
+    if (g_Input.GetKey('A') >= KEY_PUSH)
+    {
+        m_vCameraPos.x -= m_pSpeed * g_fSecPerFrame;
+        m_vCameraTarget.x -= m_pSpeed * g_fSecPerFrame;
+    }
+    if (g_Input.GetKey('D') >= KEY_HOLD)
+    {
+        m_vCameraPos.x += m_pSpeed * g_fSecPerFrame;
+        m_vCameraTarget.x += m_pSpeed * g_fSecPerFrame;
+    }
     // -1 ~ +1 -> 0 ~ 1 => -1*0.5f+0.5f;
     // 0 ~ +1 -> -1 ~ 1 => 0.5f*2.0f-1.0f;
     // D3D11_USAGE_DEFAULT
     //m_cbData.matWorld._11 = cosf(g_fGameTimer)*0.5f+0.5f;
     m_cbData.matWorld = TMatrix::RotationZ(g_fGameTimer);
 
-    TVector3 vPos = { 0,0,-10.0f };
-    TVector3 vTarget = { 0,0,1.0f };
     TVector3 vUp = { 0,1,0.0f };
-    m_cbData.matView = TMatrix::ViewLookAt(vPos, vTarget, vUp);
+    m_cbData.matView = TMatrix::ViewLookAt(
+        m_vCameraPos, m_vCameraTarget, vUp);
     m_cbData.matProj = TMatrix::PerspectiveFovLH(1.0f, 
         100.0f, TBASIS_PI * 0.5f, 
         (float)g_rtClient.right / (float)g_rtClient.bottom);
@@ -175,7 +219,7 @@ bool Sample::Render()
         &pStrides, &pOffsets);
     m_pImmediateContext->IASetPrimitiveTopology(
         D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-    m_pImmediateContext->Draw(6, 0);
+    m_pImmediateContext->Draw(m_VertexList.size(), 0);
     return false;
 }
 
