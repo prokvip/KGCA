@@ -8,7 +8,7 @@ class Sample : public TCore
 public:
 	TBoxShape			m_BoxObj[2];
 	TMap				m_Map;
-	TCamera				m_Camera;
+	TDebugCamera		m_Camera;
 public:
 	bool   Init();
 	bool   Frame();
