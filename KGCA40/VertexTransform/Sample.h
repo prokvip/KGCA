@@ -1,12 +1,12 @@
 #pragma once
 #include <TCore.h>
 #include <d3dcompiler.h>
-#include "TMatrix.h"
+#include "XMatrix.h"
 #pragma comment	(lib, "D3DCompiler.lib")
 struct SimpleVertex
 {
-	TVector3 pos;
-	TVector4 color;
+	XVector3 pos;
+	XVector4 color;
 	SimpleVertex()
 	{
 		color.x = 1.0f;
@@ -17,15 +17,15 @@ struct SimpleVertex
 };
 struct CB_DATA
 {
-	TMatrix  matWorld;
-	TMatrix  matView;
-	TMatrix  matProj;
+	XMatrix  matWorld;
+	XMatrix  matView;
+	XMatrix  matProj;
 };
 class Sample : public TCore
 {
 	float				m_pSpeed;
-	TVector3			m_vCameraPos;
-	TVector3			m_vCameraTarget;
+	XVector3			m_vCameraPos;
+	XVector3			m_vCameraTarget;
 	CB_DATA				m_cbData;
 	ID3DBlob*			m_pVSBlob = nullptr;
 	ID3D11Buffer*		m_pVertexBuffer;

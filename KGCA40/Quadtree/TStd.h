@@ -4,7 +4,7 @@
 #include <list>
 #include <map>
 #include <string>
-#include "TVector.h"
+#include "XVector.h"
 using namespace std;
 
 
@@ -14,9 +14,9 @@ struct Rect
 };
 struct TRect
 {
-	TVector2  p0;
-	TVector2  p1;
-	TVector2  wh;
+	XVector2  p0;
+	XVector2  p1;
+	XVector2  wh;
 	// x1,y1(p0)
 	//
 	//          x2, y2(p1)

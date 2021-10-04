@@ -4,7 +4,7 @@
 #include <list>
 #include <map>
 #include <string>
-#include "TVector.h"
+#include "XVector.h"
 using namespace std;
 
 #define TBASIS_EPSILON		((float)  0.001f)
@@ -22,11 +22,11 @@ static const float T_PI			= 3.141592654f;
 // È­¸éÁÂÇ¥°è
 struct TRect
 {
-	TVector2  vPivot;
-	TVector2  vMin;
-	TVector2  vMax;
-	TVector2  vSize;
-	TVector2  vCenter;
+	XVector2  vPivot;
+	XVector2  vMin;
+	XVector2  vMax;
+	XVector2  vSize;
+	XVector2  vCenter;
 	TRect()
 	{
 		vPivot = { 0,0 };
@@ -35,11 +35,11 @@ struct TRect
 		vSize = { 0,0 };
 		vCenter = { 0,0 };
 	}
-	TRect(TVector2 vMin, TVector2 vMax)
+	TRect(XVector2 vMin, XVector2 vMax)
 	{
 		vCenter = (vMax + vMin) / 2.0f;
 		vSize = vMax - vCenter;
-		TVector2 vHalf = vSize / 2.0f;
+		XVector2 vHalf = vSize / 2.0f;
 		vPivot = { vCenter.x - vHalf.x, vCenter.y - vHalf.y };
 		this->vMin = vMin;
 		this->vMax = vMax;
@@ -48,11 +48,11 @@ struct TRect
 // Á÷°¢ÁÂÇ¥°è
 struct TBox
 {
-	TVector3  vPivot;
-	TVector3  vMin;
-	TVector3  vMax;
-	TVector3  vSize;
-	TVector3  vCenter;
+	XVector3  vPivot;
+	XVector3  vMin;
+	XVector3  vMax;
+	XVector3  vSize;
+	XVector3  vCenter;
 	TBox()
 	{
 		vPivot = { 0,0,0 };
@@ -61,11 +61,11 @@ struct TBox
 		vSize = { 0,0,0 };
 		vCenter = { 0,0,0 };
 	}
-	TBox(TVector3 vMin, TVector3 vMax)
+	TBox(XVector3 vMin, XVector3 vMax)
 	{
 		vCenter = (vMax + vMin) / 2.0f;
 		vSize = vMax - vCenter;
-		TVector3 vHalf = vSize / 2.0f;
+		XVector3 vHalf = vSize / 2.0f;
 		vPivot = { vCenter.x - vHalf.x, vCenter.y - vHalf.y, vCenter.z + vHalf.z };
 		this->vMin = vMin;
 		this->vMax = vMax;
@@ -74,26 +74,26 @@ struct TBox
 struct TLine
 {
 	// y = mx+b
-	TVector3 vP1;
+	XVector3 vP1;
 	float    fSlope;
 };
 struct TSegment
 {
-	TVector3 vP1;
-	TVector3 vP2;	
+	XVector3 vP1;
+	XVector3 vP2;	
 };
 struct TRay
 {
-	TVector3 vStart;	
-	TVector3 vDirection;
+	XVector3 vStart;	
+	XVector3 vDirection;
 };
 struct TSphere 
 {
-	TVector3 vCenter;
+	XVector3 vCenter;
 	float    fRadius;
 };
 struct TCircle
 {
-	TVector2 vCenter;
+	XVector2 vCenter;
 	float    fRadius;
 };

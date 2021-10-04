@@ -1,13 +1,13 @@
 #pragma once
 #include <TCore.h>
 #include <d3dcompiler.h>
-#include "TVector.h"
+#include "XVector.h"
 #pragma comment	(lib, "D3DCompiler.lib")
 struct SimpleVertex
 {
-	TVector3 pos;
-	TVector4 color;
-	SimpleVertex(TVector3 p, TVector4 c)
+	XVector3 pos;
+	XVector4 color;
+	SimpleVertex(XVector3 p, XVector4 c)
 	{
 		pos = p;
 		color = c;

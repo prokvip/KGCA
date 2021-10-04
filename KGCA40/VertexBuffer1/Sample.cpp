@@ -1,6 +1,6 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include "Sample.h"
-#include "TVector.h"
+#include "XVector.h"
 TBASIS_RUN(SampleLibrary)
 //This function or variable may be unsafe.
 //Consider using _wfopen_s instead.To disable deprecation,

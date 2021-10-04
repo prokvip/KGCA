@@ -9,7 +9,7 @@
 #include <dxgi.h>
 #include <assert.h>
 #include <d3dcompiler.h>
-#include "TMatrix.h"
+#include "XMatrix.h"
 #include "SimpleMath.h"
 #pragma comment	(lib, "D3DCompiler.lib")
 #pragma comment	(lib, "TEngineCore.lib")

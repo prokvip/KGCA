@@ -6,8 +6,8 @@
 
 int main()
 {
-    TBox a(TVector3(-10.0f, -10.0f, -10.0f), TVector3(10.0f, 10.0f, 10.0f));
-    TBox b(TVector3(-5.0f, -5.0f, -5.0f), TVector3(15.0f, 15.0f, 15.0f));
+    TBox a(XVector3(-10.0f, -10.0f, -10.0f), XVector3(10.0f, 10.0f, 10.0f));
+    TBox b(XVector3(-5.0f, -5.0f, -5.0f), XVector3(15.0f, 15.0f, 15.0f));
     TBox rtUnion = TCollision::UnionRegion(a, b);
     TBox rtIntersect;
     if (TCollision::IntersectRegion(a, b, &rtIntersect))
@@ -21,12 +21,12 @@ int main()
         //srand(time(NULL));
         for (int iObj = 0; iObj < 30; iObj++)
         {
-            TVector3 pos;
+            XVector3 pos;
             pos.x = (float)(rand() % 100);
             pos.y = (float)(rand() % 100);
             pos.z = -(float)(rand() % 100);
 
-            TVector3 rect;
+            XVector3 rect;
             rect.x = (float)(rand() % 10) + 1.0f;
             rect.y = (float)(rand() % 10) + 1.0f;
             rect.z = (float)(rand() % 10) + 1.0f;

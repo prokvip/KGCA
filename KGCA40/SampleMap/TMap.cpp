@@ -54,7 +54,7 @@ bool	TMap::CreateVertexData()
                 m_VertexList[iIndex + 0].pos.z - m_info.m_fCellDistance;
 
             m_VertexList[iIndex + 5].color = 
-                TVector4(
+                XVector4(
                     randstep(0.0f, 1.0f),
                     randstep(0.0f, 1.0f),
                     randstep(0.0f, 1.0f),1.0f);

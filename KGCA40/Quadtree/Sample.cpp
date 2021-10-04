@@ -12,7 +12,7 @@ int main()
         //srand(time(NULL));
         for (int iObj = 0; iObj < 3; iObj++)
         {
-            TVector2 pos;
+            XVector2 pos;
             pos.x = (float)(rand() % 100);
             pos.y = (float)(rand() % 100);
             g_Quadtree.AddObject(pos);
@@ -21,7 +21,6 @@ int main()
         float fSec = 0.0f;
         while (fSec < 10)
         {
-            _sleep(10);
             Sleep(10);// 1 /100
             // 경과시간
             g_Quadtree.Frame(10.0f / 1000.0f);                        

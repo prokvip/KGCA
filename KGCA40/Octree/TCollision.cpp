@@ -1,5 +1,5 @@
 #include "TCollision.h"
-//bool  TCollision2D::PointToPoint(TVector2 desk, TVector2 src)
+//bool  TCollision2D::PointToPoint(XVector2 desk, XVector2 src)
 //{
 //	if (fabs(desk.x - src.x) < T_EPSILON)
 //	{
@@ -10,7 +10,7 @@
 //	}
 //	return false;
 //}
-//bool  TCollision2D::LineToPoint(TLine desk, TVector2 p) 
+//bool  TCollision2D::LineToPoint(TLine desk, XVector2 p) 
 //{ 
 //	return true; 
 //};
@@ -22,7 +22,7 @@
 //{ 
 //	return true; 
 //};
-//bool  TCollision2D::RectToPoint(TRect desk, TVector2 pos) 
+//bool  TCollision2D::RectToPoint(TRect desk, XVector2 pos) 
 //{
 //	return true; 
 //};

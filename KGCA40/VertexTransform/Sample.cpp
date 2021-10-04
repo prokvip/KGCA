@@ -1,5 +1,5 @@
 #include "Sample.h"
-#include "TVector.h"
+#include "XVector.h"
 TBASIS_RUN(SampleLibrary)
 bool  Sample::LoadObject(std::wstring filename)
 {
@@ -187,12 +187,12 @@ bool Sample::Frame()
     // 0 ~ +1 -> -1 ~ 1 => 0.5f*2.0f-1.0f;
     // D3D11_USAGE_DEFAULT
     //m_cbData.matWorld._11 = cosf(g_fGameTimer)*0.5f+0.5f;
-    m_cbData.matWorld = TMatrix::RotationZ(g_fGameTimer);
+    m_cbData.matWorld = XMatrix::RotationZ(g_fGameTimer);
 
-    TVector3 vUp = { 0,1,0.0f };
-    m_cbData.matView = TMatrix::ViewLookAt(
+    XVector3 vUp = { 0,1,0.0f };
+    m_cbData.matView = XMatrix::ViewLookAt(
         m_vCameraPos, m_vCameraTarget, vUp);
-    m_cbData.matProj = TMatrix::PerspectiveFovLH(1.0f, 
+    m_cbData.matProj = XMatrix::PerspectiveFovLH(1.0f, 
         100.0f, TBASIS_PI * 0.5f, 
         (float)g_rtClient.right / (float)g_rtClient.bottom);
 

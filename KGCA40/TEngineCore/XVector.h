@@ -1,6 +1,4 @@
 #pragma once
-#include <math.h>
-#pragma once
 #include <Windows.h>
 #include <math.h>
 
@@ -38,44 +36,44 @@ namespace TBASIS_VECTOR {
 			float v[4];
 		};
 	};
-	class TVector3 : public float3
+	class XVector3 : public float3
 	{
 	public:
-		TVector3();
-		TVector3(const TVector3& v0);
-		TVector3(float fX, float fY, float fZ);
+		XVector3();
+		XVector3(const XVector3& v0);
+		XVector3(float fX, float fY, float fZ);
 		// 연산자 재정의 
-		TVector3 operator + (TVector3 const& v0);
-		TVector3 operator - (TVector3 const& v0);
-		TVector3 operator * (float const& fScala);
-		TVector3 operator + (float const& fScala);
-		TVector3 operator / (float const& fScala);
+		XVector3 operator + (XVector3 const& v0);
+		XVector3 operator - (XVector3 const& v0);
+		XVector3 operator * (float const& fScala);
+		XVector3 operator + (float const& fScala);
+		XVector3 operator / (float const& fScala);
 		// Dot Product
-		float operator | (TVector3 const& v0);
+		float operator | (XVector3 const& v0);
 		// Cross Product
-		TVector3 operator ^ (TVector3 const& v0);
-		bool	operator == (TVector3 const& v0);
+		XVector3 operator ^ (XVector3 const& v0);
+		bool	operator == (XVector3 const& v0);
 		// 제곱
 		float LengthSquared();
 		// 원점으로 부터의 거리
 		float Length();
-		TVector3 Normal();
-		float Angle(TVector3& v0);
+		XVector3 Normal();
+		float Angle(XVector3& v0);
 	};
-	class TVector4 : public float4
+	class XVector4 : public float4
 	{
 	public:
-		TVector4();
-		TVector4(const TVector4& v0);
-		TVector4(float fX, float fY, float fZ, float fW);
+		XVector4();
+		XVector4(const XVector4& v0);
+		XVector4(float fX, float fY, float fZ, float fW);
 	};
 
-	class TVector2 : public float2
+	class XVector2 : public float2
 	{
 	public:
-		TVector2();
-		TVector2(const TVector2& v0);
-		TVector2(float fX, float fY);
+		XVector2();
+		XVector2(const XVector2& v0);
+		XVector2(float fX, float fY);
 	};
 }
 using namespace TBASIS_VECTOR;

@@ -1,106 +1,106 @@
 #pragma once
 #include <math.h>
-struct TVector2
+struct XVector2
 {
 	float x;
 	float y;
-	TVector2  operator += (TVector2 p)
+	XVector2  operator += (XVector2 p)
 	{
 		x += p.x;
 		y += p.y;
 		return *this;
 	}
-	TVector2  operator * (float s)
+	XVector2  operator * (float s)
 	{
-		TVector2 ret;
+		XVector2 ret;
 		ret.x = x * s;
 		ret.y = y * s;
 		return ret;
 	}
-	TVector2  operator / (float fValue)
+	XVector2  operator / (float fValue)
 	{
-		TVector2 ret;
+		XVector2 ret;
 		ret.x = x / fValue;
 		ret.y = y / fValue;
 		return ret;
 	}
-	TVector2  operator + (TVector2 p)
+	XVector2  operator + (XVector2 p)
 	{
-		TVector2 ret;
+		XVector2 ret;
 		ret.x = x + p.x;
 		ret.y = y + p.y;
 		return ret;
 	}
-	TVector2  operator - (TVector2 p)
+	XVector2  operator - (XVector2 p)
 	{
-		TVector2 ret;
+		XVector2 ret;
 		ret.x = x - p.x;
 		ret.y = y - p.y;
 		return ret;
 	}
 	// ³»Àû
-	float   operator | (TVector2 p);
-	float   DotProduct(TVector2 a, TVector2 b);
-	float   ProjectionPoint(TVector2 q1, TVector2 q2, TVector2 p);
-	TVector2 Normalize();
+	float   operator | (XVector2 p);
+	float   DotProduct(XVector2 a, XVector2 b);
+	float   ProjectionPoint(XVector2 q1, XVector2 q2, XVector2 p);
+	XVector2 Normalize();
 	float    Length();
 	//bool     PointToRect(Rect desk) { return true; };
 public:
-	TVector2() {}
-	TVector2(float x, float y)
+	XVector2() {}
+	XVector2(float x, float y)
 	{
 		this->x = x;
 		this->y = y;
 	}
 };
-class TVector3
+class XVector3
 {
 public:
 	float x;
 	float y;
 	float z;
-	TVector3  operator += (TVector3 p)
+	XVector3  operator += (XVector3 p)
 	{
 		x += p.x;
 		y += p.y;
 		z += p.z;
 		return *this;
 	}
-	TVector3  operator * (float s)
+	XVector3  operator * (float s)
 	{
-		TVector3 ret;
+		XVector3 ret;
 		ret.x = x * s;
 		ret.y = y * s;
 		ret.z = z * s;
 		return ret;
 	}
-	TVector3  operator + (TVector3 p)
+	XVector3  operator + (XVector3 p)
 	{
-		TVector3 ret;
+		XVector3 ret;
 		ret.x = x + p.x;
 		ret.y = y + p.y;
 		ret.z = z + p.z;
 		return ret;
 	}
-	TVector3  operator - (TVector3 p)
+	XVector3  operator - (XVector3 p)
 	{
-		TVector3 ret;
+		XVector3 ret;
 		ret.x = x - p.x;
 		ret.y = y - p.y;
 		ret.z = z - p.z;
 		return ret;
 	}
-	TVector3  operator / (float fValue)
+	XVector3  operator / (float fValue)
 	{
-		TVector3 ret;
+		XVector3 ret;
 		ret.x = x / fValue;
 		ret.y = y / fValue;
 		ret.z = z / fValue;
 		return ret;
 	}
 public:
-	TVector3() {}
-	TVector3(float x, float y, float z)
+	XVector3() {}
+	XVector3(float x, float y, float z)
 	{
 		this->x = x;
 		this->y = y;
@@ -108,11 +108,3 @@ public:
 	}
 };
 
-class TVector4
-{
-public:
-	float x;
-	float y;
-	float z;
-	float w;
-};

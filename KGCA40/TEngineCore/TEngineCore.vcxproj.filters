@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Sample">
+      <UniqueIdentifier>{82feef8d-da03-4726-a19d-c77c2465d4eb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="TCore.cpp">
@@ -36,11 +39,14 @@
     <ClCompile Include="TWrite.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="TMatrix.cpp">
+    <ClCompile Include="TMath.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="TVector.cpp">
-      <Filter>소스 파일</Filter>
+    <ClCompile Include="XMatrix.cpp">
+      <Filter>Sample</Filter>
+    </ClCompile>
+    <ClCompile Include="XVector.cpp">
+      <Filter>Sample</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -68,11 +74,14 @@
     <ClInclude Include="TWrite.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="TMatrix.h">
+    <ClInclude Include="TMath.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="TVector.h">
-      <Filter>헤더 파일</Filter>
+    <ClInclude Include="XVector.h">
+      <Filter>Sample</Filter>
+    </ClInclude>
+    <ClInclude Include="XMatrix.h">
+      <Filter>Sample</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

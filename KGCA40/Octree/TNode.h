@@ -12,11 +12,11 @@ public:
 	TNode*		m_pParent;
 public:	
 	bool		AddObject(int index);
-	bool		IsRect(TVector3 pos);
+	bool		IsRect(XVector3 pos);
 public:
 	TNode() {};
 	TNode(float x, float y, float z, float w, float h, float t);
-	TNode(TVector3 vPivot, TVector3 vSize);
+	TNode(XVector3 vPivot, XVector3 vSize);
 	~TNode();
 };
 

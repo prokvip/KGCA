@@ -64,7 +64,7 @@ void TQuadtree::Buildtree(TNode* pNode)
 		Buildtree(pNode->m_pChild[3]);		
 	}
 }
-TNode* TQuadtree::FindNode(TNode* pNode, TVector2 pos)
+TNode* TQuadtree::FindNode(TNode* pNode, XVector2 pos)
 {
 	do {
 		for (int iNode = 0; iNode < 4; iNode++)
@@ -82,7 +82,7 @@ TNode* TQuadtree::FindNode(TNode* pNode, TVector2 pos)
 	} while (pNode);
 	return pNode;
 }
-bool    TQuadtree::AddObject(TVector2 pos)
+bool    TQuadtree::AddObject(XVector2 pos)
 {
 	TNode* pFindNode = FindNode(m_pRootNode, pos);
 	if (pFindNode != nullptr)
@@ -92,7 +92,7 @@ bool    TQuadtree::AddObject(TVector2 pos)
 	}
 	return false;
 }
-TNode*    TQuadtree::FindPlayerNode(TVector2 pos)
+TNode*    TQuadtree::FindPlayerNode(XVector2 pos)
 {
 	TNode* pFindNode = FindNode(m_pRootNode, pos);
 	if (pFindNode != nullptr)

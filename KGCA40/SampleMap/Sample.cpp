@@ -18,8 +18,8 @@ bool Sample::Init()
     }
 
     m_Camera.Init();
-    m_Camera.CreateViewMatrix(  TVector3(16,3,-31), 
-                                TVector3(16,3,100000));
+    m_Camera.CreateViewMatrix(  XVector3(16,3,-31), 
+                                XVector3(16,3,100000));
     m_Camera.CreateProjMatrix(1.0f,
         1000.0f, TBASIS_PI * 0.5f,
         (float)g_rtClient.right / (float)g_rtClient.bottom);

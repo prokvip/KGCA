@@ -1,5 +1,5 @@
 #include "Sample.h"
-#include "TVector.h"
+#include "XVector.h"
 TBASIS_RUN(SampleLibrary)
 
 Sample::Sample()

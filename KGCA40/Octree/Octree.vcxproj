@@ -147,7 +147,7 @@
     <ClCompile Include="TObject.cpp" />
     <ClCompile Include="TOctree.cpp" />
     <ClCompile Include="TStd.cpp" />
-    <ClCompile Include="TVector.cpp" />
+    <ClCompile Include="XVector.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TCollision.h" />
@@ -155,7 +155,7 @@
     <ClInclude Include="TObject.h" />
     <ClInclude Include="TOctree.h" />
     <ClInclude Include="TStd.h" />
-    <ClInclude Include="TVector.h" />
+    <ClInclude Include="XVector.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />

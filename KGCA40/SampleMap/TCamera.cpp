@@ -4,12 +4,12 @@ bool TCamera::Init()
 {
     return true;
 }
-TMatrix     TCamera::CreateViewMatrix(
-    TVector3 vPos, TVector3 vTarget, TVector3 vUp)
+XMatrix     TCamera::CreateViewMatrix(
+    XVector3 vPos, XVector3 vTarget, XVector3 vUp)
 {
     m_vCameraPos = vPos;
     m_vCameraTarget = vTarget;
-    m_matView= TMatrix::ViewLookAt(
+    m_matView= XMatrix::ViewLookAt(
         m_vCameraPos, m_vCameraTarget, vUp);
     m_vSide.x = m_matView._11;
     m_vSide.y = m_matView._21;
@@ -24,10 +24,10 @@ TMatrix     TCamera::CreateViewMatrix(
     m_vLook.z = m_matView._33;
     return m_matView;
 }
-TMatrix  	TCamera::CreateProjMatrix(
+XMatrix  	TCamera::CreateProjMatrix(
     float fNear, float fFar, float fFov, float fAspect)
 {
-    m_matProj = TMatrix::PerspectiveFovLH(fNear,
+    m_matProj = XMatrix::PerspectiveFovLH(fNear,
         fFar, fFov,
         fAspect);
     return m_matProj;

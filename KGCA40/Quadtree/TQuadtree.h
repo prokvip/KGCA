@@ -15,10 +15,10 @@ public:
 	bool    Init(int iWidth, int iHeight);
 	TNode*  CreateNode(TNode* pParent, float x, float y, float w, float h);
 	void	Buildtree(TNode*);
-	bool    AddObject(TVector2 pos);
-	TNode*  FindNode(TNode* pNode, TVector2 pos);
+	bool    AddObject(XVector2 pos);
+	TNode*  FindNode(TNode* pNode, XVector2 pos);
 	void    Release();
-	TNode*  FindPlayerNode(TVector2 pos);
+	TNode*  FindPlayerNode(XVector2 pos);
 public:
 	void	Frame(float time);
 public:

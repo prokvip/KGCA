@@ -5,12 +5,12 @@ class TObject
 public:
 	int			m_iNodeIndex;	
 	float		m_fMass;
-	TVector3	m_vPos;
-	TVector3	m_vVelocity; //속도
-	TVector3	m_vAcceleration; //가속도
-	TVector3	m_vForces; //모든 힘 합산
+	XVector3	m_vPos;
+	XVector3	m_vVelocity; //속도
+	XVector3	m_vAcceleration; //가속도
+	XVector3	m_vForces; //모든 힘 합산
 	TBox		m_tRect;
 public:
 	TObject();
-	TObject(TVector3 vPos, TVector3 rect);
+	TObject(XVector3 vPos, XVector3 rect);
 };

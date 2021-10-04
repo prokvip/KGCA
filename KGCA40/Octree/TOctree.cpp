@@ -23,7 +23,7 @@ void	TOctree::Frame(float time)
 	m_pPlayer->m_vVelocity.y = 0.0f;
 	m_pPlayer->m_vPos += m_pPlayer->m_vVelocity * time;
 
-	TVector3 vHalf = m_pPlayer->m_tRect.vSize / 2.0f;
+	XVector3 vHalf = m_pPlayer->m_tRect.vSize / 2.0f;
 	m_pPlayer->m_tRect.vPivot = { m_pPlayer->m_vPos.x - vHalf.x, m_pPlayer->m_vPos.y - vHalf.y, m_pPlayer->m_vPos.z + vHalf.z };
 	m_pPlayer->m_tRect.vMin = { m_pPlayer->m_vPos.x - vHalf.x, m_pPlayer->m_vPos.y - vHalf.y, m_pPlayer->m_vPos.z - vHalf.z };
 	m_pPlayer->m_tRect.vMax = { m_pPlayer->m_vPos.x + vHalf.x, m_pPlayer->m_vPos.y + vHalf.y, m_pPlayer->m_vPos.z + vHalf.z };
@@ -38,7 +38,7 @@ bool    TOctree::Init(float fMaxX, float fMaxY, float fMaxZ)
 {	
 	m_pPlayer = new TObject();
 	m_vSize = { fMaxX, fMaxY, fMaxZ };
-	m_pRootNode = CreateNode(nullptr, TVector3(0, 0, 0), m_vSize);
+	m_pRootNode = CreateNode(nullptr, XVector3(0, 0, 0), m_vSize);
 	Buildtree(m_pRootNode);
 	AddObject(m_pPlayer);
 	return true;
@@ -48,29 +48,29 @@ void TOctree::Buildtree(TNode* pNode)
 {
 	if (pNode->m_tRect.vSize.x >= 30.0f &&  pNode->m_tRect.vSize.y >= 30.0f && pNode->m_tRect.vSize.z >= 30.0f)
 	{
-		TVector3  vHalf = pNode->m_tRect.vSize / 2.0f;
+		XVector3  vHalf = pNode->m_tRect.vSize / 2.0f;
 		pNode->m_pChild[0] = CreateNode(pNode, 	pNode->m_tRect.vPivot, vHalf);
 		Buildtree(pNode->m_pChild[0]);
 		
-		pNode->m_pChild[1] = CreateNode(pNode, TVector3(pNode->m_tRect.vPivot.x + vHalf.x, pNode->m_tRect.vPivot.y, pNode->m_tRect.vPivot.z),vHalf);
+		pNode->m_pChild[1] = CreateNode(pNode, XVector3(pNode->m_tRect.vPivot.x + vHalf.x, pNode->m_tRect.vPivot.y, pNode->m_tRect.vPivot.z),vHalf);
 		Buildtree(pNode->m_pChild[1]);
 
-		pNode->m_pChild[2] = CreateNode(pNode, TVector3(pNode->m_tRect.vPivot.x + vHalf.x, pNode->m_tRect.vPivot.y, pNode->m_tRect.vPivot.z-vHalf.z), vHalf);
+		pNode->m_pChild[2] = CreateNode(pNode, XVector3(pNode->m_tRect.vPivot.x + vHalf.x, pNode->m_tRect.vPivot.y, pNode->m_tRect.vPivot.z-vHalf.z), vHalf);
 		Buildtree(pNode->m_pChild[2]);
 		
-		pNode->m_pChild[3] = CreateNode(pNode, TVector3(pNode->m_tRect.vPivot.x, pNode->m_tRect.vPivot.y, pNode->m_tRect.vPivot.z - vHalf.z), vHalf);
+		pNode->m_pChild[3] = CreateNode(pNode, XVector3(pNode->m_tRect.vPivot.x, pNode->m_tRect.vPivot.y, pNode->m_tRect.vPivot.z - vHalf.z), vHalf);
 		Buildtree(pNode->m_pChild[3]);		
 
-		pNode->m_pChild[4] = CreateNode(pNode, TVector3(pNode->m_tRect.vPivot.x, pNode->m_tRect.vPivot.y+vHalf.y, pNode->m_tRect.vPivot.z), vHalf);
+		pNode->m_pChild[4] = CreateNode(pNode, XVector3(pNode->m_tRect.vPivot.x, pNode->m_tRect.vPivot.y+vHalf.y, pNode->m_tRect.vPivot.z), vHalf);
 		Buildtree(pNode->m_pChild[4]);
 
-		pNode->m_pChild[5] = CreateNode(pNode, TVector3(pNode->m_tRect.vPivot.x + vHalf.x, pNode->m_tRect.vPivot.y + vHalf.y, pNode->m_tRect.vPivot.z), vHalf);
+		pNode->m_pChild[5] = CreateNode(pNode, XVector3(pNode->m_tRect.vPivot.x + vHalf.x, pNode->m_tRect.vPivot.y + vHalf.y, pNode->m_tRect.vPivot.z), vHalf);
 		Buildtree(pNode->m_pChild[5]);
 
-		pNode->m_pChild[6] = CreateNode(pNode, TVector3(pNode->m_tRect.vPivot.x + vHalf.x, pNode->m_tRect.vPivot.y + vHalf.y, pNode->m_tRect.vPivot.z - vHalf.z), vHalf);
+		pNode->m_pChild[6] = CreateNode(pNode, XVector3(pNode->m_tRect.vPivot.x + vHalf.x, pNode->m_tRect.vPivot.y + vHalf.y, pNode->m_tRect.vPivot.z - vHalf.z), vHalf);
 		Buildtree(pNode->m_pChild[6]);
 
-		pNode->m_pChild[7] = CreateNode(pNode, TVector3(pNode->m_tRect.vPivot.x, pNode->m_tRect.vPivot.y + vHalf.y, pNode->m_tRect.vPivot.z - vHalf.z), vHalf);
+		pNode->m_pChild[7] = CreateNode(pNode, XVector3(pNode->m_tRect.vPivot.x, pNode->m_tRect.vPivot.y + vHalf.y, pNode->m_tRect.vPivot.z - vHalf.z), vHalf);
 		Buildtree(pNode->m_pChild[7]);
 	}
 }
@@ -131,7 +131,7 @@ void TOctree::Release()
 	 }
 	m_ObjectList.clear();
 }
-TNode* TOctree::CreateNode(TNode* pParent, TVector3 vPivot, TVector3 vSize)
+TNode* TOctree::CreateNode(TNode* pParent, XVector3 vPivot, XVector3 vSize)
 {
 	TNode* pNode =	new TNode(vPivot, vSize);
 	if (pParent != nullptr)
