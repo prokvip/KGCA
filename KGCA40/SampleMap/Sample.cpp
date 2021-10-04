@@ -64,7 +64,7 @@ bool Sample::Frame()
     // 0 ~ +1 -> -1 ~ 1 => 0.5f*2.0f-1.0f;
     // D3D11_USAGE_DEFAULT
     //m_cbData.matWorld._11 = cosf(g_fGameTimer)*0.5f+0.5f;
-    m_cbData.matWorld = TMatrix::RotationY(g_fGameTimer);
+    //m_cbData.matWorld = TMatrix::RotationY(g_fGameTimer);
     //DirectX::SimpleMath::Matrix  mat;
     //mat = mat.CreateRotationY(g_fGameTimer);
     //memcpy( &m_cbData.matWorld,    &mat, sizeof(TMatrix));
