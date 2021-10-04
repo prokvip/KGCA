@@ -21,6 +21,7 @@ struct CB_DATA
 };
 class TModel 
 {
+public:
 	CB_DATA				m_cbData;
 	ID3DBlob* m_pVSBlob = nullptr;
 	ID3D11Buffer* m_pVertexBuffer;
@@ -30,6 +31,9 @@ class TModel
 	ID3D11PixelShader* m_pPS;
 	std::vector< SimpleVertex> m_VertexList;
 public:
+	TMatrix		m_matWorld;
+public:
+	virtual bool	CreateVertexData();
 	HRESULT		CreateConstantBuffer();
 	HRESULT		CreateVertexBuffer();
 	HRESULT		CreateVertexLayout();
@@ -38,7 +42,7 @@ public:
 	void		SetMatrix(TMatrix* pMatWorld,
 		TMatrix* pMatView, TMatrix* pMatProj);
 public:
-	bool   Init();
+	bool   Init();	
 	bool   Frame();
 	bool   Render(ID3D11DeviceContext* pContext);
 	bool   Release();

@@ -3,9 +3,18 @@ void		TModel::SetMatrix(
     TMatrix* pMatWorld,
     TMatrix* pMatView, TMatrix* pMatProj)
 {
-    m_cbData.matWorld = pMatWorld->Transpose();
-    m_cbData.matView = pMatView->Transpose();
-    m_cbData.matProj = pMatProj->Transpose();
+    if (pMatWorld != nullptr)
+    {
+        m_cbData.matWorld = pMatWorld->Transpose();
+    }
+    if (pMatView != nullptr)
+    {
+        m_cbData.matView = pMatView->Transpose();
+    }
+    if (pMatProj != nullptr)
+    {
+        m_cbData.matProj = pMatProj->Transpose();
+    }
 }
 bool  TModel::LoadObject(std::wstring filename)
 {
@@ -155,14 +164,23 @@ HRESULT TModel::LoadShader()
     PSBlob->Release();
     return hr;
 }
-
-bool TModel::Init()
+bool	TModel::CreateVertexData()
 {
-    LoadObject(L"ObjectData.txt");
-    CreateConstantBuffer();
-    CreateVertexBuffer();
-    LoadShader();
-    CreateVertexLayout();
+    if (m_VertexList.size() > 0)
+    {
+        return true;
+    }
+    return false;
+}
+bool TModel::Init()
+{    
+    if (CreateVertexData())
+    {
+        CreateConstantBuffer();
+        CreateVertexBuffer();
+        LoadShader();
+        CreateVertexLayout();
+    }
     return false;
 }
 
@@ -173,6 +191,8 @@ bool TModel::Frame()
 
 bool TModel::Render(ID3D11DeviceContext* pContext)
 {
+    if (m_VertexList.size() <= 0) return true;
+
     pContext->UpdateSubresource(
         m_pConstantBuffer, 0, NULL, &m_cbData, 0, 0);
     pContext->VSSetConstantBuffers(

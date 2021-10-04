@@ -4,12 +4,29 @@ TBASIS_RUN(SampleLibrary)
 Sample::Sample()
 {
     m_pSpeed = 3.0f;
-    m_vCameraPos = { 3,3, -5.0f };
-    m_vCameraTarget = { 0,0,0.0f };
+    m_vCameraPos =    { 8, 20, -20.0f };
+    m_vCameraTarget = { 8, 0, -19.0f };
 }
 bool Sample::Init()
 {
-    m_BoxObj.Init();
+    TMapInfo info{
+            64 + 1, 
+            64 + 1, 0,0, 0,     
+            1.0f
+    };
+    if (m_Map.Load(info))
+    {
+        m_Map.Init();
+    }
+
+    m_vCameraPos = { m_Map.m_info.m_iNumCol/2.0f, m_Map.m_info.m_iNumCol / 2.0f, -(m_Map.m_info.m_iNumRow / 2.0f) };
+    m_vCameraTarget = { m_Map.m_info.m_iNumCol / 2.0f, 0, -(m_Map.m_info.m_iNumRow / 2.0f)+1.0f };
+
+    for (int iObj = 0; iObj < 2; iObj++)
+    {
+        m_BoxObj[iObj].LoadObject(L"ObjectData.txt");
+        m_BoxObj[iObj].Init();
+    }
     return true;
 }
 bool Sample::Frame()
@@ -32,6 +49,14 @@ bool Sample::Frame()
         m_vCameraPos.x += m_pSpeed * g_fSecPerFrame;
         m_vCameraTarget.x += m_pSpeed * g_fSecPerFrame;
     }
+    if (g_Input.GetKey('Q') >= KEY_PUSH)
+    {
+        m_vCameraPos.y -= m_pSpeed * g_fSecPerFrame;
+    }
+    if (g_Input.GetKey('R') >= KEY_HOLD)
+    {
+        m_vCameraPos.y += m_pSpeed * g_fSecPerFrame;
+    }
     // -1 ~ +1 -> 0 ~ 1 => -1*0.5f+0.5f;
     // 0 ~ +1 -> -1 ~ 1 => 0.5f*2.0f-1.0f;
     // D3D11_USAGE_DEFAULT
@@ -42,24 +67,46 @@ bool Sample::Frame()
     m_cbData.matView = TMatrix::ViewLookAt(
         m_vCameraPos, m_vCameraTarget, vUp);
     m_cbData.matProj = TMatrix::PerspectiveFovLH(1.0f, 
-        100.0f, TBASIS_PI * 0.5f, 
+        1000.0f, TBASIS_PI * 0.5f, 
         (float)g_rtClient.right / (float)g_rtClient.bottom);
 
+    m_Map.Frame();
+    for (int iObj = 0; iObj < 2; iObj++)
+    {
+        m_BoxObj[iObj].Frame();
+    }
     return true;
 }
 
 bool Sample::Render()
 {
-    m_BoxObj.SetMatrix(
-        &m_cbData.matWorld, 
-        &m_cbData.matView, 
+    m_Map.SetMatrix(
+        nullptr,
+        &m_cbData.matView,
         &m_cbData.matProj);
-    m_BoxObj.Render(m_pImmediateContext);
+    m_Map.Render(m_pImmediateContext);
+
+    m_BoxObj[0].m_matWorld._41= -3.0f;
+    m_BoxObj[1].m_matWorld._41 = 3.0f;
+
+    for (int iObj = 0; iObj < 2; iObj++)
+    {        
+        m_BoxObj[iObj].SetMatrix(
+            &m_BoxObj[iObj].m_matWorld,
+            &m_cbData.matView,
+            &m_cbData.matProj);
+        m_BoxObj[iObj].Render(m_pImmediateContext);
+    }
+   
     return false;
 }
 
 bool Sample::Release()
 {
-    m_BoxObj.Release();
+    m_Map.Release();
+    for (int iObj = 0; iObj < 2; iObj++)
+    {
+        m_BoxObj[iObj].Release();
+    }
     return false;
 }
