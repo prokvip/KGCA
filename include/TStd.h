@@ -10,11 +10,14 @@
 #include <assert.h>
 #include <d3dcompiler.h>
 #include "TMatrix.h"
+#include "SimpleMath.h"
 #pragma comment	(lib, "D3DCompiler.lib")
 #pragma comment	(lib, "TEngineCore.lib")
 #pragma comment	(lib, "d3d11.lib")
 #pragma comment	(lib, "dxgi.lib")
 #pragma comment	(lib, "DirectXTK.lib")
+
+using namespace DirectX::SimpleMath;
 
 extern float g_fSecPerFrame;
 extern float g_fGameTimer;
