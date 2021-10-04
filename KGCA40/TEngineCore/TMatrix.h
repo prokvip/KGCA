@@ -36,6 +36,15 @@ public:
 		matRet._21 = -fSin; matRet._22 = fCos;
 		return matRet;
 	}
+	static TMatrix RotationY(float fRadian)
+	{
+		TMatrix matRet;
+		float fCos = cosf(fRadian);
+		float fSin = sinf(fRadian);
+		matRet._11 = fCos; matRet._13 = -fSin;
+		matRet._31 = fSin; matRet._33 = fCos;
+		return matRet;
+	}
 	TMatrix Transpose()
 	{
 		TMatrix matrix;

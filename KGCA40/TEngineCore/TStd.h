@@ -14,6 +14,7 @@
 #pragma comment	(lib, "TEngineCore.lib")
 #pragma comment	(lib, "d3d11.lib")
 #pragma comment	(lib, "dxgi.lib")
+#pragma comment	(lib, "DirectXTK.lib")
 
 extern float g_fSecPerFrame;
 extern float g_fGameTimer;
