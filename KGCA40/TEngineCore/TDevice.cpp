@@ -1,5 +1,5 @@
 #include "TDevice.h"
-
+ID3D11Device* g_pd3dDevice = nullptr;
 bool	TDevice::SetDevice()
 {
 	HRESULT hr;
@@ -11,6 +11,7 @@ bool	TDevice::SetDevice()
 	{
 		return false;
 	}
+	g_pd3dDevice = m_pd3dDevice;
 	if (FAILED(CreateSwapChain(g_hWnd,
 		g_rtClient.right,
 		g_rtClient.bottom)))

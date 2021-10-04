@@ -18,10 +18,10 @@
     <ClInclude Include="Sample.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="TVector.h">
+    <ClInclude Include="TModel.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="TMatrix.h">
+    <ClInclude Include="TShape.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
@@ -29,10 +29,10 @@
     <ClCompile Include="Sample.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="TVector.cpp">
+    <ClCompile Include="TModel.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="TMatrix.cpp">
+    <ClCompile Include="TShape.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

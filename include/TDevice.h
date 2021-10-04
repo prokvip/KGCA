@@ -1,10 +1,6 @@
 #pragma once
 #include "TStd.h"
-#include <d3d11.h>
-#include <dxgi.h>
-#include <assert.h>
-#pragma comment	(lib, "d3d11.lib")
-#pragma comment		(lib, "dxgi.lib")
+
 class TDevice
 {
 public:

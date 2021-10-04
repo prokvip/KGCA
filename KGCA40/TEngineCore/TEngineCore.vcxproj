@@ -152,8 +152,10 @@ copy "*.h" "..\\..\include"</Command>
     <ClCompile Include="TCore.cpp" />
     <ClCompile Include="TDevice.cpp" />
     <ClCompile Include="TInput.cpp" />
+    <ClCompile Include="TMatrix.cpp" />
     <ClCompile Include="TSound.cpp" />
     <ClCompile Include="TTimer.cpp" />
+    <ClCompile Include="TVector.cpp" />
     <ClCompile Include="TWindow.cpp" />
     <ClCompile Include="TWrite.cpp" />
   </ItemGroup>
@@ -161,9 +163,11 @@ copy "*.h" "..\\..\include"</Command>
     <ClInclude Include="TCore.h" />
     <ClInclude Include="TDevice.h" />
     <ClInclude Include="TInput.h" />
+    <ClInclude Include="TMatrix.h" />
     <ClInclude Include="TSound.h" />
     <ClInclude Include="TStd.h" />
     <ClInclude Include="TTimer.h" />
+    <ClInclude Include="TVector.h" />
     <ClInclude Include="TWindow.h" />
     <ClInclude Include="TWrite.h" />
   </ItemGroup>

@@ -1,6 +1,4 @@
 #pragma once
-#include <math.h>
-#pragma once
 #include <Windows.h>
 #include <math.h>
 

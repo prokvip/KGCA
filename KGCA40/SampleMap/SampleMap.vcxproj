@@ -144,13 +144,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Sample.h" />
-    <ClInclude Include="TMatrix.h" />
-    <ClInclude Include="TVector.h" />
+    <ClInclude Include="TModel.h" />
+    <ClInclude Include="TShape.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Sample.cpp" />
-    <ClCompile Include="TMatrix.cpp" />
-    <ClCompile Include="TVector.cpp" />
+    <ClCompile Include="TModel.cpp" />
+    <ClCompile Include="TShape.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TEngineCore\TEngineCore.vcxproj">

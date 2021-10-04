@@ -5,13 +5,21 @@
 #include <map>
 #include <vector>
 #include <list>
+#include <d3d11.h>
+#include <dxgi.h>
+#include <assert.h>
+#include <d3dcompiler.h>
+#include "TMatrix.h"
+#pragma comment	(lib, "D3DCompiler.lib")
 #pragma comment	(lib, "TEngineCore.lib")
+#pragma comment	(lib, "d3d11.lib")
+#pragma comment	(lib, "dxgi.lib")
 
 extern float g_fSecPerFrame;
 extern float g_fGameTimer;
 extern HWND  g_hWnd;
 extern RECT  g_rtClient;
-
+extern ID3D11Device* g_pd3dDevice;
 template<class T>
 class TSingleton
 {
