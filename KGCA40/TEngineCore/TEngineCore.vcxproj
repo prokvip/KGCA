@@ -129,8 +129,13 @@
     </Link>
     <PostBuildEvent>
       <Command>copy "..\\..\\output\\TEngineCore.lib" "..\\..\\lib\\TEngineCore.lib"
-copy "*.h" "..\\..\include"</Command>
+copy "*.h" "..\\..\include"
+</Command>
     </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>
+      </Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>

@@ -306,8 +306,12 @@
     </Link>
     <PostBuildEvent>
       <Command>copy "..\\..\\output\\DirectXTK.lib" "..\\..\\lib\\DirectXTK.lib"
-copy "inc\\*.h" "..\\..\include\\dxtk"</Command>
+copy "inc\\*.h" "..\\..\\include\\dxtk"
+copy "inc\\*.inl" "..\\..\\include\\dxtk"</Command>
     </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>md "..\\..\\include\\dxtk"</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">
     <ClCompile>
