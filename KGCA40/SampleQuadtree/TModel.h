@@ -1,8 +1,6 @@
 #pragma once
-#include <TCore.h>
-#include <d3dcompiler.h>
-#include "XMatrix.h"
-#pragma comment	(lib, "D3DCompiler.lib")
+#include "TStd.h"
+
 struct SimpleVertex
 {
 	TVector3 pos;
@@ -21,34 +19,38 @@ struct CB_DATA
 	TMatrix  matView;
 	TMatrix  matProj;
 };
-class Sample : public TCore
+class TModel 
 {
-	float				m_pSpeed;
-	TVector3			m_vCameraPos;
-	TVector3			m_vCameraTarget;
+public:
 	CB_DATA				m_cbData;
-	ID3DBlob*			m_pVSBlob = nullptr;
-	ID3D11Buffer*		m_pVertexBuffer;
-	ID3D11Buffer*		m_pIndexBuffer;
-	ID3D11Buffer*		m_pConstantBuffer;
-	ID3D11InputLayout*	m_pVertexLayout;
+	ID3DBlob* m_pVSBlob = nullptr;
+	ID3D11Buffer* m_pVertexBuffer;
+	ID3D11Buffer* m_pIndexBuffer;
+	ID3D11Buffer* m_pConstantBuffer;
+	ID3D11InputLayout* m_pVertexLayout;
 	ID3D11VertexShader* m_pVS;
-	ID3D11PixelShader*  m_pPS;
-	std::vector< SimpleVertex> m_VertexList;
+	ID3D11PixelShader* m_pPS;
+	std::vector< SimpleVertex> m_VertexList;	
 	std::vector< DWORD> m_IndexList;
 public:
+	TMatrix		m_matWorld;
+public:
+	virtual bool	CreateVertexData();
+	virtual bool	CreateIndexData();
 	HRESULT		CreateConstantBuffer();
 	HRESULT		CreateVertexBuffer();
 	HRESULT		CreateIndexBuffer();
 	HRESULT		CreateVertexLayout();
 	HRESULT		LoadShader();
 	bool		LoadObject(std::wstring filename);
+	void		SetMatrix(TMatrix* pMatWorld,
+		TMatrix* pMatView, TMatrix* pMatProj);
 public:
-	bool   Init();
+	bool   Init();	
 	bool   Frame();
-	bool   Render();
+	bool   Render(ID3D11DeviceContext* pContext);
 	bool   Release();
 public:
-	Sample();
+	TModel();
 };
 

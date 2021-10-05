@@ -1,7 +1,22 @@
-#include "Sample.h"
-#include "XVector.h"
-TBASIS_RUN(SampleLibrary)
-bool  Sample::LoadObject(std::wstring filename)
+#include "TModel.h"
+void		TModel::SetMatrix(
+    TMatrix* pMatWorld,
+    TMatrix* pMatView, TMatrix* pMatProj)
+{
+    if (pMatWorld != nullptr)
+    {
+        m_cbData.matWorld = pMatWorld->Transpose();
+    }
+    if (pMatView != nullptr)
+    {
+        m_cbData.matView = pMatView->Transpose();
+    }
+    if (pMatProj != nullptr)
+    {
+        m_cbData.matProj = pMatProj->Transpose();
+    }
+}
+bool  TModel::LoadObject(std::wstring filename)
 {
     FILE* fp = nullptr;
     _tfopen_s(&fp, filename.c_str(), _T("rt"));
@@ -33,19 +48,16 @@ bool  Sample::LoadObject(std::wstring filename)
     fclose(fp);
     return true;
 }
-Sample::Sample()
+TModel::TModel()
 {
-    m_pSpeed = 3.0f;
-    m_vCameraPos = { 3,3, -5.0f };
-    m_vCameraTarget = { 0,0,0.0f };
     m_pVertexBuffer = nullptr;
     m_pVertexLayout = nullptr;
     m_pVS = nullptr;
     m_pPS = nullptr;
 }
-HRESULT Sample::CreateConstantBuffer()
+HRESULT TModel::CreateConstantBuffer()
 {
-    HRESULT hr = S_OK;   
+    HRESULT hr = S_OK;
     D3D11_BUFFER_DESC bd;
     ZeroMemory(&bd, sizeof(D3D11_BUFFER_DESC));
     bd.ByteWidth = sizeof(CB_DATA);
@@ -54,11 +66,11 @@ HRESULT Sample::CreateConstantBuffer()
     D3D11_SUBRESOURCE_DATA data;
     ZeroMemory(&data, sizeof(D3D11_SUBRESOURCE_DATA));
     data.pSysMem = &m_cbData;
-    hr = m_pd3dDevice->CreateBuffer(&bd, &data, &m_pConstantBuffer);
+    hr = g_pd3dDevice->CreateBuffer(&bd, &data, &m_pConstantBuffer);
     if (FAILED(hr)) return hr;
     return hr;
 }
-HRESULT Sample::CreateVertexBuffer()
+HRESULT TModel::CreateVertexBuffer()
 {
     HRESULT hr = S_OK;
     // ·ÎÄ®->¿ùµå->ºä->Åõ¿µÁÂÇ¥°è(NDC)->È­¸é
@@ -76,24 +88,14 @@ HRESULT Sample::CreateVertexBuffer()
     D3D11_SUBRESOURCE_DATA data;
     ZeroMemory(&data, sizeof(D3D11_SUBRESOURCE_DATA));
     data.pSysMem = &m_VertexList.at(0);
-    hr = m_pd3dDevice->CreateBuffer(&bd, &data, &m_pVertexBuffer);
+    hr = g_pd3dDevice->CreateBuffer(&bd, &data, &m_pVertexBuffer);
     if (FAILED(hr)) return hr;
     return hr;
 }
-HRESULT Sample::CreateIndexBuffer()
+
+HRESULT TModel::CreateIndexBuffer()
 {
     HRESULT hr = S_OK;
-    m_IndexList.resize(6);
-    m_IndexList[0] = 0;
-    m_IndexList[1] = 1;
-    m_IndexList[2] = 2;
-    m_IndexList[3] = 2;
-    m_IndexList[4] = 1;
-    m_IndexList[5] = 3;
-    // 0      1
-
-
-    // 2      3
     D3D11_BUFFER_DESC bd;
     ZeroMemory(&bd, sizeof(D3D11_BUFFER_DESC));
     bd.ByteWidth = sizeof(DWORD) * m_IndexList.size();
@@ -102,25 +104,24 @@ HRESULT Sample::CreateIndexBuffer()
     D3D11_SUBRESOURCE_DATA data;
     ZeroMemory(&data, sizeof(D3D11_SUBRESOURCE_DATA));
     data.pSysMem = &m_IndexList.at(0);
-    hr = m_pd3dDevice->CreateBuffer(&bd, &data, &m_pIndexBuffer);
+    hr = g_pd3dDevice->CreateBuffer(&bd, &data, &m_pIndexBuffer);
     if (FAILED(hr)) return hr;
     return hr;
 }
-
-HRESULT Sample::CreateVertexLayout()
+HRESULT TModel::CreateVertexLayout()
 {
     HRESULT hr = S_OK;
     D3D11_INPUT_ELEMENT_DESC layout[2];
     ZeroMemory(layout, sizeof(D3D11_INPUT_ELEMENT_DESC) * 2);
     layout[0].SemanticName = "POSITION";
     layout[0].Format = DXGI_FORMAT_R32G32B32_FLOAT;
-    layout[0].AlignedByteOffset=0;
+    layout[0].AlignedByteOffset = 0;
     layout[0].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
     layout[1].SemanticName = "COLOR";
-    layout[1].Format= DXGI_FORMAT_R32G32B32A32_FLOAT;
-    layout[1].AlignedByteOffset=12;
+    layout[1].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+    layout[1].AlignedByteOffset = 12;
     layout[1].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
-    hr = m_pd3dDevice->CreateInputLayout(layout,2,
+    hr = g_pd3dDevice->CreateInputLayout(layout, 2,
         m_pVSBlob->GetBufferPointer(),
         m_pVSBlob->GetBufferSize(),
         &m_pVertexLayout);
@@ -130,7 +131,7 @@ HRESULT Sample::CreateVertexLayout()
     return hr;
 }
 
-HRESULT Sample::LoadShader()
+HRESULT TModel::LoadShader()
 {
     HRESULT hr = S_OK;
     ID3DBlob* error = nullptr;
@@ -142,7 +143,7 @@ HRESULT Sample::LoadShader()
         "vs_5_0",
         0,
         0,
-        &m_pVSBlob,        
+        &m_pVSBlob,
         &error);
     if (FAILED(hr))
     {
@@ -152,8 +153,8 @@ HRESULT Sample::LoadShader()
         return hr;
     }
 
-    hr = m_pd3dDevice->CreateVertexShader(
-        m_pVSBlob->GetBufferPointer(), 
+    hr = g_pd3dDevice->CreateVertexShader(
+        m_pVSBlob->GetBufferPointer(),
         m_pVSBlob->GetBufferSize(),
         NULL, &m_pVS);
     if (FAILED(hr)) return hr;
@@ -170,7 +171,7 @@ HRESULT Sample::LoadShader()
         &PSBlob,
         nullptr);
     if (FAILED(hr)) return hr;
-    hr = m_pd3dDevice->CreatePixelShader(
+    hr = g_pd3dDevice->CreatePixelShader(
         PSBlob->GetBufferPointer(),
         PSBlob->GetBufferSize(),
         NULL, &m_pPS);
@@ -178,75 +179,68 @@ HRESULT Sample::LoadShader()
     PSBlob->Release();
     return hr;
 }
-
-bool Sample::Init()
+bool	TModel::CreateVertexData()
 {
-    LoadObject(L"ObjectData.txt");
-    CreateConstantBuffer();
-    CreateVertexBuffer();
-    CreateIndexBuffer();
-    LoadShader();
-    CreateVertexLayout();    
+    if (m_VertexList.size() > 0)
+    {
+        return true;
+    }
+    return false;
+}
+bool	TModel::CreateIndexData()
+{
+    if (m_IndexList.size() > 0)
+    {
+        return true;
+    }
+    return false;
+}
+bool TModel::Init()
+{    
+    if (CreateVertexData()&& CreateIndexData())
+    {
+        CreateConstantBuffer();
+        CreateVertexBuffer();
+        CreateIndexBuffer();
+        LoadShader();
+        CreateVertexLayout();
+    }
     return false;
 }
 
-bool Sample::Frame()
-{
-    if (g_Input.GetKey('W') >= KEY_PUSH)
-    {
-        m_vCameraPos.z += m_pSpeed * g_fSecPerFrame;
-    }
-    if (g_Input.GetKey('S') >= KEY_HOLD)
-    {
-        m_vCameraPos.z -= m_pSpeed * g_fSecPerFrame;
-    }
-    if (g_Input.GetKey('A') >= KEY_PUSH)
-    {
-        m_vCameraPos.x -= m_pSpeed * g_fSecPerFrame;
-        m_vCameraTarget.x -= m_pSpeed * g_fSecPerFrame;
-    }
-    if (g_Input.GetKey('D') >= KEY_HOLD)
-    {
-        m_vCameraPos.x += m_pSpeed * g_fSecPerFrame;
-        m_vCameraTarget.x += m_pSpeed * g_fSecPerFrame;
-    }
-    TVector3 vUp = { 0,1,0.0f };
-    D3DXMatrixLookAtLH(&m_cbData.matView, &m_vCameraPos, &m_vCameraTarget, &vUp);
-    D3DXMatrixPerspectiveFovLH(&m_cbData.matProj, TBASIS_PI * 0.5f, 
-        (float)g_rtClient.right / (float)g_rtClient.bottom, 1, 1000);
-
-    m_cbData.matWorld = m_cbData.matWorld.Transpose();
-    m_cbData.matView = m_cbData.matView.Transpose();
-    m_cbData.matProj = m_cbData.matProj.Transpose();
-    m_pImmediateContext->UpdateSubresource(
-        m_pConstantBuffer,0,NULL, &m_cbData, 0,0);
-
-
-    return false;
+bool TModel::Frame()
+{     
+    return true;
 }
 
-bool Sample::Render()
+bool TModel::Render(ID3D11DeviceContext* pContext)
 {
-    m_pImmediateContext->VSSetConstantBuffers(
-        0, 1, &m_pConstantBuffer   );
-    m_pImmediateContext->VSSetShader(m_pVS, NULL, 0);
-    m_pImmediateContext->PSSetShader(m_pPS, NULL, 0);
-    m_pImmediateContext->IASetInputLayout(m_pVertexLayout);
+    if (m_VertexList.size() <= 0) return true;
+
+    pContext->UpdateSubresource(
+        m_pConstantBuffer, 0, NULL, &m_cbData, 0, 0);
+    pContext->VSSetConstantBuffers(
+        0, 1, &m_pConstantBuffer);
+    pContext->VSSetShader(m_pVS, NULL, 0);
+    pContext->PSSetShader(m_pPS, NULL, 0);
+    pContext->IASetInputLayout(m_pVertexLayout);
     UINT pStrides = sizeof(SimpleVertex);
     UINT pOffsets = 0;
-    m_pImmediateContext->IASetVertexBuffers(0, 1, &m_pVertexBuffer,
+    pContext->IASetVertexBuffers(0, 1, &m_pVertexBuffer,
         &pStrides, &pOffsets);
-    m_pImmediateContext->IASetIndexBuffer(m_pIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
+    pContext->IASetIndexBuffer(m_pIndexBuffer,
+        DXGI_FORMAT_R32_UINT, 0);
 
-    m_pImmediateContext->IASetPrimitiveTopology(
+    pContext->IASetPrimitiveTopology(
         D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-    m_pImmediateContext->DrawIndexed(m_IndexList.size(),0, 0);
+    pContext->DrawIndexed(m_IndexList.size(), 0, 0);
     return false;
 }
 
-bool Sample::Release()
+bool TModel::Release()
 {
     m_pVertexBuffer->Release();
+    m_pIndexBuffer->Release();
     m_pVertexLayout->Release();
     m_pConstantBuffer->Release();
     m_pVS->Release();
