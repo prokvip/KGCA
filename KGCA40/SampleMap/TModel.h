@@ -3,8 +3,8 @@
 
 struct SimpleVertex
 {
-	XVector3 pos;
-	XVector4 color;
+	TVector3 pos;
+	TVector4 color;
 	SimpleVertex()
 	{
 		color.x = 1.0f;
@@ -15,9 +15,9 @@ struct SimpleVertex
 };
 struct CB_DATA
 {
-	XMatrix  matWorld;
-	XMatrix  matView;
-	XMatrix  matProj;
+	TMatrix  matWorld;
+	TMatrix  matView;
+	TMatrix  matProj;
 };
 class TModel 
 {
@@ -31,7 +31,7 @@ public:
 	ID3D11PixelShader* m_pPS;
 	std::vector< SimpleVertex> m_VertexList;
 public:
-	XMatrix		m_matWorld;
+	TMatrix		m_matWorld;
 public:
 	virtual bool	CreateVertexData();
 	HRESULT		CreateConstantBuffer();
@@ -39,8 +39,8 @@ public:
 	HRESULT		CreateVertexLayout();
 	HRESULT		LoadShader();
 	bool		LoadObject(std::wstring filename);
-	void		SetMatrix(XMatrix* pMatWorld,
-		XMatrix* pMatView, XMatrix* pMatProj);
+	void		SetMatrix(TMatrix* pMatWorld,
+		TMatrix* pMatView, TMatrix* pMatProj);
 public:
 	bool   Init();	
 	bool   Frame();

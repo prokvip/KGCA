@@ -11,6 +11,7 @@
 #include <d3dcompiler.h>
 #include "XMatrix.h"
 #include "SimpleMath.h"
+#include "TMath.h"
 #pragma comment	(lib, "D3DCompiler.lib")
 #pragma comment	(lib, "TEngineCore.lib")
 #pragma comment	(lib, "d3d11.lib")

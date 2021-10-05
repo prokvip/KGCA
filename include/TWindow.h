@@ -14,7 +14,8 @@ public:
 	bool   InitWindow(HINSTANCE hInstance,
 		int nCmdShow,
 		const WCHAR* strWindowTitle);	
-	LRESULT MsgProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+	LRESULT WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+	virtual LRESULT MsgProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 	bool	Run();
 	virtual bool	GameInit();
 	virtual bool	GameRun();

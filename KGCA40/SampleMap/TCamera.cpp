@@ -4,13 +4,12 @@ bool TCamera::Init()
 {
     return true;
 }
-XMatrix     TCamera::CreateViewMatrix(
-    XVector3 vPos, XVector3 vTarget, XVector3 vUp)
+TMatrix     TCamera::CreateViewMatrix(
+    TVector3 vPos, TVector3 vTarget, TVector3 vUp)
 {
     m_vCameraPos = vPos;
     m_vCameraTarget = vTarget;
-    m_matView= XMatrix::ViewLookAt(
-        m_vCameraPos, m_vCameraTarget, vUp);
+    D3DXMatrixLookAtLH(&m_matView, &m_vCameraPos, &m_vCameraTarget, &vUp);
     m_vSide.x = m_matView._11;
     m_vSide.y = m_matView._21;
     m_vSide.z = m_matView._31;
@@ -24,12 +23,10 @@ XMatrix     TCamera::CreateViewMatrix(
     m_vLook.z = m_matView._33;
     return m_matView;
 }
-XMatrix  	TCamera::CreateProjMatrix(
+TMatrix  	TCamera::CreateProjMatrix(
     float fNear, float fFar, float fFov, float fAspect)
 {
-    m_matProj = XMatrix::PerspectiveFovLH(fNear,
-        fFar, fFov,
-        fAspect);
+    D3DXMatrixPerspectiveFovLH(&m_matProj, fFov, fAspect, fNear, fFar);
     return m_matProj;
 }
 bool TCamera::Frame()
@@ -94,48 +91,13 @@ TCamera::TCamera()
 TCamera::~TCamera()
 {
 }
-
-bool TDebugCamera::Frame()
+TMatrix TDebugCamera::Update(TVector4 vValue)
 {
-    if (g_Input.GetKey('W') >= KEY_PUSH)
-    {
-        m_vCameraPos = m_vCameraPos + m_vLook * m_pSpeed * g_fSecPerFrame;
-    }
-    if (g_Input.GetKey('S') >= KEY_HOLD)
-    {
-        m_vCameraPos = m_vCameraPos + m_vLook * -m_pSpeed * g_fSecPerFrame;
-    }   
-    
-    Vector3 vLook;
-    vLook.x= m_vLook.x;
-    vLook.y = m_vLook.y;
-    vLook.z = m_vLook.z;
-    Vector3 vTarget;
-    vTarget.x = m_vCameraPos.x;
-    vTarget.y = m_vCameraPos.y;
-    vTarget.z = m_vCameraPos.z; 
-    
-    Matrix matRotation, matY, matX;
-    if (g_Input.GetKey(VK_RIGHT) >= KEY_PUSH)
-    {
-        matRotation = Matrix::CreateRotationY(g_fSecPerFrame);
-    }
-    if (g_Input.GetKey(VK_LEFT) >= KEY_PUSH)
-    {
-        matRotation = Matrix::CreateRotationY(-g_fSecPerFrame);
-    }    
-    vLook = Vector3::Transform(vLook, matRotation);
-    vTarget.x = vTarget.x + vLook.x * 100.0f;
-    vTarget.y = vTarget.y + vLook.y * 100.0f;
-    vTarget.z = vTarget.z + vLook.z * 100.0f;
-
-    m_vCameraTarget.x = vTarget.x;
-    m_vCameraTarget.y = vTarget.y;
-    m_vCameraTarget.z = vTarget.z;
-
-
-    m_matView = CreateViewMatrix(m_vCameraPos, m_vCameraTarget);
-
+    TQuaternion q;
+    D3DXQuaternionRotationYawPitchRoll(&q, vValue.y, vValue.x, vValue.z);    
+    TMatrix matRotation;
+    D3DXMatrixAffineTransformation(&matRotation, 1.0f, NULL, &q, &m_vCameraPos);
+    D3DXMatrixInverse(&m_matView, NULL, &matRotation);
     m_vSide.x = m_matView._11;
     m_vSide.y = m_matView._21;
     m_vSide.z = m_matView._31;
@@ -147,5 +109,17 @@ bool TDebugCamera::Frame()
     m_vLook.x = m_matView._13;
     m_vLook.y = m_matView._23;
     m_vLook.z = m_matView._33;
+    return matRotation;
+}
+bool TDebugCamera::Frame()
+{
+    if (g_Input.GetKey('W') >= KEY_PUSH)
+    {
+        m_vCameraPos = m_vCameraPos + m_vLook * m_pSpeed * g_fSecPerFrame;
+    }
+    if (g_Input.GetKey('S') >= KEY_HOLD)
+    {
+        m_vCameraPos = m_vCameraPos + m_vLook * -m_pSpeed * g_fSecPerFrame;
+    }       
     return true;
 }

@@ -4,23 +4,24 @@ class TCamera
 {
 public:
 	float				m_pSpeed;
-	XVector3			m_vCameraPos;
-	XVector3			m_vCameraTarget;
-	XVector3			m_vLook;
-	XVector3			m_vSide;
-	XVector3			m_vUp;
+	TVector3			m_vCameraPos;
+	TVector3			m_vCameraTarget;
+	TVector3			m_vLook;
+	TVector3			m_vSide;
+	TVector3			m_vUp;
 public:
-	XMatrix m_matWorld;
-	XMatrix m_matView;
-	XMatrix m_matProj;
+	TMatrix m_matWorld;
+	TMatrix m_matView;
+	TMatrix m_matProj;
 public:
-	virtual XMatrix     CreateViewMatrix(XVector3 vPos, XVector3 vTarget, XVector3 vUp=XVector3(0,1,0));
-	virtual XMatrix  	CreateProjMatrix(float fNear, float fFar, float fFov, float fAspect);
+	virtual TMatrix     CreateViewMatrix(TVector3 vPos, TVector3 vTarget, TVector3 vUp= TVector3(0,1,0));
+	virtual TMatrix  	CreateProjMatrix(float fNear, float fFar, float fFov, float fAspect);
 public:
 	virtual bool		Init();
 	virtual bool		Frame();
 	virtual bool		Render();
 	virtual bool		Release();
+	
 public:
 	TCamera();
 	virtual ~TCamera();
@@ -30,5 +31,6 @@ class TDebugCamera : public TCamera
 {
 public:
 	virtual bool		Frame() override;
+	virtual TMatrix		Update(TVector4 vValue);
 };
 

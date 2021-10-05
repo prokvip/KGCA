@@ -4,15 +4,23 @@ TWindow* g_pWindow = nullptr;
 HWND  g_hWnd;
 RECT  g_rtClient;
 
-LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
-LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK StaticWndProc(HWND, UINT, WPARAM, LPARAM);
+LRESULT CALLBACK StaticWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     // 메세지 핸들링
     assert(g_pWindow);
-    return g_pWindow->MsgProc(hWnd, message, wParam, lParam);    
+    return g_pWindow->WndProc(hWnd, message, wParam, lParam);
 }
-LRESULT  TWindow::MsgProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+LRESULT TWindow::MsgProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
+    return 0;
+}
+LRESULT  TWindow::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+{
+    if (MsgProc(hWnd, message, wParam, lParam))
+    {
+        return 1;
+    }
     switch (message)
     {
     case WM_DESTROY:
@@ -34,7 +42,7 @@ bool   TWindow::InitWindow(
     ZeroMemory(&wcex, sizeof(WNDCLASSEXW));
     wcex.cbSize = sizeof(WNDCLASSEX);
     wcex.style = CS_HREDRAW | CS_VREDRAW;
-    wcex.lpfnWndProc = WndProc;
+    wcex.lpfnWndProc = StaticWndProc;
     wcex.hInstance = hInstance;
     wcex.hbrBackground = CreateSolidBrush(RGB(133,143,108));
     wcex.lpszClassName = L"KGCA";

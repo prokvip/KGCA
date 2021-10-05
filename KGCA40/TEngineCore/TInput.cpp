@@ -1,5 +1,63 @@
 #include "TInput.h"
-
+void   TInput::OnMove(int iX, int iY)
+{
+    if (m_bDrag)
+    {
+        m_pDrag.x = iX - m_pDragDown.x;
+        m_pDrag.y = iY - m_pDragDown.y;  
+    }
+    m_pDragDown.x = iX;
+    m_pDragDown.y = iY;
+    //std::string buffer;
+    //std::string b = std::to_string(iX);
+    //buffer = b + " " + std::to_string(m_pDragDown.x);
+    //OutputDebugStringA(buffer.c_str());
+    return;
+}
+void   TInput::OnBegin(int iX, int iY)
+{
+    m_bDrag = true;
+    m_pDragDown.x = iX;
+    m_pDragDown.y = iY;
+    return;
+}
+void   TInput::OnEnd()
+{
+    m_bMove = false;
+    m_bDrag = false;
+    m_pDrag.x = 0;
+    m_pDrag.y = 0;
+    return;
+}
+LRESULT TInput::MsgProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+{
+    int iMouseX = (short)LOWORD(lParam);
+    int iMouseY = (short)HIWORD(lParam);
+    switch (message)
+    {
+    case  WM_MOUSEMOVE:
+        OnMove(iMouseX, iMouseY);
+        return TRUE;
+    case WM_LBUTTONDOWN:
+        SetCapture(g_hWnd);
+        OnBegin(iMouseX, iMouseY);        
+        return TRUE;
+    case WM_LBUTTONUP:
+        ReleaseCapture();
+        OnEnd();
+        return TRUE;
+    /*case WM_RBUTTONDOWN:
+    case WM_RBUTTONUP:
+    case WM_MBUTTONDOWN:
+    case WM_MBUTTONUP:*/
+    case WM_MOUSEWHEEL:
+    {
+        m_iWheel = GET_WHEEL_DELTA_WPARAM(wParam);//120    
+        return 0;
+    }
+    }
+    return 0;
+}
 bool TInput::Init()
 {    
     ZeroMemory(&m_dwKeyState, sizeof(DWORD) * 256);

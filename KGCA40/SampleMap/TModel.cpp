@@ -1,7 +1,7 @@
 #include "TModel.h"
 void		TModel::SetMatrix(
-    XMatrix* pMatWorld,
-    XMatrix* pMatView, XMatrix* pMatProj)
+    TMatrix* pMatWorld,
+    TMatrix* pMatView, TMatrix* pMatProj)
 {
     if (pMatWorld != nullptr)
     {
