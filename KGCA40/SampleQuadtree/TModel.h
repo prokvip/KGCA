@@ -22,6 +22,7 @@ struct CB_DATA
 class TModel 
 {
 public:
+	UINT				m_iNumIndex;
 	CB_DATA				m_cbData;
 	ID3DBlob* m_pVSBlob = nullptr;
 	ID3D11Buffer* m_pVertexBuffer;
@@ -48,7 +49,9 @@ public:
 public:
 	bool   Init();	
 	bool   Frame();
+	bool   PreRender(ID3D11DeviceContext* pContext);
 	bool   Render(ID3D11DeviceContext* pContext);
+	bool   PostRender(ID3D11DeviceContext* pContext, UINT iNumIndex);
 	bool   Release();
 public:
 	TModel();

@@ -106,6 +106,8 @@ HRESULT TModel::CreateIndexBuffer()
     data.pSysMem = &m_IndexList.at(0);
     hr = g_pd3dDevice->CreateBuffer(&bd, &data, &m_pIndexBuffer);
     if (FAILED(hr)) return hr;
+
+    m_iNumIndex = m_IndexList.size();
     return hr;
 }
 HRESULT TModel::CreateVertexLayout()
@@ -215,6 +217,12 @@ bool TModel::Frame()
 
 bool TModel::Render(ID3D11DeviceContext* pContext)
 {
+    if (PreRender(pContext) ==false) return false;
+    if (PostRender(pContext, m_iNumIndex) == false) return false;
+    return true;
+}
+bool TModel::PreRender(ID3D11DeviceContext* pContext)
+{
     if (m_VertexList.size() <= 0) return true;
 
     pContext->UpdateSubresource(
@@ -230,13 +238,14 @@ bool TModel::Render(ID3D11DeviceContext* pContext)
         &pStrides, &pOffsets);
     pContext->IASetIndexBuffer(m_pIndexBuffer,
         DXGI_FORMAT_R32_UINT, 0);
-
+    return true;
+}bool TModel::PostRender(ID3D11DeviceContext* pContext, UINT iNumIndex)
+{
     pContext->IASetPrimitiveTopology(
         D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-    pContext->DrawIndexed(m_IndexList.size(), 0, 0);
+    pContext->DrawIndexed(iNumIndex, 0, 0);
     return false;
 }
-
 bool TModel::Release()
 {
     m_pVertexBuffer->Release();

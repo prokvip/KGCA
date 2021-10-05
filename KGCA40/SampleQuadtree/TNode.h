@@ -23,8 +23,11 @@ public:
 	TRect		m_tRect;
 	std::vector<TVector2>  m_ObjectList;
 	std::vector<DWORD>  m_CornerList;
+	std::vector<DWORD>  m_IndexList;
+	ID3D11Buffer*		m_pIndexBuffer;
 	TNode*		m_pChild[4];
 	int			m_iDepth;
+	bool		m_bLeaf;
 	TNode*		m_pParent;
 public:	
 	bool		AddObject(float fX, float fY);

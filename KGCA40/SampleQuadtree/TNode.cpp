@@ -26,6 +26,7 @@ TNode::TNode(UINT x, UINT y, UINT w, UINT h)
 {
 	m_pParent = nullptr;
 	m_iDepth = 0;
+	m_bLeaf = false;
 	m_CornerList.push_back(x);
 	m_CornerList.push_back(y);
 	m_CornerList.push_back(w);
@@ -42,4 +43,5 @@ TNode::~TNode()
 			TNode::g_iNewCounter--;
 		}
 	}
+	if (m_pIndexBuffer) m_pIndexBuffer->Release();
 }
