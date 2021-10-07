@@ -62,8 +62,10 @@ bool  TQuadtree::LoadObject(std::wstring filename)
 			{
 				lod.IndexList[iCode][i] = (DWORD)(_tstoi(ListTokens[i].c_str()));
 			}			
-		}
+		}		
 		m_LodPatchList.push_back(lod);
+
+		_fgetts(buffer, 256, fp);
 	}
 	for (int iLod = 0; iLod < iNumPatch; iLod++)
 	{
@@ -181,28 +183,64 @@ bool	TQuadtree::Render(ID3D11DeviceContext* pContext, TVector3 vCamera)
 {		
 	for (int iNode = 0; iNode < m_pLeafList.size(); iNode++)
 	{
-		ID3D11Buffer* pRenderBuffer = nullptr;
-		UINT iNumIndex = 0;
 		int iLodLevel = 0;
 		float fDistance = (m_pLeafList[iNode]->m_vCenter - vCamera).Length();
-		if (fDistance > 60.0f)
+		if (fDistance < 30.0f)
 		{
-			if (fDistance > 90.0f)
-			{
-				pRenderBuffer = m_LodPatchList[0].IndexBufferList[15];
-				iNumIndex = m_LodPatchList[0].IndexList[15].size();
-			}
-			else
-			{
-				pRenderBuffer = m_LodPatchList[1].IndexBufferList[15];
-				iNumIndex = m_LodPatchList[1].IndexList[15].size();
-			}
+			m_pLeafList[iNode]->m_iLodLevel = 2;
+		}
+		else if (fDistance < 60.0f)
+		{
+			m_pLeafList[iNode]->m_iLodLevel = 1;
+		}		
+		else
+			m_pLeafList[iNode]->m_iLodLevel = 0;
+	}
+
+	for (int iNode = 0; iNode < m_pLeafList.size(); iNode++)
+	{
+		int iRenderCode = 0;
+		// µ¿¼­³²ºÏ
+		if (m_pLeafList[iNode]->m_NeighborList[0] &&
+			m_pLeafList[iNode]->m_iLodLevel < m_pLeafList[iNode]->m_NeighborList[0]->m_iLodLevel)
+		{
+			iRenderCode += 2;
+		}
+		if (m_pLeafList[iNode]->m_NeighborList[1] && 
+			m_pLeafList[iNode]->m_iLodLevel < m_pLeafList[iNode]->m_NeighborList[1]->m_iLodLevel)
+		{
+			iRenderCode += 8;
+		}
+		if (m_pLeafList[iNode]->m_NeighborList[2] && 
+			m_pLeafList[iNode]->m_iLodLevel < m_pLeafList[iNode]->m_NeighborList[2]->m_iLodLevel)
+		{
+			iRenderCode += 4;
+		}
+		if (m_pLeafList[iNode]->m_NeighborList[3] && 
+			m_pLeafList[iNode]->m_iLodLevel < m_pLeafList[iNode]->m_NeighborList[3]->m_iLodLevel)
+		{
+			iRenderCode += 1;
+		}
+
+		UINT iNumIndex = 0;
+		ID3D11Buffer * pRenderBuffer = nullptr;
+		UINT iLodLevel = m_pLeafList[iNode]->m_iLodLevel;
+		if (m_pLeafList[iNode]->m_iLodLevel ==  0)
+		{
+			iNumIndex = m_LodPatchList[iLodLevel].IndexList[iRenderCode].size();
+			pRenderBuffer = m_LodPatchList[iLodLevel].IndexBufferList[iRenderCode];
+		}
+		else if (m_pLeafList[iNode]->m_iLodLevel == 1)
+		{
+			iNumIndex = m_LodPatchList[iLodLevel].IndexList[iRenderCode].size();
+			pRenderBuffer = m_LodPatchList[iLodLevel].IndexBufferList[iRenderCode];
 		}
 		else
 		{
-			pRenderBuffer = m_pIndexBuffer;
 			iNumIndex = m_IndexList.size();
+			pRenderBuffer = m_pIndexBuffer;
 		}
+
 		m_pMap->PreRender(pContext);
 		UINT pStrides = sizeof(SimpleVertex);
 		UINT pOffsets = 0;
