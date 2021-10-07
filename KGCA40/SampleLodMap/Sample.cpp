@@ -70,6 +70,7 @@ bool Sample::Render()
 bool Sample::Release()
 {
     m_Map.Release();
+    m_Quadtree.Release();
     /*for (int iObj = 0; iObj < 2; iObj++)
     {
         m_BoxObj[iObj].Release();

@@ -1,9 +1,96 @@
 #include "TQuadtree.h"
+#include <iterator>
 // 0           2            4
 // 5           7             
 // 10          12           14
 // 15           17 
 // 20          22           24 		
+template <typename OutputIterator>
+void TQuadtree::Tokenize(const std::wstring& text, const std::wstring& delimiters, OutputIterator first)
+{
+	size_t start, stop, n = text.length();
+
+	for (start = text.find_first_not_of(delimiters); 0 <= start && start < n;
+		start = text.find_first_not_of(delimiters, stop + 1))
+	{
+		stop = text.find_first_of(delimiters, start);
+		if (stop < 0 || stop > n)
+		{
+			stop = n;
+		}
+		*first++ = text.substr(start, stop - start);
+	}
+}
+bool  TQuadtree::LoadObject(std::wstring filename)
+{
+	FILE* fp = nullptr;
+	_tfopen_s(&fp, filename.c_str(), _T("rt"));
+	if (fp == NULL)
+	{
+		return false;
+	}
+
+	TCHAR data[256] = { 0, };
+
+	TCHAR buffer[256] = { 0, };
+	int iVersion = 0;
+	_fgetts(buffer, 256, fp);
+	TCHAR tmp[256] = { 0, };
+	_stscanf_s(buffer, _T("%s%d"), tmp, _countof(tmp), &iVersion);
+
+	int iNumPatch = 0;
+	_fgetts(buffer, 256, fp);
+	_stscanf_s(buffer, _T("%s%d"), tmp, _countof(tmp), &iNumPatch);
+
+	int index = 0;
+	
+	for (int iLod = 0; iLod < iNumPatch; iLod++)
+	{
+		TLodPatch lod;
+		lod.iLodLevel = iLod;
+		for (int iCode = 0; iCode < 16; iCode++)
+		{			
+			std::vector<std::wstring>	ListTokens;
+			_fgetts(buffer, 256, fp);
+			_stscanf_s(buffer, _T("%d %s"),	&index, data, _countof(data));
+
+			std::wstring sentence = data;
+			Tokenize(sentence, L",", std::back_inserter(ListTokens));
+			int iMaxCnt = (int)ListTokens.size();
+			lod.IndexList[iCode].resize(iMaxCnt);
+			for (int i = 0; i < iMaxCnt; i++)
+			{
+				lod.IndexList[iCode][i] = (DWORD)(_tstoi(ListTokens[i].c_str()));
+			}			
+		}
+		m_LodPatchList.push_back(lod);
+	}
+	for (int iLod = 0; iLod < iNumPatch; iLod++)
+	{
+		for (int iCode = 0; iCode < 16; iCode++)
+		{
+			CreateIndexBuffer(m_LodPatchList[iLod], iCode);
+		}		
+	}
+	fclose(fp);
+	return true;
+}
+HRESULT TQuadtree::CreateIndexBuffer(TLodPatch& patch, int iCode)
+{
+	patch.IndexBufferList[iCode] = nullptr;
+	HRESULT hr = S_OK;
+	D3D11_BUFFER_DESC bd;
+	ZeroMemory(&bd, sizeof(D3D11_BUFFER_DESC));
+	bd.ByteWidth = sizeof(DWORD) * patch.IndexList[iCode].size();
+	bd.Usage = D3D11_USAGE_DEFAULT;
+	bd.BindFlags = D3D11_BIND_INDEX_BUFFER;
+	D3D11_SUBRESOURCE_DATA data;
+	ZeroMemory(&data, sizeof(D3D11_SUBRESOURCE_DATA));
+	data.pSysMem = &patch.IndexList[iCode].at(0);
+	hr = g_pd3dDevice->CreateBuffer(&bd, &data, &patch.IndexBufferList[iCode]);
+	if (FAILED(hr)) return hr;
+	return hr;
+}
 bool TQuadtree::UpdateIndexList(TNode* pNode)
 {
 	int iNumCols = m_pMap->m_info.m_iNumCol;	
@@ -122,6 +209,8 @@ bool	TQuadtree::Frame()
 }
 void    TQuadtree::Build(TMap* pMap)
 {
+	LoadObject(L"StaticLod.txt");
+
 	m_pMap = pMap;
 	m_iNumCol = pMap->m_info.m_iNumCol;
 	m_iNumRow = pMap->m_info.m_iNumRow;
@@ -143,8 +232,7 @@ void    TQuadtree::Build(TMap* pMap)
 	}
 }
 bool    TQuadtree::Init()
-{	
-	
+{		
 	return true;
 }
 bool  TQuadtree::SubDivide(TNode* pNode)
@@ -252,6 +340,10 @@ TNode*    TQuadtree::FindPlayerNode(TVector2 pos)
 }
 bool TQuadtree::Release()
 {
+	for (int iPatch = 0; iPatch < m_LodPatchList.size(); iPatch++)
+	{
+		m_LodPatchList[iPatch].Release();
+	}
 	if(m_pIndexBuffer)m_pIndexBuffer->Release();
 	delete m_pRootNode;
 	m_pRootNode = nullptr;
@@ -345,7 +437,7 @@ TNode* TQuadtree::CreateNode(TNode* pParent, float x, float y, float w, float h)
 	return pNode;
 }
 TQuadtree::TQuadtree()
-{
+{	
 	m_pRootNode = nullptr;
 }
 

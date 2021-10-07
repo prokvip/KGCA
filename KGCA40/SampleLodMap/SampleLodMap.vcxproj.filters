@@ -65,5 +65,6 @@
     <Text Include="PixelShader.txt" />
     <Text Include="ObjectData.txt" />
     <Text Include="lod.txt" />
+    <Text Include="StaticLod.txt" />
   </ItemGroup>
 </Project>

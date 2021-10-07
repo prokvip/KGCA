@@ -53,7 +53,7 @@ TNode::~TNode()
 			m_pChild[iChild] = nullptr;
 			TNode::g_iNewCounter--;
 		}
-	}
+	}	
 	if (m_pIndexBuffer) m_pIndexBuffer->Release();
 	if (m_pVertexBuffer) m_pVertexBuffer->Release();
 }

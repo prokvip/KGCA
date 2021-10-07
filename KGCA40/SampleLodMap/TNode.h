@@ -20,8 +20,25 @@ struct TLodPatch
 	UINT   iLodLevel;
 	//std::vector<DWORD_VECTOR>  IndexList;
 	DWORD_VECTOR		IndexList[16];
-	ID3D11Buffer*		IndexBufferList[16];
+	ID3D11Buffer* IndexBufferList[16] = { nullptr, };
 	//std::vector<ID3D11Buffer*> IndexBufferList;
+	void Release()
+	{
+		for (int iBuffer = 0; iBuffer < 16; iBuffer++)
+		{
+			if (IndexBufferList[iBuffer])
+			{
+				IndexBufferList[iBuffer]->Release();
+				IndexBufferList[iBuffer] = nullptr;
+			}
+
+		}
+	}
+	TLodPatch() {}
+	~TLodPatch()
+	{
+		Release();
+	}
 };
 // 8421 code 1111
 // 0 ~ 16
@@ -33,7 +50,6 @@ class TNode
 {
 public:
 	UINT			m_iLodLevel;
-
 public:
 	static      int g_iNewCounter;
 	int			m_iIndex;

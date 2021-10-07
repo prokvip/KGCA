@@ -10,7 +10,6 @@ public:
 	UINT		m_iNumPatch;
 	std::vector<DWORD>  m_IndexList;
 	ID3D11Buffer* m_pIndexBuffer;
-	//TLodPatch		m_LoadData;
 	std::vector<TLodPatch>   m_LodPatchList;
 public:
 	TNode*		m_pRootNode;
@@ -36,11 +35,15 @@ public:
 	bool	SubDivide(TNode* pNode);
 
 	void	SetNeighborNode(TNode* pNode);
+	bool    LoadObject(std::wstring filename);
 public:
 	bool	Frame();
 	bool	Render(ID3D11DeviceContext* pContext);
 	bool    Release();
 	bool    ComputeStaticLodIndex(int iMaxCells);
+	HRESULT CreateIndexBuffer(TLodPatch& patch, int iCode);
+	template <typename OutputIterator>
+	void	Tokenize(const std::wstring& text, const std::wstring& delimiters, OutputIterator first);
 public:
 	TQuadtree();
 	virtual ~TQuadtree();
