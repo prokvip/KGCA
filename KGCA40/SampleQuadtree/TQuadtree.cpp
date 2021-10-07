@@ -54,7 +54,7 @@ HRESULT TQuadtree::CreateIndexBuffer(TNode* pNode)
 }
 bool	TQuadtree::Render(ID3D11DeviceContext* pContext)
 {	
-	for (int iNode = 0; iNode < 1/*m_pLeafList.size()*/; iNode++)
+	for (int iNode = 0; iNode < m_pLeafList.size(); iNode++)
 	{
 		m_pMap->PreRender(pContext);
 		pContext->IASetIndexBuffer(m_pLeafList[iNode]->m_pIndexBuffer,
@@ -87,6 +87,7 @@ void    TQuadtree::Build(TMap* pMap)
 	m_pRootNode = CreateNode(nullptr, 0, m_iNumCol-1, 
 		(m_iNumRow-1)* m_iNumCol, m_iNumRow * m_iNumCol -1);
 	Buildtree(m_pRootNode);
+	SetNeighborNode(m_pRootNode);
 }
 bool    TQuadtree::Init()
 {	
@@ -144,6 +145,12 @@ void TQuadtree::Buildtree(TNode* pNode)
 	else
 	{
 		pNode->m_bLeaf = true;
+		TVector3 vLT = m_pMap->m_VertexList[pNode->m_CornerList[0]].pos;
+		TVector3 vRT = m_pMap->m_VertexList[pNode->m_CornerList[1]].pos;
+		TVector3 vLB = m_pMap->m_VertexList[pNode->m_CornerList[2]].pos;
+		TVector3 vRB = m_pMap->m_VertexList[pNode->m_CornerList[3]].pos;
+
+		pNode->SetRect(vLT.x, vLT.z, vRT.x - vLT.x, vLT.z - vLB.z);
 		if (UpdateIndexList(pNode))
 		{
 			CreateIndexBuffer(pNode);
@@ -194,6 +201,74 @@ bool TQuadtree::Release()
 	m_pRootNode = nullptr;
 	return true;
 }
+void TQuadtree::SetNeighborNode(TNode* pNode)
+{
+	// 0 ~ 15 nodes
+	//  0   1   2   3  4
+	//  5   6   7   8  9
+	//  10  11  12  13 14
+	//  15  16  17  18 19
+	//  20  21  22  23 24
+	for (int iNode = 0; iNode < m_pLeafList.size(); iNode++)
+	{
+		TNode* pNode = m_pLeafList[iNode];
+		TVector3 vLT = m_pMap->m_VertexList[pNode->m_CornerList[0]].pos;
+		TVector3 vRT = m_pMap->m_VertexList[pNode->m_CornerList[1]].pos;
+		TVector3 vlB = m_pMap->m_VertexList[pNode->m_CornerList[2]].pos;
+		TVector3 vRB = m_pMap->m_VertexList[pNode->m_CornerList[3]].pos;
+		TVector3 vCenter = (vLT+ vRT+ vlB+vRB);
+		vCenter /= 4.0f;
+		// RIGHT
+		TVector2 vPoint;
+		vPoint.x = vCenter.x + (vRT.x - vLT.x);
+		vPoint.y = vCenter.z;
+		for (int iNode = 0; iNode < m_pLeafList.size(); iNode++)
+		{
+			if (m_pLeafList[iNode] == pNode) continue;
+			if (m_pLeafList[iNode]->IsRect(vPoint))
+			{
+				pNode->m_NeighborList[0] = m_pLeafList[iNode];
+				break;
+			}
+		}
+		// LEFT
+		vPoint.x = vCenter.x - (vRT.x - vLT.x);
+		vPoint.y = vCenter.z;		
+		for (int iNode = 0; iNode < m_pLeafList.size(); iNode++)
+		{
+			if (m_pLeafList[iNode] == pNode) continue;
+			if (m_pLeafList[iNode]->IsRect(vPoint))
+			{
+				pNode->m_NeighborList[1] = m_pLeafList[iNode];
+				break;
+			}
+		}
+		// BOTTOM
+		vPoint.x = vCenter.x;
+		vPoint.y = vCenter.z - (vLT.z - vRB.z);
+		for (int iNode = 0; iNode < m_pLeafList.size(); iNode++)
+		{
+			if (m_pLeafList[iNode] == pNode) continue;
+			if (m_pLeafList[iNode]->IsRect(vPoint))
+			{
+				pNode->m_NeighborList[2] = m_pLeafList[iNode];
+				break;
+			}
+		}
+		//TOP
+		vPoint.x = vCenter.x;
+		vPoint.y = vCenter.z + (vLT.z - vRB.z);
+		for (int iNode = 0; iNode < m_pLeafList.size(); iNode++)
+		{
+			if (m_pLeafList[iNode] == pNode) continue;
+			if (m_pLeafList[iNode]->IsRect(vPoint))
+			{
+				pNode->m_NeighborList[3] = m_pLeafList[iNode];
+				break;
+			}
+		}
+	}
+}
 TNode* TQuadtree::CreateNode(TNode* pParent, float x, float y, float w, float h)
 {
 	TNode* pNode =	new TNode(x,y,w,h);
@@ -202,6 +277,13 @@ TNode* TQuadtree::CreateNode(TNode* pParent, float x, float y, float w, float h)
 		pNode->m_iDepth = pParent->m_iDepth + 1;
 		pNode->m_pParent = pParent;
 	}	
+	//TVector3 vLT = m_pMap->m_VertexList[pNode->m_CornerList[0]].pos;
+	//TVector3 vRT = m_pMap->m_VertexList[pNode->m_CornerList[1]].pos;
+	//TVector3 vlB = m_pMap->m_VertexList[pNode->m_CornerList[2]].pos;
+	//TVector3 vRB = m_pMap->m_VertexList[pNode->m_CornerList[3]].pos;
+
+	//pNode->SetRect(vLT.x, vLT.y, vRT.x - vLT.x, vRB.z - vLT.z);
+
 	pNode->m_iIndex = TNode::g_iNewCounter;
 	TNode::g_iNewCounter++;
 	return pNode;

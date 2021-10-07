@@ -14,9 +14,26 @@ struct TRect
 	//
 	//          x2, y2(p1)
 };
-
+typedef std::vector<DWORD>  DWORD_VECTOR;
+struct TLodPatch
+{
+	UINT   iLodLevel;
+	//std::vector<DWORD_VECTOR>  IndexList;
+	DWORD_VECTOR		IndexList[16];
+	ID3D11Buffer*		IndexBufferList[16];
+	//std::vector<ID3D11Buffer*> IndexBufferList;
+};
+// 8421 code 1111
+// 0 ~ 16
+//     1
+// 8   x   2
+//     4
+// 
 class TNode
 {
+public:
+	TLodPatch		m_LoadData;
+	//std::vector<TLodData>   m_LodData;
 public:
 	static      int g_iNewCounter;
 	int			m_iIndex;
@@ -24,8 +41,10 @@ public:
 	std::vector<TVector2>  m_ObjectList;
 	std::vector<DWORD>  m_CornerList;
 	std::vector<DWORD>  m_IndexList;
-	ID3D11Buffer*		m_pIndexBuffer;
+	ID3D11Buffer*		m_pIndexBuffer;	
+	TVector3			m_vCenter;
 	TNode*		m_pChild[4];
+	TNode*		m_NeighborList[4];
 	int			m_iDepth;
 	bool		m_bLeaf;
 	TNode*		m_pParent;
@@ -33,6 +52,7 @@ public:
 	bool		AddObject(float fX, float fY);
 	bool		AddObject(TVector2 pos);
 	bool		IsRect(TVector2 pos);
+	void		SetRect(float x, float y, float w, float h);
 public:
 	TNode() {};
 	TNode(UINT x, UINT y, UINT w, UINT h);

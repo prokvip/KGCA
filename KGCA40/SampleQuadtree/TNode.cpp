@@ -1,5 +1,16 @@
 #include "TNode.h"
 int   TNode::g_iNewCounter = 0;
+
+void		TNode::SetRect(float x, float y, float w, float h)
+{
+	this->m_tRect.wh = TVector2(w, h);
+	this->m_tRect.p0 = TVector2(x, y);
+	this->m_tRect.p1.x = this->m_tRect.p0.x + w;
+	this->m_tRect.p1.y = this->m_tRect.p0.y - h;
+	m_vCenter.x = x + (w / 2.0f);
+	m_vCenter.y = 0.0f;
+	m_vCenter.z = y - (h / 2.0f);
+}
 bool TNode::AddObject(float fX, float fY)
 {
 	m_ObjectList.push_back(TVector2(fX, fY));
@@ -15,8 +26,8 @@ bool		TNode::IsRect(TVector2 pos)
 {
 	if (this->m_tRect.p0.x <= pos.x &&
 		this->m_tRect.p1.x >= pos.x &&
-		this->m_tRect.p0.y <= pos.y &&
-		this->m_tRect.p1.y >= pos.y)
+		this->m_tRect.p1.y <= pos.y &&
+		this->m_tRect.p0.y >= pos.y)
 	{
 		return true;
 	}

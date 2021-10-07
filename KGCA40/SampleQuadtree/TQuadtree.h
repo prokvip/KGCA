@@ -23,6 +23,8 @@ public:
 	
 	TNode*  FindPlayerNode(TVector2 pos);
 	bool	SubDivide(TNode* pNode);
+
+	void	SetNeighborNode(TNode* pNode);
 public:
 	bool	Frame();
 	bool	Render(ID3D11DeviceContext* pContext);

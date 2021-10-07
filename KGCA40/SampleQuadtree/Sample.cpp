@@ -6,8 +6,8 @@ LRESULT Sample::MsgProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 bool Sample::Init()
 {
     TMapInfo info{
-            128 + 1, 
-            128 + 1, 0,0, 0,
+            8 + 1, 
+            8 + 1, 0,0, 0,
             1.0f
     };
     if (m_Map.Load(info))
