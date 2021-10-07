@@ -1,4 +1,12 @@
 #include "Sample.h"
+// 1)리프노드 랜더링
+//   - 공유 정점버퍼(맵), 리프노드 당 인덱스 버퍼 사용
+// 2)리프노드 랜더링
+//   - 리프노드 당 정점버퍼, 공유되는 인덱스 버퍼 사용
+//   = LOD -> 패치단위로 16개의 정점 인덱스 버퍼가 있어야 된다. 
+//  LOD
+// 1) 리프노드에 패치 몇개야 ? 
+//   - PatchList[][16] 인덱스버퍼가 있다.
 LRESULT Sample::MsgProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     return g_Input.MsgProc(hWnd, message, wParam, lParam);
@@ -6,8 +14,8 @@ LRESULT Sample::MsgProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 bool Sample::Init()
 {
     TMapInfo info{
-            8 + 1, 
-            8 + 1, 0,0, 0,
+            64 + 1, 
+            64 + 1, 0,0, 0,
             1.0f
     };
     if (m_Map.Load(info))

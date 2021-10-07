@@ -166,6 +166,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Text Include="lod.txt" />
     <Text Include="ObjectData.txt" />
     <Text Include="PixelShader.txt" />
     <Text Include="VertexShader.txt" />

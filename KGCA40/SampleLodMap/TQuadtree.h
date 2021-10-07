@@ -5,8 +5,14 @@
 class TQuadtree
 {
 public:
+	UINT		m_iMaxDepth;
+	UINT		m_iNumCell;
+	UINT		m_iNumPatch;
 	std::vector<DWORD>  m_IndexList;
 	ID3D11Buffer* m_pIndexBuffer;
+	//TLodPatch		m_LoadData;
+	std::vector<TLodPatch>   m_LodPatchList;
+public:
 	TNode*		m_pRootNode;
 	int			m_iNumCol;
 	int			m_iNumRow;
@@ -34,6 +40,7 @@ public:
 	bool	Frame();
 	bool	Render(ID3D11DeviceContext* pContext);
 	bool    Release();
+	bool    ComputeStaticLodIndex(int iMaxCells);
 public:
 	TQuadtree();
 	virtual ~TQuadtree();

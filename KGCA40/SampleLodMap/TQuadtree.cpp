@@ -91,15 +91,15 @@ HRESULT TQuadtree::CreateVertexBuffer(TNode* pNode)
 	return hr;
 }
 bool	TQuadtree::Render(ID3D11DeviceContext* pContext)
-{	
+{		
 	for (int iNode = 0; iNode < m_pLeafList.size(); iNode++)
 	{
 		m_pMap->PreRender(pContext);
 		UINT pStrides = sizeof(SimpleVertex);
 		UINT pOffsets = 0;
 		pContext->IASetVertexBuffers(0, 1, &m_pLeafList[iNode]->m_pVertexBuffer,
-			&pStrides, &pOffsets);
-		pContext->IASetIndexBuffer(m_pIndexBuffer,	DXGI_FORMAT_R32_UINT, 0);
+			&pStrides, &pOffsets);		
+		pContext->IASetIndexBuffer(m_pIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
 		m_pMap->PostRender(pContext, m_IndexList.size());
 	}
 	return true;
@@ -129,8 +129,14 @@ void    TQuadtree::Build(TMap* pMap)
 		(m_iNumRow-1)* m_iNumCol, m_iNumRow * m_iNumCol -1);
 	Buildtree(m_pRootNode);
 	SetNeighborNode(m_pRootNode);
-
-	// 공유 정점버퍼용
+	// lod patch (전체 가로 개수(9), 리프노드 깊이(1))
+	m_iNumCell =  (m_iNumCol-1) / pow(2.0f, m_iMaxDepth);
+	m_iNumPatch = (log(m_iNumCell) / log(2.0f));
+	if (m_iNumPatch > 0)
+	{
+		m_LodPatchList.resize(m_iNumPatch);
+	}
+	//// 공유 정점버퍼
 	if (UpdateIndexList(m_pLeafList[0]))
 	{
 		CreateIndexBuffer(m_pLeafList[0]);
@@ -143,8 +149,7 @@ bool    TQuadtree::Init()
 }
 bool  TQuadtree::SubDivide(TNode* pNode)
 {
-	if (pNode->m_iDepth < 3 &&
-		(pNode->m_CornerList[1] - pNode->m_CornerList[0]) > 2)
+	if ((pNode->m_CornerList[1] - pNode->m_CornerList[0]) > 4)
 	{
 		return true;
 	}
@@ -192,6 +197,7 @@ void TQuadtree::Buildtree(TNode* pNode)
 	else
 	{
 		pNode->m_bLeaf = true;
+		m_iMaxDepth = pNode->m_iDepth;
 		TVector3 vLT = m_pMap->m_pVertexList[pNode->m_CornerList[0]].pos;
 		TVector3 vRT = m_pMap->m_pVertexList[pNode->m_CornerList[1]].pos;
 		TVector3 vLB = m_pMap->m_pVertexList[pNode->m_CornerList[2]].pos;
@@ -345,4 +351,10 @@ TQuadtree::TQuadtree()
 
 TQuadtree::~TQuadtree()
 {
+}
+
+bool TQuadtree::ComputeStaticLodIndex(int iMaxCells)
+{
+	m_LodPatchList.reserve(m_iNumPatch);	
+	return true;
 }

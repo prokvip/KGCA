@@ -32,8 +32,8 @@ struct TLodPatch
 class TNode
 {
 public:
-	TLodPatch		m_LoadData;
-	//std::vector<TLodData>   m_LodData;
+	UINT			m_iLodLevel;
+
 public:
 	static      int g_iNewCounter;
 	int			m_iIndex;
