@@ -38,7 +38,7 @@ public:
 	bool    LoadObject(std::wstring filename);
 public:
 	bool	Frame();
-	bool	Render(ID3D11DeviceContext* pContext);
+	bool	Render(ID3D11DeviceContext* pContext, TVector3 vCamera);
 	bool    Release();
 	bool    ComputeStaticLodIndex(int iMaxCells);
 	HRESULT CreateIndexBuffer(TLodPatch& patch, int iCode);

@@ -63,7 +63,7 @@ bool Sample::Render()
         &m_Camera.m_matView,
         &m_Camera.m_matProj);
     //m_Map.Render(m_pImmediateContext);
-    m_Quadtree.Render(m_pImmediateContext);
+    m_Quadtree.Render(m_pImmediateContext, m_Camera.m_vCameraPos);
     return false;
 }
 
