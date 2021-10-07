@@ -181,20 +181,34 @@ bool	TQuadtree::Render(ID3D11DeviceContext* pContext, TVector3 vCamera)
 {		
 	for (int iNode = 0; iNode < m_pLeafList.size(); iNode++)
 	{
+		ID3D11Buffer* pRenderBuffer = nullptr;
+		UINT iNumIndex = 0;
 		int iLodLevel = 0;
 		float fDistance = (m_pLeafList[iNode]->m_vCenter - vCamera).Length();
-		if (fDistance > 30.0f) iLodLevel = 0;
-		else iLodLevel = 1;
+		if (fDistance > 60.0f)
+		{
+			if (fDistance > 90.0f)
+			{
+				pRenderBuffer = m_LodPatchList[0].IndexBufferList[15];
+				iNumIndex = m_LodPatchList[0].IndexList[15].size();
+			}
+			else
+			{
+				pRenderBuffer = m_LodPatchList[1].IndexBufferList[15];
+				iNumIndex = m_LodPatchList[1].IndexList[15].size();
+			}
+		}
+		else
+		{
+			pRenderBuffer = m_pIndexBuffer;
+			iNumIndex = m_IndexList.size();
+		}
 		m_pMap->PreRender(pContext);
 		UINT pStrides = sizeof(SimpleVertex);
 		UINT pOffsets = 0;
-		pContext->IASetVertexBuffers(0, 1, &m_pLeafList[iNode]->m_pVertexBuffer,
-			&pStrides, &pOffsets);		
-		if(fDistance > 30.0f)
-			pContext->IASetIndexBuffer(m_LodPatchList[0].IndexBufferList[15], DXGI_FORMAT_R32_UINT, 0);
-		else
-			pContext->IASetIndexBuffer(m_pIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
-		m_pMap->PostRender(pContext, m_IndexList.size());
+		pContext->IASetVertexBuffers(0, 1, &m_pLeafList[iNode]->m_pVertexBuffer,&pStrides, &pOffsets);		
+		pContext->IASetIndexBuffer(pRenderBuffer, DXGI_FORMAT_R32_UINT, 0);
+		m_pMap->PostRender(pContext, iNumIndex);
 	}
 	return true;
 }
