@@ -7,8 +7,6 @@
 class Sample : public TCore
 {
 public:
-	ID3D11RasterizerState* m_pRSSolid;
-	ID3D11RasterizerState* m_pRSWireFrame;
 	//TBoxShape			m_BoxObj[2];
 	TMap				m_Map;
 	TDebugCamera		m_Camera;

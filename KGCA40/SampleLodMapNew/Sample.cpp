@@ -13,19 +13,9 @@ LRESULT Sample::MsgProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 }
 bool Sample::Init()
 {
-    D3D11_RASTERIZER_DESC rd;
-    ZeroMemory(&rd, sizeof(D3D11_RASTERIZER_DESC));
-    rd.FillMode = D3D11_FILL_WIREFRAME;
-    rd.CullMode = D3D11_CULL_BACK;
-    g_pd3dDevice->CreateRasterizerState(&rd, &m_pRSWireFrame);
-    ZeroMemory(&rd, sizeof(D3D11_RASTERIZER_DESC));
-    rd.FillMode = D3D11_FILL_SOLID;
-    rd.CullMode = D3D11_CULL_BACK;
-    g_pd3dDevice->CreateRasterizerState(&rd, &m_pRSSolid);
-
     TMapInfo info{
-            128 + 1, 
-            128 + 1, 0,0, 0,
+            64 + 1, 
+            64 + 1, 0,0, 0,
             1.0f
     };
     if (m_Map.Load(info))
@@ -68,14 +58,6 @@ bool Sample::Frame()
 
 bool Sample::Render()
 {
-    if (g_Input.GetKey(VK_F2) >= KEY_PUSH)
-    {
-        m_pImmediateContext->RSSetState(m_pRSWireFrame);
-    }
-    else
-    {
-        m_pImmediateContext->RSSetState(m_pRSSolid);
-    }
     m_Map.SetMatrix(
         nullptr,
         &m_Camera.m_matView,
@@ -87,8 +69,6 @@ bool Sample::Render()
 
 bool Sample::Release()
 {
-    m_pRSWireFrame->Release();
-    m_pRSSolid->Release();
     m_Map.Release();
     m_Quadtree.Release();
     /*for (int iObj = 0; iObj < 2; iObj++)

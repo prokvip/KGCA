@@ -212,7 +212,6 @@ bool TModel::Init()
 
 bool TModel::Frame()
 {     
-    m_cbData.vValue.z = g_fGameTimer;
     return true;
 }
 

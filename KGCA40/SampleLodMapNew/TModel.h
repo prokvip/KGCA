@@ -18,7 +18,6 @@ struct CB_DATA
 	TMatrix  matWorld;
 	TMatrix  matView;
 	TMatrix  matProj;
-	TVector4 vValue;
 };
 class TModel 
 {
