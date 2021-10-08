@@ -16,7 +16,7 @@ public:
 	int			m_iNumCol;
 	int			m_iNumRow;
 	std::queue<TNode*>  m_Queue;
-	std::vector<TNode*>  m_pLeafList;
+	std::map<int, TNode*>  m_pLeafList;
 	TMap*		m_pMap;
 public:
 	bool	UpdateIndexList(TNode* pNode);
@@ -34,7 +34,7 @@ public:
 	TNode*  FindPlayerNode(TVector2 pos);
 	bool	SubDivide(TNode* pNode);
 
-	void	SetNeighborNode(TNode* pNode);
+	void	SetNeighborNode();
 	bool    LoadObject(std::wstring filename);
 public:
 	bool	Frame();

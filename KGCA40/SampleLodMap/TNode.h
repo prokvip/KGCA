@@ -53,6 +53,7 @@ public:
 public:
 	static      int g_iNewCounter;
 	int			m_iIndex;
+	POINT		m_Element;
 	TRect		m_tRect;
 	std::vector<TVector2>  m_ObjectList;
 	std::vector<DWORD>  m_CornerList;

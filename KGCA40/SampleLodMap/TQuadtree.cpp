@@ -276,7 +276,7 @@ void    TQuadtree::Build(TMap* pMap)
 	m_pRootNode = CreateNode(nullptr, 0, m_iNumCol-1, 
 		(m_iNumRow-1)* m_iNumCol, m_iNumRow * m_iNumCol -1);
 	Buildtree(m_pRootNode);
-	SetNeighborNode(m_pRootNode);
+	SetNeighborNode();
 	// lod patch (전체 가로 개수(9), 리프노드 깊이(1))
 	m_iNumCell =  (m_iNumCol-1) / pow(2.0f, m_iMaxDepth);
 	m_iNumPatch = (log(m_iNumCell) / log(2.0f));
@@ -344,20 +344,16 @@ void TQuadtree::Buildtree(TNode* pNode)
 	else
 	{
 		pNode->m_bLeaf = true;
-		m_iMaxDepth = pNode->m_iDepth;
-		TVector3 vLT = m_pMap->m_pVertexList[pNode->m_CornerList[0]].pos;
-		TVector3 vRT = m_pMap->m_pVertexList[pNode->m_CornerList[1]].pos;
-		TVector3 vLB = m_pMap->m_pVertexList[pNode->m_CornerList[2]].pos;
-		TVector3 vRB = m_pMap->m_pVertexList[pNode->m_CornerList[3]].pos;
-
-		pNode->SetRect(vLT.x, vLT.z, vRT.x - vLT.x, vLT.z - vLB.z);
-		
+		if (m_iMaxDepth < pNode->m_iDepth)
+		{
+			m_iMaxDepth = pNode->m_iDepth;
+		}				
 		// 공유 인덱스버퍼용(정점버퍼 리프노드 당)
 		if (UpdateVertexList(pNode))
 		{
 			CreateVertexBuffer(pNode);
 		}
-		m_pLeafList.push_back(pNode);
+		m_pLeafList.insert( std::make_pair(pNode->m_iIndex,pNode));
 	}
 }
 TNode* TQuadtree::FindNode(TNode* pNode, TVector2 pos)
@@ -408,73 +404,49 @@ bool TQuadtree::Release()
 	m_pRootNode = nullptr;
 	return true;
 }
-void TQuadtree::SetNeighborNode(TNode* pNode)
-{
-	// 0 ~ 15 nodes
-	//  0   1   2   3  4
-	//  5   6   7   8  9
-	//  10  11  12  13 14
-	//  15  16  17  18 19
-	//  20  21  22  23 24
+void TQuadtree::SetNeighborNode()
+{	
 	for (int iNode = 0; iNode < m_pLeafList.size(); iNode++)
 	{
-		TNode* pNode = m_pLeafList[iNode];
-		TVector3 vLT = m_pMap->m_pVertexList[pNode->m_CornerList[0]].pos;
-		TVector3 vRT = m_pMap->m_pVertexList[pNode->m_CornerList[1]].pos;
-		TVector3 vlB = m_pMap->m_pVertexList[pNode->m_CornerList[2]].pos;
-		TVector3 vRB = m_pMap->m_pVertexList[pNode->m_CornerList[3]].pos;
-		TVector3 vCenter = (vLT+ vRT+ vlB+vRB);
-		vCenter /= 4.0f;
-		// RIGHT
-		TVector2 vPoint;
-		vPoint.x = vCenter.x + (vRT.x - vLT.x);
-		vPoint.y = vCenter.z;
-		for (int iNode = 0; iNode < m_pLeafList.size(); iNode++)
+		auto iter = m_pLeafList.find(iNode);
+		_ASSERT(iter != m_pLeafList.end());
+		TNode* pNode = iter->second;
+		DWORD dwNumPatchCount = (DWORD)pow(2.0f, (float)pNode->m_iDepth);
+		DWORD dwNeighborCol, dwNeighborRow;
+
+		if (pNode->m_Element.y > 0)  // 상
 		{
-			if (m_pLeafList[iNode] == pNode) continue;
-			if (m_pLeafList[iNode]->IsRect(vPoint))
-			{
-				pNode->m_NeighborList[0] = m_pLeafList[iNode];
-				break;
-			}
+			dwNeighborCol = pNode->m_Element.x;
+			dwNeighborRow = (pNode->m_Element.y - 1) * dwNumPatchCount;
+			auto iter = m_pLeafList.find(dwNeighborRow + dwNeighborCol);
+			_ASSERT(iter != m_pLeafList.end());
+			pNode->m_NeighborList[3] = iter->second;;
 		}
-		// LEFT
-		vPoint.x = vCenter.x - (vRT.x - vLT.x);
-		vPoint.y = vCenter.z;		
-		for (int iNode = 0; iNode < m_pLeafList.size(); iNode++)
+		if (pNode->m_Element.y < dwNumPatchCount - 1) // 하
 		{
-			if (m_pLeafList[iNode] == pNode) continue;
-			if (m_pLeafList[iNode]->IsRect(vPoint))
-			{
-				pNode->m_NeighborList[1] = m_pLeafList[iNode];
-				break;
-			}
+			dwNeighborCol = pNode->m_Element.x;
+			dwNeighborRow = (pNode->m_Element.y + 1) * dwNumPatchCount;
+			auto iter = m_pLeafList.find(dwNeighborRow + dwNeighborCol);
+			_ASSERT(iter != m_pLeafList.end());
+			pNode->m_NeighborList[2] = iter->second;;
 		}
-		// BOTTOM
-		vPoint.x = vCenter.x;
-		vPoint.y = vCenter.z - (vLT.z - vRB.z);
-		for (int iNode = 0; iNode < m_pLeafList.size(); iNode++)
+		if (pNode->m_Element.x > 0) // 좌
 		{
-			if (m_pLeafList[iNode] == pNode) continue;
-			if (m_pLeafList[iNode]->IsRect(vPoint))
-			{
-				pNode->m_NeighborList[2] = m_pLeafList[iNode];
-				break;
-			}
+			dwNeighborCol = pNode->m_Element.x - 1;
+			dwNeighborRow = pNode->m_Element.y * dwNumPatchCount;
+			auto iter = m_pLeafList.find(dwNeighborRow + dwNeighborCol);
+			_ASSERT(iter != m_pLeafList.end());
+			pNode->m_NeighborList[1] = iter->second;;
 		}
-		//TOP
-		vPoint.x = vCenter.x;
-		vPoint.y = vCenter.z + (vLT.z - vRB.z);
-		for (int iNode = 0; iNode < m_pLeafList.size(); iNode++)
+		if (pNode->m_Element.x < dwNumPatchCount - 1) // 우
 		{
-			if (m_pLeafList[iNode] == pNode) continue;
-			if (m_pLeafList[iNode]->IsRect(vPoint))
-			{
-				pNode->m_NeighborList[3] = m_pLeafList[iNode];
-				break;
-			}
+			dwNeighborCol = pNode->m_Element.x + 1;
+			dwNeighborRow = pNode->m_Element.y * dwNumPatchCount;
+			auto iter = m_pLeafList.find(dwNeighborRow + dwNeighborCol);
+			_ASSERT(iter != m_pLeafList.end());
+			pNode->m_NeighborList[0] = iter->second;;
 		}
-	}
+	}	
 }
 TNode* TQuadtree::CreateNode(TNode* pParent, float x, float y, float w, float h)
 {
@@ -484,14 +456,22 @@ TNode* TQuadtree::CreateNode(TNode* pParent, float x, float y, float w, float h)
 		pNode->m_iDepth = pParent->m_iDepth + 1;
 		pNode->m_pParent = pParent;
 	}	
-	//TVector3 vLT = m_pMap->m_pVertexList[pNode->m_CornerList[0]].pos;
-	//TVector3 vRT = m_pMap->m_pVertexList[pNode->m_CornerList[1]].pos;
-	//TVector3 vlB = m_pMap->m_pVertexList[pNode->m_CornerList[2]].pos;
-	//TVector3 vRB = m_pMap->m_pVertexList[pNode->m_CornerList[3]].pos;
+	// 쿼드트리의 성분 저장(ldiv함수의 결과와 동일하여 대체되었다.)
+	//pNode->m_Element.x = (pNode->m_CornerList[0] % m_iNumCol) / (pNode->m_CornerList[1] - pNode->m_CornerList[0]);
+	//pNode->m_Element.y = pNode->m_CornerList[0] / (pNode->m_CornerList[2] - pNode->m_CornerList[0]);
+	ldiv_t divValue = ldiv(pNode->m_CornerList[0], m_iNumCol);
+	pNode->m_Element.x = divValue.rem / (pNode->m_CornerList[1] - pNode->m_CornerList[0]); // 나머지-> X
+	pNode->m_Element.y = divValue.quot / (pNode->m_CornerList[1] - pNode->m_CornerList[0]);//몫 -> Y
+	
+	DWORD dwNumPatchCount = (DWORD)pow(2.0f, (float)pNode->m_iDepth);
+	pNode->m_iIndex = pNode->m_Element.y * dwNumPatchCount + pNode->m_Element.x;
 
-	//pNode->SetRect(vLT.x, vLT.y, vRT.x - vLT.x, vRB.z - vLT.z);
+	TVector3 vLT = m_pMap->m_pVertexList[pNode->m_CornerList[0]].pos;
+	TVector3 vRT = m_pMap->m_pVertexList[pNode->m_CornerList[1]].pos;
+	TVector3 vLB = m_pMap->m_pVertexList[pNode->m_CornerList[2]].pos;
+	TVector3 vRB = m_pMap->m_pVertexList[pNode->m_CornerList[3]].pos;
+	pNode->SetRect(vLT.x, vLT.z, vRT.x - vLT.x, vLT.z - vLB.z);
 
-	pNode->m_iIndex = TNode::g_iNewCounter;
 	TNode::g_iNewCounter++;
 	return pNode;
 }

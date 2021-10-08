@@ -24,9 +24,9 @@ bool Sample::Init()
     g_pd3dDevice->CreateRasterizerState(&rd, &m_pRSSolid);
 
     TMapInfo info{
-            128 + 1, 
-            128 + 1, 0,0, 0,
-            1.0f
+            16 + 1, 
+            16 + 1, 0,0, 0,
+            10.0f
     };
     if (m_Map.Load(info))
     {

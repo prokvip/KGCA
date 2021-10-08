@@ -277,13 +277,6 @@ TNode* TQuadtree::CreateNode(TNode* pParent, float x, float y, float w, float h)
 		pNode->m_iDepth = pParent->m_iDepth + 1;
 		pNode->m_pParent = pParent;
 	}	
-	//TVector3 vLT = m_pMap->m_VertexList[pNode->m_CornerList[0]].pos;
-	//TVector3 vRT = m_pMap->m_VertexList[pNode->m_CornerList[1]].pos;
-	//TVector3 vlB = m_pMap->m_VertexList[pNode->m_CornerList[2]].pos;
-	//TVector3 vRB = m_pMap->m_VertexList[pNode->m_CornerList[3]].pos;
-
-	//pNode->SetRect(vLT.x, vLT.y, vRT.x - vLT.x, vRB.z - vLT.z);
-
 	pNode->m_iIndex = TNode::g_iNewCounter;
 	TNode::g_iNewCounter++;
 	return pNode;
