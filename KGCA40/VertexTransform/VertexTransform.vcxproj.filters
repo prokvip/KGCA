@@ -24,9 +24,4 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
-  <ItemGroup>
-    <Text Include="VertexShader.txt" />
-    <Text Include="PixelShader.txt" />
-    <Text Include="ObjectData.txt" />
-  </ItemGroup>
 </Project>

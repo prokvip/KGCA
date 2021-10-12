@@ -1,6 +1,6 @@
 #include "Sample.h"
 #include "XVector.h"
-TBASIS_RUN(SampleLibrary)
+
 bool  Sample::LoadObject(std::wstring filename)
 {
     FILE* fp = nullptr;
@@ -24,10 +24,11 @@ bool  Sample::LoadObject(std::wstring filename)
     {
         SimpleVertex v;
         _fgetts(buffer, 256, fp);
-        _stscanf_s(buffer, _T("%d %f %f %f %f %f %f %f"),
+        _stscanf_s(buffer, _T("%d %f %f %f %f %f %f %f %f %f"),
             &index,
             &v.pos.x, &v.pos.y, &v.pos.z,
-            &v.color.x, &v.color.y, &v.color.z, &v.color.w);
+            &v.color.x, &v.color.y, &v.color.z, &v.color.w,
+            &v.uv.x, &v.uv.y);
         m_VertexList.push_back(v);
     }
     fclose(fp);
@@ -36,7 +37,7 @@ bool  Sample::LoadObject(std::wstring filename)
 Sample::Sample()
 {
     m_pSpeed = 3.0f;
-    m_vCameraPos = { 3,3, -5.0f };
+    m_vCameraPos = { 0,0, -5.0f };
     m_vCameraTarget = { 0,0,0.0f };
     m_pVertexBuffer = nullptr;
     m_pVertexLayout = nullptr;
@@ -106,36 +107,32 @@ HRESULT Sample::CreateIndexBuffer()
     if (FAILED(hr)) return hr;
     return hr;
 }
-
 HRESULT Sample::CreateVertexLayout()
 {
     HRESULT hr = S_OK;
-    D3D11_INPUT_ELEMENT_DESC layout[2];
-    ZeroMemory(layout, sizeof(D3D11_INPUT_ELEMENT_DESC) * 2);
-    layout[0].SemanticName = "POSITION";
-    layout[0].Format = DXGI_FORMAT_R32G32B32_FLOAT;
-    layout[0].AlignedByteOffset=0;
-    layout[0].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
-    layout[1].SemanticName = "COLOR";
-    layout[1].Format= DXGI_FORMAT_R32G32B32A32_FLOAT;
-    layout[1].AlignedByteOffset=12;
-    layout[1].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
-    hr = m_pd3dDevice->CreateInputLayout(layout,2,
+    D3D11_INPUT_ELEMENT_DESC layout[] =
+    {
+        { "POSITION",  0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0,  D3D11_INPUT_PER_VERTEX_DATA, 0 },
+        { "COLOR",  0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12,  D3D11_INPUT_PER_VERTEX_DATA, 0 },
+        { "TEXTURE",  0, DXGI_FORMAT_R32G32_FLOAT, 0, 28,  D3D11_INPUT_PER_VERTEX_DATA, 0 }
+    };
+    UINT numLayout = sizeof(layout) / sizeof(layout[0]);
+    hr = m_pd3dDevice->CreateInputLayout(layout, numLayout,
         m_pVSBlob->GetBufferPointer(),
         m_pVSBlob->GetBufferSize(),
         &m_pVertexLayout);
     if (FAILED(hr)) return hr;
 
     m_pVSBlob->Release();
+    m_pVSBlob = nullptr;
     return hr;
 }
-
 HRESULT Sample::LoadShader()
 {
     HRESULT hr = S_OK;
     ID3DBlob* error = nullptr;
     hr = D3DCompileFromFile(
-        L"VertexShader.txt",
+        L"../../data/shader/VertexShader.txt",
         nullptr,
         nullptr,
         "VS",
@@ -160,7 +157,7 @@ HRESULT Sample::LoadShader()
 
     ID3DBlob* PSBlob = nullptr;
     hr = D3DCompileFromFile(
-        L"PixelShader.txt",
+        L"../../data/shader/PixelShader.txt",
         nullptr,
         nullptr,
         "PS",
@@ -178,18 +175,17 @@ HRESULT Sample::LoadShader()
     PSBlob->Release();
     return hr;
 }
-
 bool Sample::Init()
 {
-    LoadObject(L"ObjectData.txt");
+    LoadObject(L"../../data/script/plane.txt");
     CreateConstantBuffer();
     CreateVertexBuffer();
     CreateIndexBuffer();
     LoadShader();
     CreateVertexLayout();    
+    m_Texture.LoadTexture(L"../../data/bitmap1.BMP");
     return false;
 }
-
 bool Sample::Frame()
 {
     if (g_Input.GetKey('W') >= KEY_PUSH)
@@ -224,9 +220,10 @@ bool Sample::Frame()
 
     return false;
 }
-
 bool Sample::Render()
 {
+    m_pImmediateContext->PSSetSamplers(0,1, &m_Texture.m_pSampler);
+    m_pImmediateContext->PSSetShaderResources(1, 1, &m_Texture.m_pTextureSRV);
     m_pImmediateContext->VSSetConstantBuffers(
         0, 1, &m_pConstantBuffer   );
     m_pImmediateContext->VSSetShader(m_pVS, NULL, 0);
@@ -243,13 +240,24 @@ bool Sample::Render()
     m_pImmediateContext->DrawIndexed(m_IndexList.size(),0, 0);
     return false;
 }
-
 bool Sample::Release()
 {
-    m_pVertexBuffer->Release();
-    m_pVertexLayout->Release();
-    m_pConstantBuffer->Release();
-    m_pVS->Release();
-    m_pPS->Release();
+    m_Texture.Release();
+    if(m_pVSBlob) m_pVSBlob->Release();
+    if (m_pVertexBuffer) m_pVertexBuffer->Release();
+    if (m_pIndexBuffer) m_pIndexBuffer->Release();
+    if (m_pConstantBuffer) m_pConstantBuffer->Release();
+    if (m_pVertexLayout) m_pVertexLayout->Release();
+    if (m_pVS) m_pVS->Release();
+    if (m_pPS) m_pPS->Release();
+    
+    m_pVSBlob = nullptr;
+    m_pVertexBuffer = nullptr;
+    m_pIndexBuffer = nullptr;
+    m_pConstantBuffer = nullptr;
+    m_pVertexLayout = nullptr;
+    m_pVS = nullptr;
+    m_pPS = nullptr;
     return false;
 }
+TBASIS_RUN(SampleLibrary)

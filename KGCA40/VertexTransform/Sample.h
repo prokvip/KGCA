@@ -2,11 +2,13 @@
 #include <TCore.h>
 #include <d3dcompiler.h>
 #include "XMatrix.h"
+#include "TTexture.h"
 #pragma comment	(lib, "D3DCompiler.lib")
 struct SimpleVertex
 {
 	TVector3 pos;
 	TVector4 color;
+	TVector2 uv;
 	SimpleVertex()
 	{
 		color.x = 1.0f;
@@ -37,12 +39,15 @@ class Sample : public TCore
 	std::vector< SimpleVertex> m_VertexList;
 	std::vector< DWORD> m_IndexList;
 public:
+	TTexture		m_Texture;
+public:
 	HRESULT		CreateConstantBuffer();
 	HRESULT		CreateVertexBuffer();
 	HRESULT		CreateIndexBuffer();
 	HRESULT		CreateVertexLayout();
 	HRESULT		LoadShader();
 	bool		LoadObject(std::wstring filename);
+
 public:
 	bool   Init();
 	bool   Frame();

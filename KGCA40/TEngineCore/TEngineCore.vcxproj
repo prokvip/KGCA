@@ -155,10 +155,17 @@ copy "*.h" "..\\..\include"
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="TCamera.cpp" />
     <ClCompile Include="TCore.cpp" />
     <ClCompile Include="TDevice.cpp" />
     <ClCompile Include="TInput.cpp" />
+    <ClCompile Include="TMap.cpp" />
     <ClCompile Include="TMath.cpp" />
+    <ClCompile Include="TModel.cpp" />
+    <ClCompile Include="TNode.cpp" />
+    <ClCompile Include="TQuadtree.cpp" />
+    <ClCompile Include="TShape.cpp" />
+    <ClCompile Include="TTexture.cpp" />
     <ClCompile Include="XMatrix.cpp" />
     <ClCompile Include="TSound.cpp" />
     <ClCompile Include="TTimer.cpp" />
@@ -167,10 +174,17 @@ copy "*.h" "..\\..\include"
     <ClCompile Include="TWrite.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="TCamera.h" />
     <ClInclude Include="TCore.h" />
     <ClInclude Include="TDevice.h" />
     <ClInclude Include="TInput.h" />
+    <ClInclude Include="TMap.h" />
     <ClInclude Include="TMath.h" />
+    <ClInclude Include="TModel.h" />
+    <ClInclude Include="TNode.h" />
+    <ClInclude Include="TQuadtree.h" />
+    <ClInclude Include="TShape.h" />
+    <ClInclude Include="TTexture.h" />
     <ClInclude Include="XMatrix.h" />
     <ClInclude Include="TSound.h" />
     <ClInclude Include="TStd.h" />

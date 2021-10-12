@@ -78,8 +78,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>../../output/</OutDir>
-    <IntDir>../../output/SampleLibrary</IntDir>
+    <OutDir>../../output/SampleLodMap</OutDir>
+    <IntDir>../../output/SampleLodMap</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -144,21 +144,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Sample.h" />
-    <ClInclude Include="TCamera.h" />
-    <ClInclude Include="TMap.h" />
-    <ClInclude Include="TModel.h" />
-    <ClInclude Include="TNode.h" />
-    <ClInclude Include="TQuadtree.h" />
-    <ClInclude Include="TShape.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="Sample.cpp" />
-    <ClCompile Include="TCamera.cpp" />
-    <ClCompile Include="TMap.cpp" />
-    <ClCompile Include="TModel.cpp" />
-    <ClCompile Include="TNode.cpp" />
-    <ClCompile Include="TQuadtree.cpp" />
-    <ClCompile Include="TShape.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TEngineCore\TEngineCore.vcxproj">
@@ -166,10 +151,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="ObjectData.txt" />
-    <Text Include="PixelShader.txt" />
-    <Text Include="StaticLod.txt" />
-    <Text Include="VertexShader.txt" />
+    <ClCompile Include="Sample.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

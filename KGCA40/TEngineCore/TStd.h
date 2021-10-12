@@ -18,6 +18,7 @@
 #pragma comment	(lib, "dxgi.lib")
 #pragma comment	(lib, "DirectXTK.lib")
 
+using namespace DirectX;
 using namespace DirectX::SimpleMath;
 
 extern float g_fSecPerFrame;

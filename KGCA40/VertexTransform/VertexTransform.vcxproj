@@ -78,8 +78,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>../../output/</OutDir>
-    <IntDir>../../output/SampleLibrary</IntDir>
+    <OutDir>../../output/SampleTransform</OutDir>
+    <IntDir>../../output/SampleTransform</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -152,11 +152,6 @@
     <ProjectReference Include="..\TEngineCore\TEngineCore.vcxproj">
       <Project>{5e241d3a-e46a-4ff0-a578-f345e68050b4}</Project>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="ObjectData.txt" />
-    <Text Include="PixelShader.txt" />
-    <Text Include="VertexShader.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

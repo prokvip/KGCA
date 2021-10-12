@@ -28,10 +28,12 @@ bool Sample::Init()
             16 + 1, 0,0, 0,
             10.0f
     };
-    if (m_Map.Load(info))
+    if (!m_Map.Load(info, L"../../data/shader/VSMap.txt", 
+        L"../../data/shader/PSMap.txt"))
     {
-        m_Map.Init();
+        return false;
     }
+    m_Quadtree.LoadObject(L"../../data/script/StaticLod.txt");
     m_Quadtree.Build(&m_Map);
     
     m_Camera.Init();
