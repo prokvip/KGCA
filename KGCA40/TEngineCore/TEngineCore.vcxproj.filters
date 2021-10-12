@@ -16,6 +16,9 @@
     <Filter Include="Sample">
       <UniqueIdentifier>{82feef8d-da03-4726-a19d-c77c2465d4eb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="shader">
+      <UniqueIdentifier>{e7f17b0f-b162-40f7-a688-a1eec3bc9d3e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="TCore.cpp">
@@ -125,5 +128,22 @@
     <ClInclude Include="TShape.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\..\data\shader\box.txt">
+      <Filter>shader</Filter>
+    </Text>
+    <Text Include="..\..\data\shader\PixelShader.txt">
+      <Filter>shader</Filter>
+    </Text>
+    <Text Include="..\..\data\shader\PSMap.txt">
+      <Filter>shader</Filter>
+    </Text>
+    <Text Include="..\..\data\shader\VertexShader.txt">
+      <Filter>shader</Filter>
+    </Text>
+    <Text Include="..\..\data\shader\VSMap.txt">
+      <Filter>shader</Filter>
+    </Text>
   </ItemGroup>
 </Project>

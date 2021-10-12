@@ -193,6 +193,13 @@ copy "*.h" "..\\..\include"
     <ClInclude Include="TWindow.h" />
     <ClInclude Include="TWrite.h" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\..\data\shader\box.txt" />
+    <Text Include="..\..\data\shader\PixelShader.txt" />
+    <Text Include="..\..\data\shader\PSMap.txt" />
+    <Text Include="..\..\data\shader\VertexShader.txt" />
+    <Text Include="..\..\data\shader\VSMap.txt" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

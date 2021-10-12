@@ -37,7 +37,7 @@ bool  TModel::LoadObject(std::wstring filename)
     int index = 0;
     for (int iLine = 0; iLine < iNumVertex; iLine++)
     {
-        SimpleVertex v;
+        PC_VERTEX v;
         _fgetts(buffer, 256, fp);
         _stscanf_s(buffer, _T("%d %f %f %f %f %f %f %f"),
             &index,
@@ -82,7 +82,7 @@ HRESULT TModel::CreateVertexBuffer()
      // 그래픽 카드 메모리로 보내야 한다.
     D3D11_BUFFER_DESC bd;
     ZeroMemory(&bd, sizeof(D3D11_BUFFER_DESC));
-    bd.ByteWidth = sizeof(SimpleVertex) * m_pVertexList.size();
+    bd.ByteWidth = sizeof(PC_VERTEX) * m_pVertexList.size();
     bd.Usage = D3D11_USAGE_DEFAULT;
     bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
     D3D11_SUBRESOURCE_DATA data;
@@ -238,7 +238,7 @@ bool TModel::PreRender(ID3D11DeviceContext* pContext)
     pContext->VSSetShader(m_pVS, NULL, 0);
     pContext->PSSetShader(m_pPS, NULL, 0);
     pContext->IASetInputLayout(m_pVertexLayout);
-    UINT pStrides = sizeof(SimpleVertex);
+    UINT pStrides = sizeof(PC_VERTEX);
     UINT pOffsets = 0;
     pContext->IASetVertexBuffers(0, 1, &m_pVertexBuffer,
         &pStrides, &pOffsets);

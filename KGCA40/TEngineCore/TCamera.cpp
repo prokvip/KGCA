@@ -93,8 +93,13 @@ TCamera::~TCamera()
 }
 TMatrix TDebugCamera::Update(TVector4 vValue)
 {
+    m_fYaw += vValue.y;
+    m_fPitch += vValue.x;
+    m_fRoll += vValue.z;
+    m_fRadius += vValue.w;
+
     TQuaternion q;
-    D3DXQuaternionRotationYawPitchRoll(&q, vValue.y, vValue.x, vValue.z);    
+    D3DXQuaternionRotationYawPitchRoll(&q, m_fYaw, m_fPitch, m_fRoll);
     TMatrix matRotation;
     D3DXMatrixAffineTransformation(&matRotation, 1.0f, NULL, &q, &m_vCameraPos);
     D3DXMatrixInverse(&m_matView, NULL, &matRotation);

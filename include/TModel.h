@@ -1,11 +1,11 @@
 #pragma once
 #include "TStd.h"
 
-struct SimpleVertex
+struct PC_VERTEX
 {
 	TVector3 pos;
 	TVector4 color;
-	SimpleVertex()
+	PC_VERTEX()
 	{
 		color.x = 1.0f;
 		color.y = 1.0f;
@@ -13,6 +13,20 @@ struct SimpleVertex
 		color.w = 1.0f;
 	}
 };
+struct PCT_VERTEX
+{
+	TVector3 pos;
+	TVector4 color;
+	TVector2 tex;
+	PCT_VERTEX()
+	{
+		color.x = 1.0f;
+		color.y = 1.0f;
+		color.z = 1.0f;
+		color.w = 1.0f;
+	}
+};
+
 struct CB_DATA
 {
 	TMatrix  matWorld;
@@ -32,7 +46,7 @@ public:
 	ID3D11InputLayout* m_pVertexLayout;
 	ID3D11VertexShader* m_pVS;
 	ID3D11PixelShader* m_pPS;
-	std::vector< SimpleVertex> m_pVertexList;	
+	std::vector< PC_VERTEX> m_pVertexList;	
 	std::vector< DWORD> m_IndexList;
 public:
 	TMatrix		m_matWorld;

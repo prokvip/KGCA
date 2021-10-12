@@ -187,41 +187,17 @@ bool Sample::Init()
     return false;
 }
 bool Sample::Frame()
-{
-    if (g_Input.GetKey('W') >= KEY_PUSH)
-    {
-        m_vCameraPos.z += m_pSpeed * g_fSecPerFrame;
-    }
-    if (g_Input.GetKey('S') >= KEY_HOLD)
-    {
-        m_vCameraPos.z -= m_pSpeed * g_fSecPerFrame;
-    }
-    if (g_Input.GetKey('A') >= KEY_PUSH)
-    {
-        m_vCameraPos.x -= m_pSpeed * g_fSecPerFrame;
-        m_vCameraTarget.x -= m_pSpeed * g_fSecPerFrame;
-    }
-    if (g_Input.GetKey('D') >= KEY_HOLD)
-    {
-        m_vCameraPos.x += m_pSpeed * g_fSecPerFrame;
-        m_vCameraTarget.x += m_pSpeed * g_fSecPerFrame;
-    }
-    TVector3 vUp = { 0,1,0.0f };
-    D3DXMatrixLookAtLH(&m_cbData.matView, &m_vCameraPos, &m_vCameraTarget, &vUp);
-    D3DXMatrixPerspectiveFovLH(&m_cbData.matProj, TBASIS_PI * 0.5f, 
-        (float)g_rtClient.right / (float)g_rtClient.bottom, 1, 1000);
-
-    m_cbData.matWorld = m_cbData.matWorld.Transpose();
-    m_cbData.matView = m_cbData.matView.Transpose();
-    m_cbData.matProj = m_cbData.matProj.Transpose();
-    m_pImmediateContext->UpdateSubresource(
-        m_pConstantBuffer,0,NULL, &m_cbData, 0,0);
-
-
-    return false;
+{    
+    return true;
 }
 bool Sample::Render()
 {
+    m_cbData.matWorld = m_matWorld.Transpose();
+    m_cbData.matView = m_Camera.m_matView.Transpose();
+    m_cbData.matProj = m_Camera.m_matProj.Transpose();
+    m_pImmediateContext->UpdateSubresource(
+        m_pConstantBuffer, 0, NULL, &m_cbData, 0, 0);
+
     m_pImmediateContext->PSSetSamplers(0,1, &m_Texture.m_pSampler);
     m_pImmediateContext->PSSetShaderResources(1, 1, &m_Texture.m_pTextureSRV);
     m_pImmediateContext->VSSetConstantBuffers(

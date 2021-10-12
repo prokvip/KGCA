@@ -9,6 +9,10 @@ public:
 	TVector3			m_vLook;
 	TVector3			m_vSide;
 	TVector3			m_vUp;
+	float				m_fYaw = 0.0f;
+	float				m_fPitch = 0.0f;
+	float				m_fRoll = 0.0f;
+	float				m_fRadius = 10.0f;
 public:
 	TMatrix m_matWorld;
 	TMatrix m_matView;

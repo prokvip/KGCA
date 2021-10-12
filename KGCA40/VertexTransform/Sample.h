@@ -40,6 +40,7 @@ class Sample : public TCore
 	std::vector< DWORD> m_IndexList;
 public:
 	TTexture		m_Texture;
+	TMatrix			m_matWorld;
 public:
 	HRESULT		CreateConstantBuffer();
 	HRESULT		CreateVertexBuffer();

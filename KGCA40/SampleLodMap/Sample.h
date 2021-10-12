@@ -7,20 +7,14 @@
 class Sample : public TCore
 {
 public:
-	ID3D11RasterizerState* m_pRSSolid;
-	ID3D11RasterizerState* m_pRSWireFrame;
 	//TBoxShape			m_BoxObj[2];
-	TMap				m_Map;
-	TDebugCamera		m_Camera;
+	TMap				m_Map;	
 	TQuadtree			m_Quadtree;
-	float m_fYaw =0.0f;
-	float m_fPitch=0.0f;
 public:
 	bool   Init() override;
 	bool   Frame()override;
 	bool   Render()override;
 	bool   Release()override;
-	LRESULT MsgProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)override;
 public:
 	Sample();
 	virtual ~Sample();
