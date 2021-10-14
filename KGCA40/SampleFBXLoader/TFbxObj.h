@@ -1,6 +1,9 @@
 #pragma once
 #include "TModel.h"
 #include <fbxsdk.h>
+#pragma comment	(lib, "libfbxsdk.lib")
+#pragma comment	(lib, "libxml2-md.lib")
+#pragma comment	(lib, "zlib-md.lib")
 class TFbxObj : public TModel
 {
 	FbxManager*		m_pFbxManager;

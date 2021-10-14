@@ -2,14 +2,12 @@
 #include "TNode.h"
 #include <queue>
 
-class TQuadtree
+class TQuadtree : public TModel
 {
 public:
 	UINT		m_iMaxDepth;
 	UINT		m_iNumCell;
 	UINT		m_iNumPatch;
-	std::vector<DWORD>  m_IndexList;
-	ID3D11Buffer* m_pIndexBuffer;
 	std::vector<TLodPatch>   m_LodPatchList;
 public:
 	TNode*		m_pRootNode;

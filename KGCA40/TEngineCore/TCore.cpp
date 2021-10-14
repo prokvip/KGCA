@@ -47,11 +47,8 @@ bool	TCore::GameInit()
     m_Write.Init();
 
     m_Camera.Init();
-    m_Camera.CreateViewMatrix(TVector3(0, 0, -30),
-        TVector3(0, 0, 0));
-    m_Camera.CreateProjMatrix(1.0f,
-        1000.0f, TBASIS_PI * 0.5f,
-        (float)g_rtClient.right / (float)g_rtClient.bottom);
+    m_Camera.CreateViewMatrix(TVector3(0, 0, -100),TVector3(0, 0, 0));
+    m_Camera.CreateProjMatrix(1.0f,1000.0f, XM_PI * 0.25f, (float)g_rtClient.right / (float)g_rtClient.bottom);
 
     IDXGISurface1* m_pBackBuffer;
     m_pSwapChain->GetBuffer(0, 

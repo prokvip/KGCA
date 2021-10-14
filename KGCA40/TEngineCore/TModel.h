@@ -1,6 +1,5 @@
 #pragma once
-#include "TStd.h"
-
+#include "TTexture.h"
 struct PC_VERTEX
 {
 	TVector3 pos;
@@ -48,9 +47,11 @@ struct CB_DATA
 	TMatrix  matProj;
 	TVector4 vValue;
 };
+
 class TModel 
 {
 public:
+	UINT				m_iVertexSize;
 	UINT				m_iNumIndex;
 	CB_DATA				m_cbData;
 	ID3DBlob* m_pVSBlob = nullptr;
@@ -60,30 +61,31 @@ public:
 	ID3D11InputLayout* m_pVertexLayout;
 	ID3D11VertexShader* m_pVS;
 	ID3D11PixelShader* m_pPS;
-	std::vector< PC_VERTEX> m_pVertexList;	
+	std::vector<PNCT_VERTEX> m_pVertexList;	
 	std::vector< DWORD> m_IndexList;
 public:
 	TMatrix		m_matWorld;
 public:
 	virtual bool	CreateVertexData();
 	virtual bool	CreateIndexData();
-	HRESULT		CreateConstantBuffer();
-	HRESULT		CreateVertexBuffer();
-	HRESULT		CreateIndexBuffer();
-	HRESULT		CreateVertexLayout();
-	HRESULT		LoadShader(std::wstring vs, std::wstring ps);
-	bool		LoadObject(std::wstring filename);
-	void		SetMatrix(TMatrix* pMatWorld,
+	virtual HRESULT		CreateConstantBuffer();
+	virtual HRESULT		CreateVertexBuffer();
+	virtual HRESULT		CreateIndexBuffer();
+	virtual HRESULT		CreateVertexLayout();
+	virtual HRESULT		LoadShader(std::wstring vs, std::wstring ps);
+	virtual bool		LoadObject(std::wstring filename);
+	virtual void		SetMatrix(TMatrix* pMatWorld,
 		TMatrix* pMatView, TMatrix* pMatProj);
 public:
-	bool	Create(std::wstring vsFile, std::wstring psFile);
-	bool   Init();	
-	bool   Frame();
-	bool   PreRender(ID3D11DeviceContext* pContext);
-	bool   Render(ID3D11DeviceContext* pContext);
-	bool   PostRender(ID3D11DeviceContext* pContext, UINT iNumIndex);
-	bool   Release();
+	virtual bool	Create(std::wstring vsFile, std::wstring psFile);
+	virtual bool   Init();
+	virtual bool   Frame();
+	virtual bool   PreRender(ID3D11DeviceContext* pContext);
+	virtual bool   Render(ID3D11DeviceContext* pContext);
+	virtual bool   PostRender(ID3D11DeviceContext* pContext, UINT iNumIndex);
+	virtual bool   Release();
 public:
 	TModel();
+	virtual ~TModel();
 };
 

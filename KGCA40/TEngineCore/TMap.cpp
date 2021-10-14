@@ -29,7 +29,9 @@ bool	TMap::CreateVertexData()
                 TVector4(
                     randstep(0.0f, 1.0f),
                     randstep(0.0f, 1.0f),
-                    randstep(0.0f, 1.0f),1.0f);            
+                    randstep(0.0f, 1.0f),1.0f);      
+            m_pVertexList[iIndex].tex.x = (float)iCol / (float)m_info.m_iNumCol;
+            m_pVertexList[iIndex].tex.y = (float)iRow / (float)m_info.m_iNumRow;
         }
     }
     if (m_pVertexList.size() > 0) return true;

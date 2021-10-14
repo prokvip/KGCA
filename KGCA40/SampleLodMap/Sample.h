@@ -4,12 +4,14 @@
 #include "TMap.h"
 #include "TCamera.h"
 #include "TQuadtree.h"
+#include "TTexture.h"
 class Sample : public TCore
 {
 public:
-	//TBoxShape			m_BoxObj[2];
-	TMap				m_Map;	
-	TQuadtree			m_Quadtree;
+	//TBoxShape		m_BoxObj[2];
+	TMap			m_Map;	
+	TQuadtree		m_Quadtree;
+	TTexture		m_Texture;
 public:
 	bool   Init() override;
 	bool   Frame()override;

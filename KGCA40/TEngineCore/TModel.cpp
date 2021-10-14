@@ -37,7 +37,7 @@ bool  TModel::LoadObject(std::wstring filename)
     int index = 0;
     for (int iLine = 0; iLine < iNumVertex; iLine++)
     {
-        PC_VERTEX v;
+        PNCT_VERTEX v;
         _fgetts(buffer, 256, fp);
         _stscanf_s(buffer, _T("%d %f %f %f %f %f %f %f"),
             &index,
@@ -54,6 +54,7 @@ TModel::TModel()
     m_pVertexLayout = nullptr;
     m_pVS = nullptr;
     m_pPS = nullptr;
+    m_iVertexSize = sizeof(PNCT_VERTEX);
 }
 HRESULT TModel::CreateConstantBuffer()
 {
@@ -82,7 +83,7 @@ HRESULT TModel::CreateVertexBuffer()
      // 그래픽 카드 메모리로 보내야 한다.
     D3D11_BUFFER_DESC bd;
     ZeroMemory(&bd, sizeof(D3D11_BUFFER_DESC));
-    bd.ByteWidth = sizeof(PC_VERTEX) * m_pVertexList.size();
+    bd.ByteWidth = m_iVertexSize * m_pVertexList.size();
     bd.Usage = D3D11_USAGE_DEFAULT;
     bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
     D3D11_SUBRESOURCE_DATA data;
@@ -92,7 +93,6 @@ HRESULT TModel::CreateVertexBuffer()
     if (FAILED(hr)) return hr;
     return hr;
 }
-
 HRESULT TModel::CreateIndexBuffer()
 {
     HRESULT hr = S_OK;
@@ -113,17 +113,14 @@ HRESULT TModel::CreateIndexBuffer()
 HRESULT TModel::CreateVertexLayout()
 {
     HRESULT hr = S_OK;
-    D3D11_INPUT_ELEMENT_DESC layout[2];
-    ZeroMemory(layout, sizeof(D3D11_INPUT_ELEMENT_DESC) * 2);
-    layout[0].SemanticName = "POSITION";
-    layout[0].Format = DXGI_FORMAT_R32G32B32_FLOAT;
-    layout[0].AlignedByteOffset = 0;
-    layout[0].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
-    layout[1].SemanticName = "COLOR";
-    layout[1].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
-    layout[1].AlignedByteOffset = 12;
-    layout[1].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
-    hr = g_pd3dDevice->CreateInputLayout(layout, 2,
+    D3D11_INPUT_ELEMENT_DESC layout[] =
+    {
+        { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0,  0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+        { "NORMAL",   0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+        { "COLOR",    0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 24, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+        { "TEXTURE", 0, DXGI_FORMAT_R32G32_FLOAT,    0, 40, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+    };
+    hr = g_pd3dDevice->CreateInputLayout(layout, _countof(layout),
         m_pVSBlob->GetBufferPointer(),
         m_pVSBlob->GetBufferSize(),
         &m_pVertexLayout);
@@ -132,7 +129,6 @@ HRESULT TModel::CreateVertexLayout()
     m_pVSBlob->Release();
     return hr;
 }
-
 HRESULT TModel::LoadShader(std::wstring vs, std::wstring ps)
 {
     HRESULT hr = S_OK;
@@ -181,7 +177,7 @@ HRESULT TModel::LoadShader(std::wstring vs, std::wstring ps)
     PSBlob->Release();
     return hr;
 }
-bool	TModel::CreateVertexData()
+bool TModel::CreateVertexData()
 {
     if (m_pVertexList.size() > 0)
     {
@@ -189,7 +185,7 @@ bool	TModel::CreateVertexData()
     }
     return false;
 }
-bool	TModel::CreateIndexData()
+bool TModel::CreateIndexData()
 {
     if (m_IndexList.size() > 0)
     {
@@ -214,13 +210,11 @@ bool TModel::Create(std::wstring vsFile, std::wstring psFile)
     }
     return false;
 }
-
 bool TModel::Frame()
 {     
     m_cbData.vValue.z = g_fGameTimer;
     return true;
 }
-
 bool TModel::Render(ID3D11DeviceContext* pContext)
 {
     if (PreRender(pContext) ==false) return false;
@@ -238,14 +232,15 @@ bool TModel::PreRender(ID3D11DeviceContext* pContext)
     pContext->VSSetShader(m_pVS, NULL, 0);
     pContext->PSSetShader(m_pPS, NULL, 0);
     pContext->IASetInputLayout(m_pVertexLayout);
-    UINT pStrides = sizeof(PC_VERTEX);
+    UINT pStrides = m_iVertexSize;
     UINT pOffsets = 0;
     pContext->IASetVertexBuffers(0, 1, &m_pVertexBuffer,
         &pStrides, &pOffsets);
     pContext->IASetIndexBuffer(m_pIndexBuffer,
         DXGI_FORMAT_R32_UINT, 0);
     return true;
-}bool TModel::PostRender(ID3D11DeviceContext* pContext, UINT iNumIndex)
+}
+bool TModel::PostRender(ID3D11DeviceContext* pContext, UINT iNumIndex)
 {
     pContext->IASetPrimitiveTopology(
         D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -254,11 +249,15 @@ bool TModel::PreRender(ID3D11DeviceContext* pContext)
 }
 bool TModel::Release()
 {
-    m_pVertexBuffer->Release();
-    m_pIndexBuffer->Release();
-    m_pVertexLayout->Release();
-    m_pConstantBuffer->Release();
-    m_pVS->Release();
-    m_pPS->Release();
+    SAFE_RELEASE(m_pVertexBuffer);
+    SAFE_RELEASE(m_pVertexLayout);
+    SAFE_RELEASE(m_pConstantBuffer);
+    SAFE_RELEASE(m_pConstantBuffer);
+    SAFE_RELEASE(m_pVS);
+    SAFE_RELEASE(m_pPS);    
     return false;
+}
+TModel::~TModel()
+{
+
 }

@@ -9,13 +9,14 @@
 //   - PatchList[][16] 인덱스버퍼가 있다.
 bool Sample::Init()
 {
+    m_Texture.LoadTexture(L"../../data/bitmap1.BMP");
     TMapInfo info{
             16 + 1, 
             16 + 1, 0,0, 0,
             10.0f
     };
-    if (!m_Map.Load(info, L"../../data/shader/VSMap.txt", 
-        L"../../data/shader/PSMap.txt"))
+    if (!m_Map.Load(info, L"../../data/shader/DefaultShader.hlsl", 
+        L"../../data/shader/DefaultShader.hlsl"))
     {
         return false;
     }
@@ -41,12 +42,16 @@ bool Sample::Render()
         &m_Camera.m_matView,
         &m_Camera.m_matProj);
     //m_Map.Render(m_pImmediateContext);
+
+    m_pImmediateContext->PSSetSamplers(0, 1, &m_Texture.m_pSampler);
+    m_pImmediateContext->PSSetShaderResources(1, 1, &m_Texture.m_pTextureSRV);
     m_Quadtree.Render(m_pImmediateContext, m_Camera.m_vCameraPos);
     return false;
 }
 
 bool Sample::Release()
 {
+    m_Texture.Release();
     m_Map.Release();
     m_Quadtree.Release();
     /*for (int iObj = 0; iObj < 2; iObj++)

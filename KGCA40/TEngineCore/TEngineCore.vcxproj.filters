@@ -136,13 +136,7 @@
     <Text Include="..\..\data\shader\PixelShader.txt">
       <Filter>shader</Filter>
     </Text>
-    <Text Include="..\..\data\shader\PSMap.txt">
-      <Filter>shader</Filter>
-    </Text>
     <Text Include="..\..\data\shader\VertexShader.txt">
-      <Filter>shader</Filter>
-    </Text>
-    <Text Include="..\..\data\shader\VSMap.txt">
       <Filter>shader</Filter>
     </Text>
   </ItemGroup>

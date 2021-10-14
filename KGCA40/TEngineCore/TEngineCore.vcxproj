@@ -196,12 +196,12 @@ copy "*.h" "..\\..\include"
   <ItemGroup>
     <Text Include="..\..\data\shader\box.txt" />
     <Text Include="..\..\data\shader\PixelShader.txt" />
-    <Text Include="..\..\data\shader\PSMap.txt" />
     <Text Include="..\..\data\shader\VertexShader.txt" />
-    <Text Include="..\..\data\shader\VSMap.txt" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="..\..\data\shader\DefaultShader.hlsl" />
+    <FxCompile Include="..\..\data\shader\DefaultShader.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </FxCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
