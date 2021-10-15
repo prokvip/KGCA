@@ -40,11 +40,15 @@ bool TTexture::Render()
 }
 bool TTexture::Release()
 {
-    if (m_pTexture) m_pTexture->Release();
-    if (m_pTextureSRV) m_pTextureSRV->Release();
-    if (m_pSampler) m_pSampler->Release();
-    m_pTexture = nullptr;
-    m_pTextureSRV = nullptr;
-    m_pSampler = nullptr;
+    SAFE_RELEASE(m_pTexture);
+    SAFE_RELEASE(m_pTextureSRV);
+    SAFE_RELEASE(m_pSampler);    
     return true;
+}
+
+TTexture::TTexture()
+{
+    SAFE_ZERO(m_pTexture);
+    SAFE_ZERO(m_pTextureSRV);
+    SAFE_ZERO(m_pSampler);
 }

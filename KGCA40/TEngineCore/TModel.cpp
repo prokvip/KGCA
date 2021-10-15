@@ -50,10 +50,11 @@ bool  TModel::LoadObject(std::wstring filename)
 }
 TModel::TModel()
 {
-    m_pVertexBuffer = nullptr;
-    m_pVertexLayout = nullptr;
-    m_pVS = nullptr;
-    m_pPS = nullptr;
+    SAFE_ZERO(m_pVertexBuffer);
+    SAFE_ZERO(m_pIndexBuffer);
+    SAFE_ZERO(m_pVertexLayout);
+    SAFE_ZERO(m_pVS);
+    SAFE_ZERO(m_pPS);
     m_iVertexSize = sizeof(PNCT_VERTEX);
 }
 HRESULT TModel::CreateConstantBuffer()
