@@ -41,7 +41,6 @@ bool	TCore::GameInit()
 {
     TDevice::SetDevice();
     SetDeviceState();
-    // TODO : create Timer
     m_Timer.Init();
     g_Input.Init();
     m_Write.Init();
@@ -62,7 +61,6 @@ bool	TCore::GameInit()
 }
 bool	TCore::GameFrame() 
 {
-    // TODO : Frame Timer
     m_Timer.Frame();
     g_Input.Frame();
     m_Write.Frame();
@@ -88,7 +86,6 @@ bool	TCore::GameFrame()
 bool	TCore::GameRender() 
 {
     PreRender();   
-        // TODO : Render Timer
         m_Timer.Render();
         g_Input.Render();
         m_Write.Render();
@@ -110,7 +107,6 @@ bool	TCore::GameRelease()
     m_pRSSolid = nullptr;
     m_pRSWireFrame = nullptr;
 
-    // TODO : Render Timer
     m_Timer.Release();
     g_Input.Release();
     m_Write.Release();

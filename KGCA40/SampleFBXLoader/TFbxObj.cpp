@@ -310,7 +310,6 @@ void	TFbxObj::ParseNode(FbxNode* pNode, TMesh* pMesh)
 					vertex.pos.z = pos.mData[1];
 					if (VertexUVList != nullptr)
 					{
-						// todo : uvlist
 						FbxVector2 uv = ReadTextureCoord(
 							pFbxMesh, 1, VertexUVList,
 							iCornerIndex[iIndex], u[iIndex]	);
@@ -319,7 +318,6 @@ void	TFbxObj::ParseNode(FbxNode* pNode, TMesh* pMesh)
 					}					
 					if (VertexColorList != nullptr)
 					{
-						// todo : uvlist
 						int iColorIndex[3];
 						iColorIndex[0] = iBasePlayIndex + 0;
 						iColorIndex[1] = iBasePlayIndex + iTriangle + 2;
@@ -336,12 +334,10 @@ void	TFbxObj::ParseNode(FbxNode* pNode, TMesh* pMesh)
 					}
 					if (VertexNormalList != nullptr)
 					{
-						// todo : uvlist
 						int iNormalIndex[3];
 						iNormalIndex[0] = iBasePlayIndex + 0;
 						iNormalIndex[1] = iBasePlayIndex + iTriangle + 2;
 						iNormalIndex[2] = iBasePlayIndex + iTriangle + 1;
-						// todo : uvlist
 						FbxVector4 normal = ReadNormal(
 							pFbxMesh, 1, VertexNormalList,
 							iCornerIndex[iIndex], iNormalIndex[iIndex]);
