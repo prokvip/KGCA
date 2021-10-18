@@ -1,7 +1,9 @@
 #include "Sample.h"
 bool		Sample::Init()
 {
-	m_FbxObj.LoadObject("../../data/box.fbx");
+	//m_FbxObj.LoadObject("../../data/object/box.fbx");
+	m_FbxObj.LoadObject("../../data/object/ship.fbx");
+	//m_FbxObj.LoadObject("../../data/object/multiCamera.fbx");
 	return true;
 }
 bool		Sample::Frame() {

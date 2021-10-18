@@ -130,7 +130,7 @@ bool	TCore::Frame() {
 bool	TCore::PreRender() {
     float ClearColor[4] = { 0.0f, 0.125f, 0.3f, 1.0f }; //red,green,blue,alpha
     m_pImmediateContext->ClearRenderTargetView(m_pRenderTargetView, ClearColor);
-
+    m_pImmediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     return true;
 }
 bool	TCore::Render() {

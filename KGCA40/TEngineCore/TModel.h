@@ -82,7 +82,8 @@ public:
 	virtual bool   Frame();
 	virtual bool   PreRender(ID3D11DeviceContext* pContext);
 	virtual bool   Render(ID3D11DeviceContext* pContext);
-	virtual bool   PostRender(ID3D11DeviceContext* pContext, UINT iNumIndex);
+	virtual bool   PostRender(	ID3D11DeviceContext* pContext, 
+								UINT iNumIndex=0);
 	virtual bool   Release();
 public:
 	TModel();

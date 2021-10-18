@@ -24,34 +24,92 @@ TMatrix     TFbxObj::ConvertMatrix(FbxMatrix& m)
 }
 void		TFbxObj::LoadMaterial(TMtrl* pMtrl)
 {
-	//FbxSurfaceMaterial* pFbxSurfaceMtrl = pMtrl->pFbxMtrl;
-	FbxSurfaceMaterial* pFbxMaterial = pMtrl->m_pFbxNode->GetMaterial(0);
-	FbxProperty prop= pFbxMaterial->FindProperty(FbxSurfaceMaterial::sDiffuse);
-	if (prop.IsValid())
+	if (pMtrl == nullptr) return;
+	if (pMtrl->m_pSubMtrl.size() > 0)
 	{
-		int iTexCount = prop.GetSrcObjectCount<FbxTexture>();
-		for (int iTex = 0; iTex < iTexCount; iTex++)
+		for (int iSub = 0; iSub < pMtrl->m_pSubMtrl.size(); iSub++)
 		{
-			FbxTexture* pTex =	prop.GetSrcObject<FbxFileTexture>(iTex);
-			if (pTex == nullptr) continue;
-			FbxFileTexture* fileTexture =prop.GetSrcObject<FbxFileTexture>(iTex);
-			
-			std::string szFileName;
-			char Drive[MAX_PATH] = { 0, };
-			char Dir[MAX_PATH] = { 0, };
-			char FName[MAX_PATH] = { 0, };
-			char Ext[MAX_PATH] = { 0, };
-			if (fileTexture->GetFileName())
+			TMtrl* pSubMtrl = pMtrl->m_pSubMtrl[iSub];
+			FbxSurfaceMaterial* pFbxMaterial = pSubMtrl->m_pFbxSurfaceMtrl;
+			FbxProperty prop = pFbxMaterial->FindProperty(FbxSurfaceMaterial::sDiffuse);
+			if (prop.IsValid())
 			{
-				_splitpath(fileTexture->GetFileName(), Drive, Dir, FName, Ext);
-				Ext[4] = 0;
-				szFileName = FName;
-				szFileName += Ext;
+				int iTexCount = prop.GetSrcObjectCount<FbxTexture>();
+				for (int iTex = 0; iTex < iTexCount; iTex++)
+				{
+					FbxTexture* pTex = prop.GetSrcObject<FbxFileTexture>(iTex);
+					if (pTex == nullptr) continue;
+					FbxFileTexture* fileTexture = prop.GetSrcObject<FbxFileTexture>(iTex);
+
+					std::string szFileName;
+					char Drive[MAX_PATH] = { 0, };
+					char Dir[MAX_PATH] = { 0, };
+					char FName[MAX_PATH] = { 0, };
+					char Ext[MAX_PATH] = { 0, };
+					if (fileTexture->GetFileName())
+					{
+						_splitpath(fileTexture->GetFileName(), Drive, Dir, FName, Ext);
+						Ext[4] = 0;
+						szFileName = FName;
+						if (_stricmp(Ext, ".tga") == 0)
+						{
+							szFileName += ".dds";
+						}
+						else
+						{
+							szFileName += Ext;
+						}
+					}
+
+					pSubMtrl->m_Texture.m_szFileName = TBASIS::g_szDataPath;
+					pSubMtrl->m_Texture.m_szFileName += L"object/";
+					pSubMtrl->m_Texture.m_szFileName += TBASIS::mtw(szFileName);
+					pSubMtrl->m_Texture.LoadTexture(
+						pSubMtrl->m_Texture.m_szFileName);
+				}
 			}
-			pMtrl->m_Texture.m_szFileName = TBASIS::g_szDataPath;
-			pMtrl->m_Texture.m_szFileName += TBASIS::mtw(szFileName);
-			pMtrl->m_Texture.LoadTexture(pMtrl->m_Texture.m_szFileName);
-		}						
+		}
+	}
+	else
+	{
+		//FbxSurfaceMaterial* pFbxSurfaceMtrl = pMtrl->m_pFbxSurfaceMtrl;
+		FbxSurfaceMaterial* pFbxMaterial = pMtrl->m_pFbxNode->GetMaterial(0);
+		FbxProperty prop = pFbxMaterial->FindProperty(FbxSurfaceMaterial::sDiffuse);
+		if (prop.IsValid())
+		{
+			int iTexCount = prop.GetSrcObjectCount<FbxTexture>();
+			for (int iTex = 0; iTex < iTexCount; iTex++)
+			{
+				FbxTexture* pTex = prop.GetSrcObject<FbxFileTexture>(iTex);
+				if (pTex == nullptr) continue;
+				FbxFileTexture* fileTexture = prop.GetSrcObject<FbxFileTexture>(iTex);
+
+				std::string szFileName;
+				char Drive[MAX_PATH] = { 0, };
+				char Dir[MAX_PATH] = { 0, };
+				char FName[MAX_PATH] = { 0, };
+				char Ext[MAX_PATH] = { 0, };
+				if (fileTexture->GetFileName())
+				{
+					_splitpath(fileTexture->GetFileName(), Drive, Dir, FName, Ext);
+					Ext[4] = 0;
+					szFileName = FName;
+					if (_stricmp(Ext, ".tga") == 0)
+					{
+						szFileName += ".dds";
+					}
+					else
+					{
+						szFileName += Ext;
+					}
+				}
+
+				pMtrl->m_Texture.m_szFileName = TBASIS::g_szDataPath;
+				pMtrl->m_Texture.m_szFileName += L"object/";
+				pMtrl->m_Texture.m_szFileName += TBASIS::mtw(szFileName);
+				pMtrl->m_Texture.LoadTexture(pMtrl->m_Texture.m_szFileName);
+			}
+		}
 	}
 }
 void		TFbxObj::SetMatrix(
@@ -77,17 +135,35 @@ bool    TFbxObj::Render(ID3D11DeviceContext* pContext)
 	{
 		TMesh* pMesh = m_pMeshList[iObj];
 		TMtrl* pMtrl = nullptr;
-		if (pMesh->m_iMtrlRef >= 0)
+		pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+		
+		// 서브메터리얼 존재  
+		if (pMesh->m_pSubMesh.size() > 0)
 		{
-			pMtrl = m_pFbxMaterialList[pMesh->m_iMtrlRef];
+			for (int iSub = 0; iSub < pMesh->m_pSubMesh.size(); iSub++)
+			{
+				TMtrl* pSubMtrl = 
+					m_pFbxMaterialList[pMesh->m_iMtrlRef]->m_pSubMtrl[iSub];
+				pContext->PSSetSamplers(0, 1, &pSubMtrl->m_Texture.m_pSampler);
+				pContext->PSSetShaderResources(1, 1, &pSubMtrl->m_Texture.m_pTextureSRV);				
+				pMesh->m_pSubMesh[iSub]->SetMatrix(&pMesh->m_matWorld, &m_cbData.matView, &m_cbData.matProj);
+				pMesh->m_pSubMesh[iSub]->Render(pContext);
+			}
 		}
-		pMesh->SetMatrix(&pMesh->m_matWorld, &m_cbData.matView, &m_cbData.matProj);
-		if (pMtrl != nullptr)
+		else 
 		{
-			pContext->PSSetSamplers(0, 1, &pMtrl->m_Texture.m_pSampler);
-			pContext->PSSetShaderResources(1, 1, &pMtrl->m_Texture.m_pTextureSRV);
+			if (pMesh->m_iMtrlRef >= 0)
+			{
+				pMtrl = m_pFbxMaterialList[pMesh->m_iMtrlRef];
+			}			
+			if (pMtrl != nullptr)
+			{
+				pContext->PSSetSamplers(0, 1, &pMtrl->m_Texture.m_pSampler);
+				pContext->PSSetShaderResources(1, 1, &pMtrl->m_Texture.m_pTextureSRV);
+			}
+			pMesh->SetMatrix(&pMesh->m_matWorld, &m_cbData.matView, &m_cbData.matProj);
+			pMesh->Render(pContext);
 		}
-		pMesh->Render(pContext);
 	}
 	return true;
 }
@@ -95,7 +171,7 @@ int     TFbxObj::GetRootMtrl(FbxSurfaceMaterial* pFbxMaterial)
 {
 	for (int iMtrl = 0; iMtrl < m_pFbxMaterialList.size(); iMtrl++)
 	{
-		if (m_pFbxMaterialList[iMtrl]->pFbxMtrl == pFbxMaterial)
+		if (m_pFbxMaterialList[iMtrl]->m_pFbxSurfaceMtrl == pFbxMaterial)
 		{
 			return iMtrl;
 		}
@@ -106,60 +182,38 @@ void	TFbxObj::ParseNode(FbxNode* pNode, TMesh* pMesh)
 {
 	FbxSurfaceMaterial* pFbxMaterial = pNode->GetMaterial(0);
 	pMesh->m_iMtrlRef = GetRootMtrl(pFbxMaterial);
+
 	std::string name = pNode->GetName();
 	FbxMesh* pFbxMesh = pNode->GetMesh();
 	std::vector< std::string> fbxFileTexList;
 	if (pFbxMesh != nullptr)
 	{
-		int iNumLayer = pFbxMesh->GetLayerCount();
-		std::vector< FbxLayerElementUV*> VertexUVList;
-		std::vector< FbxLayerElementVertexColor*> VertexColorList;
-		std::vector< FbxLayerElementNormal*> VertexNormalList;
+		pMesh->m_iNumLayer = pFbxMesh->GetLayerCount();
+		pMesh->m_LayerList.resize(pMesh->m_iNumLayer);
+		//std::vector< FbxLayerElementUV*> VertexUVList;
+		//std::vector< FbxLayerElementVertexColor*> VertexColorList;
+		//std::vector< FbxLayerElementNormal*> VertexNormalList;
+		//FbxLayerElementMaterial* fbxSubMaterial=nullptr;
+		// 
 		// todo : 정점성분 레이어 리스트
-		for (int iLayer = 0; iLayer < iNumLayer; iLayer++)
+		for (int iLayer = 0; iLayer < pMesh->m_iNumLayer; iLayer++)
 		{
-			FbxLayer* pLayer = pFbxMesh->GetLayer(0);
+			FbxLayer* pLayer = pFbxMesh->GetLayer(iLayer);
 			if (pLayer->GetVertexColors() != nullptr) 
 			{
-				VertexColorList.push_back(pLayer->GetVertexColors());
+				pMesh->m_LayerList[iLayer].pColor = pLayer->GetVertexColors();
 			}
 			if (pLayer->GetNormals() != nullptr) 
 			{
-				VertexNormalList.push_back(pLayer->GetNormals());
+				pMesh->m_LayerList[iLayer].pNormal = pLayer->GetNormals();
 			}
 			if (pLayer->GetUVs() != nullptr) 
 			{
-				VertexUVList.push_back(pLayer->GetUVs());
+				pMesh->m_LayerList[iLayer].pUV = pLayer->GetUVs();
 			}
 			if (pLayer->GetMaterials() != nullptr)
 			{
-				FbxLayerElementMaterial* fbxMaterial = pLayer->GetMaterials();
-				//	int iMtrlCount = fbxMaterial->mDirectArray->GetCount();
-				//	// 서브메터리얼 구조
-				//	if (iMtrlCount > 1)
-				//	{
-				//		for (int iSub=0;iSub < iMtrlCount; iSub++)
-				//		{
-
-				//		}
-				//	}
-				//	else
-				//	{
-				//		FbxSurfaceMaterial* pFbxMaterial = pNode->GetMaterial(0);
-				//		FbxProperty prop= pFbxMaterial->FindProperty(FbxSurfaceMaterial::sDiffuse);
-				//		if (prop.IsValid())
-				//		{
-				//			int iTexCount = prop.GetSrcObjectCount<FbxTexture>();
-				//			for (int iTex = 0; iTex < iTexCount; iTex++)
-				//			{
-				//				FbxTexture* pTex =	prop.GetSrcObject<FbxFileTexture>(iTex);
-				//				if (pTex == nullptr) continue;
-				//				FbxFileTexture* fileTexture =prop.GetSrcObject<FbxFileTexture>(iTex);
-				//				fbxFileTexList.push_back(fileTexture->GetFileName());
-				//			}						
-				//		}
-				//	}
-				//}
+				pMesh->m_LayerList[iLayer].pMaterial = pLayer->GetMaterials();
 			}
 		}
 		// TODO : 월드행렬
@@ -177,8 +231,55 @@ void	TFbxObj::ParseNode(FbxNode* pNode, TMesh* pMesh)
 		int m_iNumPolygon = pFbxMesh->GetPolygonCount();
 		// 정점리스트 주소
 		FbxVector4* pVertexPositions = pFbxMesh->GetControlPoints();
+		int iBasePlayIndex = 0;
+		int iNumFbxMaterial = pNode->GetMaterialCount();
+		if (iNumFbxMaterial > 1)
+		{
+			pMesh->m_pSubMesh.resize(iNumFbxMaterial);
+			for (int iSub = 0; iSub < iNumFbxMaterial; iSub++)
+			{
+				pMesh->m_pSubMesh[iSub] = new TMesh;
+			}
+		}
+
+		FbxLayerElementMaterial* fbxSubMaterial = 
+			pMesh->m_LayerList[0].pMaterial;
+		FbxLayerElementUV* VertexUVList=
+			pMesh->m_LayerList[0].pUV;
+		FbxLayerElementVertexColor* VertexColorList=
+			pMesh->m_LayerList[0].pColor;
+		FbxLayerElementNormal* VertexNormalList=
+			pMesh->m_LayerList[0].pNormal;
+
 		for (int iPoly = 0; iPoly < m_iNumPolygon; iPoly++)
 		{
+			int iSubMtrlIndex = 0;
+			if (fbxSubMaterial != nullptr)
+			{
+				switch (fbxSubMaterial->GetMappingMode())
+				{
+					case FbxLayerElement::eByPolygon: 
+					{
+						switch (fbxSubMaterial->GetReferenceMode())
+						{
+							case FbxLayerElement::eDirect:
+							{
+								iSubMtrlIndex = iPoly;
+							}break;
+							case FbxLayerElement::eIndex:
+							case FbxLayerElement::eIndexToDirect:
+							{
+								iSubMtrlIndex = 
+									fbxSubMaterial->GetIndexArray().GetAt(iPoly);
+							}break;
+						}
+					}break;
+					default:
+					{
+						iSubMtrlIndex = 0;
+					}break;
+				}
+			}
 			// 삼각형, 사각형
 			int iPolySize = pFbxMesh->GetPolygonSize(iPoly);
 			int m_iNumTriangle = iPolySize - 2;
@@ -207,60 +308,85 @@ void	TFbxObj::ParseNode(FbxNode* pNode, TMesh* pMesh)
 					vertex.pos.x = pos.mData[0];
 					vertex.pos.y = pos.mData[2];
 					vertex.pos.z = pos.mData[1];
-					if (VertexUVList.size())
+					if (VertexUVList != nullptr)
 					{
 						// todo : uvlist
-						FbxLayerElementUV* pUVElement=
-							VertexUVList[0];
 						FbxVector2 uv = ReadTextureCoord(
-							pFbxMesh, 1, pUVElement,
+							pFbxMesh, 1, VertexUVList,
 							iCornerIndex[iIndex], u[iIndex]	);
 						vertex.tex.x = uv.mData[0];
 						vertex.tex.y = 1.0f-uv.mData[1];
 					}					
-					if (VertexColorList.size())
+					if (VertexColorList != nullptr)
 					{
 						// todo : uvlist
-						FbxLayerElementVertexColor* pElement = VertexColorList[0];
+						int iColorIndex[3];
+						iColorIndex[0] = iBasePlayIndex + 0;
+						iColorIndex[1] = iBasePlayIndex + iTriangle + 2;
+						iColorIndex[2] = iBasePlayIndex + iTriangle + 1;
+
 						FbxColor color = ReadColor(
-							pFbxMesh, 1, pElement,
-							iCornerIndex[iIndex], u[iIndex]);
+							pFbxMesh, 1, VertexColorList,
+							iCornerIndex[iIndex], iColorIndex[iIndex]);
 						vertex.color.x = color.mRed;
 						vertex.color.y = color.mGreen;
 						vertex.color.z = color.mBlue;
 						vertex.color.w = 1.0f;
 						
 					}
-					if (VertexNormalList.size())
+					if (VertexNormalList != nullptr)
 					{
 						// todo : uvlist
-						FbxLayerElementNormal* pElement =
-							VertexNormalList[0];
+						int iNormalIndex[3];
+						iNormalIndex[0] = iBasePlayIndex + 0;
+						iNormalIndex[1] = iBasePlayIndex + iTriangle + 2;
+						iNormalIndex[2] = iBasePlayIndex + iTriangle + 1;
+						// todo : uvlist
 						FbxVector4 normal = ReadNormal(
-							pFbxMesh, 1, pElement,
-							iCornerIndex[iIndex], u[iIndex]);
+							pFbxMesh, 1, VertexNormalList,
+							iCornerIndex[iIndex], iNormalIndex[iIndex]);
 						vertex.normal.x = normal.mData[0];
 						vertex.normal.y = normal.mData[2];
 						vertex.normal.z = normal.mData[1];
 					}
-					pMesh->m_pVertexList.push_back(vertex);
+					if (iNumFbxMaterial > 1)
+					{			
+						pMesh->m_pSubMesh[iSubMtrlIndex]->m_pVertexList.push_back(vertex);
+					}
+					else
+					{
+						pMesh->m_pVertexList.push_back(vertex);
+					}
 				}
 			}
+			iBasePlayIndex += iPolySize;
 		}
 	}
 }
 
 void	TFbxObj::PreProcess(FbxNode* pNode)
 {
-	// pNode 정보 얻기
 	int iNumFbxMaterial = pNode->GetMaterialCount();
 	FbxSurfaceMaterial* pFbxMaterial = pNode->GetMaterial(0);
-	if (pFbxMaterial != nullptr)
+	if (iNumFbxMaterial > 1)
 	{
-		TMtrl* pMtrl = new TMtrl;
-		pMtrl->pFbxMtrl = pFbxMaterial;
-		pMtrl->m_pFbxNode = pNode;			
+		TMtrl* pMtrl = new TMtrl(pNode, pFbxMaterial);
+		for (int iSub = 0; iSub < iNumFbxMaterial; iSub++)
+		{
+			FbxSurfaceMaterial* pFbxSubMaterial = pNode->GetMaterial(iSub);
+			_ASSERT(pFbxSubMaterial != nullptr);
+			TMtrl* pSubMtrl = new TMtrl(pNode, pFbxSubMaterial);
+			pMtrl->m_pSubMtrl.push_back(pSubMtrl);
+		}
 		m_pFbxMaterialList.push_back(pMtrl);
+	}
+	else
+	{		
+		if (pFbxMaterial != nullptr)
+		{
+			TMtrl* pMtrl = new TMtrl( pNode, pFbxMaterial);
+			m_pFbxMaterialList.push_back(pMtrl);
+		}
 	}
 	int iNumChild = pNode->GetChildCount();
 	for (int iNode = 0; iNode < iNumChild; iNode++)
@@ -277,31 +403,44 @@ void	TFbxObj::PreProcess(FbxNode* pNode)
 }
 bool	TFbxObj::LoadObject(std::string filename)
 {
-	// todo  : 메모리 관리;
 	m_pFbxManager = FbxManager::Create();	
-	//todo  : FbxImporter* m_pFbxImporter;
 	m_pFbxImporter = FbxImporter::Create(m_pFbxManager,"");
-	//todo  : FbxScene* m_pFbxScene;
 	m_pFbxScene = FbxScene::Create(m_pFbxManager, "");
 	bool bRet = m_pFbxImporter->Initialize( filename.c_str());
 	bRet = m_pFbxImporter->Import(m_pFbxScene);
+
 	FbxNode* m_pRootNode=m_pFbxScene->GetRootNode();
 	PreProcess(m_pRootNode);
-
+	// todo : 중복처리 미작업
 	for (int iMtrl = 0; iMtrl < m_pFbxMaterialList.size(); iMtrl++)
 	{
 		TMtrl* pMtrl = m_pFbxMaterialList[iMtrl];		
 		LoadMaterial(pMtrl);
 	}
-
-	for (int iObj = 0; iObj < m_pFbxNodeList.size(); iObj++)
+	for (int iNode = 0; iNode < m_pFbxNodeList.size(); iNode++)
 	{
-		FbxNode* pNode = m_pFbxNodeList[iObj];
+		FbxNode* pNode = m_pFbxNodeList[iNode];
 		TMesh* pMesh = new TMesh;
 		m_pMeshList.push_back(pMesh);
-		ParseNode(pNode, pMesh);
-		pMesh->Create(L"FbxShader.hlsl", L"../../data/shader/DefaultShader.hlsl");
+		ParseNode(pNode, pMesh);		
 	}	
+	for (int iMesh = 0; iMesh < m_pMeshList.size(); iMesh++)
+	{
+		TMesh* pMesh = m_pMeshList[iMesh];
+		if (pMesh->m_pSubMesh.size() > 0)
+		{
+			for (int iSubMesh = 0; iSubMesh < m_pMeshList[iMesh]->m_pSubMesh.size(); iSubMesh++)
+			{
+				TMesh* pSubMesh = m_pMeshList[iMesh]->m_pSubMesh[iSubMesh];
+				// todo : 쉐이더 등등 중복처리 미작업
+				pSubMesh->Create(L"FbxShader.hlsl", L"../../data/shader/DefaultShader.hlsl");
+			}
+		}
+		else
+		{
+			pMesh->Create(L"FbxShader.hlsl", L"../../data/shader/DefaultShader.hlsl");
+		}
+	}
 	return bRet;
 }
 bool    TFbxObj::Release()
@@ -309,11 +448,12 @@ bool    TFbxObj::Release()
 	for (int iObj = 0; iObj < m_pMeshList.size(); iObj++)
 	{
 		m_pMeshList[iObj]->Release();
+		SAFE_DEL(m_pMeshList[iObj]);
 	}
 	for (int iObj = 0; iObj < m_pFbxMaterialList.size(); iObj++)
 	{
 		m_pFbxMaterialList[iObj]->Release();
-		delete m_pFbxMaterialList[iObj];
+		SAFE_DEL(m_pFbxMaterialList[iObj]);
 	}
 	return true;
 }

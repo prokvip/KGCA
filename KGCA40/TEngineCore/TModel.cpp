@@ -48,15 +48,7 @@ bool  TModel::LoadObject(std::wstring filename)
     fclose(fp);
     return true;
 }
-TModel::TModel()
-{
-    SAFE_ZERO(m_pVertexBuffer);
-    SAFE_ZERO(m_pIndexBuffer);
-    SAFE_ZERO(m_pVertexLayout);
-    SAFE_ZERO(m_pVS);
-    SAFE_ZERO(m_pPS);
-    m_iVertexSize = sizeof(PNCT_VERTEX);
-}
+
 HRESULT TModel::CreateConstantBuffer()
 {
     HRESULT hr = S_OK;
@@ -75,6 +67,7 @@ HRESULT TModel::CreateConstantBuffer()
 HRESULT TModel::CreateVertexBuffer()
 {
     HRESULT hr = S_OK;
+    if (m_pVertexList.size() <= 0) return hr;
     // ·ÎÄ®->¿ùµå->ºä->Åõ¿µÁÂÇ¥°è(NDC)->È­¸é
     //  x = -1.0f ~ 1.0f
     //  y = -1.0f ~ 1.0f
@@ -97,6 +90,7 @@ HRESULT TModel::CreateVertexBuffer()
 HRESULT TModel::CreateIndexBuffer()
 {
     HRESULT hr = S_OK;
+    if (m_IndexList.size() <= 0) return hr;
     D3D11_BUFFER_DESC bd;
     ZeroMemory(&bd, sizeof(D3D11_BUFFER_DESC));
     bd.ByteWidth = sizeof(DWORD) * m_IndexList.size();
@@ -200,14 +194,21 @@ bool TModel::Init()
 }
 bool TModel::Create(std::wstring vsFile, std::wstring psFile)
 {
-    if (CreateVertexData() && CreateIndexData())
+    CreateConstantBuffer();
+    if (CreateVertexData())
     {
-        CreateConstantBuffer();
         CreateVertexBuffer();
+    }
+    if (CreateIndexData())
+    {
         CreateIndexBuffer();
-        LoadShader(vsFile,psFile);
-        CreateVertexLayout();
-        return true;
+    }
+    if (SUCCEEDED(LoadShader(vsFile, psFile)))
+    {
+        if (SUCCEEDED(CreateVertexLayout()))
+        {
+            return true;
+        }        
     }
     return false;
 }
@@ -243,20 +244,36 @@ bool TModel::PreRender(ID3D11DeviceContext* pContext)
 }
 bool TModel::PostRender(ID3D11DeviceContext* pContext, UINT iNumIndex)
 {
-    pContext->IASetPrimitiveTopology(
-        D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-    pContext->DrawIndexed(iNumIndex, 0, 0);
+    if (iNumIndex > 0)
+    {        
+        pContext->DrawIndexed(iNumIndex, 0, 0);
+    }
+    else
+    {
+        pContext->Draw(m_pVertexList.size(), 0);
+    }
     return false;
 }
 bool TModel::Release()
 {
     SAFE_RELEASE(m_pVertexBuffer);
     SAFE_RELEASE(m_pVertexLayout);
-    SAFE_RELEASE(m_pConstantBuffer);
+    SAFE_RELEASE(m_pIndexBuffer);
     SAFE_RELEASE(m_pConstantBuffer);
     SAFE_RELEASE(m_pVS);
     SAFE_RELEASE(m_pPS);    
     return false;
+}
+TModel::TModel()
+{
+    SAFE_ZERO(m_pVertexBuffer);
+    SAFE_ZERO(m_pIndexBuffer);
+    SAFE_ZERO(m_pVertexLayout);
+    SAFE_ZERO(m_pConstantBuffer);
+    SAFE_ZERO(m_pVS);
+    SAFE_ZERO(m_pPS);
+    m_iVertexSize = sizeof(PNCT_VERTEX);
+    m_iNumIndex = 0;
 }
 TModel::~TModel()
 {

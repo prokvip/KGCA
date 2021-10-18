@@ -6,42 +6,49 @@
 #pragma comment	(lib, "zlib-md.lib")
 struct TMtrl
 {	
-	FbxNode* m_pFbxNode;
-	FbxSurfaceMaterial* pFbxMtrl;
-	TTexture	m_Texture;
-	std::vector<TMtrl> m_SubMtrl;
+	FbxNode*			m_pFbxNode;
+	FbxSurfaceMaterial* m_pFbxSurfaceMtrl;
+	TTexture			m_Texture;
+	std::vector<TMtrl*> m_pSubMtrl;
+	TMtrl() {}
+	TMtrl(FbxNode* pFbxNode, FbxSurfaceMaterial* pFbxMtrl)
+	{
+		m_pFbxNode = pFbxNode;
+		m_pFbxSurfaceMtrl = pFbxMtrl;
+	}
 	void Release()
 	{
 		m_Texture.Release();
-		for (auto& data : m_SubMtrl)
+		for (auto data : m_pSubMtrl)
 		{
-			data.Release();
+			data->Release();
+			delete data;
 		}
 	}
 };
+struct TLayer
+{
+	FbxLayerElementUV*			pUV;
+	FbxLayerElementVertexColor* pColor;
+	FbxLayerElementNormal*		pNormal;
+	FbxLayerElementMaterial*	pMaterial;
+};
 struct TMesh : public TModel
 {
-	TMatrix m_matWorld;
-	int   m_iMtrlRef;
-	bool  PostRender(ID3D11DeviceContext* pContext, UINT iNumIndex)
+	int					m_iNumLayer;
+	std::vector<TLayer> m_LayerList;
+	int					m_iMtrlRef;
+	TMatrix				m_matWorld;	
+	std::vector<TMesh*> m_pSubMesh;	
+	bool Release() override
 	{
-		pContext->IASetPrimitiveTopology(
-			D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-		pContext->Draw(m_pVertexList.size(), 0);
-		return true;
-	}
-	bool Create(std::wstring vsFile, std::wstring psFile)
-	{
-		if (CreateVertexData())
+		TModel::Release();
+		for (auto data : m_pSubMesh)
 		{
-			CreateConstantBuffer();
-			CreateVertexBuffer();
-			//CreateIndexBuffer();
-			LoadShader(vsFile, psFile);
-			CreateVertexLayout();
-			return true;
+			data->Release();
+			SAFE_DEL(data);
 		}
-		return false;
+		return true;
 	}
 };
 class TFbxObj 
@@ -50,16 +57,16 @@ class TFbxObj
 	FbxImporter*	m_pFbxImporter;
 	FbxScene*		m_pFbxScene;
 public:
-	std::vector<FbxNode*>  m_pFbxNodeList;
-	std::vector<TMtrl*>  m_pFbxMaterialList;
-	std::vector<TMesh*> m_pMeshList;
-	CB_DATA				m_cbData;
+	std::vector<FbxNode*>	m_pFbxNodeList;
+	std::vector<TMtrl*>		m_pFbxMaterialList;
+	std::vector<TMesh*>		m_pMeshList;
+	CB_DATA					m_cbData;
 /// <summary>
 /// 가상함수 리스트
 /// </summary>
 public:
-	bool	LoadObject(std::string filename);	
-	bool    Release();
+	bool		LoadObject(std::string filename);	
+	bool		Release();
 	TMatrix     DxConvertMatrix(TMatrix m);
 	TMatrix     ConvertMatrix(FbxMatrix& m);
 public:
@@ -67,9 +74,6 @@ public:
 	bool    Render(ID3D11DeviceContext* pContext);
 	int     GetRootMtrl(FbxSurfaceMaterial* pFbxMaterial);
 	void	LoadMaterial(TMtrl* pMtrl);
-/// <summary>
-/// 일반함수 리스트
-/// </summary>
 public:
 	void	PreProcess(FbxNode* pNode);
 	void	ParseNode(FbxNode* pNode, TMesh* pMesh);
