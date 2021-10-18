@@ -1,5 +1,27 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include "TFbxObj.h"
+TMatrix     TFbxObj::DxConvertMatrix(TMatrix m)
+{
+	TMatrix mat;
+	mat._11 = m._11; mat._12 = m._13; mat._13 = m._12;
+	mat._21 = m._31; mat._22 = m._33; mat._23 = m._32;
+	mat._31 = m._21; mat._32 = m._23; mat._33 = m._22;
+	mat._41 = m._41; mat._42 = m._43; mat._43 = m._42;
+	mat._14 = mat._24 = mat._34 = 0.0f;
+	mat._44 = 1.0f;
+	return mat;
+}
+TMatrix     TFbxObj::ConvertMatrix(FbxMatrix& m)
+{
+	TMatrix mat;
+	float* pMatArray = reinterpret_cast<float*>(&mat);
+	double* pSrcArray = reinterpret_cast< double*>(&m);
+	for (int i = 0; i < 16; i++)
+	{
+		pMatArray[i] = pSrcArray[i];
+	}
+	return mat;
+}
 void		TFbxObj::LoadMaterial(TMtrl* pMtrl)
 {
 	//FbxSurfaceMaterial* pFbxSurfaceMtrl = pMtrl->pFbxMtrl;
@@ -59,9 +81,10 @@ bool    TFbxObj::Render(ID3D11DeviceContext* pContext)
 		{
 			pMtrl = m_pFbxMaterialList[pMesh->m_iMtrlRef];
 		}
-		pMesh->SetMatrix(nullptr, &m_cbData.matView, &m_cbData.matProj);
+		pMesh->SetMatrix(&pMesh->m_matWorld, &m_cbData.matView, &m_cbData.matProj);
 		if (pMtrl != nullptr)
 		{
+			pContext->PSSetSamplers(0, 1, &pMtrl->m_Texture.m_pSampler);
 			pContext->PSSetShaderResources(1, 1, &pMtrl->m_Texture.m_pTextureSRV);
 		}
 		pMesh->Render(pContext);
@@ -90,13 +113,20 @@ void	TFbxObj::ParseNode(FbxNode* pNode, TMesh* pMesh)
 	{
 		int iNumLayer = pFbxMesh->GetLayerCount();
 		std::vector< FbxLayerElementUV*> VertexUVList;
-		// 정점성분 레이어 리스트
+		std::vector< FbxLayerElementVertexColor*> VertexColorList;
+		std::vector< FbxLayerElementNormal*> VertexNormalList;
+		// todo : 정점성분 레이어 리스트
 		for (int iLayer = 0; iLayer < iNumLayer; iLayer++)
 		{
 			FbxLayer* pLayer = pFbxMesh->GetLayer(0);
-			if (pLayer->GetVertexColors() != nullptr) {}
-			if (pLayer->GetNormals() != nullptr) {}
-			if (pLayer->GetTangents() != nullptr) {}
+			if (pLayer->GetVertexColors() != nullptr) 
+			{
+				VertexColorList.push_back(pLayer->GetVertexColors());
+			}
+			if (pLayer->GetNormals() != nullptr) 
+			{
+				VertexNormalList.push_back(pLayer->GetNormals());
+			}
 			if (pLayer->GetUVs() != nullptr) 
 			{
 				VertexUVList.push_back(pLayer->GetUVs());
@@ -132,7 +162,18 @@ void	TFbxObj::ParseNode(FbxNode* pNode, TMesh* pMesh)
 				//}
 			}
 		}
-
+		// TODO : 월드행렬
+		FbxAMatrix matGeom;
+		{
+			FbxVector4 rot = pNode->GetGeometricRotation(FbxNode::eSourcePivot);
+			FbxVector4 trans = pNode->GetGeometricTranslation(FbxNode::eSourcePivot);
+			FbxVector4 scale = pNode->GetGeometricScaling(FbxNode::eSourcePivot);
+			matGeom.SetT(trans);
+			matGeom.SetR(rot);
+			matGeom.SetS(scale);
+		}
+		FbxMatrix matA = matGeom;
+		pMesh->m_matWorld = DxConvertMatrix(ConvertMatrix(matA));
 		int m_iNumPolygon = pFbxMesh->GetPolygonCount();
 		// 정점리스트 주소
 		FbxVector4* pVertexPositions = pFbxMesh->GetControlPoints();
@@ -162,10 +203,10 @@ void	TFbxObj::ParseNode(FbxNode* pNode, TMesh* pMesh)
 				{
 					PNCT_VERTEX vertex;
 					FbxVector4 pos = pVertexPositions[iCornerIndex[iIndex]];
+					//FbxVector4 vPos = matGeom.MultT(pos);
 					vertex.pos.x = pos.mData[0];
 					vertex.pos.y = pos.mData[2];
 					vertex.pos.z = pos.mData[1];
-
 					if (VertexUVList.size())
 					{
 						// todo : uvlist
@@ -176,6 +217,31 @@ void	TFbxObj::ParseNode(FbxNode* pNode, TMesh* pMesh)
 							iCornerIndex[iIndex], u[iIndex]	);
 						vertex.tex.x = uv.mData[0];
 						vertex.tex.y = 1.0f-uv.mData[1];
+					}					
+					if (VertexColorList.size())
+					{
+						// todo : uvlist
+						FbxLayerElementVertexColor* pElement = VertexColorList[0];
+						FbxColor color = ReadColor(
+							pFbxMesh, 1, pElement,
+							iCornerIndex[iIndex], u[iIndex]);
+						vertex.color.x = color.mRed;
+						vertex.color.y = color.mGreen;
+						vertex.color.z = color.mBlue;
+						vertex.color.w = 1.0f;
+						
+					}
+					if (VertexNormalList.size())
+					{
+						// todo : uvlist
+						FbxLayerElementNormal* pElement =
+							VertexNormalList[0];
+						FbxVector4 normal = ReadNormal(
+							pFbxMesh, 1, pElement,
+							iCornerIndex[iIndex], u[iIndex]);
+						vertex.normal.x = normal.mData[0];
+						vertex.normal.y = normal.mData[2];
+						vertex.normal.z = normal.mData[1];
 					}
 					pMesh->m_pVertexList.push_back(vertex);
 				}
@@ -183,64 +249,11 @@ void	TFbxObj::ParseNode(FbxNode* pNode, TMesh* pMesh)
 		}
 	}
 }
-FbxVector2 TFbxObj::ReadTextureCoord(FbxMesh* pFbxMesh, DWORD dwVertexTextureCount, FbxLayerElementUV* pUVSet, int vertexIndex, int uvIndex)
-{
-	FbxVector2 uv(0, 0);
-	if (dwVertexTextureCount < 1 || pUVSet == nullptr)
-	{
-		return uv;
-	}
-	int iVertexTextureCountLayer = pFbxMesh->GetElementUVCount();
-	FbxLayerElementUV* pFbxLayerElementUV = pFbxMesh->GetElementUV(0);
 
-	// 제어점은 평면의 4개 정점, 폴리곤 정점은 6개 정점을 위미한다.
-	// 그래서 텍스처 좌표와 같은 레이어 들은 제어점 또는 정점으로 구분된다.
-	switch (pUVSet->GetMappingMode())
-	{
-	case FbxLayerElementUV::eByControlPoint: // 제어점 당 1개의 텍스처 좌표가 있다.
-	{
-		switch (pUVSet->GetReferenceMode())
-		{
-		case FbxLayerElementUV::eDirect: // 배열에서 직접 얻는다.
-		{
-			FbxVector2 fbxUv = pUVSet->GetDirectArray().GetAt(vertexIndex);
-			uv.mData[0] = fbxUv.mData[0];
-			uv.mData[1] = fbxUv.mData[1];
-			break;
-		}
-		case FbxLayerElementUV::eIndexToDirect: // 배열에 해당하는 인덱스를 통하여 얻는다.
-		{
-			int id = pUVSet->GetIndexArray().GetAt(vertexIndex);
-			FbxVector2 fbxUv = pUVSet->GetDirectArray().GetAt(id);
-			uv.mData[0] = fbxUv.mData[0];
-			uv.mData[1] = fbxUv.mData[1];
-			break;
-		}
-		}
-		break;
-	}
-	case FbxLayerElementUV::eByPolygonVertex: // 정점 당 1개의 매핑 좌표가 있다.
-	{
-		switch (pUVSet->GetReferenceMode())
-		{
-		case FbxLayerElementUV::eDirect:
-		case FbxLayerElementUV::eIndexToDirect:
-		{
-			uv.mData[0] = pUVSet->GetDirectArray().GetAt(uvIndex).mData[0];
-			uv.mData[1] = pUVSet->GetDirectArray().GetAt(uvIndex).mData[1];
-			break;
-		}
-		}
-		break;
-	}
-	}
-	return uv;
-}
 void	TFbxObj::PreProcess(FbxNode* pNode)
 {
 	// pNode 정보 얻기
-	//std::vector<FbxNode*>  m_pFbxNodeList;
-	//std::vector<FbxSurfaceMaterial*>  m_pFbxMaterialList;
+	int iNumFbxMaterial = pNode->GetMaterialCount();
 	FbxSurfaceMaterial* pFbxMaterial = pNode->GetMaterial(0);
 	if (pFbxMaterial != nullptr)
 	{
@@ -265,18 +278,12 @@ void	TFbxObj::PreProcess(FbxNode* pNode)
 bool	TFbxObj::LoadObject(std::string filename)
 {
 	// todo  : 메모리 관리;
-	m_pFbxManager = FbxManager::Create();
-	// 익스포터 or 임포터;
-	FbxIOSettings* ios = FbxIOSettings::Create(m_pFbxManager, IOSROOT);
-	m_pFbxManager->SetIOSettings(ios);
+	m_pFbxManager = FbxManager::Create();	
 	//todo  : FbxImporter* m_pFbxImporter;
 	m_pFbxImporter = FbxImporter::Create(m_pFbxManager,"");
 	//todo  : FbxScene* m_pFbxScene;
 	m_pFbxScene = FbxScene::Create(m_pFbxManager, "");
-	INT iFileFormat = -1;
-	bool bRet = m_pFbxImporter->Initialize( filename.c_str(), 
-								iFileFormat,
-								m_pFbxManager->GetIOSettings());
+	bool bRet = m_pFbxImporter->Initialize( filename.c_str());
 	bRet = m_pFbxImporter->Import(m_pFbxScene);
 	FbxNode* m_pRootNode=m_pFbxScene->GetRootNode();
 	PreProcess(m_pRootNode);

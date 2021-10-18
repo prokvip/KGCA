@@ -21,6 +21,7 @@ struct TMtrl
 };
 struct TMesh : public TModel
 {
+	TMatrix m_matWorld;
 	int   m_iMtrlRef;
 	bool  PostRender(ID3D11DeviceContext* pContext, UINT iNumIndex)
 	{
@@ -59,6 +60,8 @@ public:
 public:
 	bool	LoadObject(std::string filename);	
 	bool    Release();
+	TMatrix     DxConvertMatrix(TMatrix m);
+	TMatrix     ConvertMatrix(FbxMatrix& m);
 public:
 	void	SetMatrix(TMatrix* pMatWorld, TMatrix* pMatView, TMatrix* pMatProj);
 	bool    Render(ID3D11DeviceContext* pContext);
@@ -70,7 +73,14 @@ public:
 public:
 	void	PreProcess(FbxNode* pNode);
 	void	ParseNode(FbxNode* pNode, TMesh* pMesh);
-	FbxVector2 ReadTextureCoord(FbxMesh* pFbxMesh, DWORD dwVertexTextureCount, FbxLayerElementUV* pUVSet, int vertexIndex, int uvIndex);
-	
+public:
+	FbxVector2  ReadTextureCoord(FbxMesh* pFbxMesh, DWORD dwVertexTextureCount, FbxLayerElementUV* pUVSet, int vertexIndex, int uvIndex);
+	FbxVector4  ReadNormal(const FbxMesh* mesh, DWORD dwVertexNormalCount, FbxLayerElementNormal* VertexNormalSets,
+		int controlPointIndex, int dwVertexIndex);
+	FbxColor	ReadColor(const FbxMesh* mesh, DWORD dwVertexColorCount, FbxLayerElementVertexColor* VertexColorSets,
+		DWORD dwDCCIndex, DWORD dwVertexIndex);
+	FbxVector4	ReadTangent(const FbxMesh* pFbxMesh,
+		DWORD dwVertexTangentCount, FbxGeometryElementTangent* VertexTangentSets,
+		DWORD dwDCCIndex, DWORD dwVertexIndex);
 };
 

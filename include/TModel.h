@@ -37,6 +37,11 @@ struct PNCT_VERTEX
 		color.y = 1.0f;
 		color.z = 1.0f;
 		color.w = 1.0f;
+		normal.x = 0.0f;
+		normal.y = 0.0f;
+		normal.z = 0.0f;
+		tex.x = 0.0f;
+		tex.y = 0.0f;
 	}
 };
 
