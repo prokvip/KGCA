@@ -126,5 +126,14 @@ bool TDebugCamera::Frame()
     {
         m_vCameraPos = m_vCameraPos + m_vLook * -m_pSpeed * g_fSecPerFrame;
     }       
+    if (g_Input.GetKey(VK_SPACE) >= KEY_HOLD)
+    {
+        m_pSpeed += g_fSecPerFrame * 200.0f;
+    }
+    else
+    {
+        m_pSpeed -= g_fSecPerFrame * 100.0f;
+        if (m_pSpeed <= 100.0f)m_pSpeed = 100.0f;
+    }
     return true;
 }
