@@ -404,7 +404,6 @@ void	TFbxObj::ParseMesh(FbxNode* pNode, TMesh* pMesh)
 		}
 	}
 }
-
 void	TFbxObj::PreProcess(FbxNode* pNode)
 {
 	if (pNode->GetCamera() || pNode->GetLight())
