@@ -4,6 +4,12 @@
 #pragma comment	(lib, "libfbxsdk.lib")
 #pragma comment	(lib, "libxml2-md.lib")
 #pragma comment	(lib, "zlib-md.lib")
+const enum OBJECTCLASSTYPE {
+	CLASS_GEOM = 0,
+	CLASS_BONE,
+	CLASS_DUMMY,
+	CLASS_BIPED,
+};
 struct TMtrl
 {	
 	FbxNode*			m_pFbxNode;
@@ -35,10 +41,14 @@ struct TLayer
 };
 struct TMesh : public TModel
 {
+	OBJECTCLASSTYPE     m_ClassType;
+	std::wstring		m_szName;
+	std::wstring		m_szParentName;
 	int					m_iNumLayer;
 	std::vector<TLayer> m_LayerList;
 	int					m_iMtrlRef;
 	TMatrix				m_matWorld;	
+	TMesh*				m_pParent;
 	std::vector<TMesh*> m_pSubMesh;	
 	bool Release() override
 	{
@@ -49,6 +59,10 @@ struct TMesh : public TModel
 			SAFE_DEL(data);
 		}
 		return true;
+	}
+	TMesh()
+	{
+		m_ClassType = CLASS_GEOM;
 	}
 };
 class TFbxObj 
@@ -77,6 +91,8 @@ public:
 public:
 	void	PreProcess(FbxNode* pNode);
 	void	ParseNode(FbxNode* pNode, TMesh* pMesh);
+	void	ParseMesh(FbxNode* pNode, TMesh* pMesh);
+	TMatrix   ParseTransform(FbxNode* pNode, TMatrix& matParent);
 public:
 	FbxVector2  ReadTextureCoord(FbxMesh* pFbxMesh, DWORD dwVertexTextureCount, FbxLayerElementUV* pUVSet, int vertexIndex, int uvIndex);
 	FbxVector4  ReadNormal(const FbxMesh* mesh, DWORD dwVertexNormalCount, FbxLayerElementNormal* VertexNormalSets,

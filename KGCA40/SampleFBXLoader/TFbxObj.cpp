@@ -1,5 +1,50 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include "TFbxObj.h"
+void      TFbxObj::ParseNode(FbxNode* pNode, TMesh* pParentMesh)
+{
+	if (pNode->GetCamera() || pNode->GetLight())
+	{
+		return;
+	}
+	TMesh* pMesh = new TMesh;
+	pMesh->m_szName = TBASIS::mtw(pNode->GetName());	
+	TMatrix matParent;
+	if (pParentMesh != nullptr)
+	{
+		pMesh->m_szParentName = pParentMesh->m_szName;
+		matParent = pParentMesh->m_matWorld;
+	}
+	pMesh->m_pParent = pParentMesh;
+	pMesh->m_matWorld = ParseTransform(pNode, matParent);
+	if (pNode->GetMesh())
+	{
+		ParseMesh(pNode, pMesh);
+		pMesh->m_ClassType = CLASS_GEOM;
+	}
+	else
+	{
+		pMesh->m_ClassType = CLASS_BONE;
+	}
+	m_pMeshList.push_back(pMesh);
+
+	int iNumChild = pNode->GetChildCount();
+	for (int iNode = 0; iNode < iNumChild; iNode++)
+	{
+		FbxNode* pChildNode = pNode->GetChild(iNode);
+		ParseNode(pChildNode, pMesh);
+	}
+}
+TMatrix   TFbxObj::ParseTransform(FbxNode* pNode, TMatrix& matParent)
+{
+	//// TODO : 월드행렬
+	FbxVector4 rotLcl = pNode->LclRotation.Get();
+	FbxVector4 transLcl = pNode->LclTranslation.Get();
+	FbxVector4 scaleLcl = pNode->LclScaling.Get();
+	FbxMatrix matTransform(transLcl, rotLcl, scaleLcl);
+	TMatrix matLocal = DxConvertMatrix(ConvertMatrix(matTransform));
+	TMatrix matWorld = matLocal * matParent;
+	return matWorld;
+}
 TMatrix     TFbxObj::DxConvertMatrix(TMatrix m)
 {
 	TMatrix mat;
@@ -134,6 +179,8 @@ bool    TFbxObj::Render(ID3D11DeviceContext* pContext)
 	for (int iObj = 0; iObj < m_pMeshList.size(); iObj++)
 	{
 		TMesh* pMesh = m_pMeshList[iObj];
+		if (pMesh->m_ClassType != CLASS_GEOM) continue;
+
 		TMtrl* pMtrl = nullptr;
 		pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 		
@@ -142,6 +189,7 @@ bool    TFbxObj::Render(ID3D11DeviceContext* pContext)
 		{
 			for (int iSub = 0; iSub < pMesh->m_pSubMesh.size(); iSub++)
 			{
+				if (pMesh->m_pSubMesh[iSub]->m_pVertexList.size() <= 0) continue;
 				TMtrl* pSubMtrl = 
 					m_pFbxMaterialList[pMesh->m_iMtrlRef]->m_pSubMtrl[iSub];
 				pContext->PSSetSamplers(0, 1, &pSubMtrl->m_Texture.m_pSampler);
@@ -178,7 +226,7 @@ int     TFbxObj::GetRootMtrl(FbxSurfaceMaterial* pFbxMaterial)
 	}
 	return -1;
 }
-void	TFbxObj::ParseNode(FbxNode* pNode, TMesh* pMesh)
+void	TFbxObj::ParseMesh(FbxNode* pNode, TMesh* pMesh)
 {
 	FbxSurfaceMaterial* pFbxMaterial = pNode->GetMaterial(0);
 	pMesh->m_iMtrlRef = GetRootMtrl(pFbxMaterial);
@@ -190,11 +238,7 @@ void	TFbxObj::ParseNode(FbxNode* pNode, TMesh* pMesh)
 	{
 		pMesh->m_iNumLayer = pFbxMesh->GetLayerCount();
 		pMesh->m_LayerList.resize(pMesh->m_iNumLayer);
-		//std::vector< FbxLayerElementUV*> VertexUVList;
-		//std::vector< FbxLayerElementVertexColor*> VertexColorList;
-		//std::vector< FbxLayerElementNormal*> VertexNormalList;
-		//FbxLayerElementMaterial* fbxSubMaterial=nullptr;
-		// 
+	
 		// todo : 정점성분 레이어 리스트
 		for (int iLayer = 0; iLayer < pMesh->m_iNumLayer; iLayer++)
 		{
@@ -217,21 +261,18 @@ void	TFbxObj::ParseNode(FbxNode* pNode, TMesh* pMesh)
 			}
 		}
 		// TODO : 월드행렬
-		FbxAMatrix matGeom;
-		{
-			FbxVector4 rot = pNode->GetGeometricRotation(FbxNode::eSourcePivot);
-			FbxVector4 trans = pNode->GetGeometricTranslation(FbxNode::eSourcePivot);
-			FbxVector4 scale = pNode->GetGeometricScaling(FbxNode::eSourcePivot);
-			matGeom.SetT(trans);
-			matGeom.SetR(rot);
-			matGeom.SetS(scale);
-		}
-		FbxMatrix matA = matGeom;
-		pMesh->m_matWorld = DxConvertMatrix(ConvertMatrix(matA));
+		FbxAMatrix matGeom;			
+		FbxVector4 rot = pNode->GetGeometricRotation(FbxNode::eSourcePivot);
+		FbxVector4 trans = pNode->GetGeometricTranslation(FbxNode::eSourcePivot);
+		FbxVector4 scale = pNode->GetGeometricScaling(FbxNode::eSourcePivot);
+		matGeom.SetT(trans);
+		matGeom.SetR(rot);
+		matGeom.SetS(scale);
+
 		int m_iNumPolygon = pFbxMesh->GetPolygonCount();
 		// 정점리스트 주소
 		FbxVector4* pVertexPositions = pFbxMesh->GetControlPoints();
-		int iBasePlayIndex = 0;
+		int iBasePolyIndex = 0;
 		int iNumFbxMaterial = pNode->GetMaterialCount();
 		if (iNumFbxMaterial > 1)
 		{
@@ -280,6 +321,10 @@ void	TFbxObj::ParseNode(FbxNode* pNode, TMesh* pMesh)
 					}break;
 				}
 			}
+			if (iSubMtrlIndex < 0 || iSubMtrlIndex >= iNumFbxMaterial)
+			{
+				int kk = 0;
+			}
 			// 삼각형, 사각형
 			int iPolySize = pFbxMesh->GetPolygonSize(iPoly);
 			int m_iNumTriangle = iPolySize - 2;
@@ -304,10 +349,10 @@ void	TFbxObj::ParseNode(FbxNode* pNode, TMesh* pMesh)
 				{
 					PNCT_VERTEX vertex;
 					FbxVector4 pos = pVertexPositions[iCornerIndex[iIndex]];
-					//FbxVector4 vPos = matGeom.MultT(pos);
-					vertex.pos.x = pos.mData[0];
-					vertex.pos.y = pos.mData[2];
-					vertex.pos.z = pos.mData[1];
+					FbxVector4 vPos = matGeom.MultT(pos);
+					vertex.pos.x = vPos.mData[0];
+					vertex.pos.y = vPos.mData[2];
+					vertex.pos.z = vPos.mData[1];
 					if (VertexUVList != nullptr)
 					{
 						FbxVector2 uv = ReadTextureCoord(
@@ -319,9 +364,9 @@ void	TFbxObj::ParseNode(FbxNode* pNode, TMesh* pMesh)
 					if (VertexColorList != nullptr)
 					{
 						int iColorIndex[3];
-						iColorIndex[0] = iBasePlayIndex + 0;
-						iColorIndex[1] = iBasePlayIndex + iTriangle + 2;
-						iColorIndex[2] = iBasePlayIndex + iTriangle + 1;
+						iColorIndex[0] = iBasePolyIndex + 0;
+						iColorIndex[1] = iBasePolyIndex + iTriangle + 2;
+						iColorIndex[2] = iBasePolyIndex + iTriangle + 1;
 
 						FbxColor color = ReadColor(
 							pFbxMesh, 1, VertexColorList,
@@ -335,9 +380,9 @@ void	TFbxObj::ParseNode(FbxNode* pNode, TMesh* pMesh)
 					if (VertexNormalList != nullptr)
 					{
 						int iNormalIndex[3];
-						iNormalIndex[0] = iBasePlayIndex + 0;
-						iNormalIndex[1] = iBasePlayIndex + iTriangle + 2;
-						iNormalIndex[2] = iBasePlayIndex + iTriangle + 1;
+						iNormalIndex[0] = iBasePolyIndex + 0;
+						iNormalIndex[1] = iBasePolyIndex + iTriangle + 2;
+						iNormalIndex[2] = iBasePolyIndex + iTriangle + 1;
 						FbxVector4 normal = ReadNormal(
 							pFbxMesh, 1, VertexNormalList,
 							iCornerIndex[iIndex], iNormalIndex[iIndex]);
@@ -355,33 +400,40 @@ void	TFbxObj::ParseNode(FbxNode* pNode, TMesh* pMesh)
 					}
 				}
 			}
-			iBasePlayIndex += iPolySize;
+			iBasePolyIndex += iPolySize;
 		}
 	}
 }
 
 void	TFbxObj::PreProcess(FbxNode* pNode)
 {
+	if (pNode->GetCamera() || pNode->GetLight())
+	{
+		return;
+	}
 	int iNumFbxMaterial = pNode->GetMaterialCount();
 	FbxSurfaceMaterial* pFbxMaterial = pNode->GetMaterial(0);
-	if (iNumFbxMaterial > 1)
+	if (GetRootMtrl(pFbxMaterial) == -1)
 	{
-		TMtrl* pMtrl = new TMtrl(pNode, pFbxMaterial);
-		for (int iSub = 0; iSub < iNumFbxMaterial; iSub++)
+		if (iNumFbxMaterial > 1 )
 		{
-			FbxSurfaceMaterial* pFbxSubMaterial = pNode->GetMaterial(iSub);
-			_ASSERT(pFbxSubMaterial != nullptr);
-			TMtrl* pSubMtrl = new TMtrl(pNode, pFbxSubMaterial);
-			pMtrl->m_pSubMtrl.push_back(pSubMtrl);
-		}
-		m_pFbxMaterialList.push_back(pMtrl);
-	}
-	else
-	{		
-		if (pFbxMaterial != nullptr)
-		{
-			TMtrl* pMtrl = new TMtrl( pNode, pFbxMaterial);
+			TMtrl* pMtrl = new TMtrl(pNode, pFbxMaterial);
+			for (int iSub = 0; iSub < iNumFbxMaterial; iSub++)
+			{
+				FbxSurfaceMaterial* pFbxSubMaterial = pNode->GetMaterial(iSub);
+				_ASSERT(pFbxSubMaterial != nullptr);
+				TMtrl* pSubMtrl = new TMtrl(pNode, pFbxSubMaterial);
+				pMtrl->m_pSubMtrl.push_back(pSubMtrl);
+			}
 			m_pFbxMaterialList.push_back(pMtrl);
+		}
+		else
+		{
+			if (pFbxMaterial != nullptr)
+			{
+				TMtrl* pMtrl = new TMtrl(pNode, pFbxMaterial);
+				m_pFbxMaterialList.push_back(pMtrl);
+			}
 		}
 	}
 	int iNumChild = pNode->GetChildCount();
@@ -390,7 +442,9 @@ void	TFbxObj::PreProcess(FbxNode* pNode)
 		FbxNode* pChildNode = pNode->GetChild(iNode);	
 		FbxNodeAttribute::EType type = 
 			pChildNode->GetNodeAttribute()->GetAttributeType();
-		if (type == FbxNodeAttribute::eMesh )
+		if (/*type == FbxNodeAttribute::eMesh ||
+			type == FbxNodeAttribute::eSkeleton*/
+			pChildNode->GetNodeAttribute() != nullptr)
 		{
 			m_pFbxNodeList.push_back(pChildNode);
 		}
@@ -404,6 +458,7 @@ bool	TFbxObj::LoadObject(std::string filename)
 	m_pFbxScene = FbxScene::Create(m_pFbxManager, "");
 	bool bRet = m_pFbxImporter->Initialize( filename.c_str());
 	bRet = m_pFbxImporter->Import(m_pFbxScene);
+	FbxAxisSystem::MayaZUp.ConvertScene(m_pFbxScene);
 
 	FbxNode* m_pRootNode=m_pFbxScene->GetRootNode();
 	PreProcess(m_pRootNode);
@@ -413,13 +468,9 @@ bool	TFbxObj::LoadObject(std::string filename)
 		TMtrl* pMtrl = m_pFbxMaterialList[iMtrl];		
 		LoadMaterial(pMtrl);
 	}
-	for (int iNode = 0; iNode < m_pFbxNodeList.size(); iNode++)
-	{
-		FbxNode* pNode = m_pFbxNodeList[iNode];
-		TMesh* pMesh = new TMesh;
-		m_pMeshList.push_back(pMesh);
-		ParseNode(pNode, pMesh);		
-	}	
+
+	ParseNode(m_pRootNode, nullptr);
+	
 	for (int iMesh = 0; iMesh < m_pMeshList.size(); iMesh++)
 	{
 		TMesh* pMesh = m_pMeshList[iMesh];

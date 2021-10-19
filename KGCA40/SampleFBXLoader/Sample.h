@@ -3,7 +3,8 @@
 #include "TFbxObj.h"
 class Sample :   public TCore
 {
-	TFbxObj		m_FbxObj;
+	TFbxObj		m_FbxObjA;
+	TFbxObj		m_FbxObjB;
 public:
 	bool		Init()override;
 	bool		Frame()override;
