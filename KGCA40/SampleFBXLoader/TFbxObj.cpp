@@ -1,5 +1,6 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include "TFbxObj.h"
+
 void      TFbxObj::ParseNode(FbxNode* pNode, TMesh* pParentMesh)
 {
 	if (pNode->GetCamera() || pNode->GetLight())
@@ -260,7 +261,7 @@ void	TFbxObj::ParseMesh(FbxNode* pNode, TMesh* pMesh)
 				pMesh->m_LayerList[iLayer].pMaterial = pLayer->GetMaterials();
 			}
 		}
-		// TODO : 월드행렬
+		// TODO : 기하행렬
 		FbxAMatrix matGeom;			
 		FbxVector4 rot = pNode->GetGeometricRotation(FbxNode::eSourcePivot);
 		FbxVector4 trans = pNode->GetGeometricTranslation(FbxNode::eSourcePivot);
@@ -328,36 +329,32 @@ void	TFbxObj::ParseMesh(FbxNode* pNode, TMesh* pMesh)
 			// 삼각형, 사각형
 			int iPolySize = pFbxMesh->GetPolygonSize(iPoly);
 			int m_iNumTriangle = iPolySize - 2;
-			int iCornerIndex[3];
-			for (int iTriangle = 0; 
-				iTriangle < m_iNumTriangle;
-				iTriangle++)
+			int iVertexIndex[3];
+			for (int iTriangle = 0; iTriangle < m_iNumTriangle;	iTriangle++)
 			{
 				// 위치 인덱스
-				iCornerIndex[0] = pFbxMesh->GetPolygonVertex(iPoly, 0);
-				iCornerIndex[1] = pFbxMesh->GetPolygonVertex(iPoly, iTriangle + 2);
-				iCornerIndex[2] = pFbxMesh->GetPolygonVertex(iPoly, iTriangle + 1);
-				// UV 인덱스
-				int u[3];
-				u[0] = pFbxMesh->GetTextureUVIndex(iPoly, 0);
-				u[1] = pFbxMesh->GetTextureUVIndex(iPoly, iTriangle + 2);
-				u[2] = pFbxMesh->GetTextureUVIndex(iPoly, iTriangle + 1);
-
-				for (int iIndex = 0;
-					iIndex < 3;
-					iIndex++)
+				iVertexIndex[0] = pFbxMesh->GetPolygonVertex(iPoly, 0);
+				iVertexIndex[1] = pFbxMesh->GetPolygonVertex(iPoly, iTriangle + 2);
+				iVertexIndex[2] = pFbxMesh->GetPolygonVertex(iPoly, iTriangle + 1);
+				
+				for (int iIndex = 0;iIndex < 3;	iIndex++)
 				{
 					PNCT_VERTEX vertex;
-					FbxVector4 pos = pVertexPositions[iCornerIndex[iIndex]];
+					FbxVector4 pos = pVertexPositions[iVertexIndex[iIndex]];
 					FbxVector4 vPos = matGeom.MultT(pos);
 					vertex.pos.x = vPos.mData[0];
 					vertex.pos.y = vPos.mData[2];
 					vertex.pos.z = vPos.mData[1];
 					if (VertexUVList != nullptr)
 					{
+						// UV 인덱스
+						int uvIndex[3];
+						uvIndex[0] = pFbxMesh->GetTextureUVIndex(iPoly, 0);
+						uvIndex[1] = pFbxMesh->GetTextureUVIndex(iPoly, iTriangle + 2);
+						uvIndex[2] = pFbxMesh->GetTextureUVIndex(iPoly, iTriangle + 1);
 						FbxVector2 uv = ReadTextureCoord(
 							pFbxMesh, 1, VertexUVList,
-							iCornerIndex[iIndex], u[iIndex]	);
+							iVertexIndex[iIndex], uvIndex[iIndex]	);
 						vertex.tex.x = uv.mData[0];
 						vertex.tex.y = 1.0f-uv.mData[1];
 					}					
@@ -370,7 +367,7 @@ void	TFbxObj::ParseMesh(FbxNode* pNode, TMesh* pMesh)
 
 						FbxColor color = ReadColor(
 							pFbxMesh, 1, VertexColorList,
-							iCornerIndex[iIndex], iColorIndex[iIndex]);
+							iVertexIndex[iIndex], iColorIndex[iIndex]);
 						vertex.color.x = color.mRed;
 						vertex.color.y = color.mGreen;
 						vertex.color.z = color.mBlue;
@@ -385,7 +382,7 @@ void	TFbxObj::ParseMesh(FbxNode* pNode, TMesh* pMesh)
 						iNormalIndex[2] = iBasePolyIndex + iTriangle + 1;
 						FbxVector4 normal = ReadNormal(
 							pFbxMesh, 1, VertexNormalList,
-							iCornerIndex[iIndex], iNormalIndex[iIndex]);
+							iVertexIndex[iIndex], iNormalIndex[iIndex]);
 						vertex.normal.x = normal.mData[0];
 						vertex.normal.y = normal.mData[2];
 						vertex.normal.z = normal.mData[1];
@@ -406,10 +403,8 @@ void	TFbxObj::ParseMesh(FbxNode* pNode, TMesh* pMesh)
 }
 void	TFbxObj::PreProcess(FbxNode* pNode)
 {
-	if (pNode->GetCamera() || pNode->GetLight())
-	{
-		return;
-	}
+	if (pNode->GetCamera() || pNode->GetLight()) { return; }
+
 	int iNumFbxMaterial = pNode->GetMaterialCount();
 	FbxSurfaceMaterial* pFbxMaterial = pNode->GetMaterial(0);
 	if (GetRootMtrl(pFbxMaterial) == -1)
@@ -487,6 +482,9 @@ bool	TFbxObj::LoadObject(std::string filename)
 			pMesh->Create(L"FbxShader.hlsl", L"../../data/shader/DefaultShader.hlsl");
 		}
 	}
+	m_pFbxScene->Destroy();	
+	m_pFbxImporter->Destroy();
+	m_pFbxManager->Destroy();
 	return bRet;
 }
 bool    TFbxObj::Release()
