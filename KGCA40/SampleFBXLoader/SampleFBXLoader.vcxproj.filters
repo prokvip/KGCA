@@ -32,5 +32,8 @@
     <ClCompile Include="TFbxMeshData.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="TFbxAnimation.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

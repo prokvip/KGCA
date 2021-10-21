@@ -8,6 +8,7 @@ void      TFbxObj::ParseNode(FbxNode* pNode, TMesh* pParentMesh)
 		return;
 	}
 	TMesh* pMesh = new TMesh;
+	
 	pMesh->m_szName = TBASIS::mtw(pNode->GetName());	
 	TMatrix matParent;
 	if (pParentMesh != nullptr)
@@ -17,6 +18,9 @@ void      TFbxObj::ParseNode(FbxNode* pNode, TMesh* pParentMesh)
 	}
 	pMesh->m_pParent = pParentMesh;
 	pMesh->m_matWorld = ParseTransform(pNode, matParent);
+
+	ParseAnimationNode(pNode, pMesh);
+
 	if (pNode->GetMesh())
 	{
 		ParseMesh(pNode, pMesh);
@@ -62,6 +66,17 @@ TMatrix     TFbxObj::ConvertMatrix(FbxMatrix& m)
 	TMatrix mat;
 	float* pMatArray = reinterpret_cast<float*>(&mat);
 	double* pSrcArray = reinterpret_cast< double*>(&m);
+	for (int i = 0; i < 16; i++)
+	{
+		pMatArray[i] = pSrcArray[i];
+	}
+	return mat;
+}
+TMatrix     TFbxObj::ConvertAMatrix(FbxAMatrix& m)
+{
+	TMatrix mat;
+	float* pMatArray = reinterpret_cast<float*>(&mat);
+	double* pSrcArray = reinterpret_cast<double*>(&m);
 	for (int i = 0; i < 16; i++)
 	{
 		pMatArray[i] = pSrcArray[i];
@@ -195,7 +210,9 @@ bool    TFbxObj::Render(ID3D11DeviceContext* pContext)
 					m_pFbxMaterialList[pMesh->m_iMtrlRef]->m_pSubMtrl[iSub];
 				pContext->PSSetSamplers(0, 1, &pSubMtrl->m_Texture.m_pSampler);
 				pContext->PSSetShaderResources(1, 1, &pSubMtrl->m_Texture.m_pTextureSRV);				
-				pMesh->m_pSubMesh[iSub]->SetMatrix(&pMesh->m_matWorld, &m_cbData.matView, &m_cbData.matProj);
+				pMesh->m_pSubMesh[iSub]->SetMatrix(
+					&pMesh->m_AnimationTrack[m_iAnimIndex],
+					&m_cbData.matView, &m_cbData.matProj);
 				pMesh->m_pSubMesh[iSub]->Render(pContext);
 			}
 		}
@@ -210,7 +227,8 @@ bool    TFbxObj::Render(ID3D11DeviceContext* pContext)
 				pContext->PSSetSamplers(0, 1, &pMtrl->m_Texture.m_pSampler);
 				pContext->PSSetShaderResources(1, 1, &pMtrl->m_Texture.m_pTextureSRV);
 			}
-			pMesh->SetMatrix(&pMesh->m_matWorld, &m_cbData.matView, &m_cbData.matProj);
+			pMesh->SetMatrix(&pMesh->m_AnimationTrack[m_iAnimIndex],
+				&m_cbData.matView, &m_cbData.matProj);
 			pMesh->Render(pContext);
 		}
 	}
@@ -463,8 +481,9 @@ bool	TFbxObj::LoadObject(std::string filename)
 		LoadMaterial(pMtrl);
 	}
 
+	ParseAnimation();
 	ParseNode(m_pRootNode, nullptr);
-	
+
 	for (int iMesh = 0; iMesh < m_pMeshList.size(); iMesh++)
 	{
 		TMesh* pMesh = m_pMeshList[iMesh];

@@ -149,6 +149,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Sample.cpp" />
+    <ClCompile Include="TFbxAnimation.cpp" />
     <ClCompile Include="TFbxMeshData.cpp" />
     <ClCompile Include="TFbxObj.cpp" />
   </ItemGroup>

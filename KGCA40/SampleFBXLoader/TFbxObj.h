@@ -40,7 +40,7 @@ struct TLayer
 	FbxLayerElementMaterial*	pMaterial;
 };
 struct TMesh : public TModel
-{
+{	
 	OBJECTCLASSTYPE     m_ClassType;
 	std::wstring		m_szName;
 	std::wstring		m_szParentName;
@@ -49,6 +49,7 @@ struct TMesh : public TModel
 	int					m_iMtrlRef;
 	TMatrix				m_matWorld;	
 	TMesh*				m_pParent;
+	std::vector<TMatrix> m_AnimationTrack;
 	std::vector<TMesh*> m_pSubMesh;	
 	bool Release() override
 	{
@@ -71,6 +72,12 @@ class TFbxObj
 	FbxImporter*	m_pFbxImporter;
 	FbxScene*		m_pFbxScene;
 public:
+	bool	m_bAnimPlay = false;
+	float   m_fElpaseTime=0.0f;
+	int		m_iAnimIndex=0;
+	float m_fStartTime;
+	float m_fEndTime;
+	float m_fSampleTime;
 	std::vector<FbxNode*>	m_pFbxNodeList;
 	std::vector<TMtrl*>		m_pFbxMaterialList;
 	std::vector<TMesh*>		m_pMeshList;
@@ -83,6 +90,7 @@ public:
 	bool		Release();
 	TMatrix     DxConvertMatrix(TMatrix m);
 	TMatrix     ConvertMatrix(FbxMatrix& m);
+	TMatrix     ConvertAMatrix(FbxAMatrix& m);
 public:
 	void	SetMatrix(TMatrix* pMatWorld, TMatrix* pMatView, TMatrix* pMatProj);
 	bool    Render(ID3D11DeviceContext* pContext);
@@ -91,8 +99,12 @@ public:
 public:
 	void	PreProcess(FbxNode* pNode);
 	void	ParseNode(FbxNode* pNode, TMesh* pMesh);
-	void	ParseMesh(FbxNode* pNode, TMesh* pMesh);
+	void	ParseMesh(FbxNode* pNode, TMesh* pMesh);	
 	TMatrix   ParseTransform(FbxNode* pNode, TMatrix& matParent);
+public:
+	void	ParseAnimationNode(FbxNode* pNode, TMesh* pMesh);
+	void	ParseAnimation();
+	void	ParseAnimStack(FbxString* szData);
 public:
 	FbxVector2  ReadTextureCoord(FbxMesh* pFbxMesh, DWORD dwVertexTextureCount, FbxLayerElementUV* pUVSet, int vertexIndex, int uvIndex);
 	FbxVector4  ReadNormal(const FbxMesh* mesh, DWORD dwVertexNormalCount, FbxLayerElementNormal* VertexNormalSets,
