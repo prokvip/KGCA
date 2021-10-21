@@ -1,4 +1,5 @@
 #include "Sample.h"
+
 bool	Sample::PreRender() 
 {
 	TCore::PreRender();	
