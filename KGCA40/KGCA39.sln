@@ -21,6 +21,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SampleLodMap", "SampleLodMa
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SampleFBXLoader", "SampleFBXLoader\SampleFBXLoader.vcxproj", "{EA75189B-068A-428D-BC62-0E39F7E887AA}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SampleDepthBuffer", "SampleDepthBuffer\SampleDepthBuffer.vcxproj", "{33A94160-D342-4386-9A1E-00B9803F0D78}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|ARM64 = Debug|ARM64
@@ -103,6 +105,16 @@ Global
 		{EA75189B-068A-428D-BC62-0E39F7E887AA}.Release|x64.Build.0 = Release|x64
 		{EA75189B-068A-428D-BC62-0E39F7E887AA}.Release|x86.ActiveCfg = Release|Win32
 		{EA75189B-068A-428D-BC62-0E39F7E887AA}.Release|x86.Build.0 = Release|Win32
+		{33A94160-D342-4386-9A1E-00B9803F0D78}.Debug|ARM64.ActiveCfg = Debug|Win32
+		{33A94160-D342-4386-9A1E-00B9803F0D78}.Debug|x64.ActiveCfg = Debug|x64
+		{33A94160-D342-4386-9A1E-00B9803F0D78}.Debug|x64.Build.0 = Debug|x64
+		{33A94160-D342-4386-9A1E-00B9803F0D78}.Debug|x86.ActiveCfg = Debug|Win32
+		{33A94160-D342-4386-9A1E-00B9803F0D78}.Debug|x86.Build.0 = Debug|Win32
+		{33A94160-D342-4386-9A1E-00B9803F0D78}.Release|ARM64.ActiveCfg = Release|Win32
+		{33A94160-D342-4386-9A1E-00B9803F0D78}.Release|x64.ActiveCfg = Release|x64
+		{33A94160-D342-4386-9A1E-00B9803F0D78}.Release|x64.Build.0 = Release|x64
+		{33A94160-D342-4386-9A1E-00B9803F0D78}.Release|x86.ActiveCfg = Release|Win32
+		{33A94160-D342-4386-9A1E-00B9803F0D78}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
