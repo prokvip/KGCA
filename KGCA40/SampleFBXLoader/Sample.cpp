@@ -73,7 +73,7 @@ bool		Sample::Init()
 	//m_FbxObj.LoadObject("../../data/object/ship.fbx");
 	//m_FbxObjA.LoadObject("../../data/object/multiCamera.fbx");
 	m_FbxObjA.LoadObject("../../data/object/BoxAnim.fbx");
-//	m_FbxObjB.LoadObject("../../data/object/Turret.fbx");
+	m_FbxObjB.LoadObject("../../data/object/Turret.fbx");
 	m_Camera.CreateViewMatrix(TVector3(0, 0, -100), TVector3(0, 0, 0));
 	m_Camera.CreateProjMatrix(1.0f, 1000.0f, XM_PI * 0.25f, (float)g_rtClient.right / (float)g_rtClient.bottom);
 
@@ -85,26 +85,20 @@ bool		Sample::Frame()
 	{
 		m_FbxObjA.m_bAnimPlay = !m_FbxObjA.m_bAnimPlay;
 	}
-
-	if (m_FbxObjA.m_bAnimPlay)
+	if (g_Input.GetKey(VK_F4) == KEY_PUSH)
 	{
-		m_FbxObjA.m_fElpaseTime += g_fSecPerFrame * 1.0f;
-		m_FbxObjA.m_iAnimIndex = m_FbxObjA.m_fElpaseTime * 30.0f;
-		if (m_FbxObjA.m_fEndTime < m_FbxObjA.m_fElpaseTime)
-		{
-			m_FbxObjA.m_iAnimIndex = 0;
-			m_FbxObjA.m_fElpaseTime = 0;
-			m_FbxObjA.m_bAnimPlay = false;
-		}
+		m_FbxObjB.m_bAnimPlay = !m_FbxObjB.m_bAnimPlay;
 	}
+	m_FbxObjA.Frame();
+	m_FbxObjB.Frame();
 	return true;
 }
 bool		Sample::Render() 
 {
 	m_FbxObjA.SetMatrix(nullptr, &m_Camera.m_matView, &m_Camera.m_matProj);
 	m_FbxObjA.Render(m_pImmediateContext);	
-	//m_FbxObjB.SetMatrix(nullptr, &m_Camera.m_matView, &m_Camera.m_matProj);
-	//m_FbxObjB.Render(m_pImmediateContext);
+	m_FbxObjB.SetMatrix(nullptr, &m_Camera.m_matView, &m_Camera.m_matProj);
+	m_FbxObjB.Render(m_pImmediateContext);
 	return true;
 }
 bool		Sample::Release() 
@@ -112,7 +106,7 @@ bool		Sample::Release()
 	SAFE_RELEASE(m_pDsvState);
 	SAFE_RELEASE(m_pDepthStencilView);
 	m_FbxObjA.Release();
-	//m_FbxObjB.Release();
+	m_FbxObjB.Release();
 	return true;
 }
 Sample::Sample()

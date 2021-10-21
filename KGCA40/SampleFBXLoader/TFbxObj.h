@@ -87,6 +87,7 @@ public:
 /// </summary>
 public:
 	bool		LoadObject(std::string filename);	
+	bool		Frame();
 	bool		Release();
 	TMatrix     DxConvertMatrix(TMatrix m);
 	TMatrix     ConvertMatrix(FbxMatrix& m);
