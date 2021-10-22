@@ -73,8 +73,12 @@ bool		Sample::Init()
 	//m_FbxObjA.LoadObject("../../data/object/SM_Tree_Var01.fbx");
 	//m_FbxObj.LoadObject("../../data/object/ship.fbx");
 	//m_FbxObjA.LoadObject("../../data/object/multiCamera.fbx");
-	m_FbxObjA.LoadObject("../../data/object/BoxAnim.fbx");
-	m_FbxObjB.LoadObject("../../data/object/Turret.fbx");
+	//m_FbxObjA.LoadObject("../../data/object/BoxAnim.fbx");
+	
+	CStopwatch stop;
+	//m_FbxObjA.LoadObject("../../data/object/Turret.fbx");	
+	m_FbxObjB.LoadObject("../../data/object/Man.fbx");
+	stop.Output(L"a");
 	m_Camera.CreateViewMatrix(TVector3(0, 0, -100), TVector3(0, 0, 0));
 	m_Camera.CreateProjMatrix(1.0f, 1000.0f, XM_PI * 0.25f, (float)g_rtClient.right / (float)g_rtClient.bottom);
 

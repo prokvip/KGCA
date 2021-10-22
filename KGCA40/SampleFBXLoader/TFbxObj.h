@@ -39,8 +39,28 @@ struct TLayer
 	FbxLayerElementNormal*		pNormal;
 	FbxLayerElementMaterial*	pMaterial;
 };
+struct TWeight
+{
+	std::vector<int>     m_IndexList;
+	std::vector<float>   m_WegihtList;
+};
+struct TSkinData
+{
+	std::vector<FbxNode*>  m_MatrixList;
+	std::vector<TWeight>   m_VertexList;
+};
+struct PNCTIW_VERTEX : public PNCT_VERTEX
+{
+	int     index[4];
+	float   weight[4];
+};
+
+
 struct TMesh : public TModel
 {	
+	// 정점 당 가중치, 인덱스 저장
+	std::vector<PNCTIW_VERTEX>       m_WeightList;
+	FbxNode* m_pFbxNode;
 	OBJECTCLASSTYPE     m_ClassType;
 	std::wstring		m_szName;
 	std::wstring		m_szParentName;
@@ -106,6 +126,7 @@ public:
 	void	ParseAnimationNode(FbxNode* pNode, TMesh* pMesh);
 	void	ParseAnimation();
 	void	ParseAnimStack(FbxString* szData);
+	bool	ParseMeshSkinning(FbxMesh* pFbxMesh, TMesh* pMesh, TSkinData* pSkindata);
 public:
 	FbxVector2  ReadTextureCoord(FbxMesh* pFbxMesh, DWORD dwVertexTextureCount, FbxLayerElementUV* pUVSet, int vertexIndex, int uvIndex);
 	FbxVector4  ReadNormal(const FbxMesh* mesh, DWORD dwVertexNormalCount, FbxLayerElementNormal* VertexNormalSets,

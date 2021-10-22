@@ -1,5 +1,6 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include "TFbxObj.h"
+#include "TTimer.h"
 bool		TFbxObj::Frame()
 {
 	if (m_bAnimPlay)
@@ -22,7 +23,7 @@ void      TFbxObj::ParseNode(FbxNode* pNode, TMesh* pParentMesh)
 		return;
 	}
 	TMesh* pMesh = new TMesh;
-	
+	pMesh->m_pFbxNode = pNode;
 	pMesh->m_szName = TBASIS::mtw(pNode->GetName());	
 	TMatrix matParent;
 	if (pParentMesh != nullptr)
@@ -33,7 +34,7 @@ void      TFbxObj::ParseNode(FbxNode* pNode, TMesh* pParentMesh)
 	pMesh->m_pParent = pParentMesh;
 	pMesh->m_matWorld = ParseTransform(pNode, matParent);
 
-	ParseAnimationNode(pNode, pMesh);
+	
 
 	if (pNode->GetMesh())
 	{
@@ -269,6 +270,22 @@ void	TFbxObj::ParseMesh(FbxNode* pNode, TMesh* pMesh)
 	std::vector< std::string> fbxFileTexList;
 	if (pFbxMesh != nullptr)
 	{
+		// 스키닝 오브젝트 여부?
+		// pFbxMesh에 영향을 미치는 행렬(노드)에 전체 개수?
+		// 행렬[0]=FbxNode ~ 행렬[3] = 4개
+		// 정점[0]->인덱스[1]		// 		
+		TSkinData skindata;
+		bool bSkinnedMesh = ParseMeshSkinning(pFbxMesh, pMesh, &skindata);
+		if (bSkinnedMesh)
+		{
+			// 정점[N]-> 인덱스[20], 가중치
+			pMesh->m_WeightList.resize(skindata.m_VertexList.size());
+		}
+		else
+		{
+
+		}
+
 		pMesh->m_iNumLayer = pFbxMesh->GetLayerCount();
 		pMesh->m_LayerList.resize(pMesh->m_iNumLayer);
 	
@@ -305,6 +322,7 @@ void	TFbxObj::ParseMesh(FbxNode* pNode, TMesh* pMesh)
 		int m_iNumPolygon = pFbxMesh->GetPolygonCount();
 		// 정점리스트 주소
 		FbxVector4* pVertexPositions = pFbxMesh->GetControlPoints();
+		int iNumCP = pFbxMesh->GetControlPointsCount();
 		int iBasePolyIndex = 0;
 		int iNumFbxMaterial = pNode->GetMaterialCount();
 		if (iNumFbxMaterial > 1)
@@ -419,6 +437,32 @@ void	TFbxObj::ParseMesh(FbxNode* pNode, TMesh* pMesh)
 						vertex.normal.y = normal.mData[2];
 						vertex.normal.z = normal.mData[1];
 					}
+					// 인덱스 및 가중치 저장
+					int iRealIndex = iVertexIndex[iIndex];
+					if (bSkinnedMesh)
+					{						
+						int iNum = 
+							skindata.m_VertexList[iRealIndex].m_IndexList.size();
+						for (int i=0; i < iNum; i++)
+						{
+							pMesh->m_WeightList[iRealIndex].index[i] =
+								skindata.m_VertexList[iRealIndex].m_IndexList[i];
+							pMesh->m_WeightList[iRealIndex].weight[i] =
+								skindata.m_VertexList[iRealIndex].m_WegihtList[i];
+						}
+					}
+					// 비 스키닝 오브젝트를 -> 스키닝화 처리
+					else
+					{
+						pMesh->m_WeightList[iRealIndex].index[0] = 0;
+						pMesh->m_WeightList[iRealIndex].weight[0] = 1.0f;						
+						for (int i = 0; i <4; i++)
+						{
+							pMesh->m_WeightList[iRealIndex].index[0] = 0;
+							pMesh->m_WeightList[iRealIndex].weight[i] =0.0f;
+						}
+
+					}
 					if (iNumFbxMaterial > 1)
 					{			
 						pMesh->m_pSubMesh[iSubMtrlIndex]->m_pVertexList.push_back(vertex);
@@ -497,6 +541,7 @@ bool	TFbxObj::LoadObject(std::string filename)
 
 	ParseAnimation();
 	ParseNode(m_pRootNode, nullptr);
+	ParseAnimationNode(nullptr, nullptr);	
 
 	for (int iMesh = 0; iMesh < m_pMeshList.size(); iMesh++)
 	{
