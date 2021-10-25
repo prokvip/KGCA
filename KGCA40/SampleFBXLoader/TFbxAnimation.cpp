@@ -1,5 +1,13 @@
 #include "TFbxObj.h"
 #include "TTimer.h"
+#include <algorithm>
+bool Compare(const pair<int, int>& a, const pair<int, int>& b)
+{
+	if (a.first == b.first)
+		return a.second < b.second;
+	return a.first < b.first;
+}
+
 int  TFbxObj::GetFindInedx(FbxNode* pNode)
 {
 	for (int iNode = 0; iNode < m_pFbxNodeList.size(); iNode++)
@@ -30,6 +38,15 @@ bool TFbxObj::ParseMeshSkinning(FbxMesh* pFbxMesh, TMesh* pMesh, TSkinData* pSki
 		for (int iCluster = 0; iCluster < iNumCluster; iCluster++)
 		{
 			FbxCluster* pCluster = pSkin->GetCluster(iCluster);
+
+			FbxAMatrix matXBindPose;
+			pCluster->GetTransformLinkMatrix(matXBindPose);
+			FbxAMatrix matInitPostion;
+			pCluster->GetTransformMatrix(matInitPostion);
+			FbxAMatrix matBoneBindPos = matInitPostion.Inverse() *
+				matXBindPose;
+			TMatrix matBinePos = 
+				DxConvertMatrix(ConvertAMatrix(matBoneBindPos));
 			// 영향을 미치는 행렬이 iClusterSize 정점에 영향을 미친다.
 			int iNumVertex = pCluster->GetControlPointIndicesCount();
 			
@@ -38,6 +55,8 @@ bool TFbxObj::ParseMeshSkinning(FbxMesh* pFbxMesh, TMesh* pMesh, TSkinData* pSki
 			int iBone = GetFindInedx(pLinkNode);
 			_ASSERT(iBone>=0);
 			pMesh->m_iBoneList.push_back(iBone);
+			D3DXMatrixInverse(&matBinePos, NULL, &matBinePos);
+			m_matBindPoseList[iBone] = matBinePos;
 
 			int iMatrixIndex = pSkindata->m_MatrixList.size() - 1;
 			//ControlPoint(제어점) 정점리스트

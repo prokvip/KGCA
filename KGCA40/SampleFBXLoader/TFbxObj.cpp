@@ -1,11 +1,18 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include "TFbxObj.h"
 #include "TTimer.h"
+#include <algorithm>
+bool Compare(const pair<float, int>& a, const pair<float, int>& b)
+{
+	if (a.first == b.first)
+		return a.second > b.second;
+	return a.first > b.first;
+}
 bool		TFbxObj::Frame()
 {
 	if (m_bAnimPlay)
 	{
-		m_fElpaseTime += g_fSecPerFrame * 0.0f;
+		m_fElpaseTime += g_fSecPerFrame * 1.0f;
 		m_iAnimIndex = m_fElpaseTime * 30.0f;
 		if (m_fEndTime < m_fElpaseTime)
 		{
@@ -16,8 +23,9 @@ bool		TFbxObj::Frame()
 	}
 	for (int iObj = 0; iObj < m_pMeshList.size(); iObj++)
 	{
-		TMesh* pMesh = m_pMeshList[iObj];
+		TMesh* pMesh = m_pMeshList[iObj];		
 		m_matAnimMatrix.matAnimation[iObj] =
+			m_matBindPoseList[iObj] * 
 			pMesh->m_AnimationTrack[m_iAnimIndex];
 	}
 	return true;
@@ -293,11 +301,27 @@ void	TFbxObj::ParseMesh(FbxNode* pNode, TMesh* pMesh)
 		TSkinData skindata;
 		bool bSkinnedMesh = ParseMeshSkinning(pFbxMesh, pMesh, &skindata);
 		_ASSERT(skindata.m_VertexList.size() == iNumCP);
-		//if (bSkinnedMesh)
-		//{
-		//	// 정점[N]-> 인덱스[20], 가중치
-		//	pMesh->m_WeightList.resize(skindata.m_VertexList.size());
-		//}
+		if (bSkinnedMesh)
+		{			
+			for (int i = 0; i < skindata.m_VertexList.size(); i++)
+			{
+				std::vector<std::pair<float, int>> list;
+				for (int j = 0; j <
+					skindata.m_VertexList[i].m_IndexList.size();
+					j++)
+				{
+					list.push_back(std::make_pair(
+						skindata.m_VertexList[i].m_WegihtList[j],
+						skindata.m_VertexList[i].m_IndexList[j]));
+				}
+				std::sort(list.begin(), list.end(), Compare);
+				for (int k = 0; k < list.size(); k++)
+				{
+					skindata.m_VertexList[i].m_WegihtList[k]=list[k].first;
+					skindata.m_VertexList[i].m_IndexList[k]=list[k].second;					
+				}
+			}			
+		}
 		//else
 		//{
 		//	pMesh->m_WeightList.resize(iNumCP);
@@ -408,6 +432,7 @@ void	TFbxObj::ParseMesh(FbxNode* pNode, TMesh* pMesh)
 				{
 					PNCT_VERTEX vertex;
 					PNCTIW_VERTEX iwVertex;
+					ZeroMemory(&iwVertex, sizeof(PNCTIW_VERTEX));
 					FbxVector4 pos = pVertexPositions[iVertexIndex[iIndex]];
 					FbxVector4 vPos = matGeom.MultT(pos);
 					vertex.pos.x = vPos.mData[0];
@@ -536,6 +561,7 @@ void	TFbxObj::PreProcess(FbxNode* pNode)
 			pChildNode->GetNodeAttribute() != nullptr)
 		{
 			m_pFbxNodeList.push_back(pChildNode);
+			m_matBindPoseList.push_back(TMatrix());
 		}
 		PreProcess(pChildNode);
 	}
@@ -551,6 +577,8 @@ bool	TFbxObj::LoadObject(std::string filename, std::string shaderName)
 
 	FbxNode* m_pRootNode=m_pFbxScene->GetRootNode();
 	m_pFbxNodeList.push_back(m_pRootNode);
+	TMatrix matWorld;
+	m_matBindPoseList.push_back(matWorld);
 	PreProcess(m_pRootNode);
 	// todo : 중복처리 미작업
 	for (int iMtrl = 0; iMtrl < m_pFbxMaterialList.size(); iMtrl++)

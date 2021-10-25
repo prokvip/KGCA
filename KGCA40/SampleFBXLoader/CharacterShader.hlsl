@@ -44,7 +44,7 @@ VS_OUT VS(VS_IN vIn)
 		matrix matBone = g_matBondMatrix[iBoneIndex];
 		vAnim += vIn.w[i] * mul(vLocal, matBone);
 	}	
-	float4 vWorld = mul(vLocal, g_matWorld);
+	float4 vWorld = mul(vAnim, g_matWorld);
 	float4 vView = mul(vWorld, g_matView);
 	float4 vProj = mul(vView, g_matProj);
 	output.p = vProj;

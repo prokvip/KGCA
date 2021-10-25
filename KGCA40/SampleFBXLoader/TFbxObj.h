@@ -15,6 +15,7 @@ public:
 	float m_fEndTime;
 	float m_fSampleTime;
 	std::vector<FbxNode*>	m_pFbxNodeList;
+	std::vector<TMatrix>	m_matBindPoseList;
 	std::vector<TMtrl*>		m_pFbxMaterialList;
 	std::vector<TMesh*>		m_pMeshList;
 	CB_DATA					m_cbData;
