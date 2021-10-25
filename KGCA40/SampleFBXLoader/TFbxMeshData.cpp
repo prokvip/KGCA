@@ -1,4 +1,5 @@
 #include "TFbxObj.h"
+
 FbxVector2 TFbxObj::ReadTextureCoord(FbxMesh* pFbxMesh, DWORD dwVertexTextureCount, FbxLayerElementUV* pUVSet, int vertexIndex, int uvIndex)
 {
 	FbxVector2 uv(0, 0);

@@ -21,6 +21,9 @@
     <ClInclude Include="TFbxObj.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="TMesh.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Sample.cpp">
@@ -35,5 +38,11 @@
     <ClCompile Include="TFbxAnimation.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="TMesh.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="CharacterShader.hlsl" />
   </ItemGroup>
 </Project>

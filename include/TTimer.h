@@ -11,7 +11,7 @@ public:
 	{    // Start 가 호출된 후 경과한 밀리초를 리턴
 		LARGE_INTEGER liPerfNow;
 		QueryPerformanceCounter(&liPerfNow);
-		__int64 qwElapsedTime = (((liPerfNow.QuadPart - m_liPerfStart.QuadPart))) / m_liPerFreq.QuadPart;
+		__int64 qwElapsedTime = (((liPerfNow.QuadPart - m_liPerfStart.QuadPart)));// / m_liPerFreq.QuadPart);
 		Start();
 		return qwElapsedTime;
 	}
@@ -21,7 +21,7 @@ public:
 		TCHAR  strMessage[MAX_PATH] = { 0, };
 		__int64 qwElapsedTime = Now();
 		float Second = static_cast<float>(qwElapsedTime) / static_cast<float>(m_liPerFreq.QuadPart);
-		_stprintf_s(strMessage, _T("<=====%s[%lld:%10.4f]====>"), pData, qwElapsedTime, Second);
+		_stprintf_s(strMessage, _T("<=====%s[%lld:10.4f]====>"), pData, qwElapsedTime, Second);
 		OutputDebugString(strMessage);
 #endif
 	}

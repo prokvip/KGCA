@@ -273,7 +273,7 @@ TModel::TModel()
     SAFE_ZERO(m_pVS);
     SAFE_ZERO(m_pPS);
     m_iVertexSize = sizeof(PNCT_VERTEX);
-    m_iNumIndex = 0;
+    m_iNumIndex = 0;    
 }
 TModel::~TModel()
 {

@@ -17,6 +17,8 @@ struct VS_IN
 	float3 n : NORMAL;
 	float4 c : COLOR;
 	float2 t : TEXTURE;
+	//float4 i : INDEX;
+	//float4 w : WEIGHT;
 };
 struct VS_OUT
 {

@@ -5,7 +5,7 @@ bool		TFbxObj::Frame()
 {
 	if (m_bAnimPlay)
 	{
-		m_fElpaseTime += g_fSecPerFrame * 1.0f;
+		m_fElpaseTime += g_fSecPerFrame * 0.0f;
 		m_iAnimIndex = m_fElpaseTime * 30.0f;
 		if (m_fEndTime < m_fElpaseTime)
 		{
@@ -13,6 +13,12 @@ bool		TFbxObj::Frame()
 			m_fElpaseTime = 0;
 			m_bAnimPlay = false;
 		}
+	}
+	for (int iObj = 0; iObj < m_pMeshList.size(); iObj++)
+	{
+		TMesh* pMesh = m_pMeshList[iObj];
+		m_matAnimMatrix.matAnimation[iObj] =
+			pMesh->m_AnimationTrack[m_iAnimIndex];
 	}
 	return true;
 }
@@ -210,8 +216,16 @@ bool    TFbxObj::Render(ID3D11DeviceContext* pContext)
 	for (int iObj = 0; iObj < m_pMeshList.size(); iObj++)
 	{
 		TMesh* pMesh = m_pMeshList[iObj];
-		if (pMesh->m_ClassType != CLASS_GEOM) continue;
+		if (pMesh->m_ClassType != CLASS_GEOM) continue;		
 
+		for (int iBone = 0; iBone < pMesh->m_iBoneList.size(); iBone++)
+		{
+			int iIndex = pMesh->m_iBoneList[iBone];
+			pMesh->m_matAnimMatrix.matAnimation[iBone] = 
+				m_matAnimMatrix.matAnimation[iIndex];
+			pMesh->m_matAnimMatrix.matAnimation[iBone]=
+				pMesh->m_matAnimMatrix.matAnimation[iBone].Transpose();
+		}
 		TMtrl* pMtrl = nullptr;
 		pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 		
@@ -225,8 +239,9 @@ bool    TFbxObj::Render(ID3D11DeviceContext* pContext)
 					m_pFbxMaterialList[pMesh->m_iMtrlRef]->m_pSubMtrl[iSub];
 				pContext->PSSetSamplers(0, 1, &pSubMtrl->m_Texture.m_pSampler);
 				pContext->PSSetShaderResources(1, 1, &pSubMtrl->m_Texture.m_pTextureSRV);				
+
 				pMesh->m_pSubMesh[iSub]->SetMatrix(
-					&pMesh->m_AnimationTrack[m_iAnimIndex],
+					nullptr,
 					&m_cbData.matView, &m_cbData.matProj);
 				pMesh->m_pSubMesh[iSub]->Render(pContext);
 			}
@@ -242,7 +257,7 @@ bool    TFbxObj::Render(ID3D11DeviceContext* pContext)
 				pContext->PSSetSamplers(0, 1, &pMtrl->m_Texture.m_pSampler);
 				pContext->PSSetShaderResources(1, 1, &pMtrl->m_Texture.m_pTextureSRV);
 			}
-			pMesh->SetMatrix(&pMesh->m_AnimationTrack[m_iAnimIndex],
+			pMesh->SetMatrix(nullptr,
 				&m_cbData.matView, &m_cbData.matProj);
 			pMesh->Render(pContext);
 		}
@@ -270,21 +285,23 @@ void	TFbxObj::ParseMesh(FbxNode* pNode, TMesh* pMesh)
 	std::vector< std::string> fbxFileTexList;
 	if (pFbxMesh != nullptr)
 	{
+		int iNumCP = pFbxMesh->GetControlPointsCount();
 		// 스키닝 오브젝트 여부?
 		// pFbxMesh에 영향을 미치는 행렬(노드)에 전체 개수?
 		// 행렬[0]=FbxNode ~ 행렬[3] = 4개
 		// 정점[0]->인덱스[1]		// 		
 		TSkinData skindata;
 		bool bSkinnedMesh = ParseMeshSkinning(pFbxMesh, pMesh, &skindata);
-		if (bSkinnedMesh)
-		{
-			// 정점[N]-> 인덱스[20], 가중치
-			pMesh->m_WeightList.resize(skindata.m_VertexList.size());
-		}
-		else
-		{
-
-		}
+		_ASSERT(skindata.m_VertexList.size() == iNumCP);
+		//if (bSkinnedMesh)
+		//{
+		//	// 정점[N]-> 인덱스[20], 가중치
+		//	pMesh->m_WeightList.resize(skindata.m_VertexList.size());
+		//}
+		//else
+		//{
+		//	pMesh->m_WeightList.resize(iNumCP);
+		//}
 
 		pMesh->m_iNumLayer = pFbxMesh->GetLayerCount();
 		pMesh->m_LayerList.resize(pMesh->m_iNumLayer);
@@ -322,7 +339,7 @@ void	TFbxObj::ParseMesh(FbxNode* pNode, TMesh* pMesh)
 		int m_iNumPolygon = pFbxMesh->GetPolygonCount();
 		// 정점리스트 주소
 		FbxVector4* pVertexPositions = pFbxMesh->GetControlPoints();
-		int iNumCP = pFbxMesh->GetControlPointsCount();
+		
 		int iBasePolyIndex = 0;
 		int iNumFbxMaterial = pNode->GetMaterialCount();
 		if (iNumFbxMaterial > 1)
@@ -390,6 +407,7 @@ void	TFbxObj::ParseMesh(FbxNode* pNode, TMesh* pMesh)
 				for (int iIndex = 0;iIndex < 3;	iIndex++)
 				{
 					PNCT_VERTEX vertex;
+					PNCTIW_VERTEX iwVertex;
 					FbxVector4 pos = pVertexPositions[iVertexIndex[iIndex]];
 					FbxVector4 vPos = matGeom.MultT(pos);
 					vertex.pos.x = vPos.mData[0];
@@ -443,33 +461,34 @@ void	TFbxObj::ParseMesh(FbxNode* pNode, TMesh* pMesh)
 					{						
 						int iNum = 
 							skindata.m_VertexList[iRealIndex].m_IndexList.size();
-						for (int i=0; i < iNum; i++)
+						for (int i=0; i < min(iNum,4); i++)
 						{
-							pMesh->m_WeightList[iRealIndex].index[i] =
+							iwVertex.index[i] =
 								skindata.m_VertexList[iRealIndex].m_IndexList[i];
-							pMesh->m_WeightList[iRealIndex].weight[i] =
+							iwVertex.weight[i] =
 								skindata.m_VertexList[iRealIndex].m_WegihtList[i];
 						}
 					}
 					// 비 스키닝 오브젝트를 -> 스키닝화 처리
 					else
 					{
-						pMesh->m_WeightList[iRealIndex].index[0] = 0;
-						pMesh->m_WeightList[iRealIndex].weight[0] = 1.0f;						
+						iwVertex.index[0] = 0;
+						iwVertex.weight[0] = 1.0f;
 						for (int i = 0; i <4; i++)
 						{
-							pMesh->m_WeightList[iRealIndex].index[0] = 0;
-							pMesh->m_WeightList[iRealIndex].weight[i] =0.0f;
+							iwVertex.index[i] = 0;
+							iwVertex.weight[i] =0.0f;
 						}
-
 					}
 					if (iNumFbxMaterial > 1)
 					{			
 						pMesh->m_pSubMesh[iSubMtrlIndex]->m_pVertexList.push_back(vertex);
+						pMesh->m_pSubMesh[iSubMtrlIndex]->m_WeightList.push_back(iwVertex);
 					}
 					else
 					{
 						pMesh->m_pVertexList.push_back(vertex);
+						pMesh->m_WeightList.push_back(iwVertex);
 					}
 				}
 			}
@@ -521,7 +540,7 @@ void	TFbxObj::PreProcess(FbxNode* pNode)
 		PreProcess(pChildNode);
 	}
 }
-bool	TFbxObj::LoadObject(std::string filename)
+bool	TFbxObj::LoadObject(std::string filename, std::string shaderName)
 {
 	m_pFbxManager = FbxManager::Create();	
 	m_pFbxImporter = FbxImporter::Create(m_pFbxManager,"");
@@ -531,6 +550,7 @@ bool	TFbxObj::LoadObject(std::string filename)
 	FbxAxisSystem::MayaZUp.ConvertScene(m_pFbxScene);
 
 	FbxNode* m_pRootNode=m_pFbxScene->GetRootNode();
+	m_pFbxNodeList.push_back(m_pRootNode);
 	PreProcess(m_pRootNode);
 	// todo : 중복처리 미작업
 	for (int iMtrl = 0; iMtrl < m_pFbxMaterialList.size(); iMtrl++)
@@ -552,12 +572,14 @@ bool	TFbxObj::LoadObject(std::string filename)
 			{
 				TMesh* pSubMesh = m_pMeshList[iMesh]->m_pSubMesh[iSubMesh];
 				// todo : 쉐이더 등등 중복처리 미작업
-				pSubMesh->Create(L"FbxShader.hlsl", L"../../data/shader/DefaultShader.hlsl");
+				pSubMesh->Create(TBASIS::mtw(shaderName), 
+								 TBASIS::mtw(shaderName));
 			}
 		}
 		else
 		{
-			pMesh->Create(L"FbxShader.hlsl", L"../../data/shader/DefaultShader.hlsl");
+			pMesh->Create(	TBASIS::mtw(shaderName), 
+							TBASIS::mtw(shaderName));
 		}
 	}
 	m_pFbxScene->Destroy();	

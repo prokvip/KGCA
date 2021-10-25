@@ -1,5 +1,16 @@
 #include "TFbxObj.h"
 #include "TTimer.h"
+int  TFbxObj::GetFindInedx(FbxNode* pNode)
+{
+	for (int iNode = 0; iNode < m_pFbxNodeList.size(); iNode++)
+	{
+		if (m_pFbxNodeList[iNode] == pNode)
+		{
+			return iNode;
+		}
+	}
+	return -1;
+}
 bool TFbxObj::ParseMeshSkinning(FbxMesh* pFbxMesh, TMesh* pMesh, TSkinData* pSkindata)
 {
 	int iNumDeformer = pFbxMesh->GetDeformerCount(FbxDeformer::eSkin);
@@ -24,6 +35,10 @@ bool TFbxObj::ParseMeshSkinning(FbxMesh* pFbxMesh, TMesh* pMesh, TSkinData* pSki
 			
 			FbxNode* pLinkNode = pCluster->GetLink();
 			pSkindata->m_MatrixList.push_back(pLinkNode);
+			int iBone = GetFindInedx(pLinkNode);
+			_ASSERT(iBone>=0);
+			pMesh->m_iBoneList.push_back(iBone);
+
 			int iMatrixIndex = pSkindata->m_MatrixList.size() - 1;
 			//ControlPoint(제어점) 정점리스트
 			int* iIndex = pCluster->GetControlPointIndices();
