@@ -39,14 +39,11 @@ bool TFbxObj::ParseMeshSkinning(FbxMesh* pFbxMesh, TMesh* pMesh, TSkinData* pSki
 		{
 			FbxCluster* pCluster = pSkin->GetCluster(iCluster);
 
-			FbxAMatrix matXBindPose;
+			FbxAMatrix matXBindPose, matInitPostion;
 			pCluster->GetTransformLinkMatrix(matXBindPose);
-			FbxAMatrix matInitPostion;
 			pCluster->GetTransformMatrix(matInitPostion);
-			FbxAMatrix matBoneBindPos = matInitPostion.Inverse() *
-				matXBindPose;
-			TMatrix matBinePos = 
-				DxConvertMatrix(ConvertAMatrix(matBoneBindPos));
+			FbxAMatrix matBoneBindPos = matInitPostion.Inverse() * 	matXBindPose;
+			TMatrix matBinePos = DxConvertMatrix(ConvertAMatrix(matBoneBindPos));
 			// 영향을 미치는 행렬이 iClusterSize 정점에 영향을 미친다.
 			int iNumVertex = pCluster->GetControlPointIndicesCount();
 			
@@ -75,6 +72,7 @@ bool TFbxObj::ParseMeshSkinning(FbxMesh* pFbxMesh, TMesh* pMesh, TSkinData* pSki
 }
 void    TFbxObj::ParseAnimStack(FbxString* szData)
 {
+	m_pFbxScene->GetAnimationEvaluator()->Reset();
 	// Frame, Tick
 	// 1Frame = 160Tick
 	// frameSpeed = 1Sec Per 30Frame
@@ -111,8 +109,7 @@ void	TFbxObj::ParseAnimation()
 		ParseAnimStack(AnimStackNameArray.GetAt(iStack));
 	}
 }
-void	TFbxObj::ParseAnimationNode(	FbxNode* pNode, 
-										TMesh* pMesh)
+void	TFbxObj::ParseAnimationNode()
 {
 	// 에니메이션 데이터 저장
 	FbxAnimEvaluator* pAnim = m_pFbxScene->GetAnimationEvaluator();
@@ -131,18 +128,4 @@ void	TFbxObj::ParseAnimationNode(	FbxNode* pNode,
 		}
 		fCurrentTime += m_fSampleTime;
 	}	
-	/*for (int iMesh = 0; iMesh < m_pMeshList.size(); iMesh++)
-	{
-		float fCurrentTime = m_fStartTime;
-		TMesh* pMesh = m_pMeshList[iMesh];
-		while (fCurrentTime < m_fEndTime)
-		{
-			FbxTime time;
-			time.SetSecondDouble(fCurrentTime);
-			FbxAMatrix matGlobal = pAnim->GetNodeGlobalTransform(pMesh->m_pFbxNode, time);
-			TMatrix matGlobaDX = DxConvertMatrix(ConvertAMatrix(matGlobal));
-			pMesh->m_AnimationTrack.push_back(matGlobaDX);
-			fCurrentTime += m_fSampleTime;
-		}
-	}*/
 }

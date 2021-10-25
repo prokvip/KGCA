@@ -51,16 +51,16 @@ struct CB_DATA
 class TModel 
 {
 public:
-	UINT				m_iVertexSize;
-	UINT				m_iNumIndex;
+	UINT				m_iVertexSize=0;
+	UINT				m_iNumIndex=0;
 	CB_DATA				m_cbData;
 	ID3DBlob* m_pVSBlob = nullptr;
-	ID3D11Buffer* m_pVertexBuffer;
-	ID3D11Buffer* m_pIndexBuffer;
-	ID3D11Buffer* m_pConstantBuffer;
-	ID3D11InputLayout* m_pVertexLayout;
-	ID3D11VertexShader* m_pVS;
-	ID3D11PixelShader* m_pPS;
+	ID3D11Buffer* m_pVertexBuffer = nullptr;
+	ID3D11Buffer* m_pIndexBuffer = nullptr;
+	ID3D11Buffer* m_pConstantBuffer = nullptr;
+	ID3D11InputLayout* m_pVertexLayout = nullptr;
+	ID3D11VertexShader* m_pVS = nullptr;
+	ID3D11PixelShader* m_pPS = nullptr;
 	std::vector<PNCT_VERTEX> m_pVertexList;	
 	std::vector< DWORD> m_IndexList;
 public:

@@ -75,7 +75,26 @@ bool TMesh::PreRender(ID3D11DeviceContext* pContext)
 	UINT pStrides[2] = {sizeof(PNCT_VERTEX), sizeof(PNCTIW_VERTEX)};
 	UINT pOffsets[2] = { 0,0 };
 	pContext->IASetVertexBuffers(0, 2, vb,	pStrides, pOffsets);
-	pContext->IASetIndexBuffer(m_pIndexBuffer,
-		DXGI_FORMAT_R32_UINT, 0);
+	pContext->IASetIndexBuffer(m_pIndexBuffer,DXGI_FORMAT_R32_UINT, 0);
 	return true;
+}
+bool TMesh::Release() 
+{
+	TModel::Release();
+	for (auto data : m_pSubMesh)
+	{
+		data->Release();
+		SAFE_DEL(data);
+	}
+	SAFE_RELEASE(m_pIWVertrexBuffer);
+	SAFE_RELEASE(m_pAnimCB);
+	return true;
+}
+TMesh::TMesh()
+{
+	m_ClassType = CLASS_GEOM;
+	m_iMtrlRef = -1;
+}
+TMesh::~TMesh()
+{
 }

@@ -193,22 +193,22 @@ bool TModel::Init()
     return false;
 }
 bool TModel::Create(std::wstring vsFile, std::wstring psFile)
-{
-    CreateConstantBuffer();
+{    
     if (CreateVertexData())
-    {
+    {        
         CreateVertexBuffer();
-    }
-    if (CreateIndexData())
-    {
-        CreateIndexBuffer();
-    }
-    if (SUCCEEDED(LoadShader(vsFile, psFile)))
-    {
-        if (SUCCEEDED(CreateVertexLayout()))
+        if (CreateIndexData())
         {
-            return true;
-        }        
+            CreateIndexBuffer();
+        }
+        if (SUCCEEDED(LoadShader(vsFile, psFile)))
+        {
+            if (SUCCEEDED(CreateVertexLayout()))
+            {
+                CreateConstantBuffer();
+                return true;
+            }
+        }
     }
     return false;
 }

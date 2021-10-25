@@ -42,7 +42,7 @@ public:
 	void	ParseMesh(FbxNode* pNode, TMesh* pMesh);	
 	TMatrix   ParseTransform(FbxNode* pNode, TMatrix& matParent);
 public:
-	void	ParseAnimationNode(FbxNode* pNode, TMesh* pMesh);
+	void	ParseAnimationNode();
 	void	ParseAnimation();
 	void	ParseAnimStack(FbxString* szData);
 	bool	ParseMeshSkinning(FbxMesh* pFbxMesh, TMesh* pMesh, TSkinData* pSkindata);

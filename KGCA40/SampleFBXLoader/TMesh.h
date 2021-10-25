@@ -64,43 +64,29 @@ class TMesh :  public TModel
 public:	
 	std::vector<int>  m_iBoneList;
 	TAnimMatrix   m_matAnimMatrix;
-	ID3D11Buffer* m_pAnimCB;
-	ID3D11Buffer* m_pIWVertrexBuffer;
+	ID3D11Buffer* m_pAnimCB = nullptr;
+	ID3D11Buffer* m_pIWVertrexBuffer = nullptr;
 	// 정점 당 가중치, 인덱스 저장
 	std::vector<PNCTIW_VERTEX>       m_WeightList;
-	FbxNode* m_pFbxNode;
+	FbxNode* m_pFbxNode = nullptr;
 	OBJECTCLASSTYPE     m_ClassType;
 	std::wstring		m_szName;
 	std::wstring		m_szParentName;
-	int					m_iNumLayer;
+	int					m_iNumLayer = 0;
 	std::vector<TLayer> m_LayerList;
 	int					m_iMtrlRef;
 	TMatrix				m_matWorld;
-	TMesh* m_pParent;
+	TMesh* m_pParent = nullptr;
 	std::vector<TMatrix> m_AnimationTrack;
-	std::vector<TMesh*> m_pSubMesh;
-	bool Release() override
-	{
-		TModel::Release();
-		for (auto data : m_pSubMesh)
-		{
-			data->Release();
-			SAFE_DEL(data);
-		}
-		SAFE_RELEASE(m_pIWVertrexBuffer);
-		return true;
-	}
-	
+	std::vector<TMesh*> m_pSubMesh;	
 public:
+	bool Release() override;
 	virtual HRESULT		CreateConstantBuffer()override;
 	virtual HRESULT		CreateVertexLayout() override;
 	virtual HRESULT		CreateVertexBuffer()override;
 	virtual bool		PreRender(ID3D11DeviceContext* pContext)override;
 public:
-	TMesh()
-	{
-		m_ClassType = CLASS_GEOM;
-		m_iMtrlRef = -1;
-	}
+	TMesh();
+	virtual ~TMesh();
 };
 

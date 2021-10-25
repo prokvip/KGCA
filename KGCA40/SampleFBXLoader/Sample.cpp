@@ -76,9 +76,8 @@ bool		Sample::Init()
 	//m_FbxObjA.LoadObject("../../data/object/BoxAnim.fbx");
 	
 	CStopwatch stop;
-	//m_FbxObjA.LoadObject("../../data/object/Turret.fbx");	
-	m_FbxObjB.LoadObject("../../data/object/Man.fbx",
-						 "CharacterShader.hlsl");
+	m_FbxObjA.LoadObject("../../data/object/Turret.fbx", "CharacterShader.hlsl");
+	m_FbxObjB.LoadObject("../../data/object/Man.fbx", "CharacterShader.hlsl");
 	stop.Output(L"a");
 	m_Camera.CreateViewMatrix(TVector3(0, 0, -100), TVector3(0, 0, 0));
 	m_Camera.CreateProjMatrix(1.0f, 1000.0f, XM_PI * 0.25f, (float)g_rtClient.right / (float)g_rtClient.bottom);
@@ -95,14 +94,14 @@ bool		Sample::Frame()
 	{
 		m_FbxObjB.m_bAnimPlay = !m_FbxObjB.m_bAnimPlay;
 	}
-	//m_FbxObjA.Frame();
+	m_FbxObjA.Frame();
 	m_FbxObjB.Frame();
 	return true;
 }
 bool		Sample::Render() 
 {
-	/*m_FbxObjA.SetMatrix(nullptr, &m_Camera.m_matView, &m_Camera.m_matProj);
-	m_FbxObjA.Render(m_pImmediateContext);	*/
+	m_FbxObjA.SetMatrix(nullptr, &m_Camera.m_matView, &m_Camera.m_matProj);
+	m_FbxObjA.Render(m_pImmediateContext);	
 	m_FbxObjB.SetMatrix(nullptr, &m_Camera.m_matView, &m_Camera.m_matProj);
 	m_FbxObjB.Render(m_pImmediateContext);
 	return true;

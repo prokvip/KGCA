@@ -4,8 +4,6 @@
 #include <algorithm>
 bool Compare(const pair<float, int>& a, const pair<float, int>& b)
 {
-	if (a.first == b.first)
-		return a.second > b.second;
 	return a.first > b.first;
 }
 bool		TFbxObj::Frame()
@@ -25,7 +23,7 @@ bool		TFbxObj::Frame()
 	{
 		TMesh* pMesh = m_pMeshList[iObj];		
 		m_matAnimMatrix.matAnimation[iObj] =
-			m_matBindPoseList[iObj] * 
+			m_matBindPoseList[iObj] *
 			pMesh->m_AnimationTrack[m_iAnimIndex];
 	}
 	return true;
@@ -46,9 +44,7 @@ void      TFbxObj::ParseNode(FbxNode* pNode, TMesh* pParentMesh)
 		matParent = pParentMesh->m_matWorld;
 	}
 	pMesh->m_pParent = pParentMesh;
-	pMesh->m_matWorld = ParseTransform(pNode, matParent);
-
-	
+	pMesh->m_matWorld = ParseTransform(pNode, matParent);	
 
 	if (pNode->GetMesh())
 	{
@@ -226,13 +222,14 @@ bool    TFbxObj::Render(ID3D11DeviceContext* pContext)
 		TMesh* pMesh = m_pMeshList[iObj];
 		if (pMesh->m_ClassType != CLASS_GEOM) continue;		
 
+		pMesh->m_matAnimMatrix.matAnimation[0] =
+			m_matAnimMatrix.matAnimation[iObj].Transpose();
+
 		for (int iBone = 0; iBone < pMesh->m_iBoneList.size(); iBone++)
 		{
 			int iIndex = pMesh->m_iBoneList[iBone];
-			pMesh->m_matAnimMatrix.matAnimation[iBone] = 
-				m_matAnimMatrix.matAnimation[iIndex];
-			pMesh->m_matAnimMatrix.matAnimation[iBone]=
-				pMesh->m_matAnimMatrix.matAnimation[iBone].Transpose();
+			pMesh->m_matAnimMatrix.matAnimation[iBone] =
+				m_matAnimMatrix.matAnimation[iIndex].Transpose();
 		}
 		TMtrl* pMtrl = nullptr;
 		pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -245,12 +242,14 @@ bool    TFbxObj::Render(ID3D11DeviceContext* pContext)
 				if (pMesh->m_pSubMesh[iSub]->m_pVertexList.size() <= 0) continue;
 				TMtrl* pSubMtrl = 
 					m_pFbxMaterialList[pMesh->m_iMtrlRef]->m_pSubMtrl[iSub];
-				pContext->PSSetSamplers(0, 1, &pSubMtrl->m_Texture.m_pSampler);
-				pContext->PSSetShaderResources(1, 1, &pSubMtrl->m_Texture.m_pTextureSRV);				
-
-				pMesh->m_pSubMesh[iSub]->SetMatrix(
-					nullptr,
-					&m_cbData.matView, &m_cbData.matProj);
+				if (pSubMtrl->m_Texture.m_pTextureSRV != nullptr)
+				{
+					pContext->PSSetSamplers(0, 1, &pSubMtrl->m_Texture.m_pSampler);
+					pContext->PSSetShaderResources(1, 1, &pSubMtrl->m_Texture.m_pTextureSRV);
+				}
+				pMesh->m_pSubMesh[iSub]->m_matAnimMatrix.matAnimation[0] =
+					m_matAnimMatrix.matAnimation[iObj].Transpose();					
+				pMesh->m_pSubMesh[iSub]->SetMatrix(nullptr,&m_cbData.matView, &m_cbData.matProj);
 				pMesh->m_pSubMesh[iSub]->Render(pContext);
 			}
 		}
@@ -265,8 +264,7 @@ bool    TFbxObj::Render(ID3D11DeviceContext* pContext)
 				pContext->PSSetSamplers(0, 1, &pMtrl->m_Texture.m_pSampler);
 				pContext->PSSetShaderResources(1, 1, &pMtrl->m_Texture.m_pTextureSRV);
 			}
-			pMesh->SetMatrix(nullptr,
-				&m_cbData.matView, &m_cbData.matProj);
+			pMesh->SetMatrix(nullptr,&m_cbData.matView, &m_cbData.matProj);
 			pMesh->Render(pContext);
 		}
 	}
@@ -299,10 +297,10 @@ void	TFbxObj::ParseMesh(FbxNode* pNode, TMesh* pMesh)
 		// 행렬[0]=FbxNode ~ 행렬[3] = 4개
 		// 정점[0]->인덱스[1]		// 		
 		TSkinData skindata;
-		bool bSkinnedMesh = ParseMeshSkinning(pFbxMesh, pMesh, &skindata);
-		_ASSERT(skindata.m_VertexList.size() == iNumCP);
+		bool bSkinnedMesh = ParseMeshSkinning(pFbxMesh, pMesh, &skindata);		
 		if (bSkinnedMesh)
 		{			
+			_ASSERT(skindata.m_VertexList.size() == iNumCP);
 			for (int i = 0; i < skindata.m_VertexList.size(); i++)
 			{
 				std::vector<std::pair<float, int>> list;
@@ -322,10 +320,6 @@ void	TFbxObj::ParseMesh(FbxNode* pNode, TMesh* pMesh)
 				}
 			}			
 		}
-		//else
-		//{
-		//	pMesh->m_WeightList.resize(iNumCP);
-		//}
 
 		pMesh->m_iNumLayer = pFbxMesh->GetLayerCount();
 		pMesh->m_LayerList.resize(pMesh->m_iNumLayer);
@@ -499,7 +493,7 @@ void	TFbxObj::ParseMesh(FbxNode* pNode, TMesh* pMesh)
 					{
 						iwVertex.index[0] = 0;
 						iwVertex.weight[0] = 1.0f;
-						for (int i = 0; i <4; i++)
+						for (int i = 1; i <4; i++)
 						{
 							iwVertex.index[i] = 0;
 							iwVertex.weight[i] =0.0f;
@@ -524,7 +518,8 @@ void	TFbxObj::ParseMesh(FbxNode* pNode, TMesh* pMesh)
 void	TFbxObj::PreProcess(FbxNode* pNode)
 {
 	if (pNode->GetCamera() || pNode->GetLight()) { return; }
-
+	m_pFbxNodeList.push_back(pNode);
+	m_matBindPoseList.push_back(TMatrix());
 	int iNumFbxMaterial = pNode->GetMaterialCount();
 	FbxSurfaceMaterial* pFbxMaterial = pNode->GetMaterial(0);
 	if (GetRootMtrl(pFbxMaterial) == -1)
@@ -560,8 +555,7 @@ void	TFbxObj::PreProcess(FbxNode* pNode)
 			type == FbxNodeAttribute::eSkeleton*/
 			pChildNode->GetNodeAttribute() != nullptr)
 		{
-			m_pFbxNodeList.push_back(pChildNode);
-			m_matBindPoseList.push_back(TMatrix());
+			
 		}
 		PreProcess(pChildNode);
 	}
@@ -576,9 +570,6 @@ bool	TFbxObj::LoadObject(std::string filename, std::string shaderName)
 	FbxAxisSystem::MayaZUp.ConvertScene(m_pFbxScene);
 
 	FbxNode* m_pRootNode=m_pFbxScene->GetRootNode();
-	m_pFbxNodeList.push_back(m_pRootNode);
-	TMatrix matWorld;
-	m_matBindPoseList.push_back(matWorld);
 	PreProcess(m_pRootNode);
 	// todo : 중복처리 미작업
 	for (int iMtrl = 0; iMtrl < m_pFbxMaterialList.size(); iMtrl++)
@@ -589,7 +580,7 @@ bool	TFbxObj::LoadObject(std::string filename, std::string shaderName)
 
 	ParseAnimation();
 	ParseNode(m_pRootNode, nullptr);
-	ParseAnimationNode(nullptr, nullptr);	
+	ParseAnimationNode();
 
 	for (int iMesh = 0; iMesh < m_pMeshList.size(); iMesh++)
 	{
