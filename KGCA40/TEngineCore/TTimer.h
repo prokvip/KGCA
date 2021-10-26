@@ -21,7 +21,7 @@ public:
 		TCHAR  strMessage[MAX_PATH] = { 0, };
 		__int64 qwElapsedTime = Now();
 		float Second = static_cast<float>(qwElapsedTime) / static_cast<float>(m_liPerFreq.QuadPart);
-		_stprintf_s(strMessage, _T("<=====%s[%lld:10.4f]====>"), pData, qwElapsedTime, Second);
+		_stprintf_s(strMessage, _T("<=====%s[%lld:%10.4f]====>"), pData, qwElapsedTime, Second);
 		OutputDebugString(strMessage);
 #endif
 	}

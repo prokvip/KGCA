@@ -4,6 +4,7 @@
 class Sample :   public TCore
 {
 	TVector3	m_vMoePos;
+	std::vector<TFbxObj*> m_pObjectList;
 	TFbxObj		m_FbxObjA;
 	TFbxObj		m_FbxObjB;
 	ID3D11DepthStencilView* m_pDepthStencilView;

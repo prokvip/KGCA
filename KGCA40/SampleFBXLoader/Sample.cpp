@@ -70,6 +70,7 @@ bool		Sample::Init()
 	CreateDepthStencilView();
 	CreateDepthStencilState();
 
+	
 	//m_FbxObjA.LoadObject("../../data/object/SM_Tree_Var01.fbx");
 	//m_FbxObj.LoadObject("../../data/object/ship.fbx");
 	//m_FbxObjA.LoadObject("../../data/object/multiCamera.fbx");
@@ -82,6 +83,8 @@ bool		Sample::Init()
 	m_Camera.CreateViewMatrix(TVector3(0, 0, -100), TVector3(0, 0, 0));
 	m_Camera.CreateProjMatrix(1.0f, 1000.0f, XM_PI * 0.25f, (float)g_rtClient.right / (float)g_rtClient.bottom);
 
+	m_pObjectList.push_back(&m_FbxObjA);
+	m_pObjectList.push_back(&m_FbxObjB);
 	return true;
 }
 bool		Sample::Frame() 
@@ -94,8 +97,12 @@ bool		Sample::Frame()
 	{
 		m_FbxObjB.m_bAnimPlay = !m_FbxObjB.m_bAnimPlay;
 	}
-	m_FbxObjA.Frame();
-	m_FbxObjB.Frame();
+	for (int iObj = 0; iObj < m_pObjectList.size(); iObj++)
+	{
+		m_pObjectList[iObj]->Frame();
+	}
+	//m_FbxObjA.Frame();
+	//m_FbxObjB.Frame();
 
 	
 	if (g_Input.GetKey(VK_UP) >= KEY_PUSH)
@@ -117,10 +124,15 @@ bool		Sample::Frame()
 }
 bool		Sample::Render() 
 {
-	m_FbxObjA.SetMatrix(nullptr, &m_Camera.m_matView, &m_Camera.m_matProj);
+	for (int iObj = 0; iObj < m_pObjectList.size(); iObj++)
+	{
+		m_pObjectList[iObj]->SetMatrix(nullptr, &m_Camera.m_matView, &m_Camera.m_matProj);
+		m_pObjectList[iObj]->Render(m_pImmediateContext);
+	}
+	/*m_FbxObjA.SetMatrix(nullptr, &m_Camera.m_matView, &m_Camera.m_matProj);
 	m_FbxObjA.Render(m_pImmediateContext);	
 	m_FbxObjB.SetMatrix(nullptr, &m_Camera.m_matView, &m_Camera.m_matProj);
-	m_FbxObjB.Render(m_pImmediateContext);
+	m_FbxObjB.Render(m_pImmediateContext);*/
 	return true;
 }
 bool		Sample::Release() 
