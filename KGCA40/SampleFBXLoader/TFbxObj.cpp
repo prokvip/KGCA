@@ -256,7 +256,8 @@ bool    TFbxObj::Render(ID3D11DeviceContext* pContext)
 					pMesh->m_pSubMesh[iSub]->m_matAnimMatrix.matAnimation[iBone]
 						= pMesh->m_matAnimMatrix.matAnimation[iBone];
 				}
-				pMesh->m_pSubMesh[iSub]->SetMatrix(nullptr,&m_cbData.matView, &m_cbData.matProj);
+				pMesh->m_pSubMesh[iSub]->SetMatrix(&m_matWorld,
+					&m_cbData.matView, &m_cbData.matProj);
 				pMesh->m_pSubMesh[iSub]->Render(pContext);
 			}
 		}
@@ -274,7 +275,7 @@ bool    TFbxObj::Render(ID3D11DeviceContext* pContext)
 					pContext->PSSetShaderResources(1, 1, &pMtrl->m_Texture.m_pTextureSRV);
 				}
 			}
-			pMesh->SetMatrix(nullptr,&m_cbData.matView, &m_cbData.matProj);
+			pMesh->SetMatrix(&m_matWorld,&m_cbData.matView, &m_cbData.matProj);
 			pMesh->Render(pContext);
 		}
 	}

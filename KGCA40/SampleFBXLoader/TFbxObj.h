@@ -7,6 +7,7 @@ class TFbxObj
 	FbxImporter*	m_pFbxImporter;
 	FbxScene*		m_pFbxScene;
 public:
+	TMatrix			m_matWorld;
 	TAnimMatrix     m_matAnimMatrix;
 	bool	m_bAnimPlay = false;
 	float   m_fElpaseTime=0.0f;

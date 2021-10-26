@@ -96,6 +96,23 @@ bool		Sample::Frame()
 	}
 	m_FbxObjA.Frame();
 	m_FbxObjB.Frame();
+
+	
+	if (g_Input.GetKey(VK_UP) >= KEY_PUSH)
+	{
+		m_vMoePos.z += g_fSecPerFrame * 100.0f;
+	}
+	if (g_Input.GetKey(VK_DOWN) >= KEY_PUSH)
+	{
+		m_vMoePos.z -= g_fSecPerFrame * 100.0f;
+	}
+	if (g_Input.GetKey(VK_LEFT) >= KEY_PUSH)
+	{
+		D3DXMatrixRotationY(&m_FbxObjB.m_matWorld, g_fGameTimer);		
+	}
+	m_FbxObjB.m_matWorld._41 = m_vMoePos.x;
+	m_FbxObjB.m_matWorld._42 = m_vMoePos.y;
+	m_FbxObjB.m_matWorld._43 = m_vMoePos.z;
 	return true;
 }
 bool		Sample::Render() 

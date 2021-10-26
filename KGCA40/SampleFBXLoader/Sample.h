@@ -3,6 +3,7 @@
 #include "TFbxObj.h"
 class Sample :   public TCore
 {
+	TVector3	m_vMoePos;
 	TFbxObj		m_FbxObjA;
 	TFbxObj		m_FbxObjB;
 	ID3D11DepthStencilView* m_pDepthStencilView;
