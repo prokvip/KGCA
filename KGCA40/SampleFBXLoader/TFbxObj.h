@@ -15,7 +15,6 @@ public:
 	float m_fEndTime;
 	float m_fSampleTime;
 	std::vector<FbxNode*>	m_pFbxNodeList;
-	std::vector<TMatrix>	m_matBindPoseList;
 	std::vector<TMtrl*>		m_pFbxMaterialList;
 	std::vector<TMesh*>		m_pMeshList;
 	CB_DATA					m_cbData;
@@ -23,7 +22,7 @@ public:
 /// 가상함수 리스트
 /// </summary>
 public:
-	int			GetFindInedx(FbxNode* pNode);
+	TMesh* GetFindInedx(FbxNode* pNode);
 	bool		LoadObject( std::string filename, 
 							std::string shaderName);
 	bool		Frame();

@@ -19,13 +19,13 @@ bool		TFbxObj::Frame()
 			m_bAnimPlay = false;
 		}
 	}
-	for (int iObj = 0; iObj < m_pMeshList.size(); iObj++)
+	/*for (int iObj = 0; iObj < m_pMeshList.size(); iObj++)
 	{
-		TMesh* pMesh = m_pMeshList[iObj];		
+		TMesh* pMesh = m_pMeshList[iObj];				
 		m_matAnimMatrix.matAnimation[iObj] =
-			m_matBindPoseList[iObj] *
+			pMesh->m_matBindPoseList[iObj] *
 			pMesh->m_AnimationTrack[m_iAnimIndex];
-	}
+	}*/
 	return true;
 }
 void      TFbxObj::ParseNode(FbxNode* pNode, TMesh* pParentMesh)
@@ -222,14 +222,15 @@ bool    TFbxObj::Render(ID3D11DeviceContext* pContext)
 		TMesh* pMesh = m_pMeshList[iObj];
 		if (pMesh->m_ClassType != CLASS_GEOM) continue;		
 
-		pMesh->m_matAnimMatrix.matAnimation[0] =
-			m_matAnimMatrix.matAnimation[iObj].Transpose();
+		D3DXMatrixTranspose(&pMesh->m_matAnimMatrix.matAnimation[0],
+							&pMesh->m_AnimationTrack[m_iAnimIndex]);
 
-		for (int iBone = 0; iBone < pMesh->m_iBoneList.size(); iBone++)
+		for (int iBone = 0; iBone < pMesh->m_matBindPoseList.size(); iBone++)
 		{
-			int iIndex = pMesh->m_iBoneList[iBone];
-			pMesh->m_matAnimMatrix.matAnimation[iBone] =
-				m_matAnimMatrix.matAnimation[iIndex].Transpose();
+			TMatrix matAnim = pMesh->m_matBindPoseList[iBone] *
+				pMesh->m_pMeshLinkList[iBone]->m_AnimationTrack[m_iAnimIndex];
+			D3DXMatrixTranspose(&pMesh->m_matAnimMatrix.matAnimation[iBone],
+				&matAnim);
 		}
 		TMtrl* pMtrl = nullptr;
 		pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -247,8 +248,14 @@ bool    TFbxObj::Render(ID3D11DeviceContext* pContext)
 					pContext->PSSetSamplers(0, 1, &pSubMtrl->m_Texture.m_pSampler);
 					pContext->PSSetShaderResources(1, 1, &pSubMtrl->m_Texture.m_pTextureSRV);
 				}
-				pMesh->m_pSubMesh[iSub]->m_matAnimMatrix.matAnimation[0] =
-					m_matAnimMatrix.matAnimation[iObj].Transpose();					
+				// 스키닝도 서브메터리얼 사용 가능함.
+				D3DXMatrixTranspose(&pMesh->m_pSubMesh[iSub]->m_matAnimMatrix.matAnimation[0],
+					&pMesh->m_AnimationTrack[m_iAnimIndex]);
+				for (int iBone = 0; iBone < pMesh->m_matBindPoseList.size(); iBone++)
+				{
+					pMesh->m_pSubMesh[iSub]->m_matAnimMatrix.matAnimation[iBone]
+						= pMesh->m_matAnimMatrix.matAnimation[iBone];
+				}
 				pMesh->m_pSubMesh[iSub]->SetMatrix(nullptr,&m_cbData.matView, &m_cbData.matProj);
 				pMesh->m_pSubMesh[iSub]->Render(pContext);
 			}
@@ -261,8 +268,11 @@ bool    TFbxObj::Render(ID3D11DeviceContext* pContext)
 			}			
 			if (pMtrl != nullptr)
 			{
-				pContext->PSSetSamplers(0, 1, &pMtrl->m_Texture.m_pSampler);
-				pContext->PSSetShaderResources(1, 1, &pMtrl->m_Texture.m_pTextureSRV);
+				if (pMtrl->m_Texture.m_pTextureSRV != nullptr)
+				{
+					pContext->PSSetSamplers(0, 1, &pMtrl->m_Texture.m_pSampler);
+					pContext->PSSetShaderResources(1, 1, &pMtrl->m_Texture.m_pTextureSRV);
+				}
 			}
 			pMesh->SetMatrix(nullptr,&m_cbData.matView, &m_cbData.matProj);
 			pMesh->Render(pContext);
@@ -517,9 +527,8 @@ void	TFbxObj::ParseMesh(FbxNode* pNode, TMesh* pMesh)
 }
 void	TFbxObj::PreProcess(FbxNode* pNode)
 {
-	if (pNode->GetCamera() || pNode->GetLight()) { return; }
-	m_pFbxNodeList.push_back(pNode);
-	m_matBindPoseList.push_back(TMatrix());
+	if (pNode && (pNode->GetCamera() || pNode->GetLight())) { return; }
+	m_pFbxNodeList.push_back(pNode);	
 	int iNumFbxMaterial = pNode->GetMaterialCount();
 	FbxSurfaceMaterial* pFbxMaterial = pNode->GetMaterial(0);
 	if (GetRootMtrl(pFbxMaterial) == -1)
@@ -549,14 +558,6 @@ void	TFbxObj::PreProcess(FbxNode* pNode)
 	for (int iNode = 0; iNode < iNumChild; iNode++)
 	{
 		FbxNode* pChildNode = pNode->GetChild(iNode);	
-		FbxNodeAttribute::EType type = 
-			pChildNode->GetNodeAttribute()->GetAttributeType();
-		if (/*type == FbxNodeAttribute::eMesh ||
-			type == FbxNodeAttribute::eSkeleton*/
-			pChildNode->GetNodeAttribute() != nullptr)
-		{
-			
-		}
 		PreProcess(pChildNode);
 	}
 }
@@ -571,7 +572,6 @@ bool	TFbxObj::LoadObject(std::string filename, std::string shaderName)
 
 	FbxNode* m_pRootNode=m_pFbxScene->GetRootNode();
 	PreProcess(m_pRootNode);
-	// todo : 중복처리 미작업
 	for (int iMtrl = 0; iMtrl < m_pFbxMaterialList.size(); iMtrl++)
 	{
 		TMtrl* pMtrl = m_pFbxMaterialList[iMtrl];		
@@ -585,6 +585,11 @@ bool	TFbxObj::LoadObject(std::string filename, std::string shaderName)
 	for (int iMesh = 0; iMesh < m_pMeshList.size(); iMesh++)
 	{
 		TMesh* pMesh = m_pMeshList[iMesh];
+		for (int iBone = 0; iBone < pMesh->m_pFbxNodeList.size(); iBone++)
+		{
+			TMesh* pLinkMesh = GetFindInedx(pMesh->m_pFbxNodeList[iBone]);
+			pMesh->m_pMeshLinkList.push_back(pLinkMesh);
+		}
 		if (pMesh->m_pSubMesh.size() > 0)
 		{
 			for (int iSubMesh = 0; iSubMesh < m_pMeshList[iMesh]->m_pSubMesh.size(); iSubMesh++)

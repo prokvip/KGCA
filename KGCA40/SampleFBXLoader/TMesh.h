@@ -62,7 +62,10 @@ struct TAnimMatrix
 class TMesh :  public TModel
 {
 public:	
-	std::vector<int>  m_iBoneList;
+	std::vector<FbxNode*>	m_pFbxNodeList;
+	std::vector<TMesh*>     m_pMeshLinkList;
+	std::vector<TMatrix>	m_matBindPoseList;
+	
 	TAnimMatrix   m_matAnimMatrix;
 	ID3D11Buffer* m_pAnimCB = nullptr;
 	ID3D11Buffer* m_pIWVertrexBuffer = nullptr;
