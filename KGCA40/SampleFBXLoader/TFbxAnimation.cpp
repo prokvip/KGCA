@@ -108,21 +108,55 @@ void	TFbxObj::ParseAnimation()
 }
 void	TFbxObj::ParseAnimationNode()
 {
-	// 에니메이션 데이터 저장
+	FbxTime::SetGlobalTimeMode(FbxTime::eFrames30);
+	FbxAnimStack* currAnimStack = m_pFbxScene->GetSrcObject<FbxAnimStack>(0);
+
+	m_pFbxScene->SetCurrentAnimationStack(currAnimStack);
+	FbxString Name = currAnimStack->GetNameOnly();
+	FbxString TakeName = currAnimStack->GetName();
+	FbxTakeInfo* TakeInfo = m_pFbxScene->GetTakeInfo(TakeName);
+	FbxTimeSpan LocalTimeSpan = TakeInfo->mLocalTimeSpan;
+	FbxTime Start = LocalTimeSpan.GetStart();
+	FbxTime Stop = LocalTimeSpan.GetStop();
+	FbxTime Duration = LocalTimeSpan.GetDuration();
+
+	FbxTime::EMode TimeMode = FbxTime::GetGlobalTimeMode();
+	FbxLongLong FrameCount = Duration.GetFrameCount(TimeMode);
+	double FrameRate = FbxTime::GetFrameRate(TimeMode);
+
 	FbxAnimEvaluator* pAnim = m_pFbxScene->GetAnimationEvaluator();
-	
-	float fCurrentTime = m_fStartTime;
-	while (fCurrentTime < m_fEndTime)
-	{		
-		FbxTime time;
-		time.SetSecondDouble(fCurrentTime);	
+	FbxLongLong a = Start.GetFrameCount(TimeMode);
+	FbxLongLong b = Stop.GetFrameCount(TimeMode);
+
+	FbxTime time;
+	for (FbxLongLong f = a; f <= b; ++f)
+	{				
+		time.SetFrame(f, TimeMode);
 		for (int iMesh = 0; iMesh < m_pMeshList.size(); iMesh++)
 		{
 			TMesh* pMesh = m_pMeshList[iMesh];
-			FbxAMatrix matGlobal = pAnim->GetNodeGlobalTransform(pMesh->m_pFbxNode, time);
+			FbxAMatrix matGlobal = pMesh->m_pFbxNode->EvaluateGlobalTransform(time);
 			TMatrix matGlobaDX = DxConvertMatrix(ConvertAMatrix(matGlobal));
 			pMesh->m_AnimationTrack.push_back(matGlobaDX);
 		}
-		fCurrentTime += m_fSampleTime;
-	}	
+	}
+
+	// 에니메이션 데이터 저장
+	
+	//FbxTime::EMode TimeMode = FbxTime::GetGlobalTimeMode();
+	//float fCurrentTime = m_fStartTime;
+	//while (fCurrentTime < m_fEndTime)
+	//{		
+	//	FbxTime time;
+	//	//time.SetSecondDouble(fCurrentTime);	
+	//	time.SetFrame(0, TimeMode);
+	//	for (int iMesh = 0; iMesh < m_pMeshList.size(); iMesh++)
+	//	{
+	//		TMesh* pMesh = m_pMeshList[iMesh];
+	//		FbxAMatrix matGlobal = pAnim->GetNodeGlobalTransform(pMesh->m_pFbxNode, time);
+	//		TMatrix matGlobaDX = DxConvertMatrix(ConvertAMatrix(matGlobal));
+	//		pMesh->m_AnimationTrack.push_back(matGlobaDX);
+	//	}
+	//	fCurrentTime += m_fSampleTime;
+	//}	
 }

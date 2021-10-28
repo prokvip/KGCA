@@ -124,28 +124,40 @@ HRESULT TModel::CreateVertexLayout()
     m_pVSBlob->Release();
     return hr;
 }
-HRESULT TModel::LoadShader(std::wstring vs, std::wstring ps)
+ID3DBlob* TModel::LoadShaderBlob(std::wstring vs,
+    std::string function, std::string version)
 {
     HRESULT hr = S_OK;
+    ID3DBlob* ret = nullptr;
     ID3DBlob* error = nullptr;
     hr = D3DCompileFromFile(
         vs.c_str(),
         nullptr,
         nullptr,
-        "VS",
-        "vs_5_0",
+        function.c_str(),
+        version.c_str(),
         0,
         0,
-        &m_pVSBlob,
+        &ret,
         &error);
     if (FAILED(hr))
     {
         MessageBoxA(NULL,
             (char*)error->GetBufferPointer(),
             "error", MB_OK);
+        return ret;
+    }
+    return ret;
+}
+HRESULT TModel::LoadShader(std::wstring vs, std::wstring ps)
+{
+    HRESULT hr = S_OK;
+    ID3DBlob* error = nullptr;
+    m_pVSBlob = LoadShaderBlob(vs, "VS", "vs_5_0");   
+    if (m_pVSBlob == nullptr)
+    {
         return hr;
     }
-
     hr = g_pd3dDevice->CreateVertexShader(
         m_pVSBlob->GetBufferPointer(),
         m_pVSBlob->GetBufferSize(),
@@ -153,22 +165,17 @@ HRESULT TModel::LoadShader(std::wstring vs, std::wstring ps)
     if (FAILED(hr)) return hr;
 
     ID3DBlob* PSBlob = nullptr;
-    hr = D3DCompileFromFile(
-        ps.c_str(),
-        nullptr,
-        nullptr,
-        "PS",
-        "ps_5_0",
-        0,
-        0,
-        &PSBlob,
-        nullptr);
-    if (FAILED(hr)) return hr;
+    PSBlob = LoadShaderBlob(ps, "PS", "ps_5_0");
+    if (PSBlob == nullptr)
+    {
+        return hr;
+    }
     hr = g_pd3dDevice->CreatePixelShader(
         PSBlob->GetBufferPointer(),
         PSBlob->GetBufferSize(),
         NULL, &m_pPS);
     if (FAILED(hr)) return hr;
+    m_pMainPS = m_pPS;
     PSBlob->Release();
     return hr;
 }
@@ -232,7 +239,7 @@ bool TModel::PreRender(ID3D11DeviceContext* pContext)
     pContext->VSSetConstantBuffers(
         0, 1, &m_pConstantBuffer);
     pContext->VSSetShader(m_pVS, NULL, 0);
-    pContext->PSSetShader(m_pPS, NULL, 0);
+    pContext->PSSetShader(m_pMainPS, NULL, 0);
     pContext->IASetInputLayout(m_pVertexLayout);
     UINT pStrides = m_iVertexSize;
     UINT pOffsets = 0;

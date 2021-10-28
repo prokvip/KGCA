@@ -57,3 +57,7 @@ float4 PS(VS_OUT v) : SV_TARGET
 {
 	return g_txDiffuse.Sample(g_Sampler, v.t) *v.c;
 }
+float4 PSShadow(VS_OUT v) : SV_TARGET
+{
+	return float4(1,0,0,1);
+}

@@ -6,6 +6,39 @@ bool Compare(const pair<float, int>& a, const pair<float, int>& b)
 {
 	return a.first > b.first;
 }
+void TFbxObj::SetPixelShader(ID3D11PixelShader* ps)
+{
+	for (int iMesh = 0; iMesh < m_pMeshList.size(); iMesh++)
+	{
+		TMesh* pMesh = m_pMeshList[iMesh];
+		if (pMesh->m_pSubMesh.size() > 0)
+		{
+			for (int iSubMesh = 0; iSubMesh < m_pMeshList[iMesh]->m_pSubMesh.size(); iSubMesh++)
+			{
+				TMesh* pSubMesh = m_pMeshList[iMesh]->m_pSubMesh[iSubMesh];
+				if (ps == nullptr)
+				{
+					pSubMesh->m_pMainPS = pSubMesh->m_pPS;
+				}
+				else
+				{
+					pSubMesh->m_pMainPS = ps;
+				}
+			}
+		}
+		else
+		{
+			if (ps == nullptr)
+			{
+				pMesh->m_pMainPS = pMesh->m_pPS;
+			}
+			else
+			{
+				pMesh->m_pMainPS = ps;
+			}
+		}
+	}
+}
 bool		TFbxObj::Frame()
 {
 	if (m_bAnimPlay)
@@ -258,7 +291,7 @@ bool    TFbxObj::Render(ID3D11DeviceContext* pContext)
 				}
 				pMesh->m_pSubMesh[iSub]->SetMatrix(&m_matWorld,
 					&m_cbData.matView, &m_cbData.matProj);
-				pMesh->m_pSubMesh[iSub]->Render(pContext);
+				pMesh->m_pSubMesh[iSub]->Render(pContext);				
 			}
 		}
 		else 
@@ -275,7 +308,7 @@ bool    TFbxObj::Render(ID3D11DeviceContext* pContext)
 					pContext->PSSetShaderResources(1, 1, &pMtrl->m_Texture.m_pTextureSRV);
 				}
 			}
-			pMesh->SetMatrix(&m_matWorld,&m_cbData.matView, &m_cbData.matProj);
+			pMesh->SetMatrix(&m_cbData.matWorld,&m_cbData.matView, &m_cbData.matProj);
 			pMesh->Render(pContext);
 		}
 	}

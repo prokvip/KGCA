@@ -61,6 +61,7 @@ public:
 	ID3D11InputLayout* m_pVertexLayout = nullptr;
 	ID3D11VertexShader* m_pVS = nullptr;
 	ID3D11PixelShader* m_pPS = nullptr;
+	ID3D11PixelShader* m_pMainPS = nullptr;
 	std::vector<PNCT_VERTEX> m_pVertexList;	
 	std::vector< DWORD> m_IndexList;
 public:
@@ -85,6 +86,8 @@ public:
 	virtual bool   PostRender(	ID3D11DeviceContext* pContext, 
 								UINT iNumIndex=0);
 	virtual bool   Release();
+public:
+	static ID3DBlob*	LoadShaderBlob(std::wstring vs, std::string function, std::string version);
 public:
 	TModel();
 	virtual ~TModel();

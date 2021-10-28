@@ -1,4 +1,5 @@
 #include "TMesh.h"
+
 HRESULT TMesh::CreateConstantBuffer()
 {
 	HRESULT hr = S_OK;
@@ -68,7 +69,7 @@ bool TMesh::PreRender(ID3D11DeviceContext* pContext)
 	pContext->VSSetConstantBuffers(1, 1, &m_pAnimCB);
 
 	pContext->VSSetShader(m_pVS, NULL, 0);
-	pContext->PSSetShader(m_pPS, NULL, 0);
+	pContext->PSSetShader(m_pMainPS, NULL, 0);
 	pContext->IASetInputLayout(m_pVertexLayout);
 
 	ID3D11Buffer* vb[2] = { m_pVertexBuffer, m_pIWVertrexBuffer };

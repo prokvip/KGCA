@@ -67,6 +67,34 @@ HRESULT Sample::CreateDepthStencilState()
 }
 bool		Sample::Init()
 {
+	TPlane p;
+	p.x = 0.0f;
+	p.y = 1.0f;
+	p.z = 0.0f;
+	p.w = 0.0f;
+	TVector4 v;
+	v.x = 100.0f;
+	v.y = 100.0f;
+	v.z = 100.0f;
+	v.w = 0.0f;
+	D3DXMatrixShadow(&m_matShadow, &v, &p);
+
+	ID3DBlob* PSBlob = nullptr;
+	PSBlob = TModel::LoadShaderBlob(L"CharacterShader.hlsl", 
+							"PSShadow", "ps_5_0");
+	if (PSBlob != nullptr)
+	{
+		HRESULT hr=S_OK;
+		hr = g_pd3dDevice->CreatePixelShader(
+			PSBlob->GetBufferPointer(),
+			PSBlob->GetBufferSize(),
+			NULL, &m_pPSShadow);
+		if (FAILED(hr)) return hr;
+		PSBlob->Release();
+	}
+
+
+
 	CreateDepthStencilView();
 	CreateDepthStencilState();
 
@@ -77,14 +105,12 @@ bool		Sample::Init()
 	//m_FbxObjA.LoadObject("../../data/object/BoxAnim.fbx");
 	
 	CStopwatch stop;
-	m_FbxObjA.LoadObject("../../data/object/Turret.fbx", "CharacterShader.hlsl");
+	//m_FbxObjA.LoadObject("../../data/object/Turret.fbx", "CharacterShader.hlsl");
 	m_FbxObjB.LoadObject("../../data/object/Man.fbx", "CharacterShader.hlsl");
 	stop.Output(L"a");
 	m_Camera.CreateViewMatrix(TVector3(0, 0, -100), TVector3(0, 0, 0));
 	m_Camera.CreateProjMatrix(1.0f, 1000.0f, XM_PI * 0.25f, (float)g_rtClient.right / (float)g_rtClient.bottom);
 
-	m_pObjectList.push_back(&m_FbxObjA);
-	m_pObjectList.push_back(&m_FbxObjB);
 	return true;
 }
 bool		Sample::Frame() 
@@ -124,23 +150,25 @@ bool		Sample::Frame()
 }
 bool		Sample::Render() 
 {
-	for (int iObj = 0; iObj < m_pObjectList.size(); iObj++)
-	{
-		m_pObjectList[iObj]->SetMatrix(nullptr, &m_Camera.m_matView, &m_Camera.m_matProj);
-		m_pObjectList[iObj]->Render(m_pImmediateContext);
-	}
 	/*m_FbxObjA.SetMatrix(nullptr, &m_Camera.m_matView, &m_Camera.m_matProj);
-	m_FbxObjA.Render(m_pImmediateContext);	
-	m_FbxObjB.SetMatrix(nullptr, &m_Camera.m_matView, &m_Camera.m_matProj);
-	m_FbxObjB.Render(m_pImmediateContext);*/
+	m_FbxObjA.Render(m_pImmediateContext);	*/
+	m_FbxObjB.SetMatrix(&m_FbxObjB.m_matWorld, &m_Camera.m_matView, &m_Camera.m_matProj);
+	m_FbxObjB.SetPixelShader(nullptr);
+	m_FbxObjB.Render(m_pImmediateContext);
+	m_FbxObjB.SetMatrix(&m_matShadow, &m_Camera.m_matView, &m_Camera.m_matProj);
+	m_FbxObjB.SetPixelShader(m_pPSShadow);
+	m_FbxObjB.Render(m_pImmediateContext);
 	return true;
 }
 bool		Sample::Release() 
 {
 	SAFE_RELEASE(m_pDsvState);
 	SAFE_RELEASE(m_pDepthStencilView);
-	m_FbxObjA.Release();
+	//FbxObjA.Release();
 	m_FbxObjB.Release();
+
+
+	SAFE_RELEASE(m_pPSShadow);
 	return true;
 }
 Sample::Sample()

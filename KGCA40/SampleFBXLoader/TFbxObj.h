@@ -1,7 +1,7 @@
 #pragma once
 #include "TMesh.h"
 
-class TFbxObj 
+class TFbxObj : public TModel
 {
 	FbxManager*		m_pFbxManager;
 	FbxImporter*	m_pFbxImporter;
@@ -56,5 +56,6 @@ public:
 		DWORD dwVertexTangentCount, FbxGeometryElementTangent* VertexTangentSets,
 		DWORD dwDCCIndex, DWORD dwVertexIndex);
 
+	void  SetPixelShader(ID3D11PixelShader* ps=nullptr);
 };
 
