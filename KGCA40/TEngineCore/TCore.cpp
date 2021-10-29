@@ -123,10 +123,17 @@ bool	TCore::Init()
 bool	TCore::Frame() {
     return true;
 }
-bool	TCore::PreRender() {
+bool	TCore::PreRender() 
+{
     float ClearColor[4] = { 0.0f, 0.125f, 0.3f, 1.0f }; //red,green,blue,alpha
-    m_pImmediateContext->ClearRenderTargetView(m_pRenderTargetView, ClearColor);
+    m_pImmediateContext->ClearRenderTargetView(
+        m_DefaultRT.m_pRenderTargetView, ClearColor);
+    m_pImmediateContext->ClearDepthStencilView(
+        m_DefaultDS.m_pDepthStencilView,
+        D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
     m_pImmediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    m_pImmediateContext->OMSetRenderTargets(1,
+        &m_DefaultRT.m_pRenderTargetView, m_DefaultDS.m_pDepthStencilView);
     return true;
 }
 bool	TCore::Render() {

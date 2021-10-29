@@ -1,5 +1,14 @@
 #include "TDevice.h"
 ID3D11Device* g_pd3dDevice = nullptr;
+HRESULT TDevice::SetDepthStencilView()
+{
+	HRESULT hr = S_OK;
+	DXGI_SWAP_CHAIN_DESC Desc;
+	m_pSwapChain->GetDesc(&Desc);
+	hr = m_DefaultDS.CreateDepthStencilView(Desc.BufferDesc.Width,
+		Desc.BufferDesc.Height);
+	return hr;
+}
 bool	TDevice::SetDevice()
 {
 	HRESULT hr;
@@ -19,6 +28,10 @@ bool	TDevice::SetDevice()
 		return false;
 	}
 	if (FAILED(SetRenderTargetView()))
+	{
+		return false;
+	}
+	if (FAILED(SetDepthStencilView()))
 	{
 		return false;
 	}
@@ -97,19 +110,7 @@ HRESULT TDevice::SetRenderTargetView()
 	{
 		return hr;
 	}
-	hr=m_pd3dDevice->CreateRenderTargetView(
-		pBackBuffer, NULL, 
-		&m_pRenderTargetView);
-	if (FAILED(hr))
-	{
-		pBackBuffer->Release();
-		return hr;
-	}
-	pBackBuffer->Release();	
-
-	m_pImmediateContext->OMSetRenderTargets(1, 
-		&m_pRenderTargetView, NULL);
-
+	m_DefaultRT.SetRenderTargetView(pBackBuffer);
 	return hr;
 }
 
@@ -132,15 +133,16 @@ HRESULT TDevice::SetViewPort()
 
 bool TDevice::CleanupDevice()
 {
+	m_DefaultDS.Release();
+	m_DefaultRT.Release();
+
 	if (m_pImmediateContext) m_pImmediateContext->ClearState();
-	if (m_pRenderTargetView) m_pRenderTargetView->Release();
 	if (m_pSwapChain) m_pSwapChain->Release();
 	if (m_pImmediateContext) m_pImmediateContext->Release();
 	if (m_pd3dDevice) m_pd3dDevice->Release();
 	if (m_pGIFactory) m_pGIFactory->Release();
 	m_pd3dDevice = NULL;
 	m_pSwapChain = NULL;
-	m_pRenderTargetView = NULL;
 	m_pImmediateContext = NULL;
 	m_pGIFactory = NULL;
 	return true;

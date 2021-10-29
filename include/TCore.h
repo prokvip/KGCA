@@ -11,6 +11,7 @@ class TCore : public TWindow
 public:
 	ID3D11RasterizerState* m_pRSSolid;
 	ID3D11RasterizerState* m_pRSWireFrame;
+
 public:
 	TTimer				m_Timer;
 	TSound				m_Sound;

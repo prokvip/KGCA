@@ -166,6 +166,8 @@ copy "*.h" "..\\..\include"
     <ClCompile Include="TQuadtree.cpp" />
     <ClCompile Include="TShape.cpp" />
     <ClCompile Include="TTexture.cpp" />
+    <ClCompile Include="TViewDS.cpp" />
+    <ClCompile Include="TViewRT.cpp" />
     <ClCompile Include="XMatrix.cpp" />
     <ClCompile Include="TSound.cpp" />
     <ClCompile Include="TTimer.cpp" />
@@ -185,6 +187,8 @@ copy "*.h" "..\\..\include"
     <ClInclude Include="TQuadtree.h" />
     <ClInclude Include="TShape.h" />
     <ClInclude Include="TTexture.h" />
+    <ClInclude Include="TViewDS.h" />
+    <ClInclude Include="TViewRT.h" />
     <ClInclude Include="XMatrix.h" />
     <ClInclude Include="TSound.h" />
     <ClInclude Include="TStd.h" />
