@@ -18,6 +18,7 @@ HRESULT Sample::CreateDepthStencilState()
 }
 bool		Sample::Init()
 {
+	m_Rt.CreateRenderTargetView(512, 512);
 	TPlane p;
 	p.x = 0.0f;
 	p.y = 1.0f;

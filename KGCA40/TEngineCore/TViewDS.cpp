@@ -37,6 +37,19 @@ HRESULT TViewDS::CreateDepthStencilView(UINT Width,
 	{
 		return E_FAIL;
 	}
+	/*D3D11_SHADER_RESOURCE_VIEW_DESC Desc;
+	ZeroMemory(&Desc, sizeof(D3D11_SHADER_RESOURCE_VIEW_DESC));
+	Desc.Format = DXGI_FORMAT_R24_UNORM_X8_TYPELESS;
+	Desc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+	Desc.Texture2D.MipLevels = 1;
+	hr = g_pd3dDevice->CreateShaderResourceView(m_pTexture, 
+		&Desc, &m_pTextureSRV);
+	if (FAILED(hr))
+	{
+		m_pTexture->Release();
+		return hr;
+	}*/
+
 	D3D11_DEPTH_STENCIL_VIEW_DESC svd;
 	ZeroMemory(&svd, sizeof(D3D11_DEPTH_STENCIL_VIEW_DESC));
 	svd.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
@@ -54,6 +67,7 @@ HRESULT TViewDS::CreateDepthStencilView(UINT Width,
 bool		TViewDS::Release()
 {
 	SAFE_RELEASE(m_pTexture);
+	SAFE_RELEASE(m_pTextureSRV);
 	SAFE_RELEASE(m_pDepthStencilView);
 	return true;
 }

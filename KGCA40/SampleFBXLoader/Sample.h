@@ -3,6 +3,7 @@
 #include "TFbxObj.h"
 class Sample :   public TCore
 {
+	TViewRT     m_Rt;
 	TVector3	m_vMoePos;
 	std::vector<TFbxObj*> m_pObjectList;
 	TFbxObj		m_FbxObjA;

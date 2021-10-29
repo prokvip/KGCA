@@ -11,7 +11,7 @@ ID3D11Texture2D* TViewRT::CreateTexture(UINT Width, UINT Height)
 	td.ArraySize = 1;
 	td.Format = DXGI_FORMAT_R8G8B8A8_UNORM;//DXGI_FORMAT_R8G8B8A8_UNORM
 	td.Usage = D3D11_USAGE_DEFAULT;
-	td.BindFlags = D3D11_BIND_DEPTH_STENCIL | D3D11_BIND_SHADER_RESOURCE;
+	td.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
 	td.CPUAccessFlags = 0;
 	td.MiscFlags = 0;
 	td.SampleDesc.Count = 1;
@@ -20,7 +20,7 @@ ID3D11Texture2D* TViewRT::CreateTexture(UINT Width, UINT Height)
 	if (FAILED(hr))
 	{
 		return nullptr;
-	}
+	}	
 	return pTexture;
 }
 HRESULT TViewRT::SetRenderTargetView(ID3D11Texture2D* pBackBuffer)
@@ -35,6 +35,7 @@ HRESULT TViewRT::SetRenderTargetView(ID3D11Texture2D* pBackBuffer)
 		pBackBuffer->Release();
 		return hr;
 	}
+
 	pBackBuffer->Release();
 	return hr;
 }
@@ -46,6 +47,12 @@ HRESULT TViewRT::CreateRenderTargetView(UINT Width, UINT Height)
 	if (m_pDSTexture == nullptr)
 	{
 		return E_FAIL;
+	}
+	hr = g_pd3dDevice->CreateShaderResourceView(m_pDSTexture, NULL, &m_pTextureSRV);
+	if (FAILED(hr))
+	{
+		m_pDSTexture->Release();
+		return hr;
 	}
 	hr = g_pd3dDevice->CreateRenderTargetView(
 		m_pDSTexture, NULL,
@@ -60,6 +67,7 @@ HRESULT TViewRT::CreateRenderTargetView(UINT Width, UINT Height)
 bool TViewRT::Release()
 {
 	SAFE_RELEASE(m_pDSTexture);
+	SAFE_RELEASE(m_pTextureSRV);
 	SAFE_RELEASE(m_pRenderTargetView);
 	return true;
 }
