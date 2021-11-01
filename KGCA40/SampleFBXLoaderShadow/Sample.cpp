@@ -39,28 +39,16 @@ bool		Sample::Init()
 	v.w = 0.0f;
 	D3DXMatrixShadow(&m_matShadow, &v, &p);
 
-	ID3DBlob* PSBlob = nullptr;
-	PSBlob = TModel::LoadShaderBlob(L"CharacterShader.hlsl", 
-							"PSShadow", "ps_5_0");
-	if (PSBlob != nullptr)
-	{
-		HRESULT hr=S_OK;
-		hr = g_pd3dDevice->CreatePixelShader(
-			PSBlob->GetBufferPointer(),
-			PSBlob->GetBufferSize(),
-			NULL, &m_pPSShadow);
-		if (FAILED(hr)) return hr;
-		PSBlob->Release();
-	}
+	ID3DBlob* PSBlob = nullptr;	
 	PSBlob = TModel::LoadShaderBlob(L"CharacterShader.hlsl",
-		"PSShadowColor", "ps_5_0");
+		"PSShadow", "ps_5_0");
 	if (PSBlob != nullptr)
 	{
 		HRESULT hr = S_OK;
 		hr = g_pd3dDevice->CreatePixelShader(
 			PSBlob->GetBufferPointer(),
 			PSBlob->GetBufferSize(),
-			NULL, &m_pPSShadowColor);
+			NULL, &m_pPSShadow);
 		if (FAILED(hr)) return hr;
 		PSBlob->Release();
 	}
@@ -124,7 +112,7 @@ bool		Sample::Render()
 	{
 		m_FbxObjB.SetMatrix(&m_FbxObjB.m_matWorld, 
 			&m_Camera.m_matView, &m_Camera.m_matProj);
-		m_FbxObjB.SetPixelShader(m_pPSShadowColor);
+		m_FbxObjB.SetPixelShader(m_pPSShadow);
 		m_FbxObjB.Render(m_pImmediateContext);
 		m_Rt.End(m_pImmediateContext);
 	}
@@ -151,7 +139,6 @@ bool		Sample::Render()
 }
 bool		Sample::Release() 
 {	
-	SAFE_RELEASE(m_pPSShadowColor);
 	m_MapObj.Release();
 	m_MiniMap.Release();
 	m_Rt.Release();

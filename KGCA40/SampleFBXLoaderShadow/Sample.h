@@ -48,7 +48,6 @@ class Sample :   public TCore
 	TFbxObj		m_FbxObjB;		
 	TMatrix		m_matShadow;
 	ID3D11PixelShader* m_pPSShadow = nullptr;
-    ID3D11PixelShader* m_pPSShadowColor = nullptr;
 public:
 	ID3D11DepthStencilState* m_pDsvState;
 	HRESULT     CreateDepthStencilState();

@@ -165,9 +165,6 @@
       <Project>{5e241d3a-e46a-4ff0-a578-f345e68050b4}</Project>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Text Include="ShadowPS.txt" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
