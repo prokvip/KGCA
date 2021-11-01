@@ -8,19 +8,19 @@ bool TPlaneShape::CreateVertexData()
     m_pVertexList[0].color = TVector4(1.0f, 1.0f, 1.0f, 1.0f);
     m_pVertexList[0].tex = TVector2(0.0f, 0.0f);
 
-    m_pVertexList[1].pos = TVector3(0.0f, 1.0f, 0.0f);
+    m_pVertexList[1].pos = TVector3(1.0f, 1.0f, 0.0f);
     m_pVertexList[1].normal = TVector3(0.0f, 0.0f, -1.0f);
     m_pVertexList[1].color = TVector4(1.0f, 1.0f, 1.0f, 1.0f);
     m_pVertexList[1].tex = TVector2(1.0f, 0.0f);
 
 
-    m_pVertexList[2].pos = TVector3(-1.0f, 0.0f, 0.0f);
+    m_pVertexList[2].pos = TVector3(-1.0f, -1.0f, 0.0f);
     m_pVertexList[2].normal = TVector3(0.0f, 0.0f, -1.0f);
     m_pVertexList[2].color = TVector4(1.0f, 1.0f, 1.0f, 1.0f);
     m_pVertexList[2].tex = TVector2(0.0f, 1.0f);
 
 
-    m_pVertexList[3].pos = TVector3(0.0f, 0.0f, 0.0f);
+    m_pVertexList[3].pos = TVector3(1.0f, -1.0f, 0.0f);
     m_pVertexList[3].normal = TVector3(0.0f, 0.0f, -1.0f);
     m_pVertexList[3].color = TVector4(1.0f, 1.0f, 1.0f, 1.0f);
     m_pVertexList[3].tex = TVector2(1.0f, 1.0f);

@@ -45,4 +45,7 @@
   <ItemGroup>
     <FxCompile Include="CharacterShader.hlsl" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="ShadowPS.txt" />
+  </ItemGroup>
 </Project>

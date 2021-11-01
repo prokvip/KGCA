@@ -8,6 +8,7 @@ struct TMapInfo
     int m_iNumColCell;
     int m_iNumVertex;
     float m_fCellDistance;
+    std::wstring szDefaultTexture;
 };
 class TMap :public TModel
 {

@@ -87,7 +87,7 @@ bool TViewRT::Begin(ID3D11DeviceContext* pContext)
 	pContext->RSGetViewports(&m_nViewPorts, m_vpOld);
 	pContext->OMGetRenderTargets(1, &m_pOldRTV, &m_pOldDSV);
 
-	float ClearColor[4] = { 1.0f, 1.0f, 0.0f, 1.0f }; //red,green,blue,alpha
+	float ClearColor[4] = { 0.0f, 0.0f, 0.0f, 1.0f }; //red,green,blue,alpha
 	pContext->ClearRenderTargetView(
 		this->m_pRenderTargetView, ClearColor);
 	pContext->ClearDepthStencilView(
@@ -102,6 +102,8 @@ bool TViewRT::Begin(ID3D11DeviceContext* pContext)
 }
 bool TViewRT::End(ID3D11DeviceContext* pContext)
 {
+	ID3D11ShaderResourceView* ppSRVNULL[2] = { NULL, NULL };
+	pContext->PSSetShaderResources(0, 2, ppSRVNULL);
 	pContext->RSSetViewports(m_nViewPorts, m_vpOld);
 	pContext->OMSetRenderTargets(1, &m_pOldRTV, m_pOldDSV);
 	SAFE_RELEASE(m_pOldRTV);

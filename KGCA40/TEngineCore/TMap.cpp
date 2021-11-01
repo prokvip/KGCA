@@ -5,7 +5,7 @@ bool    TMap::Load(TMapInfo& info, std::wstring vs, std::wstring ps)
     m_info.m_iNumColCell = m_info.m_iNumCol - 1;
     m_info.m_iNumRowCell = m_info.m_iNumRow - 1;
     m_info.m_iNumVertex = m_info.m_iNumCol * m_info.m_iNumRow;
-    return Create(vs, ps);
+    return Create(vs, ps, info.szDefaultTexture);
 }
 bool	TMap::CreateVertexData()
 {

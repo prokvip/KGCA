@@ -51,6 +51,7 @@ struct CB_DATA
 class TModel 
 {
 public:
+	TTexture			m_Tex;
 	UINT				m_iVertexSize=0;
 	UINT				m_iNumIndex=0;
 	CB_DATA				m_cbData;
@@ -77,8 +78,10 @@ public:
 	virtual bool		LoadObject(std::wstring filename);
 	virtual void		SetMatrix(TMatrix* pMatWorld,
 		TMatrix* pMatView, TMatrix* pMatProj);
+	virtual bool		LoadTexture(std::wstring szTextureName);
 public:
-	virtual bool	Create(std::wstring vsFile, std::wstring psFile);
+	virtual bool	Create(std::wstring vsFile, std::wstring psFile,
+						   std::wstring szTextureName );
 	virtual bool   Init();
 	virtual bool   Frame();
 	virtual bool   PreRender(ID3D11DeviceContext* pContext);

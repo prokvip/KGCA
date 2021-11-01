@@ -16,6 +16,14 @@ void		TModel::SetMatrix(
         m_cbData.matProj = pMatProj->Transpose();
     }
 }
+bool TModel::LoadTexture(std::wstring szTextureName)
+{
+    if (!szTextureName.empty())
+    {
+        return m_Tex.LoadTexture(szTextureName);
+    }
+    return false;
+}
 bool  TModel::LoadObject(std::wstring filename)
 {
     FILE* fp = nullptr;
@@ -199,7 +207,9 @@ bool TModel::Init()
 {     
     return false;
 }
-bool TModel::Create(std::wstring vsFile, std::wstring psFile)
+bool TModel::Create(std::wstring vsFile,
+    std::wstring psFile,
+    std::wstring szTextureName)
 {    
     if (CreateVertexData())
     {        
@@ -208,6 +218,8 @@ bool TModel::Create(std::wstring vsFile, std::wstring psFile)
         {
             CreateIndexBuffer();
         }
+        LoadTexture(szTextureName);
+
         if (SUCCEEDED(LoadShader(vsFile, psFile)))
         {
             if (SUCCEEDED(CreateVertexLayout()))
@@ -216,6 +228,7 @@ bool TModel::Create(std::wstring vsFile, std::wstring psFile)
                 return true;
             }
         }
+        
     }
     return false;
 }
@@ -236,8 +249,8 @@ bool TModel::PreRender(ID3D11DeviceContext* pContext)
 
     pContext->UpdateSubresource(
         m_pConstantBuffer, 0, NULL, &m_cbData, 0, 0);
-    pContext->VSSetConstantBuffers(
-        0, 1, &m_pConstantBuffer);
+    pContext->VSSetConstantBuffers( 0, 1, &m_pConstantBuffer);
+    pContext->PSSetShaderResources( 0, 1, &m_Tex.m_pTextureSRV);
     pContext->VSSetShader(m_pVS, NULL, 0);
     pContext->PSSetShader(m_pMainPS, NULL, 0);
     pContext->IASetInputLayout(m_pVertexLayout);

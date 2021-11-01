@@ -631,13 +631,14 @@ bool	TFbxObj::LoadObject(std::string filename, std::string shaderName)
 				TMesh* pSubMesh = m_pMeshList[iMesh]->m_pSubMesh[iSubMesh];
 				// todo : 쉐이더 등등 중복처리 미작업
 				pSubMesh->Create(TBASIS::mtw(shaderName), 
-								 TBASIS::mtw(shaderName));
+								 TBASIS::mtw(shaderName),
+					L"");
 			}
 		}
 		else
 		{
 			pMesh->Create(	TBASIS::mtw(shaderName), 
-							TBASIS::mtw(shaderName));
+							TBASIS::mtw(shaderName), L"");
 		}
 	}
 	m_pFbxScene->Destroy();	

@@ -61,3 +61,7 @@ float4 PSShadow(VS_OUT v) : SV_TARGET
 {
 	return float4(1,0,0,1);
 }
+float4 PSShadowColor(VS_OUT v) : SV_TARGET
+{
+	return float4(1,1,1,1);
+}
