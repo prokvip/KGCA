@@ -119,27 +119,19 @@ bool		Sample::Frame()
 bool		Sample::Render() 
 {	
 	m_pImmediateContext->RSSetState(m_pRSSolid);
+	
 	if (m_Rt.Begin(m_pImmediateContext))
 	{
-		/*m_FbxObjA.SetMatrix(nullptr, &m_Camera.m_matView, &m_Camera.m_matProj);
-		m_FbxObjA.Render(m_pImmediateContext);	*/
 		m_FbxObjB.SetMatrix(&m_FbxObjB.m_matWorld, 
 			&m_Camera.m_matView, &m_Camera.m_matProj);
-		//m_FbxObjB.SetPixelShader(m_pPSShadowColor);
+		m_FbxObjB.SetPixelShader(m_pPSShadowColor);
 		m_FbxObjB.Render(m_pImmediateContext);
-		/*m_FbxObjB.SetMatrix(&m_matShadow, 
-			&m_Camera.m_matView, 
-			&m_Rt.m_matProj);
-		m_FbxObjB.SetPixelShader(m_pPSShadow);
-		m_FbxObjB.Render(m_pImmediateContext);*/
 		m_Rt.End(m_pImmediateContext);
 	}
 	
 	m_MapObj.SetMatrix(&m_MapObj.m_matWorld, &m_Camera.m_matView, &m_Camera.m_matProj);
 	m_MapObj.Render(m_pImmediateContext);
 
-	//m_pImmediateContext->RSSetState(m_pRSSolid);
-	
 	m_MiniMap.SetMatrix(nullptr, nullptr, nullptr);
 	m_MiniMap.PreRender(m_pImmediateContext);
 	m_pImmediateContext->PSSetShaderResources(
@@ -147,14 +139,8 @@ bool		Sample::Render()
 	m_MiniMap.PostRender(m_pImmediateContext, 
 		m_MiniMap.m_iNumIndex);
 
-	//m_pImmediateContext->RSSetState(m_pRSWireFrame);
-	/*m_FbxObjA.SetMatrix(nullptr, &m_Camera.m_matView, &m_Camera.m_matProj);
-		m_FbxObjA.Render(m_pImmediateContext);	*/
 	m_FbxObjB.SetMatrix(&m_FbxObjB.m_matWorld, &m_Camera.m_matView, &m_Camera.m_matProj);
 	m_FbxObjB.SetPixelShader(nullptr);
-	m_FbxObjB.Render(m_pImmediateContext);
-	m_FbxObjB.SetMatrix(&m_matShadow, &m_Camera.m_matView, &m_Camera.m_matProj);
-	m_FbxObjB.SetPixelShader(m_pPSShadowColor);
 	m_FbxObjB.Render(m_pImmediateContext);
 
 	if (g_Input.GetKey(VK_F5) == KEY_PUSH)
@@ -164,7 +150,9 @@ bool		Sample::Render()
 	return true;
 }
 bool		Sample::Release() 
-{
+{	
+	SAFE_RELEASE(m_pPSShadowColor);
+	m_MapObj.Release();
 	m_MiniMap.Release();
 	m_Rt.Release();
 	SAFE_RELEASE(m_pDsvState);	

@@ -276,6 +276,7 @@ bool TModel::PostRender(ID3D11DeviceContext* pContext, UINT iNumIndex)
 }
 bool TModel::Release()
 {
+    m_Tex.Release();
     SAFE_RELEASE(m_pVertexBuffer);
     SAFE_RELEASE(m_pVertexLayout);
     SAFE_RELEASE(m_pIndexBuffer);

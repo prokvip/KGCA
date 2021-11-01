@@ -4,8 +4,6 @@
 #include "TShape.h"
 class TMiniMap : public TPlaneShape
 {
-public:
-    TTexture    m_Tex;
 public:  
     bool		LoadTexture()
     {
