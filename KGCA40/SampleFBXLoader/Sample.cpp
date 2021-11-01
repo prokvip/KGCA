@@ -18,8 +18,7 @@ HRESULT Sample::CreateDepthStencilState()
 }
 bool		Sample::Init()
 {
-	m_Rt.CreateRenderTargetView(512, 512);
-	m_Ds.CreateDepthStencilView(512, 512);
+	m_Rt.Create(512, 512);
 	TPlane p;
 	p.x = 0.0f;
 	p.y = 1.0f;
@@ -99,18 +98,28 @@ bool		Sample::Frame()
 }
 bool		Sample::Render() 
 {	
-	/*m_FbxObjA.SetMatrix(nullptr, &m_Camera.m_matView, &m_Camera.m_matProj);
-	m_FbxObjA.Render(m_pImmediateContext);	*/
-	m_FbxObjB.SetMatrix(&m_FbxObjB.m_matWorld, &m_Camera.m_matView, &m_Camera.m_matProj);
-	m_FbxObjB.SetPixelShader(nullptr);
-	m_FbxObjB.Render(m_pImmediateContext);
-	m_FbxObjB.SetMatrix(&m_matShadow, &m_Camera.m_matView, &m_Camera.m_matProj);
-	m_FbxObjB.SetPixelShader(m_pPSShadow);
-	m_FbxObjB.Render(m_pImmediateContext);
+	if (m_Rt.Begin(m_pImmediateContext))
+	{
+		/*m_FbxObjA.SetMatrix(nullptr, &m_Camera.m_matView, &m_Camera.m_matProj);
+		m_FbxObjA.Render(m_pImmediateContext);	*/
+		m_FbxObjB.SetMatrix(&m_FbxObjB.m_matWorld, &m_Camera.m_matView, &m_Camera.m_matProj);
+		m_FbxObjB.SetPixelShader(nullptr);
+		m_FbxObjB.Render(m_pImmediateContext);
+		m_FbxObjB.SetMatrix(&m_matShadow, &m_Camera.m_matView, &m_Camera.m_matProj);
+		m_FbxObjB.SetPixelShader(m_pPSShadow);
+		m_FbxObjB.Render(m_pImmediateContext);
+		m_Rt.End(m_pImmediateContext);
+	}
+
+	if (g_Input.GetKey(VK_F5) == KEY_PUSH)
+	{
+		m_Rt.Save(L"frame.dds");
+	}
 	return true;
 }
 bool		Sample::Release() 
 {
+	m_Rt.Release();
 	SAFE_RELEASE(m_pDsvState);	
 	//FbxObjA.Release();
 	m_FbxObjB.Release();

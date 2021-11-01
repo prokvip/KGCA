@@ -4,7 +4,6 @@
 class Sample :   public TCore
 {
 	TViewRT     m_Rt;
-	TViewDS     m_Ds;
 	TVector3	m_vMoePos;
 	std::vector<TFbxObj*> m_pObjectList;
 	TFbxObj		m_FbxObjA;

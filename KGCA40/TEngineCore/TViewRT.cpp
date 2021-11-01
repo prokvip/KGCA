@@ -64,10 +64,53 @@ HRESULT TViewRT::CreateRenderTargetView(UINT Width, UINT Height)
 	}
 	return hr;
 }
+bool TViewRT::Create(UINT Width, UINT Height)
+{
+	if (FAILED(CreateRenderTargetView(Width, Height)))
+	{
+		return false;
+	}
+	if (FAILED(m_dxDs.CreateDepthStencilView(Width, Height)))
+	{
+		return false;
+	}
+	return false;
+}
+bool TViewRT::Begin(ID3D11DeviceContext* pContext)
+{
+	m_nViewPorts = 1;
+	pContext->RSGetViewports(&m_nViewPorts, m_vpOld);
+	pContext->OMGetRenderTargets(1, &m_pOldRTV, &m_pOldDSV);
+
+	float ClearColor[4] = { 0.0f, 0.0f, 0.0f, 1.0f }; //red,green,blue,alpha
+	pContext->ClearRenderTargetView(
+		this->m_pRenderTargetView, ClearColor);
+	pContext->ClearDepthStencilView(
+		this->m_dxDs.m_pDepthStencilView,
+		D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+	pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	pContext->OMSetRenderTargets(1,
+		&this->m_pRenderTargetView, 
+		this->m_dxDs.m_pDepthStencilView);
+	return false;
+}
+bool TViewRT::End(ID3D11DeviceContext* pContext)
+{
+	pContext->RSSetViewports(m_nViewPorts, m_vpOld);
+	pContext->OMSetRenderTargets(1, &m_pOldRTV, m_pOldDSV);
+	SAFE_RELEASE(m_pOldRTV);
+	SAFE_RELEASE(m_pOldDSV);
+	return false;
+}
 bool TViewRT::Release()
 {
+	m_dxDs.Release();
 	SAFE_RELEASE(m_pDSTexture);
 	SAFE_RELEASE(m_pTextureSRV);
 	SAFE_RELEASE(m_pRenderTargetView);
 	return true;
+}
+
+void TViewRT::Save(std::wstring saveFileName)
+{
 }
