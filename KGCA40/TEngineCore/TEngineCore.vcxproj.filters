@@ -151,6 +151,12 @@
     <Text Include="..\..\data\shader\VertexShader.txt">
       <Filter>shader</Filter>
     </Text>
+    <Text Include="..\..\data\shader\PlanePS.txt">
+      <Filter>shader</Filter>
+    </Text>
+    <Text Include="..\..\data\shader\PlaneVS.txt">
+      <Filter>shader</Filter>
+    </Text>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\..\data\shader\DefaultShader.hlsl">

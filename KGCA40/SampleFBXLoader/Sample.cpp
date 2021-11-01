@@ -17,8 +17,10 @@ HRESULT Sample::CreateDepthStencilState()
 	return hr;
 }
 bool		Sample::Init()
-{
-	m_Rt.Create(512, 512);
+{	
+	m_PlaneObj.Create(L"../../data/shader/PlaneVS.txt",
+		L"../../data/shader/PlanePS.txt");
+	m_Rt.Create(4096, 4096);
 	TPlane p;
 	p.x = 0.0f;
 	p.y = 1.0f;
@@ -98,6 +100,7 @@ bool		Sample::Frame()
 }
 bool		Sample::Render() 
 {	
+	m_pImmediateContext->RSSetState(m_pRSSolid);
 	if (m_Rt.Begin(m_pImmediateContext))
 	{
 		/*m_FbxObjA.SetMatrix(nullptr, &m_Camera.m_matView, &m_Camera.m_matProj);
@@ -105,20 +108,39 @@ bool		Sample::Render()
 		m_FbxObjB.SetMatrix(&m_FbxObjB.m_matWorld, &m_Camera.m_matView, &m_Camera.m_matProj);
 		m_FbxObjB.SetPixelShader(nullptr);
 		m_FbxObjB.Render(m_pImmediateContext);
-		m_FbxObjB.SetMatrix(&m_matShadow, &m_Camera.m_matView, &m_Camera.m_matProj);
+		m_FbxObjB.SetMatrix(&m_matShadow, 
+			&m_Camera.m_matView, 
+			&m_Rt.m_matProj);
 		m_FbxObjB.SetPixelShader(m_pPSShadow);
 		m_FbxObjB.Render(m_pImmediateContext);
 		m_Rt.End(m_pImmediateContext);
 	}
 
+	//m_pImmediateContext->RSSetState(m_pRSSolid);
+	m_pImmediateContext->PSSetShaderResources(
+		0, 1, &m_Rt.m_pTextureSRV);
+	m_PlaneObj.SetMatrix(nullptr, nullptr, nullptr);
+	m_PlaneObj.Render(m_pImmediateContext);
+
+	//m_pImmediateContext->RSSetState(m_pRSWireFrame);
+	/*m_FbxObjA.SetMatrix(nullptr, &m_Camera.m_matView, &m_Camera.m_matProj);
+		m_FbxObjA.Render(m_pImmediateContext);	*/
+	m_FbxObjB.SetMatrix(&m_FbxObjB.m_matWorld, &m_Camera.m_matView, &m_Camera.m_matProj);
+	m_FbxObjB.SetPixelShader(nullptr);
+	m_FbxObjB.Render(m_pImmediateContext);
+	m_FbxObjB.SetMatrix(&m_matShadow, &m_Camera.m_matView, &m_Camera.m_matProj);
+	m_FbxObjB.SetPixelShader(m_pPSShadow);
+	m_FbxObjB.Render(m_pImmediateContext);
+
 	if (g_Input.GetKey(VK_F5) == KEY_PUSH)
 	{
-		m_Rt.Save(L"frame.dds");
+		m_Rt.Save(m_pImmediateContext,L"frame.jpg");
 	}
 	return true;
 }
 bool		Sample::Release() 
 {
+	m_PlaneObj.Release();
 	m_Rt.Release();
 	SAFE_RELEASE(m_pDsvState);	
 	//FbxObjA.Release();

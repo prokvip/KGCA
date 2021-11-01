@@ -1,8 +1,10 @@
 #pragma once
 #include "TCore.h"
 #include "TFbxObj.h"
+#include "TShape.h"
 class Sample :   public TCore
 {
+	TPlaneShape	m_PlaneObj;
 	TViewRT     m_Rt;
 	TVector3	m_vMoePos;
 	std::vector<TFbxObj*> m_pObjectList;

@@ -200,6 +200,8 @@ copy "*.h" "..\\..\include"
   <ItemGroup>
     <Text Include="..\..\data\shader\box.txt" />
     <Text Include="..\..\data\shader\PixelShader.txt" />
+    <Text Include="..\..\data\shader\PlanePS.txt" />
+    <Text Include="..\..\data\shader\PlaneVS.txt" />
     <Text Include="..\..\data\shader\VertexShader.txt" />
   </ItemGroup>
   <ItemGroup>
