@@ -23,7 +23,7 @@ bool	TMap::CreateVertexData()
         {
             int iIndex = iRow * m_info.m_iNumRow + iCol;
             m_pVertexList[iIndex].pos.x = m_info.m_fCellDistance * iCol;
-            m_pVertexList[iIndex].pos.y = 0.0f;
+            m_pVertexList[iIndex].pos.y = randstep(0.0f, 5.0f);
             m_pVertexList[iIndex].pos.z = -m_info.m_fCellDistance * iRow;
             m_pVertexList[iIndex].color = 
                 TVector4(

@@ -2,6 +2,7 @@
 #include "TCore.h"
 #include "TFbxObj.h"
 #include "TShape.h"
+#include "TMap.h"
 class TMiniMap : public TPlaneShape
 {
 public:  
@@ -37,13 +38,61 @@ public:
         return true;
     }
 };
-class Sample :   public TCore
+
+struct cbDataShadow
 {
+    TMatrix g_matShadow1; // Lw * Lv * Lp	
+};
+class TLight
+{
+public:
+    TVector3    m_vPos;
+    TVector3    m_vInitPos;
+    TVector3    m_vTarget;
+    TVector3    m_vDir;
+    TMatrix     m_matWorld;
+    TMatrix     m_matView;
+    TMatrix     m_matProj;
+public:
+    void        Set(TVector3    vPos, TVector3    vTarget)
+    {
+        m_vInitPos = vPos;
+        m_vPos = vPos;
+        m_vTarget = vTarget;
+        //error C2102: '&'에 l-value가 있어야 합니다.
+        m_vDir = m_vTarget - m_vPos;
+        D3DXVec3Normalize(&m_vDir, &m_vDir);
+        TVector3 vUp(0, 1, 0);
+        D3DXMatrixLookAtLH(&m_matView, &m_vPos, &m_vTarget, &vUp);
+        D3DXMatrixPerspectiveFovLH(&m_matProj, XM_PI * 0.25f, 1.0f, 1.0f, 1000.0f);
+    }
+    bool        Frame()
+    {
+        //m_vPos = m_vPos * m_matWorld;
+        D3DXMatrixRotationY(&m_matWorld, XM_PI*g_fGameTimer*0.1f );
+        D3DXVec3TransformCoord(&m_vPos, &m_vInitPos, &m_matWorld);
+        //error C2102: '&'에 l-value가 있어야 합니다.
+        m_vDir = m_vTarget - m_vPos;
+        D3DXVec3Normalize(&m_vDir, &m_vDir);
+        TVector3 vUp(0, 1, 0);
+        D3DXMatrixLookAtLH(&m_matView, &m_vPos, &m_vTarget, &vUp);
+        D3DXMatrixPerspectiveFovLH(&m_matProj, XM_PI * 0.25f, 1.0f, 1.0f, 1000.0f);
+
+        return true;
+    }
+};
+class Sample :   public TCore
+{    
+    ID3D11SamplerState* m_pSamplerClamp=nullptr;
+    TMatrix         m_matTex;
+    cbDataShadow    m_ShadowCB;
+    TMatrix m_matViewScene;
+    TMatrix m_matProjScene;
+    TLight      m_Light1;
     TMiniMap	m_MiniMap;
     TPlaneShape	m_MapObj;
 	TViewRT     m_Rt;
-	TVector3	m_vMoePos;
-	std::vector<TFbxObj*> m_pObjectList;
+	TVector3	m_vMovePos;
 	TFbxObj		m_FbxObjA;
 	TFbxObj		m_FbxObjB;		
 	TMatrix		m_matShadow;

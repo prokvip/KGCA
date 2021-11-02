@@ -45,6 +45,7 @@ struct CB_DATA
 	TMatrix  matWorld;
 	TMatrix  matView;
 	TMatrix  matProj;
+	TMatrix  matNormal;
 	TVector4 vValue;
 };
 

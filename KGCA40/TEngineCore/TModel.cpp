@@ -15,6 +15,7 @@ void		TModel::SetMatrix(
     {
         m_cbData.matProj = pMatProj->Transpose();
     }
+    m_cbData.matNormal = m_cbData.matNormal.Transpose();
 }
 bool TModel::LoadTexture(std::wstring szTextureName)
 {

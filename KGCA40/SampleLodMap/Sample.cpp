@@ -28,10 +28,6 @@ bool Sample::Init()
 bool Sample::Frame()
 {
      m_Map.Frame();
-    /*for (int iObj = 0; iObj < 2; iObj++)
-    {
-        m_BoxObj[iObj].Frame();
-    }*/   
     return true;
 }
 

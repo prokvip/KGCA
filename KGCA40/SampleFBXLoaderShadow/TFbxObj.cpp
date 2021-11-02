@@ -247,6 +247,7 @@ void		TFbxObj::SetMatrix(
 	{
 		m_cbData.matProj = *pMatProj;
 	}
+	m_cbData.matNormal = m_cbData.matNormal.Transpose();
 }
 bool    TFbxObj::Render(ID3D11DeviceContext* pContext)
 {
