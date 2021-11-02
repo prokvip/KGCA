@@ -16,18 +16,7 @@ bool		Sample::Init()
 	D3DXMatrixRotationX(&matWorld, XM_PI / 2.0f);
 	D3DXMatrixScaling(&matScale, 100.0f, 100.0f, 100.0f);
 	m_MapObj.m_matWorld= matScale * matWorld;
-	m_Rt.Create(4096, 4096);
-	TPlane p;
-	p.x = 0.0f;
-	p.y = 1.0f;
-	p.z = 0.0f;
-	p.w = -0.1f;
-	TVector4 v;
-	v.x = 100.0f;
-	v.y = 100.0f;
-	v.z = 100.0f;
-	v.w = 0.0f;
-	D3DXMatrixShadow(&m_matShadow, &v, &p);
+	m_Rt.Create(4096, 4096);	
 
 	ID3DBlob* PSBlob = nullptr;	
 	PSBlob = TModel::LoadShaderBlob(L"CharacterShader.hlsl","PSShadow", "ps_5_0");
