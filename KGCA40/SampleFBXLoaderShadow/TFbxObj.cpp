@@ -278,8 +278,7 @@ bool    TFbxObj::Render(ID3D11DeviceContext* pContext)
 				TMtrl* pSubMtrl = 
 					m_pFbxMaterialList[pMesh->m_iMtrlRef]->m_pSubMtrl[iSub];
 				if (pSubMtrl->m_Texture.m_pTextureSRV != nullptr)
-				{
-					pContext->PSSetSamplers(0, 1, &pSubMtrl->m_Texture.m_pSampler);
+				{					
 					pContext->PSSetShaderResources(1, 1, &pSubMtrl->m_Texture.m_pTextureSRV);
 				}
 				// 스키닝도 서브메터리얼 사용 가능함.
@@ -304,8 +303,7 @@ bool    TFbxObj::Render(ID3D11DeviceContext* pContext)
 			if (pMtrl != nullptr)
 			{
 				if (pMtrl->m_Texture.m_pTextureSRV != nullptr)
-				{
-					pContext->PSSetSamplers(0, 1, &pMtrl->m_Texture.m_pSampler);
+				{					
 					pContext->PSSetShaderResources(1, 1, &pMtrl->m_Texture.m_pTextureSRV);
 				}
 			}

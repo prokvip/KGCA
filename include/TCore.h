@@ -6,12 +6,9 @@
 #include "TSound.h"
 #include "TWrite.h"
 #include "TCamera.h"
+#include "TDxState.h"
 class TCore : public TWindow
 {
-public:
-	ID3D11RasterizerState* m_pRSSolid;
-	ID3D11RasterizerState* m_pRSWireFrame;
-
 public:
 	TTimer				m_Timer;
 	TSound				m_Sound;
@@ -25,7 +22,6 @@ private:
 	bool	GameRender();
 	bool	GameRelease()override;
 public:
-	bool    SetDeviceState();
 	void	FrameCamera();
 	LRESULT MsgProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)override;
 public:

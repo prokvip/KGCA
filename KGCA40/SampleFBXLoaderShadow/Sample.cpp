@@ -1,32 +1,7 @@
 #include "Sample.h"
 
-HRESULT Sample::CreateDepthStencilState()
-{
-	HRESULT hr = S_OK;
-	D3D11_DEPTH_STENCIL_DESC sd;
-	ZeroMemory(&sd, sizeof(D3D11_DEPTH_STENCIL_DESC));
-	sd.DepthEnable = TRUE;
-	sd.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
-	sd.DepthFunc = D3D11_COMPARISON_LESS_EQUAL;
-	hr = m_pd3dDevice->CreateDepthStencilState(&sd, &m_pDsvState);
-	if (FAILED(hr))
-	{
-		return hr;
-	}
-	m_pImmediateContext->OMSetDepthStencilState(m_pDsvState, 0x01);
-	return hr;
-}
 bool		Sample::Init()
 {	
-	D3D11_SAMPLER_DESC sd;
-	ZeroMemory(&sd, sizeof(D3D11_SAMPLER_DESC));
-	sd.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
-	sd.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
-	sd.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
-	sd.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
-	HRESULT hr = g_pd3dDevice->CreateSamplerState(&sd, &m_pSamplerClamp);
-	if (FAILED(hr)) return false;
-
 	m_matTex._11 = 0.5f; m_matTex._22 = -0.5f;
 	m_matTex._41 = 0.5f; m_matTex._42 = 0.5f;
 	// x = x * 0.5f + 0.5f;
@@ -66,8 +41,6 @@ bool		Sample::Init()
 		if (FAILED(hr)) return hr;
 		PSBlob->Release();
 	}
-		
-	CreateDepthStencilState();
 	m_FbxObjB.LoadObject("../../data/object/Man.fbx", "CharacterShader.hlsl");
 	m_Camera.CreateViewMatrix(TVector3(0, 0, -100), TVector3(0, 0, 0));
 	m_Camera.CreateProjMatrix(1.0f, 1000.0f, XM_PI * 0.25f, (float)g_rtClient.right / (float)g_rtClient.bottom);
@@ -87,7 +60,7 @@ bool		Sample::Frame()
 }
 bool		Sample::Render() 
 {	
-	m_pImmediateContext->RSSetState(m_pRSSolid);
+	ApplyRS(m_pImmediateContext, TDxState::g_pRSSolid);
 	
 	if (m_Rt.Begin(m_pImmediateContext))
 	{
@@ -97,7 +70,7 @@ bool		Sample::Render()
 		m_FbxObjB.Render(m_pImmediateContext);
 		m_Rt.End(m_pImmediateContext);
 	}
-	m_pImmediateContext->PSSetSamplers(1, 1, &m_pSamplerClamp);
+	ApplySS(m_pImmediateContext, TDxState::g_pClampSS,1);
 	m_MapObj.m_cbData.matNormal = m_ShadowCB.g_matShadow1;
 	m_MapObj.SetMatrix(&m_MapObj.m_matWorld, &m_Camera.m_matView, &m_Camera.m_matProj);
 	m_pImmediateContext->PSSetShaderResources(1, 1, &m_Rt.m_pTextureSRV);
@@ -121,11 +94,9 @@ bool		Sample::Render()
 }
 bool		Sample::Release() 
 {	
-	SAFE_RELEASE(m_pSamplerClamp);
 	m_MapObj.Release();
 	m_MiniMap.Release();
 	m_Rt.Release();
-	SAFE_RELEASE(m_pDsvState);	
 	m_FbxObjB.Release();
 	SAFE_RELEASE(m_pPSShadow);
 	return true;

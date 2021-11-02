@@ -82,8 +82,7 @@ public:
     }
 };
 class Sample :   public TCore
-{    
-    ID3D11SamplerState* m_pSamplerClamp=nullptr;
+{       
     TMatrix         m_matTex;
     cbDataShadow    m_ShadowCB;
     TMatrix m_matViewScene;
@@ -98,8 +97,7 @@ class Sample :   public TCore
 	TMatrix		m_matShadow;
 	ID3D11PixelShader* m_pPSShadow = nullptr;
 public:
-	ID3D11DepthStencilState* m_pDsvState;
-	HRESULT     CreateDepthStencilState();
+	
 public:
 	bool		Init()override;
 	bool		Frame()override;

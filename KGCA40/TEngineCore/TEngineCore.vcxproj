@@ -158,6 +158,7 @@ copy "*.h" "..\\..\include"
     <ClCompile Include="TCamera.cpp" />
     <ClCompile Include="TCore.cpp" />
     <ClCompile Include="TDevice.cpp" />
+    <ClCompile Include="TDxState.cpp" />
     <ClCompile Include="TInput.cpp" />
     <ClCompile Include="TMap.cpp" />
     <ClCompile Include="TMath.cpp" />
@@ -179,6 +180,7 @@ copy "*.h" "..\\..\include"
     <ClInclude Include="TCamera.h" />
     <ClInclude Include="TCore.h" />
     <ClInclude Include="TDevice.h" />
+    <ClInclude Include="TDxState.h" />
     <ClInclude Include="TInput.h" />
     <ClInclude Include="TMap.h" />
     <ClInclude Include="TMath.h" />

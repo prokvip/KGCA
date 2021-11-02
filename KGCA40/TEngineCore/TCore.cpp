@@ -18,19 +18,7 @@ void TCore::FrameCamera()
     m_Camera.Update(TVector4(fPitch, fYaw, 0.0f, 0.0f));
     m_Camera.Frame();
 }
-bool    TCore::SetDeviceState()
-{
-    D3D11_RASTERIZER_DESC rd;
-    ZeroMemory(&rd, sizeof(D3D11_RASTERIZER_DESC));
-    rd.FillMode = D3D11_FILL_WIREFRAME;
-    rd.CullMode = D3D11_CULL_BACK;
-    g_pd3dDevice->CreateRasterizerState(&rd, &m_pRSWireFrame);
-    ZeroMemory(&rd, sizeof(D3D11_RASTERIZER_DESC));
-    rd.FillMode = D3D11_FILL_SOLID;
-    rd.CullMode = D3D11_CULL_BACK;
-    g_pd3dDevice->CreateRasterizerState(&rd, &m_pRSSolid);
-    return true;
-}
+
 bool	TCore::GameRun()
 {
     if (!GameFrame()) return false;
@@ -40,7 +28,8 @@ bool	TCore::GameRun()
 bool	TCore::GameInit()
 {
     TDevice::SetDevice();
-    SetDeviceState();
+    TDxState::Init();
+
     m_Timer.Init();
     g_Input.Init();
     m_Write.Init();
@@ -68,11 +57,11 @@ bool	TCore::GameFrame()
 
     if (g_Input.GetKey(VK_F2) >= KEY_PUSH)
     {
-        m_pImmediateContext->RSSetState(m_pRSWireFrame);
+       ApplyRS(m_pImmediateContext, TDxState::g_pRSWireFrame);
     }
     else
     {
-        m_pImmediateContext->RSSetState(m_pRSSolid);
+        ApplyRS(m_pImmediateContext, TDxState::g_pRSSolid);
     }
     if (g_Input.GetKey('1') == KEY_PUSH)
     {
@@ -102,16 +91,11 @@ bool	TCore::GameRender()
 bool	TCore::GameRelease() 
 {
     Release();
-    if(m_pRSSolid)m_pRSSolid->Release();
-    if (m_pRSWireFrame)m_pRSWireFrame->Release();
-    m_pRSSolid = nullptr;
-    m_pRSWireFrame = nullptr;
-
+    TDxState::Release();
     m_Timer.Release();
     g_Input.Release();
     m_Write.Release();
     m_Camera.Release();
-
     CleanupDevice();
     return true;
 }
@@ -134,6 +118,10 @@ bool	TCore::PreRender()
     m_pImmediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     m_pImmediateContext->OMSetRenderTargets(1,
         &m_DefaultRT.m_pRenderTargetView, m_DefaultDS.m_pDepthStencilView);
+
+    ApplyDSS(m_pImmediateContext, TDxState::g_pLessEqualDSS);
+    ApplySS(m_pImmediateContext, TDxState::g_pWrapSS,0);
+    ApplyRS(m_pImmediateContext, TDxState::g_pRSSolid);
     return true;
 }
 bool	TCore::Render() {
