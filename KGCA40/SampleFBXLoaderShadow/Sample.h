@@ -83,21 +83,15 @@ public:
 };
 class Sample :   public TCore
 {       
-    TMatrix         m_matTex;
-    cbDataShadow    m_ShadowCB;
-    TMatrix m_matViewScene;
-    TMatrix m_matProjScene;
-    TLight      m_Light1;
-    TMiniMap	m_MiniMap;
-    TPlaneShape	m_MapObj;
-	TViewRT     m_Rt;
-	TVector3	m_vMovePos;
-	TFbxObj		m_FbxObjA;
-	TFbxObj		m_FbxObjB;		
-	TMatrix		m_matShadow;
-	ID3D11PixelShader* m_pPSShadow = nullptr;
-public:
-	
+    TMatrix             m_matTex;
+    cbDataShadow        m_ShadowCB;
+    TLight              m_Light1;
+    TMiniMap	        m_MiniMap;
+    TPlaneShape	        m_MapObj;
+	TViewRT             m_Rt;
+	TFbxObj		        m_FbxCharacter;		
+	TMatrix		        m_matShadow;
+	ID3D11PixelShader*  m_pPSShadow = nullptr;
 public:
 	bool		Init()override;
 	bool		Frame()override;

@@ -41,7 +41,7 @@ bool		Sample::Init()
 		if (FAILED(hr)) return hr;
 		PSBlob->Release();
 	}
-	m_FbxObjB.LoadObject("../../data/object/Man.fbx", "CharacterShader.hlsl");
+	m_FbxCharacter.LoadObject("../../data/object/Man.fbx", "CharacterShader.hlsl");
 	m_Camera.CreateViewMatrix(TVector3(0, 0, -100), TVector3(0, 0, 0));
 	m_Camera.CreateProjMatrix(1.0f, 1000.0f, XM_PI * 0.25f, (float)g_rtClient.right / (float)g_rtClient.bottom);
 	return true;
@@ -50,9 +50,9 @@ bool		Sample::Frame()
 {
 	if (g_Input.GetKey(VK_F4) == KEY_PUSH)
 	{
-		m_FbxObjB.m_bAnimPlay = !m_FbxObjB.m_bAnimPlay;
+		m_FbxCharacter.m_bAnimPlay = !m_FbxCharacter.m_bAnimPlay;
 	}
-	m_FbxObjB.Frame();
+	m_FbxCharacter.Frame();
 	m_Light1.Frame();	
 	m_ShadowCB.g_matShadow1 =
 	m_Light1.m_matView * m_Light1.m_matProj * m_matTex;
@@ -64,10 +64,10 @@ bool		Sample::Render()
 	
 	if (m_Rt.Begin(m_pImmediateContext))
 	{
-		m_FbxObjB.SetMatrix(&m_FbxObjB.m_matWorld, 
+		m_FbxCharacter.SetMatrix(&m_FbxCharacter.m_matWorld, 
 			&m_Light1.m_matView, &m_Light1.m_matProj);
-		m_FbxObjB.SetPixelShader(m_pPSShadow);
-		m_FbxObjB.Render(m_pImmediateContext);
+		m_FbxCharacter.SetPixelShader(m_pPSShadow);
+		m_FbxCharacter.Render(m_pImmediateContext);
 		m_Rt.End(m_pImmediateContext);
 	}
 	ApplySS(m_pImmediateContext, TDxState::g_pClampSS,1);
@@ -82,9 +82,9 @@ bool		Sample::Render()
 		0, 1, &m_Rt.m_pTextureSRV);
 	m_MiniMap.PostRender(m_pImmediateContext, m_MiniMap.m_iNumIndex);
 
-	m_FbxObjB.SetMatrix(&m_FbxObjB.m_matWorld, 	&m_Camera.m_matView, &m_Camera.m_matProj);
-	m_FbxObjB.SetPixelShader(nullptr);
-	m_FbxObjB.Render(m_pImmediateContext);
+	m_FbxCharacter.SetMatrix(&m_FbxCharacter.m_matWorld, 	&m_Camera.m_matView, &m_Camera.m_matProj);
+	m_FbxCharacter.SetPixelShader(nullptr);
+	m_FbxCharacter.Render(m_pImmediateContext);
 
 	if (g_Input.GetKey(VK_F5) == KEY_PUSH)
 	{
@@ -97,7 +97,7 @@ bool		Sample::Release()
 	m_MapObj.Release();
 	m_MiniMap.Release();
 	m_Rt.Release();
-	m_FbxObjB.Release();
+	m_FbxCharacter.Release();
 	SAFE_RELEASE(m_pPSShadow);
 	return true;
 }
