@@ -62,7 +62,7 @@ bool		Sample::Frame()
 }
 bool		Sample::Render() 
 {	
-	ApplyRS(m_pImmediateContext, TDxState::g_pRSSolid);
+	ApplyRS(m_pImmediateContext, TDxState::g_pRSDepthBias);
 	
 	if (m_Rt.Begin(m_pImmediateContext))
 	{
@@ -79,6 +79,8 @@ bool		Sample::Render()
 		m_FbxCharacter.Render(m_pImmediateContext);
 		m_Rt.End(m_pImmediateContext);
 	}
+
+	ApplyRS(m_pImmediateContext, TDxState::g_pRSSolid);
 	ApplySS(m_pImmediateContext, TDxState::g_pClampSS,1);
 	m_MapObj.m_cbData.matNormal = m_ShadowCB.g_matShadow1;
 	m_MapObj.SetMatrix(&m_MapObj.m_matWorld, &m_Camera.m_matView, &m_Camera.m_matProj);
@@ -87,12 +89,12 @@ bool		Sample::Render()
 
 	m_MiniMap.SetMatrix(nullptr, nullptr, nullptr);
 	m_MiniMap.PreRender(m_pImmediateContext);
-	m_pImmediateContext->PSSetShaderResources(
-		0, 1, &m_Rt.m_pTextureSRV);
+	m_pImmediateContext->PSSetShaderResources(0, 1, &m_Rt.m_pTextureSRV);
 	m_MiniMap.PostRender(m_pImmediateContext, m_MiniMap.m_iNumIndex);
 
 	m_FbxCharacter.SetMatrix(&m_FbxCharacter.m_matWorld, 	&m_Camera.m_matView, &m_Camera.m_matProj);
 	m_FbxCharacter.SetPixelShader(nullptr, &m_ShadowCB.g_matShadow1);
+	m_pImmediateContext->PSSetShaderResources(1, 1, &m_Rt.m_pTextureSRV);
 	m_FbxCharacter.Render(m_pImmediateContext);
 
 	if (g_Input.GetKey(VK_F5) == KEY_PUSH)

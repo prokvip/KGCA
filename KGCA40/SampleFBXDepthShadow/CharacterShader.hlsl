@@ -52,7 +52,7 @@ VS_OUT VS(VS_IN vIn)
 	float4 vView = mul(vWorld, g_matView);
 	float4 vProj = mul(vView, g_matProj);
 	float4 vShadowProj = mul(vWorld, g_matNormal);
-	output.s = vWorld;
+	output.s = vShadowProj;
 	output.p = vProj;
 	output.n = vIn.n;
 	float depth = vProj.z * 1.0f / (500.0f - 1.0f) + -1.0f / (500.0f - 1.0f);
@@ -62,14 +62,14 @@ VS_OUT VS(VS_IN vIn)
 }
 float4 PS(VS_OUT v) : SV_TARGET
 {
-	float4 vShadowProj = mul(v.s, g_matNormal);
-	vShadowProj.xy = vShadowProj.xy / vShadowProj.w;
-	vShadowProj.z = vShadowProj.z * 1.0f / (500.0f - 1.0f) + -1.0f / (500.0f - 1.0f);
-	float4 shadow = g_txShadow.Sample(g_SamplerClamp,vShadowProj.xy);
+	float3 vShadowProj;
+	vShadowProj.xyz = v.s.xyz / v.s.w;
+	vShadowProj.z = v.s.z * 1.0f / (500.0f - 1.0f) + -1.0f / (500.0f - 1.0f);
+	float shadow = g_txShadow.Sample(g_SamplerClamp,vShadowProj.xy);
 	float4 color = g_txDiffuse.Sample(g_Sampler, v.t);
-	if (shadow.r + 0.01f <= vShadowProj.z)
+	if (shadow + 0.0065f <= vShadowProj.z)
 	{
-		color = color*float4(0.5f,0.5f,0.5f,1);
+		color = color*float4(0.9f,0.9f,0.9f,1);
 	}
 	return color;
 }

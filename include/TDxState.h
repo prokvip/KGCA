@@ -10,6 +10,7 @@ public:
 	static ID3D11DepthStencilState* g_pLessEqualDSS;
 	static ID3D11SamplerState* g_pClampSS;
 	static ID3D11SamplerState* g_pWrapSS;
+	static ID3D11RasterizerState* g_pRSDepthBias;
 	static ID3D11RasterizerState* g_pRSSolid;
 	static ID3D11RasterizerState* g_pRSWireFrame;
 	static HRESULT     CreateDepthStencilState();	

@@ -8,7 +8,8 @@ ID3D11DepthStencilState* TDxState::g_pLessEqualDSS= nullptr;
 ID3D11SamplerState* TDxState::g_pClampSS = nullptr;
 ID3D11SamplerState* TDxState::g_pWrapSS = nullptr;
 ID3D11RasterizerState* TDxState::g_pRSSolid = nullptr;
-ID3D11RasterizerState* TDxState::g_pRSWireFrame = nullptr;
+ID3D11RasterizerState* TDxState::g_pRSWireFrame = nullptr; 
+ID3D11RasterizerState* TDxState::g_pRSDepthBias = nullptr;
 bool TDxState::Init()
 {
 	CreateDepthStencilState();
@@ -64,15 +65,18 @@ HRESULT    TDxState::CreateRasterizerState()
 	rd.FillMode = D3D11_FILL_SOLID;
 	rd.CullMode = D3D11_CULL_BACK;
 
-	/*INT DepthBias;
-	FLOAT DepthBiasClamp;
-	FLOAT SlopeScaledDepthBias;*/
+	
 	rd.DepthClipEnable = TRUE;
-	//BOOL ScissorEnable;
-	//BOOL MultisampleEnable;
-	//BOOL AntialiasedLineEnable;
+	rd.MultisampleEnable = TRUE;
+	rd.AntialiasedLineEnable= TRUE;
 
 	hr = g_pd3dDevice->CreateRasterizerState(&rd, &g_pRSSolid);
+
+
+	rd.DepthBias = 10000;
+	rd.DepthBiasClamp = 0;
+	rd.SlopeScaledDepthBias= 1;
+	hr = g_pd3dDevice->CreateRasterizerState(&rd, &g_pRSDepthBias);
 	return hr;
 }
 bool TDxState::Release()
@@ -81,6 +85,7 @@ bool TDxState::Release()
 	SAFE_RELEASE(g_pClampSS);
 	SAFE_RELEASE(g_pWrapSS);
 	SAFE_RELEASE(g_pRSSolid);
+	SAFE_RELEASE(g_pRSDepthBias);
 	SAFE_RELEASE(g_pRSWireFrame);
 	return true;
 }
