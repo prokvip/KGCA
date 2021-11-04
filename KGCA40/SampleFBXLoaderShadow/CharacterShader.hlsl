@@ -59,5 +59,5 @@ float4 PS(VS_OUT v) : SV_TARGET
 }
 float4 PSShadow(VS_OUT v) : SV_TARGET
 {
-	return float4(1,1,1,1);
+	return float4(0,0,0,1);
 }

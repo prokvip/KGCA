@@ -48,7 +48,7 @@ float4 PS( VS_OUT v ) : SV_TARGET
 	float4 shadow = g_txShadow.Sample(g_SamplerClamp, 
 									v.s.xy / v.s.w);
 	float4 color = g_txDiffuse.Sample(g_Sampler, v.t);
-	if( shadow.r > 0.5f)
+	if( shadow.r < 0.5f)
 	{
 		color = color * float4(0.5f,0.5f,0.5f,1);
 	}
