@@ -2,10 +2,12 @@
 
 bool		Sample::Init()
 {	
+	m_Camera.CreateViewMatrix(TVector3(0, 0, -100), TVector3(0, 0, 0));
+	m_Camera.CreateProjMatrix(1.0f, 500.0f, XM_PI * 0.25f, (float)g_rtClient.right / (float)g_rtClient.bottom);
+
+
 	m_matTex._11 = 0.5f; m_matTex._22 = -0.5f;
 	m_matTex._41 = 0.5f; m_matTex._42 = 0.5f;
-	// x = x * 0.5f + 0.5f;
-	// y = y * -0.5f + 0.5f;
 	m_Light1.Set(TVector3(150, 150, 150), TVector3(0, 0, 0));
 	
 	m_MiniMap.Create(L"../../data/shader/PlaneVS.txt",
@@ -43,8 +45,8 @@ bool		Sample::Init()
 		PSBlob->Release();
 	}
 	m_FbxCharacter.LoadObject("../../data/object/Man.fbx", "CharacterShader.hlsl");
-	m_Camera.CreateViewMatrix(TVector3(0, 0, -100), TVector3(0, 0, 0));
-	m_Camera.CreateProjMatrix(1.0f, 500.0f, XM_PI * 0.25f, (float)g_rtClient.right / (float)g_rtClient.bottom);
+	
+
 	return true;
 }
 bool		Sample::Frame() 
@@ -55,8 +57,7 @@ bool		Sample::Frame()
 	}
 	m_FbxCharacter.Frame();
 	m_Light1.Frame();	
-	m_ShadowCB.g_matShadow1 =
-	m_Light1.m_matView * m_Light1.m_matProj * m_matTex;
+	m_ShadowCB.g_matShadow1 =m_Light1.m_matView * m_Light1.m_matProj *m_matTex;
 	return true;
 }
 bool		Sample::Render() 

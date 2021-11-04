@@ -27,6 +27,7 @@ TMatrix  	TCamera::CreateProjMatrix(
     float fNear, float fFar, float fFov, float fAspect)
 {
     D3DXMatrixPerspectiveFovLH(&m_matProj, fFov, fAspect, fNear, fFar);
+    //D3DXMatrixOrthoLH(&m_matProj, 1024.0f, 1024.0f, fNear, fFar);
     return m_matProj;
 }
 bool TCamera::Frame()

@@ -66,6 +66,7 @@ bool TMesh::PreRender(ID3D11DeviceContext* pContext)
 	pContext->UpdateSubresource(m_pConstantBuffer, 0, NULL, &m_cbData, 0, 0);
 	pContext->UpdateSubresource(m_pAnimCB, 0, NULL, &m_matAnimMatrix, 0, 0);
 	pContext->VSSetConstantBuffers(0, 1, &m_pConstantBuffer);
+	pContext->PSSetConstantBuffers(0, 1, &m_pConstantBuffer);
 	pContext->VSSetConstantBuffers(1, 1, &m_pAnimCB);
 
 	pContext->VSSetShader(m_pVS, NULL, 0);

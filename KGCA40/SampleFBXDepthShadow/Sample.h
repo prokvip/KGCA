@@ -76,7 +76,7 @@ public:
         D3DXVec3Normalize(&m_vDir, &m_vDir);
         TVector3 vUp(0, 1, 0);
         D3DXMatrixLookAtLH(&m_matView, &m_vPos, &m_vTarget, &vUp);
-        D3DXMatrixPerspectiveFovLH(&m_matProj, XM_PI * 0.25f, 1.0f, 1.0f, 1000.0f);
+        D3DXMatrixPerspectiveFovLH(&m_matProj, XM_PI * 0.25f, 1.0f, 1.0f, 500.0f);
 
         return true;
     }

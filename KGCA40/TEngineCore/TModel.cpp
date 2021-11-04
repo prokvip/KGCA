@@ -139,13 +139,17 @@ ID3DBlob* TModel::LoadShaderBlob(std::wstring vs,
     HRESULT hr = S_OK;
     ID3DBlob* ret = nullptr;
     ID3DBlob* error = nullptr;
+    UINT flags = D3DCOMPILE_ENABLE_STRICTNESS;
+#if defined( DEBUG ) || defined( _DEBUG )
+    flags |= D3DCOMPILE_DEBUG;
+#endif
     hr = D3DCompileFromFile(
         vs.c_str(),
         nullptr,
         nullptr,
         function.c_str(),
         version.c_str(),
-        0,
+        flags,
         0,
         &ret,
         &error);

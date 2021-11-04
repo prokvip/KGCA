@@ -29,13 +29,11 @@ VS_OUT VS(	float3 p: POSITION,
 	float4 vWorld = mul( vLocal, g_matWorld);
 	float4 vView = mul( vWorld, g_matView);
 	float4 vProj = mul( vView, g_matProj);
-	float4 vShadowProj = mul( vWorld, g_matNormal);
-
-	output.s = vShadowProj;
+	output.s = mul(vWorld, g_matNormal);
 	output.p = vProj;
 	output.n = n;
-	float depth = output.p.z / 500.0f;
-	output.c = float4(depth, depth, depth,vShadowProj.z/500.0f);	
+	float depth1 = vProj.z * 1.0f / (500.0f - 1.0f) + -1.0f / (500.0f - 1.0f);		
+	output.c = float4(depth1, depth1, depth1,1);	
 	output.t = t;
 	return output;
 }
@@ -44,12 +42,17 @@ Texture2D g_txDiffuse : register(t0);
 Texture2D g_txShadow  : register(t1);
 SamplerState g_Sampler : register(s0);
 SamplerState g_SamplerClamp : register(s1);
+
 float4 PS( VS_OUT v ) : SV_TARGET
 {
-	float4 shadow = g_txShadow.Sample(g_SamplerClamp, 
-									v.s.xy / v.s.w);
+	float3 vShadowProj;
+	vShadowProj.xy = v.s.xy / v.s.w;
+	vShadowProj.z = v.s.z * (1.0f / (500.0f - 1.0f)) + (-1.0f / (500.0f - 1.0f));
+
+	float4 shadow = g_txShadow.Sample(g_SamplerClamp, vShadowProj.xy);
 	float4 color = g_txDiffuse.Sample(g_Sampler, v.t);
-	if( shadow.r+0.01f < v.c.w )
+	float depth =v.s.z * 1.0f / (500.0f - 1.0f) + -1.0f / (500.0f - 1.0f);
+	if( shadow.r+0.01f <= vShadowProj.z )
 	{
 		color = color * float4(0.5f,0.5f,0.5f,1);
 	}
