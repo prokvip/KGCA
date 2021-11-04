@@ -91,7 +91,7 @@ bool		Sample::Render()
 	m_MiniMap.PostRender(m_pImmediateContext, m_MiniMap.m_iNumIndex);
 
 	m_FbxCharacter.SetMatrix(&m_FbxCharacter.m_matWorld, 	&m_Camera.m_matView, &m_Camera.m_matProj);
-	m_FbxCharacter.SetPixelShader(nullptr);
+	m_FbxCharacter.SetPixelShader(nullptr, &m_ShadowCB.g_matShadow1);
 	m_FbxCharacter.Render(m_pImmediateContext);
 
 	if (g_Input.GetKey(VK_F5) == KEY_PUSH)

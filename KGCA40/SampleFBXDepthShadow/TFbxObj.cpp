@@ -6,7 +6,7 @@ bool Compare(const pair<float, int>& a, const pair<float, int>& b)
 {
 	return a.first > b.first;
 }
-void TFbxObj::SetPixelShader(ID3D11PixelShader* ps)
+void TFbxObj::SetPixelShader(ID3D11PixelShader* ps,TMatrix* matNormal)
 {
 	for (int iMesh = 0; iMesh < m_pMeshList.size(); iMesh++)
 	{
@@ -24,6 +24,10 @@ void TFbxObj::SetPixelShader(ID3D11PixelShader* ps)
 				{
 					pSubMesh->m_pMainPS = ps;
 				}
+				if (matNormal != nullptr)
+				{
+					pSubMesh->m_cbData.matNormal = *matNormal;
+				}
 			}
 		}
 		else
@@ -35,6 +39,10 @@ void TFbxObj::SetPixelShader(ID3D11PixelShader* ps)
 			else
 			{
 				pMesh->m_pMainPS = ps;
+			}
+			if (matNormal != nullptr)
+			{
+				pMesh->m_cbData.matNormal = *matNormal;
 			}
 		}
 	}
@@ -279,7 +287,7 @@ bool    TFbxObj::Render(ID3D11DeviceContext* pContext)
 					m_pFbxMaterialList[pMesh->m_iMtrlRef]->m_pSubMtrl[iSub];
 				if (pSubMtrl->m_Texture.m_pTextureSRV != nullptr)
 				{					
-					pContext->PSSetShaderResources(1, 1, &pSubMtrl->m_Texture.m_pTextureSRV);
+					pContext->PSSetShaderResources(0, 1, &pSubMtrl->m_Texture.m_pTextureSRV);
 				}
 				// 스키닝도 서브메터리얼 사용 가능함.
 				D3DXMatrixTranspose(&pMesh->m_pSubMesh[iSub]->m_matAnimMatrix.matAnimation[0],
@@ -304,7 +312,7 @@ bool    TFbxObj::Render(ID3D11DeviceContext* pContext)
 			{
 				if (pMtrl->m_Texture.m_pTextureSRV != nullptr)
 				{					
-					pContext->PSSetShaderResources(1, 1, &pMtrl->m_Texture.m_pTextureSRV);
+					pContext->PSSetShaderResources(0, 1, &pMtrl->m_Texture.m_pTextureSRV);
 				}
 			}
 			pMesh->SetMatrix(&m_cbData.matWorld,&m_cbData.matView, &m_cbData.matProj);

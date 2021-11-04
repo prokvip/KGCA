@@ -2,15 +2,18 @@
 // 정해진 레지스터에서 정해진 레지스터로 저장한다.
 // 레지스터-> x,y,z,w  9.0 -> 65545/4
 #define MAX_BONE_MATRICES 255
-Texture2D g_txDiffuse : register(t1);
+Texture2D g_txDiffuse : register(t0);
+Texture2D g_txShadow  : register(t1);
 SamplerState g_Sampler : register(s0);
+SamplerState g_SamplerClamp : register(s1);
 
 cbuffer cbData: register(b0)
 {
 	matrix g_matWorld	: packoffset(c0);
 	matrix g_matView	: packoffset(c4);
 	matrix g_matProj	: packoffset(c8);
-	float  g_fTimer : packoffset(c12.z);
+	matrix g_matNormal	: packoffset(c12);
+	float  g_fTimer : packoffset(c16.z);
 };
 cbuffer cbAnimMatrix : register(b1)
 {
@@ -31,6 +34,7 @@ struct VS_OUT
 	float3 n : NORMAL;
 	float4 c : COLOR0;
 	float2 t : TEXCOORD0;
+	float4 s : TEXCOORD1;
 };
 VS_OUT VS(VS_IN vIn)
 {
@@ -47,16 +51,25 @@ VS_OUT VS(VS_IN vIn)
 	float4 vWorld = mul(vAnim, g_matWorld);
 	float4 vView = mul(vWorld, g_matView);
 	float4 vProj = mul(vView, g_matProj);
+	float4 vShadowProj = mul(vWorld, g_matNormal);
+	output.s = vShadowProj;	
 	output.p = vProj;
 	output.n = vIn.n;
 	float depth = output.p.z / 500.0f;
-	output.c = float4(depth, depth, depth,1);
+	output.c = float4(depth, depth, depth, 1);
 	output.t = vIn.t;
 	return output;
 }
 float4 PS(VS_OUT v) : SV_TARGET
 {
-	return g_txDiffuse.Sample(g_Sampler, v.t);// *v.c;
+	float4 shadow = g_txShadow.Sample(g_SamplerClamp,
+									v.s.xy / v.s.w);
+	float4 color = g_txDiffuse.Sample(g_Sampler, v.t);
+	if (shadow.r + 0.0165f < (v.s.z/500.0f))
+	{
+		color = float4(0.95f,0.95f,0.95f,1);
+	}
+	return color;
 }
 float4 PSShadow(VS_OUT v) : SV_TARGET
 {
