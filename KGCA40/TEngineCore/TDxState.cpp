@@ -63,6 +63,15 @@ HRESULT    TDxState::CreateRasterizerState()
 	ZeroMemory(&rd, sizeof(D3D11_RASTERIZER_DESC));
 	rd.FillMode = D3D11_FILL_SOLID;
 	rd.CullMode = D3D11_CULL_BACK;
+
+	/*INT DepthBias;
+	FLOAT DepthBiasClamp;
+	FLOAT SlopeScaledDepthBias;*/
+	rd.DepthClipEnable = TRUE;
+	//BOOL ScissorEnable;
+	//BOOL MultisampleEnable;
+	//BOOL AntialiasedLineEnable;
+
 	hr = g_pd3dDevice->CreateRasterizerState(&rd, &g_pRSSolid);
 	return hr;
 }
