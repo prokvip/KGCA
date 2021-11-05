@@ -34,10 +34,16 @@ using namespace Microsoft::WRL::Wrappers;
 using namespace std;
 
 #pragma comment	(lib, "D3DCompiler.lib")
+#ifdef _DEBUG
 #pragma comment	(lib, "TEngineCore.lib")
+#pragma comment	(lib, "DirectXTK.lib")
+#else
+#pragma comment	(lib, "TEngineCoreR.lib")
+#pragma comment	(lib, "DirectXTK_R.lib")
+#endif
 #pragma comment	(lib, "d3d11.lib")
 #pragma comment	(lib, "dxgi.lib")
-#pragma comment	(lib, "DirectXTK.lib")
+
 
 using namespace DirectX;
 using namespace DirectX::SimpleMath;

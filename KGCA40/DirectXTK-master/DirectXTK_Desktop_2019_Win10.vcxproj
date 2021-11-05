@@ -377,6 +377,12 @@ copy "inc\\*.inl" "..\\..\\include\\dxtk"</Command>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
+    <Lib>
+      <OutputFile>DirectXTK_R.lib</OutputFile>
+    </Lib>
+    <PostBuildEvent>
+      <Command>copy "DirectXTK_R.lib" "..\\..\\lib\\DirectXTK_R.lib"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">
     <ClCompile>

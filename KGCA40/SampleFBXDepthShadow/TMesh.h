@@ -1,9 +1,16 @@
 #pragma once
 #include "TModel.h"
 #include <fbxsdk.h>
-#pragma comment	(lib, "libfbxsdk.lib")
+#ifdef _DEBUG
+#pragma comment	(lib, "libfbxsdk-md.lib")
 #pragma comment	(lib, "libxml2-md.lib")
 #pragma comment	(lib, "zlib-md.lib")
+#else
+//#pragma comment	(lib, "libfbxsdk.lib")
+#pragma comment	(lib, "libfbxsdk-md.lib")
+#pragma comment	(lib, "libxml2-md.lib")
+#pragma comment	(lib, "zlib-md.lib")
+#endif
 
 const enum OBJECTCLASSTYPE {
 	CLASS_GEOM = 0,
