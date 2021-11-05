@@ -59,8 +59,9 @@ bool		Sample::Init()
 		if (FAILED(hr)) return hr;
 		PSBlob->Release();
 	}
+	CStopwatch t;
 	m_FbxCharacter.LoadObject("../../data/object/Man2.fbx", "CharacterShader.hlsl");
-	
+	t.Output(L"");
 
 	return true;
 }
