@@ -1,7 +1,22 @@
 #include "Sample.h"
-
+HRESULT Sample::CreateConstantBuffer()
+{
+	HRESULT hr = S_OK;
+	D3D11_BUFFER_DESC bd;
+	ZeroMemory(&bd, sizeof(D3D11_BUFFER_DESC));
+	bd.ByteWidth = sizeof(cbDataShadow);
+	bd.Usage = D3D11_USAGE_DEFAULT;
+	bd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	D3D11_SUBRESOURCE_DATA data;
+	ZeroMemory(&data, sizeof(D3D11_SUBRESOURCE_DATA));
+	data.pSysMem = &m_ShadowCB;
+	hr = g_pd3dDevice->CreateBuffer(&bd, &data, &m_pShadowCB);
+	if (FAILED(hr)) return hr;
+	return hr;
+}
 bool		Sample::Init()
 {	
+	CreateConstantBuffer();
 	m_Camera.CreateViewMatrix(TVector3(0, 0, -100), TVector3(0, 0, 0));
 	m_Camera.CreateProjMatrix(1.0f, 500.0f, XM_PI * 0.25f, (float)g_rtClient.right / (float)g_rtClient.bottom);
 
@@ -57,6 +72,7 @@ bool		Sample::Frame()
 	}
 	m_FbxCharacter.Frame();
 	m_Light1.Frame();	
+	
 	m_ShadowCB.g_matShadow1 =m_Light1.m_matView * m_Light1.m_matProj *m_matTex;
 	return true;
 }
@@ -80,9 +96,19 @@ bool		Sample::Render()
 		m_Rt.End(m_pImmediateContext);
 	}
 
+	m_ShadowCB.g_matShadow1 = m_ShadowCB.g_matShadow1.Transpose();
+	m_pImmediateContext->UpdateSubresource(
+		m_pShadowCB, 0, NULL, &m_ShadowCB, 0, 0);
+	m_pImmediateContext->VSSetConstantBuffers(2, 1, &m_pShadowCB);
+
 	ApplyRS(m_pImmediateContext, TDxState::g_pRSSolid);
 	ApplySS(m_pImmediateContext, TDxState::g_pClampSS,1);
-	m_MapObj.m_cbData.matNormal = m_ShadowCB.g_matShadow1;
+	
+	D3DXMatrixInverse(&m_MapObj.m_cbData.matNormal, NULL, 
+		&m_MapObj.m_matWorld);
+	m_MapObj.m_cbData.vLightDir.x = m_Light1.m_vDir.x;
+	m_MapObj.m_cbData.vLightDir.y = m_Light1.m_vDir.y;
+	m_MapObj.m_cbData.vLightDir.z = m_Light1.m_vDir.z;
 	m_MapObj.SetMatrix(&m_MapObj.m_matWorld, &m_Camera.m_matView, &m_Camera.m_matProj);
 	m_pImmediateContext->PSSetShaderResources(1, 1, &m_Rt.m_pTextureSRV);
 	m_MapObj.Render(m_pImmediateContext);
@@ -92,8 +118,11 @@ bool		Sample::Render()
 	m_pImmediateContext->PSSetShaderResources(0, 1, &m_Rt.m_pTextureSRV);
 	m_MiniMap.PostRender(m_pImmediateContext, m_MiniMap.m_iNumIndex);
 
+	D3DXMatrixInverse(&m_FbxCharacter.m_cbData.matNormal, 
+		NULL, &m_FbxCharacter.m_matWorld);
 	m_FbxCharacter.SetMatrix(&m_FbxCharacter.m_matWorld, 	&m_Camera.m_matView, &m_Camera.m_matProj);
-	m_FbxCharacter.SetPixelShader(nullptr, &m_ShadowCB.g_matShadow1);
+	m_FbxCharacter.SetPixelShader(nullptr, 
+		&m_FbxCharacter.m_cbData.matNormal, m_Light1.m_vDir);
 	m_pImmediateContext->PSSetShaderResources(1, 1, &m_Rt.m_pTextureSRV);
 	m_FbxCharacter.Render(m_pImmediateContext);
 

@@ -167,6 +167,7 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="ProjectionShadow.txt" />
+    <Text Include="ShaderStd.h" />
     <Text Include="ShadowPS.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

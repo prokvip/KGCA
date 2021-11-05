@@ -1,11 +1,3 @@
-// 정해진 출력 양식(반드시 정점 위치는 SV_POSITION에 저장해야 한다.)
-// 정해진 레지스터에서 정해진 레지스터로 저장한다.
-// 레지스터-> x,y,z,w  9.0 -> 65545/4
-#define MAX_BONE_MATRICES 255
-Texture2D g_txDiffuse : register(t0);
-Texture2D g_txShadow  : register(t1);
-SamplerState g_Sampler : register(s0);
-SamplerState g_SamplerClamp : register(s1);
 
 cbuffer cbData: register(b0)
 {
@@ -13,12 +5,23 @@ cbuffer cbData: register(b0)
 	matrix g_matView	: packoffset(c4);
 	matrix g_matProj	: packoffset(c8);
 	matrix g_matNormal	: packoffset(c12);
-	float  g_fTimer : packoffset(c16.z);
+	float4 g_vLightDir : packoffset(c16);
+	float  g_fTimer : packoffset(c17.z);
 };
+#define MAX_BONE_MATRICES 255
+Texture2D g_txDiffuse : register(t0);
+Texture2D g_txShadow  : register(t1);
+SamplerState g_Sampler : register(s0);
+SamplerState g_SamplerClamp : register(s1);
+
 cbuffer cbAnimMatrix : register(b1)
 {
 	matrix g_matBondMatrix[MAX_BONE_MATRICES];
 }
+cbuffer cbDataShadow : register(b2)
+{
+	matrix g_matShadow	: packoffset(c0);
+};
 struct VS_IN
 {
 	float3 p : POSITION;
@@ -40,21 +43,24 @@ VS_OUT VS(VS_IN vIn)
 {
 	VS_OUT output = (VS_OUT)0;
 	float4 vLocal = float4(vIn.p, 1.0f);
-	
+	float3 vLocalNormal = vIn.n;
 	float4 vAnim = 0;
+	float3 vNormal = 0;
 	for (int i = 0; i < 4; i++)
 	{
 		uint iBoneIndex = (uint)vIn.i[i];
 		matrix matBone = g_matBondMatrix[iBoneIndex];
 		vAnim += vIn.w[i] * mul(vLocal, matBone);
+		vNormal += vIn.w[i] * mul(vLocalNormal, (float3x3)matBone);
 	}	
 	float4 vWorld = mul(vAnim, g_matWorld);
 	float4 vView = mul(vWorld, g_matView);
 	float4 vProj = mul(vView, g_matProj);
-	float4 vShadowProj = mul(vWorld, g_matNormal);
+	float4 vShadowProj = mul(vWorld, g_matShadow);
 	output.s = vShadowProj;
 	output.p = vProj;
-	output.n = vIn.n;
+	matrix matNormal = transpose(g_matNormal);
+	output.n = normalize(mul(vNormal, (float3x3)matNormal));
 	float depth = vProj.z * 1.0f / (500.0f - 1.0f) + -1.0f / (500.0f - 1.0f);
 	output.c = float4(depth, depth, depth, 1);
 	output.t = vIn.t;
@@ -62,6 +68,9 @@ VS_OUT VS(VS_IN vIn)
 }
 float4 PS(VS_OUT v) : SV_TARGET
 {
+	float3 vLight = float3(g_vLightDir.x, g_vLightDir.y, g_vLightDir.z);
+	float fDot = max(0, dot(v.n, -vLight));
+
 	float3 vShadowProj;
 	vShadowProj.xyz = v.s.xyz / v.s.w;
 	vShadowProj.z = v.s.z * 1.0f / (500.0f - 1.0f) + -1.0f / (500.0f - 1.0f);
@@ -71,7 +80,7 @@ float4 PS(VS_OUT v) : SV_TARGET
 	{
 		color = color*float4(0.9f,0.9f,0.9f,1);
 	}
-	return color;
+	return color* fDot;
 }
 float4 PSShadow(VS_OUT v) : SV_TARGET
 {

@@ -57,6 +57,6 @@ public:
 		DWORD dwDCCIndex, DWORD dwVertexIndex);
 
 	void  SetPixelShader(ID3D11PixelShader* ps=nullptr,
-		TMatrix* matNormal=nullptr);
+		TMatrix* matNormal=nullptr, TVector3 vLight=TVector3(0,0,1));
 };
 

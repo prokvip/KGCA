@@ -255,6 +255,7 @@ bool TModel::PreRender(ID3D11DeviceContext* pContext)
     pContext->UpdateSubresource(
         m_pConstantBuffer, 0, NULL, &m_cbData, 0, 0);
     pContext->VSSetConstantBuffers( 0, 1, &m_pConstantBuffer);
+    pContext->PSSetConstantBuffers(0, 1, &m_pConstantBuffer);
     pContext->PSSetShaderResources( 0, 1, &m_Tex.m_pTextureSRV);
     pContext->VSSetShader(m_pVS, NULL, 0);
     pContext->PSSetShader(m_pMainPS, NULL, 0);

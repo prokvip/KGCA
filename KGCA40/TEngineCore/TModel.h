@@ -46,6 +46,7 @@ struct CB_DATA
 	TMatrix  matView;
 	TMatrix  matProj;
 	TMatrix  matNormal;
+	TVector4  vLightDir;
 	TVector4 vValue;
 };
 

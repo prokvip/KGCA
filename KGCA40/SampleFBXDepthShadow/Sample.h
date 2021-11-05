@@ -93,11 +93,13 @@ class Sample :   public TCore
 	TMatrix		        m_matShadow;
 	ID3D11PixelShader*  m_pPSShadow = nullptr;
     ID3D11PixelShader*  m_pPSShadowMap = nullptr;
+    ID3D11Buffer*       m_pShadowCB = nullptr;
 public:
 	bool		Init()override;
 	bool		Frame()override;
 	bool		Render()override;
 	bool		Release()override;
+    HRESULT     CreateConstantBuffer();
 public:
 	Sample();
 	virtual ~Sample();
