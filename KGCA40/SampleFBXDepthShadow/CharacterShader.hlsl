@@ -70,10 +70,9 @@ float4 PS(VS_OUT v) : SV_TARGET
 {
 	
 	float4 vAmbientColor = float4(0.1f,0.1f,0.1f,1.0f);
-	float4 vDiffuseColor = float4(1.0f, 1.0f, 1.0f, 1.0f);
+	float4 vDiffuseColor = float4(0.7f, 0.7f, 0.7f, 1.0f);
 	float3 vLight = float3(g_vLightDir.x, g_vLightDir.y, g_vLightDir.z);
 	float fDot = max(0, dot(v.n, -vLight));
-	vDiffuse = vAmbient + vDiffuse * fDot;
 	float3 vShadowProj;
 	vShadowProj.xyz = v.s.xyz / v.s.w;
 	vShadowProj.z = v.s.z * 1.0f / (500.0f - 1.0f) + -1.0f / (500.0f - 1.0f);
