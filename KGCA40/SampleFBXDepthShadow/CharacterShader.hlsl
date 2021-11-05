@@ -68,19 +68,24 @@ VS_OUT VS(VS_IN vIn)
 }
 float4 PS(VS_OUT v) : SV_TARGET
 {
+	
+	float4 vAmbientColor = float4(0.1f,0.1f,0.1f,1.0f);
+	float4 vDiffuseColor = float4(1.0f, 1.0f, 1.0f, 1.0f);
 	float3 vLight = float3(g_vLightDir.x, g_vLightDir.y, g_vLightDir.z);
 	float fDot = max(0, dot(v.n, -vLight));
-
+	vDiffuse = vAmbient + vDiffuse * fDot;
 	float3 vShadowProj;
 	vShadowProj.xyz = v.s.xyz / v.s.w;
 	vShadowProj.z = v.s.z * 1.0f / (500.0f - 1.0f) + -1.0f / (500.0f - 1.0f);
 	float shadow = g_txShadow.Sample(g_SamplerClamp,vShadowProj.xy);
-	float4 color = g_txDiffuse.Sample(g_Sampler, v.t);
+	float4 vFinalColor = g_txDiffuse.Sample(g_Sampler, v.t);
 	if (shadow + 0.0065f <= vShadowProj.z)
 	{
-		color = color*float4(0.9f,0.9f,0.9f,1);
+		fDot = min(fDot, 0.5f);
 	}
-	return color* fDot;
+	vFinalColor += vAmbientColor + vDiffuseColor * fDot;
+	vFinalColor.a = 1.0f;
+	return vFinalColor;
 }
 float4 PSShadow(VS_OUT v) : SV_TARGET
 {

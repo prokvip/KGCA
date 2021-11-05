@@ -59,7 +59,7 @@ bool		Sample::Init()
 		if (FAILED(hr)) return hr;
 		PSBlob->Release();
 	}
-	m_FbxCharacter.LoadObject("../../data/object/Man.fbx", "CharacterShader.hlsl");
+	m_FbxCharacter.LoadObject("../../data/object/Man2.fbx", "CharacterShader.hlsl");
 	
 
 	return true;
