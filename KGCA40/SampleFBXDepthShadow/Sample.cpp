@@ -140,6 +140,8 @@ bool		Sample::Release()
 	m_Rt.Release();
 	m_FbxCharacter.Release();
 	SAFE_RELEASE(m_pPSShadow);
+	SAFE_RELEASE(m_pShadowCB);
+	SAFE_RELEASE(m_pPSShadowMap);
 	return true;
 }
 Sample::Sample()

@@ -60,7 +60,7 @@ bool		TFbxObj::Frame()
 	if (m_bAnimPlay)
 	{
 		m_fElpaseTime += g_fSecPerFrame * 1.0f;
-		m_iAnimIndex = m_fElpaseTime * 30.0f;
+		m_iAnimIndex = m_fElpaseTime * 24.0f;
 		if (m_fEndTime < m_fElpaseTime)
 		{
 			m_iAnimIndex = 0;

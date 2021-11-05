@@ -108,7 +108,7 @@ void	TFbxObj::ParseAnimation()
 }
 void	TFbxObj::ParseAnimationNode()
 {
-	FbxTime::SetGlobalTimeMode(FbxTime::eFrames30);
+	FbxTime::SetGlobalTimeMode(FbxTime::eFrames24);
 	FbxAnimStack* currAnimStack = m_pFbxScene->GetSrcObject<FbxAnimStack>(0);
 
 	m_pFbxScene->SetCurrentAnimationStack(currAnimStack);
