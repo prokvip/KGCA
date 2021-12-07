@@ -33,7 +33,7 @@ void main(int argc, char* argv[])
 	// 1)데이터 초기화 및 입력
 	FILE* fp = Create();
 	// 2)추가
-	int iCounter = FileSaveInsert(fp);
+	//int iCounter = FileSaveInsert(fp);
 	fclose(fp);
 	DeleteAll();
 
