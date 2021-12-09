@@ -9,6 +9,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Project1", "Project1\Projec
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LinkedList1", "LinkedList1\LinkedList1.vcxproj", "{D70C5AE7-58D2-422E-8D51-F9CE23EE88E3}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "c++", "c++", "{44B8947E-74CF-479B-8583-DDB1524627C2}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TStudentSample", "TStudentSample\TStudentSample.vcxproj", "{8C85D75A-4E99-4A97-92AD-585A1B9C00EE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -33,12 +37,22 @@ Global
 		{D70C5AE7-58D2-422E-8D51-F9CE23EE88E3}.Release|x64.Build.0 = Release|x64
 		{D70C5AE7-58D2-422E-8D51-F9CE23EE88E3}.Release|x86.ActiveCfg = Release|Win32
 		{D70C5AE7-58D2-422E-8D51-F9CE23EE88E3}.Release|x86.Build.0 = Release|Win32
+		{8C85D75A-4E99-4A97-92AD-585A1B9C00EE}.Debug|x64.ActiveCfg = Debug|x64
+		{8C85D75A-4E99-4A97-92AD-585A1B9C00EE}.Debug|x64.Build.0 = Debug|x64
+		{8C85D75A-4E99-4A97-92AD-585A1B9C00EE}.Debug|x86.ActiveCfg = Debug|Win32
+		{8C85D75A-4E99-4A97-92AD-585A1B9C00EE}.Debug|x86.Build.0 = Debug|Win32
+		{8C85D75A-4E99-4A97-92AD-585A1B9C00EE}.Release|x64.ActiveCfg = Release|x64
+		{8C85D75A-4E99-4A97-92AD-585A1B9C00EE}.Release|x64.Build.0 = Release|x64
+		{8C85D75A-4E99-4A97-92AD-585A1B9C00EE}.Release|x86.ActiveCfg = Release|Win32
+		{8C85D75A-4E99-4A97-92AD-585A1B9C00EE}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{558A5DB2-5817-49FE-835C-D8F4892A779F} = {90C1536C-F3A0-440B-8D05-1C2D1429C6DD}
+		{D70C5AE7-58D2-422E-8D51-F9CE23EE88E3} = {90C1536C-F3A0-440B-8D05-1C2D1429C6DD}
+		{8C85D75A-4E99-4A97-92AD-585A1B9C00EE} = {44B8947E-74CF-479B-8583-DDB1524627C2}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0E548235-7F46-4E65-A970-38A7E957E481}
