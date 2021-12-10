@@ -2,10 +2,16 @@
 
  TStudent* const TStudentManager::NewNode()
 {
-	TStudent* pUser = new TStudent(77, 88);
-	pUser->iIndex = g_iMaxUserCounter;
-	pUser->iKor = rand() % 100;
-	pUser->pNext = NULL;
+	TStudent* pUser = new TStudent();
+	pUser->m_iIndex = g_iMaxUserCounter;
+	pUser->m_iKor = rand() % 100;
+	pUser->m_iEng = rand() % 100;
+	pUser->m_iMat = rand() % 100;
+	pUser->m_iTotal =	pUser->m_iKor +
+						pUser->m_iEng +
+						pUser->m_iMat;
+	pUser->m_fAverage = pUser->m_iTotal / 3.0f;
+	pUser->m_pNext = NULL;
 	return pUser;
 }
 void TStudentManager::AddLink( TStudent* const pUser)
@@ -18,7 +24,7 @@ void TStudentManager::AddLink( TStudent* const pUser)
 		g_iMaxUserCounter++;
 		return;
 	}
-	g_pEndUser->pNext = pUser;
+	g_pEndUser->m_pNext = pUser;
 	g_pEndUser = pUser;
 	g_iMaxUserCounter++;
 }
@@ -30,7 +36,7 @@ bool TStudentManager::FileSave()
 	fwrite(&iCouner, sizeof(int), 1, fpWrite);
 	for (TStudent* user = g_pHeadUserList;
 		user != NULL;
-		user = user->pNext)
+		user = user->m_pNext)
 	{
 		fwrite(user, sizeof(TStudent), 1, fpWrite);
 	}
@@ -46,11 +52,11 @@ void TStudentManager::Create()
 }
 void TStudentManager::DeleteAll()
 {
-	TStudent* pNext = g_pHeadUserList;
-	while (pNext)
+	TStudent* m_pNext = g_pHeadUserList;
+	while (m_pNext)
 	{
-		TStudent* pDeleteUser = pNext;
-		pNext = pDeleteUser->pNext;
+		TStudent* pDeleteUser = m_pNext;
+		m_pNext = pDeleteUser->m_pNext;
 		delete pDeleteUser;
 		pDeleteUser = NULL;
 		g_iMaxUserCounter--;
@@ -67,9 +73,9 @@ int TStudentManager::FileSaveInsert(FILE* fp)
 
 	fwrite(&g_iMaxUserCounter, sizeof(int), 1, fp);
 	fseek(fp, 0, SEEK_END);
-	for (TStudent* user = pSaveEndNode->pNext;
+	for (TStudent* user = pSaveEndNode->m_pNext;
 		user != NULL;
-		user = user->pNext)
+		user = user->m_pNext)
 	{
 		fwrite(user, sizeof(TStudent), 1, fp);
 	}
@@ -89,7 +95,7 @@ void TStudentManager::Load()
 			TStudent* pUser = new TStudent(0, 0);
 			memset(pUser, 0, sizeof(TStudent));
 			fread(pUser, sizeof(TStudent), 1, fpRead);
-			pUser->pNext = 0;
+			pUser->m_pNext = 0;
 			AddLink(pUser);
 		}
 		fclose(fpRead);
@@ -97,11 +103,18 @@ void TStudentManager::Load()
 	}
 }
 void TStudentManager::Draw()
-{
-	for (TStudent* user = g_pHeadUserList;
+{	
+	std::cout << *g_pHeadUserList;
+}
+
+std::ostream& operator << ( std::ostream& os, 
+			const  TStudentManager& mgr)
+{	
+	for (TStudent* user = mgr.g_pHeadUserList;
 		user != NULL;
-		user = user->pNext)
+		user = user->m_pNext)
 	{
-		printf("%d %d\n", user->iIndex, user->iKor);
+		std::cout << *user;
 	}
+	return os;
 }

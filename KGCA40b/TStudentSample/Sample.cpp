@@ -28,7 +28,7 @@ void main(int argc, char* argv[])
 			mgr.Load();
 		}break;
 		case 4: {
-			mgr.Draw();
+			std::cout << mgr;
 		}break;
 		}
 	}

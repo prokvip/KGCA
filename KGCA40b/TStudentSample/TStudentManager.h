@@ -23,6 +23,10 @@ public:
 		//g_iMaxUserCounter = 0; // error
 		return g_iMaxUserCounter;
 	}
+	TStudent* GetHead()
+	{
+		return g_pHeadUserList;
+	}
 private:
 	int    g_iMaxUserCounter;
 	TStudent* g_pHeadUserList;
@@ -43,6 +47,11 @@ public:
 	void Load();
 	// 4) 화면 출력
 	void Draw();
+	
 	void AddLink( TStudent* const pUser);
+
+	friend std::ostream& operator << (
+		std::ostream& os,
+		const  TStudentManager& mgr);
 private:
 };
