@@ -21,9 +21,15 @@
     <ClCompile Include="TStudent.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="TStudentManager.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TStudent.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="TStudentManager.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
