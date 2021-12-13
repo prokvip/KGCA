@@ -3,7 +3,9 @@
 class TStudentCollege : public TStudent
 {
 public:
+	int   m_iGraphic;
 	int   m_iPhysics;
+	int   m_iAI;
 public:
 	void		Show() override;
 	void		Save() override;
