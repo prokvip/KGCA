@@ -42,7 +42,7 @@ bool TStudentManager::FileSave(const  char* pFileName)
 }
 void TStudentManager::Create()
 {
-	for (int iData = 0; iData < 5; iData++)
+	for (int iData = 0; iData < 1; iData++)
 	{
 		AddLink(NewNode());
 	}

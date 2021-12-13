@@ -13,54 +13,57 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="library">
+      <UniqueIdentifier>{9399ebad-4c92-4869-81fa-f8952172f0f7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Sample.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="TStudent.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="TStudentManager.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="TNodeBox.cpp">
-      <Filter>소스 파일</Filter>
+      <Filter>library</Filter>
     </ClCompile>
     <ClCompile Include="TObject.cpp">
-      <Filter>소스 파일</Filter>
+      <Filter>library</Filter>
     </ClCompile>
-    <ClCompile Include="TStudentMiddle.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="TStudentHigh.cpp">
-      <Filter>소스 파일</Filter>
+    <ClCompile Include="TStudent.cpp">
+      <Filter>library</Filter>
     </ClCompile>
     <ClCompile Include="TStudentCollege.cpp">
-      <Filter>소스 파일</Filter>
+      <Filter>library</Filter>
+    </ClCompile>
+    <ClCompile Include="TStudentHigh.cpp">
+      <Filter>library</Filter>
+    </ClCompile>
+    <ClCompile Include="TStudentMiddle.cpp">
+      <Filter>library</Filter>
+    </ClCompile>
+    <ClCompile Include="TStudentManager.cpp">
+      <Filter>library</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="TStudent.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="TStudentManager.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="TNodeBox.h">
-      <Filter>헤더 파일</Filter>
+      <Filter>library</Filter>
     </ClInclude>
     <ClInclude Include="TObject.h">
-      <Filter>헤더 파일</Filter>
+      <Filter>library</Filter>
     </ClInclude>
-    <ClInclude Include="TStudentMiddle.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="TStudentHigh.h">
-      <Filter>헤더 파일</Filter>
+    <ClInclude Include="TStudent.h">
+      <Filter>library</Filter>
     </ClInclude>
     <ClInclude Include="TStudentCollege.h">
-      <Filter>헤더 파일</Filter>
+      <Filter>library</Filter>
+    </ClInclude>
+    <ClInclude Include="TStudentHigh.h">
+      <Filter>library</Filter>
+    </ClInclude>
+    <ClInclude Include="TStudentManager.h">
+      <Filter>library</Filter>
+    </ClInclude>
+    <ClInclude Include="TStudentMiddle.h">
+      <Filter>library</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
