@@ -37,14 +37,14 @@ void main(int argc, char* argv[])
 			iSelect = 1;
 		}break;
 		case 1: {
-			mgr.FileSave();
+			mgr.FileSave("save.txt");
 		}break;
 		case 2: {
 			mgr.DeleteAll();
 		}break;
 		case 3: {
 			mgr.DeleteAll();
-			mgr.Load();
+			mgr.Load("save.txt");
 		}break;
 		case 4: {
 			std::cout << mgr;

@@ -19,9 +19,9 @@ void TStudentManager::AddLink( TNodeBox* const pUser)
 	g_pEndUser = pUser;
 	g_iMaxUserCounter++;
 }
-bool TStudentManager::FileSave()
+bool TStudentManager::FileSave(const  char* pFileName)
 {
-	FILE* fpWrite = fopen("test.txt", "wb");
+	FILE* fpWrite = fopen(pFileName, "wb");
 	// 블럭단위(덩어리) 입출력 함수
 	int iCouner = g_iMaxUserCounter;
 	fwrite(&iCouner, sizeof(int), 1, fpWrite);
@@ -61,9 +61,9 @@ void TStudentManager::DeleteAll()
 	g_pHeadUserList = NULL;
 }
 
-void TStudentManager::Load()
+void TStudentManager::Load(const char* pFileName)
 {
-	FILE* fpRead = fopen("test.txt", "rb");
+	FILE* fpRead = fopen(pFileName, "rb");
 	int iCounerRead = 0;
 	fread(&iCounerRead, sizeof(int), 1, fpRead);
 	if (fpRead != NULL)
