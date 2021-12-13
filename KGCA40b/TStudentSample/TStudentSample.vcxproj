@@ -142,12 +142,25 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Sample.cpp" />
+    <ClCompile Include="TNodeBox.cpp" />
+    <ClCompile Include="TObject.cpp" />
     <ClCompile Include="TStudent.cpp" />
+    <ClCompile Include="TStudentCollege.cpp" />
+    <ClCompile Include="TStudentHigh.cpp" />
     <ClCompile Include="TStudentManager.cpp" />
+    <ClCompile Include="TStudentMiddle.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="TNodeBox.h" />
+    <ClInclude Include="TObject.h" />
     <ClInclude Include="TStudent.h" />
+    <ClInclude Include="TStudentCollege.h" />
+    <ClInclude Include="TStudentHigh.h" />
     <ClInclude Include="TStudentManager.h" />
+    <ClInclude Include="TStudentMiddle.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

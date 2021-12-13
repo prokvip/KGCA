@@ -1,7 +1,26 @@
 #include "TStudentManager.h"
 // mutable, frined, static_cast<> Çüº¯È¯
 void main(int argc, char* argv[])
-{	
+{		
+	/*TStudent* data1 = new TMiddleStudent;
+	*data1 << 1 << 4 << 5.4f;*/
+
+	/*TMiddleStudent* pA = new TMiddleStudent;
+	THighStudent* pB = new THighStudent;
+	TCollegeStudent* pC = new TCollegeStudent;
+	TStudent* data[3] = { 0, };
+	data[0] = pA;
+	data[1] = pB;
+	data[2] = pC;
+	for (int i = 0; i < 3; i++)
+	{
+		data[i]->Show();
+	}
+	for (int i = 0; i < 3; i++)
+	{
+		delete data[i];
+	}	*/
+
 	TStudentManager mgr;
 	int iSelect = 0;	
 	while (iSelect < 99 )

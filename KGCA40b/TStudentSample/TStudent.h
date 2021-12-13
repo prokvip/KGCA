@@ -1,19 +1,17 @@
 #pragma once
-#define _CRT_SECURE_NO_WARNINGS
-#include <iostream> // std::cout, std::in
-#include <memory.h>
-#include <stdlib.h>
-class TStudent
+#include "TObject.h"
+class TStudent : public TObject
 {
 public:
 	int			m_iIndex;
-	int			m_iKor;
-	int			m_iEng;
-	int			m_iMat;
 	int			m_iTotal;
-	float		m_fAverage;
-
-	TStudent*	m_pNext;
+	float		m_fAverage;	
+public:
+	// 가상테이블 생성됨.
+	virtual void	Show();
+	virtual void	Save();
+	virtual void	Load() override;
+	virtual void    SetData(int iIndex);
 	int& operator [] (int id);
 	// p1 * 3 , 3 * p1
 	friend std::ostream& operator << (
@@ -22,17 +20,16 @@ public:
 	TStudent()
 	{
 		m_iIndex = 0;
-		m_iKor = 0;
-		m_pNext = NULL;
+		m_iType  = 0;
 	}
 	TStudent(int i, int kor) 
 	{
 		m_iIndex = i;
-		m_iKor = kor;
-		m_pNext = NULL;
+		m_iType = 0;
 	}
-	~TStudent()
+	virtual ~TStudent()
 	{
+		int k = 0;
 	}
 };
 

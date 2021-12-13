@@ -1,5 +1,5 @@
 #pragma once
-#include "TStudent.h"
+#include "TNodeBox.h"
 class TStudentManager
 {
 public:
@@ -19,36 +19,32 @@ public:
 	}	
 	int  GetUserCounter() const
 	{
-		//SetUserCounter(3); // error
-		//g_iMaxUserCounter = 0; // error
 		return g_iMaxUserCounter;
 	}
-	TStudent* GetHead()
+	TNodeBox* GetHead()
 	{
 		return g_pHeadUserList;
 	}
 private:
 	int    g_iMaxUserCounter;
-	TStudent* g_pHeadUserList;
-	TStudent* g_pEndUser;
+	TNodeBox* g_pHeadUserList;
+	TNodeBox* g_pEndUser;
 public:
 	/// <summary>
 	/// 연결리스트 해당파일로 출력 기능
 	/// </summary>
 	bool FileSave();
 public:
-	TStudent* const NewNode();
+	TNodeBox* const NewNode();
 	void DeleteAll();
 	// 1)데이터 초기화 및 입력
 	void Create();
-	// 2) 데이터 추가
-	int FileSaveInsert(FILE* fp);
 	// 3) 로드해서 저장
 	void Load();
 	// 4) 화면 출력
 	void Draw();
 	
-	void AddLink( TStudent* const pUser);
+	void AddLink(TNodeBox* const pUser);
 
 	friend std::ostream& operator << (
 		std::ostream& os,
