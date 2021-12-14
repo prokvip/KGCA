@@ -142,6 +142,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Sample.cpp" />
+    <ClCompile Include="TFileIO.cpp" />
+    <ClCompile Include="TLinkedList.cpp" />
     <ClCompile Include="TNodeBox.cpp" />
     <ClCompile Include="TObject.cpp" />
     <ClCompile Include="TStudent.cpp" />
@@ -151,6 +153,8 @@
     <ClCompile Include="TStudentMiddle.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="TFileIO.h" />
+    <ClInclude Include="TLinkedList.h" />
     <ClInclude Include="TNodeBox.h" />
     <ClInclude Include="TObject.h" />
     <ClInclude Include="TStudent.h" />

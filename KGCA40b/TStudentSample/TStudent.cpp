@@ -3,15 +3,15 @@
 template<typename T>
 T TStudent::operator [] (int id)
 {
-	if (id == 0) return m_iIndex;
-	if (id == 1) return m_iType;
-	if (id == 6) return m_iTotal;
+	if (id == Index) return m_iIndex;
+	if (id == Type) return m_iType;
+	if (id == Total) return m_iTotal;
 	return -1;
 }
 template<>
 float TStudent::operator [] (int id)
 {
-	if (id == 6) return m_fAverage;
+	if (id == Average) return m_fAverage;
 	return -1.0f;
 }
 
@@ -34,9 +34,9 @@ std::ostream& operator << (
 }
 void		TStudent::Show()
 {
-	std::cout  << operator[]<int>(0) << " "
-		<< operator[]<int>(5) << " "
-		<< operator[]<float>(6) << " ";
+	std::cout  << operator[]<int>(Index) << " "
+		<< operator[]<int>(Total) << " "
+		<< operator[]<float>(Average) << " ";
 }
 void		TStudent::Save()
 {	

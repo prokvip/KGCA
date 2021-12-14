@@ -8,13 +8,6 @@
       <NewMemberFileName>TStudent.h</NewMemberFileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="TStudent" Collapsed="true">
-    <Position X="2.25" Y="1.75" Width="2.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAgMABAAEQAAAAAQAAAAAAAIEEAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>TStudent.h</FileName>
-    </TypeIdentifier>
-  </Class>
   <Class Name="TStudentManager">
     <Position X="8.5" Y="0.5" Width="2.25" />
     <TypeIdentifier>
@@ -22,11 +15,18 @@
       <FileName>TStudentManager.h</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="TNodeBox">
+  <Class Name="TNodeBox&lt;T&gt;">
     <Position X="6.75" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAARgAAAAAAAAAAAAAAQAAAAAAAAAgAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAARgAAAAAAAAAAAAAAQAAAAAAAAAAAAA=</HashCode>
       <FileName>TNodeBox.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TStudent" Collapsed="true">
+    <Position X="2.25" Y="1.75" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAgMABAAEQAAAAAQAAAAAAAIEEAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>TStudent.h</FileName>
     </TypeIdentifier>
   </Class>
   <Font Name="맑은 고딕" Size="9" />

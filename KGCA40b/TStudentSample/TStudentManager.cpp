@@ -12,107 +12,80 @@ TNodeBox<TStudent>* const TStudentManager::NewNode()
 	else
 		pNewObject = new TStudentCollege();
 	
-	pNewObject->SetData(g_iMaxUserCounter);
+	pNewObject->SetData(m_List.m_iNumNode);
 	pNodeBox->m_pData = pNewObject;
 	return pNodeBox;
 }
-void TStudentManager::AddLink( TNodeBox<TStudent>* const pUser)
-{
-	//pUser = 0; //error
-	if (g_pHeadUserList == NULL)
-	{
-		g_pHeadUserList = pUser;
-		g_pEndUser = pUser;
-		g_iMaxUserCounter++;
-		return;
-	}
-	g_pEndUser->m_pNext = pUser;
-	g_pEndUser = pUser;
-	g_iMaxUserCounter++;
-}
 bool TStudentManager::FileSave(const  char* pFileName)
 {
-	FILE* fpWrite = fopen(pFileName, "wb");
-	// 블럭단위(덩어리) 입출력 함수
-	int iCouner = g_iMaxUserCounter;
-	fwrite(&iCouner, sizeof(int), 1, fpWrite);
-	for (TNodeBox<TStudent>* pData = g_pHeadUserList;
-		pData != NULL;
-		pData = pData->m_pNext)
+	if (m_FileIO.CreateFile(pFileName))
 	{
-		pData->m_pData->Save();
-		fwrite(&pData->m_pData->m_iType,
-			sizeof(int), 1, fpWrite);
-		fwrite(&pData->m_pData->m_iBufferSize, 
-			sizeof(int), 1, fpWrite);
-		fwrite(pData->m_pData->m_csBuffer,
-			pData->m_pData->m_iBufferSize, 1, fpWrite);
+		m_FileIO.Write(&m_List.m_iNumNode, sizeof(int));
+		for (TNodeBox<TStudent>* pData = m_List.GetHead();
+			pData != NULL;
+			pData = pData->m_pNext)
+		{
+			pData->m_pData->Save();
+			m_FileIO.Write(&pData->m_pData->m_iType,sizeof(int));
+			m_FileIO.Write(&pData->m_pData->m_iBufferSize,sizeof(int));
+			m_FileIO.Write(pData->m_pData->m_csBuffer, pData->m_pData->m_iBufferSize);
+		}
+		m_FileIO.CloseFile();
 	}
-	fclose(fpWrite);
 	return true;
 }
 void TStudentManager::Create()
 {
 	for (int iData = 0; iData < 1; iData++)
 	{
-		AddLink(NewNode());
+		m_List.AddLink(NewNode());
 	}
 }
 void TStudentManager::DeleteAll()
 {
-	TNodeBox<TStudent>* m_pNext = g_pHeadUserList;
-	while (m_pNext)
-	{
-		TNodeBox<TStudent>* pDeleteUser = m_pNext;
-		m_pNext = pDeleteUser->m_pNext;
-		delete pDeleteUser;
-		pDeleteUser = NULL;
-		g_iMaxUserCounter--;
-	}
-	g_pHeadUserList = NULL;
+	m_List.DeleteAll();
 }
 
 void TStudentManager::Load(const char* pFileName)
 {
-	FILE* fpRead = fopen(pFileName, "rb");
-	int iCounerRead = 0;
-	fread(&iCounerRead, sizeof(int), 1, fpRead);
-	if (fpRead != NULL)
+	if (m_FileIO.OpenFile(pFileName))
 	{
+		int iCounerRead = 0;
+		m_FileIO.Read(&iCounerRead, sizeof(int));
 		for (int iAdd = 0; iAdd < iCounerRead; iAdd++)
 		{
 			// error C2259: 'TStudent': 추상 클래스를 인스턴스화할 수 없습니다.
 			TNodeBox<TStudent>* pData = new TNodeBox<TStudent>();
 			int iType = -1;
-			fread(&iType, sizeof(int), 1, fpRead);
+			m_FileIO.Read(&iType, sizeof(int));
+			
 			if (iType == 1)
 				pData->m_pData = new TStudentMiddle();
 			else if (iType == 2)
 				pData->m_pData = new TStudentHigh();
 			else
-				pData->m_pData = new TStudentCollege();						
-			
-			fread(&pData->m_pData->m_iBufferSize,
-				sizeof(int), 1, fpRead);
-			fread(pData->m_pData->m_csBuffer,
-				pData->m_pData->m_iBufferSize, 1, fpRead);
+				pData->m_pData = new TStudentCollege();
+
+			m_FileIO.Read(&pData->m_pData->m_iBufferSize,
+							sizeof(int));
+			m_FileIO.Read(pData->m_pData->m_csBuffer,
+						pData->m_pData->m_iBufferSize);
 
 			pData->m_pData->Load();
-			AddLink(pData);
+			m_List.AddLink(pData);
 		}
-		fclose(fpRead);
-		fpRead = NULL;
+		m_FileIO.CloseFile();		
 	}
 }
 void TStudentManager::Draw()
 {	
-	std::cout << *g_pHeadUserList;
+	std::cout << *m_List.GetHead();
 }
 
 std::ostream& operator << ( std::ostream& os, 
-			const  TStudentManager& mgr)
+			 TStudentManager& mgr)
 {	
-	for (TNodeBox<TStudent>* pData = mgr.g_pHeadUserList;
+	for (TNodeBox<TStudent>* pData = mgr.m_List.GetHead();
 		pData != NULL;
 		pData = pData->m_pNext)
 	{

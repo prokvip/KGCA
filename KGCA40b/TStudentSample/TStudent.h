@@ -1,5 +1,13 @@
 #pragma once
 #include "TObject.h"
+enum subject {  Index=0, 
+				Type,
+				Kor=2,Graphic=2, 
+				Eng=3, Physics=3,
+				Mat=4,AI=4,
+				Total, 
+				Average,
+};
 class TStudent : public TObject
 {
 public:

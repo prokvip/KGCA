@@ -1,4 +1,7 @@
 #include "TStudentManager.h"
+enum Job {
+	Create,Save,Delete,Load,Draw,Quit,
+};
 // mutable, frined, static_cast<> Çüº¯È¯
 void main(int argc, char* argv[])
 {		
@@ -32,21 +35,21 @@ void main(int argc, char* argv[])
 
 		switch (iSelect)
 		{
-		case 0: {
+		case Create: {
 			mgr.Create();
 			iSelect = 1;
 		}break;
-		case 1: {
+		case Save: {
 			mgr.FileSave("save.txt");
 		}break;
-		case 2: {
+		case Delete: {
 			mgr.DeleteAll();
 		}break;
-		case 3: {
+		case Load: {
 			mgr.DeleteAll();
 			mgr.Load("save.txt");
 		}break;
-		case 4: {
+		case Draw: {
 			std::cout << mgr;
 		}break;
 		}

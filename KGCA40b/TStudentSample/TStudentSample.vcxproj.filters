@@ -42,6 +42,12 @@
     <ClCompile Include="TStudentManager.cpp">
       <Filter>library</Filter>
     </ClCompile>
+    <ClCompile Include="TLinkedList.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="TFileIO.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TNodeBox.h">
@@ -64,6 +70,12 @@
     </ClInclude>
     <ClInclude Include="TStudentMiddle.h">
       <Filter>library</Filter>
+    </ClInclude>
+    <ClInclude Include="TLinkedList.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="TFileIO.h">
+      <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
