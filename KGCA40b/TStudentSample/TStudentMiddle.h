@@ -3,9 +3,13 @@
 class TStudentMiddle : public TStudent
 {
 public:
-	int			m_iKor;
-	int			m_iEng;
-	int			m_iMat;
+	int			m_iKor; // 2
+	int			m_iEng; // 3
+	int			m_iMat; // 4
+	template<typename T>
+	T operator [] (int id);
+	template<>
+	float operator [] (int id);
 public:
 	virtual void	Show()override;
 	virtual void	Save()override;

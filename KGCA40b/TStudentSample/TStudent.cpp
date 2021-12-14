@@ -1,4 +1,20 @@
 #include "TStudent.h"
+
+template<typename T>
+T TStudent::operator [] (int id)
+{
+	if (id == 0) return m_iIndex;
+	if (id == 1) return m_iType;
+	if (id == 6) return m_iTotal;
+	return -1;
+}
+template<>
+float TStudent::operator [] (int id)
+{
+	if (id == 6) return m_fAverage;
+	return -1.0f;
+}
+
 void TStudent::SetData(int iIndex)
 {
 	m_iIndex = iIndex;
@@ -6,11 +22,7 @@ void TStudent::SetData(int iIndex)
 	strcpy(m_csName, "none");
 	m_fAverage = m_iTotal / 3.0f;
 }
-int& TStudent::operator [] (int id)
-{
-	if (id == 0) return m_iIndex;
-	return m_iTotal;	
-}
+
 std::ostream& operator << (
 	std::ostream& os,
 	TStudent& data)
@@ -22,9 +34,9 @@ std::ostream& operator << (
 }
 void		TStudent::Show()
 {
-	std::cout  << m_iIndex << " "
-		<< m_iTotal << " "
-		<< m_fAverage << " ";
+	std::cout  << operator[]<int>(0) << " "
+		<< operator[]<int>(5) << " "
+		<< operator[]<float>(6) << " ";
 }
 void		TStudent::Save()
 {	

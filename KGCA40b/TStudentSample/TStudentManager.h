@@ -21,21 +21,21 @@ public:
 	{
 		return g_iMaxUserCounter;
 	}
-	TNodeBox* GetHead()
+	TNodeBox<TStudent>* GetHead()
 	{
 		return g_pHeadUserList;
 	}
 private:
 	int    g_iMaxUserCounter;
-	TNodeBox* g_pHeadUserList;
-	TNodeBox* g_pEndUser;
+	TNodeBox<TStudent>* g_pHeadUserList;
+	TNodeBox<TStudent>* g_pEndUser;
 public:
 	/// <summary>
 	/// 연결리스트 해당파일로 출력 기능
 	/// </summary>
 	bool FileSave(const char* pFileName);
 public:
-	TNodeBox* const NewNode();
+	TNodeBox<TStudent>* const NewNode();
 	void DeleteAll();
 	// 1)데이터 초기화 및 입력
 	void Create();
@@ -44,7 +44,7 @@ public:
 	// 4) 화면 출력
 	void Draw();
 	
-	void AddLink(TNodeBox* const pUser);
+	void AddLink(TNodeBox<TStudent>* const pUser);
 
 	friend std::ostream& operator << (
 		std::ostream& os,

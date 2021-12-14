@@ -1,4 +1,26 @@
 #include "TStudentMiddle.h"
+template<typename T>
+T TStudentMiddle::operator [] (int id)
+{
+	int iRet = TStudent::operator[]<int>(id);
+	if (iRet < 0)
+	{
+		if (id == 2) return m_iKor;
+		if (id == 3) return m_iEng;
+		if (id == 4) return m_iMat;
+	}
+	return iRet;
+}
+template<>
+float TStudentMiddle::operator [] (int id)
+{
+	int iRet = TStudent::operator[]<float>(id);
+	if (iRet < 0)
+	{
+		if (id == 6) return m_fAverage;
+	}
+	return iRet;
+}
 void  TStudentMiddle::SetData(int iIndex)
 {
 	m_iIndex = iIndex;
@@ -13,14 +35,15 @@ void  TStudentMiddle::SetData(int iIndex)
 }
 void  TStudentMiddle::Show()
 {
+	//t __cdecl TStudent::operator[]<int>(int)"
+	// data[0] -> data.operator[]
+	for (int i = 0; i < 6; i++)
+	{
+		std::cout
+			<< operator[]<int>(i) << " ";
+	}
 	std::cout
-		<< m_iIndex << " "
-		<< m_iType << " "
-		<< m_iKor << " "
-		<< m_iEng << " "
-		<< m_iMat << " "
-		<< m_iTotal << " "
-		<< m_fAverage << " " << std::endl;
+		<< operator[]<float>(6) << " " << std::endl;
 }
 void  TStudentMiddle::Save()
 {

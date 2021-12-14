@@ -1,11 +1,22 @@
 #include "TStudentManager.h"
 
-TNodeBox* const TStudentManager::NewNode()
+TNodeBox<TStudent>* const TStudentManager::NewNode()
 {
-	TNodeBox* pUser = new TNodeBox(g_iMaxUserCounter);
-	return pUser;
+	TNodeBox<TStudent>* pNodeBox = new TNodeBox<TStudent>();
+	int iType = rand() % 3;
+	TStudent* pNewObject = nullptr;
+	if( iType == 0)
+		pNewObject = new TStudentMiddle();
+	else if (iType == 1)
+		pNewObject = new TStudentHigh();
+	else
+		pNewObject = new TStudentCollege();
+	
+	pNewObject->SetData(g_iMaxUserCounter);
+	pNodeBox->m_pData = pNewObject;
+	return pNodeBox;
 }
-void TStudentManager::AddLink( TNodeBox* const pUser)
+void TStudentManager::AddLink( TNodeBox<TStudent>* const pUser)
 {
 	//pUser = 0; //error
 	if (g_pHeadUserList == NULL)
@@ -25,7 +36,7 @@ bool TStudentManager::FileSave(const  char* pFileName)
 	// 블럭단위(덩어리) 입출력 함수
 	int iCouner = g_iMaxUserCounter;
 	fwrite(&iCouner, sizeof(int), 1, fpWrite);
-	for (TNodeBox* pData = g_pHeadUserList;
+	for (TNodeBox<TStudent>* pData = g_pHeadUserList;
 		pData != NULL;
 		pData = pData->m_pNext)
 	{
@@ -49,10 +60,10 @@ void TStudentManager::Create()
 }
 void TStudentManager::DeleteAll()
 {
-	TNodeBox* m_pNext = g_pHeadUserList;
+	TNodeBox<TStudent>* m_pNext = g_pHeadUserList;
 	while (m_pNext)
 	{
-		TNodeBox* pDeleteUser = m_pNext;
+		TNodeBox<TStudent>* pDeleteUser = m_pNext;
 		m_pNext = pDeleteUser->m_pNext;
 		delete pDeleteUser;
 		pDeleteUser = NULL;
@@ -71,8 +82,7 @@ void TStudentManager::Load(const char* pFileName)
 		for (int iAdd = 0; iAdd < iCounerRead; iAdd++)
 		{
 			// error C2259: 'TStudent': 추상 클래스를 인스턴스화할 수 없습니다.
-			TNodeBox* pData = new TNodeBox();
-			memset(pData, 0, sizeof(TNodeBox));
+			TNodeBox<TStudent>* pData = new TNodeBox<TStudent>();
 			int iType = -1;
 			fread(&iType, sizeof(int), 1, fpRead);
 			if (iType == 1)
@@ -102,12 +112,14 @@ void TStudentManager::Draw()
 std::ostream& operator << ( std::ostream& os, 
 			const  TStudentManager& mgr)
 {	
-	for (TNodeBox* pData = mgr.g_pHeadUserList;
+	for (TNodeBox<TStudent>* pData = mgr.g_pHeadUserList;
 		pData != NULL;
 		pData = pData->m_pNext)
 	{
-		//std::cout << *pData;
-		pData->m_pData->Show();
+		if (pData->m_pData != nullptr)
+		{
+			pData->m_pData->Show();
+		}
 	}
 	return os;
 }
