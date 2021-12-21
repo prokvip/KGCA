@@ -6,60 +6,60 @@ struct Node
 {
 	int iDepth;
 	int iValue;	
-	Node* pLeft;//pChild[0]
-	Node* pRight;//pChild[1]
+	Node* pChild[2];
 	Node() {
 		iValue = -1;
-		pLeft = nullptr;
-		pRight = nullptr;
+		pChild[0] = nullptr;
+		pChild[1] = nullptr;
 	};
-	Node(int i)
+	Node(int i) : Node()
 	{
 		iValue = i;
-		pLeft = nullptr;
-		pRight = nullptr;
+		pChild[0] = nullptr;
+		pChild[1] = nullptr;
 	}
 	~Node()
 	{
-		delete pLeft;
-		delete pRight;
+		delete pChild[0];
+		delete pChild[1];
 	}
 };
-Node* g_pArray[7];
+Node** g_ppArray=nullptr;
 std::queue<Node*> g_Queue;
 int g_iValue = 0;
 void CreaeBinaryNode(Node* pNode)
 {
 	if (pNode->iDepth == 2) return;
-	pNode->pLeft = new Node(++g_iValue);
-	//g_pArray[g_iValue] = pNode->pLeft;
-	pNode->pRight = new Node(++g_iValue);
-	//g_pArray[g_iValue] = pNode->pRight;
-	pNode->pLeft->iDepth = pNode->iDepth + 1;
-	pNode->pRight->iDepth = pNode->iDepth + 1;
-	CreaeBinaryNode(pNode->pLeft);
-	CreaeBinaryNode(pNode->pRight);
+	pNode->pChild[0] = new Node(++g_iValue);
+	g_ppArray[g_iValue] = pNode->pChild[0];
+	pNode->pChild[1] = new Node(++g_iValue);
+	g_ppArray[g_iValue] = pNode->pChild[1];
+	
+	pNode->pChild[0]->iDepth = pNode->iDepth + 1;
+	pNode->pChild[1]->iDepth = pNode->iDepth + 1;
+	CreaeBinaryNode(pNode->pChild[0]);
+	CreaeBinaryNode(pNode->pChild[1]);
 }
 
 void BinaryNodePrintPreOrder(Node* pNode)
 {
 	if (pNode == nullptr) return;
 	std::cout << pNode->iValue;
-	BinaryNodePrintPreOrder(pNode->pLeft);
-	BinaryNodePrintPreOrder(pNode->pRight);
+	BinaryNodePrintPreOrder(pNode->pChild[0]);
+	BinaryNodePrintPreOrder(pNode->pChild[1]);
 }
 void BinaryNodePrintInOrder(Node* pNode)
 {
 	if (pNode == nullptr) return;	
-	BinaryNodePrintInOrder(pNode->pLeft);
+	BinaryNodePrintInOrder(pNode->pChild[0]);
 	std::cout << pNode->iValue;
-	BinaryNodePrintInOrder(pNode->pRight);
+	BinaryNodePrintInOrder(pNode->pChild[1]);
 }
 void BinaryNodePrintPostOrder(Node* pNode)
 {
 	if (pNode == nullptr) return;	
-	BinaryNodePrintPostOrder(pNode->pLeft);
-	BinaryNodePrintPostOrder(pNode->pRight);
+	BinaryNodePrintPostOrder(pNode->pChild[0]);
+	BinaryNodePrintPostOrder(pNode->pChild[1]);
 	std::cout << pNode->iValue;
 }
 // cnt = 2^detph+1 - 1, 7
@@ -76,36 +76,34 @@ void BinaryNodePrintPostOrder(Node* pNode)
 
 void BinaryNodePrintLevelOrder(Node* pNode)
 {
+	std::cout << pNode->iValue;	
 	do {
-		if (pNode->pLeft != nullptr)
-			g_Queue.push(pNode->pLeft);
-		if (pNode->pRight != nullptr)
-			g_Queue.push(pNode->pRight);
+		if (pNode->pChild[0] != nullptr)
+			g_Queue.push(pNode->pChild[0]);
+		if (pNode->pChild[1] != nullptr)
+			g_Queue.push(pNode->pChild[1]);
 
 		if (g_Queue.empty()) break;
 		pNode = g_Queue.front();
 		std::cout << pNode->iValue;
 		g_Queue.pop();
-
-		if (g_Queue.empty()) break;
-		pNode = g_Queue.front();
 	} while (pNode);
 }
 void main()
 {	
-	Node* pRoot = new Node(0);
-	g_pArray[0] = pRoot;
+	int iMaxDepth = 2;
+	int cnt = pow(2, iMaxDepth + 1) - 1;
+	g_ppArray = new Node*[cnt];
+
+	Node* pRoot = new Node(0);	
+	if (pRoot == nullptr) return;
+
 	pRoot->iDepth = 0;
+	g_ppArray[0] = pRoot;
 	CreaeBinaryNode(pRoot);
-	BinaryNodePrintPreOrder(pRoot);
-	std::cout << std::endl;
-	BinaryNodePrintInOrder(pRoot);
-	std::cout << std::endl;
-	BinaryNodePrintPostOrder(pRoot);
-	std::cout << std::endl;
-
-	g_Queue.push(pRoot);
+	BinaryNodePrintPreOrder(pRoot); 	std::cout << std::endl;
+	BinaryNodePrintInOrder(pRoot);		std::cout << std::endl;
+	BinaryNodePrintPostOrder(pRoot);	std::cout << std::endl;
 	BinaryNodePrintLevelOrder(pRoot);
-
 	delete pRoot;
 }
