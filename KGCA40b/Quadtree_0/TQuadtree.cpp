@@ -27,28 +27,28 @@ void TQuadtree::BuildTree(TNode* pParent)
 {
 	if (pParent->m_iDepth == m_iMaxDepth) return;
 	pParent->pChild[0] = CreateNode(pParent,
-		pParent->m_rt.x1,
-		pParent->m_rt.y1,
-		pParent->m_rt.w / 2.0f,
-		pParent->m_rt.h / 2.0f );
+		pParent->m_rt.p1.x,
+		pParent->m_rt.p1.y,
+		pParent->m_rt.size.x / 2.0f,
+		pParent->m_rt.size.y / 2.0f );
 	BuildTree(pParent->pChild[0]);
 	pParent->pChild[1] = CreateNode(pParent,
-		pParent->m_rt.mx,
-		pParent->m_rt.y1,
-		pParent->m_rt.w / 2.0f,
-		pParent->m_rt.h / 2.0f);
+		pParent->m_rt.middle.x,
+		pParent->m_rt.p1.y,
+		pParent->m_rt.size.x / 2.0f,
+		pParent->m_rt.size.y / 2.0f);
 	BuildTree(pParent->pChild[1]);
 	pParent->pChild[2] = CreateNode(pParent,
-		pParent->m_rt.mx,
-		pParent->m_rt.my,
-		pParent->m_rt.w / 2.0f,
-		pParent->m_rt.h / 2.0f);
+		pParent->m_rt.middle.x,
+		pParent->m_rt.middle.y,
+		pParent->m_rt.size.x / 2.0f,
+		pParent->m_rt.size.y / 2.0f);
 	BuildTree(pParent->pChild[2]);
 	pParent->pChild[3] = CreateNode(pParent,
-		pParent->m_rt.x1,
-		pParent->m_rt.my,
-		pParent->m_rt.w / 2.0f,
-		pParent->m_rt.h / 2.0f);
+		pParent->m_rt.p1.x,
+		pParent->m_rt.middle.y,
+		pParent->m_rt.size.x / 2.0f,
+		pParent->m_rt.size.y / 2.0f);
 	BuildTree(pParent->pChild[3]);
 }
 bool TQuadtree::AddObject(int fX, int fY)
@@ -90,7 +90,7 @@ void TQuadtree::PrintObjectList(TNode* pNode)
 	{
 		TObject* pObj = *iter;
 		std::cout << "[" << pNode->m_iDepth << "]" <<
-			pObj->m_iX <<":"<< pObj->m_iY << " ";
+			pObj->m_Pos.x <<":"<< pObj->m_Pos.y << " ";
 	}
 	std::cout << std::endl;
 	for (int iNode = 0; iNode < 4; iNode++)

@@ -8,10 +8,10 @@
 using namespace std;
 struct TRect
 {
-	float x1, y1; // x1,y1   -    w
-	float x2, y2;
-	float mx, my;//   -     m
-	float w, h;   //  h           x2,y2	
+	TVector2 p1;
+	TVector2 p2;
+	TVector2 middle;
+	TVector2 size;
 };
 class TNode
 {

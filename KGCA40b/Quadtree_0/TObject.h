@@ -1,14 +1,14 @@
 #pragma once
 #include <iostream>
+#include "TVector2.h"
 class TObject
 {
 public:
-	int			m_iX;
-	int			m_iY;
+	TVector2    m_Pos;
 	TObject(int x, int y)
 	{
-		m_iX = x;
-		m_iY = y;
+		m_Pos.x = x;
+		m_Pos.y = y;
 	}
 };
 
