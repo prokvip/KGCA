@@ -29,6 +29,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BinarySearch", "BinarySearc
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Quadtree_0", "Quadtree_0\Quadtree_0.vcxproj", "{047485D7-4146-46DE-AF38-7D671ECD4482}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OctreeSample", "OctreeSample\OctreeSample.vcxproj", "{DC87D29B-9E14-4275-BC7A-CB869D86074B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -117,6 +119,14 @@ Global
 		{047485D7-4146-46DE-AF38-7D671ECD4482}.Release|x64.Build.0 = Release|x64
 		{047485D7-4146-46DE-AF38-7D671ECD4482}.Release|x86.ActiveCfg = Release|Win32
 		{047485D7-4146-46DE-AF38-7D671ECD4482}.Release|x86.Build.0 = Release|Win32
+		{DC87D29B-9E14-4275-BC7A-CB869D86074B}.Debug|x64.ActiveCfg = Debug|x64
+		{DC87D29B-9E14-4275-BC7A-CB869D86074B}.Debug|x64.Build.0 = Debug|x64
+		{DC87D29B-9E14-4275-BC7A-CB869D86074B}.Debug|x86.ActiveCfg = Debug|Win32
+		{DC87D29B-9E14-4275-BC7A-CB869D86074B}.Debug|x86.Build.0 = Debug|Win32
+		{DC87D29B-9E14-4275-BC7A-CB869D86074B}.Release|x64.ActiveCfg = Release|x64
+		{DC87D29B-9E14-4275-BC7A-CB869D86074B}.Release|x64.Build.0 = Release|x64
+		{DC87D29B-9E14-4275-BC7A-CB869D86074B}.Release|x86.ActiveCfg = Release|Win32
+		{DC87D29B-9E14-4275-BC7A-CB869D86074B}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -132,6 +142,7 @@ Global
 		{6F297F86-E7A8-4073-8D4E-79A6ED0727D7} = {486E4B2F-2744-4590-9906-3E0440688FE9}
 		{AFF6E739-2F10-4355-98F0-C33A34B30B21} = {486E4B2F-2744-4590-9906-3E0440688FE9}
 		{047485D7-4146-46DE-AF38-7D671ECD4482} = {486E4B2F-2744-4590-9906-3E0440688FE9}
+		{DC87D29B-9E14-4275-BC7A-CB869D86074B} = {486E4B2F-2744-4590-9906-3E0440688FE9}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0E548235-7F46-4E65-A970-38A7E957E481}
