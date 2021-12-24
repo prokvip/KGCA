@@ -6,7 +6,7 @@
 // 
 LRESULT CALLBACK  WndProc(HWND, UINT, WPARAM, LPARAM);
 
-int APIENTRY wWinMain(   HINSTANCE hInstance,
+int WINAPI wWinMain(   HINSTANCE hInstance,
                          HINSTANCE hPrevInstance,
                          LPWSTR    lpCmdLine,
                          int       nCmdShow)
@@ -27,7 +27,7 @@ int APIENTRY wWinMain(   HINSTANCE hInstance,
         L"KGCA_Window",
         L"kgca",
         WS_OVERLAPPEDWINDOW,
-        0, 0,
+        200, 200,
         800, 600,
         NULL,
         NULL,
@@ -44,7 +44,7 @@ int APIENTRY wWinMain(   HINSTANCE hInstance,
     while (1)
     {
         // 메세지큐에 메세지가 없으면 블록
-        if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE)==FALSE)
+        if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
         {
             if (msg.message == WM_QUIT)
             {
