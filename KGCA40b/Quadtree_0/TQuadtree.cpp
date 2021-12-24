@@ -27,14 +27,14 @@ void TQuadtree::BuildTree(TNode* pParent)
 {
 	if (pParent->m_iDepth == m_iMaxDepth) return;
 	pParent->pChild[0] = CreateNode(pParent,
-		pParent->m_rt.p1.x,
-		pParent->m_rt.p1.y,
+		pParent->m_rt.vMin.x,
+		pParent->m_rt.vMin.y,
 		pParent->m_rt.size.x / 2.0f,
 		pParent->m_rt.size.y / 2.0f );
 	BuildTree(pParent->pChild[0]);
 	pParent->pChild[1] = CreateNode(pParent,
 		pParent->m_rt.middle.x,
-		pParent->m_rt.p1.y,
+		pParent->m_rt.vMin.y,
 		pParent->m_rt.size.x / 2.0f,
 		pParent->m_rt.size.y / 2.0f);
 	BuildTree(pParent->pChild[1]);
@@ -45,18 +45,19 @@ void TQuadtree::BuildTree(TNode* pParent)
 		pParent->m_rt.size.y / 2.0f);
 	BuildTree(pParent->pChild[2]);
 	pParent->pChild[3] = CreateNode(pParent,
-		pParent->m_rt.p1.x,
+		pParent->m_rt.vMin.x,
 		pParent->m_rt.middle.y,
 		pParent->m_rt.size.x / 2.0f,
 		pParent->m_rt.size.y / 2.0f);
 	BuildTree(pParent->pChild[3]);
 }
-bool TQuadtree::AddObject(int fX, int fY)
+bool TQuadtree::AddObject(TObject* obj)
 {
-	TNode* pFindNode = FindNode(m_pRootNode, fX, fY);
+	TNode* pFindNode = 
+		FindNode(m_pRootNode, obj->m_rt);
 	if (pFindNode != nullptr)
 	{
-		pFindNode->AddObject(fX, fY);
+		pFindNode->AddObject(obj);
 		return true;
 	}
 	return false;
@@ -68,13 +69,39 @@ TNode* TQuadtree::FindNode(TNode* pNode, int x, int y)
 		{
 			if (pNode->pChild[iNode] != nullptr)
 			{
-				if (pNode->pChild[iNode]->IsRect(x,y))
+				if (TCollision::RectToPoint(
+					pNode->pChild[iNode]->m_rt,
+					x,y))
 				{
 					g_Queue.push(pNode->pChild[iNode]);
 					break;
 				}
 			}
 		}		
+		if (g_Queue.empty()) break;
+		pNode = g_Queue.front();
+		g_Queue.pop();
+	} while (pNode);
+	return pNode;
+}
+TNode* TQuadtree::FindNode(TNode* pNode, TRect rt)
+{
+	do {
+		for (int iNode = 0; iNode < 4; iNode++)
+		{
+			if (pNode->pChild[iNode] != nullptr)
+			{
+				TRect intersect;
+				int iRet = TCollision::RectToRect(
+						pNode->pChild[iNode]->m_rt,
+						rt);
+				if( iRet == 1)
+				{
+					g_Queue.push(pNode->pChild[iNode]);
+					break;
+				}
+			}
+		}
 		if (g_Queue.empty()) break;
 		pNode = g_Queue.front();
 		g_Queue.pop();
@@ -90,7 +117,7 @@ void TQuadtree::PrintObjectList(TNode* pNode)
 	{
 		TObject* pObj = *iter;
 		std::cout << "[" << pNode->m_iDepth << "]" <<
-			pObj->m_Pos.x <<":"<< pObj->m_Pos.y << " ";
+			pObj->m_vPos.x <<":"<< pObj->m_vPos.y << " ";
 	}
 	std::cout << std::endl;
 	for (int iNode = 0; iNode < 4; iNode++)

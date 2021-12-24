@@ -1,9 +1,12 @@
 #pragma once
+#include <iostream>
+#include <math.h>
+
 struct TFloat2
 {
 	union
 	{
-		float x, y;
+		struct { float x, y; };
 		float v[2];
 	};
 };
@@ -15,8 +18,16 @@ public:
 	TVector2(const TVector2& v);
 public:
 	TVector2 operator + (const TVector2& v);
+	TVector2 operator - (const TVector2& v);
+	TVector2 operator * (float fValue);
+	TVector2 operator / (float fValue);
+	bool operator == (const TVector2& v);
+	bool operator != (const TVector2& v);
 	// Á¤±ÔÈ­
+	TVector2 Normalize();
+	TVector2 Normal();
+	friend TVector2 Normalize(TVector2& v);
 	// Å©±â
-	// º¤ÅÍ »¬¼À, ½ºÄ®¶ó °ö¼À
+	float Length();
 };
 

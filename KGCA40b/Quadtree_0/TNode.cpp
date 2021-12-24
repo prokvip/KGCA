@@ -1,16 +1,8 @@
 #include "TNode.h"
-bool   TNode::IsRect(int x, int y)
+
+void TNode::AddObject(TObject* obj)
 {
-	if (m_rt.p1.x <= x && m_rt.p2.x >= x &&
-		m_rt.p1.y <= y && m_rt.p2.y >= y)
-	{
-		return true;
-	}
-	return false;
-}
-void TNode::AddObject(int fX, int fY)
-{
-	m_ObjectList.push_back(new TObject(fX, fY));
+	m_ObjectList.push_back(obj);
 }
 TNode::TNode() {
 	m_pParent = nullptr;
@@ -32,10 +24,10 @@ TNode::TNode() {
 };
 TNode::TNode(float x, float y, float w, float h) : TNode()
 {
-	m_rt.p1.x = x;
-	m_rt.p1.y = y;
-	m_rt.p2.x = x + w;
-	m_rt.p2.y = y + h;
+	m_rt.vMin.x = x;
+	m_rt.vMin.y = y;
+	m_rt.vMax.x = x + w;
+	m_rt.vMax.y = y + h;
 	m_rt.middle.x = x + (w / 2.0f);
 	m_rt.middle.y = y + (h / 2.0f);
 	m_rt.size.x = w;

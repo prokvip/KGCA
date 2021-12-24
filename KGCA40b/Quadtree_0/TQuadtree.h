@@ -18,8 +18,9 @@ public:
 	void		Init(int iWidth, int iHeight, int iMaxDepth);
 	TNode*		CreateNode(TNode* pParent, float x, float y, float w, float h);
 	void		BuildTree(TNode* pParent);
-	bool		AddObject(int fX, int fY);
+	bool		AddObject(TObject* obj);
 	TNode*		FindNode(TNode* pNode, int x, int y);
+	TNode*		FindNode(TNode* pNode, TRect rt);
 public:
 	void PrintObjectList(TNode* pNode);
 //	void BinaryNodePrintInOrder(TNode* pNode);

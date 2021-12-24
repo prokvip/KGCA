@@ -3,11 +3,23 @@ void main()
 {
 	TQuadtree tree;
 	tree.Init(100, 100, 2);
-	for (int iObj = 0; iObj < 10; iObj++)
+	for (int iObj = 0; iObj < 5; iObj++)
 	{
-		int iX = rand() % 100;
-		int iY = rand() % 100;
-		tree.AddObject(iX, iY);
+		TObject* pObj = new TObject();
+		pObj->SetPos(	(float)(rand() % 100),
+						(float)(rand() % 100));
+		// -------w------
+		// vMin
+		//      c(pos)
+		//               vMax
+		float hw = (float)(rand() % 17) + 1;
+		float hh = (float)(rand() % 17) + 1;
+		TVector2 vMin;
+		vMin.x = pObj->m_vPos.x - hw;
+		vMin.y = pObj->m_vPos.y - hh;
+		TRect rt(vMin,  hw*2.0f, hh*2.0f);
+		pObj->SetRect(rt);
+		tree.AddObject(pObj);
 	}
 	// Ãâ·Â
 	tree.PrintObjectList(tree.m_pRootNode);
