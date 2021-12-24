@@ -3,7 +3,7 @@ void main()
 {
 	TQuadtree tree;
 	tree.Init(100, 100, 2);
-	for (int iObj = 0; iObj < 5; iObj++)
+	for (int iObj = 0; iObj < 10; iObj++)
 	{
 		TObject* pObj = new TObject();
 		pObj->SetPos(	(float)(rand() % 100),
@@ -12,8 +12,8 @@ void main()
 		// vMin
 		//      c(pos)
 		//               vMax
-		float hw = (float)(rand() % 17) + 1;
-		float hh = (float)(rand() % 17) + 1;
+		float hw = (float)(rand() % 10) + 10;
+		float hh = (float)(rand() % 10) + 10;
 		TVector2 vMin;
 		vMin.x = pObj->m_vPos.x - hw;
 		vMin.y = pObj->m_vPos.y - hh;

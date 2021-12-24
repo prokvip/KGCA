@@ -92,10 +92,10 @@ TNode* TQuadtree::FindNode(TNode* pNode, TRect rt)
 			if (pNode->pChild[iNode] != nullptr)
 			{
 				TRect intersect;
-				int iRet = TCollision::RectToRect(
+				TCollisionType iRet = TCollision::RectToRect(
 						pNode->pChild[iNode]->m_rt,
 						rt);
-				if( iRet == 1)
+				if( iRet == RECT_OVERLAP)
 				{
 					g_Queue.push(pNode->pChild[iNode]);
 					break;

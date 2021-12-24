@@ -60,14 +60,14 @@ bool   TCollision::IntersectRect(
 // 0 :  떨어져 있다.
 // 1 :  안에 있다.
 // 2 :  걸쳐 있다.
-int   TCollision::RectToRect(TRect rt1, TRect rt2)
+TCollisionType   TCollision::RectToRect(TRect rt1, TRect rt2)
 {	
 	TRect rtInterction;
 	int iRet = IntersectRect(rt1, rt2, &rtInterction);
 	if (iRet <= 0)
 	{
-		return 0;
+		return RECT_OUT;
 	}
-	if (rtInterction == rt2) return 1;
-	return 2;
+	if (rtInterction == rt2) return RECT_OVERLAP;
+	return RECT_IN;
 }

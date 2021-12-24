@@ -1,5 +1,11 @@
 #pragma once
 #include "TVector2.h"
+enum TCollisionType
+{
+	RECT_OUT = 0,
+	RECT_IN,
+	RECT_OVERLAP,
+};
 struct TRect
 {
 	TVector2 vMin;
@@ -40,7 +46,7 @@ class TCollision
 public:
 	static bool   RectToPoint(TRect rt, int x, int y);
 	static bool   RectToPoint(TRect rt, TVector2 v);
-	static int    RectToRect(TRect,TRect);
+	static TCollisionType    RectToRect(TRect,TRect);
 	static TRect  UnionRect(TRect rt1, TRect rt2);
 	static bool  IntersectRect(TRect rt1, TRect rt2, TRect* rt);
 };
