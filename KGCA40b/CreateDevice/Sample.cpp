@@ -1,48 +1,68 @@
 #include "Sample.h"
 bool	Sample::Init()
 {
-	//ID3D11Device*			m_pd3dDevice;	// 디바이스 객체
-	//ID3D11DeviceContext*	m_pImmediateContext;// 다비이스 컨텍스트 객체
-	//IDXGISwapChain*			m_pSwapChain;	// 스왑체인 객체
 	UINT Flags = 0;
 	D3D_FEATURE_LEVEL fl[]
 	{
 		D3D_FEATURE_LEVEL_11_0,
 		D3D_FEATURE_LEVEL_10_0,
 	};
-	DXGI_SWAP_CHAIN_DESC scd;
-	ZeroMemory(&scd, sizeof(DXGI_SWAP_CHAIN_DESC));
-	scd.BufferDesc.Width = m_rtClient.right;
-	scd.BufferDesc.Height= m_rtClient.bottom;
-	scd.BufferDesc.RefreshRate.Numerator = 60;
-	scd.BufferDesc.RefreshRate.Denominator = 1;
-	scd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-	scd.SampleDesc.Count = 1;
-	scd.BufferUsage=DXGI_USAGE_RENDER_TARGET_OUTPUT;
-	scd.BufferCount = 1;
-	scd.OutputWindow = m_hWnd;
-	scd.Windowed = true;
-	
 
-	D3D_FEATURE_LEVEL pFeatureLevel;
+	ZeroMemory(&m_SwapChainDesc, sizeof(DXGI_SWAP_CHAIN_DESC));
+	m_SwapChainDesc.BufferDesc.Width = m_rtClient.right;
+	m_SwapChainDesc.BufferDesc.Height= m_rtClient.bottom;
+	m_SwapChainDesc.BufferDesc.RefreshRate.Numerator = 60;
+	m_SwapChainDesc.BufferDesc.RefreshRate.Denominator = 1;
+	m_SwapChainDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	m_SwapChainDesc.SampleDesc.Count = 1;
+	m_SwapChainDesc.BufferUsage=DXGI_USAGE_RENDER_TARGET_OUTPUT;
+	m_SwapChainDesc.BufferCount = 1;
+	m_SwapChainDesc.OutputWindow = m_hWnd;
+	m_SwapChainDesc.Windowed = true;
+
 	HRESULT hr = D3D11CreateDeviceAndSwapChain(
-		NULL, // 그래픽카드 IDXGIAdapter * pAdapter,
+		NULL, 
 		D3D_DRIVER_TYPE_HARDWARE,
 		NULL,
 		Flags,
 		fl,
 		1,
 		D3D11_SDK_VERSION,
-		&scd,
+		&m_SwapChainDesc,
 		&m_pSwapChain,
 		&m_pd3dDevice,
-		&pFeatureLevel,
+		&m_FeatureLevel,
 		&m_pImmediateContext);	
 	if ( FAILED(hr))
 	{
 		return false;
 	}
-	//ID3D11RenderTargetView* m_pRenderTargetView;// 메인 랜더타켓 뷰
+
+	ID3D11Texture2D* backBuffer = nullptr;
+	m_pSwapChain->GetBuffer(0, 
+			__uuidof(ID3D11Texture2D),
+			(LPVOID*)&backBuffer);
+		m_pd3dDevice->CreateRenderTargetView(
+			backBuffer,
+			NULL,
+			&m_pRenderTargetView);
+	if (backBuffer)backBuffer->Release();
+
+	m_pImmediateContext->OMSetRenderTargets(
+		1,
+		&m_pRenderTargetView, NULL);
+
+	// 뷰포트 세팅
+	//DXGI_SWAP_CHAIN_DESC swapDesc;
+	//m_pSwapChain->GetDesc(&swapDesc);
+
+	m_ViewPort.TopLeftX = 0;
+	m_ViewPort.TopLeftY = 0;
+	m_ViewPort.Width = m_SwapChainDesc.BufferDesc.Width;
+	m_ViewPort.Height = m_SwapChainDesc.BufferDesc.Height;
+	m_ViewPort.MinDepth = 0.0f;
+	m_ViewPort.MaxDepth = 1.0f;
+	m_pImmediateContext->RSSetViewports(1, &m_ViewPort);
 	return true;
 }
 bool	Sample::Frame()
@@ -50,7 +70,13 @@ bool	Sample::Frame()
 	return true;
 }
 bool	Sample::Render()
-{
+{	
+	float color[4] = {1.0f, 0.0f, 0.0f,1.0f};
+	m_pImmediateContext->ClearRenderTargetView(
+		m_pRenderTargetView,
+		color);
+	// 백버퍼에 랜더링 한다.
+	m_pSwapChain->Present(0, 0);
 	return true;
 }
 bool	Sample::Release()
