@@ -15,7 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Sample.cpp">
+    <ClCompile Include="TCore.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="TWindow.cpp">
@@ -23,6 +23,12 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="TCore.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="TStd.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
     <ClInclude Include="TWindow.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
