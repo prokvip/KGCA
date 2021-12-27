@@ -1,6 +1,6 @@
 #pragma once
 #include "TDevice.h"
-class TCore : protected TDevice
+class TCore : public TDevice
 {
 private:
 	bool	CoreInit();	

@@ -23,7 +23,7 @@ bool	TCore::CoreFrame()
 }
 bool	TCore::CoreRender()
 {	
-	float color[4] = { 1.0f, 0.0f, 0.0f,1.0f };
+	float color[4] = { 0.1543f, 0.23421f, 0.4323f,1.0f };
 	m_pImmediateContext->ClearRenderTargetView(
 		m_pRenderTargetView,
 		color);
