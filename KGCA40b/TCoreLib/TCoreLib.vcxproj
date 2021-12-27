@@ -151,12 +151,17 @@ copy "..\\..\\output\\Debug\\TCoreLib.lib" "..\\..\\TCoreLib\\Lib\\"
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="TCore.cpp" />
+    <ClCompile Include="TDevice.cpp" />
     <ClCompile Include="TWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TCore.h" />
+    <ClInclude Include="TDevice.h" />
     <ClInclude Include="TStd.h" />
     <ClInclude Include="TWindow.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

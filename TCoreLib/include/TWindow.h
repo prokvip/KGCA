@@ -1,6 +1,6 @@
 #pragma once
 #include "TStd.h"
-class TWindow
+class TWindow 
 {
 public:
 	HINSTANCE	m_hInstance;

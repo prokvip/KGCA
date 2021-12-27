@@ -1,6 +1,6 @@
 #pragma once
-#include "TWindow.h"
-class TCore : public TWindow
+#include "TDevice.h"
+class TCore : protected TDevice
 {
 private:
 	bool	CoreInit();	
