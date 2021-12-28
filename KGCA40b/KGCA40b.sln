@@ -37,7 +37,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Window_0", "Window_0\Window
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Window_1", "Window_1\Window_1.vcxproj", "{8E72A41D-833C-4115-AD93-492D21E3FB26}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CreateDevice", "CreateDevice\CreateDevice.vcxproj", "{9EF8826B-2EE6-4705-A090-79E99D288B41}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CreateDevice_0", "CreateDevice\CreateDevice.vcxproj", "{9EF8826B-2EE6-4705-A090-79E99D288B41}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TCoreLib", "TCoreLib\TCoreLib.vcxproj", "{98617CA6-FE41-4536-94F6-159046E15AD9}"
 EndProject
@@ -46,6 +46,8 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SampleLibrary", "SampleLibrary\SampleLibrary.vcxproj", "{EABC9CDF-9AF7-4E9B-862C-CE4AE3B8312E}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LibraryWin", "LibraryWin\LibraryWin.vcxproj", "{0D555733-BEFC-4682-8F0D-C0E47E4A26A9}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CreateVertexBuffer", "CreateVertexBuffer\CreateVertexBuffer.vcxproj", "{FD9C4AC5-0EB4-4486-9265-958DDBBC1D2A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -199,6 +201,14 @@ Global
 		{0D555733-BEFC-4682-8F0D-C0E47E4A26A9}.Release|x64.Build.0 = Release|x64
 		{0D555733-BEFC-4682-8F0D-C0E47E4A26A9}.Release|x86.ActiveCfg = Release|Win32
 		{0D555733-BEFC-4682-8F0D-C0E47E4A26A9}.Release|x86.Build.0 = Release|Win32
+		{FD9C4AC5-0EB4-4486-9265-958DDBBC1D2A}.Debug|x64.ActiveCfg = Debug|x64
+		{FD9C4AC5-0EB4-4486-9265-958DDBBC1D2A}.Debug|x64.Build.0 = Debug|x64
+		{FD9C4AC5-0EB4-4486-9265-958DDBBC1D2A}.Debug|x86.ActiveCfg = Debug|Win32
+		{FD9C4AC5-0EB4-4486-9265-958DDBBC1D2A}.Debug|x86.Build.0 = Debug|Win32
+		{FD9C4AC5-0EB4-4486-9265-958DDBBC1D2A}.Release|x64.ActiveCfg = Release|x64
+		{FD9C4AC5-0EB4-4486-9265-958DDBBC1D2A}.Release|x64.Build.0 = Release|x64
+		{FD9C4AC5-0EB4-4486-9265-958DDBBC1D2A}.Release|x86.ActiveCfg = Release|Win32
+		{FD9C4AC5-0EB4-4486-9265-958DDBBC1D2A}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -222,6 +232,7 @@ Global
 		{98617CA6-FE41-4536-94F6-159046E15AD9} = {F769EDFA-31C5-4BA7-8098-467D47C3B825}
 		{EABC9CDF-9AF7-4E9B-862C-CE4AE3B8312E} = {F769EDFA-31C5-4BA7-8098-467D47C3B825}
 		{0D555733-BEFC-4682-8F0D-C0E47E4A26A9} = {F769EDFA-31C5-4BA7-8098-467D47C3B825}
+		{FD9C4AC5-0EB4-4486-9265-958DDBBC1D2A} = {F769EDFA-31C5-4BA7-8098-467D47C3B825}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0E548235-7F46-4E65-A970-38A7E957E481}

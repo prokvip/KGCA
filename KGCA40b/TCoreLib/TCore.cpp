@@ -1,7 +1,7 @@
 #include "TCore.h"
 bool	TCore::CoreInit()
 {
-	CreateDevice();
+	InitDeivice();
 	Init();
 	return true;
 }
@@ -23,7 +23,8 @@ bool	TCore::CoreFrame()
 }
 bool	TCore::CoreRender()
 {	
-	float color[4] = { 0.1543f, 0.23421f, 0.4323f,1.0f };
+	//float color[4] = { 0.1543f, 0.23421f, 0.4323f,1.0f };
+	float color[4] = { 1.1543f, 1.23421f, 1.4323f,1.0f };
 	m_pImmediateContext->ClearRenderTargetView(
 		m_pRenderTargetView,
 		color);
@@ -40,4 +41,13 @@ bool	TCore::CoreRelease()
 	Release();
 	CleapupDevice();
 	return true;
+}
+
+TCore::TCore()
+{
+
+}
+TCore::~TCore()
+{
+
 }

@@ -13,5 +13,8 @@ public:
 					int iWidth = 800, 
 					int iHeight= 600);
 	bool  WinRun();
+public:
+	TWindow();
+	virtual ~TWindow();
 };
 

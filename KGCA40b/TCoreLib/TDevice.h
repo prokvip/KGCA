@@ -12,9 +12,13 @@ public:
 	DXGI_SWAP_CHAIN_DESC	m_SwapChainDesc;	// 스왑체인 속성값
 	D3D11_VIEWPORT			m_ViewPort;	// 뷰 포트 속성값
 public:
+	HRESULT		    InitDeivice();
 	virtual bool	CreateDevice();
+	virtual bool	CreateRenderTargetView();
+	virtual bool	SetViewport();
 	virtual bool	CleapupDevice();
 public:
 	TDevice();
+	virtual ~TDevice();
 };
 

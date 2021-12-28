@@ -3,10 +3,12 @@
 #include <vector>
 #include <list>
 #include <d3d11.h>
+#include "TCollision.h"
 #pragma comment	(lib, "d3d11.lib")
 #pragma comment	(lib, "TCoreLib")
 using namespace std;
 
+extern RECT g_rtClient;
 
 #define GAME_START int WINAPI wWinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance, LPWSTR    lpCmdLine, int       nCmdShow){   Sample core;   
 #define GAME_WIN(s,x,y) if (core.SetWinClass(hInstance) == FALSE) return 1;   if (core.SetWindow(L#s, x, y) == FALSE) return 1;   core.GameRun();    return 1;}

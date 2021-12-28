@@ -1,4 +1,6 @@
 #include "TWindow.h"
+RECT g_rtClient;
+
 LRESULT  CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
     switch (msg)
@@ -54,6 +56,7 @@ BOOL TWindow::SetWindow(const WCHAR* szTitle,
     }
     GetClientRect(m_hWnd, &m_rtClient);
     GetWindowRect(m_hWnd, &m_rtWindow);
+    g_rtClient = m_rtClient;
 
     ShowWindow(m_hWnd, SW_SHOW);
     return TRUE;
@@ -74,3 +77,10 @@ bool TWindow::WinRun()
     }
     return true;
 }
+
+TWindow::TWindow()
+{
+
+}
+TWindow::~TWindow()
+{}

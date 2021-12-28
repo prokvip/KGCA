@@ -1,5 +1,6 @@
 #pragma once
 #include "TDevice.h"
+
 class TCore : public TDevice
 {
 private:
@@ -22,5 +23,8 @@ public:
 	virtual bool	Release() {
 		return true;
 	};
+public:
+	TCore();
+	virtual ~TCore();
 };
 

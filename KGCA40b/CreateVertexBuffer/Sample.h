@@ -1,7 +1,9 @@
 #pragma once
 #include "TCore.h"
+#include "TDxObject.h"
 class Sample : public TCore
 {
+	std::vector<TDxObject> m_ObjectList;
 public:
 	virtual bool	Init()  override;
 	virtual bool	Frame()  override;
