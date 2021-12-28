@@ -1,4 +1,5 @@
 #include "Sample.h"
+
 bool	Sample::Init()
 {
 	for (int iObj = 0; iObj < 3; iObj++)
