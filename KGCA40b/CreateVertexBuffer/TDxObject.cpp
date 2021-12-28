@@ -47,10 +47,10 @@ void	TDxObject::Convert(
 bool	TDxObject::Create(ID3D11Device* pd3dDevice,
 	ID3D11DeviceContext* pContext,TVector2 vPos, float fWidth, float fHeight)
 {
-	if ((vPos.x - fWidth / 2.0f) < 0) return false;
-	if ((vPos.x + fWidth / 2.0f) > g_rtClient.right) return false;
-	if ((vPos.y - fHeight / 2.0f) < 0) return false;
-	if ((vPos.y + fHeight / 2.0f) > g_rtClient.bottom) return false;
+	//if ((vPos.x - fWidth / 2.0f) < 0) return false;
+	//if ((vPos.x + fWidth / 2.0f) > g_rtClient.right) return false;
+	//if ((vPos.y - fHeight / 2.0f) < 0) return false;
+	//if ((vPos.y + fHeight / 2.0f) > g_rtClient.bottom) return false;
 	SetDevice(pd3dDevice, pContext);
 	//È­¸éÁÂÇ¥°è
 	// 0,0   ~      800,0
@@ -66,15 +66,13 @@ bool	TDxObject::Create(ID3D11Device* pd3dDevice,
 	// -1,-1          1,-1
 	HRESULT hr;
 	// ui used
-	m_InitScreenList.resize(6);
-	m_InitScreenList[0].v = TVector2(0.0f, 0.0f);
-	m_InitScreenList[1].v = TVector2(fWidth, 0.0f);
-	m_InitScreenList[2].v = TVector2(0.0f, fHeight);
-	m_InitScreenList[3].v = TVector2(0.0f, fHeight);
-	m_InitScreenList[4].v = TVector2(fWidth, 0.0f);
-	m_InitScreenList[5].v = TVector2(fWidth, fHeight);
-
-
+	//m_InitScreenList.resize(6);
+	//m_InitScreenList[0].v = TVector2(0.0f, 0.0f);
+	//m_InitScreenList[1].v = TVector2(fWidth, 0.0f);
+	//m_InitScreenList[2].v = TVector2(0.0f, fHeight);
+	//m_InitScreenList[3].v = TVector2(0.0f, fHeight);
+	//m_InitScreenList[4].v = TVector2(fWidth, 0.0f);
+	//m_InitScreenList[5].v = TVector2(fWidth, fHeight);
 	//Convert(m_InitScreenList, m_VertexList);
 
 	m_vPos = vPos;
@@ -183,14 +181,14 @@ bool	TDxObject::Init()
 }
 bool	TDxObject::Frame()
 {
-	/*m_VertexList[0].v.x += m_fSpeed;
+	m_VertexList[0].v.x += m_fSpeed;
 	m_VertexList[1].v.x += m_fSpeed;
 	m_VertexList[2].v.x += m_fSpeed;
 	m_VertexList[3].v.x += m_fSpeed;
 	m_VertexList[4].v.x += m_fSpeed;
 	m_VertexList[5].v.x += m_fSpeed;
 	m_pContext->UpdateSubresource(
-		m_pVertexBuffer,0, NULL, &m_VertexList.at(0), 0,0);*/
+		m_pVertexBuffer,0, NULL, &m_VertexList.at(0), 0,0);
 	return true;
 }
 bool	TDxObject::Render()

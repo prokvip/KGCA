@@ -2,15 +2,14 @@
 
 bool	Sample::Init()
 {
-	for (int iObj = 0; iObj < 3; iObj++)
+	for (int iObj = 0; iObj < 12; iObj++)
 	{
-		float fStep = 100+(iObj*100);
 		TDxObject obj;
 		obj.Init();
 
 		///0 ~ g_rtClient
 		if(obj.Create(m_pd3dDevice, m_pImmediateContext,
-			TVector2(100*iObj+fStep, 300), 100, 100))
+			TVector2(-100*iObj, iObj*50), 400, 30))
 		{
 			m_ObjectList.push_back(obj);
 		}
