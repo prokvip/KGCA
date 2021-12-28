@@ -8,6 +8,7 @@ struct SimpleVertex
 };
 class TDxObject 
 {
+	float   m_fSpeed;
 	TVector2 m_vPos;
 	std::vector<SimpleVertex> m_InitScreenList;
 	std::vector<SimpleVertex> m_VertexList;

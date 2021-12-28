@@ -183,14 +183,14 @@ bool	TDxObject::Init()
 }
 bool	TDxObject::Frame()
 {
-	//m_VertexList[0].v = TVector2(-1.0f, 1.0f);
-	//m_VertexList[1].v = TVector2(0.5f, 0.5f);
-	//m_VertexList[2].v = TVector2(-0.5f, -0.5f);
-	//m_VertexList[3].v = TVector2(-0.5f, -0.5f);
-	//m_VertexList[4].v = TVector2(0.5f, 0.5f);
-	//m_VertexList[5].v = TVector2(0.5f, -0.5f);
-	//m_pContext->UpdateSubresource(
-	//	m_pVertexBuffer,0, NULL, &m_VertexList.at(0), 0,0);
+	/*m_VertexList[0].v.x += m_fSpeed;
+	m_VertexList[1].v.x += m_fSpeed;
+	m_VertexList[2].v.x += m_fSpeed;
+	m_VertexList[3].v.x += m_fSpeed;
+	m_VertexList[4].v.x += m_fSpeed;
+	m_VertexList[5].v.x += m_fSpeed;
+	m_pContext->UpdateSubresource(
+		m_pVertexBuffer,0, NULL, &m_VertexList.at(0), 0,0);*/
 	return true;
 }
 bool	TDxObject::Render()
@@ -229,7 +229,7 @@ bool	TDxObject::Release()
 }
 TDxObject::TDxObject()
 {
-
+	m_fSpeed = 0.00001f;
 }
 TDxObject::~TDxObject()
 {}
