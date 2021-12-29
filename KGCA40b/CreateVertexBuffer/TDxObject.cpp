@@ -97,8 +97,7 @@ bool	TDxObject::Create(ID3D11Device* pd3dDevice,
 	}
 	// 새항목->유틸리티->txt파일 작성
 	// 쉐이더 컴파일->오브젝트 파일을 통해서 쉐이더객체 생성 
-	ID3DBlob* pVSCodeResult = nullptr;
-	ID3DBlob* pErrorMsgs = nullptr;
+	
 	hr = D3DCompileFromFile(
 		L"VertexShader.txt",
 		NULL,
@@ -107,19 +106,20 @@ bool	TDxObject::Create(ID3D11Device* pd3dDevice,
 		"vs_5_0",
 		0,
 		0,
-		&pVSCodeResult,
-		&pErrorMsgs
+		&m_pVSCodeResult,
+		&m_pErrorMsgs
 	);
 	if (FAILED(hr))
 	{
 		MessageBoxA(NULL,
-			(char*)pErrorMsgs->GetBufferPointer(),
+			(char*)m_pErrorMsgs->GetBufferPointer(),
 			"ERROR", MB_OK);
+		if(m_pErrorMsgs) m_pErrorMsgs->Release();
 		return false;
 	}
 	hr = m_pd3dDevice->CreateVertexShader(
-		pVSCodeResult->GetBufferPointer(),
-		pVSCodeResult->GetBufferSize(),
+		m_pVSCodeResult->GetBufferPointer(),
+		m_pVSCodeResult->GetBufferSize(),
 		NULL,
 		&m_pVertexShader);
 	if (FAILED(hr))
@@ -127,7 +127,7 @@ bool	TDxObject::Create(ID3D11Device* pd3dDevice,
 		return false;
 	}
 
-	ID3DBlob* pPSCodeResult = nullptr;
+	
 	hr = D3DCompileFromFile(
 		L"PixelShader.txt",
 		NULL,
@@ -136,19 +136,20 @@ bool	TDxObject::Create(ID3D11Device* pd3dDevice,
 		"ps_5_0",
 		0,
 		0,
-		&pPSCodeResult,
-		&pErrorMsgs
+		&m_pPSCodeResult,
+		&m_pErrorMsgs
 	);
 	if (FAILED(hr))
 	{
 		MessageBoxA(NULL,
-			(char*)pErrorMsgs->GetBufferPointer(),
+			(char*)m_pErrorMsgs->GetBufferPointer(),
 			"ERROR", MB_OK);
+		if (m_pErrorMsgs) m_pErrorMsgs->Release();
 		return false;
 	}
 	hr = m_pd3dDevice->CreatePixelShader(
-		pPSCodeResult->GetBufferPointer(),
-		pPSCodeResult->GetBufferSize(),
+		m_pPSCodeResult->GetBufferPointer(),
+		m_pPSCodeResult->GetBufferSize(),
 		NULL,
 		&m_pPixelShader);
 	if (FAILED(hr))
@@ -165,8 +166,8 @@ bool	TDxObject::Create(ID3D11Device* pd3dDevice,
 	hr = m_pd3dDevice->CreateInputLayout(
 		layout,
 		NumElements,
-		pVSCodeResult->GetBufferPointer(),
-		pVSCodeResult->GetBufferSize(),
+		m_pVSCodeResult->GetBufferPointer(),
+		m_pVSCodeResult->GetBufferSize(),
 		&m_pVertexLayout);
 	if (FAILED(hr))
 	{
@@ -215,6 +216,8 @@ bool	TDxObject::Render()
 }
 bool	TDxObject::Release()
 {
+	if (m_pVSCodeResult) m_pVSCodeResult->Release();
+	if (m_pPSCodeResult) m_pPSCodeResult->Release();
 	if (m_pVertexBuffer) m_pVertexBuffer->Release();
 	if (m_pVertexLayout) m_pVertexLayout->Release();
 	if (m_pVertexShader) m_pVertexShader->Release();
@@ -223,6 +226,8 @@ bool	TDxObject::Release()
 	m_pVertexLayout = nullptr;
 	m_pVertexShader = nullptr;
 	m_pPixelShader = nullptr;
+	m_pVSCodeResult = nullptr;
+	m_pPSCodeResult = nullptr;
 	return true;
 }
 TDxObject::TDxObject()

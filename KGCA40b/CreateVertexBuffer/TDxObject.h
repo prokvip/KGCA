@@ -19,6 +19,10 @@ class TDxObject
 
 	ID3D11Device*		 m_pd3dDevice;	
 	ID3D11DeviceContext* m_pContext;
+
+	ID3DBlob*			m_pVSCodeResult = nullptr;
+	ID3DBlob*			m_pErrorMsgs = nullptr;
+	ID3DBlob*			m_pPSCodeResult = nullptr;
 public:
 	void    SetDevice(ID3D11Device* m_pd3dDevice,
 					  ID3D11DeviceContext* m_pContext);
