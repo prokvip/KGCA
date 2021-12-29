@@ -24,11 +24,12 @@ BOOL TWindow::SetWinClass(HINSTANCE hInstance)
     wc.style = CS_HREDRAW | CS_VREDRAW;
     wc.lpfnWndProc = WndProc;
     wc.hInstance = hInstance;
-    wc.lpszClassName = L"KGCA_Window";
+    wc.lpszClassName = L"KGCA_Window";   
     if (RegisterClass(&wc) == false)
     {
         return FALSE;
     }
+
     return TRUE;
 }
 

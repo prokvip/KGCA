@@ -61,19 +61,11 @@ struct TBox
 	TBox() {};
 	TBox(TVector3 vMin, TVector3 vMax)
 	{
-		this->vMin = vMin;
-		this->vMax = vMax;
-		vMiddle = (vMax + vMin) / 2.0f;
-		size.x = vMax.x - vMin.x;
-		size.y = vMax.y - vMin.y;
+
 	}
 	TBox(TVector3 v, float w, float h, float q)
 	{
-		this->vMin = v;
-		this->vMax = vMin + TVector3(w, h,q);
-		vMiddle = (vMax + vMin) / 2.0f;
-		this->size.x = w;
-		this->size.y = h;
+
 	}
 };
 class TCollision
