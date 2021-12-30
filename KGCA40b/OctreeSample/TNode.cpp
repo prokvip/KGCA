@@ -4,7 +4,17 @@ void TNode::AddObject(TObject* obj)
 {
 	m_ObjectList.push_back(obj);
 }
-TNode::TNode() {
+void TNode::AddDynamicObject(TObject* obj)
+{
+	m_DynamicObjectList.push_back(obj);
+}
+void TNode::DelDynamicObject(TObject* obj)
+{
+	m_DynamicObjectList.clear();
+}
+TNode::TNode() 
+{
+	m_iIndex = -1;
 	m_pParent = nullptr;
 	m_iDepth = 0;
 	pChild[0] = nullptr;
@@ -25,6 +35,7 @@ TNode::TNode() {
 TNode::TNode(float x, float y, float z, 
 			float w, float h, float q) : TNode()
 {
+	m_iIndex = -1;
 	m_rt.vMin.x = x;
 	m_rt.vMin.y = y;
 	m_rt.vMin.z = z;

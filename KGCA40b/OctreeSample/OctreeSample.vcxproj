@@ -146,6 +146,7 @@
     <ClCompile Include="TNode.cpp" />
     <ClCompile Include="TObject.cpp" />
     <ClCompile Include="TOctree.cpp" />
+    <ClCompile Include="TTimer.cpp" />
     <ClCompile Include="TVector2.cpp" />
     <ClCompile Include="TVector3.cpp" />
   </ItemGroup>
@@ -154,6 +155,7 @@
     <ClInclude Include="TNode.h" />
     <ClInclude Include="TObject.h" />
     <ClInclude Include="TOctree.h" />
+    <ClInclude Include="TTimer.h" />
     <ClInclude Include="TVector2.h" />
     <ClInclude Include="TVector3.h" />
   </ItemGroup>

@@ -1,9 +1,41 @@
 #include "TOctree.h"
+int	TOctree::m_iNodeCount = 0;
+bool TOctree::AddObject(TObject* obj)
+{
+	TNode* pFindNode = FindNode(m_pRootNode, obj->m_rt);
+	if (pFindNode != nullptr)
+	{
+		pFindNode->AddObject(obj);
+		return true;
+	}
+	return false;
+}
+void TOctree::DynamicDeleteObject(TNode* pNode)
+{
+	if (pNode == nullptr) return;
+	pNode->m_DynamicObjectList.clear();
+	for (int iNode = 0; iNode < 8; iNode++)
+	{
+		DynamicDeleteObject(pNode->pChild[iNode]);
+	}
+}
+bool TOctree::AddDynamicObject(TObject* obj)
+{
+	TNode* pFindNode = FindNode(m_pRootNode, obj->m_rt);
+	if (pFindNode != nullptr)
+	{
+		obj->m_iNodeIndex = pFindNode->m_iIndex;
+		pFindNode->AddDynamicObject(obj);
+		return true;
+	}
+	return false;
+}
 TNode* TOctree::CreateNode(
 	TNode* pParent, float x, float y, float z,
 	float w, float h, float q)
 {
 	TNode* pNode = new TNode(x,y,z, w,h,q);
+	pNode->m_iIndex = m_iNodeCount++;
 	if (pParent != nullptr)
 	{
 		pNode->m_iDepth = pParent->m_iDepth + 1;
@@ -98,17 +130,7 @@ void TOctree::BuildTree(TNode* pParent)
 		pParent->m_rt.size.z / 2.0f);
 	BuildTree(pParent->pChild[7]);
 }
-bool TOctree::AddObject(TObject* obj)
-{
-	TNode* pFindNode = 
-		FindNode(m_pRootNode, obj->m_rt);
-	if (pFindNode != nullptr)
-	{
-		pFindNode->AddObject(obj);
-		return true;
-	}
-	return false;
-}
+
 
 TNode* TOctree::FindNode(TNode* pNode, TBox rt)
 {
@@ -137,13 +159,13 @@ TNode* TOctree::FindNode(TNode* pNode, TBox rt)
 void TOctree::PrintObjectList(TNode* pNode)
 {
 	if (pNode == nullptr) return;
-	for (std::list<TObject*>::iterator iter = pNode->m_ObjectList.begin();
-		iter != pNode->m_ObjectList.end();
+	for (std::list<TObject*>::iterator iter = pNode->m_DynamicObjectList.begin();
+		iter != pNode->m_DynamicObjectList.end();
 		iter++)
 	{
 		TObject* pObj = *iter;
-		std::cout << "[" << pNode->m_iDepth << "]" <<
-			pObj->m_vPos.x <<":"<< pObj->m_vPos.y << " ";
+		std::cout << "[" << pNode->m_iIndex << "]" <<
+			pObj->m_vPos.x <<":"<< pObj->m_vPos.y << ":" << pObj->m_vPos.z << " ";
 	}
 	std::cout << std::endl;
 	for (int iNode = 0; iNode < 4; iNode++)

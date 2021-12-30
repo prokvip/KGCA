@@ -4,6 +4,7 @@
 class TOctree
 {
 public:
+	static int	m_iNodeCount;
 	int		m_iSizeX;
 	int		m_iSizeY;
 	int		m_iSizeZ;
@@ -25,6 +26,8 @@ public:
 	void		BuildTree(TNode* pParent);
 	bool		AddObject(TObject* obj);	
 	TNode*		FindNode(TNode* pNode, TBox rt);
+	bool		AddDynamicObject(TObject* obj);
+	void		DynamicDeleteObject(TNode* pNode);
 public:
 	void PrintObjectList(TNode* pNode);
 //	void BinaryNodePrintInOrder(TNode* pNode);
