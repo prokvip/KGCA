@@ -79,6 +79,7 @@ bool TQuadtree::AddDynamicObject(TObject* obj)
 		FindNode(m_pRootNode, obj->m_rt);
 	if (pFindNode != nullptr)
 	{
+		obj->m_iNodeIndex = pFindNode->m_iIndex;
 		pFindNode->AddDynamicObject(obj);
 		return true;
 	}
@@ -118,7 +119,7 @@ TNode* TQuadtree::FindNode(TNode* pNode, TRect rt)
 				TCollisionType iRet = TCollision::RectToRect(
 						pNode->pChild[iNode]->m_rt,
 						rt);
-				if( iRet > RECT_OUT)
+				if( iRet == RECT_IN)
 				{
 					g_Queue.push(pNode->pChild[iNode]);
 					break;

@@ -68,6 +68,6 @@ TCollisionType   TCollision::RectToRect(TRect rt1, TRect rt2)
 	{
 		return RECT_OUT;
 	}
-	if (rtInterction == rt2) return RECT_OVERLAP;
-	return RECT_IN;
+	if (rtInterction == rt2) return RECT_IN;
+	return RECT_OVERLAP;
 }

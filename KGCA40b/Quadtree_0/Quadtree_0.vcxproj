@@ -146,6 +146,7 @@
     <ClCompile Include="TNode.cpp" />
     <ClCompile Include="TObject.cpp" />
     <ClCompile Include="TQuadtree.cpp" />
+    <ClCompile Include="TTimer.cpp" />
     <ClCompile Include="TVector2.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -153,6 +154,7 @@
     <ClInclude Include="TNode.h" />
     <ClInclude Include="TObject.h" />
     <ClInclude Include="TQuadtree.h" />
+    <ClInclude Include="TTimer.h" />
     <ClInclude Include="TVector2.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
