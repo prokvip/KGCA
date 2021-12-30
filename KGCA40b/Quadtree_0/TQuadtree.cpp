@@ -1,8 +1,19 @@
 #include "TQuadtree.h"
+int TQuadtree::g_iCount = 0;
+void TQuadtree::DynamicDeleteObject(TNode* pNode)
+{
+	if (pNode == nullptr) return;
+	pNode->m_DynamicObjectList.clear();
+	for (int iNode = 0; iNode < 4; iNode++)
+	{
+		DynamicDeleteObject(pNode->pChild[iNode]);
+	}
+}
 TNode* TQuadtree::CreateNode(
 	TNode* pParent, float x, float y, float w, float h)
 {
 	TNode* pNode = new TNode(x,y,w,h);
+	pNode->m_iIndex = g_iCount++;
 	if (pParent != nullptr)
 	{
 		pNode->m_iDepth = pParent->m_iDepth + 1;
@@ -62,6 +73,17 @@ bool TQuadtree::AddObject(TObject* obj)
 	}
 	return false;
 }
+bool TQuadtree::AddDynamicObject(TObject* obj)
+{
+	TNode* pFindNode =
+		FindNode(m_pRootNode, obj->m_rt);
+	if (pFindNode != nullptr)
+	{
+		pFindNode->AddDynamicObject(obj);
+		return true;
+	}
+	return false;
+}
 TNode* TQuadtree::FindNode(TNode* pNode, int x, int y)
 {	
 	do {		
@@ -84,6 +106,7 @@ TNode* TQuadtree::FindNode(TNode* pNode, int x, int y)
 	} while (pNode);
 	return pNode;
 }
+
 TNode* TQuadtree::FindNode(TNode* pNode, TRect rt)
 {
 	do {
@@ -95,7 +118,7 @@ TNode* TQuadtree::FindNode(TNode* pNode, TRect rt)
 				TCollisionType iRet = TCollision::RectToRect(
 						pNode->pChild[iNode]->m_rt,
 						rt);
-				if( iRet == RECT_OVERLAP)
+				if( iRet > RECT_OUT)
 				{
 					g_Queue.push(pNode->pChild[iNode]);
 					break;
@@ -111,13 +134,13 @@ TNode* TQuadtree::FindNode(TNode* pNode, TRect rt)
 void TQuadtree::PrintObjectList(TNode* pNode)
 {
 	if (pNode == nullptr) return;
-	for (std::list<TObject*>::iterator iter = pNode->m_ObjectList.begin();
-		iter != pNode->m_ObjectList.end();
+	for (std::list<TObject*>::iterator iter = pNode->m_DynamicObjectList.begin();
+		iter != pNode->m_DynamicObjectList.end();
 		iter++)
 	{
 		TObject* pObj = *iter;
-		std::cout << "[" << pNode->m_iDepth << "]" <<
-			pObj->m_vPos.x <<":"<< pObj->m_vPos.y << " ";
+		std::cout << "[" << pNode->m_iIndex << "]" <<
+			(int)pObj->m_vPos.x <<":"<< (int)pObj->m_vPos.y << " ";
 	}
 	std::cout << std::endl;
 	for (int iNode = 0; iNode < 4; iNode++)

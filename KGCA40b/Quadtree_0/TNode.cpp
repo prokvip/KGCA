@@ -4,6 +4,14 @@ void TNode::AddObject(TObject* obj)
 {
 	m_ObjectList.push_back(obj);
 }
+void TNode::AddDynamicObject(TObject* obj)
+{
+	m_DynamicObjectList.push_back(obj);
+}
+void TNode::DelDynamicObject(TObject* obj)
+{
+	m_DynamicObjectList.clear();
+}
 TNode::TNode() {
 	m_pParent = nullptr;
 	m_iDepth = 0;

@@ -8,7 +8,7 @@ public:
 	int		m_iHeight;
 	int		m_iMaxDepth;
 	TNode*  m_pRootNode;
-	
+	static  int g_iCount;
 public:
 	std::vector<TNode*> g_ppArray;
 	//TNode** g_ppArray = nullptr;
@@ -19,6 +19,9 @@ public:
 	TNode*		CreateNode(TNode* pParent, float x, float y, float w, float h);
 	void		BuildTree(TNode* pParent);
 	bool		AddObject(TObject* obj);
+	bool		AddDynamicObject(TObject* obj);
+
+	void		DynamicDeleteObject(TNode* pNode);
 	TNode*		FindNode(TNode* pNode, int x, int y);
 	TNode*		FindNode(TNode* pNode, TRect rt);
 public:
