@@ -31,6 +31,31 @@ void main()
 	ioctlsocket(ListenSock, FIONBIO, &on);
 
 	std::list<SOCKET> userlist;
+	//while (userlist.size() > 2)
+	//{
+	//	SOCKET clientSock = accept(ListenSock,
+	//		(sockaddr*)&clientAddr, &iLen);
+	//	if (clientSock == SOCKET_ERROR)
+	//	{
+	//		int iError = WSAGetLastError();
+	//		if (iError != WSAEWOULDBLOCK)
+	//		{
+	//			std::cout << "ErrorCode=" << iError << std::endl;
+	//			break;
+	//		}
+	//	}
+	//	else
+	//	{
+	//		userlist.push_back(clientSock);
+	//		std::cout
+	//			<< "ip =" << inet_ntoa(clientAddr.sin_addr)
+	//			<< "port =" << ntohs(clientAddr.sin_port)
+	//			<< "  " << std::endl;
+	//		u_long on = 1;
+	//		ioctlsocket(clientSock, FIONBIO, &on);
+	//		std::cout << userlist.size() << " 명 접속중.." << std::endl;
+	//	}
+	//}
 
 	while (1)
 	{
@@ -38,12 +63,12 @@ void main()
 			(sockaddr*)&clientAddr, &iLen);
 		if (clientSock == SOCKET_ERROR)
 		{
-			int iError = WSAGetLastError();			
+			int iError = WSAGetLastError();
 			if (iError != WSAEWOULDBLOCK)
 			{
 				std::cout << "ErrorCode=" << iError << std::endl;
 				break;
-			}		
+			}
 		}
 		else
 		{
@@ -54,13 +79,13 @@ void main()
 				<< "  " << std::endl;
 			u_long on = 1;
 			ioctlsocket(clientSock, FIONBIO, &on);
-		}					
+			std::cout << userlist.size() << " 명 접속중.." << std::endl;
+		}
 
 		if(userlist.size() > 0)
 		{
 			std::list<SOCKET>::iterator iter;
-			for (iter = userlist.begin(); iter != userlist.end();
-				)
+			for (iter = userlist.begin(); iter != userlist.end(); )
 			{
 				SOCKET sock = *iter;
 				char szRecvBuffer[256] = { 0, };
@@ -87,8 +112,7 @@ void main()
 				{
 					std::list<SOCKET>::iterator iterSend;
 					for (iterSend = userlist.begin(); 
-						iterSend != userlist.end();
-						)
+						iterSend != userlist.end();	)
 					{
 						SOCKET sock = *iterSend;
 						std::cout << szRecvBuffer << "받음" << std::endl;
@@ -113,13 +137,6 @@ void main()
 			}			
 		}		
 	}
-	/*char szBuffer[] = "안녕하세여.";
-	int iSendByte = send(sock,
-		szBuffer,
-		sizeof(szBuffer),
-		0);
-	char szRecvBuffer[256] = { 0, };
-	int iRecvByte = recv(sock, szRecvBuffer, 256, 0);
-	std::cout << szRecvBuffer;*/
+	closesocket(ListenSock);
 	WSACleanup();
 }

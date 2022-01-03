@@ -79,6 +79,7 @@ void main()
 				if (WSAGetLastError() != WSAEWOULDBLOCK)
 				{
 					std::cout << "비정상 서버종료됨.." << std::endl;
+					break;
 				}
 			}
 			else
@@ -88,6 +89,8 @@ void main()
 			}
 		}
 	}
+	std::cout << "접속종료" << std::endl;
 	closesocket(sock);
 	WSACleanup();
+	_getch();
 }
