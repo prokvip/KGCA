@@ -2,7 +2,22 @@
 #include <iostream>
 #include <winsock2.h>
 #include <list>
+#include <string>
 #pragma comment	(lib, "ws2_32.lib")
+struct TUser
+{
+	SOCKET		m_Sock;
+	SOCKADDR_IN m_Addr;
+	std::string m_csName;
+	short       m_iPort;
+	void set(SOCKET sock, SOCKADDR_IN addr)
+	{
+		m_Sock = sock;
+		m_Addr = addr;
+		m_csName = inet_ntoa(addr.sin_addr);
+		m_iPort = ntohs(addr.sin_port);
+	}
+};
 void main()
 {
 	WSADATA wsa;
@@ -30,7 +45,7 @@ void main()
 	u_long on = 1;
 	ioctlsocket(ListenSock, FIONBIO, &on);
 
-	std::list<SOCKET> userlist;
+	std::list<TUser> userlist;
 	//while (userlist.size() > 2)
 	//{
 	//	SOCKET clientSock = accept(ListenSock,
@@ -72,7 +87,10 @@ void main()
 		}
 		else
 		{
-			userlist.push_back(clientSock);
+			TUser user;
+			user.set(clientSock, clientAddr);
+			userlist.push_back(user);
+
 			std::cout
 				<< "ip =" << inet_ntoa(clientAddr.sin_addr)
 				<< "port =" << ntohs(clientAddr.sin_port)
@@ -84,25 +102,26 @@ void main()
 
 		if(userlist.size() > 0)
 		{
-			std::list<SOCKET>::iterator iter;
+			std::list<TUser>::iterator iter;
 			for (iter = userlist.begin(); iter != userlist.end(); )
 			{
-				SOCKET sock = *iter;
+				TUser user = *iter;
 				char szRecvBuffer[256] = { 0, };
-				int iRecvByte = recv(sock, szRecvBuffer, 256, 0);
+				int iRecvByte = recv(user.m_Sock, szRecvBuffer, 256, 0);
 				if (iRecvByte == 0)
 				{
-					closesocket(sock);
+					closesocket(user.m_Sock);
 					iter = userlist.erase(iter);
+					std::cout << user.m_csName <<" 접속종료됨." << std::endl;
 					continue;
 				}
 				if (iRecvByte == SOCKET_ERROR)
 				{
-					int iError = WSAGetLastError();
-					//std::cout << "ErrorCode=" << iError << std::endl;
+					int iError = WSAGetLastError();					
 					if (iError != WSAEWOULDBLOCK)
 					{
 						iter = userlist.erase(iter);
+						std::cout << user.m_csName << " 비정상 접속종료됨." << std::endl;
 					}
 					else
 					{
@@ -111,21 +130,22 @@ void main()
 				}
 				else
 				{
-					std::list<SOCKET>::iterator iterSend;
+					std::list<TUser>::iterator iterSend;
 					for (iterSend = userlist.begin(); 
 						iterSend != userlist.end();	)
 					{
-						SOCKET sock = *iterSend;
+						TUser user = *iterSend;
 						std::cout << szRecvBuffer << "받음" << std::endl;
-						int iSendByte = send(sock, szRecvBuffer, iRecvByte, 0);
-						std::cout << sock <<":" <<iSendByte << "보냄." << std::endl;
+						int iSendByte = send(user.m_Sock, szRecvBuffer, iRecvByte, 0);
+						std::cout << user.m_Sock <<":" <<iSendByte << "보냄." << std::endl;
 						if (iSendByte == SOCKET_ERROR)
 						{
 							int iError = WSAGetLastError();
 							if (iError != WSAEWOULDBLOCK)
 							{
-								closesocket(sock);
+								closesocket(user.m_Sock);
 								iterSend = userlist.erase(iterSend);
+								std::cout << user.m_csName << " 비정상 접속종료됨." << std::endl;
 							}
 						}
 						else
