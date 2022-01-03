@@ -30,12 +30,23 @@ void main()
 			szBuffer,
 			sizeof(szBuffer),
 			0);
+		if (iSendByte == SOCKET_ERROR)
+		{
+			std::cout << "비정상 서버종료됨.." << std::endl;
+			break;
+		}
 		char szRecvBuffer[256] = { 0, };
 		int iRecvByte = recv(sock, szRecvBuffer, 256, 0);
 		std::cout << szRecvBuffer;
 		if (iRecvByte == 0)
 		{
 			std::cout << "서버종료됨.." << std::endl;
+			break;
+		}
+		if (iSendByte == SOCKET_ERROR)
+		{
+			std::cout << "비정상 서버종료됨.." << std::endl;
+			break;
 		}
 		Sleep(1000);
 	}

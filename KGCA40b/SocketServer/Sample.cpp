@@ -74,7 +74,7 @@ void main()
 				std::cout << szRecvBuffer << "¹ÞÀ½" << std::endl;
 				int iSendByte = send(clientSock, szRecvBuffer, iRecvByte, 0);
 				std::cout << iSendByte << "º¸³¿." << std::endl;
-			}
+			}			
 		}
 		closesocket(clientSock);
 	}
