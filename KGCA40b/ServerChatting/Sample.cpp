@@ -93,7 +93,8 @@ void main()
 				if (iRecvByte == 0)
 				{
 					closesocket(sock);
-					iter = userlist.erase(iter);					
+					iter = userlist.erase(iter);
+					continue;
 				}
 				if (iRecvByte == SOCKET_ERROR)
 				{
@@ -132,7 +133,10 @@ void main()
 							iterSend++;
 						}
 					}				
-					iter++;				
+					if (iter != userlist.end())
+					{
+						iter++;
+					}
 				}				
 			}			
 		}		
