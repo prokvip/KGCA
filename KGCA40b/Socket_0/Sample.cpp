@@ -43,7 +43,7 @@ void main()
 			std::cout << "서버종료됨.." << std::endl;
 			break;
 		}
-		if (iSendByte == SOCKET_ERROR)
+		if (iRecvByte == SOCKET_ERROR)
 		{
 			std::cout << "비정상 서버종료됨.." << std::endl;
 			break;
