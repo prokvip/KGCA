@@ -21,10 +21,9 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{73a2da2d-acd5-49f8-aecf-82f80fe1c55f}</ProjectGuid>
-    <RootNamespace>Socket0</RootNamespace>
+    <ProjectGuid>{8e975805-32eb-491b-a640-cf31df9c2489}</ProjectGuid>
+    <RootNamespace>SocketServer</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
-    <ProjectName>SocketClient</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -80,7 +79,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>../../output/Debug/</OutDir>
-    <IntDir>../../output/Debug/Socket_0</IntDir>
+    <IntDir>../../output/Debug/SocketServer</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>

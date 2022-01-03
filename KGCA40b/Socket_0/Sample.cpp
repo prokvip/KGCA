@@ -21,13 +21,24 @@ void main()
 		sock,
 		(sockaddr*)&sa,
 		sizeof(sa));
-	char szBuffer[] = "æ»≥Á«œººø©.";
-	int iSendByte = send(sock,
-		szBuffer,
-		sizeof(szBuffer),
-		0);
-	char szRecvBuffer[256] = { 0, };
-	int iRecvByte = recv(sock, szRecvBuffer, 256, 0);
-	std::cout << szRecvBuffer;
+	
+	int iSendCount = 3;
+	while (iSendCount-- > 0 )
+	{
+		char szBuffer[] = "æ»≥Á«œººø©.";
+		int iSendByte = send(sock,
+			szBuffer,
+			sizeof(szBuffer),
+			0);
+		char szRecvBuffer[256] = { 0, };
+		int iRecvByte = recv(sock, szRecvBuffer, 256, 0);
+		std::cout << szRecvBuffer;
+		if (iRecvByte == 0)
+		{
+			std::cout << "º≠πˆ¡æ∑·µ .." << std::endl;
+		}
+		Sleep(1000);
+	}
+	closesocket(sock);
 	WSACleanup();
 }
