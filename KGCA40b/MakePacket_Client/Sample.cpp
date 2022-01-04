@@ -31,13 +31,6 @@ int SendMsg(SOCKET sock, char* msg, WORD type)
 }
 int SendPacket(SOCKET sock, char* msg, WORD type)
 {
-	//struct TChatMsg
-//{
-//	long   index;
-//	char    name[20]; // 홍길동
-//	long   damage;
-//	char    message[256];// 안녕하세여.
-//};
 	// 1번 패킷 생성
 	TPacket tPacket(type);
 	tPacket << 999 << "홍길동" << (short)50 << msg;
@@ -196,7 +189,15 @@ void main()
 				if (iRet < 0) break;
 				if (iRet == 0) continue;
 				// 메세지 처리
-				std::cout << "\n" << packet.msg;				
+				TPacket data;
+				data.m_uPacket = packet;
+				TChatMsg recvdata;
+				ZeroMemory(&recvdata, sizeof(recvdata));
+				data >> recvdata.index >> recvdata.name
+					>> recvdata.damage >> recvdata.message;
+				std::cout << "\n" << 
+					"["<< recvdata.name << "]" 
+					<< recvdata.message;
 			}
 		}
 	}

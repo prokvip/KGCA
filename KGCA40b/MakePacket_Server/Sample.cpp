@@ -3,7 +3,7 @@
 #include <winsock2.h>
 #include <list>
 #include <string>
-#include "TProtocol.h"
+#include "TPacket.h"
 #pragma comment	(lib, "ws2_32.lib")
 struct TUser
 {
@@ -221,16 +221,24 @@ void main()
 					}
 				} while (iRecvSize < recvPacket.ph.len - PACKET_HEADER_SIZE);
 
-				// 패킷 완성		
+				TPacket data;
+				data.m_uPacket = recvPacket;
+				TChatMsg recvdata;
+				ZeroMemory(&recvdata, sizeof(recvdata));
+				data >> recvdata.index >> recvdata.name
+					>> recvdata.damage >> recvdata.message;
+
+				std::cout << "\n" <<
+					"[" << recvdata.name << "]"
+					<< recvdata.message;			
+
+						// 패킷 완성		
 				std::list<TUser>::iterator iterSend;
 				for (iterSend = userlist.begin();
 					iterSend != userlist.end(); )
 				{
-					TUser user = *iterSend;
-					std::cout << szRecvBuffer << "받음" << std::endl;					
-					int iSendMsgSize = SendMsg(user.m_Sock, recvPacket);
-
-					std::cout << user.m_Sock << ":" << iSendMsgSize << "보냄." << std::endl;
+					TUser user = *iterSend;					
+					int iSendMsgSize = SendMsg(user.m_Sock, recvPacket);					
 					if (iSendMsgSize < 0)
 					{
 						closesocket(user.m_Sock);

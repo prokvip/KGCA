@@ -142,8 +142,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Sample.cpp" />
+    <ClCompile Include="TPacket.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="TPacket.h" />
     <ClInclude Include="TProtocol.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
