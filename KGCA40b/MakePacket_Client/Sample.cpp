@@ -2,7 +2,7 @@
 #include <iostream>
 #include <winsock2.h>
 #include <conio.h>
-#include "TProtocol.h"
+#include "TPacket.h"
 #pragma comment	(lib, "ws2_32.lib")
 int SendMsg(SOCKET sock, char* msg, WORD type)
 {
@@ -11,7 +11,7 @@ int SendMsg(SOCKET sock, char* msg, WORD type)
 	ZeroMemory(&packet, sizeof(packet));
 	packet.ph.len = strlen(msg) + PACKET_HEADER_SIZE;
 	packet.ph.type = type;
-	memcpy(packet.msg, msg, strlen(msg));
+	memcpy(packet.msg, msg, strlen(msg));	
 	// 2번 패킷 전송 : 운영체제 sendbuffer(short바이트), recvbuffer
 	char* pMsg = (char*)&packet;
 	int iSendSize = 0;
@@ -27,6 +27,39 @@ int SendMsg(SOCKET sock, char* msg, WORD type)
 		}
 		iSendSize += iSendByte;
 	} while (iSendSize < packet.ph.len);
+	return iSendSize;
+}
+int SendPacket(SOCKET sock, char* msg, WORD type)
+{
+	//struct TChatMsg
+//{
+//	long   index;
+//	char    name[20]; // 홍길동
+//	long   damage;
+//	char    message[256];// 안녕하세여.
+//};
+	// 1번 패킷 생성
+	TPacket tPacket(type);
+	tPacket << 999 << "홍길동" << (short)50 << msg;
+	TPacket tPacketTest(tPacket);
+	TChatMsg recvdata;
+	ZeroMemory(&recvdata, sizeof(recvdata));
+	tPacketTest >> recvdata.index >> recvdata.name
+		>> recvdata.damage >> recvdata.message;
+	char* pData = (char*)&tPacket.m_uPacket;
+	int iSendSize = 0;
+	do {
+		int iSendByte = send(sock, &pData[iSendSize],
+			tPacket.m_uPacket.ph.len - iSendSize, 0);
+		if (iSendByte == SOCKET_ERROR)
+		{
+			if (WSAGetLastError() != WSAEWOULDBLOCK)
+			{
+				return -1;
+			}
+		}
+		iSendSize += iSendByte;
+	} while (iSendSize < tPacket.m_uPacket.ph.len);
 	return iSendSize;
 }
 int RecvPacketHeader(SOCKET sock, UPACKET& recvPacket)
@@ -134,8 +167,11 @@ void main()
 				break;
 			}
 			if (iValue == '\r')
-			{	
-				int iSendByte = SendMsg(sock, szBuffer, PACKET_CHAT_MSG);
+			{		
+				// 방법 1
+				//int iSendByte = SendMsg(sock, szBuffer, PACKET_CHAT_MSG);
+				// 방법 2
+				int iSendByte = SendPacket(sock, szBuffer, PACKET_CHAT_MSG);
 				if (iSendByte < 0)
 				{
 					std::cout << "비정상 종료됨.." << std::endl;
