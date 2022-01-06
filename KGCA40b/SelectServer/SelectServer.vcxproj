@@ -142,9 +142,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Sample.cpp" />
+    <ClCompile Include="TNetUser.cpp" />
+    <ClCompile Include="TNetwork.cpp" />
     <ClCompile Include="TPacket.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="TNetUser.h" />
+    <ClInclude Include="TNetwork.h" />
     <ClInclude Include="TPacket.h" />
     <ClInclude Include="TProtocol.h" />
   </ItemGroup>
