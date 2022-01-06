@@ -52,7 +52,10 @@ struct TUser
 					// 다음패킷 처리
 					m_iPacketPos += pPacket->ph.len;
 					m_iReadPos -= pPacket->ph.len;
-
+					if (m_iReadPos < PACKET_HEADER_SIZE)
+					{
+						break;
+					}
 					pPacket = (UPACKET*)&m_szRecvBuffer[m_iPacketPos];
 				} while (pPacket->ph.len <= m_iReadPos);
 			}			
@@ -204,10 +207,7 @@ void main()
 				FD_SET(user.m_Sock, &wSet);
 			}
 		}
-		int iRet = select(0, &rSet,
-			NULL,
-			 NULL,
-			NULL);
+		int iRet = select(0, &rSet, &wSet, NULL,NULL);
 		if (iRet == 0)
 		{
 			continue;
@@ -223,7 +223,7 @@ void main()
 		{
 			if (FD_ISSET(user.m_Sock, &rSet))
 			{
-				int iRet= RecvUser(user);
+				int iRet= RecvUser(user);				
 			}
 		}
 		for (TUser& user : userlist)
@@ -232,16 +232,15 @@ void main()
 			{
 				if (user.m_packetPool.size() > 0)
 				{
-					for (TUser& senduser : userlist)
+					std::list<TPacket>::iterator iter;
+					for (iter = user.m_packetPool.begin();
+						iter != user.m_packetPool.end();	)
 					{
-						std::list<TPacket>::iterator iter;
-						for (iter = senduser.m_packetPool.begin();
-								iter != senduser.m_packetPool.end();
-							iter++)
-						{
-							TPacket* tPacket = (TPacket*)&iter;
-							SendMsg(senduser.m_Sock, tPacket->m_uPacket);
+						for (TUser& senduser : userlist)
+						{							
+							SendMsg(senduser.m_Sock, (*iter).m_uPacket);							
 						}
+						iter = user.m_packetPool.erase(iter);
 					}
 				}
 			}
