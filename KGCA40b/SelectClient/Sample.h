@@ -7,6 +7,7 @@ class Sample : public TCore
 	HWND				m_hEdit;
 	HWND				m_hButton;
 	HWND				m_hListBox;
+	int					m_iChatCnt;
 public:
 	virtual bool	Init()  override;
 	virtual bool	Frame()  override;

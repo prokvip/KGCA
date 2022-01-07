@@ -75,6 +75,10 @@ TPacket& TPacket::operator >> (std::string& data)
 	GetData(data.c_str(), iSize);
 	return *this;
 }
+void TPacket::Reset()
+{
+	m_pOffset = m_uPacket.msg;
+}
 TPacket::TPacket()
 {
 	ZeroMemory(&m_uPacket, sizeof(UPACKET));

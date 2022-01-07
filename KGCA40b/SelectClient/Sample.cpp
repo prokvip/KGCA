@@ -15,6 +15,7 @@ LRESULT  Sample::MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 			tPacket << 999 << "ȫ�浿" << (short)50 << buffer;
 			m_Net.SendMsg(m_Net.m_Sock, tPacket.m_uPacket);
 
+			SendMessageA(m_hEdit, WM_SETTEXT, 0, (LPARAM)"");
 		}break;
 		}
 	}break;
@@ -24,7 +25,7 @@ LRESULT  Sample::MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
 bool	Sample::Init()
 {
-	DWORD style = WS_CHILD | WS_VISIBLE | ES_MULTILINE;
+	DWORD style = WS_CHILD | WS_VISIBLE | ES_MULTILINE ;
 	m_hEdit = CreateWindow(L"edit", NULL, style, 
 		0, g_rtClient.bottom-50, 300, 50,
 		m_hWnd, (HMENU)100, m_hInstance, NULL);
@@ -44,16 +45,20 @@ bool	Sample::Init()
 }
 bool	Sample::Frame()
 {
-	if (m_Net.m_PlayerUser.m_packetPool.size() > 0)
+	int iChatCnt = m_Net.m_PlayerUser.m_packetPool.size();
+	if (iChatCnt > 0 && m_iChatCnt != iChatCnt)
 	{
-		//SendMessage(m_hListBox, LB_RESETCONTENT, 0, 0);
+		m_iChatCnt = iChatCnt;
+		SendMessage(m_hListBox, LB_RESETCONTENT, 0, 0);
+
 		std::list<TPacket>::iterator iter;
-		if (m_Net.m_PlayerUser.m_packetPool.size() > 10)
+		if (m_Net.m_PlayerUser.m_packetPool.size() > 20)
 		{
-			//m_Net.m_PlayerUser.m_packetPool.pop_front();
+			m_Net.m_PlayerUser.m_packetPool.pop_front();
 		}
 		for (iter = m_Net.m_PlayerUser.m_packetPool.begin();
-			iter != m_Net.m_PlayerUser.m_packetPool.end();)
+			iter != m_Net.m_PlayerUser.m_packetPool.end();
+			iter++)
 		{
 			TChatMsg recvdata;
 			ZeroMemory(&recvdata, sizeof(recvdata));
@@ -61,7 +66,8 @@ bool	Sample::Frame()
 				>> recvdata.damage >> recvdata.message;
 			SendMessageA(m_hListBox, LB_ADDSTRING, 0, 
 				(LPARAM)recvdata.message);
-			iter = m_Net.m_PlayerUser.m_packetPool.erase(iter);
+			//iter = m_Net.m_PlayerUser.m_packetPool.erase(iter);
+			(*iter).Reset();
 		}
 	}
 	return true;

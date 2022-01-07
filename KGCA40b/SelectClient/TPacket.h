@@ -13,6 +13,7 @@ public:
 	UPACKET m_uPacket;
 	void PutData(const char* pData, int iSize);
 	void GetData(const char* pData, int iSize);
+	void Reset();
 public:
 	TPacket& operator << (int data);
 	TPacket& operator << (long data);
