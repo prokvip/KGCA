@@ -13,6 +13,7 @@ public:
 					int iWidth = 800, 
 					int iHeight= 600);
 	bool  WinRun();
+	virtual LRESULT  MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 public:
 	TWindow();
 	virtual ~TWindow();

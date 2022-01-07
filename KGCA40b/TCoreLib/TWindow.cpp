@@ -1,8 +1,10 @@
 #include "TWindow.h"
 RECT g_rtClient;
-
+HWND g_hWnd;
+TWindow* g_pWindow = nullptr;
 LRESULT  CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
+    g_pWindow->MsgProc(hWnd, msg, wParam, lParam);
     switch (msg)
     {
     case WM_DESTROY:
@@ -14,7 +16,10 @@ LRESULT  CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
     }
     return 0;
 }
-
+LRESULT  TWindow::MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
+{
+    return 0;
+}
 BOOL TWindow::SetWinClass(HINSTANCE hInstance)
 {
     m_hInstance = hInstance;
@@ -24,7 +29,8 @@ BOOL TWindow::SetWinClass(HINSTANCE hInstance)
     wc.style = CS_HREDRAW | CS_VREDRAW;
     wc.lpfnWndProc = WndProc;
     wc.hInstance = hInstance;
-    wc.lpszClassName = L"KGCA_Window";   
+    wc.lpszClassName = L"KGCA_Window";
+    wc.hbrBackground = (HBRUSH)GetStockObject(GRAY_BRUSH);
     if (RegisterClass(&wc) == false)
     {
         return FALSE;
@@ -55,6 +61,7 @@ BOOL TWindow::SetWindow(const WCHAR* szTitle,
     {
         return FALSE;
     }
+    g_hWnd = m_hWnd;
     GetClientRect(m_hWnd, &m_rtClient);
     GetWindowRect(m_hWnd, &m_rtWindow);
     g_rtClient = m_rtClient;
@@ -81,7 +88,7 @@ bool TWindow::WinRun()
 
 TWindow::TWindow()
 {
-
+    g_pWindow = this;
 }
 TWindow::~TWindow()
 {}
