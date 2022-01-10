@@ -1,25 +1,7 @@
 #define _WINSOCK_DEPRECATED_NO_WARNINGS
-#include <iostream>
-#include <winsock2.h>
-#include <list>
-#include <string>
-#include "TPacket.h"
-#pragma comment	(lib, "ws2_32.lib")
-struct TUser
-{
-	SOCKET		m_Sock;
-	SOCKADDR_IN m_Addr;
-	std::string m_csName;
-	short       m_iPort;
-	void set(SOCKET sock, SOCKADDR_IN addr)
-	{
-		m_Sock = sock;
-		m_Addr = addr;
-		m_csName = inet_ntoa(addr.sin_addr);
-		m_iPort = ntohs(addr.sin_port);
-	}
-};
-
+#include "TNetUser.h"
+std::list<TNetUser> g_USerList;
+CRITICAL_SECTION g_CS;
 int SendMsg(SOCKET sock, char*msg, WORD type)
 {
 	// 1번 패킷 생성
@@ -63,8 +45,98 @@ int SendMsg(SOCKET sock, UPACKET& packet)
 	} while (iSendSize < packet.ph.len);
 	return iSendSize;
 }
+int Broadcast(TNetUser& user)
+{
+	if (user.m_packetPool.size() > 0)
+	{
+		std::list<TPacket>::iterator iter;
+		for (iter = user.m_packetPool.begin();
+			iter != user.m_packetPool.end(); )
+		{
+			for (TNetUser& senduser : g_USerList)
+			{
+				int iRet = SendMsg(senduser.m_Sock, (*iter).m_uPacket);
+				if (iRet <= 0)
+				{
+					senduser.m_bConnect = false;
+				}
+			}
+			iter = user.m_packetPool.erase(iter);
+		}
+	}
+	return 1;
+}
+int RecvUser(TNetUser& user)
+{
+	char szRecvBuffer[1024] = { 0, };
+	int iRecvByte = recv(user.m_Sock, szRecvBuffer, 1024, 0);
+	if (iRecvByte == 0)
+	{
+		return 0;
+	}
+	if (iRecvByte == SOCKET_ERROR)
+	{
+		int iError = WSAGetLastError();
+		if (iError != WSAEWOULDBLOCK)
+		{			
+			return -1;
+		}
+		return 2;
+	}
+	user.DispatchRead(szRecvBuffer, iRecvByte);
+	return 1;
+}
+DWORD WINAPI RecvThread(LPVOID param)
+{
+	SOCKET sock = (SOCKET)param;
+	while (1)
+	{
+		EnterCriticalSection(&g_CS);
+		std::list<TNetUser>::iterator userIter;
+		for (userIter = g_USerList.begin();
+			userIter != g_USerList.end();)
+		{
+			int iRet = RecvUser(*userIter);
+			if (iRet <= 0)
+			{
+				userIter = g_USerList.erase(userIter);
+			}
+			else
+			{
+				userIter++;
+			}
+		}
+		LeaveCriticalSection(&g_CS);
+		Sleep(1);
+	}
+}
+DWORD WINAPI SendThread(LPVOID param)
+{
+	SOCKET sock = (SOCKET)param;
+	while (1)
+	{
+		EnterCriticalSection(&g_CS);
+		std::list<TNetUser>::iterator userIter;
+		for (userIter = g_USerList.begin();
+			userIter != g_USerList.end();)
+		{
+			int iRet = Broadcast(*userIter);
+			if (iRet <= 0)
+			{
+				userIter = g_USerList.erase(userIter);
+			}
+			else
+			{
+				userIter++;
+			}
+		}
+		LeaveCriticalSection(&g_CS);
+		Sleep(1);
+	}
+}
 void main()
 {
+	InitializeCriticalSection(&g_CS);
 	WSADATA wsa;
 	if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0)
 	{
@@ -84,38 +156,31 @@ void main()
 	SOCKADDR_IN clientAddr;
 	int iLen = sizeof(clientAddr);
 
-	std::cout
-		<< "서버 가동중......." << std::endl;
+	std::cout	<< "서버 가동중......." << std::endl;
 
 	u_long on = 1;
 	ioctlsocket(ListenSock, FIONBIO, &on);
 
-	std::list<TUser> userlist;
-	//while (userlist.size() > 2)
-	//{
-	//	SOCKET clientSock = accept(ListenSock,
-	//		(sockaddr*)&clientAddr, &iLen);
-	//	if (clientSock == SOCKET_ERROR)
-	//	{
-	//		int iError = WSAGetLastError();
-	//		if (iError != WSAEWOULDBLOCK)
-	//		{
-	//			std::cout << "ErrorCode=" << iError << std::endl;
-	//			break;
-	//		}
-	//	}
-	//	else
-	//	{
-	//		userlist.push_back(clientSock);
-	//		std::cout
-	//			<< "ip =" << inet_ntoa(clientAddr.sin_addr)
-	//			<< "port =" << ntohs(clientAddr.sin_port)
-	//			<< "  " << std::endl;
-	//		u_long on = 1;
-	//		ioctlsocket(clientSock, FIONBIO, &on);
-	//		std::cout << userlist.size() << " 명 접속중.." << std::endl;
-	//	}
-	//}
+	DWORD ThreadId;
+	HANDLE hThreadRecv = ::CreateThread(
+		0,
+		0,
+		RecvThread,// 반환
+		(LPVOID)ListenSock,
+		0,
+		&ThreadId
+	);
+	CloseHandle(hThreadRecv);
+	DWORD ThreadIdSend;
+	HANDLE hThreadSend = ::CreateThread(
+		0,
+		0,
+		SendThread,// 반환
+		(LPVOID)ListenSock,
+		0,
+		&ThreadIdSend
+	);
+	CloseHandle(hThreadSend);
 
 	while (1)
 	{
@@ -132,9 +197,11 @@ void main()
 		}
 		else
 		{
-			TUser user;
+			TNetUser user;
 			user.set(clientSock, clientAddr);
-			userlist.push_back(user);
+			EnterCriticalSection(&g_CS);
+				g_USerList.push_back(user);
+			LeaveCriticalSection(&g_CS);
 
 			std::cout
 				<< "ip =" << inet_ntoa(clientAddr.sin_addr)
@@ -142,121 +209,12 @@ void main()
 				<< "  " << std::endl;
 			u_long on = 1;
 			ioctlsocket(clientSock, FIONBIO, &on);
-			std::cout << userlist.size() << " 명 접속중.." << std::endl;
+			std::cout << g_USerList.size() << " 명 접속중.." << std::endl;
 		}
-
-		if (userlist.size() > 0)
-		{
-			std::list<TUser>::iterator iter;
-			for (iter = userlist.begin(); iter != userlist.end(); )
-			{
-				TUser user = *iter;
-				char szRecvBuffer[256] = { 0, };
-				//패킷헤더 받기
-				UPACKET recvPacket;
-				ZeroMemory(&recvPacket, sizeof(recvPacket));
-				int iRecvSize = 0;
-				do {
-					int iRecvByte = recv(user.m_Sock, szRecvBuffer,
-						PACKET_HEADER_SIZE, 0);
-					iRecvSize += iRecvByte;
-					if (iRecvByte == 0)
-					{
-						closesocket(user.m_Sock);
-						iter = userlist.erase(iter);
-						std::cout << user.m_csName << " 접속종료됨." << std::endl;
-						break;
-					}
-					if (iRecvByte == SOCKET_ERROR)
-					{
-						int iError = WSAGetLastError();
-						if (iError != WSAEWOULDBLOCK)
-						{
-							iter = userlist.erase(iter);
-							std::cout << user.m_csName << " 비정상 접속종료됨." << std::endl;
-							break;
-						}
-						else
-						{
-							break;
-						}
-					}
-				}while(iRecvSize < PACKET_HEADER_SIZE);
-				
-				if (iRecvSize == SOCKET_ERROR)
-				{
-					if (iter != userlist.end())
-					{
-						iter++;
-					}
-					continue;
-				}
-				
-				memcpy(&recvPacket.ph, szRecvBuffer, PACKET_HEADER_SIZE);
-				// 데이터 받기
-				iRecvSize = 0;
-				do {
-					int iRecvByte = recv(user.m_Sock, recvPacket.msg,
-						recvPacket.ph.len- PACKET_HEADER_SIZE- iRecvSize, 0);
-					iRecvSize += iRecvByte;
-					if (iRecvByte == 0)
-					{
-						closesocket(user.m_Sock);
-						iter = userlist.erase(iter);
-						std::cout << user.m_csName << " 접속종료됨." << std::endl;
-						continue;
-					}
-					if (iRecvByte == SOCKET_ERROR)
-					{
-						int iError = WSAGetLastError();
-						if (iError != WSAEWOULDBLOCK)
-						{
-							iter = userlist.erase(iter);
-							std::cout << user.m_csName << " 비정상 접속종료됨." << std::endl;
-						}
-						else
-						{
-							iter++;
-						}
-					}
-				} while (iRecvSize < recvPacket.ph.len - PACKET_HEADER_SIZE);
-
-				TPacket data;
-				data.m_uPacket = recvPacket;
-				TChatMsg recvdata;
-				ZeroMemory(&recvdata, sizeof(recvdata));
-				data >> recvdata.index >> recvdata.name
-					>> recvdata.damage >> recvdata.message;
-
-				std::cout << "\n" <<
-					"[" << recvdata.name << "]"
-					<< recvdata.message;			
-
-						// 패킷 완성		
-				std::list<TUser>::iterator iterSend;
-				for (iterSend = userlist.begin();
-					iterSend != userlist.end(); )
-				{
-					TUser user = *iterSend;					
-					int iSendMsgSize = SendMsg(user.m_Sock, recvPacket);					
-					if (iSendMsgSize < 0)
-					{
-						closesocket(user.m_Sock);
-						iterSend = userlist.erase(iterSend);
-						std::cout << user.m_csName << " 비정상 접속종료됨." << std::endl;						
-					}
-					else
-					{
-						iterSend++;
-					}
-				}
-				if (iter != userlist.end())
-				{
-					iter++;
-				}				
-			}
-		}
+		Sleep(1);
 	}
 	closesocket(ListenSock);
 	WSACleanup();
+
+	DeleteCriticalSection(&g_CS);
 }
