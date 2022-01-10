@@ -2,6 +2,7 @@
 #include "TNetUser.h"
 std::list<TNetUser> g_USerList;
 CRITICAL_SECTION g_CS;
+HANDLE g_hMutex;
 int SendMsg(SOCKET sock, char*msg, WORD type)
 {
 	// 1번 패킷 생성
@@ -91,7 +92,11 @@ DWORD WINAPI RecvThread(LPVOID param)
 	SOCKET sock = (SOCKET)param;
 	while (1)
 	{
-		EnterCriticalSection(&g_CS);
+		//DWORD dwID = GetCurrentThreadId();
+		//std::cout << dwID << std::endl;
+		//EnterCriticalSection(&g_CS);
+		WaitForSingleObject(g_hMutex, INFINITE);
+		
 		std::list<TNetUser>::iterator userIter;
 		for (userIter = g_USerList.begin();
 			userIter != g_USerList.end();)
@@ -106,7 +111,8 @@ DWORD WINAPI RecvThread(LPVOID param)
 				userIter++;
 			}
 		}
-		LeaveCriticalSection(&g_CS);
+		//LeaveCriticalSection(&g_CS);
+		ReleaseMutex(g_hMutex);
 		Sleep(1);
 	}
 }
@@ -115,7 +121,11 @@ DWORD WINAPI SendThread(LPVOID param)
 	SOCKET sock = (SOCKET)param;
 	while (1)
 	{
-		EnterCriticalSection(&g_CS);
+		WaitForSingleObject(g_hMutex, INFINITE);
+		//DWORD dwID = GetCurrentThreadId();
+		//std::cout << dwID << std::endl;
+		//EnterCriticalSection(&g_CS);		
+
 		std::list<TNetUser>::iterator userIter;
 		for (userIter = g_USerList.begin();
 			userIter != g_USerList.end();)
@@ -130,13 +140,17 @@ DWORD WINAPI SendThread(LPVOID param)
 				userIter++;
 			}
 		}
-		LeaveCriticalSection(&g_CS);
+
+		//LeaveCriticalSection(&g_CS);
+		ReleaseMutex(g_hMutex);
+
 		Sleep(1);
 	}
 }
 void main()
 {
 	InitializeCriticalSection(&g_CS);
+	g_hMutex = CreateMutex(NULL, FALSE, NULL);
 	WSADATA wsa;
 	if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0)
 	{
@@ -184,6 +198,9 @@ void main()
 
 	while (1)
 	{
+		//DWORD dwID = GetCurrentThreadId();
+		//std::cout << dwID << " MainThread" << std::endl;
+
 		SOCKET clientSock = accept(ListenSock,
 			(sockaddr*)&clientAddr, &iLen);
 		if (clientSock == SOCKET_ERROR)
@@ -199,9 +216,11 @@ void main()
 		{
 			TNetUser user;
 			user.set(clientSock, clientAddr);
-			EnterCriticalSection(&g_CS);
+			//EnterCriticalSection(&g_CS);
+			WaitForSingleObject(g_hMutex, INFINITE);
 				g_USerList.push_back(user);
-			LeaveCriticalSection(&g_CS);
+			//LeaveCriticalSection(&g_CS);
+			ReleaseMutex(g_hMutex);
 
 			std::cout
 				<< "ip =" << inet_ntoa(clientAddr.sin_addr)
@@ -217,4 +236,5 @@ void main()
 	WSACleanup();
 
 	DeleteCriticalSection(&g_CS);
+	CloseHandle(g_hMutex);
 }
