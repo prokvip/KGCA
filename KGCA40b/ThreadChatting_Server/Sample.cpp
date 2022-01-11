@@ -163,9 +163,15 @@ void main()
 	sa.sin_port = htons(10000);
 	sa.sin_addr.s_addr = htonl(INADDR_ANY);
 	int iRet = bind(ListenSock, (sockaddr*)&sa, sizeof(sa));
-	if (iRet == SOCKET_ERROR)  return;
+	if (iRet == SOCKET_ERROR)
+	{
+		return;
+	}
 	iRet = listen(ListenSock, SOMAXCONN);
-	if (iRet == SOCKET_ERROR)  return;
+	if (iRet == SOCKET_ERROR)
+	{
+		return;
+	}
 
 	SOCKADDR_IN clientAddr;
 	int iLen = sizeof(clientAddr);
