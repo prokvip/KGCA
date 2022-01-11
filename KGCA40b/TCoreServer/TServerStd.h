@@ -6,8 +6,8 @@
 #include <iostream>
 #pragma comment	(lib, "ws2_32.lib")
 #ifdef _DEBUG
-#pragma comment	(lib, "TCoreNet_d.lib")
+#pragma comment	(lib, "TCoreServer_d.lib")
 #else
-#pragma comment	(lib, "TCoreNet_r.lib")
+#pragma comment	(lib, "TCoreServer_r.lib")
 #endif
 using namespace std;

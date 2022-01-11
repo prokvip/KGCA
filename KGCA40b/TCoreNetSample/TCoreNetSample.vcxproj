@@ -148,6 +148,14 @@
   <ItemGroup>
     <ClInclude Include="Sample.h" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\TCoreLib\TCoreLib.vcxproj">
+      <Project>{98617ca6-fe41-4536-94f6-159046e15ad9}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\TCoreNet\TCoreNet.vcxproj">
+      <Project>{89662571-438a-489c-9630-0b2c1fc2323f}</Project>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
