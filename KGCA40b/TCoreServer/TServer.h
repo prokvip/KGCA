@@ -13,7 +13,7 @@ public:
 	int Broadcast(TNetUser& user);
 	int RecvUser(TNetUser& user);
 public:
-	bool		Init();
+	bool		InitServer(int iPort);
 	bool		Run();
 	bool		Release();
 };

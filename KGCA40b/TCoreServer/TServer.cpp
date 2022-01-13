@@ -1,5 +1,5 @@
 #include "TServer.h"
-bool TServer::Init()
+bool TServer::InitServer(int iPort)
 {
 	InitializeCriticalSection(&g_CS);
 	g_hMutex = CreateMutex(NULL, FALSE, NULL);
@@ -12,7 +12,7 @@ bool TServer::Init()
 	SOCKADDR_IN sa;
 	ZeroMemory(&sa, sizeof(sa));
 	sa.sin_family = AF_INET;
-	sa.sin_port = htons(10000);
+	sa.sin_port = htons(iPort);
 	sa.sin_addr.s_addr = htonl(INADDR_ANY);
 	int iRet = bind(m_ListenSock, (sockaddr*)&sa, sizeof(sa));
 	if (iRet == SOCKET_ERROR)

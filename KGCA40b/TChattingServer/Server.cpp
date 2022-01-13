@@ -11,7 +11,7 @@ DWORD WINAPI RecvThread(LPVOID param)
 		//std::cout << dwID << std::endl;
 		//EnterCriticalSection(&g_CS);
 		WaitForSingleObject(pServer->g_hMutex, INFINITE);
-		
+
 		std::list<TNetUser>::iterator userIter;
 		for (userIter = pServer->g_UserList.begin();
 			userIter != pServer->g_UserList.end();)
@@ -65,14 +65,14 @@ DWORD WINAPI SendThread(LPVOID param)
 }
 void main()
 {
-	TServer server;	
-	server.InitServer(10000);
+	TServer server;
+	server.InitServer(9000);
 	DWORD ThreadId;
-	HANDLE hThreadRecv = ::CreateThread(0,0,RecvThread,(LPVOID)&server,	0,&ThreadId);	
+	HANDLE hThreadRecv = ::CreateThread(0, 0, RecvThread, (LPVOID)&server, 0, &ThreadId);
 	DWORD ThreadIdSend;
-	HANDLE hThreadSend = ::CreateThread(0,0,SendThread,(LPVOID)&server,0,&ThreadIdSend);
+	HANDLE hThreadSend = ::CreateThread(0, 0, SendThread, (LPVOID)&server, 0, &ThreadIdSend);
 	server.Run();
-	server.Release();	
+	server.Release();
 	CloseHandle(hThreadRecv);
 	CloseHandle(hThreadSend);
 }
