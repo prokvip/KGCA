@@ -36,8 +36,11 @@ void main()
 		BOOL bReturn = GetOverlappedResult(hFileAsync,&g_ReadOV, &dwRead, TRUE);
 		
 		// 비동기 출력
-		g_WriteOV.Offset = i * BlockSize;
-		g_WriteOV.OffsetHigh = 0;
+		LARGE_INTEGER offset;
+		offset.QuadPart = i * BlockSize;
+		g_WriteOV.Offset = offset.LowPart;
+		g_WriteOV.OffsetHigh = offset.HighPart;
+
 		DWORD dwWritten;
 		ret = WriteFile(hFileCopy, g_buffer, dwRead,&dwWritten, &g_WriteOV);
 		bReturn = GetOverlappedResult(hFileCopy,&g_WriteOV, &dwWritten, TRUE);
