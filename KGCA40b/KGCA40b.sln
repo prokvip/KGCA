@@ -101,6 +101,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AsyncIOBlock", "AsyncIOBloc
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "IOCP", "IOCP\IOCP.vcxproj", "{196D2401-0BBF-4505-B47F-52BC2C7D27A1}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TCoreServerIOCP", "TCoreServerIOCP\TCoreServerIOCP.vcxproj", "{9553F4CE-2ED1-45D9-B9B0-55857E83B763}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -413,6 +415,14 @@ Global
 		{196D2401-0BBF-4505-B47F-52BC2C7D27A1}.Release|x64.Build.0 = Release|x64
 		{196D2401-0BBF-4505-B47F-52BC2C7D27A1}.Release|x86.ActiveCfg = Release|Win32
 		{196D2401-0BBF-4505-B47F-52BC2C7D27A1}.Release|x86.Build.0 = Release|Win32
+		{9553F4CE-2ED1-45D9-B9B0-55857E83B763}.Debug|x64.ActiveCfg = Debug|x64
+		{9553F4CE-2ED1-45D9-B9B0-55857E83B763}.Debug|x64.Build.0 = Debug|x64
+		{9553F4CE-2ED1-45D9-B9B0-55857E83B763}.Debug|x86.ActiveCfg = Debug|Win32
+		{9553F4CE-2ED1-45D9-B9B0-55857E83B763}.Debug|x86.Build.0 = Debug|Win32
+		{9553F4CE-2ED1-45D9-B9B0-55857E83B763}.Release|x64.ActiveCfg = Release|x64
+		{9553F4CE-2ED1-45D9-B9B0-55857E83B763}.Release|x64.Build.0 = Release|x64
+		{9553F4CE-2ED1-45D9-B9B0-55857E83B763}.Release|x86.ActiveCfg = Release|Win32
+		{9553F4CE-2ED1-45D9-B9B0-55857E83B763}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

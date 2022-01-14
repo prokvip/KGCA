@@ -74,6 +74,7 @@ bool TServer::Run()
 		}
 		Sleep(1);
 	}
+	//SetEvent();
 	return true;
 }
 bool TServer::Release()

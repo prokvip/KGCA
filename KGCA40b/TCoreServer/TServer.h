@@ -1,6 +1,6 @@
 #pragma once
 #include "TNetUser.h"
-class TServer
+class TServer 
 {
 public:
 	std::list<TNetUser> g_UserList;
