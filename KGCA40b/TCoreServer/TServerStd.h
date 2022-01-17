@@ -1,6 +1,7 @@
 #pragma once
 #include <winsock2.h>
 #include <windows.h>
+#include <ws2tcpip.h> // inet_ntop
 #include <vector>
 #include <list>
 #include <iostream>

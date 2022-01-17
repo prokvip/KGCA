@@ -152,13 +152,17 @@ copy "..\\..\\output\\Debug\\TCoreServer.lib" "..\\..\\Lib\\TCoreServer_d.lib"</
     <ClCompile Include="TNetUser.cpp" />
     <ClCompile Include="TPacket.cpp" />
     <ClCompile Include="TServer.cpp" />
+    <ClCompile Include="TServerObj.cpp" />
+    <ClCompile Include="TThread.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TNetUser.h" />
     <ClInclude Include="TPacket.h" />
     <ClInclude Include="TProtocol.h" />
     <ClInclude Include="TServer.h" />
+    <ClInclude Include="TServerObj.h" />
     <ClInclude Include="TServerStd.h" />
+    <ClInclude Include="TThread.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

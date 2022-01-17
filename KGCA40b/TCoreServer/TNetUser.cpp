@@ -1,5 +1,43 @@
 #include "TNetUser.h"
-int TNetUser::DispatchRead(char* szRecvBuffer, int iRecvByte)
+int TNetUser::Recv()
+{
+	// 비동기 로드	
+	m_wsaRecvBuffer.len = sizeof(char)*256;
+	m_wsaRecvBuffer.buf = m_szRecv;
+	m_ovRecv.type = 1000;
+	DWORD dwRead;
+	DWORD lpFlags=0;
+	BOOL ret = WSARecv(m_Sock, 
+		&m_wsaRecvBuffer,
+		1, 
+		&dwRead,
+		&lpFlags,
+		(WSAOVERLAPPED*)&m_ovRecv,
+		nullptr);
+	return 0;
+}
+int TNetUser::Dispatch(DWORD dwTrans, TOV* tov)
+{
+	if (m_bConnect == false)
+	{
+		return 0;
+	}
+	if (tov->type == 1000)
+	{
+		if (!DispatchRecv(m_szRecv, dwTrans))
+		{
+		}	
+		Recv();
+	}
+	if(tov->type == 2000)
+	{
+		if (!DispatchSend(dwTrans))
+		{
+		}
+	}
+	return 1;
+}
+int TNetUser::DispatchRecv(char* szRecvBuffer, int iRecvByte)
 {
 	//p1(m_iPacketPos)  p2(2.1)       pn   (m_ReadPos)
 	//2035 ~ 2038 ~ 22  ~ 50  ~  2028 ~ 2038 ~ 2048 
@@ -44,7 +82,10 @@ int TNetUser::DispatchRead(char* szRecvBuffer, int iRecvByte)
 	}
 	return 1;
 }
-
+int TNetUser::DispatchSend(DWORD dwTrans)
+{
+	return 0;
+}
 void TNetUser::set(SOCKET sock, SOCKADDR_IN addr)
 {
 	m_bConnect = true;
@@ -52,11 +93,22 @@ void TNetUser::set(SOCKET sock, SOCKADDR_IN addr)
 	m_iPacketPos = 0;
 	m_iWritePos = 0;
 	m_iReadPos = 0;
-	int  m_iWritePos;  // 현재의 저장 위치
-	int  m_iReadPos;
-
 	m_Sock = sock;
 	m_Addr = addr;
 	m_csName = inet_ntoa(addr.sin_addr);
 	m_iPort = ntohs(addr.sin_port);
+}
+bool TNetUser::DisConnect()
+{
+	closesocket(m_Sock);
+	return true;
+}
+
+TNetUser::TNetUser()
+{
+
+}
+TNetUser::~TNetUser()
+{
+
 }

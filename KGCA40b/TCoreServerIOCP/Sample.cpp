@@ -1,21 +1,13 @@
 #define _WINSOCK_DEPRECATED_NO_WARNINGS
-#include "TServer.h"
-#include "TThreadRecv.h"
-#include "TThreadSend.h"
+#include "TLobbyServer.h"
+#include "TAccepter.h"
 
 void main()
 {
-	TServer server;
+	TLobbyServer server;
 	server.InitServer(10000);
-	
-	TThreadRecv tRecv(&server);
-	TThreadSend tSend(&server);
-	tRecv.Detach();
-	tSend.Detach();
-	
+	TAccepter accept(&server);
+	accept.Detach();
 	server.Run();
 	server.Release();
-
-	//tRecv.Join();
-	//tSend.Join();
 }

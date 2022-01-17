@@ -144,16 +144,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Sample.cpp" />
-    <ClCompile Include="TServerObj.cpp" />
-    <ClCompile Include="TThread.cpp" />
-    <ClCompile Include="TThreadRecv.cpp" />
-    <ClCompile Include="TThreadSend.cpp" />
+    <ClCompile Include="TAccepter.cpp" />
+    <ClCompile Include="TChatUser.cpp" />
+    <ClCompile Include="TLobbyServer.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="TServerObj.h" />
-    <ClInclude Include="TThread.h" />
-    <ClInclude Include="TThreadRecv.h" />
-    <ClInclude Include="TThreadSend.h" />
+    <ClInclude Include="TAccepter.h" />
+    <ClInclude Include="TChatUser.h" />
+    <ClInclude Include="TLobbyServer.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TCoreServer\TCoreServer.vcxproj">

@@ -1,8 +1,6 @@
 #include "TServer.h"
 bool TServer::InitServer(int iPort)
 {
-	InitializeCriticalSection(&g_CS);
-	g_hMutex = CreateMutex(NULL, FALSE, NULL);
 	WSADATA wsa;
 	if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0)
 	{
@@ -24,67 +22,24 @@ bool TServer::InitServer(int iPort)
 	{
 		return false;
 	}
-
-	
-
 	std::cout << "서버 가동중......." << std::endl;
-
 	u_long on = 1;
 	ioctlsocket(m_ListenSock, FIONBIO, &on);
 
 	return true;
 }
 bool TServer::Run()
+{	
+	return true;
+}
+bool TServer::AddUser(SOCKET sock, SOCKADDR_IN clientAddr)
 {
-	SOCKADDR_IN clientAddr;
-	int iLen = sizeof(clientAddr);
-
-	while (1)
-	{
-		//DWORD dwID = GetCurrentThreadId();
-		//std::cout << dwID << " MainThread" << std::endl;
-		SOCKET clientSock = accept(m_ListenSock,
-			(sockaddr*)&clientAddr, &iLen);
-		if (clientSock == SOCKET_ERROR)
-		{
-			int iError = WSAGetLastError();
-			if (iError != WSAEWOULDBLOCK)
-			{
-				std::cout << "ErrorCode=" << iError << std::endl;
-				break;
-			}
-		}
-		else
-		{
-			TNetUser user;
-			user.set(clientSock, clientAddr);
-			//EnterCriticalSection(&g_CS);
-			WaitForSingleObject(g_hMutex, INFINITE);
-			g_UserList.push_back(user);
-			//LeaveCriticalSection(&g_CS);
-			ReleaseMutex(g_hMutex);
-
-			std::cout
-				<< "ip =" << inet_ntoa(clientAddr.sin_addr)
-				<< "port =" << ntohs(clientAddr.sin_port)
-				<< "  " << std::endl;
-			u_long on = 1;
-			ioctlsocket(clientSock, FIONBIO, &on);
-			std::cout << g_UserList.size() << " 명 접속중.." << std::endl;
-		}
-		Sleep(1);
-	}
-	//SetEvent();
 	return true;
 }
 bool TServer::Release()
 {
 	closesocket(m_ListenSock);
 	WSACleanup();
-
-	DeleteCriticalSection(&g_CS);
-	CloseHandle(g_hMutex);
-
 	return true;
 }
 int TServer::SendMsg(SOCKET sock, char* msg, WORD type)
@@ -130,44 +85,24 @@ int TServer::SendMsg(SOCKET sock, UPACKET& packet)
 	} while (iSendSize < packet.ph.len);
 	return iSendSize;
 }
-int TServer::Broadcast(TNetUser& user)
+int TServer::Broadcast(TNetUser* user)
 {
-	if (user.m_packetPool.size() > 0)
+	if (user->m_packetPool.size() > 0)
 	{
 		std::list<TPacket>::iterator iter;
-		for (iter = user.m_packetPool.begin();
-			iter != user.m_packetPool.end(); )
+		for (iter = user->m_packetPool.begin();
+			iter != user->m_packetPool.end(); )
 		{
-			for (TNetUser& senduser : g_UserList)
+			for (TNetUser* senduser : m_UserList)
 			{
-				int iRet = SendMsg(senduser.m_Sock, (*iter).m_uPacket);
+				int iRet = SendMsg(senduser->m_Sock, (*iter).m_uPacket);
 				if (iRet <= 0)
 				{
-					senduser.m_bConnect = false;
+					senduser->m_bConnect = false;
 				}
 			}
-			iter = user.m_packetPool.erase(iter);
+			iter = user->m_packetPool.erase(iter);
 		}
 	}
-	return 1;
-}
-int TServer::RecvUser(TNetUser& user)
-{
-	char szRecvBuffer[1024] = { 0, };
-	int iRecvByte = recv(user.m_Sock, szRecvBuffer, 1024, 0);
-	if (iRecvByte == 0)
-	{
-		return 0;
-	}
-	if (iRecvByte == SOCKET_ERROR)
-	{
-		int iError = WSAGetLastError();
-		if (iError != WSAEWOULDBLOCK)
-		{
-			return -1;
-		}
-		return 2;
-	}
-	user.DispatchRead(szRecvBuffer, iRecvByte);
 	return 1;
 }

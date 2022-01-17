@@ -1,20 +1,18 @@
 #pragma once
 #include "TNetUser.h"
-class TServer 
+class TServer : public TServerObj
 {
 public:
-	std::list<TNetUser> g_UserList;
-	CRITICAL_SECTION g_CS;
-	HANDLE g_hMutex;
-	SOCKET m_ListenSock;
+	std::list<TNetUser*> m_UserList;
+	SOCKET				 m_ListenSock;	
 public:
 	int SendMsg(SOCKET sock, char* msg, WORD type);
 	int SendMsg(SOCKET sock, UPACKET& packet);
-	int Broadcast(TNetUser& user);
-	int RecvUser(TNetUser& user);
+	int Broadcast(TNetUser* user);
+	virtual bool AddUser(SOCKET socr, SOCKADDR_IN clientAddr);
 public:
-	bool		InitServer(int iPort);
-	bool		Run();
-	bool		Release();
+	virtual bool	InitServer(int iPort);
+	virtual bool	Run();
+	virtual bool	Release();
 };
 

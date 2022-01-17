@@ -18,30 +18,24 @@
     <ClCompile Include="Sample.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="TThread.cpp">
+    <ClCompile Include="TAccepter.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="TServerObj.cpp">
+    <ClCompile Include="TLobbyServer.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="TThreadRecv.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="TThreadSend.cpp">
+    <ClCompile Include="TChatUser.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="TThread.h">
+    <ClInclude Include="TAccepter.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="TServerObj.h">
+    <ClInclude Include="TLobbyServer.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="TThreadRecv.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="TThreadSend.h">
+    <ClInclude Include="TChatUser.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
