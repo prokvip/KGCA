@@ -12,7 +12,7 @@ LRESULT  Sample::MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 			char buffer[MAX_PATH] = { 0, };
 			SendMessageA(m_hEdit, WM_GETTEXT, MAX_PATH, (LPARAM)buffer);
 			TPacket tPacket(PACKET_CHAT_MSG);
-			tPacket << 999 << "ȫ�浿" << (short)50 << buffer;
+			tPacket << 999 << "ȫ�浿" << buffer;
 			m_Net.SendMsg(m_Net.m_Sock, tPacket.m_uPacket);
 
 			SendMessageA(m_hEdit, WM_SETTEXT, 0, (LPARAM)"");
@@ -65,9 +65,12 @@ bool	Sample::Frame()
 			{
 				case PACKET_LOGIN_ACK:
 				{
-					int k = 0;
-					/*TLoginAck ack;
-					if( ack == 1) */
+					TLoginAck ack;
+					memcpy(&ack, (*iter).m_uPacket.msg, sizeof(TLoginAck));
+					if (ack.iResult == 1)
+					{
+						int k = 0;
+					}
 				}break;
 				case PACKET_CHAT_MSG:
 				{

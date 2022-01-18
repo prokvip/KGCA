@@ -147,6 +147,7 @@
     <ClCompile Include="TAccepter.cpp" />
     <ClCompile Include="TChatUser.cpp" />
     <ClCompile Include="TLobbyServer.cpp" />
+    <ClCompile Include="TLoginServerProcess.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TAccepter.h" />

@@ -11,3 +11,13 @@ void main()
 	server.Run();
 	server.Release();
 }
+/*
+title Login Process
+loop req != 1
+Client-> + Server: PACKET_LOGIN_REQ
+Server->DB : PACKET_DB_LOGIN_REQ
+DB->Server : PACKET_DB_LOGIN_ACK
+Server-> - Client : PACKET_LOGIN_ACK
+end
+Client->Client : LoginProcess
+*/

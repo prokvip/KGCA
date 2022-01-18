@@ -35,7 +35,7 @@ LRESULT  TAsyncSelect::MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 			TLoginReq login;
 			strcpy_s(login.szID, "ȫ�浿");
 			strcpy_s(login.szPS, "1111");
-			SendMsg(m_Sock, (char*)&login, PACKET_TLoginReq_Size, PACKET_LOGIN_REQ);
+			SendMsg(m_Sock, (char*)&login, sizeof(TLoginReq), PACKET_LOGIN_REQ);
 
 			m_bConnect = true;
 		}break;
