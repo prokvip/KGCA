@@ -2,6 +2,8 @@
 #define _WINSOCK_DEPRECATED_NO_WARNINGS
 #include "TServerObj.h"
 #include "TPacket.h"
+
+class TServer;
 struct TOV 
 {
 	OVERLAPPED ov;
@@ -10,6 +12,7 @@ struct TOV
 
 class TNetUser : public TServerObj
 {
+	TServer* m_pServer=nullptr;
 public:
 	bool		m_bConnect = false;
 	SOCKET		m_Sock;
@@ -32,8 +35,10 @@ public:
 	int Dispatch(DWORD dwTrans, TOV* tov);	
 	int DispatchRecv(char* szRecvBuffer, int iRecvByte);
 	int DispatchSend(DWORD dwTrans);
-	void set(SOCKET sock, SOCKADDR_IN addr);
+	void set(SOCKET sock, SOCKADDR_IN addr, TServer* pServer);
 	int  Recv();
+	int  SendMsg(char* msg, int iSize, WORD type);
+	int  SendMsg(UPACKET& packet);
 	bool DisConnect();
 public:
 	TNetUser();

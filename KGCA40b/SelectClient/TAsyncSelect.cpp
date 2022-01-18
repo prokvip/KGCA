@@ -19,6 +19,7 @@ bool    TAsyncSelect::Connect(HWND hWnd, int protocol, int iport, const char* ip
 	{
 		return false;
 	}
+	
 	return true;
 }
 LRESULT  TAsyncSelect::MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)

@@ -45,7 +45,7 @@ DWORD WINAPI WorkerThread(LPVOID param)
 bool TLobbyServer::AddUser(SOCKET sock, SOCKADDR_IN clientAddr)
 {
 	TChatUser* user= new TChatUser;
-	user->set(sock, clientAddr);
+	user->set(sock, clientAddr,this);
 	u_long on = 1;
 	ioctlsocket(sock, FIONBIO, &on);
 	
@@ -83,17 +83,51 @@ bool TLobbyServer::Run()
 {
 	while (1)
 	{
-		EnterCriticalSection(&m_cs);			
+		EnterCriticalSection(&m_cs);
+		for (TNetUser* tUser : m_UserList)
+		{
+			TChatUser* pChat = (TChatUser*)tUser;
+			if (pChat->m_packetPool.size() > 0)
+			{
+				// tUser->Process();				
+			}
+		}
+
+		// 패킷처리
+		std::list<XPacket>::iterator iter;
+		for (iter = m_packetPool.begin();
+			iter != m_packetPool.end();)
+		{
+			XPacket* xp = (XPacket*)&(*iter);
+			switch (xp->packet.m_uPacket.ph.type)
+			{
+				case PACKET_LOGIN_REQ:
+				{
+					TLoginAck ack;
+					ack.iResult = 1;
+					SendMsg(xp->pUser, 
+							(char*)&ack,
+							PACKET_TLoginAck_Size,
+							PACKET_LOGIN_ACK);
+				}break;		
+				case PACKET_CHAT_MSG:
+				{					
+				}break;
+			}
+			iter= m_packetPool.erase(iter);
+		}
+		// 주기적인 동기화
 		for (TNetUser* tUser : m_UserList)
 		{
 			TChatUser* pChat = (TChatUser*)tUser;
 			if (pChat->m_packetPool.size() > 0)
 			{
 				Broadcast(tUser);
-			}			
+			}
 		}
-		std::list<TNetUser*>::iterator iter;
-		for (iter = m_UserList.begin();
+
+		
+		for (m_UserIter iter= m_UserList.begin();
 			iter != m_UserList.end();)
 		{
 			if ((*iter)->m_bConnect == false)

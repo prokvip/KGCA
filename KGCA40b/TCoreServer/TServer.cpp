@@ -42,31 +42,6 @@ bool TServer::Release()
 	WSACleanup();
 	return true;
 }
-int TServer::SendMsg(SOCKET sock, char* msg, WORD type)
-{
-	// 1번 패킷 생성
-	UPACKET packet;
-	ZeroMemory(&packet, sizeof(packet));
-	packet.ph.len = strlen(msg) + PACKET_HEADER_SIZE;
-	packet.ph.type = type;
-	memcpy(packet.msg, msg, strlen(msg));
-	// 2번 패킷 전송 : 운영체제 sendbuffer(short바이트), recvbuffer
-	char* pMsg = (char*)&packet;
-	int iSendSize = 0;
-	do {
-		int iSendByte = send(sock, &pMsg[iSendSize],
-			packet.ph.len - iSendSize, 0);
-		if (iSendByte == SOCKET_ERROR)
-		{
-			if (WSAGetLastError() != WSAEWOULDBLOCK)
-			{
-				return -1;
-			}
-		}
-		iSendSize += iSendByte;
-	} while (iSendSize < packet.ph.len);
-	return iSendSize;
-}
 int TServer::SendMsg(SOCKET sock, UPACKET& packet)
 {
 	char* pMsg = (char*)&packet;
@@ -84,6 +59,17 @@ int TServer::SendMsg(SOCKET sock, UPACKET& packet)
 		iSendSize += iSendByte;
 	} while (iSendSize < packet.ph.len);
 	return iSendSize;
+}
+int TServer::SendMsg(TNetUser* pUser, char* msg, int iSize, WORD type)
+{
+	// 보내는 패킷 풀에 저장하고 일괄 전송시스템.
+	pUser->SendMsg(msg, iSize, type);
+	return 0;
+}
+int TServer::SendMsg(TNetUser* pUser, UPACKET& packet)
+{
+	pUser->SendMsg(packet);
+	return 0;
 }
 int TServer::Broadcast(TNetUser* user)
 {
