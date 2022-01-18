@@ -16,6 +16,13 @@ int TNetUser::Recv()
 		&lpFlags,
 		(WSAOVERLAPPED*)&m_ovRecv,
 		nullptr);
+	if (ret == SOCKET_ERROR)
+	{
+		if (WSAGetLastError() != WSA_IO_PENDING)
+		{
+			return false;
+		}
+	}
 	return 0;
 }
 int TNetUser::SendMsg(char* msg, int iSize, WORD type)
@@ -39,6 +46,13 @@ int TNetUser::SendMsg(char* msg, int iSize, WORD type)
 		0,
 		(WSAOVERLAPPED*)&m_ovSend,
 		nullptr);
+	if (ret == SOCKET_ERROR)
+	{
+		if (WSAGetLastError() != WSA_IO_PENDING)
+		{
+			return false;
+		}
+	}
 	return 0;
 }
 int TNetUser::SendMsg(UPACKET& packet)
@@ -57,6 +71,13 @@ int TNetUser::SendMsg(UPACKET& packet)
 		0,
 		(WSAOVERLAPPED*)&m_ovSend,
 		nullptr);
+	if (ret == SOCKET_ERROR)
+	{
+		if (WSAGetLastError() != WSA_IO_PENDING)
+		{
+			return false;
+		}
+	}
 	return 0;
 }
 int TNetUser::Dispatch(DWORD dwTrans, TOV* tov)
