@@ -1,58 +1,59 @@
 #include "TLobbyServer.h"
+void TLobbyServer::LoginReq(TPacket& t, TNetUser* user)
+{
+	TLoginReq login;
+	memcpy(&login, t.m_uPacket.msg, sizeof(TLoginReq));
+	// DB 승인받고 반환
+	TLoginAck ack;
+	ack.iResult = 1;
+	SendMsg(user,
+		(char*)&ack,
+		sizeof(TLoginAck),
+		PACKET_LOGIN_ACK);
+}
+void TLobbyServer::ChatMsg(TPacket& t, TNetUser* user)
+{
+	Broadcast(t);
+}
 bool TLobbyServer::Run()
 {
 	while (1)
 	{
 		EnterCriticalSection(&m_cs);
-		for (TNetUser* tUser : m_UserList)
-		{
-			TChatUser* pChat = (TChatUser*)tUser;
-			if (pChat->m_packetPool.size() > 0)
-			{
-				// tUser->Process();				
-			}
-		}
-
+		//for (TNetUser* tUser : m_UserList)
+		//{
+		//	TChatUser* pChat = (TChatUser*)tUser;
+		//	if (pChat->m_packetPool.size() > 0)
+		//	{
+		//		// tUser->Process();				
+		//	}
+		//}
 		// 패킷처리
 		std::list<XPacket>::iterator iter;
 		for (iter = m_packetPool.begin();
-			iter != m_packetPool.end();)
+			iter != m_packetPool.end();
+			iter++)
 		{
 			XPacket* xp = (XPacket*)&(*iter);
-			switch (xp->packet.m_uPacket.ph.type)
+			FuncionIterator iter =
+				m_fnExecutePacket.find(xp->packet.m_uPacket.ph.type);
+			if (iter != m_fnExecutePacket.end())
 			{
-			case PACKET_LOGIN_REQ:
-			{
-				TLoginReq login;
-				memcpy(&login, xp->packet.m_uPacket.msg, sizeof(TLoginReq));
-				// DB 승인받고 반환
-				TLoginAck ack;
-				ack.iResult = 1;
-				SendMsg(xp->pUser,
-					(char*)&ack,
-					sizeof(TLoginAck),
-					PACKET_LOGIN_ACK);
-			}break;
-			case PACKET_CHAT_MSG:
-			{
-			}break;
-			case PACKET_CHAT_NAME_REQ: {}break;
-			case PACKET_CHAT_NAME_ACK: {}break;
-			case PACKET_LOGOUT_REQ: {}break;
-			case PACKET_LOGOUT_ACK: {}break;
-			case PACKET_LOGOUT_PLAYER: {}break;
-			}
-			iter = m_packetPool.erase(iter);
+				CallFunction call = iter->second;				
+				call(xp->packet, xp->pUser);
+			}			
 		}
+		m_packetPool.clear();
+		
 		// 주기적인 동기화
-		for (TNetUser* tUser : m_UserList)
+		/*for (TNetUser* tUser : m_UserList)
 		{
 			TChatUser* pChat = (TChatUser*)tUser;
 			if (pChat->m_packetPool.size() > 0)
 			{
 				Broadcast(tUser);
 			}
-		}
+		}*/
 
 
 		for (m_UserIter iter = m_UserList.begin();

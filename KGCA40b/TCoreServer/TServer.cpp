@@ -1,6 +1,20 @@
 #include "TServer.h"
+void TServer::LoginReq(TPacket& t, TNetUser* user)
+{
+
+}
+//void TServer::ChatMsg(TPacket& t, TNetUser* user)
+//{
+//
+//}
 bool TServer::InitServer(int iPort)
 {
+	m_fnExecutePacket[PACKET_LOGIN_REQ] =
+		std::bind(&TServer::LoginReq, this,
+			std::placeholders::_1, 
+			std::placeholders::_2 );
+	
+
 	WSADATA wsa;
 	if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0)
 	{
@@ -12,7 +26,7 @@ bool TServer::InitServer(int iPort)
 	sa.sin_family = AF_INET;
 	sa.sin_port = htons(iPort);
 	sa.sin_addr.s_addr = htonl(INADDR_ANY);
-	int iRet = bind(m_ListenSock, (sockaddr*)&sa, sizeof(sa));
+	int iRet = ::bind(m_ListenSock, (sockaddr*)&sa, sizeof(sa));
 	if (iRet == SOCKET_ERROR)
 	{
 		return false;
@@ -71,7 +85,7 @@ int TServer::SendMsg(TNetUser* pUser, UPACKET& packet)
 	pUser->SendMsg(packet);
 	return 0;
 }
-int TServer::Broadcast(TNetUser* user)
+int TServer::BroadcastUserPacketPool(TNetUser* user)
 {
 	if (user->m_packetPool.size() > 0)
 	{
@@ -90,5 +104,17 @@ int TServer::Broadcast(TNetUser* user)
 			iter = user->m_packetPool.erase(iter);
 		}
 	}
+	return 1;
+}
+int TServer::Broadcast(TPacket& t)
+{
+	for (TNetUser* senduser : m_UserList)
+	{
+		int iRet = SendMsg(senduser->m_Sock,t.m_uPacket);
+		if (iRet <= 0)
+		{
+			senduser->m_bConnect = false;
+		}
+	}		
 	return 1;
 }

@@ -1,4 +1,10 @@
 #include "TLobbyServer.h"
+//void Func(int iA = -10, float iB= 3.0f, bool iC= false)
+//{
+//	int a = iA; // 10
+//	int b = iB; // 2.0f
+//	int c = iC; // true;
+//}
 DWORD WINAPI WorkerThread(LPVOID param)
 {
 	TLobbyServer* pServer = (TLobbyServer*)param;
@@ -77,6 +83,26 @@ bool TLobbyServer::InitServer(int iPort)
 			WorkerThread,
 			this, 0, &id);
 	}
+		
+	m_fnExecutePacket.insert(std::make_pair(
+		PACKET_CHAT_MSG,
+		std::bind(&TLobbyServer::ChatMsg, this,
+			std::placeholders::_1,
+			std::placeholders::_2)));		
+	
+	//auto value2 = 
+	//m_fnExecutePacket.insert(std::make_pair(
+	//	PACKET_LOGIN_REQ,
+	//	std::bind(&TLobbyServer::LoginReq, this,
+	//		std::placeholders::_1,
+	//		std::placeholders::_2)));
+	//if (value2.second == false)
+	//{
+	//	if (value2.first != m_fnExecutePacket.end())
+	//	{
+	//		// 이미 저장되어 있음.
+	//	}
+	//}
 	return true;
 }
 

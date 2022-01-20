@@ -4,6 +4,8 @@
 #include <ws2tcpip.h> // inet_ntop
 #include <vector>
 #include <list>
+#include <map>
+#include <functional>
 #include <iostream>
 #pragma comment	(lib, "ws2_32.lib")
 #ifdef _DEBUG

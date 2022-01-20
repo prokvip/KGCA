@@ -131,11 +131,11 @@ int TNetUser::DispatchRecv(char* szRecvBuffer, int iRecvByte)
 				memcpy(&tPacket.m_uPacket,
 					&m_szRecvBuffer[m_iPacketPos],
 					pPacket->ph.len);
-				if (pPacket->ph.type == PACKET_CHAT_MSG)
+				/*if (pPacket->ph.type == PACKET_CHAT_MSG)
 				{
 					m_packetPool.push_back(tPacket);
 				}
-				else
+				else*/
 				{
 					XPacket xPacket;
 					xPacket.pUser = this;
