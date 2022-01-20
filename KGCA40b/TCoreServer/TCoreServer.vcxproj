@@ -164,6 +164,9 @@ copy "..\\..\\output\\Debug\\TCoreServer.lib" "..\\..\\Lib\\TCoreServer_d.lib"</
     <ClInclude Include="TServerStd.h" />
     <ClInclude Include="TThread.h" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="doc.txt" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
