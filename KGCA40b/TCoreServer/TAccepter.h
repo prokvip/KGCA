@@ -2,10 +2,13 @@
 #include "TThread.h"
 class TAccepter :   public TThread
 {
+	SOCKET				 m_ListenSock;
 public:
-	bool		Run() override;
+	virtual bool	Set(int iPort);
+	bool			Run() override;
 public:
 	TAccepter();
 	TAccepter(LPVOID value);
+	virtual ~TAccepter();
 };
 

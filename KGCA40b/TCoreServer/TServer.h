@@ -1,6 +1,6 @@
 #pragma once
 #include "TNetUser.h"
-
+#include "TAccepter.h"
 struct XPacket 
 {
 	TNetUser* pUser;	
@@ -9,9 +9,9 @@ struct XPacket
 
 class TServer : public TServerObj
 {
+	TAccepter			m_Accept;
 public:
 	std::list<TNetUser*> m_UserList;
-	SOCKET				 m_ListenSock;	
 	std::list<XPacket>	 m_packetPool;
 	typedef std::list<TNetUser*>::iterator m_UserIter;
 public:
@@ -28,6 +28,10 @@ public:
 	int Broadcast(TPacket& t);
 	int BroadcastUserPacketPool(TNetUser* user);
 	virtual bool AddUser(SOCKET socr, SOCKADDR_IN clientAddr);
+protected:
+	virtual bool DelUser(SOCKET sock);
+	virtual bool DelUser(TNetUser* pUser);
+	virtual bool DelUser(m_UserIter& iter);
 public:
 	virtual bool	InitServer(int iPort);
 	virtual bool	Run();

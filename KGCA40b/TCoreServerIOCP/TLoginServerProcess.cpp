@@ -61,7 +61,7 @@ bool TLobbyServer::Run()
 		{
 			if ((*iter)->m_bConnect == false)
 			{
-				(*iter)->DisConnect();
+				DelUser((*iter));
 				delete (*iter);
 				iter = m_UserList.erase(iter);
 			}

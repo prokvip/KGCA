@@ -31,8 +31,7 @@ void main()
 
 	TLobbyServer server;
 	server.InitServer(10000);
-	TAccepter accept(&server);
-	accept.Detach();
+
 	server.Run();
 	server.Release();
 }

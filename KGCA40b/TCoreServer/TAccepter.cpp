@@ -4,7 +4,7 @@
 bool TAccepter::Run()
 {
 	TServer* pServer = (TServer*)m_pObject;
-	SOCKET sock = pServer->m_ListenSock;
+	SOCKET sock = m_ListenSock;
 	SOCKADDR_IN clientAddr;
 	int iLen = sizeof(clientAddr);
 	while (1)
@@ -29,8 +29,36 @@ bool TAccepter::Run()
 		}
 		Sleep(1);
 	}
-	//SetEvent();
 	return 1;
+}
+bool TAccepter::Set(int iPort)
+{
+	WSADATA wsa;
+	if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0)
+	{
+		return false;
+	}
+	m_ListenSock = socket(AF_INET, SOCK_STREAM, 0);
+	SOCKADDR_IN sa;
+	ZeroMemory(&sa, sizeof(sa));
+	sa.sin_family = AF_INET;
+	sa.sin_port = htons(iPort);
+	sa.sin_addr.s_addr = htonl(INADDR_ANY);
+	int iRet = ::bind(m_ListenSock, (sockaddr*)&sa, sizeof(sa));
+	if (iRet == SOCKET_ERROR)
+	{
+		return false;
+	}
+	iRet = listen(m_ListenSock, SOMAXCONN);
+	if (iRet == SOCKET_ERROR)
+	{
+		return false;
+	}
+	std::cout << "서버 가동중......." << std::endl;
+	u_long on = 1;
+	ioctlsocket(m_ListenSock, FIONBIO, &on);
+
+	return true;
 }
 TAccepter::TAccepter()
 {
@@ -39,4 +67,10 @@ TAccepter::TAccepter()
 TAccepter::TAccepter(LPVOID value) : TThread(value)
 {
 
+}
+
+TAccepter::~TAccepter()
+{
+	closesocket(m_ListenSock);	
+	WSACleanup();
 }

@@ -4,6 +4,7 @@
 #include "TPacket.h"
 #include "TObjectPool.h"
 class TServer;
+// 비동기 작업이 완료 시점까지 OVERLAPPED 유지되어 있어야 된다.
 struct TOV : public TObjectPool<TOV>
 {
 	enum { MODE_RECV=1, MODE_SEND=2, MODE_EXIT};
@@ -21,7 +22,7 @@ struct TOV : public TObjectPool<TOV>
 	}
 };
 
-class TNetUser : public TServerObj, public TObjectPool<TNetUser>
+class TNetUser : public TServerObj
 {
 	TServer* m_pServer=nullptr;
 public:

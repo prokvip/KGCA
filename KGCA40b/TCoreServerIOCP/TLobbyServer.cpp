@@ -1,10 +1,4 @@
 #include "TLobbyServer.h"
-//void Func(int iA = -10, float iB= 3.0f, bool iC= false)
-//{
-//	int a = iA; // 10
-//	int b = iB; // 2.0f
-//	int c = iC; // true;
-//}
 DWORD WINAPI WorkerThread(LPVOID param)
 {
 	TLobbyServer* pServer = (TLobbyServer*)param;
@@ -107,7 +101,6 @@ bool TLobbyServer::InitServer(int iPort)
 	//}
 	return true;
 }
-
 bool TLobbyServer::Release()
 {
 	CloseHandle(g_hIOCP);

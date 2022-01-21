@@ -144,13 +144,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Sample.cpp" />
-    <ClCompile Include="TAccepter.cpp" />
     <ClCompile Include="TChatUser.cpp" />
     <ClCompile Include="TLobbyServer.cpp" />
     <ClCompile Include="TLoginServerProcess.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="TAccepter.h" />
     <ClInclude Include="TChatUser.h" />
     <ClInclude Include="TLobbyServer.h" />
   </ItemGroup>

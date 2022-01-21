@@ -149,6 +149,7 @@ copy "..\\..\\output\\Debug\\TCoreServer.lib" "..\\..\\Lib\\TCoreServer_d.lib"</
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="TAccepter.cpp" />
     <ClCompile Include="TNetUser.cpp" />
     <ClCompile Include="TPacket.cpp" />
     <ClCompile Include="TServer.cpp" />
@@ -156,6 +157,7 @@ copy "..\\..\\output\\Debug\\TCoreServer.lib" "..\\..\\Lib\\TCoreServer_d.lib"</
     <ClCompile Include="TThread.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="TAccepter.h" />
     <ClInclude Include="TNetUser.h" />
     <ClInclude Include="TObjectPool.h" />
     <ClInclude Include="TPacket.h" />

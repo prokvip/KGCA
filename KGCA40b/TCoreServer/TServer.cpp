@@ -14,32 +14,9 @@ bool TServer::InitServer(int iPort)
 			std::placeholders::_1, 
 			std::placeholders::_2 );
 	
-
-	WSADATA wsa;
-	if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0)
-	{
-		return false;
-	}
-	m_ListenSock = socket(AF_INET, SOCK_STREAM, 0);
-	SOCKADDR_IN sa;
-	ZeroMemory(&sa, sizeof(sa));
-	sa.sin_family = AF_INET;
-	sa.sin_port = htons(iPort);
-	sa.sin_addr.s_addr = htonl(INADDR_ANY);
-	int iRet = ::bind(m_ListenSock, (sockaddr*)&sa, sizeof(sa));
-	if (iRet == SOCKET_ERROR)
-	{
-		return false;
-	}
-	iRet = listen(m_ListenSock, SOMAXCONN);
-	if (iRet == SOCKET_ERROR)
-	{
-		return false;
-	}
-	std::cout << "서버 가동중......." << std::endl;
-	u_long on = 1;
-	ioctlsocket(m_ListenSock, FIONBIO, &on);
-
+	m_Accept.Set(iPort);
+	m_Accept.Create(this);
+	m_Accept.Detach();
 	return true;
 }
 bool TServer::Run()
@@ -50,13 +27,24 @@ bool TServer::AddUser(SOCKET sock, SOCKADDR_IN clientAddr)
 {
 	return true;
 }
-bool TServer::Release()
+bool TServer::DelUser(SOCKET sock)
 {
+	return true;
+}
+bool TServer::DelUser(TNetUser* pUser)
+{
+	pUser->DisConnect();
+	return true;
+}
+bool TServer::DelUser(m_UserIter& iter)
+{
+	DelUser((TNetUser*)*iter);
+	return true;
+}
+bool TServer::Release()
+{	
 	TObjectPool<TNetUser>::AllFree();
 	TObjectPool<TOV>::AllFree();
-
-	closesocket(m_ListenSock);
-	WSACleanup();
 	return true;
 }
 int TServer::SendMsg(SOCKET sock, UPACKET& packet)

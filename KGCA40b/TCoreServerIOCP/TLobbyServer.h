@@ -7,12 +7,6 @@ class TLobbyServer : public TServer
 public:
 	HANDLE g_hWorkThread[MAX_WORKER_THREAD];
 	HANDLE g_hIOCP;
-//public:
-//	typedef void (TServer::* CallFunction)(TPacket& t, TNetUser* user);
-//	typedef std::map<int, CallFunction>::iterator FuncionIterator;
-//	std::map<int, CallFunction> m_fnExecutePacket;
-public:
-	
 public:
 	virtual void LoginReq(TPacket& t, TNetUser* user) override;
 	virtual void ChatMsg(TPacket& t, TNetUser* user);
