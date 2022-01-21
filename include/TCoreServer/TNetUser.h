@@ -2,15 +2,26 @@
 #define _WINSOCK_DEPRECATED_NO_WARNINGS
 #include "TServerObj.h"
 #include "TPacket.h"
-
+#include "TObjectPool.h"
 class TServer;
-struct TOV 
+struct TOV : public TObjectPool<TOV>
 {
+	enum { MODE_RECV=1, MODE_SEND=2, MODE_EXIT};
 	OVERLAPPED ov;
 	int  type;	
+	TOV(int packetType)
+	{
+		ZeroMemory(&ov, sizeof(OVERLAPPED));
+		type = packetType;
+	}
+	TOV()
+	{
+		ZeroMemory(&ov, sizeof(OVERLAPPED));
+		type = MODE_RECV;
+	}
 };
 
-class TNetUser : public TServerObj
+class TNetUser : public TServerObj, public TObjectPool<TNetUser>
 {
 	TServer* m_pServer=nullptr;
 public:
@@ -19,9 +30,6 @@ public:
 	SOCKADDR_IN m_Addr;
 	std::string m_csName;
 	short       m_iPort;
-	// buffer
-	TOV			m_ovRecv;
-	TOV			m_ovSend;
 	WSABUF		m_wsaRecvBuffer;
 	WSABUF		m_wsaSendBuffer;
 	char		m_szRecv[256];

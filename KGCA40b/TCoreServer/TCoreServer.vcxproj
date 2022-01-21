@@ -157,6 +157,7 @@ copy "..\\..\\output\\Debug\\TCoreServer.lib" "..\\..\\Lib\\TCoreServer_d.lib"</
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TNetUser.h" />
+    <ClInclude Include="TObjectPool.h" />
     <ClInclude Include="TPacket.h" />
     <ClInclude Include="TProtocol.h" />
     <ClInclude Include="TServer.h" />

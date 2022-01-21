@@ -52,6 +52,9 @@ bool TServer::AddUser(SOCKET sock, SOCKADDR_IN clientAddr)
 }
 bool TServer::Release()
 {
+	TObjectPool<TNetUser>::AllFree();
+	TObjectPool<TOV>::AllFree();
+
 	closesocket(m_ListenSock);
 	WSACleanup();
 	return true;

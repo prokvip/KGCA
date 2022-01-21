@@ -28,9 +28,11 @@ DWORD WINAPI WorkerThread(LPVOID param)
 		TOV* pOV = (TOV*)pOverlapped;
 		if (bReturn == TRUE && pUser && pOV )
 		{
-			if (dwTransfer == 0 && pOV->type == 1000)
+			if (dwTransfer == 0 )
 			{
+				pOV->type == TOV::MODE_EXIT;
 				pUser->m_bConnect = false;
+				//PostQueuedCompletionStatus();
 			}
 			else
 			{

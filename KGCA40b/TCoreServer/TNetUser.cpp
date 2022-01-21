@@ -3,10 +3,9 @@
 
 int TNetUser::Recv()
 {
-	// 비동기 로드	
+	TOV* ov = new TOV(TOV::MODE_RECV);
 	m_wsaRecvBuffer.len = sizeof(char)*256;
 	m_wsaRecvBuffer.buf = m_szRecv;
-	m_ovRecv.type = 1000;
 	DWORD dwRead;
 	DWORD lpFlags=0;
 	BOOL ret = WSARecv(m_Sock, 
@@ -14,7 +13,7 @@ int TNetUser::Recv()
 		1, 
 		&dwRead,
 		&lpFlags,
-		(WSAOVERLAPPED*)&m_ovRecv,
+		(WSAOVERLAPPED*)ov,
 		nullptr);
 	if (ret == SOCKET_ERROR)
 	{
@@ -33,10 +32,10 @@ int TNetUser::SendMsg(char* msg, int iSize, WORD type)
 	uPacket.ph.type = type;
 	memcpy(uPacket.msg, msg, iSize);
 	//memcpy(m_szSend, &uPacket, uPacket.ph.len);
-
+	TOV* ov = new TOV(TOV::MODE_SEND);
 	m_wsaSendBuffer.len = uPacket.ph.len;
 	m_wsaSendBuffer.buf = (char*)&uPacket;
-	m_ovSend.type = 2000;
+	
 	DWORD dwWrite;
 	DWORD lpFlags = 0;
 	BOOL ret = WSASend(m_Sock,
@@ -44,7 +43,7 @@ int TNetUser::SendMsg(char* msg, int iSize, WORD type)
 		1,
 		&dwWrite,
 		0,
-		(WSAOVERLAPPED*)&m_ovSend,
+		(WSAOVERLAPPED*)ov,
 		nullptr);
 	if (ret == SOCKET_ERROR)
 	{
@@ -57,11 +56,10 @@ int TNetUser::SendMsg(char* msg, int iSize, WORD type)
 }
 int TNetUser::SendMsg(UPACKET& packet)
 {
-	// 비동기 로드	
+	TOV* ov = new TOV(TOV::MODE_SEND);
 	m_wsaSendBuffer.len = packet.ph.len;
 	m_wsaSendBuffer.buf = (char*)&packet;
-	memcpy(m_wsaSendBuffer.buf, (char*)&packet, packet.ph.len- PACKET_HEADER_SIZE);
-	m_ovSend.type = 2000;
+	
 	DWORD dwWrite;
 	DWORD lpFlags = 0;
 	BOOL ret = WSASend(m_Sock,
@@ -69,7 +67,7 @@ int TNetUser::SendMsg(UPACKET& packet)
 		1,
 		&dwWrite,
 		0,
-		(WSAOVERLAPPED*)&m_ovSend,
+		(WSAOVERLAPPED*)ov,
 		nullptr);
 	if (ret == SOCKET_ERROR)
 	{
@@ -82,18 +80,20 @@ int TNetUser::SendMsg(UPACKET& packet)
 }
 int TNetUser::Dispatch(DWORD dwTrans, TOV* tov)
 {
+	delete tov;
 	if (m_bConnect == false)
 	{
 		return 0;
 	}
-	if (tov->type == 1000)
+	if(tov->type == TOV::MODE_RECV )
 	{
 		if (!DispatchRecv(m_szRecv, dwTrans))
 		{
 		}	
 		Recv();
+		return 1;
 	}
-	if(tov->type == 2000)
+	if(tov->type == TOV::MODE_SEND)
 	{
 		if (!DispatchSend(dwTrans))
 		{
