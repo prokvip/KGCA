@@ -3,7 +3,34 @@
 #include <winsock2.h>
 #include <windows.h>
 #include <iostream>
+#include <process.h>
 #pragma comment(lib, "ws2_32.lib")
+
+unsigned WINAPI SendThread(LPVOID arg)
+{
+	SOCKET sock = (SOCKET)arg;
+	char SendBuffer[256] = { 0, };
+
+	SOCKADDR_IN addressSend;
+	ZeroMemory(&addressSend, sizeof(addressSend));
+	addressSend.sin_family = AF_INET;
+	addressSend.sin_port = htons(9000);
+	addressSend.sin_addr.s_addr = INADDR_BROADCAST;
+
+	{
+		while (1)
+		{
+			fgets(SendBuffer, 256, stdin);
+			int iRet = sendto(sock, SendBuffer, strlen(SendBuffer), 0,
+				(SOCKADDR*)&addressSend, sizeof(addressSend));
+			if (iRet == SOCKET_ERROR)
+			{
+				break;
+			}
+		}
+	}
+	return 0;
+}
 
 void main()
 {
@@ -19,49 +46,34 @@ void main()
 	{
 		closesocket(sock);
 	}
+
 	int iRet = -1;
 	SOCKADDR_IN address;
 	ZeroMemory(&address, sizeof(address));
 	address.sin_family = AF_INET;
 	address.sin_port = htons(9000);
-	address.sin_addr.s_addr = INADDR_ANY;// inet_addr("192.168.0.12");
+	address.sin_addr.s_addr = INADDR_ANY;
 	iRet = bind(sockRecv, (SOCKADDR*)&address, sizeof(address));
 
-	SOCKADDR_IN addressSend;
-	ZeroMemory(&address, sizeof(addressSend));
-	addressSend.sin_family = AF_INET;
-	addressSend.sin_port = htons(9000);
-	addressSend.sin_addr.s_addr = INADDR_BROADCAST;
+
+	unsigned int id;
+	unsigned long hSendThread =	_beginthreadex(NULL, 0, SendThread,	(LPVOID)sock, 0, &id);
 
 	SOCKADDR_IN recvAddr;
-	char SendBuf[256] = { 0, };
 	char RecvBuf[256] = { 0, };
 	INT addlen = sizeof(recvAddr);
-	int iCount = 0;
-	srand(time(NULL));
 	while (1)
 	{
-		iCount++;
-		if (iCount % 2 == 1)
-		{
-			sprintf(SendBuf, "%s:%d", "ÇÐ¿ø", iCount++);
-			int iRet = sendto(sock, SendBuf, strlen(SendBuf), 0,
-				(SOCKADDR*)&addressSend, sizeof(addressSend));
-			if (iRet == SOCKET_ERROR)
-			{
-				break;
-			}
-		}
-
 		iRet = recvfrom(sockRecv, RecvBuf, 256, 0, (SOCKADDR*)&recvAddr, &addlen);
 		if (iRet == SOCKET_ERROR)
 		{
 			break;
 		}
 		RecvBuf[iRet] = 0;
-		printf("\n[%s:%d]:%s", inet_ntoa(recvAddr.sin_addr),
-			ntohs(recvAddr.sin_port), RecvBuf);
-		Sleep(1000);
+		printf("\n[%s:%d]:%s", 
+			inet_ntoa(recvAddr.sin_addr),
+			ntohs(recvAddr.sin_port), 
+			RecvBuf);
 	}
 
 	WSACleanup();
