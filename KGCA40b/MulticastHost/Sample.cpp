@@ -107,7 +107,7 @@ void main()
 	ip_mreq_source mreqsource;
 	mreqsource.imr_interface = mreq.imr_interface;
 	mreqsource.imr_multiaddr = mreq.imr_multiaddr;
-	mreqsource.imr_sourceaddr.s_addr = inet_addr("192.168.0.40");
+	mreqsource.imr_sourceaddr.s_addr = inet_addr("192.168.0.115");
 	iRet = setsockopt(sockRecv, IPPROTO_IP, IP_BLOCK_SOURCE,
 		(char*)&mreqsource, sizeof(mreqsource));
 	if (iRet == SOCKET_ERROR)
