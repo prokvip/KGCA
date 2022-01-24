@@ -54,6 +54,7 @@ void main()
 		Error("sock invalid");
 	}
 
+	int iRet = -1;
 
 	SOCKET sock = socket(AF_INET, SOCK_DGRAM, 0);
 	if (sock == INVALID_SOCKET)
@@ -63,16 +64,32 @@ void main()
 	// socket option
 	SetMulticastLoopBack(sock, AF_INET, false);
 	BOOL optval = TRUE;
-	setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, (char*)&optval, sizeof(optval));
+	iRet = setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, (char*)&optval, sizeof(optval));
+	if (iRet == SOCKET_ERROR)
+	{
+		Error("sock invalid");
+	}
 	bool loop = false;
-	setsockopt(sock, IPPROTO_IP, IP_MULTICAST_LOOP, (char*)&loop, sizeof(loop));
+	iRet = setsockopt(sock, IPPROTO_IP, IP_MULTICAST_LOOP, (char*)&loop, sizeof(loop));
+	if (iRet == SOCKET_ERROR)
+	{
+		Error("sock invalid");
+	}
 	int ttl = 3;
-	setsockopt(sock, IPPROTO_IP, IP_MULTICAST_TTL, (char*)&ttl, sizeof(ttl));
-	ULONG addr = inet_addr("192.168.0.12");
-	setsockopt(sock, IPPROTO_IP, IP_MULTICAST_IF, (char*)&addr, sizeof(addr));
+	iRet = setsockopt(sock, IPPROTO_IP, IP_MULTICAST_TTL, (char*)&ttl, sizeof(ttl));
+	if (iRet == SOCKET_ERROR)
+	{
+		Error("sock invalid");
+	}
+	ULONG addr = inet_addr("127.0.0.1");
+	iRet = setsockopt(sock, IPPROTO_IP, IP_MULTICAST_IF, (char*)&addr, sizeof(addr));
+	if (iRet == SOCKET_ERROR)
+	{
+		Error("sock invalid");
+	}
 
 	
-	int iRet = -1;
+	
 	SOCKADDR_IN serveradd;
 	ZeroMemory(&serveradd, sizeof(serveradd));
 	serveradd.sin_family = AF_INET;
@@ -89,6 +106,7 @@ void main()
 	ZeroMemory(&multicastAddr, sizeof(multicastAddr));
 	multicastAddr.sin_family = AF_INET;
 	multicastAddr.sin_port = htons(9000);
+	// 224.0.0.0 ~ 239.255.255.255 범위 사용한다.
 	multicastAddr.sin_addr.s_addr = inet_addr("235.7.8.9");
 
 	// INCLUDE 대상 포함 
@@ -138,14 +156,14 @@ void main()
 		}
 		printf("\n%s",  buf);
 
-		iRet = recvfrom(sock, buf, 256, 0, (SOCKADDR*)&clientAddr, &addlen);
+		/*iRet = recvfrom(sock, buf, 256, 0, (SOCKADDR*)&clientAddr, &addlen);
 		if (iRet == SOCKET_ERROR)
 		{
 			Error("sock invalid");
 		}
 		buf[iRet] = 0;
 		printf("\n[%s:%d]:%s", inet_ntoa(clientAddr.sin_addr), ntohs(clientAddr.sin_port), buf);
-		
+		*/
 		Sleep(1000);
 
 	}
