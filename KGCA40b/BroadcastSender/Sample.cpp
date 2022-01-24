@@ -18,13 +18,13 @@ void main()
 	{
 		closesocket(sock);
 	}
-
+	int iRet = -1;
 	SOCKADDR_IN address;
 	ZeroMemory(&address, sizeof(address));
 	address.sin_family = AF_INET;
 	address.sin_port = htons(9000);
 	address.sin_addr.s_addr = INADDR_BROADCAST;
-	//int iRet = bind(sock, (SOCKADDR*)&address, sizeof(address));
+	//iRet = bind(sock, (SOCKADDR*)&address, sizeof(address));
 
 	SOCKADDR_IN recvAddr;
 	char SendBuf[256] = { 0, };
@@ -34,7 +34,7 @@ void main()
 
 	while (1)
 	{
-		sprintf(SendBuf, "%s:%d", "kgca", iCount++);
+		sprintf(SendBuf, "%s:%d", "ÇÐ¿ø", iCount++);
 		int iRet = sendto(sock, SendBuf, strlen(SendBuf), 0,
 			(SOCKADDR*)&address, sizeof(address));
 		if (iRet == SOCKET_ERROR)
