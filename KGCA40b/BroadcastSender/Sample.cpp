@@ -12,6 +12,7 @@ void main()
 	{
 		return;
 	}
+
 	SOCKET sock = socket(AF_INET, SOCK_DGRAM, 0);
 	char flag = true;
 	if (setsockopt(sock, SOL_SOCKET, SO_BROADCAST, &flag, sizeof(flag)) < 0)
@@ -23,33 +24,26 @@ void main()
 	ZeroMemory(&address, sizeof(address));
 	address.sin_family = AF_INET;
 	address.sin_port = htons(9000);
-	address.sin_addr.s_addr = INADDR_BROADCAST;
+	address.sin_addr.s_addr = INADDR_ANY;// inet_addr("192.168.0.12");
+	iRet = bind(sock, (SOCKADDR*)&address, sizeof(address));
 
 	SOCKADDR_IN recvAddr;
-	char SendBuf[256] = { 0, };
-	char RecvBuf[256] = { 0, };
+	char buf[256] = { 0, };
 	INT addlen = sizeof(recvAddr);
-	int iCount = 0;
-
 	while (1)
 	{
-		sprintf(SendBuf, "%s:%d", "ÇÐ¿ø", iCount++);
-		int iRet = sendto(sock, SendBuf, strlen(SendBuf), 0,
-			(SOCKADDR*)&address, sizeof(address));
+		iRet = recvfrom(sock, buf, 256, 0, (SOCKADDR*)&recvAddr, &addlen);
 		if (iRet == SOCKET_ERROR)
 		{
 			break;
 		}
-
-		iRet = recvfrom(sock, RecvBuf, 256, 0, (SOCKADDR*)&recvAddr, &addlen);
+		buf[iRet] = 0;
+		printf("\n[%s:%d]:%s", inet_ntoa(recvAddr.sin_addr), ntohs(recvAddr.sin_port), buf);
+		iRet = sendto(sock, buf, iRet, 0, (SOCKADDR*)&recvAddr, sizeof(recvAddr));
 		if (iRet == SOCKET_ERROR)
 		{
 			break;
 		}
-		RecvBuf[iRet] = 0;
-		printf("\n[%s:%d]:%s", inet_ntoa(recvAddr.sin_addr),
-			ntohs(recvAddr.sin_port), RecvBuf);
-		Sleep(1000);
 	}
 
 	WSACleanup();
