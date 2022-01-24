@@ -48,6 +48,13 @@ void main()
 	{
 		return;
 	}
+	SOCKET sendSock = socket(AF_INET, SOCK_DGRAM, 0);
+	if (sendSock == INVALID_SOCKET)
+	{
+		Error("sock invalid");
+	}
+
+
 	SOCKET sock = socket(AF_INET, SOCK_DGRAM, 0);
 	if (sock == INVALID_SOCKET)
 	{
@@ -64,27 +71,24 @@ void main()
 	ULONG addr = inet_addr("192.168.0.12");
 	setsockopt(sock, IPPROTO_IP, IP_MULTICAST_IF, (char*)&addr, sizeof(addr));
 
-	SOCKET sendSock = socket(AF_INET, SOCK_DGRAM, 0);
-	if (sock == INVALID_SOCKET)
-	{
-		Error("sock invalid");
-	}
+	
+	int iRet = -1;
 	SOCKADDR_IN serveradd;
 	ZeroMemory(&serveradd, sizeof(serveradd));
 	serveradd.sin_family = AF_INET;
 	serveradd.sin_port = htons(9000);
 	// 멀티케스트 그룹에 가입하려면 반드시 INADDR_ANY를 사용해야 한다.
 	serveradd.sin_addr.s_addr = htonl(INADDR_ANY);
-	int iRet = bind(sock, (SOCKADDR*)&serveradd, sizeof(serveradd));
+	/*iRet = bind(sock, (SOCKADDR*)&serveradd, sizeof(serveradd));
 	if (iRet == SOCKET_ERROR)
 	{
-		Error("sock invalid");
-	}
+		return;
+	}*/
 
 	SOCKADDR_IN multicastAddr;
 	ZeroMemory(&multicastAddr, sizeof(multicastAddr));
 	multicastAddr.sin_family = AF_INET;
-	multicastAddr.sin_port = htons(10001);
+	multicastAddr.sin_port = htons(9000);
 	multicastAddr.sin_addr.s_addr = inet_addr("235.7.8.9");
 
 	// INCLUDE 대상 포함 
@@ -102,7 +106,7 @@ void main()
 	// IP_ADD_MEMBERSHIP <-> IP_BLOCK_SOURCE
 	struct ip_mreq mreq;
 	mreq.imr_multiaddr.s_addr = inet_addr("235.7.8.9");
-	mreq.imr_interface.s_addr = inet_addr("192.168.0.40");
+	mreq.imr_interface.s_addr = inet_addr("192.168.0.12");
 	iRet = setsockopt(sock, IPPROTO_IP, IP_ADD_MEMBERSHIP, (char*)&mreq, sizeof(mreq));
 	if (iRet == SOCKET_ERROR)
 	{
@@ -132,6 +136,7 @@ void main()
 		{
 			Error("sock invalid");
 		}
+		printf("\n%s",  buf);
 
 		iRet = recvfrom(sock, buf, 256, 0, (SOCKADDR*)&clientAddr, &addlen);
 		if (iRet == SOCKET_ERROR)
@@ -140,6 +145,7 @@ void main()
 		}
 		buf[iRet] = 0;
 		printf("\n[%s:%d]:%s", inet_ntoa(clientAddr.sin_addr), ntohs(clientAddr.sin_port), buf);
+		
 		Sleep(1000);
 
 	}

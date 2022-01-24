@@ -4,6 +4,7 @@
 #include <ws2tcpip.h>
 #include <windows.h>
 #include <iostream>
+#include <process.h>
 #pragma comment(lib, "ws2_32.lib")
 void Error(const char* msg)
 {
@@ -20,6 +21,30 @@ void Error(const char* msg)
 	LocalFree(lpMsgBuffer);
 	//exit(-1);
 }
+unsigned WINAPI SendThread(LPVOID arg)
+{
+	SOCKET sock = (SOCKET)arg;
+	char SendBuffer[256] = { 0, };
+
+	SOCKADDR_IN multicastAddress;
+	ZeroMemory(&multicastAddress, sizeof(multicastAddress));
+	multicastAddress.sin_family = AF_INET;
+	multicastAddress.sin_port = htons(9000);
+	multicastAddress.sin_addr.s_addr = inet_addr("235.7.8.9");
+	{
+		while (1)
+		{
+			fgets(SendBuffer, 256, stdin);
+			int iRet = sendto(sock, SendBuffer, strlen(SendBuffer), 0,
+				(SOCKADDR*)&multicastAddress, sizeof(multicastAddress));
+			if (iRet == SOCKET_ERROR)
+			{
+				break;
+			}
+		}
+	}
+	return 0;
+}
 void main()
 {
 	WSADATA wd;
@@ -28,14 +53,16 @@ void main()
 		return;
 	}
 
-	SOCKET sockRecv= socket(AF_INET, SOCK_DGRAM, 0);
+
+
+	SOCKET sockRecv = socket(AF_INET, SOCK_DGRAM, 0);
 	SOCKET sockSend = socket(AF_INET, SOCK_DGRAM, 0);
 	int val = 1;
 	char* opt = (char*)&val;
 	int optlevel = IPPROTO_IP;
 	int iption = IP_MULTICAST_LOOP;
 	int optlen = sizeof(opt);
-	int iRet = setsockopt(sockRecv, IPPROTO_IP, 
+	int iRet = setsockopt(sockRecv, IPPROTO_IP,
 		IP_MULTICAST_LOOP, opt, sizeof(opt));
 	if (iRet == SOCKET_ERROR)
 	{
@@ -55,8 +82,8 @@ void main()
 	ip_mreq mreq;
 	mreq.imr_interface.s_addr = inet_addr("192.168.0.12");
 	mreq.imr_multiaddr.s_addr = inet_addr("235.7.8.9");
-	iRet = setsockopt(sockRecv, IPPROTO_IP, IP_ADD_MEMBERSHIP, 
-		(char*)&mreq, sizeof(mreq) );
+	iRet = setsockopt(sockRecv, IPPROTO_IP, IP_ADD_MEMBERSHIP,
+		(char*)&mreq, sizeof(mreq));
 	if (iRet == SOCKET_ERROR)
 	{
 		Error("error");
@@ -76,7 +103,7 @@ void main()
 	setsockopt(sockRecv, IPPROTO_IP, IP_ADD_SOURCE_MEMBERSHIP,
 		(char*)&mreq, sizeof(mreq));*/
 
-	// exclude 대상 삭제
+		// exclude 대상 삭제
 	ip_mreq_source mreqsource;
 	mreqsource.imr_interface = mreq.imr_interface;
 	mreqsource.imr_multiaddr = mreq.imr_multiaddr;
@@ -88,13 +115,16 @@ void main()
 		Error("error");
 		return;
 	}
-	
+
 	SOCKADDR_IN multicastAddress;
 	ZeroMemory(&multicastAddress, sizeof(multicastAddress));
 	multicastAddress.sin_family = AF_INET;
 	multicastAddress.sin_port = htons(9000);
 	multicastAddress.sin_addr.s_addr = inet_addr("235.7.8.9");
 
+
+	unsigned int id;
+	unsigned long hSendThread = _beginthreadex(NULL, 0, SendThread, (LPVOID)sockRecv, 0, &id);
 
 	SOCKADDR_IN recvAddr;
 	char buf[256] = { 0, };
@@ -106,15 +136,11 @@ void main()
 		if (iRet == SOCKET_ERROR)
 		{
 			break;
-		}
-		buf[iRet] = 0;		
-		iRet = sendto(sockSend, buf, iRet, 0,
-			(SOCKADDR*)&multicastAddress, sizeof(multicastAddress));
-		if (iRet == SOCKET_ERROR)
-		{
-			break;
-		}
-		printf("\n[%s:%d]:%s", inet_ntoa(recvAddr.sin_addr), ntohs(recvAddr.sin_port), buf);
+		}		
+		buf[iRet] = 0;
+		printf("\n[%s:%d]:%s", 
+			inet_ntoa(recvAddr.sin_addr), 
+			ntohs(recvAddr.sin_port), buf);
 	}
 
 
