@@ -13,6 +13,7 @@ void main()
 		return;
 	}
 	SOCKET sock = socket(AF_INET, SOCK_DGRAM, 0);
+	SOCKET sockRecv = socket(AF_INET, SOCK_DGRAM, 0);
 	char flag = true;
 	if (setsockopt(sock, SOL_SOCKET, SO_BROADCAST, &flag, sizeof(flag)) < 0)
 	{
@@ -23,25 +24,35 @@ void main()
 	ZeroMemory(&address, sizeof(address));
 	address.sin_family = AF_INET;
 	address.sin_port = htons(9000);
-	address.sin_addr.s_addr = INADDR_BROADCAST;
+	address.sin_addr.s_addr = INADDR_ANY;// inet_addr("192.168.0.12");
+	iRet = bind(sockRecv, (SOCKADDR*)&address, sizeof(address));
+
+	SOCKADDR_IN addressSend;
+	ZeroMemory(&address, sizeof(addressSend));
+	addressSend.sin_family = AF_INET;
+	addressSend.sin_port = htons(9000);
+	addressSend.sin_addr.s_addr = INADDR_BROADCAST;
 
 	SOCKADDR_IN recvAddr;
 	char SendBuf[256] = { 0, };
 	char RecvBuf[256] = { 0, };
 	INT addlen = sizeof(recvAddr);
 	int iCount = 0;
-
+	srand(time(NULL));
 	while (1)
 	{
-		sprintf(SendBuf, "%s:%d", "학원", iCount++);
-		int iRet = sendto(sock, SendBuf, strlen(SendBuf), 0,
-			(SOCKADDR*)&address, sizeof(address));
-		if (iRet == SOCKET_ERROR)
+		if (rand() % 14 == 0)
 		{
-			break;
+			sprintf(SendBuf, "%s:%d", "학원", iCount++);
+			int iRet = sendto(sock, SendBuf, strlen(SendBuf), 0,
+				(SOCKADDR*)&addressSend, sizeof(addressSend));
+			if (iRet == SOCKET_ERROR)
+			{
+				break;
+			}
 		}
 
-		iRet = recvfrom(sock, RecvBuf, 256, 0, (SOCKADDR*)&recvAddr, &addlen);
+		iRet = recvfrom(sockRecv, RecvBuf, 256, 0, (SOCKADDR*)&recvAddr, &addlen);
 		if (iRet == SOCKET_ERROR)
 		{
 			break;
