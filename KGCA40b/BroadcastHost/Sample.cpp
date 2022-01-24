@@ -41,7 +41,8 @@ void main()
 	srand(time(NULL));
 	while (1)
 	{
-		if (rand() % 14 == 0)
+		iCount++;
+		if (iCount % 2 == 1)
 		{
 			sprintf(SendBuf, "%s:%d", "ÇÐ¿ø", iCount++);
 			int iRet = sendto(sock, SendBuf, strlen(SendBuf), 0,
