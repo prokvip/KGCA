@@ -12,6 +12,10 @@ bool TNetwork::InitNetwork()
 bool TNetwork::InitServer(int protocol, int iport, const char* ip)
 {
 	m_Sock = socket(AF_INET, protocol, 0);
+
+	int optval = 1;
+	setsockopt(m_Sock, IPPROTO_TCP, TCP_NODELAY, (char*)&optval, sizeof(int));
+
 	SOCKADDR_IN sa;
 	ZeroMemory(&sa, sizeof(sa));
 	sa.sin_family = AF_INET;
@@ -32,6 +36,7 @@ bool TNetwork::InitServer(int protocol, int iport, const char* ip)
 }
 bool TNetwork::CloseNetwork()
 {
+	shutdown(m_Sock, SD_SEND);
 	closesocket(m_Sock);	
 	WSACleanup();
 	return true;

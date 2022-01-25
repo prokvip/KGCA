@@ -9,6 +9,8 @@ bool    TAsyncSelect::Connect(HWND hWnd, int protocol, int iport, const char* ip
 	sa.sin_addr.s_addr = inet_addr(ip);
 	m_PlayerUser.m_Sock = m_Sock;
 
+	
+
 	if (WSAAsyncSelect(m_Sock, hWnd, NETWORK_MSG,
 		FD_CONNECT | FD_READ | FD_WRITE | FD_CLOSE) == SOCKET_ERROR)
 	{

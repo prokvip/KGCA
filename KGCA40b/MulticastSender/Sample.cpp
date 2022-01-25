@@ -75,13 +75,13 @@ void main()
 	{
 		Error("sock invalid");
 	}
-	int ttl = 3;
+	int ttl = 100;
 	iRet = setsockopt(sock, IPPROTO_IP, IP_MULTICAST_TTL, (char*)&ttl, sizeof(ttl));
 	if (iRet == SOCKET_ERROR)
 	{
 		Error("sock invalid");
 	}
-	ULONG addr = inet_addr("127.0.0.1");
+	ULONG addr = inet_addr("112.216.123.139");
 	iRet = setsockopt(sock, IPPROTO_IP, IP_MULTICAST_IF, (char*)&addr, sizeof(addr));
 	if (iRet == SOCKET_ERROR)
 	{
@@ -124,7 +124,7 @@ void main()
 	// IP_ADD_MEMBERSHIP <-> IP_BLOCK_SOURCE
 	struct ip_mreq mreq;
 	mreq.imr_multiaddr.s_addr = inet_addr("235.7.8.9");
-	mreq.imr_interface.s_addr = inet_addr("192.168.0.12");
+	mreq.imr_interface.s_addr = inet_addr("112.216.123.139");
 	iRet = setsockopt(sock, IPPROTO_IP, IP_ADD_MEMBERSHIP, (char*)&mreq, sizeof(mreq));
 	if (iRet == SOCKET_ERROR)
 	{
