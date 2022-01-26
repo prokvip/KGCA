@@ -12,6 +12,7 @@ LRESULT  Sample::MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 			char buffer[MAX_PATH] = { 0, };
 			SendMessageA(m_hEdit, WM_GETTEXT, MAX_PATH, (LPARAM)buffer);
 			TPacket tPacket(PACKET_CHAT_MSG);
+			tPacket.m_uPacket.ph.time = timeGetTime();
 			tPacket << 999 << "ȫ�浿" << buffer;
 			m_Net.SendMsg(m_Net.m_Sock, tPacket.m_uPacket);
 
@@ -61,10 +62,14 @@ bool	Sample::Frame()
 			iter != m_Net.m_PlayerUser.m_packetPool.end();
 			iter++)
 		{
+			UPACKET& uPacket = (*iter).m_uPacket;
 			switch ((*iter).m_uPacket.ph.type)
 			{
 				case PACKET_LOGIN_ACK:
 				{
+					DWORD dwCurrent = timeGetTime();
+					DWORD dwEnd = 0;
+					dwEnd = dwCurrent - uPacket.ph.time;
 					TLoginAck ack;
 					memcpy(&ack, (*iter).m_uPacket.msg, sizeof(TLoginAck));
 					if (ack.iResult == 1)
@@ -74,6 +79,15 @@ bool	Sample::Frame()
 				}break;
 				case PACKET_CHAT_MSG:
 				{
+					DWORD dwCurrent = timeGetTime();
+					DWORD dwEnd = 0;
+					dwEnd = dwCurrent - uPacket.ph.time;
+					if (dwEnd >= 1)
+					{
+						std::string data = std::to_string(dwEnd);
+						data += "\n";
+						OutputDebugStringA(data.c_str());
+					}
 					TChatMsg recvdata;
 					ZeroMemory(&recvdata, sizeof(recvdata));
 					(*iter) >> recvdata.index >> recvdata.name
@@ -83,8 +97,9 @@ bool	Sample::Frame()
 				}break;
 			}			
 			//iter = m_Net.m_PlayerUser.m_packetPool.erase(iter);
-			(*iter).Reset();
+			//(*iter).Reset();
 		}
+		m_Net.m_PlayerUser.m_packetPool.clear();
 	}
 	return true;
 }
