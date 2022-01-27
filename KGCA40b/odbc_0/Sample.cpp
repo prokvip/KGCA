@@ -81,7 +81,52 @@ void main()
 	{
 		std::wcout << Name <<" " << Price << " " << Korean << std::endl;
 	}
+	SQLCloseCursor(g_hStmt);
 
+
+	ret = SQLBindCol(g_hStmt, 1, SQL_C_ULONG, &Price, 0, &lPrice);
+	TCHAR sql2[MAX_PATH] = { 0, };// L"select name,price,korean from tblCigar='%s'";
+	wsprintf(sql2, L"select price from tblCigar where  name='%s'", L"장미");
+	ret = SQLExecDirect(g_hStmt, (SQLTCHAR*)&sql2, SQL_NTS);
+
+	while (SQLFetch(g_hStmt) != SQL_NO_DATA)
+	{
+		std::wcout << Price << std::endl;
+	}
+	SQLCloseCursor(g_hStmt);
+
+	//TCHAR sql3[MAX_PATH] = { 0, };// L"select name,price,korean from tblCigar='%s'";
+	//wsprintf(sql3, L"insert into tblCigar (name,price, korean) values ('%s',%d,%d)",
+	//				L"디스플러스", 4100, 1);
+	//ret = SQLExecDirect(g_hStmt, (SQLTCHAR*)&sql3, SQL_NTS);
+	//if (ret != SQL_SUCCESS )
+	//{
+	//	Check();
+	//	return;
+	//}	
+	//SQLCloseCursor(g_hStmt);
+
+	//TCHAR sql3[MAX_PATH] = { 0, };// L"select name,price,korean from tblCigar='%s'";
+	//wsprintf(sql3, L"delete from tblCigar where name='%s'",
+	//	L"xxxxxx");
+	//ret = SQLExecDirect(g_hStmt, (SQLTCHAR*)&sql3, SQL_NTS);
+	//if (ret != SQL_SUCCESS)
+	//{
+	//	Check();
+	//	return;
+	//}
+	//SQLCloseCursor(g_hStmt);
+
+	TCHAR sql4[MAX_PATH] = { 0, };// L"select name,price,korean from tblCigar='%s'";
+	wsprintf(sql4, L"update tblCigar set name='%s' where name='%s'",
+		L"코로나", L"88 Light");
+	ret = SQLExecDirect(g_hStmt, (SQLTCHAR*)&sql4, SQL_NTS);
+	if (ret != SQL_SUCCESS)
+	{
+		Check();
+		return;
+	}
+	SQLCloseCursor(g_hStmt);
 	SQLFreeHandle(SQL_HANDLE_STMT, g_hStmt);
 	SQLDisconnect(g_hDbc);
 	SQLFreeHandle(SQL_HANDLE_DBC, g_hDbc);
