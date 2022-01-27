@@ -1,0 +1,40 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "ProudDB2-Test", "ProudDB2-Test\ProudDB2-Test.sqlproj", "{49A73B17-2FA7-4FAE-AACE-6B89E8D77077}"
+EndProject
+Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "ProudAdo-Test", "ProudAdo-Test\ProudAdo-Test.sqlproj", "{769BB954-C26B-41D6-9F8F-F09BAB48807C}"
+EndProject
+Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "ProudLog-Test", "ProudLog-Test\ProudLog-Test.sqlproj", "{1E31D8C7-DCA8-418B-BFF2-BE7A96FACA5F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{49A73B17-2FA7-4FAE-AACE-6B89E8D77077}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{49A73B17-2FA7-4FAE-AACE-6B89E8D77077}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{49A73B17-2FA7-4FAE-AACE-6B89E8D77077}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{49A73B17-2FA7-4FAE-AACE-6B89E8D77077}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{49A73B17-2FA7-4FAE-AACE-6B89E8D77077}.Release|Any CPU.Build.0 = Release|Any CPU
+		{49A73B17-2FA7-4FAE-AACE-6B89E8D77077}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{769BB954-C26B-41D6-9F8F-F09BAB48807C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{769BB954-C26B-41D6-9F8F-F09BAB48807C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{769BB954-C26B-41D6-9F8F-F09BAB48807C}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{769BB954-C26B-41D6-9F8F-F09BAB48807C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{769BB954-C26B-41D6-9F8F-F09BAB48807C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{769BB954-C26B-41D6-9F8F-F09BAB48807C}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{1E31D8C7-DCA8-418B-BFF2-BE7A96FACA5F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1E31D8C7-DCA8-418B-BFF2-BE7A96FACA5F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1E31D8C7-DCA8-418B-BFF2-BE7A96FACA5F}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{1E31D8C7-DCA8-418B-BFF2-BE7A96FACA5F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1E31D8C7-DCA8-418B-BFF2-BE7A96FACA5F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1E31D8C7-DCA8-418B-BFF2-BE7A96FACA5F}.Release|Any CPU.Deploy.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

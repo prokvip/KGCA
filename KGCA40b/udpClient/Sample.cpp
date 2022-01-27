@@ -17,7 +17,7 @@ void main()
 	ZeroMemory(&address, sizeof(address));
 	address.sin_family = AF_INET;
 	address.sin_port = htons(9000);
-	address.sin_addr.s_addr = inet_addr("192.168.0.12");
+	address.sin_addr.s_addr = inet_addr("112.216.123.139");
 	int iRet = bind(sock, (SOCKADDR*)&address, sizeof(address));
 
 	SOCKADDR_IN recvAddr;

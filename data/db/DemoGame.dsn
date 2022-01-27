@@ -1,0 +1,9 @@
+[ODBC]
+DRIVER=SQL Server
+UID=sa
+PWD=kgca!@34
+DATABASE=KGCA38
+WSID=TOPLACE
+APP=Microsoft¢ç Windows¢ç Operating System
+SERVER=112.216.123.139
+Description=Gameuser

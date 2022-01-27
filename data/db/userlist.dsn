@@ -1,0 +1,8 @@
+[ODBC]
+DRIVER=SQL Server Native Client 11.0
+UID=sa
+PWD=kgca!@34
+DATABASE=KGCA37
+WSID=TOPLACE
+APP=Microsoft¢ç Windows¢ç Operating System
+SERVER=192.168.0.111
