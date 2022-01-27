@@ -44,14 +44,19 @@ void main()
 	SQLWCHAR dir[MAX_PATH] = { 0, };
 	GetCurrentDirectory(MAX_PATH, dir);
 	std::wstring dbpath = dir;
-	dbpath += L"\\cigarette.accdb";
+	dbpath += L"\\cigarette.dsn";// L"\\cigarette.accdb";
 
+	SQLTCHAR OutCon[255];
+	SQLSMALLINT cbOutCon;
 	TCHAR InCon[256] = { 0, };
-	_stprintf(InCon, 
-		_T("DRIVER={Microsoft Access Driver (*.mdb, *.accdb)};DBQ=%s;"), dbpath.c_str());
+	//_stprintf(InCon, 
+	//	_T("DRIVER={Microsoft Access Driver (*.mdb, *.accdb)};DBQ=%s;"), dbpath.c_str());
+	int iSize = sizeof(OutCon);
+	_stprintf(InCon, _T("FileDsn=%s"), dbpath.c_str());
 	SQLSMALLINT cbOutLen;
-	SQLRETURN ret = SQLDriverConnect(	g_hDbc, NULL, InCon, _countof(InCon),
-						NULL, 0, 
+	SQLRETURN ret = SQLDriverConnect(	g_hDbc, NULL, 
+						InCon, _countof(InCon),
+						OutCon, _countof(OutCon),
 						&cbOutLen, SQL_DRIVER_NOPROMPT);
 	if (ret != SQL_SUCCESS && ret != SQL_SUCCESS_WITH_INFO)
 	{
@@ -117,15 +122,15 @@ void main()
 	//}
 	//SQLCloseCursor(g_hStmt);
 
-	TCHAR sql4[MAX_PATH] = { 0, };// L"select name,price,korean from tblCigar='%s'";
-	wsprintf(sql4, L"update tblCigar set name='%s' where name='%s'",
-		L"코로나", L"88 Light");
-	ret = SQLExecDirect(g_hStmt, (SQLTCHAR*)&sql4, SQL_NTS);
-	if (ret != SQL_SUCCESS)
-	{
-		Check();
-		return;
-	}
+	//TCHAR sql4[MAX_PATH] = { 0, };// L"select name,price,korean from tblCigar='%s'";
+	//wsprintf(sql4, L"update tblCigar set name='%s' where name='%s'",
+	//	L"코로나", L"88 Light");
+	//ret = SQLExecDirect(g_hStmt, (SQLTCHAR*)&sql4, SQL_NTS);
+	//if (ret != SQL_SUCCESS)
+	//{
+	//	Check();
+	//	return;
+	//}
 	SQLCloseCursor(g_hStmt);
 	SQLFreeHandle(SQL_HANDLE_STMT, g_hStmt);
 	SQLDisconnect(g_hDbc);
