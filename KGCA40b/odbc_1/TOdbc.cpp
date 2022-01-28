@@ -1,5 +1,6 @@
 #include "TOdbc.h"
-bool Exec(const TCHAR* sql)
+
+bool TOdbc::Exec(const TCHAR* sql)
 {
 return true;
 }
@@ -50,11 +51,11 @@ bool TOdbc::ExecSelect(const TCHAR* sql, int iTableIndex)
 }
 bool TOdbc::ExecUpdate(const TCHAR* sql, int iTableIndex)
 {
-	TCHAR sql4[MAX_PATH] = { 0, };// L"select name,price,korean from tblCigar='%s'";
-	wsprintf(sql4, L"update tblCigar set name='%s' where name='%s'",
+	TCHAR sql4[MAX_PATH] = { 0, };// L"select szData,price,korean from tblCigar='%s'";
+	wsprintf(sql4, L"update tblCigar set szData='%s' where szData='%s'",
 		L"코로나", L"88 Light");
 	SQLRETURN ret = SQLExecDirect(m_hStmt, (SQLTCHAR*)&sql4, SQL_NTS);
-	if (ret != SQL_SUCCESS)
+	if (ret != SQL_SUCCESS && ret != SQL_NO_DATA)
 	{
 		Check();
 		return false;
@@ -70,8 +71,8 @@ bool TOdbc::ExecUpdate(const TCHAR* sql, int iTableIndex)
 }
 bool TOdbc::ExecDelete(const TCHAR* sql, int iTableIndex)
 {
-	TCHAR sql3[MAX_PATH] = { 0, };// L"select name,price,korean from tblCigar='%s'";
-	wsprintf(sql3, L"delete from tblCigar where name='%s'",
+	TCHAR sql3[MAX_PATH] = { 0, };// L"select szData,price,korean from tblCigar='%s'";
+	wsprintf(sql3, L"delete from tblCigar where szData='%s'",
 		L"xxxxxx");
 	SQLRETURN ret = SQLExecDirect(m_hStmt, (SQLTCHAR*)&sql3, SQL_NTS);
 	if (ret != SQL_SUCCESS)
@@ -91,8 +92,8 @@ bool TOdbc::ExecDelete(const TCHAR* sql, int iTableIndex)
 }
 bool TOdbc::ExecInsert(const TCHAR* sql, int iTableIndex)
 {
-	TCHAR sql3[MAX_PATH] = { 0, };// L"select name,price,korean from tblCigar='%s'";
-	wsprintf(sql3, L"insert into tblCigar (name,price, korean) values ('%s',%d,%d)",
+	TCHAR sql3[MAX_PATH] = { 0, };// L"select szData,price,korean from tblCigar='%s'";
+	wsprintf(sql3, L"insert into tblCigar (szData,price, korean) values ('%s',%d,%d)",
 					L"디스플러스", 4100, 1);
 	SQLRETURN ret = SQLExecDirect(m_hStmt, (SQLTCHAR*)&sql3, SQL_NTS);
 	if (ret != SQL_SUCCESS )
@@ -208,15 +209,15 @@ bool TOdbc::ExecTableInfo(const TCHAR* szTableName)
 	SQLLEN lTemp;
 	TCHAR szData[100][21] = { 0, };
 	int   iData[100];
-	xRecordData rData;
+	TRecord rData;
 	for (int iBind = 0; iBind < table.ColumnList.size(); iBind++)
 	{		
 		switch (table.ColumnList[iBind].pfSqlType)
 		{
 		case SQL_WCHAR:
 		case SQL_WVARCHAR: {
-			xData data;
-			data.iType = SQL_UNICODE;			
+			TField data;
+			data.iDataType = SQL_UNICODE;			
 			ret = SQLBindCol(m_hStmt, iBind+1,
 				SQL_UNICODE,
 				szData[iBind],
@@ -230,8 +231,8 @@ bool TOdbc::ExecTableInfo(const TCHAR* szTableName)
 			rData.record.push_back(data);
 		}break;
 		case SQL_INTEGER: {
-			xData data;
-			data.iType = SQL_INTEGER;
+			TField data;
+			data.iDataType = SQL_INTEGER;
 			ret = SQLBindCol(m_hStmt, iBind+1,
 				SQL_INTEGER,
 				&iData[iBind],
@@ -245,8 +246,8 @@ bool TOdbc::ExecTableInfo(const TCHAR* szTableName)
 			rData.record.push_back(data);
 		}break;
 		case -7: {
-			xData data;
-			data.iType = SQL_C_ULONG;
+			TField data;
+			data.iDataType = SQL_C_ULONG;
 			ret = SQLBindCol(m_hStmt, iBind+1,
 				SQL_C_ULONG,
 				&iData[iBind],
@@ -266,14 +267,14 @@ bool TOdbc::ExecTableInfo(const TCHAR* szTableName)
 	{	
 		for (int iCol = 0; iCol < table.ColumnList.size(); iCol++)
 		{		
-			rData.record[iCol].iType = rData.record[iCol].iType;
-			if (rData.record[iCol].iType == SQL_UNICODE)
+			rData.record[iCol].iDataType = rData.record[iCol].iDataType;
+			if (rData.record[iCol].iDataType == SQL_UNICODE)
 			{
-				rData.record[iCol].name = szData[iCol];
+				rData.record[iCol].szData = szData[iCol];
 			}
 			else
 			{
-				rData.record[iCol].name = std::to_wstring(iData[iCol]);
+				rData.record[iCol].szData = std::to_wstring(iData[iCol]);
 			}			
 		}		
 		m_RealStringData.push_back(rData);

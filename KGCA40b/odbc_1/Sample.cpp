@@ -46,25 +46,22 @@
 //#define SQL_C_TCHAR         SQL_C_CHAR
 //#endif
 void main()
-{
-	TOdbc odbc;
+{	
 	setlocale(LC_ALL, "korean");
+	TOdbc odbc;
 	odbc.Init();	
-	//std::wstring dsn = L"\\..\\..\\data\\db\\cigarette.dsn";
-	std::wstring dsn = L"\\..\\..\\data\\db\\DemoGame.accdb.dsn";
+	std::wstring dsn = L"\\..\\..\\data\\db\\cigarette.dsn";	
 	if (odbc.Connect(dsn.c_str()))
 	{
-		odbc.ExecTableInfo(L"DemoGame");
-	}
-	std::wstring sql = L"select * from tblCigar";
-	odbc.ExecSelect(sql.c_str(), 0);
+		odbc.ExecTableInfo(L"tblCigar");
+	}	
+	//std::wstring sql = L"select * from tblCigar";
+	//odbc.ExecSelect(sql.c_str(), 0);
 	odbc.Release();
 }
-
-
 //ret = SQLBindCol(m_hStmt, 1, SQL_C_ULONG, &Price, 0, &lPrice);
-//TCHAR sql2[MAX_PATH] = { 0, };// L"select name,price,korean from tblCigar='%s'";
-//wsprintf(sql2, L"select price from tblCigar where  name='%s'", L"장미");
+//TCHAR sql2[MAX_PATH] = { 0, };// L"select szData,price,korean from tblCigar='%s'";
+//wsprintf(sql2, L"select price from tblCigar where  szData='%s'", L"장미");
 //ret = SQLExecDirect(m_hStmt, (SQLTCHAR*)&sql2, SQL_NTS);
 
 //while (SQLFetch(m_hStmt) != SQL_NO_DATA)

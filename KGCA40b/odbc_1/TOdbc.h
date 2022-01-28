@@ -20,20 +20,18 @@ struct TColumnInfo
 };
 struct TTableInfo
 {
-	//std::vector<???>    TableData;
 	std::vector<TColumnInfo>	ColumnList;
-	SQLSMALLINT        iNumcol;
-	std::wstring		szTableName;
+	SQLSMALLINT 				iNumcol;
+	std::wstring				szTableName;
 };
-
-struct xData
+struct TField
 {
-	std::wstring name;
-	int  iType;
+	std::wstring	szData;
+	int				iDataType;
 };
-struct xRecordData
+struct TRecord
 {
-	std::vector<xData>  record;
+	std::vector<TField>  record;
 };
 class TOdbc
 {
@@ -41,8 +39,8 @@ public:
 	SQLHENV		m_hEnv;
 	SQLHDBC		m_hDbc;
 	SQLHSTMT	m_hStmt;
-	std::vector<TTableInfo>			m_TableList;
-	std::vector<xRecordData>        m_RealStringData;
+	std::vector<TTableInfo>				m_TableList;
+	std::vector<TRecord>         m_RealStringData;
 public:
 	bool		Init();
 	bool		Connect(const TCHAR* dsn);
