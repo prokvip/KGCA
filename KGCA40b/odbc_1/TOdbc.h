@@ -43,7 +43,7 @@ public:
 	std::vector<TRecord>         m_RealStringData;
 public:
 	bool		Init();
-	bool		Connect(const TCHAR* dsn);
+	bool		Connect(int iType, const TCHAR* dsn);
 	bool		Release();
 	bool		ExecTableInfo(const TCHAR* szTableName);
 	bool		Exec(const TCHAR* sql);

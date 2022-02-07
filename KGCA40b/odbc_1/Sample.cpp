@@ -50,11 +50,26 @@ void main()
 	setlocale(LC_ALL, "korean");
 	TOdbc odbc;
 	odbc.Init();	
-	std::wstring dsn = L"\\..\\..\\data\\db\\cigarette.dsn";	
-	if (odbc.Connect(dsn.c_str()))
+
+	SQLWCHAR dir[MAX_PATH] = { 0, };
+	GetCurrentDirectory(MAX_PATH, dir);
+	std::wstring dbpath = dir;
+	//dbpath += L"\\..\\..\\data\\db\\cigarette.dsn";// L"\\cigarette.accdb";
+	//if (odbc.Connect(2, dbpath.c_str()))
+	//{
+	//	odbc.ExecTableInfo(L"gameuser");
+	//}
+	dbpath += L"\\gameuser.dsn";
+	if (odbc.Connect(4, dbpath.c_str()))
 	{
-		odbc.ExecTableInfo(L"tblCigar");
+		odbc.ExecTableInfo(L"gameuser");
 	}	
+	/*std::wstring Systemdsn = L"DB";
+	if (odbc.Connect(0, Systemdsn.c_str()))
+	{
+		odbc.ExecTableInfo(L"gameuser");
+	}*/
+
 	//std::wstring sql = L"select * from tblCigar";
 	//odbc.ExecSelect(sql.c_str(), 0);
 	odbc.Release();

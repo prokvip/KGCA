@@ -143,25 +143,62 @@ void TOdbc::Check()
 		&length);
 	MessageBox(NULL, errorBuffer, szSQLState, MB_OK);	
 }
-bool TOdbc::Connect(const TCHAR* dsn)
+bool TOdbc::Connect(int iType, const TCHAR* dsn)
 {
-	SQLWCHAR dir[MAX_PATH] = { 0, };
-	GetCurrentDirectory(MAX_PATH, dir);
-	std::wstring dbpath = dir;
-	dbpath += dsn;// L"\\cigarette.dsn";// L"\\cigarette.accdb";
-
+	
 	SQLTCHAR OutCon[255];
 	SQLSMALLINT cbOutCon;
 	TCHAR InCon[256] = { 0, };
 	//_stprintf(InCon, 
 	//	_T("DRIVER={Microsoft Access Driver (*.mdb, *.accdb)};DBQ=%s;"), dbpath.c_str());
 	int iSize = sizeof(OutCon);
-	_stprintf(InCon, _T("FileDsn=%s"), dbpath.c_str());
+	
 	SQLSMALLINT cbOutLen;
-	SQLRETURN ret = SQLDriverConnect(m_hDbc, NULL,
-		InCon, _countof(InCon),
-		OutCon, _countof(OutCon),
-		&cbOutLen, SQL_DRIVER_NOPROMPT);
+	SQLRETURN ret;
+	switch (iType)
+	{
+		case 0: {
+			_stprintf(InCon, _T("%s"), 
+	_T("Driver={SQL Server};Server=directx.kr;Address=192.168.0.12,1433;Network=dbmssocn;Database=KGCAGAME;Uid=sa;Pwd=kgca!@34;"));
+			ret = SQLDriverConnect(m_hDbc, NULL,
+				InCon, _countof(InCon),
+				OutCon, _countof(OutCon),
+				&cbOutLen, SQL_DRIVER_NOPROMPT);
+		}break;
+			
+		case 1: {
+			_stprintf(InCon, _T("Dsn=%s"), dsn);
+			ret = SQLConnect(m_hDbc,
+				(SQLTCHAR*)dsn, SQL_NTS,
+				(SQLTCHAR*)L"sa", SQL_NTS,
+				(SQLTCHAR*)L"kgca!@34", SQL_NTS);
+		}break;
+		case 2: {			
+			_stprintf(InCon, _T("FileDsn=%s"), dsn);
+			ret = SQLDriverConnect(m_hDbc, NULL,
+				InCon, _countof(InCon),
+				OutCon, _countof(OutCon),
+				&cbOutLen, SQL_DRIVER_NOPROMPT);
+		}break;
+			// access 대화상자 버전
+		case 3: {
+			HWND hWnd = GetDesktopWindow();
+			SQLSMALLINT len;
+			ret = SQLDriverConnect(m_hDbc, hWnd,
+				(SQLWCHAR*)L"Driver={Microsoft Access Driver (*.mdb, *.accdb)}", SQL_NTS,
+				(SQLWCHAR*)InCon, _countof(InCon),
+				&len, SQL_DRIVER_PROMPT);
+		}break;
+			// SQL Server 대화상자 버전
+		case 4: {
+			HWND hWnd = GetDesktopWindow();
+			SQLSMALLINT len;
+			ret = SQLDriverConnect(m_hDbc, hWnd,
+				(SQLWCHAR*)L"Driver={SQL Server}", SQL_NTS,
+				(SQLWCHAR*)InCon, _countof(InCon),
+				&len, SQL_DRIVER_PROMPT);
+		}break;
+	}
 	if (ret != SQL_SUCCESS && ret != SQL_SUCCESS_WITH_INFO)
 	{
 		Check();
@@ -214,6 +251,22 @@ bool TOdbc::ExecTableInfo(const TCHAR* szTableName)
 	{		
 		switch (table.ColumnList[iBind].pfSqlType)
 		{
+		case SQL_TYPE_TIMESTAMP:
+		{
+			TField data;
+			data.iDataType = SQL_UNICODE;
+			ret = SQLBindCol(m_hStmt, iBind + 1,
+				SQL_TYPE_TIMESTAMP,
+				&szData[iBind],
+				0,
+				&lTemp);
+			if (ret != SQL_SUCCESS)
+			{
+				Check();
+				return false;
+			}
+			rData.record.push_back(data);
+		}break;
 		case SQL_WCHAR:
 		case SQL_WVARCHAR: {
 			TField data;
