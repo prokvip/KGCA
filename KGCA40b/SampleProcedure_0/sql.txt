@@ -1,0 +1,65 @@
+/* ----------------------------- */
+CREATE PROCEDURE [dbo].[AccountCreate]
+	@id NCHAR(10),
+	@ps NCHAR(10)
+AS
+	SET NOCOUNT ON -- 실행결과 출력하지 않는다.
+	BEGIN TRY		
+		declare @ret NCHAR(10)
+		select @ret = userid from gameuser where userid = @id
+		-- ID 이미 존재하면 
+		if(@ret <> N'')
+			begin 
+				return 1;
+			end
+		else
+			begin
+				insert into gameuser(userid, userps) values(@id,@ps)	
+			end
+		return 0;		
+	END TRY
+		
+	BEGIN CATCH
+		RETURN 2;
+	END CATCH
+
+/* ----------------------------- */
+CREATE PROCEDURE [dbo].[AllUserList]
+AS
+	SELECT * from dbo.gameuser
+RETURN 0
+
+
+-- =============================================
+-- Author:		<Author,,Name>
+-- Create date: <Create Date,,>
+-- Description:	<Description,,>
+-- =============================================
+CREATE PROCEDURE [dbo].[CheckPaswordRet]	
+	@id NCHAR(10), 
+	@ps NCHAR(10) OUTPUT
+AS
+BEGIN
+	SET NOCOUNT ON;
+    -- Insert statements for procedure here
+	SELECT @ps= userps from dbo.gameuser where @id=userid
+END
+/* ----------------------------- */
+CREATE PROCEDURE [dbo].[GameUserInfo]
+	@id NCHAR(10)
+AS
+	SELECT * from dbo.gameuser where userid=@id
+RETURN 0
+/* ----------------------------- */
+CREATE PROCEDURE [dbo].[Loginuser]
+	@id NCHAR(10)
+AS
+	UPDATE dbo.gameuser set login=GETDATE() where userid=@id
+RETURN 0
+
+/* ----------------------------- */
+CREATE PROCEDURE [dbo].[Logoutuser]
+	@id NCHAR(10)
+AS
+	update dbo.gameuser set logout=GETDATE() where userid=@id
+RETURN 0
