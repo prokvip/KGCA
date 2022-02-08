@@ -22,4 +22,7 @@
   <ItemGroup>
     <Text Include="sql.txt" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="KGCAGAME40.sql" />
+  </ItemGroup>
 </Project>
