@@ -15,13 +15,16 @@ void Error(SQLHENV env, SQLHDBC dbc, SQLHSTMT stmt)
 		buffer, SQL_MAX_MESSAGE_LENGTH + 1,
 		&length) == SQL_SUCCESS)
 	{
-		printf("%s", buffer);
+		WCHAR szBuffer[SQL_MAX_MESSAGE_LENGTH + 1] = { 0, };
+		memcpy(szBuffer, buffer, length*sizeof(WCHAR));
+		std::wcout << szBuffer;
 	}
 }
 
 
 void main()
 {
+	setlocale(LC_ALL, "korean");
 	SQLHENV henv = SQL_NULL_HENV;
 	SQLHDBC hdbc = SQL_NULL_HDBC;
 	SQLHSTMT hstmt = SQL_NULL_HSTMT;
@@ -52,7 +55,7 @@ void main()
 	retcode = SQLBindParameter(hstmt, 3, SQL_PARAM_INPUT,
 		SQL_C_WCHAR, SQL_WVARCHAR, sizeof(ps), 0, ps, sizeof(ps), NULL);
 
-	TCHAR callsp[] = L"{?=call AccountCreate(?,?)}";
+	TCHAR callsp[] = L"{?=call Account1Create(?,?)}";
 	retcode = SQLPrepare(hstmt, callsp, SQL_NTS);
 	//retcode = SQLExecDirect(hstmt,callsp, SQL_NTS);
 	retcode = SQLExecute(hstmt);
