@@ -39,11 +39,13 @@ public:
 	SQLHENV		m_hEnv;
 	SQLHDBC		m_hDbc;
 	SQLHSTMT	m_hStmt;
-	std::vector<TTableInfo>				m_TableList;
-	std::vector<TRecord>         m_RealStringData;
+	SQLHSTMT	m_hStmtArray[10];
+	std::vector<TTableInfo>		m_TableList;
+	std::vector<TRecord>        m_RealStringData;
 public:
 	bool		Init();
 	bool		Connect(int iType, const TCHAR* dsn);
+	bool		CreatePrepare() { return true; };
 	bool		Release();
 	bool		ExecTableInfo(const TCHAR* szTableName);
 	bool		Exec(const TCHAR* sql);

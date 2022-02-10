@@ -4,6 +4,12 @@
 #include <iostream>
 #include <tchar.h>
 
+SQLHENV henv = SQL_NULL_HENV;
+SQLHDBC hdbc = SQL_NULL_HDBC;
+SQLHSTMT g_stmtAccount = SQL_NULL_HSTMT;
+SQLHSTMT hstmt1 = SQL_NULL_HSTMT;
+SQLRETURN retcode;
+
 void Error(SQLHENV env, SQLHDBC dbc, SQLHSTMT stmt)
 {
 	SQLTCHAR buffer[SQL_MAX_MESSAGE_LENGTH + 1];
@@ -21,59 +27,80 @@ void Error(SQLHENV env, SQLHDBC dbc, SQLHSTMT stmt)
 	}
 }
 
+SQLWCHAR id[10] = L"NONE";
+SQLWCHAR ps[10] = L"NONE";
 
+void CreatePrepare()
+{
+	retcode = SQLAllocHandle(SQL_HANDLE_STMT, hdbc, &g_stmtAccount);
+	SWORD sReturn = 0;
+	SQLLEN cbRetParam = SQL_NTS;
+	retcode = SQLBindParameter(g_stmtAccount, 1, SQL_PARAM_OUTPUT,
+		SQL_C_SSHORT, SQL_INTEGER, 0, 0, &sReturn, 0, &cbRetParam);
+	
+	retcode = SQLBindParameter(g_stmtAccount, 2, SQL_PARAM_INPUT,
+		SQL_C_WCHAR, SQL_WVARCHAR, sizeof(id), 0, id, sizeof(id), NULL);
+	
+	retcode = SQLBindParameter(g_stmtAccount, 3, SQL_PARAM_INPUT,
+		SQL_C_WCHAR, SQL_WVARCHAR, sizeof(ps), 0, ps, sizeof(ps), NULL);
+
+	TCHAR callsp[] = L"{?=call AccountCreate(?,?)}";
+	retcode = SQLPrepare(g_stmtAccount, callsp, SQL_NTS);
+	//retcode = SQLExecDirect(g_stmtAccount,callsp, SQL_NTS);
+}
+void ExecutePrepare(const TCHAR* szid, const TCHAR* szps)
+{
+	memcpy(id, szid, sizeof(id));
+	memcpy(ps, szps, sizeof(ps));
+	retcode = SQLExecute(g_stmtAccount);
+	if (retcode != SQL_SUCCESS && retcode != SQL_SUCCESS_WITH_INFO)
+	{
+		Error(henv, hdbc, g_stmtAccount);
+		return;
+	}
+	while (SQLMoreResults(g_stmtAccount) != SQL_NO_DATA);
+	SQLFreeStmt(g_stmtAccount, SQL_CLOSE);
+	SQLCloseCursor(g_stmtAccount);
+}
 void main()
 {
 	setlocale(LC_ALL, "korean");
-	SQLHENV henv = SQL_NULL_HENV;
-	SQLHDBC hdbc = SQL_NULL_HDBC;
-	SQLHSTMT hstmt = SQL_NULL_HSTMT;
-	SQLHSTMT hstmt1 = SQL_NULL_HSTMT;
-	SQLRETURN retcode;
+	
 	retcode = SQLAllocHandle(SQL_HANDLE_ENV, SQL_NULL_HANDLE, &henv);
 	retcode = SQLSetEnvAttr(henv, SQL_ATTR_ODBC_VERSION,
 		(SQLPOINTER)SQL_OV_ODBC3_80, 0);
 	retcode = SQLAllocHandle(SQL_HANDLE_DBC, henv, &hdbc);
 
+
 	SQLSMALLINT cbCon;
 	SQLWCHAR connStrbuf[1024] = { 0, };
-	retcode = SQLDriverConnect(hdbc, GetDesktopWindow(),
+	retcode = SQLConnect(hdbc, (SQLWCHAR*)L"KGCA3d", SQL_NTS,
+		(SQLWCHAR*)L"sa", SQL_NTS,
+		(SQLWCHAR*)L"kgca!@34", SQL_NTS);
+
+	/*retcode = SQLDriverConnect(hdbc, GetDesktopWindow(),
 		(SQLWCHAR*)L"Driver={SQL Server}", SQL_NTS,
 		(SQLWCHAR*)connStrbuf, _countof(connStrbuf),
-		&cbCon, SQL_DRIVER_PROMPT);
-	retcode = SQLAllocHandle(SQL_HANDLE_STMT, hdbc, &hstmt);
+		&cbCon, SQL_DRIVER_PROMPT);*/
 
-	SWORD sReturn = 0;
-	SQLLEN cbRetParam = SQL_NTS;
-	retcode = SQLBindParameter(hstmt, 1, SQL_PARAM_OUTPUT,
-		SQL_C_SSHORT, SQL_INTEGER, 0, 0, &sReturn, 0, &cbRetParam);
-
-	SQLWCHAR id[10] = L"testuser";
-	retcode = SQLBindParameter(hstmt, 2, SQL_PARAM_INPUT,
-		SQL_C_WCHAR, SQL_WVARCHAR, sizeof(id), 0, id, sizeof(id), NULL);
-	SQLWCHAR ps[10] = L"11111";
-	retcode = SQLBindParameter(hstmt, 3, SQL_PARAM_INPUT,
-		SQL_C_WCHAR, SQL_WVARCHAR, sizeof(ps), 0, ps, sizeof(ps), NULL);
-
-	TCHAR callsp[] = L"{?=call Account1Create(?,?)}";
-	retcode = SQLPrepare(hstmt, callsp, SQL_NTS);
-	//retcode = SQLExecDirect(hstmt,callsp, SQL_NTS);
-	retcode = SQLExecute(hstmt);
-	if (retcode != SQL_SUCCESS && retcode != SQL_SUCCESS_WITH_INFO)
+	// ms sql -> odbc3_8(스트리밍) -> driver 확인
+	WCHAR szVer[20] = { 0, };
+	SQLSMALLINT cch = 0;
+	retcode = SQLGetInfo(hdbc, SQL_DRIVER_ODBC_VER, szVer,
+		_countof(szVer), &cch);
+	int iOdbcMajor;
+	int IOdbcMinor;
+	if (SQL_SUCCEEDED(retcode))
 	{
-		Error(henv, hdbc, hstmt);
-		return;
+
 	}
-	/*while (SQLFetch(hstmt) != SQL_NO_DATA)
-	{
-	}*/
-	while (SQLMoreResults(hstmt) != SQL_NO_DATA);
-	SQLFreeStmt(hstmt, SQL_UNBIND);
-	SQLFreeStmt(hstmt, SQL_RESET_PARAMS);
-	SQLCloseCursor(hstmt);
+
+	CreatePrepare();
+	ExecutePrepare(L"3333", L"3333"); // g_stmtAccount	
+	ExecutePrepare(L"4444", L"4444"); // 재사용
 
 
-
+	
 	/// <summary>
 	/// ///
 	retcode = SQLAllocHandle(SQL_HANDLE_STMT, hdbc, &hstmt1);
@@ -92,14 +119,14 @@ void main()
 
 	TCHAR callsp1[] = L"{?=call CheckPaswordRet(?,?)}";
 	retcode = SQLPrepare(hstmt1, callsp1, SQL_NTS);
-	//retcode = SQLExecDirect(hstmt,callsp1, SQL_NTS);
+	//retcode = SQLExecDirect(g_stmtAccount,callsp1, SQL_NTS);
 	retcode = SQLExecute(hstmt1);
 	if (retcode != SQL_SUCCESS && retcode != SQL_SUCCESS_WITH_INFO)
 	{
-		Error(henv, hdbc, hstmt);
+		Error(henv, hdbc, g_stmtAccount);
 		return;
 	}
-	/*while (SQLFetch(hstmt) != SQL_NO_DATA)
+	/*while (SQLFetch(g_stmtAccount) != SQL_NO_DATA)
 	{
 	}*/
 	while (SQLMoreResults(hstmt1) != SQL_NO_DATA);
