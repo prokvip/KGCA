@@ -8,7 +8,16 @@ SQLHENV henv = SQL_NULL_HENV;
 SQLHDBC hdbc = SQL_NULL_HDBC;
 SQLHSTMT g_stmtAccount = SQL_NULL_HSTMT;
 SQLHSTMT hstmt1 = SQL_NULL_HSTMT;
+SQLHSTMT hstmtInfo = SQL_NULL_HSTMT;
 SQLRETURN retcode;
+
+struct TDataBinding
+{
+	SQLSMALLINT type;
+	SQLWCHAR*  valuePtr;
+	SQLINTEGER  length;
+	SQLLEN      result;
+};
 
 void Error(SQLHENV env, SQLHDBC dbc, SQLHSTMT stmt)
 {
@@ -26,10 +35,12 @@ void Error(SQLHENV env, SQLHDBC dbc, SQLHSTMT stmt)
 		std::wcout << szBuffer;
 	}
 }
-
+bool   SQLSuccess(SQLRETURN ret)
+{
+	return(ret == SQL_SUCCESS || ret == SQL_SUCCESS_WITH_INFO);
+}
 SQLWCHAR id[10] = L"NONE";
 SQLWCHAR ps[10] = L"NONE";
-
 void CreatePrepare()
 {
 	retcode = SQLAllocHandle(SQL_HANDLE_STMT, hdbc, &g_stmtAccount);
@@ -62,6 +73,80 @@ void ExecutePrepare(const TCHAR* szid, const TCHAR* szps)
 	SQLFreeStmt(g_stmtAccount, SQL_CLOSE);
 	SQLCloseCursor(g_stmtAccount);
 }
+
+void GetDBInfo()
+{	
+	// ms sql -> odbc3_8(스트리밍) -> driver 확인
+	WCHAR szVer[20] = { 0, };
+	SQLSMALLINT cch = 0;
+	retcode = SQLGetInfo(hdbc, SQL_DRIVER_ODBC_VER, szVer, _countof(szVer), &cch);
+	int iOdbcMajor;
+	int IOdbcMinor;
+	if (SQL_SUCCEEDED(retcode)) {}
+	/// <summary>
+	/// 
+	/// </summary>
+	SQLWCHAR dbName[1024] = { 0, };
+	SQLWCHAR dbmsName[1024] = { 0, };
+	SQLWCHAR dbmsVer[1024] = { 0, };
+	SQLWCHAR userName[1024] = { 0, };
+	
+	retcode = SQLGetInfo(hdbc, SQL_DATABASE_NAME, dbName, _countof(dbName), &cch);
+	if (SQL_SUCCEEDED(retcode)) {}
+	retcode = SQLGetInfo(hdbc, SQL_DBMS_NAME, dbmsName, _countof(dbmsName), &cch);
+	if (SQL_SUCCEEDED(retcode)) {}
+	retcode = SQLGetInfo(hdbc, SQL_DBMS_VER, dbmsVer, _countof(dbmsVer), &cch);
+	if (SQL_SUCCEEDED(retcode)) {}
+	retcode = SQLGetInfo(hdbc, SQL_USER_NAME, userName, _countof(userName), &cch);
+	if (SQL_SUCCEEDED(retcode)) {}
+
+	/// <summary>
+	/// table list
+	/// 0 -> catalog
+	/// 1 -> schema
+	/// 2 -> table name
+	/// 3 -> type
+	/// </summary>
+	retcode = SQLAllocHandle(SQL_HANDLE_STMT, hdbc, &hstmtInfo); 
+	TDataBinding tbResult[50];
+	for (int i = 0; i < 50; i++)
+	{
+		tbResult[i].type = SQL_UNICODE;
+		tbResult[i].length = 1024+1;
+		tbResult[i].valuePtr = new WCHAR[tbResult[i].length];
+
+		SQLBindCol(hstmtInfo, i + 1,
+			tbResult[i].type,
+			(SQLPOINTER)tbResult[i].valuePtr,
+			tbResult[i].length,
+			&tbResult[i].result);
+	}
+	retcode = SQLTables(hstmtInfo, dbName, SQL_NTS,
+							 userName,SQL_NTS, 
+							 (SQLWCHAR*)SQL_ALL_TABLE_TYPES, SQL_NTS,
+							 (SQLWCHAR*)L"'TABLE'", SQL_NTS);
+	//Error(henv, hdbc, g_stmtAccount);
+	for (retcode=SQLFetch(hstmtInfo);
+		 SQLSuccess(retcode);
+		 retcode = SQLFetch(hstmtInfo))
+	{
+		std::wstring szData = (WCHAR*)tbResult[0].valuePtr; 	
+		szData += L" ";
+		szData += (WCHAR*)tbResult[1].valuePtr;
+		szData += L" ";
+		szData += (WCHAR*)tbResult[2].valuePtr;		
+		szData += L" ";
+		szData += (WCHAR*)tbResult[3].valuePtr;
+		std::wcout << szData.c_str()<< std::endl;		
+	}
+	SQLCloseCursor(hstmtInfo);
+	SQLFreeStmt(hstmtInfo, SQL_UNBIND);
+
+	for (int i = 0; i < 50; i++)
+	{		
+		delete tbResult[i].valuePtr;
+	}
+}
 void main()
 {
 	setlocale(LC_ALL, "korean");
@@ -71,36 +156,23 @@ void main()
 		(SQLPOINTER)SQL_OV_ODBC3_80, 0);
 	retcode = SQLAllocHandle(SQL_HANDLE_DBC, henv, &hdbc);
 
-
 	SQLSMALLINT cbCon;
 	SQLWCHAR connStrbuf[1024] = { 0, };
 	retcode = SQLConnect(hdbc, (SQLWCHAR*)L"KGCA3d", SQL_NTS,
 		(SQLWCHAR*)L"sa", SQL_NTS,
 		(SQLWCHAR*)L"kgca!@34", SQL_NTS);
-
 	/*retcode = SQLDriverConnect(hdbc, GetDesktopWindow(),
 		(SQLWCHAR*)L"Driver={SQL Server}", SQL_NTS,
 		(SQLWCHAR*)connStrbuf, _countof(connStrbuf),
 		&cbCon, SQL_DRIVER_PROMPT);*/
+	GetDBInfo();
 
-	// ms sql -> odbc3_8(스트리밍) -> driver 확인
-	WCHAR szVer[20] = { 0, };
-	SQLSMALLINT cch = 0;
-	retcode = SQLGetInfo(hdbc, SQL_DRIVER_ODBC_VER, szVer,
-		_countof(szVer), &cch);
-	int iOdbcMajor;
-	int IOdbcMinor;
-	if (SQL_SUCCEEDED(retcode))
-	{
-
-	}
-
+	/// <summary>
+	/// 
+	/// </summary>
 	CreatePrepare();
 	ExecutePrepare(L"3333", L"3333"); // g_stmtAccount	
-	ExecutePrepare(L"4444", L"4444"); // 재사용
-
-
-	
+	ExecutePrepare(L"4444", L"4444"); // 재사용	
 	/// <summary>
 	/// ///
 	retcode = SQLAllocHandle(SQL_HANDLE_STMT, hdbc, &hstmt1);
