@@ -3,6 +3,7 @@
 #include <sqlext.h>
 #include <iostream>
 #include <tchar.h>
+#include <vector>
 
 SQLHENV henv = SQL_NULL_HENV;
 SQLHDBC hdbc = SQL_NULL_HDBC;
@@ -17,7 +18,25 @@ struct TDataBinding
 	SQLWCHAR*  valuePtr;
 	SQLINTEGER  length;
 	SQLLEN      result;
+	TDataBinding()
+	{
+	}
+	TDataBinding(const TDataBinding& data)
+	{
+		type = data.type;
+		length = data.length;
+		result = data.result;
+		valuePtr = new WCHAR[length];
+		memcpy(valuePtr, data.valuePtr, length);
+	}
+	~TDataBinding()
+	{
+		delete valuePtr;
+		valuePtr = nullptr;
+	}
+	std::vector< TDataBinding >     tablelist;
 };
+std::vector< TDataBinding > g_CatalogList;
 
 void Error(SQLHENV env, SQLHDBC dbc, SQLHSTMT stmt)
 {
@@ -73,7 +92,13 @@ void ExecutePrepare(const TCHAR* szid, const TCHAR* szps)
 	SQLFreeStmt(g_stmtAccount, SQL_CLOSE);
 	SQLCloseCursor(g_stmtAccount);
 }
-
+void PrintCatalog(TDataBinding* data)
+{
+	if (data->result != SQL_NULL_DATA)
+	{
+		std::wcout << "\nCatalog= "	<< data->valuePtr << std::endl;
+	}
+}
 void GetDBInfo()
 {	
 	// ms sql -> odbc3_8(스트리밍) -> driver 확인
@@ -102,50 +127,77 @@ void GetDBInfo()
 
 	/// <summary>
 	/// table list
-	/// 0 -> catalog
+	/// 0 -> catalog(db list)
 	/// 1 -> schema
 	/// 2 -> table name
 	/// 3 -> type
 	/// </summary>
 	retcode = SQLAllocHandle(SQL_HANDLE_STMT, hdbc, &hstmtInfo); 
-	TDataBinding tbResult[50];
-	for (int i = 0; i < 50; i++)
-	{
-		tbResult[i].type = SQL_UNICODE;
-		tbResult[i].length = 1024+1;
-		tbResult[i].valuePtr = new WCHAR[tbResult[i].length];
 
-		SQLBindCol(hstmtInfo, i + 1,
-			tbResult[i].type,
-			(SQLPOINTER)tbResult[i].valuePtr,
-			tbResult[i].length,
-			&tbResult[i].result);
-	}
-	retcode = SQLTables(hstmtInfo, dbName, SQL_NTS,
-							 userName,SQL_NTS, 
-							 (SQLWCHAR*)SQL_ALL_TABLE_TYPES, SQL_NTS,
-							 (SQLWCHAR*)L"'TABLE'", SQL_NTS);
-	//Error(henv, hdbc, g_stmtAccount);
+	TDataBinding tbResult;
+	tbResult.type = SQL_UNICODE;
+	tbResult.length = 1024+1;
+	tbResult.valuePtr = new WCHAR[tbResult.length];
+	SQLBindCol(hstmtInfo, 1,
+			tbResult.type,
+			(SQLPOINTER)tbResult.valuePtr,
+			tbResult.length,
+			&tbResult.result);
+	
+	retcode = SQLTables(hstmtInfo, 
+		(SQLWCHAR*)SQL_ALL_CATALOGS, SQL_NTS,
+		(SQLWCHAR*)L"", SQL_NTS,
+		(SQLWCHAR*)L"", SQL_NTS,
+		(SQLWCHAR*)L"", SQL_NTS);
+	
 	for (retcode=SQLFetch(hstmtInfo);
 		 SQLSuccess(retcode);
 		 retcode = SQLFetch(hstmtInfo))
 	{
-		std::wstring szData = (WCHAR*)tbResult[0].valuePtr; 	
-		szData += L" ";
-		szData += (WCHAR*)tbResult[1].valuePtr;
-		szData += L" ";
-		szData += (WCHAR*)tbResult[2].valuePtr;		
-		szData += L" ";
-		szData += (WCHAR*)tbResult[3].valuePtr;
-		std::wcout << szData.c_str()<< std::endl;		
+		TDataBinding db = tbResult;
+		g_CatalogList.push_back(db);
 	}
 	SQLCloseCursor(hstmtInfo);
 	SQLFreeStmt(hstmtInfo, SQL_UNBIND);
 
-	for (int i = 0; i < 50; i++)
-	{		
-		delete tbResult[i].valuePtr;
+	/// <summary>
+	/// table list
+	/// </summary>
+	for (int iDB = 0; iDB < g_CatalogList.size(); iDB++)
+	{
+		TDataBinding tbResult[4];
+		for (int i = 0; i < 4; i++)
+		{
+			tbResult[i].type = SQL_UNICODE;
+			tbResult[i].length = 1024 + 1;
+			tbResult[i].valuePtr = new WCHAR[tbResult[i].length];
+
+			SQLBindCol(hstmtInfo, i + 1,
+				tbResult[i].type,
+				(SQLPOINTER)tbResult[i].valuePtr,
+				tbResult[i].length,
+				&tbResult[i].result);
+		}
+
+		retcode = SQLTables(hstmtInfo, g_CatalogList[iDB].valuePtr, SQL_NTS,
+			userName, SQL_NTS,
+			(SQLWCHAR*)SQL_ALL_TABLE_TYPES, SQL_NTS,
+			(SQLWCHAR*)L"'TABLE'", SQL_NTS);
+
+		for (retcode = SQLFetch(hstmtInfo);
+			SQLSuccess(retcode);
+			retcode = SQLFetch(hstmtInfo))
+		{
+			TDataBinding db = tbResult[2];
+			g_CatalogList[iDB].tablelist.push_back(db);
+			//PrintCatalog(tbResult);
+		}
+		SQLCloseCursor(hstmtInfo);
+		SQLFreeStmt(hstmtInfo, SQL_UNBIND);		
 	}
+
+	SQLCloseCursor(hstmtInfo);
+	SQLFreeStmt(hstmtInfo, SQL_UNBIND);
 }
 void main()
 {
@@ -195,17 +247,13 @@ void main()
 	retcode = SQLExecute(hstmt1);
 	if (retcode != SQL_SUCCESS && retcode != SQL_SUCCESS_WITH_INFO)
 	{
-		Error(henv, hdbc, g_stmtAccount);
+		Error(henv, hdbc, hstmt1);
 		return;
 	}
-	/*while (SQLFetch(g_stmtAccount) != SQL_NO_DATA)
-	{
-	}*/
 	while (SQLMoreResults(hstmt1) != SQL_NO_DATA);
 	SQLFreeStmt(hstmt1, SQL_UNBIND);
 	SQLFreeStmt(hstmt1, SQL_RESET_PARAMS);
 	SQLCloseCursor(hstmt1);
-	/// </summary>
 	return;
 }
 
