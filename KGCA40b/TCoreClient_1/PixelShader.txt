@@ -1,0 +1,18 @@
+Texture2D		g_txDiffuse0 : register(t0);
+Texture2D		g_txDiffuse1 : register(t1);
+SamplerState	g_Sample : register(s0);
+
+struct VS_OUTPUT
+{
+	float4 p : SV_POSITION;
+	float2 t : TEXCOORD0;
+};
+
+float4 PS(VS_OUTPUT input) : SV_TARGET
+{	
+	//텍스처에서 t좌표에 해당하는 컬러값(픽셀) 반환
+	float4 color0 = g_txDiffuse0.Sample(g_Sample, input.t);
+	float4 color1 = g_txDiffuse1.Sample(g_Sample, input.t);
+	float4 final = color0 - color1;
+	return final;
+}
