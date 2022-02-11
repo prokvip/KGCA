@@ -1,7 +1,7 @@
 #include "TCore.h"
 bool	TCore::CoreInit()
 {
-	//InitDeivice();
+	InitDeivice();
 	Init();
 	return true;
 }
@@ -11,7 +11,7 @@ bool	TCore::GameRun()
 	while(WinRun())
 	{
 		CoreFrame();
-		//CoreRender();
+		CoreRender();
 	}
 	CoreRelease();
 	return true;

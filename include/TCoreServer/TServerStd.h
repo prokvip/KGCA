@@ -8,7 +8,6 @@
 #include <functional>
 #include <iostream>
 #pragma comment	(lib, "ws2_32.lib")
-#pragma comment	(lib, "winmm.lib")
 #ifdef _DEBUG
 #pragma comment	(lib, "TCoreServer_d.lib")
 #else

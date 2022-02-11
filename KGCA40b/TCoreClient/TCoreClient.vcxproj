@@ -21,8 +21,8 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{fd9c4ac5-0eb4-4486-9265-958ddbbc1d2a}</ProjectGuid>
-    <RootNamespace>CreateVertexBuffer</RootNamespace>
+    <ProjectGuid>{07D0F9A7-F7A5-48E6-9F90-23FB87EBB28E}</ProjectGuid>
+    <RootNamespace>TCoreNetSample</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -79,7 +79,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>../../output/Debug/</OutDir>
-    <IntDir>../../output/Debug/SampleLibrary</IntDir>
+    <IntDir>../../output/Debug/TCoreNetSample</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -118,13 +118,12 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>../../TCoreLib/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../include/TCore3D;../../include/TCoreNet;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>../../lib;</AdditionalLibraryDirectories>
-      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -144,19 +143,19 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Sample.h" />
-    <ClInclude Include="TDxObject.h" />
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="Sample.cpp" />
     <ClCompile Include="TDxObject.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="ClassDiagram.cd" />
+    <ClInclude Include="Sample.h" />
+    <ClInclude Include="TDxObject.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TCoreLib\TCoreLib.vcxproj">
       <Project>{98617ca6-fe41-4536-94f6-159046e15ad9}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\TCoreNet\TCoreNet.vcxproj">
+      <Project>{89662571-438a-489c-9630-0b2c1fc2323f}</Project>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

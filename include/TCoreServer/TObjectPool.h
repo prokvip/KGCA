@@ -1,6 +1,6 @@
 #pragma once
 #include <string>
-#define		POOL_MAX_SIZE 2
+#define		POOL_MAX_SIZE 4096
 #define		POOL_SIZE_MASK (POOL_MAX_SIZE - 1)
 
 template<class T>
