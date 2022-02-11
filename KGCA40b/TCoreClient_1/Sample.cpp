@@ -204,11 +204,16 @@ bool	Sample::Release()
 		m_ObjectList[iObj].Release();
 	}
 
-	m_pTexture0->Release();
-	m_pSRV0->Release();
-	m_pTexture1->Release();
-	m_pSRV1->Release();
-
+	if(m_AlphaBlend) m_AlphaBlend->Release();
+	if (m_pTexture0) m_pTexture0->Release();
+	if (m_pSRV0) m_pSRV0->Release();
+	if (m_pTexture1) m_pTexture1->Release();
+	if (m_pSRV1) m_pSRV1->Release();
+	m_AlphaBlend = nullptr;
+	m_pTexture0 = nullptr;
+	m_pSRV0 = nullptr;
+	m_pTexture1 = nullptr;
+	m_pSRV1 = nullptr;
 	m_Net.CloseNetwork();
 	return true;
 }
