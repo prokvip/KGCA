@@ -145,15 +145,15 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Sample.cpp" />
-    <ClCompile Include="TDxObject.cpp" />
-    <ClCompile Include="TInput.cpp" />
-    <ClCompile Include="TPlayerObj.cpp" />
+    <ClCompile Include="TObject2D.cpp" />
+    <ClCompile Include="TObject3D.cpp" />
+    <ClCompile Include="TPlayerObj2D.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Sample.h" />
-    <ClInclude Include="TDxObject.h" />
-    <ClInclude Include="TInput.h" />
-    <ClInclude Include="TPlayerObj.h" />
+    <ClInclude Include="TObject2D.h" />
+    <ClInclude Include="TObject3D.h" />
+    <ClInclude Include="TPlayerObj2D.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TCoreLib\TCoreLib.vcxproj">

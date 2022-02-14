@@ -1,6 +1,8 @@
 #include "TCore.h"
 bool	TCore::CoreInit()
 {
+	m_GameTimer.Init();
+	TInput::Get().Init();
 	InitDeivice();
 	Init();
 	return true;
@@ -18,6 +20,8 @@ bool	TCore::GameRun()
 }
 bool	TCore::CoreFrame()
 {
+	m_GameTimer.Frame();
+	TInput::Get().Frame();
 	Frame();
 	return true;
 }
@@ -32,6 +36,8 @@ bool	TCore::CoreRender()
 	// 백버퍼에 랜더링 한다.
 	Render();
 
+	m_GameTimer.Render();
+	TInput::Get().Render();
 	m_pSwapChain->Present(0, 0);
 	return true;
 }
@@ -39,6 +45,9 @@ bool	TCore::CoreRender()
 bool	TCore::CoreRelease()
 {
 	Release();
+
+	m_GameTimer.Release();
+	TInput::Get().Release();
 	CleapupDevice();
 	return true;
 }

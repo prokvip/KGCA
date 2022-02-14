@@ -26,7 +26,6 @@ LRESULT  Sample::MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
 bool	Sample::Init()
 {
-	TInput::Get().Init();
 	/*DWORD style = WS_CHILD | WS_VISIBLE | ES_MULTILINE ;
 	m_hEdit = CreateWindow(L"edit", NULL, style, 
 		0, g_rtClient.bottom-50, 300, 50,
@@ -69,7 +68,16 @@ bool	Sample::Init()
 }
 bool	Sample::Frame()
 {
-	TInput::Get().Frame();
+
+	if (TInput::Get().GetKey(VK_F1) == KEY_PUSH)
+	{
+		int kk = 0;
+	}
+	if (TInput::Get().GetKey('1') == KEY_UP)
+	{
+		int kk = 0;
+	}
+
 	m_PlayerObj.Frame();
 
 	for (int iObj = 0; iObj < m_ObjectList.size(); iObj++)
@@ -140,8 +148,6 @@ bool	Sample::Render()
 		m_ObjectList[iObj].Render();
 	}
 	m_PlayerObj.Render();
-
-	TInput::Get().Render();
 	return true;
 }
 bool	Sample::Release()
@@ -153,7 +159,6 @@ bool	Sample::Release()
 	m_PlayerObj.Release();
 
 	m_Net.CloseNetwork();
-	TInput::Get().Release();
 	return true;
 }
 Sample::Sample()

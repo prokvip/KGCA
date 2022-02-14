@@ -14,8 +14,10 @@
 #pragma comment	(lib, "ws2_32.lib")
 using namespace std;
 
-extern RECT g_rtClient;
-extern HWND g_hWnd;
+extern RECT		g_rtClient;
+extern HWND		g_hWnd;
+extern float   g_fSecPerFrame;
+extern float   g_fGameTimer;
 
 #define GAME_START int WINAPI wWinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance, LPWSTR    lpCmdLine, int       nCmdShow){   Sample core;   
 #define GAME_WIN(s,x,y) if (core.SetWinClass(hInstance) == FALSE) return 1;   if (core.SetWindow(L#s, x, y) == FALSE) return 1;   core.GameRun();    return 1;}

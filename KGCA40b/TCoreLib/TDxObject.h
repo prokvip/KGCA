@@ -18,8 +18,11 @@ public:
 	ID3D11Resource*				m_pTexture1;
 	ID3D11BlendState*			m_AlphaBlend;
 public:
-	float   m_fSpeed;
-	TVector2 m_vPos;
+	float		m_fSpeed;
+	TVector2	m_vPos;
+	float		m_fWidth;
+	float		m_fHeight;
+public:
 	std::vector<SimpleVertex> m_InitScreenList;
 	std::vector<SimpleVertex> m_VertexList;
 	ID3D11Buffer* m_pVertexBuffer;

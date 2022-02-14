@@ -27,6 +27,7 @@ TVector2 TVector2::operator - (const TVector2& v)
 	ret.y = this->y - v.y;
 	return ret;
 }
+
 TVector2 TVector2::operator * (float fValue)
 {
 	this->x *= fValue;
@@ -37,6 +38,18 @@ TVector2 TVector2::operator / (float fValue)
 {
 	this->x /= fValue;
 	this->y /= fValue;
+	return *this;
+}
+TVector2 TVector2::operator += (const TVector2& v)
+{
+	this->x = this->x + v.x;
+	this->y = this->y + v.y;
+	return *this;
+}
+TVector2 TVector2::operator -= (const TVector2& v)
+{
+	this->x = this->x - v.x;
+	this->y = this->y - v.y;
 	return *this;
 }
 bool TVector2::operator == (const TVector2& v)

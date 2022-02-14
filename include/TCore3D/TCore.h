@@ -1,8 +1,12 @@
 #pragma once
 #include "TDevice.h"
-
+#include "TDxObject.h"
+#include "TInput.h"
+#include "TTimer.h"
 class TCore : public TDevice
 {
+public:
+	TTimer		m_GameTimer;
 private:
 	bool	CoreInit();	
 		bool	CoreFrame();

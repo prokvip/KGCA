@@ -61,6 +61,8 @@ bool	TDxObject::Create(ID3D11Device* pd3dDevice,
 
 	HRESULT hr;
 	m_vPos = vPos;
+	m_fWidth = fWidth;
+	m_fHeight = fHeight;
 	Convert(m_vPos,	fWidth, fHeight,m_VertexList);
 
 	//gpu메모리에 버퍼 할당(원하는 할당 크기)

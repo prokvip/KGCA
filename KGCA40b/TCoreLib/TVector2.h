@@ -21,6 +21,8 @@ public:
 	TVector2 operator - (const TVector2& v);
 	TVector2 operator * (float fValue);
 	TVector2 operator / (float fValue);
+	TVector2 operator += (const TVector2& v);
+	TVector2 operator -= (const TVector2& v);
 	bool operator == (const TVector2& v);
 	bool operator != (const TVector2& v);
 	// ¡§±‘»≠

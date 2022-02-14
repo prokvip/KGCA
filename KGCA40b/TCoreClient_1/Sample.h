@@ -1,13 +1,11 @@
 #pragma once
 #include "TCore.h"
 #include "TAsyncSelect.h"
-#include "TDxObject.h"
-#include "TInput.h"
-#include "TPlayerObj.h"
+#include "TPlayerObj2D.h"
 class Sample : public TCore
 {
 public:
-	TPlayerObj			m_PlayerObj;
+	TPlayerObj2D		m_PlayerObj;
 public:
 	std::vector<TDxObject> m_ObjectList;
 	TAsyncSelect		m_Net;
