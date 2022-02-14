@@ -146,10 +146,14 @@
   <ItemGroup>
     <ClCompile Include="Sample.cpp" />
     <ClCompile Include="TDxObject.cpp" />
+    <ClCompile Include="TInput.cpp" />
+    <ClCompile Include="TPlayerObj.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Sample.h" />
     <ClInclude Include="TDxObject.h" />
+    <ClInclude Include="TInput.h" />
+    <ClInclude Include="TPlayerObj.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TCoreLib\TCoreLib.vcxproj">

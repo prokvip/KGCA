@@ -2,16 +2,12 @@
 #include "TCore.h"
 #include "TAsyncSelect.h"
 #include "TDxObject.h"
-#include "DDSTextureLoader.h"
-#include "WICTextureLoader.h"
-
+#include "TInput.h"
+#include "TPlayerObj.h"
 class Sample : public TCore
 {
-	ID3D11ShaderResourceView*	m_pSRV0;
-	ID3D11Resource*				m_pTexture0;
-	ID3D11ShaderResourceView*	m_pSRV1;
-	ID3D11Resource*				m_pTexture1;
-	ID3D11BlendState*			m_AlphaBlend;
+public:
+	TPlayerObj			m_PlayerObj;
 public:
 	std::vector<TDxObject> m_ObjectList;
 	TAsyncSelect		m_Net;

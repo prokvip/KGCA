@@ -26,6 +26,7 @@ LRESULT  Sample::MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
 bool	Sample::Init()
 {
+	TInput::Get().Init();
 	/*DWORD style = WS_CHILD | WS_VISIBLE | ES_MULTILINE ;
 	m_hEdit = CreateWindow(L"edit", NULL, style, 
 		0, g_rtClient.bottom-50, 300, 50,
@@ -53,78 +54,24 @@ bool	Sample::Init()
 		}
 	}*/
 
-	TDxObject obj;
-	obj.Init();
+	m_PlayerObj.Init();
 	///0 ~ g_rtClient
-	if (obj.Create(m_pd3dDevice, m_pImmediateContext,
-		TVector2(400, 300), 400, 300))
+	if (!m_PlayerObj.Create(m_pd3dDevice, m_pImmediateContext,
+		TVector2(400, 300), 400, 300,
+		L"../../data/bitmap1.bmp",
+		L"../../data/bitmap2.bmp" ))
 	{
-		m_ObjectList.push_back(obj);
+		return false;
 	}
-
-	HRESULT hr;
-	hr = DirectX::CreateWICTextureFromFile(
-		m_pd3dDevice,
-		L"../../data/bitmap1.bmp", // 불투명알파 텍스처
-		//L"../../data/bitmap1Alpha.bmp",// 투명알파 텍스처		
-		//L"../../data/wireframe.dds",
-		&m_pTexture0,
-		&m_pSRV0);
-	if (FAILED(hr))
-	{
-		hr = DirectX::CreateDDSTextureFromFile(
-			m_pd3dDevice,
-			L"../../data/bitmap1.bmp", // 불투명알파 텍스처
-			//L"../../data/bitmap1Alpha.bmp",// 투명알파 텍스처		
-			//L"../../data/wireframe.dds",
-			&m_pTexture0,
-			&m_pSRV0);
-	}
-	hr = DirectX::CreateWICTextureFromFile(
-		m_pd3dDevice,
-		L"../../data/bitmap2.bmp",
-		&m_pTexture1,
-		&m_pSRV1);
-
-	// (소스컬러*D3D11_BLEND_SRC_ALPHA) 
-	//                  + 
-	// (대상컬러*D3D11_BLEND_INV_SRC_ALPHA)
-	// 컬러   =  투명컬러값 = (1,1,1,1)
-	// 마스크 =  1.0 - 투명컬러값 = (1,1,1,1)
-
-	// FinalColor = SrcColor*SrcAlpha + DestColor*(1.0f- SrcAlpha) 	    
-	// if SrcAlpha == 0 완전투명
-	//           FinalColor() = SrcColor*0 + DestColor*(1-0)
-	//                FinalColor = DestColor;
-	// if SrcAlpha == 1 완전불투명
-	//           FinalColor() = SrcColor*1 + DestColor*(1-1)
-	//                FinalColor = SrcColor;
-	// 혼합상태 = 소스(지금드로우객체 픽셀) (연산) 대상(백버퍼 객체:픽셀)
-	// 혼합상태 = 픽셀쉐이더 출력 컬러  (연산:사칙연산) 출력버퍼의 컬러
-	D3D11_BLEND_DESC  bd;
-	ZeroMemory(&bd, sizeof(D3D11_BLEND_DESC));
-	/*bd.AlphaToCoverageEnable;
-	bd.IndependentBlendEnable;*/
-	bd.RenderTarget[0].BlendEnable = TRUE;	
-	bd.RenderTarget[0].SrcBlend		= D3D11_BLEND_SRC_ALPHA;
-	bd.RenderTarget[0].DestBlend	= D3D11_BLEND_INV_SRC_ALPHA;
-	bd.RenderTarget[0].BlendOp		= D3D11_BLEND_OP_ADD;
-	//// A 연산 저장
-	bd.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
-	bd.RenderTarget[0].DestBlendAlpha= D3D11_BLEND_ZERO;
-	bd.RenderTarget[0].BlendOpAlpha= D3D11_BLEND_OP_ADD;
-	bd.RenderTarget[0].RenderTargetWriteMask = 
-					D3D11_COLOR_WRITE_ENABLE_ALL;
-	m_pd3dDevice->CreateBlendState(&bd, &m_AlphaBlend);
-
-
 	m_Net.InitNetwork();
 	m_Net.Connect(g_hWnd, SOCK_STREAM, 10000, "192.168.0.12");
-
 	return true;
 }
 bool	Sample::Frame()
 {
+	TInput::Get().Frame();
+	m_PlayerObj.Frame();
+
 	for (int iObj = 0; iObj < m_ObjectList.size(); iObj++)
 	{
 		m_ObjectList[iObj].Frame();
@@ -187,14 +134,14 @@ bool	Sample::Frame()
 	return true;
 }
 bool	Sample::Render()
-{
-	m_pImmediateContext->PSSetShaderResources(0, 1, &m_pSRV0);
-	m_pImmediateContext->PSSetShaderResources(1, 1, &m_pSRV1);
-	m_pImmediateContext->OMSetBlendState(m_AlphaBlend, 0, -1);
+{	
 	for (int iObj = 0; iObj < m_ObjectList.size(); iObj++)
 	{
 		m_ObjectList[iObj].Render();
 	}
+	m_PlayerObj.Render();
+
+	TInput::Get().Render();
 	return true;
 }
 bool	Sample::Release()
@@ -202,19 +149,11 @@ bool	Sample::Release()
 	for (int iObj = 0; iObj < m_ObjectList.size(); iObj++)
 	{
 		m_ObjectList[iObj].Release();
-	}
+	}	
+	m_PlayerObj.Release();
 
-	if(m_AlphaBlend) m_AlphaBlend->Release();
-	if (m_pTexture0) m_pTexture0->Release();
-	if (m_pSRV0) m_pSRV0->Release();
-	if (m_pTexture1) m_pTexture1->Release();
-	if (m_pSRV1) m_pSRV1->Release();
-	m_AlphaBlend = nullptr;
-	m_pTexture0 = nullptr;
-	m_pSRV0 = nullptr;
-	m_pTexture1 = nullptr;
-	m_pSRV1 = nullptr;
 	m_Net.CloseNetwork();
+	TInput::Get().Release();
 	return true;
 }
 Sample::Sample()

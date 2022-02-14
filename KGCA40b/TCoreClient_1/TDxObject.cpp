@@ -52,40 +52,16 @@ void	TDxObject::Convert(
 
 }
 bool	TDxObject::Create(ID3D11Device* pd3dDevice,
-	ID3D11DeviceContext* pContext,TVector2 vPos, float fWidth, float fHeight)
+	ID3D11DeviceContext* pContext,
+	TVector2 vPos, float fWidth, float fHeight,
+	const TCHAR* szColorFileName,
+	const TCHAR* szMaskFileName)
 {
-	//if ((vPos.x - fWidth / 2.0f) < 0) return false;
-	//if ((vPos.x + fWidth / 2.0f) > g_rtClient.right) return false;
-	//if ((vPos.y - fHeight / 2.0f) < 0) return false;
-	//if ((vPos.y + fHeight / 2.0f) > g_rtClient.bottom) return false;
 	SetDevice(pd3dDevice, pContext);
-	//화면좌표계
-	// 0,0   ~      800,0
-	// 
-	//      400,300
-	// 
-	// 0,600        800,600
-	//직각좌표계(왼손좌표계)    ->  NDC좌표로 변환 -> 화면좌표계
-	// -1,1   ~      1,1             z=(0~1)
-	// 
-	//        0,0
-	// 
-	// -1,-1          1,-1
-	HRESULT hr;
-	// ui used
-	//m_InitScreenList.resize(6);
-	//m_InitScreenList[0].v = TVector2(0.0f, 0.0f);
-	//m_InitScreenList[1].v = TVector2(fWidth, 0.0f);
-	//m_InitScreenList[2].v = TVector2(0.0f, fHeight);
-	//m_InitScreenList[3].v = TVector2(0.0f, fHeight);
-	//m_InitScreenList[4].v = TVector2(fWidth, 0.0f);
-	//m_InitScreenList[5].v = TVector2(fWidth, fHeight);
-	//Convert(m_InitScreenList, m_VertexList);
 
+	HRESULT hr;
 	m_vPos = vPos;
-	Convert(m_vPos,
-		fWidth, fHeight,
-		m_VertexList);
+	Convert(m_vPos,	fWidth, fHeight,m_VertexList);
 
 	//gpu메모리에 버퍼 할당(원하는 할당 크기)
 	D3D11_BUFFER_DESC bd;
@@ -181,6 +157,57 @@ bool	TDxObject::Create(ID3D11Device* pd3dDevice,
 	{
 		return false;
 	}
+
+
+	hr = DirectX::CreateWICTextureFromFile(
+		m_pd3dDevice,
+		szColorFileName, 		
+		&m_pTexture0,
+		&m_pSRV0);
+	if (FAILED(hr))
+	{
+		hr = DirectX::CreateDDSTextureFromFile(
+			m_pd3dDevice,
+			szColorFileName, 			
+			&m_pTexture0,
+			&m_pSRV0);
+	}
+	hr = DirectX::CreateWICTextureFromFile(
+		m_pd3dDevice,
+		szMaskFileName,
+		&m_pTexture1,
+		&m_pSRV1);
+
+	// (소스컬러*D3D11_BLEND_SRC_ALPHA) 
+	//                  + 
+	// (대상컬러*D3D11_BLEND_INV_SRC_ALPHA)
+	// 컬러   =  투명컬러값 = (1,1,1,1)
+	// 마스크 =  1.0 - 투명컬러값 = (1,1,1,1)
+
+	// FinalColor = SrcColor*SrcAlpha + DestColor*(1.0f- SrcAlpha) 	    
+	// if SrcAlpha == 0 완전투명
+	//           FinalColor() = SrcColor*0 + DestColor*(1-0)
+	//                FinalColor = DestColor;
+	// if SrcAlpha == 1 완전불투명
+	//           FinalColor() = SrcColor*1 + DestColor*(1-1)
+	//                FinalColor = SrcColor;
+	// 혼합상태 = 소스(지금드로우객체 픽셀) (연산) 대상(백버퍼 객체:픽셀)
+	// 혼합상태 = 픽셀쉐이더 출력 컬러  (연산:사칙연산) 출력버퍼의 컬러
+	D3D11_BLEND_DESC  blenddesc;
+	ZeroMemory(&blenddesc, sizeof(D3D11_BLEND_DESC));
+	/*bd.AlphaToCoverageEnable;
+	bd.IndependentBlendEnable;*/
+	blenddesc.RenderTarget[0].BlendEnable = TRUE;
+	blenddesc.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
+	blenddesc.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
+	blenddesc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
+	//// A 연산 저장
+	blenddesc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
+	blenddesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
+	blenddesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
+	blenddesc.RenderTarget[0].RenderTargetWriteMask =
+		D3D11_COLOR_WRITE_ENABLE_ALL;
+	hr =m_pd3dDevice->CreateBlendState(&blenddesc, &m_AlphaBlend);
 	return true;
 }
 bool	TDxObject::Init()
@@ -202,6 +229,10 @@ bool	TDxObject::Frame()
 }
 bool	TDxObject::Render()
 {
+	m_pContext->PSSetShaderResources(0, 1, &m_pSRV0);
+	m_pContext->PSSetShaderResources(1, 1, &m_pSRV1);
+	m_pContext->OMSetBlendState(m_AlphaBlend, 0, -1);
+
 	m_pContext->IASetInputLayout(m_pVertexLayout);
 	m_pContext->VSSetShader(m_pVertexShader, NULL, 0);
 	m_pContext->PSSetShader(m_pPixelShader, NULL, 0);
@@ -224,6 +255,17 @@ bool	TDxObject::Render()
 }
 bool	TDxObject::Release()
 {
+	if (m_AlphaBlend) m_AlphaBlend->Release();
+	if (m_pTexture0) m_pTexture0->Release();
+	if (m_pSRV0) m_pSRV0->Release();
+	if (m_pTexture1) m_pTexture1->Release();
+	if (m_pSRV1) m_pSRV1->Release();
+	m_AlphaBlend = nullptr;
+	m_pTexture0 = nullptr;
+	m_pSRV0 = nullptr;
+	m_pTexture1 = nullptr;
+	m_pSRV1 = nullptr;
+
 	if (m_pVSCodeResult) m_pVSCodeResult->Release();
 	if (m_pPSCodeResult) m_pPSCodeResult->Release();
 	if (m_pVertexBuffer) m_pVertexBuffer->Release();
@@ -240,7 +282,7 @@ bool	TDxObject::Release()
 }
 TDxObject::TDxObject()
 {
-	m_fSpeed = 0.00001f;
+	m_fSpeed = 0.0001f;
 }
 TDxObject::~TDxObject()
 {}
