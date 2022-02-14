@@ -2,12 +2,13 @@
 #include "TCore.h"
 #include "TAsyncSelect.h"
 #include "TPlayerObj2D.h"
+#include "TObjectNpc2D.h"
 class Sample : public TCore
 {
 public:
 	TPlayerObj2D		m_PlayerObj;
 public:
-	std::vector<TDxObject> m_ObjectList;
+	std::vector<TObjectNpc2D> m_NpcLlist;
 	TAsyncSelect		m_Net;
 	HWND				m_hEdit;
 	HWND				m_hButton;

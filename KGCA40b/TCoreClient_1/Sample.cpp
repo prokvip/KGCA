@@ -49,21 +49,47 @@ bool	Sample::Init()
 		if (obj.Create(m_pd3dDevice, m_pImmediateContext,
 			TVector2(-100 * iObj, iObj * 50), 400, 30))
 		{
-			m_ObjectList.push_back(obj);
+			m_NpcLlist.push_back(obj);
 		}
 	}*/
 
 	m_PlayerObj.Init();	
-	//m_PlayerObj.SetRectSouce({91,1,42,56});
-	m_PlayerObj.SetRectSouce({ 46,63,69,79 });
-	//m_PlayerObj.SetRectDraw({ 0,0, 42,56 });
-	if (!m_PlayerObj.Create(m_pd3dDevice, m_pImmediateContext,
-		TVector2(400, 300), 69, 79,
+	m_PlayerObj.SetRectSouce({91,1,42,56});
+	//m_PlayerObj.SetRectSouce({ 46,63,69,79 });
+	m_PlayerObj.SetRectDraw({ 0,0, 42,56 });
+	m_PlayerObj.SetPosition(TVector2(400,300));
+	if (!m_PlayerObj.Create(m_pd3dDevice, m_pImmediateContext,		
 		L"../../data/bitmap1.bmp",
 		L"../../data/bitmap2.bmp" ))
 	{
 		return false;
 	}
+
+	for (int iNpc = 0; iNpc < 5; iNpc++)
+	{		
+		TObjectNpc2D npc;
+		npc.Init();
+		if (iNpc % 2 == 0)
+		{
+			npc.SetRectSouce({ 46,63,69,79 });
+			npc.SetRectDraw({ 0,0, 69,79 });
+		}
+		else
+		{
+			npc.SetRectSouce({ 1,63,42,76 });
+			npc.SetRectDraw({ 0,0, 42,76 });
+		}
+		
+		npc.SetPosition(TVector2(50+iNpc*150, 50));
+		if (!npc.Create(m_pd3dDevice, m_pImmediateContext,
+			L"../../data/bitmap1.bmp",
+			L"../../data/bitmap2.bmp"))
+		{
+			return false;
+		}
+		m_NpcLlist.push_back(npc);
+	}
+
 	m_Net.InitNetwork();
 	m_Net.Connect(g_hWnd, SOCK_STREAM, 10000, "192.168.0.12");
 	return true;
@@ -72,9 +98,13 @@ bool	Sample::Frame()
 {
 	m_PlayerObj.Frame();
 
-	for (int iObj = 0; iObj < m_ObjectList.size(); iObj++)
+	for (int iObj = 0; iObj < m_NpcLlist.size(); iObj++)
 	{
-		m_ObjectList[iObj].Frame();
+		RECT rt = m_NpcLlist[iObj].m_rtDraw;
+		rt.right = rt.right + (cos(g_fGameTimer)*0.5f+0.5f) * 50.0f;
+		rt.bottom = rt.bottom + (cos(g_fGameTimer) * 0.5f + 0.5f) * 50.0f;		
+		m_NpcLlist[iObj].UpdateRectDraw(rt);
+		m_NpcLlist[iObj].Frame();
 	}
 
 	int iChatCnt = m_Net.m_PlayerUser.m_packetPool.size();
@@ -135,18 +165,18 @@ bool	Sample::Frame()
 }
 bool	Sample::Render()
 {	
-	for (int iObj = 0; iObj < m_ObjectList.size(); iObj++)
+	for (int iObj = 0; iObj < m_NpcLlist.size(); iObj++)
 	{
-		m_ObjectList[iObj].Render();
+		m_NpcLlist[iObj].Render();
 	}
 	m_PlayerObj.Render();
 	return true;
 }
 bool	Sample::Release()
 {	
-	for (int iObj = 0; iObj < m_ObjectList.size(); iObj++)
+	for (int iObj = 0; iObj < m_NpcLlist.size(); iObj++)
 	{
-		m_ObjectList[iObj].Release();
+		m_NpcLlist[iObj].Release();
 	}	
 	m_PlayerObj.Release();
 

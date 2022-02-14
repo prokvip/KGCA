@@ -44,8 +44,7 @@ public:
 								const TCHAR* szMaskFileName);
 	virtual bool    SetVertexData();
 	virtual bool	Create( ID3D11Device* m_pd3dDevice,
-					ID3D11DeviceContext* m_pContext,
-					TVector2 pos, float fWidth, float fHeight,
+					ID3D11DeviceContext* m_pContext,					
 					const TCHAR* szTextureFileName=nullptr,
 					const TCHAR* szMaskFileName = nullptr);
 public:

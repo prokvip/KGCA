@@ -8,25 +8,25 @@ bool	TPlayerObj2D::Frame()
 		TVector2 pos;
 		// 시간의 동기화
 		pos.y -= m_fSpeed * g_fSecPerFrame;
-		SetPosition(pos);
+		AddPosition(pos);
 	}
 	if (TInput::Get().GetKey('A') == KEY_HOLD)
 	{
 		TVector2 pos;
 		pos.x -= m_fSpeed * g_fSecPerFrame;
-		SetPosition(pos);
+		AddPosition(pos);
 	}
 	if (TInput::Get().GetKey('S') == KEY_HOLD)
 	{
 		TVector2 pos;
 		pos.y += m_fSpeed * g_fSecPerFrame;
-		SetPosition(pos);
+		AddPosition(pos);
 	}
 	if (TInput::Get().GetKey('D') == KEY_HOLD)
 	{
 		TVector2 pos;
 		pos.x += m_fSpeed * g_fSecPerFrame;
-		SetPosition(pos);
+		AddPosition(pos);
 	}	
 	return true;
 }

@@ -1,11 +1,31 @@
 #include "TObject2D.h"
-void		TObject2D::SetPosition(TVector2 vPos)
+void TObject2D::SetRectSouce(RECT rt)
+{
+	m_rtSource = rt;
+}
+void TObject2D::SetRectDraw(RECT rt)
+{
+	m_rtDraw = rt;
+	m_fWidth = rt.right;
+	m_fHeight = rt.bottom;
+}
+void TObject2D::UpdateRectDraw(RECT rt)
+{	
+	m_fWidth = rt.right;
+	m_fHeight = rt.bottom;
+}
+void		TObject2D::AddPosition(TVector2 vPos)
 {
 	// 현재위치
 	m_vPos += vPos;
 	Convert(m_vPos, m_fWidth, m_fHeight, m_VertexList);
 	m_pContext->UpdateSubresource(
 		m_pVertexBuffer, 0, NULL, &m_VertexList.at(0), 0, 0);
+}
+void		TObject2D::SetPosition(TVector2 vPos)
+{
+	// 현재위치
+	m_vPos = vPos;	
 }
 void	TObject2D::Convert(
 	TVector2 center, float fWidth, float fHeight,
@@ -59,6 +79,6 @@ void	TObject2D::Convert(
 }
 bool    TObject2D::SetVertexData()
 {
-	Convert(m_vPos, m_fWidth, m_fHeight, m_VertexList);
+	Convert(m_vPos, m_fWidth, m_fHeight, m_VertexList);	
 	return true;
 }

@@ -147,12 +147,14 @@
     <ClCompile Include="Sample.cpp" />
     <ClCompile Include="TObject2D.cpp" />
     <ClCompile Include="TObject3D.cpp" />
+    <ClCompile Include="TObjectNpc2D.cpp" />
     <ClCompile Include="TPlayerObj2D.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Sample.h" />
     <ClInclude Include="TObject2D.h" />
     <ClInclude Include="TObject3D.h" />
+    <ClInclude Include="TObjectNpc2D.h" />
     <ClInclude Include="TPlayerObj2D.h" />
   </ItemGroup>
   <ItemGroup>
@@ -165,6 +167,7 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="PixelShader.txt" />
+    <Text Include="player.txt" />
     <Text Include="VertexShader.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
