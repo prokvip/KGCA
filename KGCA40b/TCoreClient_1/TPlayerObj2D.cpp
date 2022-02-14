@@ -1,5 +1,6 @@
 #include "TPlayerObj2D.h"
 #include "TInput.h"
+
 bool	TPlayerObj2D::Frame()
 {	
 	if (TInput::Get().GetKey('W') == KEY_HOLD)

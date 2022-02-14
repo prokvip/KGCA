@@ -53,10 +53,12 @@ bool	Sample::Init()
 		}
 	}*/
 
-	m_PlayerObj.Init();
-	///0 ~ g_rtClient
+	m_PlayerObj.Init();	
+	//m_PlayerObj.SetRectSouce({91,1,42,56});
+	m_PlayerObj.SetRectSouce({ 46,63,69,79 });
+	//m_PlayerObj.SetRectDraw({ 0,0, 42,56 });
 	if (!m_PlayerObj.Create(m_pd3dDevice, m_pImmediateContext,
-		TVector2(400, 300), 400, 300,
+		TVector2(400, 300), 69, 79,
 		L"../../data/bitmap1.bmp",
 		L"../../data/bitmap2.bmp" ))
 	{
@@ -68,16 +70,6 @@ bool	Sample::Init()
 }
 bool	Sample::Frame()
 {
-
-	if (TInput::Get().GetKey(VK_F1) == KEY_PUSH)
-	{
-		int kk = 0;
-	}
-	if (TInput::Get().GetKey('1') == KEY_UP)
-	{
-		int kk = 0;
-	}
-
 	m_PlayerObj.Frame();
 
 	for (int iObj = 0; iObj < m_ObjectList.size(); iObj++)

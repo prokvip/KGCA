@@ -6,50 +6,51 @@ void    TDxObject::SetDevice(ID3D11Device* pd3dDevice,
 	m_pd3dDevice = pd3dDevice;
 	m_pContext   = pContext;
 }
-void	TDxObject::Convert(
-	TVector2 center, float fWidth, float fHeight,
-	std::vector<SimpleVertex>& retList)
+bool    TDxObject::LoadTexture(const TCHAR* szColorFileName,
+	const TCHAR* szMaskFileName)
 {
-	// 0       1,4
-
-	//     c
-
-	// 2,3      5
-	std::vector<SimpleVertex> list(6);
-	float halfWidth = fWidth / 2.0f;
-	float halfHeight = fHeight / 2.0f;
-	list[0].v = { center.x - halfWidth, center.y - halfHeight };
-	list[1].v = { center.x + halfWidth, center.y - halfHeight };
-	list[2].v = { center.x - halfWidth, center.y + halfHeight };
-	list[3].v = list[2].v;
-	list[4].v = list[1].v;
-	list[5].v = { center.x + halfWidth, center.y + halfHeight };
-
-	Convert(list, retList);
-
-}
-void	TDxObject::Convert(
-	std::vector<SimpleVertex>& list,
-	std::vector<SimpleVertex>& retList)
-{
-	retList.resize(list.size());
-	for (int i = 0; i < list.size(); i++)
+	HRESULT hr = DirectX::CreateWICTextureFromFile(
+		m_pd3dDevice,
+		szColorFileName,
+		(ID3D11Resource**)&m_pTexture0,
+		&m_pSRV0);
+	if (FAILED(hr))
 	{
-		// 0 ~ 800 -> 0 ~ 1 -> -1 ~ +1
-		retList[i].v.x = list[i].v.x / g_rtClient.right;
-		retList[i].v.y = list[i].v.y / g_rtClient.bottom;
-		// 0 ~ 1 -> -1 ~ +1 :::: -1 ~ +1 -> 0 ~ 1
-		// x = x * 2 + -1;  ::::  x= x * 0.5f + 0.5f;
-		retList[i].v.x = retList[i].v.x * 2.0f - 1.0f;
-		retList[i].v.y = -1.0f * (retList[i].v.y * 2.0f - 1.0f);
+		hr = DirectX::CreateDDSTextureFromFile(
+			m_pd3dDevice,
+			szColorFileName,
+			(ID3D11Resource**)&m_pTexture0,
+			&m_pSRV0);
+		if (FAILED(hr))
+		{
+			return false;
+		}
 	}
-	retList[0].t.x = 0.0f; retList[0].t.y = 0.0f;
-	retList[1].t.x = 1.0f; retList[1].t.y = 0.0f;
-	retList[2].t.x = 0.0f; retList[2].t.y = 1.0f;
-	retList[3].t =  retList[2].t;
-	retList[4].t =  retList[1].t;
-	retList[5].t.x = 1.0f; retList[5].t.y = 1.0f;
+	m_pTexture0->GetDesc(&m_TextureDesc);
 
+	hr = DirectX::CreateWICTextureFromFile(
+		m_pd3dDevice,
+		szMaskFileName,
+		(ID3D11Resource**)&m_pTexture1,
+		&m_pSRV1);
+	if (FAILED(hr))
+	{
+		hr = DirectX::CreateDDSTextureFromFile(
+			m_pd3dDevice,
+			szMaskFileName,
+			(ID3D11Resource**)&m_pTexture0,
+			&m_pSRV0);
+		if (FAILED(hr))
+		{
+			return false;
+		}
+	}
+	//m_pTexture0->GetDesc(&m_TextureDesc);
+	return true;
+}
+bool    TDxObject::SetVertexData()
+{	
+	return true;
 }
 bool	TDxObject::Create(ID3D11Device* pd3dDevice,
 	ID3D11DeviceContext* pContext,
@@ -57,14 +58,20 @@ bool	TDxObject::Create(ID3D11Device* pd3dDevice,
 	const TCHAR* szColorFileName,
 	const TCHAR* szMaskFileName)
 {
-	SetDevice(pd3dDevice, pContext);
-
 	HRESULT hr;
+	SetDevice(pd3dDevice, pContext);	
+	if (!LoadTexture(szColorFileName, szMaskFileName))
+	{
+		return false;
+	}
+
 	m_vPos = vPos;
 	m_fWidth = fWidth;
 	m_fHeight = fHeight;
-	Convert(m_vPos,	fWidth, fHeight,m_VertexList);
-
+	if (!SetVertexData())
+	{
+		return false;
+	}
 	//gpu메모리에 버퍼 할당(원하는 할당 크기)
 	D3D11_BUFFER_DESC bd;
 	ZeroMemory(&bd, sizeof(D3D11_BUFFER_DESC));
@@ -160,26 +167,6 @@ bool	TDxObject::Create(ID3D11Device* pd3dDevice,
 		return false;
 	}
 
-
-	hr = DirectX::CreateWICTextureFromFile(
-		m_pd3dDevice,
-		szColorFileName, 		
-		&m_pTexture0,
-		&m_pSRV0);
-	if (FAILED(hr))
-	{
-		hr = DirectX::CreateDDSTextureFromFile(
-			m_pd3dDevice,
-			szColorFileName, 			
-			&m_pTexture0,
-			&m_pSRV0);
-	}
-	hr = DirectX::CreateWICTextureFromFile(
-		m_pd3dDevice,
-		szMaskFileName,
-		&m_pTexture1,
-		&m_pSRV1);
-
 	// (소스컬러*D3D11_BLEND_SRC_ALPHA) 
 	//                  + 
 	// (대상컬러*D3D11_BLEND_INV_SRC_ALPHA)
@@ -219,14 +206,6 @@ bool	TDxObject::Init()
 }
 bool	TDxObject::Frame()
 {
-	/*m_VertexList[0].v.x += m_fSpeed;
-	m_VertexList[1].v.x += m_fSpeed;
-	m_VertexList[2].v.x += m_fSpeed;
-	m_VertexList[3].v.x += m_fSpeed;
-	m_VertexList[4].v.x += m_fSpeed;
-	m_VertexList[5].v.x += m_fSpeed;
-	m_pContext->UpdateSubresource(
-		m_pVertexBuffer,0, NULL, &m_VertexList.at(0), 0,0);*/
 	return true;
 }
 bool	TDxObject::Render()

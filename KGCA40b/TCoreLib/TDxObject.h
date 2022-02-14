@@ -13,10 +13,11 @@ class TDxObject
 {
 public:
 	ID3D11ShaderResourceView*	m_pSRV0;
-	ID3D11Resource*				m_pTexture0;
+	ID3D11Texture2D*			m_pTexture0;
 	ID3D11ShaderResourceView*	m_pSRV1;
-	ID3D11Resource*				m_pTexture1;
+	ID3D11Texture2D*			m_pTexture1;
 	ID3D11BlendState*			m_AlphaBlend;
+	D3D11_TEXTURE2D_DESC		m_TextureDesc;
 public:
 	float		m_fSpeed;
 	TVector2	m_vPos;
@@ -39,19 +40,15 @@ public:
 public:
 	void    SetDevice(ID3D11Device* m_pd3dDevice,
 					  ID3D11DeviceContext* m_pContext);
+	virtual bool    LoadTexture(const TCHAR* szColorFileName,
+								const TCHAR* szMaskFileName);
+	virtual bool    SetVertexData();
 	virtual bool	Create( ID3D11Device* m_pd3dDevice,
 					ID3D11DeviceContext* m_pContext,
 					TVector2 pos, float fWidth, float fHeight,
 					const TCHAR* szTextureFileName=nullptr,
 					const TCHAR* szMaskFileName = nullptr);
-	
-	// 화면좌표 위치를 중점으로 NDC 변환
-	virtual void	Convert(
-		TVector2 center, float fWidth, float fHeight,
-		std::vector<SimpleVertex>& retList);
-	// 화면좌표계를 NDC 변환
-	virtual void	Convert(std::vector<SimpleVertex>& list,
-		std::vector<SimpleVertex>& retList);
+public:
 	virtual bool	Init();
 	virtual bool	Frame();
 	virtual bool	Render();
