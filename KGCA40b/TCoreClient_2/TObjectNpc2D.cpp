@@ -1,4 +1,11 @@
 #include "TObjectNpc2D.h"
+void TObjectNpc2D::HitOverlap(TBaseObject* pObj, DWORD dwState)
+{
+	if (dwState == TCollisionType::Overlap)
+	{
+		pObj->m_bAlphaBlend = !pObj->m_bAlphaBlend;
+	}
+}
 bool	TObjectNpc2D::Frame()
 {
 	TVector2 p;
@@ -28,7 +35,7 @@ bool	TObjectNpc2D::Frame()
 }
 TObjectNpc2D::TObjectNpc2D()
 {
-	m_fSpeed = 150.0f;
+	m_fSpeed = 20.0f + (rand() % 300); // ¼Ó·Â
 	m_vDirection.x = (rand()%2 == 0) ? 1.0f : -1.0f;
 	m_vDirection.y = (rand() % 2 == 0) ? 1.0f : -1.0f;
 }

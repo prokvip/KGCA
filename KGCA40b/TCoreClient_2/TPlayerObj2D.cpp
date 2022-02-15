@@ -2,7 +2,10 @@
 #include "TInput.h"
 void TPlayerObj2D::HitOverlap(TBaseObject* pObj, DWORD dwState)
 {
-	pObj->m_bAlphaBlend = false;
+	if (dwState == TCollisionType::Overlap)
+	{
+		pObj->m_bAlphaBlend = false;
+	}	
 }
 bool	TPlayerObj2D::Frame()
 {	
@@ -36,7 +39,7 @@ bool	TPlayerObj2D::Frame()
 
 TPlayerObj2D::TPlayerObj2D()
 {
-	m_fSpeed = 600.0f; // 속력
+	m_fSpeed = 300.0f; // 속력
 }
 
 TPlayerObj2D::~TPlayerObj2D()
