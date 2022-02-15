@@ -30,15 +30,17 @@ TVector2 TVector2::operator - (const TVector2& v)
 
 TVector2 TVector2::operator * (float fValue)
 {
-	this->x *= fValue;
-	this->y *= fValue;
-	return *this;
+	TVector2 ret;
+	ret.x = this->x * fValue;
+	ret.y = this->y * fValue;	
+	return ret;
 }
 TVector2 TVector2::operator / (float fValue)
 {
-	this->x /= fValue;
-	this->y /= fValue;
-	return *this;
+	TVector2 ret;
+	ret.x = this->x / fValue;
+	ret.y = this->y / fValue;
+	return ret;
 }
 TVector2 TVector2::operator += (const TVector2& v)
 {
@@ -103,4 +105,10 @@ float TVector2::Length()
 {
 	float ret = x * x + y * y;
 	return sqrt(ret);
+}
+// 두벡터의 거리 반환
+float TVector2::Distance(TVector2& v)
+{
+	float fDist = (*this - v).Length();
+	return fDist;
 }

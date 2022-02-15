@@ -1,6 +1,6 @@
 #pragma once
 #include "TVector3.h"
-enum TCollisionType
+enum TCollisionResult
 {
 	RECT_OUT = 0,
 	RECT_IN,
@@ -81,13 +81,14 @@ class TCollision
 public:
 	static bool   RectToPoint(TRect rt, int x, int y);
 	static bool   RectToPoint(TRect rt, TVector2 v);
-	static TCollisionType    RectToRect(TRect,TRect);
+	static TCollisionResult    RectToRect(TRect,TRect);
+	static TCollisionResult    ToRect(TRect rt1, TRect rt2);
 	static TRect  UnionRect(TRect rt1, TRect rt2);
 	static bool  IntersectRect(TRect rt1, TRect rt2, TRect* rt);
 	
 	static bool   BoxToPoint(TBox rt, int x, int y, int z);
 	static bool   BoxToPoint(TBox rt, TVector3 v);
-	static TCollisionType    BoxToBox(TBox, TBox);
+	static TCollisionResult    BoxToBox(TBox, TBox);
 	static TBox   UnionBox(TBox rt1, TBox rt2);
 	static bool  IntersectBox(TBox rt1, TBox rt2, TBox* rt);
 };

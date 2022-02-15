@@ -1,4 +1,5 @@
 #include "TCore.h"
+#include "TObjectMgr.h"
 bool	TCore::CoreInit()
 {
 	m_GameTimer.Init();
@@ -22,6 +23,7 @@ bool	TCore::CoreFrame()
 {
 	m_GameTimer.Frame();
 	TInput::Get().Frame();
+	I_ObjectMgr.Frame();
 	Frame();
 	return true;
 }

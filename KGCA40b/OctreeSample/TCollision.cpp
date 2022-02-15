@@ -72,7 +72,17 @@ TCollisionType   TCollision::RectToRect(TRect rt1,
 	if (rtInterction == rt2) return RECT_OVERLAP;
 	return RECT_IN;
 }
-
+TCollisionType   TCollision::ToRect(TRect rt1, TRect rt2)
+{
+	TRect rtInterction;
+	int iRet = IntersectRect(rt1, rt2, &rtInterction);
+	if (iRet <= 0)
+	{
+		return RECT_OUT;
+	}
+	if (rtInterction == rt2) return RECT_OVERLAP;
+	return RECT_IN;
+}
 
 bool   TCollision::BoxToPoint(TBox rt, int x, int y, int z)
 {

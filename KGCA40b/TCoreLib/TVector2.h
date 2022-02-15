@@ -31,5 +31,6 @@ public:
 	friend TVector2 Normalize(TVector2& v);
 	// Å©±â
 	float Length();
+	float Distance(TVector2& v);
 };
 

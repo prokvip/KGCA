@@ -1,4 +1,9 @@
 #include "TDxObject.h"
+#include "TObjectMgr.h"
+void TBaseObject::HitOverlap(TBaseObject* pObj, DWORD dwState)
+{
+	int kkk = 0;
+}
 
 void    TDxObject::SetDevice(ID3D11Device* pd3dDevice,
 	ID3D11DeviceContext* pContext)
@@ -58,6 +63,12 @@ bool	TDxObject::Create(ID3D11Device* pd3dDevice,
 	const TCHAR* szMaskFileName)
 {
 	HRESULT hr;
+	m_rtCollision = TRect(m_vPos, m_fWidth, m_fHeight);
+	I_ObjectMgr.AddCollisionExecute(this, 
+		std::bind(&TBaseObject::HitOverlap,this, 
+											std::placeholders::_1, 
+											std::placeholders::_2 ));
+
 	SetDevice(pd3dDevice, pContext);	
 	if (!LoadTexture(szColorFileName, szMaskFileName))
 	{
@@ -192,6 +203,9 @@ bool	TDxObject::Create(ID3D11Device* pd3dDevice,
 	blenddesc.RenderTarget[0].RenderTargetWriteMask =
 		D3D11_COLOR_WRITE_ENABLE_ALL;
 	hr =m_pd3dDevice->CreateBlendState(&blenddesc, &m_AlphaBlend);
+
+	blenddesc.RenderTarget[0].BlendEnable = FALSE;
+	hr = m_pd3dDevice->CreateBlendState(&blenddesc, &m_AlphaBlendDisable);
 	return true;
 }
 bool	TDxObject::Init()
@@ -207,7 +221,14 @@ bool	TDxObject::Render()
 {
 	m_pContext->PSSetShaderResources(0, 1, &m_pSRV0);
 	m_pContext->PSSetShaderResources(1, 1, &m_pSRV1);
-	m_pContext->OMSetBlendState(m_AlphaBlend, 0, -1);
+	if (m_bAlphaBlend)
+	{
+		m_pContext->OMSetBlendState(m_AlphaBlend, 0, -1);
+	}
+	else
+	{
+		m_pContext->OMSetBlendState(m_AlphaBlendDisable, 0, -1);
+	}
 
 	m_pContext->IASetInputLayout(m_pVertexLayout);
 	m_pContext->VSSetShader(m_pVertexShader, NULL, 0);
@@ -232,11 +253,13 @@ bool	TDxObject::Render()
 bool	TDxObject::Release()
 {
 	if (m_AlphaBlend) m_AlphaBlend->Release();
+	if (m_AlphaBlendDisable) m_pSRV1->Release();
 	if (m_pTexture0) m_pTexture0->Release();
 	if (m_pSRV0) m_pSRV0->Release();
 	if (m_pTexture1) m_pTexture1->Release();
 	if (m_pSRV1) m_pSRV1->Release();
 	m_AlphaBlend = nullptr;
+	m_AlphaBlendDisable = nullptr;
 	m_pTexture0 = nullptr;
 	m_pSRV0 = nullptr;
 	m_pTexture1 = nullptr;

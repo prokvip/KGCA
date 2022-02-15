@@ -60,7 +60,7 @@ bool   TCollision::IntersectRect(
 // 0 :  떨어져 있다.
 // 1 :  안에 있다.
 // 2 :  걸쳐 있다.
-TCollisionType   TCollision::RectToRect(TRect rt1, 
+TCollisionResult   TCollision::RectToRect(TRect rt1, 
 	TRect rt2)
 {	
 	TRect rtInterction;
@@ -73,7 +73,21 @@ TCollisionType   TCollision::RectToRect(TRect rt1,
 	return RECT_IN;
 }
 
-
+TCollisionResult   TCollision::ToRect(TRect rt1,TRect rt2)
+{
+	// 거리 판정
+	float fDistanceX;
+	float fDistanceY;
+	fDistanceX = fabs(rt1.vMiddle.x - rt2.vMiddle.x);
+	fDistanceY = fabs(rt1.vMiddle.y - rt2.vMiddle.y);
+	float fToX = rt1.size.x / 2.0f + rt1.size.x / 2.0f;
+	float fToY = rt1.size.y / 2.0f + rt1.size.y / 2.0f;
+	if (fDistanceX < fToX && fDistanceY < fToY)
+	{
+		return RECT_OVERLAP;
+	}
+	return RECT_OUT;
+}
 bool   TCollision::BoxToPoint(TBox rt, int x, int y, int z)
 {
 	if (rt.vMin.x <= x && rt.vMax.x >= x &&
@@ -144,7 +158,7 @@ bool   TCollision::IntersectBox(
 // 0 :  떨어져 있다.
 // 1 :  안에 있다.
 // 2 :  걸쳐 있다.
-TCollisionType   TCollision::BoxToBox(TBox rt1, TBox rt2)
+TCollisionResult   TCollision::BoxToBox(TBox rt1, TBox rt2)
 {
 	TBox rtInterction;
 	int iRet = IntersectBox(rt1, rt2, &rtInterction);
