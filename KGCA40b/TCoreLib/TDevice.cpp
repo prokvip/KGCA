@@ -9,7 +9,11 @@ HRESULT TDevice::InitDeivice()
 }
 bool	TDevice::CreateDevice()
 {
-	UINT Flags = 0;
+	//D2DWIRETE 연동 필수
+	UINT Flags = D3D11_CREATE_DEVICE_BGRA_SUPPORT;
+#ifdef _DEBUG
+	Flags |= D3D11_CREATE_DEVICE_DEBUG;
+#endif
 	D3D_FEATURE_LEVEL fl[]
 	{
 		D3D_FEATURE_LEVEL_11_0,

@@ -2,9 +2,23 @@
 #include "TObjectMgr.h"
 bool	TCore::CoreInit()
 {
-	m_GameTimer.Init();
+	m_GameTimer.Init();	
 	TInput::Get().Init();
-	InitDeivice();
+	if( SUCCEEDED(InitDeivice()))
+	{
+		if (m_dxWrite.Init())
+		{
+			IDXGISurface1* pSurface = nullptr;
+			HRESULT hr = m_pSwapChain->GetBuffer(0, 
+				__uuidof(IDXGISurface1),
+				(void**)&pSurface);
+			if (SUCCEEDED(hr))
+			{
+				m_dxWrite.SetRenderTarget(pSurface);
+			}
+			if (pSurface) pSurface->Release();
+		}
+	}
 	Init();
 	return true;
 }
@@ -25,6 +39,7 @@ bool	TCore::CoreFrame()
 	TInput::Get().Frame();
 	I_ObjectMgr.Frame();
 	Frame();
+	m_dxWrite.Frame();
 	return true;
 }
 bool	TCore::CoreRender()
@@ -40,6 +55,8 @@ bool	TCore::CoreRender()
 
 	m_GameTimer.Render();
 	TInput::Get().Render();
+
+	m_dxWrite.Render();
 	m_pSwapChain->Present(0, 0);
 	return true;
 }
@@ -47,7 +64,7 @@ bool	TCore::CoreRender()
 bool	TCore::CoreRelease()
 {
 	Release();
-
+	m_dxWrite.Release();
 	m_GameTimer.Release();
 	TInput::Get().Release();
 	CleapupDevice();

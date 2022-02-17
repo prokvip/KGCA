@@ -163,6 +163,7 @@ copy "..\\..\\output\\Debug\\TCoreLib.lib" "..\\..\\Lib\\TCoreLib_d.lib"
     <ClCompile Include="TVector2.cpp" />
     <ClCompile Include="TVector3.cpp" />
     <ClCompile Include="TWindow.cpp" />
+    <ClCompile Include="TWriteFont.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TCollision.h" />
@@ -178,6 +179,7 @@ copy "..\\..\\output\\Debug\\TCoreLib.lib" "..\\..\\Lib\\TCoreLib_d.lib"
     <ClInclude Include="TVector2.h" />
     <ClInclude Include="TVector3.h" />
     <ClInclude Include="TWindow.h" />
+    <ClInclude Include="TWriteFont.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />

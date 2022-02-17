@@ -3,10 +3,12 @@
 #include "TDxObject.h"
 #include "TInput.h"
 #include "TTimer.h"
+#include "TWriteFont.h"
 class TCore : public TDevice
 {
 public:
 	TTimer		m_GameTimer;
+	TWriteFont  m_dxWrite;
 private:
 	bool	CoreInit();	
 		bool	CoreFrame();
