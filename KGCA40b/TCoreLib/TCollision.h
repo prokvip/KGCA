@@ -6,6 +6,43 @@ enum TCollisionResult
 	RECT_IN,
 	RECT_OVERLAP,
 };
+// È­¸éÁÂÇ¥°è+¿ÞÂÊ»ó´ÜÀÌ ¿øÁ¡
+struct TRect2D
+{
+	TVector2 vMin;
+	TVector2 vMax;
+	TVector2 vMiddle;
+	TVector2 size;
+	bool operator == (const TRect2D& v)
+	{
+		if (fabs((vMin - v.vMin).Length()) < 0.0001f)
+		{
+			if (fabs((vMax - v.vMax).Length()) < 0.0001f)
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+	TRect2D() {};
+	TRect2D(TVector2 vMin, TVector2 vMax)
+	{
+		this->vMin = vMin;
+		this->vMax = vMax;
+		vMiddle = (vMax + vMin) / 2.0f;
+		size.x = vMax.x - vMin.x;
+		size.y = vMax.y - vMin.y;
+	}
+	TRect2D(TVector2 v, float w, float h)
+	{
+		this->vMin = v;
+		this->vMax = vMin + TVector2(w, h);
+		vMiddle = (vMax + vMin) / 2.0f;
+		this->size.x = w;
+		this->size.y = h;
+	}
+};
+// È­¸éÁÂÇ¥°è+Áß¾ÓÀÌ ¿øÁ¡
 struct TRect
 {
 	TVector2 vMin;
@@ -32,11 +69,11 @@ struct TRect
 		size.x = vMax.x - vMin.x;
 		size.y = vMax.y - vMin.y;
 	}
-	TRect(TVector2 v, float w, float h)
+	TRect(TVector2 pos, float w, float h)
 	{
-		this->vMin = v;
-		this->vMax = vMin + TVector2(w, h);
-		vMiddle = (vMax + vMin) / 2.0f;
+		vMiddle = pos;
+		this->vMin = vMiddle - TVector2(w/2.0f, h/2.0f);
+		this->vMax = vMiddle + TVector2(w / 2.0f, h / 2.0f);		
 		this->size.x = w;
 		this->size.y = h;
 	}

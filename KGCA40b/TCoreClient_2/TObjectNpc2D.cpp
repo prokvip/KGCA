@@ -6,9 +6,26 @@ void TObjectNpc2D::HitOverlap(TBaseObject* pObj, DWORD dwState)
 		//pObj->m_bAlphaBlend = !pObj->m_bAlphaBlend;
 	}
 }
+
 void	TObjectNpc2D::HitSelect(TBaseObject* pObj, DWORD dwState)
 {
-	m_bDead = true;
+	if (m_dwSelectState & T_HOVER)
+	{
+		INT K = 0;
+	}
+	if (m_dwSelectState & T_FOCUS)
+	{
+		INT K = 0;
+	}
+	if (m_dwSelectState & T_ACTIVE)
+	{
+		INT K = 0;
+	}
+	if (m_dwSelectState & T_SELECTED)
+	{
+		m_bSelect = true;
+		m_bDead = true;
+	}
 }
 bool	TObjectNpc2D::Frame()
 {

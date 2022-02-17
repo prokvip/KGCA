@@ -81,7 +81,7 @@ bool	Sample::Init()
 			npc->SetRectDraw({ 0,0, 42,76 });
 		}
 		
-		npc->SetPosition(TVector2(50+iNpc*50, 50));
+		npc->SetPosition(TVector2(50+iNpc*150, 50));
 		if (!npc->Create(m_pd3dDevice, m_pImmediateContext,
 			L"../../data/bitmap1.bmp",
 			L"../../data/bitmap2.bmp"))
@@ -101,12 +101,6 @@ bool	Sample::Frame()
 	for (int iObj = 0; iObj < m_NpcLlist.size(); iObj++)
 	{
 		m_NpcLlist[iObj]->Frame();
-	}
-	// 
-	if (TCollision::RectToPoint(m_PlayerObj.m_rtCollision, 
-								g_ptMouse.x, g_ptMouse.y))
-	{
-		m_PlayerObj.m_bAlphaBlend = false;
 	}
 
 #pragma region

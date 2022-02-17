@@ -1,4 +1,5 @@
 #include "TObjectMgr.h"
+#include "TInput.h"
 void  TObjectMgr::AddCollisionExecute(TBaseObject* owner, CollisionFunction func)
 {
 	owner->m_iCollisionID = m_iExcueteCollisionID++;
@@ -78,6 +79,22 @@ bool  TObjectMgr::Frame()
 		if (TCollision::RectToPoint(
 			pObjSrc->m_rtCollision, (float)g_ptMouse.x, (float)g_ptMouse.y))
 		{
+			DWORD dwKeyState = TInput::Get().m_dwMouseState[0];
+			pObjSrc->m_dwSelectState = TSelectState::T_HOVER;
+			if (dwKeyState == KEY_PUSH)
+			{
+				pObjSrc->m_dwSelectState = TSelectState::T_ACTIVE;
+			}
+			if (dwKeyState == KEY_HOLD)
+			{
+				pObjSrc->m_dwSelectState = TSelectState::T_FOCUS;
+			}
+			if (dwKeyState == KEY_UP)
+			{
+				pObjSrc->m_dwSelectState = TSelectState::T_SELECTED;
+			}
+
+
 			FuncionIterator colliter = m_fnSelectExecute.find(pObjSrc->m_iSelectID);
 			if (colliter != m_fnSelectExecute.end())
 			{
