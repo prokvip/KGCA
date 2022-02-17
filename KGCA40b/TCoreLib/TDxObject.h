@@ -15,10 +15,18 @@ enum TCollisionType
 	Overlap,
 	Ignore,
 };
+enum TSelectType
+{
+	Select_Block = 0,
+	Select_Overlap,
+	Select_Ignore,
+};
 class TBaseObject
 {
 public:
+	bool		m_bDead;
 	int			m_iCollisionID;
+	int			m_iSelectID;
 	float		m_fSpeed;
 	TVector2	m_vPos;
 	TVector2	m_vDirection;
@@ -26,17 +34,22 @@ public:
 	float		m_fHeight;
 	TRect		m_rtCollision;
 	DWORD		m_dwCollisonType;
+	DWORD		m_dwSelectType;
 	bool		m_bAlphaBlend = true;
 public:
 	virtual void	HitOverlap(TBaseObject* pObj, DWORD dwState);
+	virtual void	HitSelect(TBaseObject* pObj, DWORD dwState);
 public:
 	
 	TBaseObject()
 	{
+		m_bDead = false;
 		m_iCollisionID = -1;
+		m_iSelectID = -1;
 		m_vDirection.x = 0.0f;
 		m_vDirection.y = 0.0f;
-		m_dwCollisonType = Overlap;
+		m_dwCollisonType = TCollisionType::Overlap;
+		m_dwSelectType = TCollisionType::Overlap;
 	}
 };
 class TDxObject : public TBaseObject

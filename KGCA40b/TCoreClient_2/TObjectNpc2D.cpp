@@ -3,8 +3,12 @@ void TObjectNpc2D::HitOverlap(TBaseObject* pObj, DWORD dwState)
 {
 	if (dwState == TCollisionType::Overlap)
 	{
-		pObj->m_bAlphaBlend = !pObj->m_bAlphaBlend;
+		//pObj->m_bAlphaBlend = !pObj->m_bAlphaBlend;
 	}
+}
+void	TObjectNpc2D::HitSelect(TBaseObject* pObj, DWORD dwState)
+{
+	m_bDead = true;
 }
 bool	TObjectNpc2D::Frame()
 {

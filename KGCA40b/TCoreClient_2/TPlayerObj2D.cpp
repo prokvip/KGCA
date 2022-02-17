@@ -4,7 +4,7 @@ void TPlayerObj2D::HitOverlap(TBaseObject* pObj, DWORD dwState)
 {
 	if (dwState == TCollisionType::Overlap)
 	{
-		pObj->m_bAlphaBlend = false;
+		//pObj->m_bAlphaBlend = false;
 	}	
 }
 bool	TPlayerObj2D::Frame()

@@ -2,9 +2,11 @@
 #include "TObjectMgr.h"
 void TBaseObject::HitOverlap(TBaseObject* pObj, DWORD dwState)
 {
-	int kkk = 0;
 }
+void TBaseObject::HitSelect(TBaseObject* pObj, DWORD dwState)
+{
 
+}
 void    TDxObject::SetDevice(ID3D11Device* pd3dDevice,
 	ID3D11DeviceContext* pContext)
 {
@@ -68,6 +70,10 @@ bool	TDxObject::Create(ID3D11Device* pd3dDevice,
 		std::bind(&TBaseObject::HitOverlap,this, 
 											std::placeholders::_1, 
 											std::placeholders::_2 ));
+	I_ObjectMgr.AddSelectExecute(this,
+		std::bind(&TBaseObject::HitSelect, this,
+			std::placeholders::_1,
+			std::placeholders::_2));
 
 	SetDevice(pd3dDevice, pContext);	
 	if (!LoadTexture(szColorFileName, szMaskFileName))

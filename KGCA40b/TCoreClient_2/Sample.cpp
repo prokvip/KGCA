@@ -97,23 +97,19 @@ bool	Sample::Init()
 }
 bool	Sample::Frame()
 {	
-	//for (int iObj = 0; iObj < m_NpcLlist.size(); iObj++)
-	//{
-	//	// 충돌체크
-	//	if (TCollision::ToRect(m_PlayerObj.m_rtCollision, m_NpcLlist[iObj].m_rtCollision))
-	//	{
-	//		m_NpcLlist[iObj].m_bAlphaBlend = false;
-	//	}
-	//}
-
 	m_PlayerObj.Frame();
-
 	for (int iObj = 0; iObj < m_NpcLlist.size(); iObj++)
 	{
-		//m_NpcLlist[iObj]->UpdateRectDraw(rt);
 		m_NpcLlist[iObj]->Frame();
 	}
+	// 
+	if (TCollision::RectToPoint(m_PlayerObj.m_rtCollision, 
+								g_ptMouse.x, g_ptMouse.y))
+	{
+		m_PlayerObj.m_bAlphaBlend = false;
+	}
 
+#pragma region
 	int iChatCnt = m_Net.m_PlayerUser.m_packetPool.size();
 	if (iChatCnt > 0 && m_iChatCnt != iChatCnt)
 	{
@@ -168,13 +164,17 @@ bool	Sample::Frame()
 		}
 		m_Net.m_PlayerUser.m_packetPool.clear();
 	}
+#pragma endregion  NetProcess
 	return true;
 }
 bool	Sample::Render()
 {	
 	for (int iObj = 0; iObj < m_NpcLlist.size(); iObj++)
 	{
-		m_NpcLlist[iObj]->Render();
+		if (m_NpcLlist[iObj]->m_bDead == false)
+		{
+			m_NpcLlist[iObj]->Render();
+		}
 	}
 	m_PlayerObj.Render();
 	return true;
