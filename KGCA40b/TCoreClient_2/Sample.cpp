@@ -171,6 +171,18 @@ bool	Sample::Render()
 		}
 	}
 	m_PlayerObj.Render();
+
+	std::wstring msg = L"FPS:";
+	msg += std::to_wstring(m_GameTimer.m_iFPS);
+	msg += L"  GT:";
+	msg += std::to_wstring(m_GameTimer.m_fTimer);
+	m_dxWrite.Draw(msg, g_rtClient, D2D1::ColorF(0,0,1,1));
+
+	RECT rt = g_rtClient;
+	rt.top = 300;
+	rt.left = 0;
+	m_dxWrite.Draw(L"KGCA게임아카데미", rt, D2D1::ColorF(0, 0, 0, 1), 
+		m_dxWrite.m_pd2dMTShadowTF);
 	return true;
 }
 bool	Sample::Release()

@@ -13,9 +13,11 @@ public:
 
 	ID2D1RenderTarget*		m_pd2dRT = nullptr;
 	IDWriteTextFormat*		m_pd2dTextFormat = nullptr;
+	IDWriteTextFormat*		m_pd2dMTShadowTF = nullptr;
 	ID2D1SolidColorBrush*	m_pd2dColorBrush = nullptr;
 public:
 	bool   SetRenderTarget(IDXGISurface1* pSurface);
+	void   Draw(std::wstring msg, RECT rt, D2D1::ColorF color, IDWriteTextFormat* tf=nullptr);
 public:
 	bool	Init();
 	bool	Frame();

@@ -19,6 +19,15 @@ bool TTimer::Frame()
     g_fSecPerFrame  = m_fSecondPerFrame;
     g_fGameTimer    = m_fTimer;
 
+    m_fFPSTimer += m_fSecondPerFrame;
+    if (m_fFPSTimer >= 1.0f)
+    {
+        m_iFPS = m_iFPSCounter;
+        m_iFPSCounter = 0;
+        m_fFPSTimer -= 1.0f;
+    }
+    m_iFPSCounter++;
+
     m_dwBeforeTime = dwCurrentTime;
     return false;
 }
