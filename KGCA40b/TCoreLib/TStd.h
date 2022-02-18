@@ -2,11 +2,13 @@
 #include <winsock2.h>
 #include <windows.h>
 #include <d3d11.h>
+#include <tchar.h>
 #include <vector>
 #include <list>
 #include <map>
 #include <functional>
 #include <iostream>
+#include <atlconv.h> // A2W
 #include "TCollision.h"
 #pragma comment	(lib, "d3d11.lib")
 #ifdef _DEBUG
@@ -22,6 +24,18 @@ extern HWND		g_hWnd;
 extern float	g_fSecPerFrame;
 extern float	g_fGameTimer;
 extern POINT	g_ptMouse;
+
+static std::wstring to_mw(const std::string& _src)
+{
+	USES_CONVERSION;
+	return std::wstring(A2W(_src.c_str()));
+};
+
+static std::string to_wm(const std::wstring& _src)
+{
+	USES_CONVERSION;
+	return std::string(W2A(_src.c_str()));
+};
 
 template<class T>
 class TSingleton

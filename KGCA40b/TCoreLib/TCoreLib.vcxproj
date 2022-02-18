@@ -120,7 +120,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>../../include/dxtk;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../include/dxtk;../../include/fmod;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -159,6 +159,7 @@ copy "..\\..\\output\\Debug\\TCoreLib.lib" "..\\..\\Lib\\TCoreLib_d.lib"
     <ClCompile Include="TObject2D.cpp" />
     <ClCompile Include="TObject3D.cpp" />
     <ClCompile Include="TObjectMgr.cpp" />
+    <ClCompile Include="TSound.cpp" />
     <ClCompile Include="TTimer.cpp" />
     <ClCompile Include="TVector2.cpp" />
     <ClCompile Include="TVector3.cpp" />
@@ -174,6 +175,7 @@ copy "..\\..\\output\\Debug\\TCoreLib.lib" "..\\..\\Lib\\TCoreLib_d.lib"
     <ClInclude Include="TObject2D.h" />
     <ClInclude Include="TObject3D.h" />
     <ClInclude Include="TObjectMgr.h" />
+    <ClInclude Include="TSound.h" />
     <ClInclude Include="TStd.h" />
     <ClInclude Include="TTimer.h" />
     <ClInclude Include="TVector2.h" />

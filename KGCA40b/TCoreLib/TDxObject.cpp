@@ -259,7 +259,7 @@ bool	TDxObject::Render()
 bool	TDxObject::Release()
 {
 	if (m_AlphaBlend) m_AlphaBlend->Release();
-	if (m_AlphaBlendDisable) m_pSRV1->Release();
+	if (m_AlphaBlendDisable) m_AlphaBlendDisable->Release();
 	if (m_pTexture0) m_pTexture0->Release();
 	if (m_pSRV0) m_pSRV0->Release();
 	if (m_pTexture1) m_pTexture1->Release();

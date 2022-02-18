@@ -3,10 +3,12 @@
 #include "TAsyncSelect.h"
 #include "TPlayerObj2D.h"
 #include "TObjectNpc2D.h"
+#include "TSound.h"
 class Sample : public TCore
 {
 public:
 	TPlayerObj2D		m_PlayerObj;
+	TSoundMgr			m_SoundMgr;
 public:
 	std::vector<TObjectNpc2D*> m_NpcLlist;
 	TAsyncSelect		m_Net;
