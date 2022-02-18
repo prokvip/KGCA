@@ -9,6 +9,7 @@ class Sample : public TCore
 public:
 	TPlayerObj2D		m_PlayerObj;
 	TSoundMgr			m_SoundMgr;
+	TSound*				m_pBackGroundMusic;
 public:
 	std::vector<TObjectNpc2D*> m_NpcLlist;
 	TAsyncSelect		m_Net;

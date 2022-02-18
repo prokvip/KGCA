@@ -29,14 +29,14 @@ bool	Sample::Init()
 	m_SoundMgr.Init();
 	TSound* pSound = m_SoundMgr.Load("../../data/Sound/OnlyLove.MP3");
 	pSound = m_SoundMgr.Load("../../data/Sound/MyLove.MP3");
-	pSound = m_SoundMgr.Load("../../data/Sound/MyLove.MP3");
+	m_pBackGroundMusic = m_SoundMgr.Load("../../data/Sound/OnlyLove.MP3");
 	pSound = m_SoundMgr.Load("../../data/Sound/00_Menu.MP3");
 	pSound = m_SoundMgr.Load("../../data/Sound/Gun1.wav");
 	pSound = m_SoundMgr.Load("../../data/Sound/abel_leaf.asf");
-	pSound = m_SoundMgr.Load("../../data/Sound/GunShot.MP3");
-	pSound = m_SoundMgr.Load("../../data/Sound/pianoSound_00.MP3");
-	pSound = m_SoundMgr.Load("../../data/Sound/romance.mid");
-	m_SoundMgr.GetPtr(pSound->m_csName)->Play();
+	pSound = m_SoundMgr.Load("../../data/Sound/GunShot.mp3");
+	//pSound = m_SoundMgr.Load("../../data/Sound/pianoSound_00.MP3");
+	//pSound = m_SoundMgr.Load("../../data/Sound/romance.mid");
+	m_pBackGroundMusic->Play(true);
 	/*DWORD style = WS_CHILD | WS_VISIBLE | ES_MULTILINE ;
 	m_hEdit = CreateWindow(L"edit", NULL, style, 
 		0, g_rtClient.bottom-50, 300, 50,
@@ -108,10 +108,25 @@ bool	Sample::Init()
 }
 bool	Sample::Frame()
 {	
-	TSound* pSound = m_SoundMgr.GetPtr(L"romance.mid");
+	
 	if (TInput::Get().GetKey(VK_F1) == KEY_PUSH)
 	{
-		pSound->Stop();
+		TSound* pSound = m_SoundMgr.GetPtr(L"GunShot.mp3");
+		if (pSound != nullptr)
+		{
+			pSound->PlayEffect();
+		}
+	}
+
+	m_pBackGroundMusic->Frame();
+
+	if (TInput::Get().GetKey(VK_UP) == KEY_HOLD)
+	{
+		m_pBackGroundMusic->VolumeUp(g_fSecPerFrame);
+	}
+	if (TInput::Get().GetKey(VK_DOWN) == KEY_HOLD)
+	{
+		m_pBackGroundMusic->VolumeDown(g_fSecPerFrame);
 	}
 
 	m_PlayerObj.Frame();
@@ -198,7 +213,7 @@ bool	Sample::Render()
 	RECT rt = g_rtClient;
 	rt.top = 300;
 	rt.left = 0;
-	m_dxWrite.Draw(L"KGCA게임아카데미", rt, D2D1::ColorF(0, 0, 0, 1), 
+	m_dxWrite.Draw(m_pBackGroundMusic->m_szBuffer, rt, D2D1::ColorF(0, 0, 0, 1),
 		m_dxWrite.m_pd2dMTShadowTF);
 	return true;
 }
