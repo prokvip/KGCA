@@ -1,17 +1,16 @@
 #pragma once
 #include "TCore.h"
 #include "TAsyncSelect.h"
-#include "TPlayerObj2D.h"
-#include "TObjectNpc2D.h"
-#include "TSound.h"
+#include "TIntroWorld.h"
+#include "TLoginWorld.h"
+#include "TZoneWorld.h"
 class Sample : public TCore
 {
 public:
-	TPlayerObj2D		m_PlayerObj;
-	TSoundMgr			m_SoundMgr;
-	TSound*				m_pBackGroundMusic;
+	TIntroWorld			m_IntroWorld;
+	//TLoginWorld			m_LoginWorld;
+	TZoneWorld			m_ZoneWorld;
 public:
-	std::vector<TObjectNpc2D*> m_NpcLlist;
 	TAsyncSelect		m_Net;
 	HWND				m_hEdit;
 	HWND				m_hButton;

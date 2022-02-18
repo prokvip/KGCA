@@ -25,18 +25,7 @@ LRESULT  Sample::MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 }
 
 bool	Sample::Init()
-{
-	m_SoundMgr.Init();
-	TSound* pSound = m_SoundMgr.Load("../../data/Sound/OnlyLove.MP3");
-	pSound = m_SoundMgr.Load("../../data/Sound/MyLove.MP3");
-	m_pBackGroundMusic = m_SoundMgr.Load("../../data/Sound/OnlyLove.MP3");
-	pSound = m_SoundMgr.Load("../../data/Sound/00_Menu.MP3");
-	pSound = m_SoundMgr.Load("../../data/Sound/Gun1.wav");
-	pSound = m_SoundMgr.Load("../../data/Sound/abel_leaf.asf");
-	pSound = m_SoundMgr.Load("../../data/Sound/GunShot.mp3");
-	//pSound = m_SoundMgr.Load("../../data/Sound/pianoSound_00.MP3");
-	//pSound = m_SoundMgr.Load("../../data/Sound/romance.mid");
-	m_pBackGroundMusic->Play(true);
+{	
 	/*DWORD style = WS_CHILD | WS_VISIBLE | ES_MULTILINE ;
 	m_hEdit = CreateWindow(L"edit", NULL, style, 
 		0, g_rtClient.bottom-50, 300, 50,
@@ -64,43 +53,18 @@ bool	Sample::Init()
 		}
 	}*/
 
-	m_PlayerObj.Init();	
-	m_PlayerObj.SetPosition(TVector2(400, 500));
-	m_PlayerObj.SetRectSouce({91,1,42,56});
-	//m_PlayerObj.SetRectSouce({ 46,63,69,79 });
-	m_PlayerObj.SetRectDraw({ 0,0, 42,56 });
-	
-	if (!m_PlayerObj.Create(m_pd3dDevice, m_pImmediateContext,		
-		L"../../data/bitmap1.bmp",
-		L"../../data/bitmap2.bmp" ))
-	{
-		return false;
-	}
+	I_Sound.Init();
 
-	for (int iNpc = 0; iNpc < 10; iNpc++)
-	{		
-		TObjectNpc2D* npc = new TObjectNpc2D;
-		npc->Init();
-		if (iNpc % 2 == 0)
-		{
-			npc->SetRectSouce({ 46,63,69,79 });
-			npc->SetRectDraw({ 0,0, 69,79 });
-		}
-		else
-		{
-			npc->SetRectSouce({ 1,63,42,76 });
-			npc->SetRectDraw({ 0,0, 42,76 });
-		}
-		
-		npc->SetPosition(TVector2(50+iNpc*150, 50));
-		if (!npc->Create(m_pd3dDevice, m_pImmediateContext,
-			L"../../data/bitmap1.bmp",
-			L"../../data/bitmap2.bmp"))
-		{
-			return false;
-		}
-		m_NpcLlist.push_back(npc);
-	}
+	m_IntroWorld.Init();
+	m_IntroWorld.m_pd3dDevice = m_pd3dDevice;
+	m_IntroWorld.m_pContext = m_pImmediateContext;
+	m_IntroWorld.Load(L"intor.txt");
+
+	m_ZoneWorld.m_pd3dDevice = m_pd3dDevice;
+	m_ZoneWorld.m_pContext = m_pImmediateContext;	
+	m_ZoneWorld.Load(L"zone.txt");
+	
+	TWorld::m_pWorld = &m_IntroWorld;
 
 	m_Net.InitNetwork();
 	m_Net.Connect(g_hWnd, SOCK_STREAM, 10000, "192.168.0.12");
@@ -108,32 +72,11 @@ bool	Sample::Init()
 }
 bool	Sample::Frame()
 {	
-	
 	if (TInput::Get().GetKey(VK_F1) == KEY_PUSH)
 	{
-		TSound* pSound = m_SoundMgr.GetPtr(L"GunShot.mp3");
-		if (pSound != nullptr)
-		{
-			pSound->PlayEffect();
-		}
+		TWorld::m_pWorld = &m_ZoneWorld;
 	}
-
-	m_pBackGroundMusic->Frame();
-
-	if (TInput::Get().GetKey(VK_UP) == KEY_HOLD)
-	{
-		m_pBackGroundMusic->VolumeUp(g_fSecPerFrame);
-	}
-	if (TInput::Get().GetKey(VK_DOWN) == KEY_HOLD)
-	{
-		m_pBackGroundMusic->VolumeDown(g_fSecPerFrame);
-	}
-
-	m_PlayerObj.Frame();
-	for (int iObj = 0; iObj < m_NpcLlist.size(); iObj++)
-	{
-		m_NpcLlist[iObj]->Frame();
-	}
+	TWorld::m_pWorld->Frame();
 
 #pragma region
 	int iChatCnt = m_Net.m_PlayerUser.m_packetPool.size();
@@ -195,14 +138,7 @@ bool	Sample::Frame()
 }
 bool	Sample::Render()
 {	
-	for (int iObj = 0; iObj < m_NpcLlist.size(); iObj++)
-	{
-		if (m_NpcLlist[iObj]->m_bDead == false)
-		{
-			m_NpcLlist[iObj]->Render();
-		}
-	}
-	m_PlayerObj.Render();
+	TWorld::m_pWorld->Render();
 
 	std::wstring msg = L"FPS:";
 	msg += std::to_wstring(m_GameTimer.m_iFPS);
@@ -210,24 +146,14 @@ bool	Sample::Render()
 	msg += std::to_wstring(m_GameTimer.m_fTimer);
 	m_dxWrite.Draw(msg, g_rtClient, D2D1::ColorF(0,0,1,1));
 
-	RECT rt = g_rtClient;
-	rt.top = 300;
-	rt.left = 0;
-	m_dxWrite.Draw(m_pBackGroundMusic->m_szBuffer, rt, D2D1::ColorF(0, 0, 0, 1),
-		m_dxWrite.m_pd2dMTShadowTF);
+	
 	return true;
 }
 bool	Sample::Release()
 {	
-	m_SoundMgr.Release();
-	for (int iObj = 0; iObj < m_NpcLlist.size(); iObj++)
-	{
-		m_NpcLlist[iObj]->Release();
-		delete m_NpcLlist[iObj];
-	}	
-	m_PlayerObj.Release();
-	m_NpcLlist.clear();
-
+	I_Sound.Release();
+	m_IntroWorld.Release();
+	m_ZoneWorld.Release();
 	m_Net.CloseNetwork();
 	return true;
 }

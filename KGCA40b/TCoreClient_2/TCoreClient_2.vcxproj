@@ -145,13 +145,19 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Sample.cpp" />
+    <ClCompile Include="TIntroWorld.cpp" />
+    <ClCompile Include="TLoginWorld.cpp" />
     <ClCompile Include="TObjectNpc2D.cpp" />
     <ClCompile Include="TPlayerObj2D.cpp" />
+    <ClCompile Include="TZoneWorld.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Sample.h" />
+    <ClInclude Include="TIntroWorld.h" />
+    <ClInclude Include="TLoginWorld.h" />
     <ClInclude Include="TObjectNpc2D.h" />
     <ClInclude Include="TPlayerObj2D.h" />
+    <ClInclude Include="TZoneWorld.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TCoreLib\TCoreLib.vcxproj">

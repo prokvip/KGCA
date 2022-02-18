@@ -46,8 +46,9 @@ public:
 	bool	Frame();
 	bool	Render();
 	bool	Release();
-public:
+private:
 	TSoundMgr();
+public:
 	~TSoundMgr();
 };
 

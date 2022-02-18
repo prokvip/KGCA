@@ -57,6 +57,9 @@
     <ClCompile Include="TSound.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="TWorld.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TCore.h">
@@ -102,6 +105,9 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="TSound.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="TWorld.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
