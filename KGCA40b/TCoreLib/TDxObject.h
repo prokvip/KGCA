@@ -68,8 +68,14 @@ public:
 		m_vDirection.x = 0.0f;
 		m_vDirection.y = 0.0f;
 		m_dwCollisonType = TCollisionType::Overlap;
-		m_dwSelectType = TCollisionType::Overlap;
+		m_dwSelectType = TCollisionType::Overlap;		
 	}
+};
+struct TIndex
+{
+	DWORD _0;
+	DWORD _1;
+	DWORD _2;
 };
 class TDxObject : public TBaseObject
 {
@@ -87,6 +93,10 @@ public:
 	std::vector<SimpleVertex> m_InitScreenList;
 	std::vector<SimpleVertex> m_VertexList;
 	ID3D11Buffer* m_pVertexBuffer;
+	
+	std::vector<DWORD> m_IndexList;
+	ID3D11Buffer* m_pIndexBuffer;
+
 	ID3D11InputLayout* m_pVertexLayout;
 	ID3D11VertexShader* m_pVertexShader;
 	ID3D11PixelShader* m_pPixelShader;
@@ -104,10 +114,16 @@ public:
 	virtual bool    LoadTexture(const TCHAR* szColorFileName,
 								const TCHAR* szMaskFileName);
 	virtual bool    SetVertexData();
+	virtual bool    SetIndexData();
 	virtual bool	Create( ID3D11Device* m_pd3dDevice,
 					ID3D11DeviceContext* m_pContext,					
 					const TCHAR* szTextureFileName=nullptr,
 					const TCHAR* szMaskFileName = nullptr);
+	virtual bool	CreateVertexBuffer();
+	virtual bool    CreateIndexBuffer();
+	virtual bool    CreateVertexShader(const TCHAR* szFile);
+	virtual bool    CreatePixelShader(const TCHAR* szFile);
+	virtual bool    CreateInputLayout();
 public:
 	virtual bool	Init();
 	virtual bool	Frame();

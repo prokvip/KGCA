@@ -35,75 +35,44 @@ bool    TDxObject::LoadTexture(const TCHAR* szColorFileName,
 	}
 	m_pTexture0->GetDesc(&m_TextureDesc);
 
-	hr = DirectX::CreateWICTextureFromFile(
-		m_pd3dDevice,
-		szMaskFileName,
-		(ID3D11Resource**)&m_pTexture1,
-		&m_pSRV1);
-	if (FAILED(hr))
+	if (szMaskFileName != nullptr)
 	{
-		hr = DirectX::CreateDDSTextureFromFile(
+		hr = DirectX::CreateWICTextureFromFile(
 			m_pd3dDevice,
 			szMaskFileName,
-			(ID3D11Resource**)&m_pTexture0,
-			&m_pSRV0);
+			(ID3D11Resource**)&m_pTexture1,
+			&m_pSRV1);
 		if (FAILED(hr))
 		{
-			return false;
+			hr = DirectX::CreateDDSTextureFromFile(
+				m_pd3dDevice,
+				szMaskFileName,
+				(ID3D11Resource**)&m_pTexture0,
+				&m_pSRV0);
+			if (FAILED(hr))
+			{
+				return false;
+			}
 		}
 	}
 	//m_pTexture0->GetDesc(&m_TextureDesc);
 	return true;
 }
 bool    TDxObject::SetVertexData()
-{	
+{
 	return true;
 }
-bool	TDxObject::Create(ID3D11Device* pd3dDevice,
-	ID3D11DeviceContext* pContext,	
-	const TCHAR* szColorFileName,
-	const TCHAR* szMaskFileName)
+bool    TDxObject::SetIndexData()
 {
-	HRESULT hr;
-	m_rtCollision = TRect(m_vPos, m_fWidth, m_fHeight);
-	I_ObjectMgr.AddCollisionExecute(this, 
-		std::bind(&TBaseObject::HitOverlap,this, 
-											std::placeholders::_1, 
-											std::placeholders::_2 ));
-	I_ObjectMgr.AddSelectExecute(this,
-		std::bind(&TBaseObject::HitSelect, this,
-			std::placeholders::_1,
-			std::placeholders::_2));
-
-	SetDevice(pd3dDevice, pContext);	
-	if (!LoadTexture(szColorFileName, szMaskFileName))
-	{
-		return false;
-	}
-	if (!SetVertexData())
-	{
-		return false;
-	}
-	//gpu메모리에 버퍼 할당(원하는 할당 크기)
-	D3D11_BUFFER_DESC bd;
-	ZeroMemory(&bd, sizeof(D3D11_BUFFER_DESC));
-	bd.ByteWidth = sizeof(SimpleVertex) * m_VertexList.size();
-	bd.Usage = D3D11_USAGE_DEFAULT;
-	bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-
-	D3D11_SUBRESOURCE_DATA sd;
-	ZeroMemory(&sd, sizeof(D3D11_SUBRESOURCE_DATA));
-	sd.pSysMem = &m_VertexList.at(0);
-
-	if (FAILED(hr = m_pd3dDevice->CreateBuffer(&bd, &sd, &m_pVertexBuffer)))
-	{
-		return false;
-	}
+	return true;
+}
+bool    TDxObject::CreateVertexShader(const TCHAR* szFile)
+{
 	// 새항목->유틸리티->txt파일 작성
 	// 쉐이더 컴파일->오브젝트 파일을 통해서 쉐이더객체 생성 
-	
-	hr = D3DCompileFromFile(
-		L"VertexShader.txt",
+
+	HRESULT hr = D3DCompileFromFile(
+		szFile,
 		NULL,
 		NULL,
 		"VS",
@@ -118,7 +87,7 @@ bool	TDxObject::Create(ID3D11Device* pd3dDevice,
 		MessageBoxA(NULL,
 			(char*)m_pErrorMsgs->GetBufferPointer(),
 			"ERROR", MB_OK);
-		if(m_pErrorMsgs) m_pErrorMsgs->Release();
+		if (m_pErrorMsgs) m_pErrorMsgs->Release();
 		return false;
 	}
 	hr = m_pd3dDevice->CreateVertexShader(
@@ -130,10 +99,12 @@ bool	TDxObject::Create(ID3D11Device* pd3dDevice,
 	{
 		return false;
 	}
-
-	
-	hr = D3DCompileFromFile(
-		L"PixelShader.txt",
+	return true;
+}
+bool    TDxObject::CreatePixelShader(const TCHAR* szFile)
+{
+	HRESULT hr = D3DCompileFromFile(
+		szFile,
 		NULL,
 		NULL,
 		"PS",
@@ -160,6 +131,53 @@ bool	TDxObject::Create(ID3D11Device* pd3dDevice,
 	{
 		return false;
 	}
+	return true;
+}
+bool	TDxObject::CreateVertexBuffer()
+{
+	if (m_VertexList.size() <= 0) return false;
+	HRESULT hr;
+	//gpu메모리에 버퍼 할당(원하는 할당 크기)
+	D3D11_BUFFER_DESC bd;
+	ZeroMemory(&bd, sizeof(D3D11_BUFFER_DESC));
+	bd.ByteWidth = sizeof(SimpleVertex) * m_VertexList.size();
+	bd.Usage = D3D11_USAGE_DEFAULT;
+	bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+
+	D3D11_SUBRESOURCE_DATA sd;
+	ZeroMemory(&sd, sizeof(D3D11_SUBRESOURCE_DATA));
+	sd.pSysMem = &m_VertexList.at(0);
+
+	if (FAILED(hr = m_pd3dDevice->CreateBuffer(&bd, &sd, &m_pVertexBuffer)))
+	{
+		return false;
+	}
+	return true;
+}
+bool	TDxObject::CreateIndexBuffer()
+{
+	HRESULT hr;
+	if (m_IndexList.size() <= 0) return true;
+	//gpu메모리에 버퍼 할당(원하는 할당 크기)
+	D3D11_BUFFER_DESC bd;
+	ZeroMemory(&bd, sizeof(D3D11_BUFFER_DESC));
+	bd.ByteWidth = sizeof(DWORD) * m_IndexList.size();
+	bd.Usage = D3D11_USAGE_DEFAULT;
+	bd.BindFlags = D3D11_BIND_INDEX_BUFFER;
+
+	D3D11_SUBRESOURCE_DATA sd;
+	ZeroMemory(&sd, sizeof(D3D11_SUBRESOURCE_DATA));
+	sd.pSysMem = &m_IndexList.at(0);
+
+	if (FAILED(hr = m_pd3dDevice->CreateBuffer(&bd, &sd, &m_pIndexBuffer)))
+	{
+		return false;
+	}
+	return true;
+}
+bool	TDxObject::CreateInputLayout()
+{
+
 	// 정점쉐이더의 결과를 통해서 정점레이아웃을 생성한다.	
 	// 정점버퍼의 각 정점의 어떤 성분을 정점쉐이더에 전달할 거냐
 	D3D11_INPUT_ELEMENT_DESC layout[] =
@@ -168,7 +186,7 @@ bool	TDxObject::Create(ID3D11Device* pd3dDevice,
 		{"TEXCOORD",0, DXGI_FORMAT_R32G32_FLOAT, 0,8,  D3D11_INPUT_PER_VERTEX_DATA, 0 },
 	};
 	UINT NumElements = sizeof(layout) / sizeof(layout[0]);
-	hr = m_pd3dDevice->CreateInputLayout(
+	HRESULT hr = m_pd3dDevice->CreateInputLayout(
 		layout,
 		NumElements,
 		m_pVSCodeResult->GetBufferPointer(),
@@ -178,7 +196,57 @@ bool	TDxObject::Create(ID3D11Device* pd3dDevice,
 	{
 		return false;
 	}
+	return true;
+}
+bool	TDxObject::Create(ID3D11Device* pd3dDevice,
+	ID3D11DeviceContext* pContext,
+	const TCHAR* szColorFileName,
+	const TCHAR* szMaskFileName)
+{
+	HRESULT hr;
+	m_rtCollision = TRect(m_vPos, m_fWidth, m_fHeight);
+	I_ObjectMgr.AddCollisionExecute(this,
+		std::bind(&TBaseObject::HitOverlap, this,
+			std::placeholders::_1,
+			std::placeholders::_2));
+	I_ObjectMgr.AddSelectExecute(this,
+		std::bind(&TBaseObject::HitSelect, this,
+			std::placeholders::_1,
+			std::placeholders::_2));
 
+	SetDevice(pd3dDevice, pContext);
+	if (!LoadTexture(szColorFileName, szMaskFileName))
+	{
+		return false;
+	}
+	if (!SetVertexData())
+	{
+		return false;
+	}
+	if (!SetIndexData())
+	{
+		return false;
+	}
+	if (!CreateVertexBuffer())
+	{
+		return false;
+	}
+	if (!CreateIndexBuffer())
+	{
+		return false;
+	}
+	if (!CreateVertexShader(L"VertexShader.txt"))
+	{
+		return false;
+	}
+	if (!CreatePixelShader(L"PixelShader.txt"))
+	{
+		return false;
+	}
+	if (!CreateInputLayout())
+	{
+		return false;
+	}
 	// (소스컬러*D3D11_BLEND_SRC_ALPHA) 
 	//                  + 
 	// (대상컬러*D3D11_BLEND_INV_SRC_ALPHA)
@@ -248,12 +316,18 @@ bool	TDxObject::Render()
 	m_pContext->IASetVertexBuffers(
 		0, 1, &m_pVertexBuffer,
 		&Strides, &Offsets);
+	m_pContext->IASetIndexBuffer(m_pIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
+
 	m_pContext->IASetPrimitiveTopology(
 		D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST
 		//D3D_PRIMITIVE_TOPOLOGY_POINTLIST
 		//D3D_PRIMITIVE_TOPOLOGY_LINELIST
 	);
-	m_pContext->Draw(m_VertexList.size(), 0);
+
+	if( m_IndexList.size() <= 0)
+		m_pContext->Draw(m_VertexList.size(), 0);
+	else
+		m_pContext->DrawIndexed(m_IndexList.size(), 0, 0);
 	return true;
 }
 bool	TDxObject::Release()
@@ -274,10 +348,12 @@ bool	TDxObject::Release()
 	if (m_pVSCodeResult) m_pVSCodeResult->Release();
 	if (m_pPSCodeResult) m_pPSCodeResult->Release();
 	if (m_pVertexBuffer) m_pVertexBuffer->Release();
+	if (m_pIndexBuffer) m_pIndexBuffer->Release();
 	if (m_pVertexLayout) m_pVertexLayout->Release();
 	if (m_pVertexShader) m_pVertexShader->Release();
 	if (m_pPixelShader) m_pPixelShader->Release();
 	m_pVertexBuffer = nullptr;
+	m_pIndexBuffer = nullptr;
 	m_pVertexLayout = nullptr;
 	m_pVertexShader = nullptr;
 	m_pPixelShader = nullptr;

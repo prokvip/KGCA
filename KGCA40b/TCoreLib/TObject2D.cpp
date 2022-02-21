@@ -69,20 +69,58 @@ void	TObject2D::Convert(
 		retList[i].v.y = -1.0f * (retList[i].v.y * 2.0f - 1.0f);
 	}
 	// 91,1, 42, 56 => 0 ~ 1
-	float u = m_rtSource.left / (float)m_TextureDesc.Width;
-	float v = m_rtSource.top / (float)m_TextureDesc.Height;
-	float w = m_rtSource.right / (float)m_TextureDesc.Width;
-	float h = m_rtSource.bottom / (float)m_TextureDesc.Height;
-	retList[0].t.x = u; retList[0].t.y = v; // v0
-	retList[1].t.x = u+w; retList[1].t.y = v; // v1
-	retList[2].t.x = u; retList[2].t.y = v+h;
-	retList[3].t = retList[2].t;
-	retList[4].t = retList[1].t;
-	retList[5].t.x = u+w; retList[5].t.y = v+h;
-
+	m_rtSource.left = 0; m_rtSource.right = 0;
+	m_rtSource.top = 0; m_rtSource.bottom = 0;
+	if (m_rtSource.left == 0 && m_rtSource.right == 0 &&
+		m_rtSource.top == 0 && m_rtSource.bottom == 0)
+	{
+		retList[0].t.x = 0.0f; retList[0].t.y = 0.0f; // v0
+		retList[1].t.x = 1.0f; retList[1].t.y = 0.0f; // v1
+		retList[2].t.x = 0.0f; retList[2].t.y = 1.0f;
+		retList[3].t = retList[2].t;
+		retList[4].t = retList[1].t;
+		retList[5].t.x = 1.0f; retList[5].t.y = 1.0f;
+	}
+	else
+	{
+		float u = m_rtSource.left / (float)m_TextureDesc.Width;
+		float v = m_rtSource.top / (float)m_TextureDesc.Height;
+		float w = m_rtSource.right / (float)m_TextureDesc.Width;
+		float h = m_rtSource.bottom / (float)m_TextureDesc.Height;
+		retList[0].t.x = u; retList[0].t.y = v; // v0
+		retList[1].t.x = u + w; retList[1].t.y = v; // v1
+		retList[2].t.x = u; retList[2].t.y = v + h;
+		retList[3].t = retList[2].t;
+		retList[4].t = retList[1].t;
+		retList[5].t.x = u + w; retList[5].t.y = v + h;
+	}
 }
 bool    TObject2D::SetVertexData()
 {
 	Convert(m_vPos, m_fWidth, m_fHeight, m_VertexList);	
 	return true;
+}
+bool    TObject2D::SetIndexData()
+{
+	//// 0   1,4
+	//// 2,3  5
+	//DWORD indeces[] = {
+	//	0,1,2,
+	//	3,4,5,
+	//};
+	m_IndexList.push_back(0); m_IndexList.push_back(1); m_IndexList.push_back(2);
+	m_IndexList.push_back(3); m_IndexList.push_back(4); m_IndexList.push_back(5);
+	return true;
+}
+
+TObject2D::TObject2D()
+{
+	m_rtSource.left = 0; m_rtSource.right = 0;
+	m_rtSource.top  = 0; m_rtSource.bottom = 0;
+	m_rtDraw.left = 0; m_rtDraw.right = g_rtClient.right;
+	m_rtDraw.top = 0; m_rtDraw.bottom = g_rtClient.bottom;
+}
+TObject2D::~TObject2D()
+{
+
 }
