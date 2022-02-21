@@ -7,6 +7,12 @@ LRESULT  CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
     g_pWindow->MsgProc(hWnd, msg, wParam, lParam);
     switch (msg)
     {
+    case WM_SIZE:
+    {
+        UINT iWidth = LOWORD(lParam);
+        UINT iHeight = HIWORD(lParam);
+        g_pWindow->ResizeDevice(iWidth, iHeight);
+    }break;
     case WM_DESTROY:
     {
         PostQuitMessage(0);// WM_QUIT
@@ -15,6 +21,9 @@ LRESULT  CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
         return DefWindowProc(hWnd, msg, wParam, lParam);
     }
     return 0;
+}
+void     TWindow::ResizeDevice(UINT iWidth, UINT iHeight)
+{
 }
 LRESULT  TWindow::MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {

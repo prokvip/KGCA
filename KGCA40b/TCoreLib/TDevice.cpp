@@ -83,6 +83,23 @@ bool	TDevice::SetViewport()
 	m_pImmediateContext->RSSetViewports(1, &m_ViewPort);
 	return true;
 }
+void     TDevice::ResizeDevice(UINT iWidth, UINT iHeight)
+{
+	m_pImmediateContext->OMSetRenderTargets(0,NULL, NULL);
+	if (m_pRenderTargetView)m_pRenderTargetView->Release();
+
+	HRESULT hr = m_pSwapChain->ResizeBuffers(m_SwapChainDesc.BufferCount,
+								iWidth, iHeight,
+								m_SwapChainDesc.BufferDesc.Format,
+								m_SwapChainDesc.Flags);
+	if( SUCCEEDED(hr))
+	{
+		m_pSwapChain->GetDesc(&m_SwapChainDesc);
+
+	}
+	CreateRenderTargetView();
+	SetViewport();
+}
 bool	TDevice::CleapupDevice()
 {
 	if (m_pd3dDevice)m_pd3dDevice->Release();	// 디바이스 객체

@@ -1,4 +1,12 @@
 #include "Sample.h"
+void	Sample::CreateResizeDevice(UINT iWidth, UINT iHeight)
+{
+	int k = 0;
+}
+void	Sample::DeleteResizeDevice(UINT iWidth, UINT iHeight)
+{
+	int k = 0;
+}
 LRESULT  Sample::MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	switch (msg)

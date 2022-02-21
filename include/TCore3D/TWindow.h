@@ -14,6 +14,7 @@ public:
 					int iHeight= 600);
 	bool  WinRun();
 	virtual LRESULT  MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+	virtual void     ResizeDevice(UINT iWidth, UINT iHeight);
 public:
 	TWindow();
 	virtual ~TWindow();

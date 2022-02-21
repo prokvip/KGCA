@@ -17,6 +17,8 @@ public:
 	HWND				m_hListBox;
 	int					m_iChatCnt;
 public:
+	virtual void	CreateResizeDevice(UINT iWidth, UINT iHeight) override;
+	virtual void	DeleteResizeDevice(UINT iWidth, UINT iHeight) override;
 	virtual bool	Init()  override;
 	virtual bool	Frame()  override;
 	virtual bool	Render()  override;

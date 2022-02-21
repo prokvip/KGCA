@@ -83,7 +83,27 @@ bool	TCore::CoreRelease()
 	CleapupDevice();
 	return true;
 }
+void     TCore::ResizeDevice(UINT iWidth, UINT iHeight)
+{
+	if (m_pd3dDevice == nullptr) return;
+	DeleteResizeDevice(iWidth, iHeight);
 
+	m_dxWrite.DeleteDeviceResize();
+		
+		TDevice::ResizeDevice(iWidth, iHeight);
+	
+	IDXGISurface1* pSurface = nullptr;
+	HRESULT hr = m_pSwapChain->GetBuffer(0,
+		__uuidof(IDXGISurface1),
+		(void**)&pSurface);
+	if (SUCCEEDED(hr))
+	{
+		m_dxWrite.SetRenderTarget(pSurface);
+	}
+	if (pSurface) pSurface->Release();
+
+	CreateResizeDevice(iWidth, iHeight);
+}
 TCore::TCore()
 {
 

@@ -18,6 +18,9 @@ private:
 public:
 	bool	GameRun();
 public:
+	virtual void	CreateResizeDevice(UINT iWidth, UINT iHeight) {};
+	virtual void	DeleteResizeDevice(UINT iWidth, UINT iHeight) {};
+	void			ResizeDevice(UINT iWidth, UINT iHeight);
 	virtual bool	Init() {
 		return true;
 	};

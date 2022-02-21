@@ -1,4 +1,10 @@
 #include "TWriteFont.h"
+void   TWriteFont::DeleteDeviceResize()
+{
+	if (m_pd2dColorBrush)m_pd2dColorBrush->Release();
+	if (m_pd2dRT)m_pd2dRT->Release();
+}
+
 bool	TWriteFont::Init()
 {
 	HRESULT hr = D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED,

@@ -17,6 +17,7 @@ public:
 	virtual bool	CreateRenderTargetView();
 	virtual bool	SetViewport();
 	virtual bool	CleapupDevice();
+	void			ResizeDevice(UINT iWidth, UINT iHeight);
 public:
 	TDevice();
 	virtual ~TDevice();
