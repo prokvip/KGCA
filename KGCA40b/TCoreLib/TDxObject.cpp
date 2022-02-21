@@ -66,6 +66,19 @@ bool    TDxObject::SetIndexData()
 {
 	return true;
 }
+bool    TDxObject::SetConstantData()
+{
+	ZeroMemory(&m_ConstantList, sizeof(TConstantData));
+	m_ConstantList.Color.x = 0.0f;
+	m_ConstantList.Color.y = 1.0f;
+	m_ConstantList.Color.z = 0.0f;
+	m_ConstantList.Color.w = 1.0f;
+	m_ConstantList.Timer.x = 0.0f;
+	m_ConstantList.Timer.y = 1.0f;
+	m_ConstantList.Timer.z = 0.0f;
+	m_ConstantList.Timer.w = 0.0f;
+	return true;
+}
 bool    TDxObject::CreateVertexShader(const TCHAR* szFile)
 {
 	// 새항목->유틸리티->txt파일 작성
@@ -175,6 +188,26 @@ bool	TDxObject::CreateIndexBuffer()
 	}
 	return true;
 }
+bool	TDxObject::CreateConstantBuffer()
+{
+	HRESULT hr;
+	//gpu메모리에 버퍼 할당(원하는 할당 크기)
+	D3D11_BUFFER_DESC bd;
+	ZeroMemory(&bd, sizeof(D3D11_BUFFER_DESC));
+	bd.ByteWidth = sizeof(TConstantData);
+	bd.Usage = D3D11_USAGE_DEFAULT;
+	bd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+
+	D3D11_SUBRESOURCE_DATA sd;
+	ZeroMemory(&sd, sizeof(D3D11_SUBRESOURCE_DATA));
+	sd.pSysMem = &m_ConstantList;
+
+	if (FAILED(hr = m_pd3dDevice->CreateBuffer(&bd, &sd, &m_pConstantBuffer)))
+	{
+		return false;
+	}
+	return true;
+}
 bool	TDxObject::CreateInputLayout()
 {
 
@@ -227,11 +260,19 @@ bool	TDxObject::Create(ID3D11Device* pd3dDevice,
 	{
 		return false;
 	}
+	if (!SetConstantData())
+	{
+		return false;
+	}
 	if (!CreateVertexBuffer())
 	{
 		return false;
 	}
 	if (!CreateIndexBuffer())
+	{
+		return false;
+	}
+	if (!CreateConstantBuffer())
 	{
 		return false;
 	}
@@ -317,6 +358,7 @@ bool	TDxObject::Render()
 		0, 1, &m_pVertexBuffer,
 		&Strides, &Offsets);
 	m_pContext->IASetIndexBuffer(m_pIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
+	m_pContext->VSSetConstantBuffers(0, 1, &m_pConstantBuffer);
 
 	m_pContext->IASetPrimitiveTopology(
 		D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST
@@ -349,11 +391,13 @@ bool	TDxObject::Release()
 	if (m_pPSCodeResult) m_pPSCodeResult->Release();
 	if (m_pVertexBuffer) m_pVertexBuffer->Release();
 	if (m_pIndexBuffer) m_pIndexBuffer->Release();
+	if (m_pConstantBuffer) m_pConstantBuffer->Release();	
 	if (m_pVertexLayout) m_pVertexLayout->Release();
 	if (m_pVertexShader) m_pVertexShader->Release();
 	if (m_pPixelShader) m_pPixelShader->Release();
 	m_pVertexBuffer = nullptr;
 	m_pIndexBuffer = nullptr;
+	m_pConstantBuffer = nullptr;
 	m_pVertexLayout = nullptr;
 	m_pVertexShader = nullptr;
 	m_pPixelShader = nullptr;

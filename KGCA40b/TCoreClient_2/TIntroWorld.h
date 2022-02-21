@@ -6,7 +6,7 @@
 class TIntroWorld :   public TWorld
 {
 public:
-	TPlayerObj2D		m_PlayerObj;	
+	TObject2D			m_PlayerObj;	
 	TSound*				m_pBackGroundMusic;
 public:
 	bool	Load(std::wstring file) override;

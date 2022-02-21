@@ -77,6 +77,12 @@ struct TIndex
 	DWORD _1;
 	DWORD _2;
 };
+
+struct TConstantData
+{
+	TVector4 Color;
+	TVector4 Timer;
+};
 class TDxObject : public TBaseObject
 {
 public:
@@ -97,6 +103,9 @@ public:
 	std::vector<DWORD> m_IndexList;
 	ID3D11Buffer* m_pIndexBuffer;
 
+	TConstantData    m_ConstantList;
+	ID3D11Buffer*    m_pConstantBuffer;
+
 	ID3D11InputLayout* m_pVertexLayout;
 	ID3D11VertexShader* m_pVertexShader;
 	ID3D11PixelShader* m_pPixelShader;
@@ -115,12 +124,14 @@ public:
 								const TCHAR* szMaskFileName);
 	virtual bool    SetVertexData();
 	virtual bool    SetIndexData();
+	virtual bool    SetConstantData();
 	virtual bool	Create( ID3D11Device* m_pd3dDevice,
 					ID3D11DeviceContext* m_pContext,					
 					const TCHAR* szTextureFileName=nullptr,
 					const TCHAR* szMaskFileName = nullptr);
 	virtual bool	CreateVertexBuffer();
 	virtual bool    CreateIndexBuffer();
+	virtual bool	CreateConstantBuffer();
 	virtual bool    CreateVertexShader(const TCHAR* szFile);
 	virtual bool    CreatePixelShader(const TCHAR* szFile);
 	virtual bool    CreateInputLayout();

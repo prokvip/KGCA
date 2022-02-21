@@ -23,6 +23,24 @@ bool	TIntroWorld::Load(std::wstring file)
 bool	TIntroWorld::Frame()
 {	
 	m_pBackGroundMusic->Frame();
+	for (auto obj : m_UIObj)
+	{
+		TObject2D* pObj = obj.second;
+		if (pObj != nullptr)
+		{
+			pObj->m_ConstantList.Color = TVector4(
+				cosf(g_fGameTimer)*0.5f+0.5f,
+				cosf(g_fGameTimer) * 0.5f + 0.5f,
+				cosf(g_fGameTimer) * 0.5f + 0.5f, 1.0f);
+			pObj->m_ConstantList.Timer = TVector4(
+				g_fGameTimer,
+				0,
+				0, 
+				1.0f);
+			m_pContext->UpdateSubresource(
+				pObj->m_pConstantBuffer, 0, NULL, &pObj->m_ConstantList, 0, 0);
+		}
+	}
 	return true;
 }
 bool	TIntroWorld::Render() 
