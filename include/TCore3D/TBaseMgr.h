@@ -4,13 +4,14 @@ template <class T, class S>
 class TBaseMgr : public TSingleton<S>
 {
 public:
-	friend class TSingleton<S>;
+	friend class TSingleton<TBaseMgr>;
 public:
 	int		m_iIndex;
 	ID3D11Device* m_pd3dDevice;
 	std::map<std::wstring, T* >  m_list;
 public:
-	T* CheckLoad(std::wstring filename, std::wstring entry);
+	std::wstring Splitpath(std::wstring path, std::wstring entry);
+	T* CheckLoad(std::wstring name);
 	virtual void	Set(ID3D11Device* pd3dDevice)
 	{
 		m_pd3dDevice = pd3dDevice;
@@ -27,7 +28,8 @@ public:
 	~TBaseMgr();
 };
 template<class T, class S>
-T* TBaseMgr<T,S>::CheckLoad(std::wstring filename, std::wstring entry)
+std::wstring TBaseMgr<T, S>::Splitpath(	std::wstring path, 
+										std::wstring entry)
 {
 	TCHAR szFileName[MAX_PATH] = { 0, };
 	TCHAR Dirve[MAX_PATH] = { 0, };
@@ -35,7 +37,7 @@ T* TBaseMgr<T,S>::CheckLoad(std::wstring filename, std::wstring entry)
 	TCHAR FileName[MAX_PATH] = { 0, };
 	TCHAR FileExt[MAX_PATH] = { 0, };
 
-	std::wstring fullpathname = filename;
+	std::wstring fullpathname = path;
 	_tsplitpath_s(fullpathname.c_str(), Dirve, Dir, FileName, FileExt);
 	std::wstring name = FileName;
 	name += FileExt;
@@ -43,6 +45,11 @@ T* TBaseMgr<T,S>::CheckLoad(std::wstring filename, std::wstring entry)
 	{
 		name += entry;
 	}
+	return name;
+}
+template<class T, class S>
+T* TBaseMgr<T,S>::CheckLoad(std::wstring name)
+{	
 	for (auto data : m_list)
 	{
 		if (data.second->m_csName == name)
@@ -65,7 +72,8 @@ T* TBaseMgr<T, S>::GetPtr(std::wstring key)
 template<class T, class S>
 T* TBaseMgr<T, S>::Load(std::wstring filename)
 {
-	T* pData = CheckLoad(filename, L"");
+	std::wstring name = Splitpath(filename,L"");
+	T* pData = CheckLoad(name);
 	if (pData != nullptr)
 	{
 		return pData;
@@ -76,15 +84,7 @@ T* TBaseMgr<T, S>::Load(std::wstring filename)
 		delete pData;
 		return nullptr;
 	}
-	TCHAR szFileName[MAX_PATH] = { 0, };
-	TCHAR Dirve[MAX_PATH] = { 0, };
-	TCHAR Dir[MAX_PATH] = { 0, };
-	TCHAR FileName[MAX_PATH] = { 0, };
-	TCHAR FileExt[MAX_PATH] = { 0, };
-	std::wstring fullpathname = filename;
-	_tsplitpath_s(fullpathname.c_str(), Dirve, Dir, FileName, FileExt);
-	pData->m_csName = FileName;
-	pData->m_csName += FileExt;
+	pData->m_csName = name;
 	m_list.insert(make_pair(pData->m_csName, pData));
 	m_iIndex++;
 	return pData;

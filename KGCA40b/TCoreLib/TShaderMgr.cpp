@@ -111,7 +111,8 @@ TShader::~TShader()
 TShader* TShaderMgr::CreateVertexShader(ID3D11Device* pd3dDevice,
 	std::wstring filename, std::string entry)
 {
-	TShader* pData = CheckLoad(filename, to_mw(entry));
+	std::wstring name = Splitpath(filename, to_mw(entry));
+	TShader* pData = CheckLoad(name);
 	if (pData != nullptr)
 	{
 		return pData;
@@ -122,7 +123,7 @@ TShader* TShaderMgr::CreateVertexShader(ID3D11Device* pd3dDevice,
 		delete pData;
 		return nullptr;
 	}
-	pData->m_csName = filename + to_mw(entry);
+	pData->m_csName = name;
 	m_list.insert(make_pair(pData->m_csName, pData));
 	m_iIndex++;
 	return pData;
@@ -130,7 +131,8 @@ TShader* TShaderMgr::CreateVertexShader(ID3D11Device* pd3dDevice,
 TShader* TShaderMgr::CreatePixelShader(ID3D11Device* pd3dDevice,
 	std::wstring filename, std::string entry)
 {
-	TShader* pData = CheckLoad(filename, to_mw(entry));
+	std::wstring name = Splitpath(filename, to_mw(entry));
+	TShader* pData = CheckLoad(name);
 	if (pData != nullptr)
 	{
 		return pData;
@@ -141,7 +143,7 @@ TShader* TShaderMgr::CreatePixelShader(ID3D11Device* pd3dDevice,
 		delete pData;
 		return nullptr;
 	}
-	pData->m_csName = filename + to_mw(entry);
+	pData->m_csName = name;
 	m_list.insert(make_pair(pData->m_csName, pData));
 	m_iIndex++;
 	return pData;
