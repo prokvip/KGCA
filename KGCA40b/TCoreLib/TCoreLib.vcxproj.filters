@@ -13,6 +13,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Manager">
+      <UniqueIdentifier>{2b8836b4-7766-4d63-9e92-d143095b4397}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Math">
+      <UniqueIdentifier>{34509274-334e-4f55-8038-4cf05db4bce0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="TCore.cpp">
@@ -27,12 +33,6 @@
     <ClCompile Include="TCollision.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="TVector2.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="TVector3.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="TInput.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
@@ -40,9 +40,6 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="TDxObject.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="TObjectMgr.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="TObject2D.cpp">
@@ -57,17 +54,26 @@
     <ClCompile Include="TWorld.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="TBaseMgr.cpp">
+      <Filter>Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="TObjectMgr.cpp">
+      <Filter>Manager</Filter>
+    </ClCompile>
     <ClCompile Include="TShaderMgr.cpp">
-      <Filter>소스 파일</Filter>
+      <Filter>Manager</Filter>
     </ClCompile>
     <ClCompile Include="TSoundMgr.cpp">
-      <Filter>소스 파일</Filter>
+      <Filter>Manager</Filter>
     </ClCompile>
     <ClCompile Include="TTexturerMgr.cpp">
-      <Filter>소스 파일</Filter>
+      <Filter>Manager</Filter>
     </ClCompile>
-    <ClCompile Include="TBaseMgr.cpp">
-      <Filter>소스 파일</Filter>
+    <ClCompile Include="TVector2.cpp">
+      <Filter>Math</Filter>
+    </ClCompile>
+    <ClCompile Include="TVector3.cpp">
+      <Filter>Math</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -86,12 +92,6 @@
     <ClInclude Include="TCollision.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="TVector2.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="TVector3.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="TInput.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
@@ -99,9 +99,6 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="TDxObject.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="TObjectMgr.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="TObject2D.h">
@@ -116,17 +113,26 @@
     <ClInclude Include="TWorld.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="TBaseMgr.h">
+      <Filter>Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="TObjectMgr.h">
+      <Filter>Manager</Filter>
+    </ClInclude>
     <ClInclude Include="TShaderMgr.h">
-      <Filter>헤더 파일</Filter>
+      <Filter>Manager</Filter>
     </ClInclude>
     <ClInclude Include="TSoundMgr.h">
-      <Filter>헤더 파일</Filter>
+      <Filter>Manager</Filter>
     </ClInclude>
     <ClInclude Include="TTextureMgr.h">
-      <Filter>헤더 파일</Filter>
+      <Filter>Manager</Filter>
     </ClInclude>
-    <ClInclude Include="TBaseMgr.h">
-      <Filter>헤더 파일</Filter>
+    <ClInclude Include="TVector2.h">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="TVector3.h">
+      <Filter>Math</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

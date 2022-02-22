@@ -112,7 +112,7 @@ TShader* TShaderMgr::CreateVertexShader(ID3D11Device* pd3dDevice,
 	std::wstring filename, std::string entry)
 {
 	std::wstring name = Splitpath(filename, to_mw(entry));
-	TShader* pData = CheckLoad(name);
+	TShader* pData = GetPtr(name);
 	if (pData != nullptr)
 	{
 		return pData;
@@ -132,7 +132,7 @@ TShader* TShaderMgr::CreatePixelShader(ID3D11Device* pd3dDevice,
 	std::wstring filename, std::string entry)
 {
 	std::wstring name = Splitpath(filename, to_mw(entry));
-	TShader* pData = CheckLoad(name);
+	TShader* pData = GetPtr(name);
 	if (pData != nullptr)
 	{
 		return pData;

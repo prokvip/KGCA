@@ -26,7 +26,7 @@ public:
 
 class TTextureMgr : public TBaseMgr<TTexture, TTextureMgr>					
 {
-	BEGIN_START(TTextureMgr);	
+	friend class TSingleton<TTextureMgr>;
 private:
 	TTextureMgr() {};
 public:

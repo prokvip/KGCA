@@ -11,7 +11,6 @@ public:
 	std::map<std::wstring, T* >  m_list;
 public:
 	std::wstring Splitpath(std::wstring path, std::wstring entry);
-	T* CheckLoad(std::wstring name);
 	virtual void	Set(ID3D11Device* pd3dDevice)
 	{
 		m_pd3dDevice = pd3dDevice;
@@ -48,18 +47,6 @@ std::wstring TBaseMgr<T, S>::Splitpath(	std::wstring path,
 	return name;
 }
 template<class T, class S>
-T* TBaseMgr<T,S>::CheckLoad(std::wstring name)
-{	
-	for (auto data : m_list)
-	{
-		if (data.second->m_csName == name)
-		{
-			return data.second;
-		}
-	}
-	return nullptr;
-}
-template<class T, class S>
 T* TBaseMgr<T, S>::GetPtr(std::wstring key)
 {
 	auto iter = m_list.find(key);
@@ -73,7 +60,7 @@ template<class T, class S>
 T* TBaseMgr<T, S>::Load(std::wstring filename)
 {
 	std::wstring name = Splitpath(filename,L"");
-	T* pData = CheckLoad(name);
+	T* pData = GetPtr(name);
 	if (pData != nullptr)
 	{
 		return pData;

@@ -30,7 +30,7 @@ public:
 
 class TShaderMgr :  public TBaseMgr<TShader, TShaderMgr>
 {
-	BEGIN_START(TShaderMgr);
+	friend class TSingleton<TShaderMgr>;
 public:
 	TShader*	CreateVertexShader(ID3D11Device* pd3dDevice,
 						std::wstring filename, std::string entry);
