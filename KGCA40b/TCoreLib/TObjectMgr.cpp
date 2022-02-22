@@ -106,7 +106,19 @@ bool  TObjectMgr::Frame()
 	}
 	return true;
 }
-bool  TObjectMgr::Releae()
+bool  TObjectMgr::Release()
 {
+	m_ObjectList.clear();
+	m_SelectList.clear();
 	return true;
 }
+
+TObjectMgr::TObjectMgr()
+{
+	m_iExcueteCollisionID = 0;
+	m_iExcueteSelectID = 0;
+};
+TObjectMgr::~TObjectMgr() 
+{
+	Release();
+};

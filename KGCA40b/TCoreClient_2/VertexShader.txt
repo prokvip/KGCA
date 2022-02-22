@@ -26,7 +26,7 @@ VS_OUTPUT VS(float2 p: POSITION, float2 t : TEXCOORD)
 	VS_OUTPUT pOut = (VS_OUTPUT)0;
 	float fScaleX = cos(TimerX)*0.5f+0.5f;
 	float fScaleY = sin(TimerX)*0.5f+0.5f;
-	pOut.p = float4(p.x*fScaleX,p.y*fScaleY,0.0f,1.0f);
+	pOut.p = float4(p.x,p.y,0.0f,1.0f);
 	pOut.t = t;
 	pOut.c = Color0;
 	return pOut;

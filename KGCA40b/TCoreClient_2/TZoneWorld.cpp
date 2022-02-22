@@ -24,6 +24,7 @@ bool	TZoneWorld::Load(std::wstring file)
 	m_PlayerObj.SetRectDraw({ 0,0, 42,56 });
 
 	if (!m_PlayerObj.Create(m_pd3dDevice, m_pContext,
+		L"Shader.txt",
 		L"../../data/bitmap1.bmp",
 		L"../../data/bitmap2.bmp"))
 	{
@@ -47,6 +48,7 @@ bool	TZoneWorld::Load(std::wstring file)
 
 		npc->SetPosition(TVector2(50 + iNpc * 150, 50));
 		if (!npc->Create(m_pd3dDevice, m_pContext,
+			L"Shader.txt",
 			L"../../data/bitmap1.bmp",
 			L"../../data/bitmap2.bmp"))
 		{

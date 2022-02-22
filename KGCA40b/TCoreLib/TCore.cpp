@@ -6,6 +6,9 @@ bool	TCore::CoreInit()
 	TInput::Get().Init();
 	if( SUCCEEDED(InitDeivice()))
 	{
+		I_Shader.Set(m_pd3dDevice);
+		I_Texture.Set(m_pd3dDevice);
+
 		if (m_dxWrite.Init())
 		{
 			IDXGISurface1* pSurface = nullptr;

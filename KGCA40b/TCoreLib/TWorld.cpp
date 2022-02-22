@@ -5,6 +5,34 @@ bool	TWorld::Load(std::wstring saveFile)
 {
 	return true;
 }
+bool	TWorld::Init()
+{
+	return true;
+}
+bool	TWorld::Frame()
+{
+	for (auto obj : m_UIObj)
+	{
+		TObject2D* pObj = obj.second;
+		if (pObj != nullptr)
+		{
+			pObj->Frame();
+		}
+	}
+	return true;
+}
+bool	TWorld::Render()
+{
+	for (auto obj : m_UIObj)
+	{
+		TObject2D* pObj = obj.second;
+		if (pObj != nullptr)
+		{
+			pObj->Render();
+		}
+	}
+	return true;
+}
 bool	TWorld::Release()
 {
 	for (auto obj : m_UIObj)

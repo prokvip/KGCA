@@ -15,9 +15,9 @@ public:
 	using m_mapIter = std::map<std::wstring, TObject2D*>::iterator;
 public:
 	virtual bool	Load(std::wstring saveFile);
-	virtual bool	Init() = 0;
-	virtual bool	Frame() = 0;
-	virtual bool	Render() = 0;
+	virtual bool	Init();
+	virtual bool	Frame();
+	virtual bool	Render();
 	virtual bool	Release();
 public:
 	TWorld();

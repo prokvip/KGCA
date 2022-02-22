@@ -23,14 +23,10 @@ public:
 	void  DeleteSelectExecute(TBaseObject* owner);
 	bool  Init();
 	bool  Frame();
-	bool  Releae();
+	bool  Release();
 private:
-	TObjectMgr() 
-	{
-		m_iExcueteCollisionID = 0; 
-		m_iExcueteSelectID = 0;
-	};
+	TObjectMgr();
 public:
-	virtual ~TObjectMgr() {};
+	virtual ~TObjectMgr();
 };
 #define I_ObjectMgr   TObjectMgr::Get()

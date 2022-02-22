@@ -1,9 +1,7 @@
 #pragma once
-#include "TStd.h"
-#include <d3dcompiler.h>
-#include "DDSTextureLoader.h"
-#include "WICTextureLoader.h"
-#pragma comment	(lib, "d3dcompiler.lib")
+#include "TShaderMgr.h"
+#include "TTextureMgr.h"
+
 struct SimpleVertex
 {
 	TVector2 v;
@@ -86,12 +84,10 @@ struct TConstantData
 class TDxObject : public TBaseObject
 {
 public:
-	
+	TTexture* m_pColorTex;
+	TTexture* m_pMaskTex;
+	TShader*  m_pShader;
 public:
-	ID3D11ShaderResourceView*	m_pSRV0;
-	ID3D11Texture2D*			m_pTexture0;
-	ID3D11ShaderResourceView*	m_pSRV1;
-	ID3D11Texture2D*			m_pTexture1;
 	ID3D11BlendState*			m_AlphaBlend;
 	ID3D11BlendState*			m_AlphaBlendDisable;
 	D3D11_TEXTURE2D_DESC		m_TextureDesc;
@@ -107,17 +103,9 @@ public:
 	ID3D11Buffer*    m_pConstantBuffer;
 
 	ID3D11InputLayout* m_pVertexLayout;
-	ID3D11VertexShader* m_pVertexShader;
-	ID3D11PixelShader* m_pPixelShader;
-
 	ID3D11Device*		 m_pd3dDevice;	
 	ID3D11DeviceContext* m_pContext;
-
-	ID3DBlob*			m_pVSCodeResult = nullptr;
-	ID3DBlob*			m_pErrorMsgs = nullptr;
-	ID3DBlob*			m_pPSCodeResult = nullptr;
-public:
-	
+public:	
 	void    SetDevice(ID3D11Device* m_pd3dDevice,
 					  ID3D11DeviceContext* m_pContext);
 	virtual bool    LoadTexture(const TCHAR* szColorFileName,
@@ -126,7 +114,8 @@ public:
 	virtual bool    SetIndexData();
 	virtual bool    SetConstantData();
 	virtual bool	Create( ID3D11Device* m_pd3dDevice,
-					ID3D11DeviceContext* m_pContext,					
+					ID3D11DeviceContext* m_pContext,	
+					const TCHAR* szShaderFileName,
 					const TCHAR* szTextureFileName=nullptr,
 					const TCHAR* szMaskFileName = nullptr);
 	virtual bool	CreateVertexBuffer();

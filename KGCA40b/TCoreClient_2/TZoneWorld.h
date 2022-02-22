@@ -2,7 +2,7 @@
 #include "TWorld.h"
 #include "TPlayerObj2D.h"
 #include "TObjectNpc2D.h"
-#include "TSound.h"
+#include "TSoundMgr.h"
 class TZoneWorld :   public TWorld
 {
 public:

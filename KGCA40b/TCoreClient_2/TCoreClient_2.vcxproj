@@ -149,6 +149,7 @@
     <ClCompile Include="TLoginWorld.cpp" />
     <ClCompile Include="TObjectNpc2D.cpp" />
     <ClCompile Include="TPlayerObj2D.cpp" />
+    <ClCompile Include="TUIObject.cpp" />
     <ClCompile Include="TZoneWorld.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -157,6 +158,7 @@
     <ClInclude Include="TLoginWorld.h" />
     <ClInclude Include="TObjectNpc2D.h" />
     <ClInclude Include="TPlayerObj2D.h" />
+    <ClInclude Include="TUIObject.h" />
     <ClInclude Include="TZoneWorld.h" />
   </ItemGroup>
   <ItemGroup>
@@ -170,6 +172,7 @@
   <ItemGroup>
     <Text Include="PixelShader.txt" />
     <Text Include="player.txt" />
+    <Text Include="Shader.txt" />
     <Text Include="VertexShader.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

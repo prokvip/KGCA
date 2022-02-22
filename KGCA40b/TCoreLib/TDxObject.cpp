@@ -16,46 +16,10 @@ void    TDxObject::SetDevice(ID3D11Device* pd3dDevice,
 bool    TDxObject::LoadTexture(const TCHAR* szColorFileName,
 	const TCHAR* szMaskFileName)
 {
-	HRESULT hr = DirectX::CreateWICTextureFromFile(
-		m_pd3dDevice,
-		szColorFileName,
-		(ID3D11Resource**)&m_pTexture0,
-		&m_pSRV0);
-	if (FAILED(hr))
-	{
-		hr = DirectX::CreateDDSTextureFromFile(
-			m_pd3dDevice,
-			szColorFileName,
-			(ID3D11Resource**)&m_pTexture0,
-			&m_pSRV0);
-		if (FAILED(hr))
-		{
-			return false;
-		}
-	}
-	m_pTexture0->GetDesc(&m_TextureDesc);
+	m_pColorTex = I_Texture.Load(szColorFileName);
+	m_pMaskTex = I_Texture.Load(szColorFileName);
 
-	if (szMaskFileName != nullptr)
-	{
-		hr = DirectX::CreateWICTextureFromFile(
-			m_pd3dDevice,
-			szMaskFileName,
-			(ID3D11Resource**)&m_pTexture1,
-			&m_pSRV1);
-		if (FAILED(hr))
-		{
-			hr = DirectX::CreateDDSTextureFromFile(
-				m_pd3dDevice,
-				szMaskFileName,
-				(ID3D11Resource**)&m_pTexture0,
-				&m_pSRV0);
-			if (FAILED(hr))
-			{
-				return false;
-			}
-		}
-	}
-	//m_pTexture0->GetDesc(&m_TextureDesc);
+	m_TextureDesc = m_pColorTex->m_TextureDesc;
 	return true;
 }
 bool    TDxObject::SetVertexData()
@@ -81,69 +45,12 @@ bool    TDxObject::SetConstantData()
 }
 bool    TDxObject::CreateVertexShader(const TCHAR* szFile)
 {
-	// 새항목->유틸리티->txt파일 작성
-	// 쉐이더 컴파일->오브젝트 파일을 통해서 쉐이더객체 생성 
-
-	HRESULT hr = D3DCompileFromFile(
-		szFile,
-		NULL,
-		NULL,
-		"VS",
-		"vs_5_0",
-		0,
-		0,
-		&m_pVSCodeResult,
-		&m_pErrorMsgs
-	);
-	if (FAILED(hr))
-	{
-		MessageBoxA(NULL,
-			(char*)m_pErrorMsgs->GetBufferPointer(),
-			"ERROR", MB_OK);
-		if (m_pErrorMsgs) m_pErrorMsgs->Release();
-		return false;
-	}
-	hr = m_pd3dDevice->CreateVertexShader(
-		m_pVSCodeResult->GetBufferPointer(),
-		m_pVSCodeResult->GetBufferSize(),
-		NULL,
-		&m_pVertexShader);
-	if (FAILED(hr))
-	{
-		return false;
-	}
+	m_pShader = I_Shader.Load(szFile);
 	return true;
 }
 bool    TDxObject::CreatePixelShader(const TCHAR* szFile)
 {
-	HRESULT hr = D3DCompileFromFile(
-		szFile,
-		NULL,
-		NULL,
-		"PS",
-		"ps_5_0",
-		0,
-		0,
-		&m_pPSCodeResult,
-		&m_pErrorMsgs
-	);
-	if (FAILED(hr))
-	{
-		MessageBoxA(NULL,
-			(char*)m_pErrorMsgs->GetBufferPointer(),
-			"ERROR", MB_OK);
-		if (m_pErrorMsgs) m_pErrorMsgs->Release();
-		return false;
-	}
-	hr = m_pd3dDevice->CreatePixelShader(
-		m_pPSCodeResult->GetBufferPointer(),
-		m_pPSCodeResult->GetBufferSize(),
-		NULL,
-		&m_pPixelShader);
-	if (FAILED(hr))
-	{
-		return false;
-	}
+	m_pShader = I_Shader.Load(szFile);
 	return true;
 }
 bool	TDxObject::CreateVertexBuffer()
@@ -222,8 +129,8 @@ bool	TDxObject::CreateInputLayout()
 	HRESULT hr = m_pd3dDevice->CreateInputLayout(
 		layout,
 		NumElements,
-		m_pVSCodeResult->GetBufferPointer(),
-		m_pVSCodeResult->GetBufferSize(),
+		m_pShader->m_pVSCodeResult->GetBufferPointer(),
+		m_pShader->m_pVSCodeResult->GetBufferSize(),
 		&m_pVertexLayout);
 	if (FAILED(hr))
 	{
@@ -233,6 +140,7 @@ bool	TDxObject::CreateInputLayout()
 }
 bool	TDxObject::Create(ID3D11Device* pd3dDevice,
 	ID3D11DeviceContext* pContext,
+	const TCHAR* szShaderFileName,
 	const TCHAR* szColorFileName,
 	const TCHAR* szMaskFileName)
 {
@@ -276,11 +184,11 @@ bool	TDxObject::Create(ID3D11Device* pd3dDevice,
 	{
 		return false;
 	}
-	if (!CreateVertexShader(L"VertexShader.txt"))
+	if (!CreateVertexShader(szShaderFileName))
 	{
 		return false;
 	}
-	if (!CreatePixelShader(L"PixelShader.txt"))
+	if (!CreatePixelShader(szShaderFileName))
 	{
 		return false;
 	}
@@ -334,8 +242,16 @@ bool	TDxObject::Frame()
 }
 bool	TDxObject::Render()
 {
-	m_pContext->PSSetShaderResources(0, 1, &m_pSRV0);
-	m_pContext->PSSetShaderResources(1, 1, &m_pSRV1);
+	if(m_pColorTex!=nullptr)
+		m_pContext->PSSetShaderResources(0, 1, &m_pColorTex->m_pSRV);
+	if (m_pMaskTex != nullptr)
+		m_pContext->PSSetShaderResources(1, 1, &m_pMaskTex->m_pSRV);
+	if (m_pShader != nullptr)
+	{
+		m_pContext->VSSetShader(m_pShader->m_pVertexShader, NULL, 0);
+		m_pContext->PSSetShader(m_pShader->m_pPixelShader, NULL, 0);
+	}
+
 	if (m_bAlphaBlend)
 	{
 		m_pContext->OMSetBlendState(m_AlphaBlend, 0, -1);
@@ -346,8 +262,7 @@ bool	TDxObject::Render()
 	}
 
 	m_pContext->IASetInputLayout(m_pVertexLayout);
-	m_pContext->VSSetShader(m_pVertexShader, NULL, 0);
-	m_pContext->PSSetShader(m_pPixelShader, NULL, 0);
+	
 
 	UINT StartSlot;
 	UINT NumBuffers;
@@ -375,34 +290,18 @@ bool	TDxObject::Render()
 bool	TDxObject::Release()
 {
 	if (m_AlphaBlend) m_AlphaBlend->Release();
-	if (m_AlphaBlendDisable) m_AlphaBlendDisable->Release();
-	if (m_pTexture0) m_pTexture0->Release();
-	if (m_pSRV0) m_pSRV0->Release();
-	if (m_pTexture1) m_pTexture1->Release();
-	if (m_pSRV1) m_pSRV1->Release();
+	if (m_AlphaBlendDisable) m_AlphaBlendDisable->Release();	
 	m_AlphaBlend = nullptr;
 	m_AlphaBlendDisable = nullptr;
-	m_pTexture0 = nullptr;
-	m_pSRV0 = nullptr;
-	m_pTexture1 = nullptr;
-	m_pSRV1 = nullptr;
 
-	if (m_pVSCodeResult) m_pVSCodeResult->Release();
-	if (m_pPSCodeResult) m_pPSCodeResult->Release();
 	if (m_pVertexBuffer) m_pVertexBuffer->Release();
 	if (m_pIndexBuffer) m_pIndexBuffer->Release();
 	if (m_pConstantBuffer) m_pConstantBuffer->Release();	
 	if (m_pVertexLayout) m_pVertexLayout->Release();
-	if (m_pVertexShader) m_pVertexShader->Release();
-	if (m_pPixelShader) m_pPixelShader->Release();
 	m_pVertexBuffer = nullptr;
 	m_pIndexBuffer = nullptr;
 	m_pConstantBuffer = nullptr;
 	m_pVertexLayout = nullptr;
-	m_pVertexShader = nullptr;
-	m_pPixelShader = nullptr;
-	m_pVSCodeResult = nullptr;
-	m_pPSCodeResult = nullptr;
 	return true;
 }
 TDxObject::TDxObject()

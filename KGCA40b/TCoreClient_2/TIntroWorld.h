@@ -2,7 +2,10 @@
 #include "TWorld.h"
 #include "TPlayerObj2D.h"
 #include "TObjectNpc2D.h"
-#include "TSound.h"
+#include "TUIObject.h"
+#include "TSoundMgr.h"
+#include "TShaderMgr.h"
+#include "TTextureMgr.h"
 class TIntroWorld :   public TWorld
 {
 public:

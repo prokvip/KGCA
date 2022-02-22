@@ -54,10 +54,16 @@
     <ClCompile Include="TWriteFont.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="TSound.cpp">
+    <ClCompile Include="TWorld.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="TWorld.cpp">
+    <ClCompile Include="TShaderMgr.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="TSoundMgr.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="TTexturerMgr.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
@@ -104,10 +110,16 @@
     <ClInclude Include="TWriteFont.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="TSound.h">
+    <ClInclude Include="TWorld.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="TWorld.h">
+    <ClInclude Include="TShaderMgr.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="TSoundMgr.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="TTextureMgr.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
