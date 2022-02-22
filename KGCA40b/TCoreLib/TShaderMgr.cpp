@@ -76,7 +76,7 @@ bool	TShader::Load(ID3D11Device* pd3dDevice, std::wstring filename)
 	if (!CreatePixelShader(pd3dDevice, filename))
 	{
 		return false;
-	}
+	}	
 	return true;
 }
 bool	TShader::Init()
@@ -108,79 +108,15 @@ TShader::~TShader()
 
 }
 
-
-/// <summary>
-/// 
-/// </summary>
-/// <param name="filename"></param>
-/// <returns></returns>
-TShader* TShaderMgr::GetPtr(std::wstring key)
-{
-	auto iter = m_list.find(key);
-	if (iter != m_list.end())
-	{
-		return (*iter).second;
-	}
-	return nullptr;
-}
-TShader* TShaderMgr::Load(std::wstring filename)
-{
-	TCHAR szFileName[MAX_PATH] = { 0, };
-	TCHAR Dirve[MAX_PATH] = { 0, };
-	TCHAR Dir[MAX_PATH] = { 0, };
-	TCHAR FileName[MAX_PATH] = { 0, };
-	TCHAR FileExt[MAX_PATH] = { 0, };
-
-	std::wstring fullpathname = filename;
-	_tsplitpath_s(fullpathname.c_str(), Dirve, Dir, FileName, FileExt);
-	std::wstring name = FileName;
-	name += FileExt;
-
-	for (auto data : m_list)
-	{
-		if (data.second->m_csName == name)
-		{
-			return data.second;
-		}
-	}
-
-	TShader* pData = new TShader;		
-	if (pData->Load(m_pd3dDevice, filename) == false)
-	{
-		delete pData;
-		return nullptr;
-	}
-	pData->m_csName = name;
-	m_list.insert(make_pair(name, pData));
-	m_iIndex++;
-	return pData;
-}
-bool	TShaderMgr::Init()
-{
-	return true;
-}
-bool	TShaderMgr::Frame()
-{
-	return true;
-}
-bool	TShaderMgr::Render()
-{
-	return true;
-}
-bool	TShaderMgr::Release()
-{
-	for (auto data : m_list)
-	{
-		data.second->Release();
-		delete data.second;
-	}
-	m_list.clear();
-	return true;
-}
 TShader* TShaderMgr::CreateVertexShader(ID3D11Device* pd3dDevice,
 	std::wstring filename, std::string entry)
 {
-	TShader* pData = new TShader;
+	TShader* pData = CheckLoad(filename, to_mw(entry));
+	if (pData != nullptr)
+	{
+		return pData;
+	}
+	pData = new TShader;
 	if (!pData->CreateVertexShader(pd3dDevice, filename, entry))
 	{		
 		delete pData;
@@ -194,7 +130,12 @@ TShader* TShaderMgr::CreateVertexShader(ID3D11Device* pd3dDevice,
 TShader* TShaderMgr::CreatePixelShader(ID3D11Device* pd3dDevice,
 	std::wstring filename, std::string entry)
 {
-	TShader* pData = new TShader;
+	TShader* pData = CheckLoad(filename, to_mw(entry));
+	if (pData != nullptr)
+	{
+		return pData;
+	}
+	pData = new TShader;
 	if (!pData->CreatePixelShader(pd3dDevice, filename, entry))
 	{
 		delete pData;

@@ -18,8 +18,7 @@ bool	TIntroWorld::Load(std::wstring file)
 		name += std::to_wstring(i);
 		name +=L".bmp";
 		m_pChangeColorTex[i] = I_Texture.Load(name);
-	}
-	
+	}	
 	TTexture* pTex = I_Texture.Load(L"../../data/ui/main_start_nor.png");
 	TShader* pVShader = I_Shader.CreateVertexShader(
 			 m_pd3dDevice, L"Shader.txt", "VS");

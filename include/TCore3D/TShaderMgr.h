@@ -1,5 +1,5 @@
 #pragma once
-#include "TStd.h"
+#include "TBaseMgr.h"
 #include <d3dcompiler.h>
 class TShader
 {
@@ -28,33 +28,17 @@ public:
 	virtual ~TShader();
 };
 
-class TShaderMgr : public TSingleton<TShaderMgr>
+class TShaderMgr :  public TBaseMgr<TShader, TShaderMgr>
 {
-	int		m_iIndex;
+	BEGIN_START(TShaderMgr);
 public:
-	friend class TSingleton<TShaderMgr>;
-	std::map<std::wstring, TShader* >  m_list;
-	ID3D11Device* m_pd3dDevice;
-	void		  Set(ID3D11Device* pd3dDevice)
-	{
-		m_pd3dDevice = pd3dDevice;
-	}
-public:
-	TShader*     Load(std::wstring filename);
-	TShader*	 GetPtr(std::wstring key);
 	TShader*	CreateVertexShader(ID3D11Device* pd3dDevice,
 						std::wstring filename, std::string entry);
 	TShader*	CreatePixelShader(ID3D11Device* pd3dDevice,
 						std::wstring filename, std::string entry);
-
-	bool	Init();
-	bool	Frame();
-	bool	Render();
-	bool	Release();
 private:
 	TShaderMgr();
 public:
 	~TShaderMgr();
 };
-
 #define I_Shader TShaderMgr::Get()

@@ -6,6 +6,7 @@
 #include <vector>
 #include <list>
 #include <map>
+#include <string>
 #include <functional>
 #include <iostream>
 #include <atlconv.h> // A2W
@@ -53,3 +54,4 @@ public:
 #define SIMPLE_WIN() if (core.SetWinClass(hInstance) == FALSE) return 1;   if (core.SetWindow() == FALSE) return 1;   core.GameRun();    return 1;}
 #define GAME_RUN(s,x,y) GAME_START; GAME_WIN(s,x,y);
 #define RUN() GAME_START; SIMPLE_WIN();
+#define BEGIN_START(S) friend class TSingleton<S>

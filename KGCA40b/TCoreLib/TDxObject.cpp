@@ -188,11 +188,13 @@ bool	TDxObject::Create(ID3D11Device* pd3dDevice,
 	{
 		return false;
 	}
-	if (szShaderFileName!= nullptr && !CreateVertexShader(szShaderFileName))
+	if (szShaderFileName!= nullptr && 
+		!CreateVertexShader(szShaderFileName))
 	{
 		return false;
 	}
-	if (szShaderFileName != nullptr && !CreatePixelShader(szShaderFileName))
+	if (szShaderFileName != nullptr &&
+		!CreatePixelShader(szShaderFileName))
 	{
 		return false;
 	}
