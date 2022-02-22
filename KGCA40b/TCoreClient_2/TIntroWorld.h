@@ -11,6 +11,8 @@ class TIntroWorld :   public TWorld
 public:
 	TObject2D			m_PlayerObj;	
 	TSound*				m_pBackGroundMusic;
+	TTexture*			m_pChangeColorTex[10];
+	TTexture*			m_pColorTex;
 public:
 	bool	Load(std::wstring file) override;
 	virtual bool	Init();
