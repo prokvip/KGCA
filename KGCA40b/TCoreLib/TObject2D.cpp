@@ -22,7 +22,7 @@ void		TObject2D::AddPosition(TVector2 vPos)
 	//
 	//   h
 	m_rtCollision = TRect(m_vPos, m_fWidth, m_fHeight);
-	Convert(m_vPos, m_fWidth, m_fHeight, m_VertexList);
+	ConvertIndex(m_vPos, m_fWidth, m_fHeight, m_VertexList);
 	m_pContext->UpdateSubresource(
 		m_pVertexBuffer, 0, NULL, &m_VertexList.at(0), 0, 0);
 }
@@ -129,9 +129,7 @@ void	TObject2D::ConvertIndex(
 		retList[i].v.x = retList[i].v.x * 2.0f - 1.0f;
 		retList[i].v.y = -1.0f * (retList[i].v.y * 2.0f - 1.0f);
 	}
-	// 91,1, 42, 56 => 0 ~ 1
-	m_rtSource.left = 0; m_rtSource.right = 0;
-	m_rtSource.top = 0; m_rtSource.bottom = 0;
+	// 91,1, 42, 56 => 0 ~ 1	
 	if (m_rtSource.left == 0 && m_rtSource.right == 0 &&
 		m_rtSource.top == 0 && m_rtSource.bottom == 0)
 	{

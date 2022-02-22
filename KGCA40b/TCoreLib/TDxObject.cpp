@@ -17,8 +17,10 @@ bool    TDxObject::LoadTexture(const TCHAR* szColorFileName,
 	const TCHAR* szMaskFileName)
 {
 	m_pColorTex = I_Texture.Load(szColorFileName);
-	m_pMaskTex = I_Texture.Load(szColorFileName);
-
+	if (szMaskFileName != nullptr)
+	{
+		m_pMaskTex = I_Texture.Load(szMaskFileName);
+	}
 	m_TextureDesc = m_pColorTex->m_TextureDesc;
 	return true;
 }
@@ -45,12 +47,14 @@ bool    TDxObject::SetConstantData()
 }
 bool    TDxObject::CreateVertexShader(const TCHAR* szFile)
 {
-	m_pShader = I_Shader.Load(szFile);
+	m_pVShader = I_Shader.CreateVertexShader(m_pd3dDevice,
+		szFile, "VS");
 	return true;
 }
 bool    TDxObject::CreatePixelShader(const TCHAR* szFile)
 {
-	m_pShader = I_Shader.Load(szFile);
+	m_pPShader = I_Shader.CreatePixelShader(m_pd3dDevice,
+		szFile, "PS");
 	return true;
 }
 bool	TDxObject::CreateVertexBuffer()
@@ -129,8 +133,8 @@ bool	TDxObject::CreateInputLayout()
 	HRESULT hr = m_pd3dDevice->CreateInputLayout(
 		layout,
 		NumElements,
-		m_pShader->m_pVSCodeResult->GetBufferPointer(),
-		m_pShader->m_pVSCodeResult->GetBufferSize(),
+		m_pVShader->m_pVSCodeResult->GetBufferPointer(),
+		m_pVShader->m_pVSCodeResult->GetBufferSize(),
 		&m_pVertexLayout);
 	if (FAILED(hr))
 	{
@@ -156,7 +160,7 @@ bool	TDxObject::Create(ID3D11Device* pd3dDevice,
 			std::placeholders::_2));
 
 	SetDevice(pd3dDevice, pContext);
-	if (!LoadTexture(szColorFileName, szMaskFileName))
+	if (szColorFileName !=nullptr && !LoadTexture(szColorFileName, szMaskFileName))
 	{
 		return false;
 	}
@@ -184,11 +188,11 @@ bool	TDxObject::Create(ID3D11Device* pd3dDevice,
 	{
 		return false;
 	}
-	if (!CreateVertexShader(szShaderFileName))
+	if (szShaderFileName!= nullptr && !CreateVertexShader(szShaderFileName))
 	{
 		return false;
 	}
-	if (!CreatePixelShader(szShaderFileName))
+	if (szShaderFileName != nullptr && !CreatePixelShader(szShaderFileName))
 	{
 		return false;
 	}
@@ -246,10 +250,13 @@ bool	TDxObject::Render()
 		m_pContext->PSSetShaderResources(0, 1, &m_pColorTex->m_pSRV);
 	if (m_pMaskTex != nullptr)
 		m_pContext->PSSetShaderResources(1, 1, &m_pMaskTex->m_pSRV);
-	if (m_pShader != nullptr)
+	if (m_pVShader != nullptr)
 	{
-		m_pContext->VSSetShader(m_pShader->m_pVertexShader, NULL, 0);
-		m_pContext->PSSetShader(m_pShader->m_pPixelShader, NULL, 0);
+		m_pContext->VSSetShader(m_pVShader->m_pVertexShader, NULL, 0);
+	}
+	if (m_pPShader != nullptr)
+	{
+		m_pContext->PSSetShader(m_pPShader->m_pPixelShader, NULL, 0);
 	}
 
 	if (m_bAlphaBlend)

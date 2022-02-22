@@ -14,8 +14,10 @@ public:
 	ID3DBlob* m_pErrorMsgs = nullptr;
 	ID3DBlob* m_pPSCodeResult = nullptr;
 public:	
-	virtual bool    CreateVertexShader(ID3D11Device* pd3dDevice, std::wstring filename);
-	virtual bool    CreatePixelShader(ID3D11Device* pd3dDevice, std::wstring filename);
+	virtual bool    CreateVertexShader(ID3D11Device* pd3dDevice, 
+		std::wstring filename, std::string entry="VS");
+	virtual bool    CreatePixelShader(ID3D11Device* pd3dDevice, 
+		std::wstring filename, std::string entry="PS");
 	bool	Init();
 	bool	Frame();
 	bool	Render();
@@ -39,7 +41,12 @@ public:
 	}
 public:
 	TShader*     Load(std::wstring filename);
-	TShader*		GetPtr(std::wstring key);
+	TShader*	 GetPtr(std::wstring key);
+	TShader*	CreateVertexShader(ID3D11Device* pd3dDevice,
+						std::wstring filename, std::string entry);
+	TShader*	CreatePixelShader(ID3D11Device* pd3dDevice,
+						std::wstring filename, std::string entry);
+
 	bool	Init();
 	bool	Frame();
 	bool	Render();

@@ -1,14 +1,13 @@
 #include "TShaderMgr.h"
-bool    TShader::CreateVertexShader(ID3D11Device* pd3dDevice, std::wstring filename)
+bool    TShader::CreateVertexShader(ID3D11Device* pd3dDevice, 
+	std::wstring filename,
+	std::string entry)
 {
-	// 새항목->유틸리티->txt파일 작성
-	// 쉐이더 컴파일->오브젝트 파일을 통해서 쉐이더객체 생성 
-
 	HRESULT hr = D3DCompileFromFile(
 		filename.c_str(),
 		NULL,
 		NULL,
-		"VS",
+		entry.c_str(),
 		"vs_5_0",
 		0,
 		0,
@@ -34,13 +33,15 @@ bool    TShader::CreateVertexShader(ID3D11Device* pd3dDevice, std::wstring filen
 	}
 	return true;
 }
-bool    TShader::CreatePixelShader(ID3D11Device* pd3dDevice, std::wstring filename)
+bool    TShader::CreatePixelShader(ID3D11Device* pd3dDevice, 
+	std::wstring filename,
+	std::string entry)
 {
 	HRESULT hr = D3DCompileFromFile(
 		filename.c_str(),
 		NULL,
 		NULL,
-		"PS",
+		entry.c_str(),
 		"ps_5_0",
 		0,
 		0,
@@ -175,6 +176,34 @@ bool	TShaderMgr::Release()
 	}
 	m_list.clear();
 	return true;
+}
+TShader* TShaderMgr::CreateVertexShader(ID3D11Device* pd3dDevice,
+	std::wstring filename, std::string entry)
+{
+	TShader* pData = new TShader;
+	if (!pData->CreateVertexShader(pd3dDevice, filename, entry))
+	{		
+		delete pData;
+		return nullptr;
+	}
+	pData->m_csName = filename + to_mw(entry);
+	m_list.insert(make_pair(pData->m_csName, pData));
+	m_iIndex++;
+	return pData;
+}
+TShader* TShaderMgr::CreatePixelShader(ID3D11Device* pd3dDevice,
+	std::wstring filename, std::string entry)
+{
+	TShader* pData = new TShader;
+	if (!pData->CreatePixelShader(pd3dDevice, filename, entry))
+	{
+		delete pData;
+		return nullptr;
+	}
+	pData->m_csName = filename + to_mw(entry);
+	m_list.insert(make_pair(pData->m_csName, pData));
+	m_iIndex++;
+	return pData;
 }
 TShaderMgr::TShaderMgr()
 {

@@ -170,6 +170,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Text Include="..\..\data\shader\DefaultUI.txt" />
     <Text Include="PixelShader.txt" />
     <Text Include="player.txt" />
     <Text Include="Shader.txt" />

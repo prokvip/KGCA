@@ -84,9 +84,10 @@ struct TConstantData
 class TDxObject : public TBaseObject
 {
 public:
-	TTexture* m_pColorTex;
-	TTexture* m_pMaskTex;
-	TShader*  m_pShader;
+	TTexture* m_pColorTex = nullptr;
+	TTexture* m_pMaskTex = nullptr;
+	TShader*  m_pVShader = nullptr;
+	TShader*  m_pPShader = nullptr;
 public:
 	ID3D11BlendState*			m_AlphaBlend;
 	ID3D11BlendState*			m_AlphaBlendDisable;
@@ -115,7 +116,7 @@ public:
 	virtual bool    SetConstantData();
 	virtual bool	Create( ID3D11Device* m_pd3dDevice,
 					ID3D11DeviceContext* m_pContext,	
-					const TCHAR* szShaderFileName,
+					const TCHAR* szShaderFileName = nullptr,
 					const TCHAR* szTextureFileName=nullptr,
 					const TCHAR* szMaskFileName = nullptr);
 	virtual bool	CreateVertexBuffer();

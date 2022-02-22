@@ -35,6 +35,7 @@ bool	TZoneWorld::Load(std::wstring file)
 	{
 		TObjectNpc2D* npc = new TObjectNpc2D;
 		npc->Init();
+		npc->SetPosition(TVector2(50 + iNpc * 150, 50));
 		if (iNpc % 2 == 0)
 		{
 			npc->SetRectSouce({ 46,63,69,79 });
@@ -46,7 +47,7 @@ bool	TZoneWorld::Load(std::wstring file)
 			npc->SetRectDraw({ 0,0, 42,76 });
 		}
 
-		npc->SetPosition(TVector2(50 + iNpc * 150, 50));
+		
 		if (!npc->Create(m_pd3dDevice, m_pContext,
 			L"Shader.txt",
 			L"../../data/bitmap1.bmp",
