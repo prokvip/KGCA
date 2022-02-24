@@ -6,22 +6,20 @@ bool TEffectObj::Init()
 }
 bool TEffectObj::Frame()
 {
-	static int iIndex = 0;
-	static float fChangeTime = m_pSprite->m_fAnimTime / m_pSprite->m_rtArray.size();
-	static float fTimer = 0.0f;
-	fTimer += g_fSecPerFrame;
-	if (fTimer >= fChangeTime)
+	m_fChangeTime = m_pSprite->m_fAnimTime / m_pSprite->m_rtArray.size();
+	m_fTimer += g_fSecPerFrame;
+	if (m_fTimer >= m_fChangeTime)
 	{
-		iIndex++;
-		if (iIndex >= m_pSprite->m_rtArray.size())
+		m_iCurrentIndex++;
+		if (m_iCurrentIndex >= m_pSprite->m_rtArray.size())
 		{
-			iIndex = 0;
+			m_iCurrentIndex = 0;
 		}
-		fTimer -= fChangeTime;
-		SetRectSouce(m_pSprite->m_rtArray[iIndex]);
+		m_fTimer -= m_fChangeTime;
+		SetRectSouce(m_pSprite->m_rtArray[m_iCurrentIndex]);
 		SetRectDraw({ 0,0,
-			m_pSprite->m_rtArray[iIndex].right,
-			m_pSprite->m_rtArray[iIndex].bottom });
+			m_pSprite->m_rtArray[m_iCurrentIndex].right,
+			m_pSprite->m_rtArray[m_iCurrentIndex].bottom });
 	}
 	AddPosition({ 0,0 });
 	return true;

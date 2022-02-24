@@ -59,7 +59,7 @@ bool	TIntroWorld::Load(std::wstring file)
 	/// <param name="file"></param>
 	/// <returns></returns>
 	I_Sprite.Load(L"SpriteData.txt");
-	m_ExplosionObj.m_pSprite = I_Sprite.GetPtr(L"rtClash");
+	m_ExplosionObj.m_pSprite = I_Sprite.GetPtr(L"rtExplosion");
 
 	m_ExplosionObj.Init();
 	m_ExplosionObj.SetPosition(TVector2(400, 500));
@@ -118,7 +118,7 @@ bool	TIntroWorld::Frame()
 			m_ExplosionObj.m_pSprite->m_rtArray[0].right,
 			m_ExplosionObj.m_pSprite->m_rtArray[0].bottom });
 	}
-	if (TInput::Get().GetKey(VK_F5) == KEY_PUSH)
+	if (TInput::Get().GetKey(VK_F6) == KEY_PUSH)
 	{
 		m_ExplosionObj.m_pSprite = I_Sprite.GetPtr(L"rtBomb");
 		m_ExplosionObj.SetRectSouce(m_ExplosionObj.m_pSprite->m_rtArray[0]);
@@ -126,7 +126,7 @@ bool	TIntroWorld::Frame()
 			m_ExplosionObj.m_pSprite->m_rtArray[0].right,
 			m_ExplosionObj.m_pSprite->m_rtArray[0].bottom });
 	}
-	if (TInput::Get().GetKey(VK_F6) == KEY_PUSH)
+	if (TInput::Get().GetKey(VK_F7) == KEY_PUSH)
 	{
 		m_ExplosionObj.m_pSprite = I_Sprite.GetPtr(L"rtClash");
 		m_ExplosionObj.SetRectSouce(m_ExplosionObj.m_pSprite->m_rtArray[0]);
