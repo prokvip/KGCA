@@ -8,7 +8,6 @@
 class Sample : public TCore
 {
 public:
-
 	TIntroWorld			m_IntroWorld;
 	//TLoginWorld			m_LoginWorld;
 	TZoneWorld			m_ZoneWorld;

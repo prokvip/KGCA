@@ -59,6 +59,8 @@ TObjectNpc2D::TObjectNpc2D()
 	m_fSpeed = 20.0f + (rand() % 300); // ¼Ó·Â
 	m_vDirection.x = (rand()%2 == 0) ? 1.0f : -1.0f;
 	m_vDirection.y = (rand() % 2 == 0) ? 1.0f : -1.0f;
+	m_dwCollisonType = TCollisionType::Overlap;
+	m_dwSelectType = TSelectType::Select_Overlap;
 }
 TObjectNpc2D::~TObjectNpc2D()
 {

@@ -68,10 +68,10 @@ bool	Sample::Init()
 	m_IntroWorld.m_pd3dDevice = m_pd3dDevice;
 	m_IntroWorld.m_pContext = m_pImmediateContext;
 	m_IntroWorld.Load(L"intor.txt");
-
-	/*m_ZoneWorld.m_pd3dDevice = m_pd3dDevice;
+	m_IntroWorld.m_pNextWorld = &m_ZoneWorld;
+	m_ZoneWorld.m_pd3dDevice = m_pd3dDevice;
 	m_ZoneWorld.m_pContext = m_pImmediateContext;	
-	m_ZoneWorld.Load(L"zone.txt");*/
+
 	
 	TWorld::m_pWorld = &m_IntroWorld;
 
@@ -81,14 +81,7 @@ bool	Sample::Init()
 }
 bool	Sample::Frame()
 {	
-	if (TInput::Get().GetKey(VK_F1) == KEY_PUSH)
-	{
-		I_ObjectMgr.Release();
-		m_ZoneWorld.m_pd3dDevice = m_pd3dDevice;
-		m_ZoneWorld.m_pContext = m_pImmediateContext;
-		m_ZoneWorld.Load(L"zone.txt");
-		TWorld::m_pWorld = &m_ZoneWorld;
-	}
+	
 	TWorld::m_pWorld->Frame();
 
 #pragma region

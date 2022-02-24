@@ -15,6 +15,7 @@ public:
 	TSound*				m_pBackGroundMusic;
 	TTexture*			m_pChangeColorTex[10];
 	TTexture*			m_pColorTex;
+	TWorld*				m_pNextWorld;
 public:
 	bool	Load(std::wstring file) override;
 	virtual bool	Init();

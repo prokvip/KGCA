@@ -1,6 +1,15 @@
 #include "TWorld.h"
+#include "TObjectMgr.h"
 TWorld* TWorld::m_pWorld = nullptr;
 
+//bool	TWorld::WorldChange()
+//{
+//	I_ObjectMgr.Release();
+//	//m_ZoneWorld.m_pd3dDevice = m_pd3dDevice;
+//	//m_ZoneWorld.m_pContext = m_pImmediateContext;
+//	m_ZoneWorld.Load(L"zone.txt");
+//	m_pWorld = &m_ZoneWorld;
+//}
 bool	TWorld::Load(std::wstring saveFile)
 {
 	return true;
@@ -19,6 +28,14 @@ bool	TWorld::Frame()
 			pObj->Frame();
 		}
 	}
+	for (auto obj : m_NpcObj)
+	{
+		TObject2D* pObj = obj.second;
+		if (pObj != nullptr)
+		{
+			pObj->Frame();
+		}
+	}
 	return true;
 }
 bool	TWorld::Render()
@@ -27,6 +44,14 @@ bool	TWorld::Render()
 	{
 		TObject2D* pObj = obj.second;
 		if (pObj != nullptr)
+		{
+			pObj->Render();
+		}
+	}
+	for (auto obj : m_NpcObj)
+	{
+		TObject2D* pObj = obj.second;
+		if (pObj->m_bDead == false)
 		{
 			pObj->Render();
 		}

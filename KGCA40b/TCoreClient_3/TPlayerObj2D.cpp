@@ -40,6 +40,8 @@ bool	TPlayerObj2D::Frame()
 TPlayerObj2D::TPlayerObj2D()
 {
 	m_fSpeed = 300.0f; // ¼Ó·Â
+	m_dwCollisonType = TCollisionType::Overlap;
+	m_dwSelectType = TSelectType::Select_Overlap;
 }
 
 TPlayerObj2D::~TPlayerObj2D()

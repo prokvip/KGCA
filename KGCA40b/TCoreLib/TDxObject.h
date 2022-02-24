@@ -55,6 +55,11 @@ public:
 public:
 	virtual void	HitOverlap(TBaseObject* pObj, DWORD dwState);
 	virtual void	HitSelect(TBaseObject* pObj, DWORD dwState);
+	virtual void	SetCollisionType(DWORD dwCollisionType, DWORD dwSelectType)
+	{
+		m_dwCollisonType = dwCollisionType;
+		m_dwSelectType = dwSelectType;
+	}
 public:
 	
 	TBaseObject()
@@ -67,8 +72,8 @@ public:
 		m_iSelectID = -1;
 		m_vDirection.x = 0.0f;
 		m_vDirection.y = 0.0f;
-		m_dwCollisonType = TCollisionType::Overlap;
-		m_dwSelectType = TCollisionType::Overlap;		
+		m_dwCollisonType = TCollisionType::Ignore;
+		m_dwSelectType = TSelectType::Select_Ignore;
 	}
 };
 struct TIndex

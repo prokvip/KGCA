@@ -5,6 +5,13 @@ class TObject2D : public TDxObject
 public:
 	RECT				m_rtSource;
 	RECT				m_rtDraw;	
+	TVector4			m_vColor;
+public:
+	float  m_fAlpha = 0.0f;
+	bool   m_bFadeIn = false;
+	bool   m_bFadeOut = false;
+	virtual void    FadeIn();
+	virtual void    FadeOut();
 public:	
 	virtual void		SetRectSouce(RECT rt);
 	virtual void		SetRectDraw(RECT rt);
@@ -25,6 +32,7 @@ public:
 public:
 	virtual bool		SetVertexData() override;
 	virtual bool		SetIndexData() override;
+	virtual bool		Frame() override;
 public:
 	TObject2D();
 	virtual ~TObject2D();

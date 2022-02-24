@@ -1,12 +1,13 @@
 #include "TUIObject.h"
+#include "TWorld.h"
 bool	TUIObject::Frame()
 {
-	TDxObject::Frame();
+	TObject2D::Frame();
 	return true;
 }
 bool	TUIObject::Render()
 {
-	TDxObject::Render();
+	TObject2D::Render();
 	return true;
 }
 bool	TImageObject::Init()
@@ -16,53 +17,41 @@ bool	TImageObject::Init()
 }
 bool	TImageObject::Frame()
 {
-	TDxObject::Frame();
-	if(m_bFadeIn)	FadeIn();
-	if(m_bFadeOut)	FadeOut();
-	m_ConstantList.Color = TVector4(
-		m_fAlpha,
-		m_fAlpha,
-		m_fAlpha, 1.0f);
-	m_ConstantList.Timer = TVector4(
-		g_fGameTimer,
-		0,
-		0,
-		1.0f);
-	m_pContext->UpdateSubresource(
-		m_pConstantBuffer, 0, NULL, &m_ConstantList, 0, 0);
+	m_vColor.x = m_fAlpha;
+	m_vColor.y = m_fAlpha;
+	m_vColor.z = m_fAlpha;
+	m_vColor.w = 1.0f;
+	TObject2D::Frame();	
 	return true;
 }
 bool	TImageObject::Render()
 {
-	TDxObject::Render();
+	TObject2D::Render();
 	return true;
 }
-void    TImageObject::FadeIn()
+bool	TButtonObject::Init()
 {
-	m_fAlpha += g_fSecPerFrame*0.5f;
-	m_fAlpha = min(m_fAlpha, 1.0f);
-	if (m_fAlpha >= 1.0f)
-	{
-		m_bFadeIn = false;
-	}
-
-}
-void    TImageObject::FadeOut()
-{
-	m_fAlpha = m_fAlpha - g_fSecPerFrame * 0.5f;
-	m_fAlpha = max(m_fAlpha, 0.0f);
-	if (m_fAlpha <= 0.0f)
-	{
-		m_bFadeOut = false;
-	}
+	//m_bFadeIn = true;
+	return true;
 }
 bool	TButtonObject::Frame()
 {
-	TDxObject::Frame();
+	//m_vColor.x = m_fAlpha;
+	//m_vColor.y = m_fAlpha;
+	//m_vColor.z = m_fAlpha;
+	//m_vColor.w = 1.0f;
+	TObject2D::Frame();
 	return true;
 }
 bool	TButtonObject::Render()
 {
-	TDxObject::Render();
+	TObject2D::Render();
 	return true;
+}
+void TButtonObject::HitSelect(TBaseObject* pObj, DWORD dwState)
+{
+	if (m_dwSelectState == TSelectState::T_SELECTED)
+	{		
+		TWorld::m_pWorld->m_bLoadZone = true;
+	}
 }

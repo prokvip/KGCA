@@ -22,7 +22,7 @@ bool	TZoneWorld::Load(std::wstring file)
 	m_PlayerObj.SetRectSouce({ 91,1,42,56 });
 	//m_PlayerObj.SetRectSouce({ 46,63,69,79 });
 	m_PlayerObj.SetRectDraw({ 0,0, 42,56 });
-
+	m_PlayerObj.m_csName = L"PlayerUser";	
 	if (!m_PlayerObj.Create(m_pd3dDevice, m_pContext,
 		L"Shader.txt",
 		L"../../data/bitmap1.bmp",
@@ -34,6 +34,8 @@ bool	TZoneWorld::Load(std::wstring file)
 	for (int iNpc = 0; iNpc < 10; iNpc++)
 	{
 		TObjectNpc2D* npc = new TObjectNpc2D;
+		npc->m_csName = L"NPC_";
+		npc->m_csName += std::to_wstring(iNpc);
 		npc->Init();
 		npc->SetPosition(TVector2(50 + iNpc * 150, 50));
 		if (iNpc % 2 == 0)
@@ -55,7 +57,7 @@ bool	TZoneWorld::Load(std::wstring file)
 		{
 			return false;
 		}
-		m_NpcLlist.push_back(npc);
+		m_NpcObj.insert(std::make_pair(npc->m_csName, npc));
 	}
 	return true;
 }
@@ -82,38 +84,17 @@ bool	TZoneWorld::Frame()
 	}
 
 	m_PlayerObj.Frame();
-	for (int iObj = 0; iObj < m_NpcLlist.size(); iObj++)
-	{
-		m_NpcLlist[iObj]->Frame();
-	}
+	TWorld::Frame();
 	return true;
 }
 bool	TZoneWorld::Render()
-{
-	for (int iObj = 0; iObj < m_NpcLlist.size(); iObj++)
-	{
-		if (m_NpcLlist[iObj]->m_bDead == false)
-		{
-			m_NpcLlist[iObj]->Render();
-		}
-	}
+{		
+	TWorld::Render();
 	m_PlayerObj.Render();
-
-	//RECT rt = g_rtClient;
-	//rt.top = 300;
-	//rt.left = 0;
-	//m_dxWrite.Draw(m_pBackGroundMusic->m_szBuffer, rt, D2D1::ColorF(0, 0, 0, 1),
-	//	m_dxWrite.m_pd2dMTShadowTF);
 	return true;
 }
 bool	TZoneWorld::Release()
 {
-	for (int iObj = 0; iObj < m_NpcLlist.size(); iObj++)
-	{
-		m_NpcLlist[iObj]->Release();
-		delete m_NpcLlist[iObj];
-	}
 	m_PlayerObj.Release();
-	m_NpcLlist.clear();
 	return true;
 }

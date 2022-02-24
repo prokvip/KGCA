@@ -74,7 +74,7 @@ bool  TObjectMgr::Frame()
 	for (auto src : m_SelectList)
 	{
 		TBaseObject* pObjSrc = (TBaseObject*)src.second;
-		if (pObjSrc->m_dwSelectType == TCollisionType::Ignore) continue;
+		if (pObjSrc->m_dwSelectType == TSelectType::Select_Ignore) continue;
 		DWORD dwState = TCollisionType::Overlap;		
 		if (TCollision::RectToPoint(
 			pObjSrc->m_rtCollision, (float)g_ptMouse.x, (float)g_ptMouse.y))

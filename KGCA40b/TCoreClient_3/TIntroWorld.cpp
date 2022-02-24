@@ -1,6 +1,7 @@
 #include "TIntroWorld.h"
 #include "TInput.h"
 #include <string>
+#include "TObjectMgr.h"
 bool	TIntroWorld::Init()
 {
 	TWorld::Init();
@@ -38,9 +39,10 @@ bool	TIntroWorld::Load(std::wstring file)
 		return false;
 	}
 
+	obj->SetCollisionType(TCollisionType::Ignore, TSelectType::Select_Ignore );
 	m_UIObj.insert(std::make_pair(L"bk", obj));
 
-	TImageObject* btnObj = new TImageObject;
+	TButtonObject* btnObj = new TButtonObject;
 	btnObj->Init();
 	btnObj->SetRectDraw({ 0,0, 334,82 });
 	btnObj->SetPosition(TVector2(g_rtClient.right / 2.0f, g_rtClient.bottom / 2.0f));
@@ -50,6 +52,7 @@ bool	TIntroWorld::Load(std::wstring file)
 	{
 		return false;
 	}
+	btnObj->SetCollisionType(TCollisionType::Ignore, TSelectType::Select_Overlap);
 	m_UIObj.insert(std::make_pair(L"btnStart", btnObj));
 
 
@@ -83,57 +86,66 @@ bool	TIntroWorld::Load(std::wstring file)
 }
 bool	TIntroWorld::Frame()
 {	
+	if (m_bLoadZone && m_pNextWorld!=nullptr)
+	{
+		I_ObjectMgr.Release();
+		m_pNextWorld->Load(L"zone.txt");
+		TWorld::m_pWorld = m_pNextWorld;
+	}
 	m_pBackGroundMusic->Frame();
-	static int iIndex = 0;
-	if ( TInput::Get().GetKey(VK_F2) == KEY_PUSH)
-	{
-		iIndex++;
-		if (iIndex >= 10)
-		{
-			iIndex = 0;
-		}
-		auto data = m_UIObj.find(L"bk");
-		if (data != m_UIObj.end())
-		{
-			data->second->m_pColorTex = m_pChangeColorTex[iIndex];			
-		}		
-	}
-	if (TInput::Get().GetKey(VK_F3) == KEY_PUSH)
-	{
-		iIndex++;
-		if (iIndex >= m_ExplosionObj.m_pSprite->m_rtArray.size())
-		{
-			iIndex = 0;
-		}
-		m_ExplosionObj.SetRectSouce(m_ExplosionObj.m_pSprite->m_rtArray[iIndex]);
-			m_ExplosionObj.SetRectDraw({ 0,0,
-				m_ExplosionObj.m_pSprite->m_rtArray[iIndex].right,
-				m_ExplosionObj.m_pSprite->m_rtArray[iIndex].bottom });
-	}
-	if (TInput::Get().GetKey(VK_F4) == KEY_PUSH)
-	{
-		m_ExplosionObj.m_pSprite = I_Sprite.GetPtr(L"rtExplosion");
-		m_ExplosionObj.SetRectSouce(m_ExplosionObj.m_pSprite->m_rtArray[0]);
-		m_ExplosionObj.SetRectDraw({ 0,0,
-			m_ExplosionObj.m_pSprite->m_rtArray[0].right,
-			m_ExplosionObj.m_pSprite->m_rtArray[0].bottom });
-	}
-	if (TInput::Get().GetKey(VK_F6) == KEY_PUSH)
-	{
-		m_ExplosionObj.m_pSprite = I_Sprite.GetPtr(L"rtBomb");
-		m_ExplosionObj.SetRectSouce(m_ExplosionObj.m_pSprite->m_rtArray[0]);
-		m_ExplosionObj.SetRectDraw({ 0,0,
-			m_ExplosionObj.m_pSprite->m_rtArray[0].right,
-			m_ExplosionObj.m_pSprite->m_rtArray[0].bottom });
-	}
-	if (TInput::Get().GetKey(VK_F7) == KEY_PUSH)
-	{
-		m_ExplosionObj.m_pSprite = I_Sprite.GetPtr(L"rtClash");
-		m_ExplosionObj.SetRectSouce(m_ExplosionObj.m_pSprite->m_rtArray[0]);
-		m_ExplosionObj.SetRectDraw({ 0,0,
-			m_ExplosionObj.m_pSprite->m_rtArray[0].right,
-			m_ExplosionObj.m_pSprite->m_rtArray[0].bottom });
-	}
+	//static int iIndex = 0;
+	//if ( TInput::Get().GetKey(VK_F2) == KEY_PUSH)
+	//{
+	//	iIndex++;
+	//	if (iIndex >= 10)
+	//	{
+	//		iIndex = 0;
+	//	}
+	//	auto data = m_UIObj.find(L"bk");
+	//	if (data != m_UIObj.end())
+	//	{
+	//		data->second->m_pColorTex = m_pChangeColorTex[iIndex];			
+	//	}		
+	//}
+	//if (TInput::Get().GetKey(VK_F3) == KEY_PUSH)
+	//{
+	//	iIndex++;
+	//	if (iIndex >= m_ExplosionObj.m_pSprite->m_rtArray.size())
+	//	{
+	//		iIndex = 0;
+	//	}
+	//	m_ExplosionObj.SetRectSouce(m_ExplosionObj.m_pSprite->m_rtArray[iIndex]);
+	//		m_ExplosionObj.SetRectDraw({ 0,0,
+	//			m_ExplosionObj.m_pSprite->m_rtArray[iIndex].right,
+	//			m_ExplosionObj.m_pSprite->m_rtArray[iIndex].bottom });
+	//}
+	//if (TInput::Get().GetKey(VK_F4) == KEY_PUSH)
+	//{
+	//	m_ExplosionObj.Reset();
+	//	m_ExplosionObj.m_pSprite = I_Sprite.GetPtr(L"rtExplosion");
+	//	m_ExplosionObj.SetRectSouce(m_ExplosionObj.m_pSprite->m_rtArray[0]);
+	//	m_ExplosionObj.SetRectDraw({ 0,0,
+	//		m_ExplosionObj.m_pSprite->m_rtArray[0].right,
+	//		m_ExplosionObj.m_pSprite->m_rtArray[0].bottom });
+	//}
+	//if (TInput::Get().GetKey(VK_F6) == KEY_PUSH)
+	//{
+	//	m_ExplosionObj.Reset();
+	//	m_ExplosionObj.m_pSprite = I_Sprite.GetPtr(L"rtBomb");
+	//	m_ExplosionObj.SetRectSouce(m_ExplosionObj.m_pSprite->m_rtArray[0]);
+	//	m_ExplosionObj.SetRectDraw({ 0,0,
+	//		m_ExplosionObj.m_pSprite->m_rtArray[0].right,
+	//		m_ExplosionObj.m_pSprite->m_rtArray[0].bottom });
+	//}
+	//if (TInput::Get().GetKey(VK_F7) == KEY_PUSH)
+	//{
+	//	m_ExplosionObj.Reset();
+	//	m_ExplosionObj.m_pSprite = I_Sprite.GetPtr(L"rtClash");
+	//	m_ExplosionObj.SetRectSouce(m_ExplosionObj.m_pSprite->m_rtArray[0]);
+	//	m_ExplosionObj.SetRectDraw({ 0,0,
+	//		m_ExplosionObj.m_pSprite->m_rtArray[0].right,
+	//		m_ExplosionObj.m_pSprite->m_rtArray[0].bottom });
+	//}
 	m_ExplosionObj.Frame();
 	TWorld::Frame();
 	return true;

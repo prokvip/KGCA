@@ -7,9 +7,7 @@ class TZoneWorld :   public TWorld
 {
 public:
 	TPlayerObj2D		m_PlayerObj;
-	TSound* m_pBackGroundMusic;
-public:
-	std::vector<TObjectNpc2D*> m_NpcLlist;
+	TSound*				m_pBackGroundMusic;
 public:
 	bool	Load(std::wstring file) override;
 	virtual bool	Init();
