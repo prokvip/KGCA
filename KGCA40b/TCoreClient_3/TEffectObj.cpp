@@ -49,5 +49,6 @@ bool TEffectObj::Render()
 }
 bool TEffectObj::Release()
 {
+	TObject2D::Release();
 	return true;
 }

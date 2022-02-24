@@ -318,4 +318,6 @@ TDxObject::TDxObject()
 	m_fSpeed = 0.0001f;
 }
 TDxObject::~TDxObject()
-{}
+{
+	Release();
+}

@@ -66,11 +66,7 @@ bool	TIntroWorld::Load(std::wstring file)
 
 	m_ExplosionObj.Init();
 	m_ExplosionObj.SetPosition(TVector2(400, 500));
-	//TSprite* pSprite = I_Sprite.GetPtr(L"rtExplosion");
-	//for (int iSprite = 0; iSprite < pSprite->m_rtArray.size(); iSprite++)
-	//{
-	//	m_ExplosionObj.SetRectSouceArray(pSprite->m_rtArray[iSprite]);
-	//}
+	TSprite* pSprite = I_Sprite.GetPtr(L"rtExplosion");	
 	m_ExplosionObj.SetRectSouce(m_ExplosionObj.m_pSprite->m_rtArray[0]);
 	m_ExplosionObj.SetRectDraw({ 0,0, 34, 46 });
 
@@ -81,7 +77,6 @@ bool	TIntroWorld::Load(std::wstring file)
 	{
 		return false;
 	}
-
 	return true;
 }
 bool	TIntroWorld::Frame()
@@ -146,14 +141,14 @@ bool	TIntroWorld::Frame()
 	//		m_ExplosionObj.m_pSprite->m_rtArray[0].right,
 	//		m_ExplosionObj.m_pSprite->m_rtArray[0].bottom });
 	//}
-	m_ExplosionObj.Frame();
+	//m_ExplosionObj.Frame();
 	TWorld::Frame();
 	return true;
 }
 bool	TIntroWorld::Render() 
 {	
 	TWorld::Render();
-	m_ExplosionObj.Render();
+	//m_ExplosionObj.Render();
 	return true;
 }
 bool	TIntroWorld::Release() 
