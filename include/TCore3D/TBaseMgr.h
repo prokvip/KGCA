@@ -15,7 +15,7 @@ public:
 	{
 		m_pd3dDevice = pd3dDevice;
 	}
-	T* Load(std::wstring filename);
+	virtual T* Load(std::wstring filename);
 	T* GetPtr(std::wstring key);
 	bool	Init();
 	bool	Frame();

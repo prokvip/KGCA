@@ -37,6 +37,7 @@ enum TSelectState
 class TBaseObject
 {
 public:
+	std::wstring   m_csName;
 	bool		m_bDead;
 	int			m_iCollisionID;
 	int			m_iSelectID;
@@ -50,7 +51,7 @@ public:
 	DWORD		m_dwSelectType;
 	DWORD		m_dwSelectState;
 	bool		m_bSelect;
-	bool		m_bAlphaBlend = true;
+	bool		m_bAlphaBlend;
 public:
 	virtual void	HitOverlap(TBaseObject* pObj, DWORD dwState);
 	virtual void	HitSelect(TBaseObject* pObj, DWORD dwState);
@@ -60,6 +61,7 @@ public:
 	{
 		m_bDead = false;
 		m_bSelect = false;
+		m_bAlphaBlend = true;
 		m_dwSelectState = T_DEFAULT;
 		m_iCollisionID = -1;
 		m_iSelectID = -1;
