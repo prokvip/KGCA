@@ -1,0 +1,202 @@
+Begin Object Class=/Script/Engine.SoundCue Name="Gold_Pickup_Cue"
+   Begin Object Class=/Script/Engine.SoundNodeWavePlayer Name="SoundNodeWavePlayer_9"
+   End Object
+   Begin Object Class=/Script/Engine.SoundNodeWavePlayer Name="SoundNodeWavePlayer_8"
+   End Object
+   Begin Object Class=/Script/Engine.SoundNodeWavePlayer Name="SoundNodeWavePlayer_4"
+   End Object
+   Begin Object Class=/Script/Engine.SoundNodeWavePlayer Name="SoundNodeWavePlayer_3"
+   End Object
+   Begin Object Class=/Script/Engine.SoundNodeWavePlayer Name="SoundNodeWavePlayer_11"
+   End Object
+   Begin Object Class=/Script/Engine.SoundNodeWavePlayer Name="SoundNodeWavePlayer_10"
+   End Object
+   Begin Object Class=/Script/Engine.SoundNodeRandom Name="SoundNodeRandom_1"
+   End Object
+   Begin Object Class=/Script/Engine.SoundNodeModulator Name="SoundNodeModulator_0"
+   End Object
+   Begin Object Class=/Script/Engine.SoundNodeAttenuation Name="SoundNodeAttenuation_1"
+   End Object
+   Begin Object Class=/Script/AudioEditor.SoundCueGraph Name="SoundCueGraph_2"
+      Begin Object Class=/Script/AudioEditor.SoundCueGraphNode_Root Name="SoundCueGraphNode_Root_2"
+      End Object
+      Begin Object Class=/Script/AudioEditor.SoundCueGraphNode Name="SoundCueGraphNode_9"
+      End Object
+      Begin Object Class=/Script/AudioEditor.SoundCueGraphNode Name="SoundCueGraphNode_8"
+      End Object
+      Begin Object Class=/Script/AudioEditor.SoundCueGraphNode Name="SoundCueGraphNode_7"
+      End Object
+      Begin Object Class=/Script/AudioEditor.SoundCueGraphNode Name="SoundCueGraphNode_6"
+      End Object
+      Begin Object Class=/Script/AudioEditor.SoundCueGraphNode Name="SoundCueGraphNode_5"
+      End Object
+      Begin Object Class=/Script/AudioEditor.SoundCueGraphNode Name="SoundCueGraphNode_17"
+      End Object
+      Begin Object Class=/Script/AudioEditor.SoundCueGraphNode Name="SoundCueGraphNode_16"
+      End Object
+      Begin Object Class=/Script/AudioEditor.SoundCueGraphNode Name="SoundCueGraphNode_15"
+      End Object
+      Begin Object Class=/Script/AudioEditor.SoundCueGraphNode Name="SoundCueGraphNode_14"
+      End Object
+   End Object
+   Begin Object Name="SoundNodeWavePlayer_9"
+      SoundWaveAssetPtr=/Game/Sounds/Interactive_Objects/Gold_Pickup02.Gold_Pickup02
+      GraphNode=SoundCueGraphNode'"Gold_Pickup_Cue:SoundCueGraph_2.SoundCueGraphNode_14"'
+   End Object
+   Begin Object Name="SoundNodeWavePlayer_8"
+      SoundWaveAssetPtr=/Game/Sounds/Interactive_Objects/Gold_Pickup04.Gold_Pickup04
+      GraphNode=SoundCueGraphNode'"Gold_Pickup_Cue:SoundCueGraph_2.SoundCueGraphNode_9"'
+   End Object
+   Begin Object Name="SoundNodeWavePlayer_4"
+      SoundWaveAssetPtr=/Game/Sounds/Interactive_Objects/Gold_Pickup05.Gold_Pickup05
+      GraphNode=SoundCueGraphNode'"Gold_Pickup_Cue:SoundCueGraph_2.SoundCueGraphNode_6"'
+   End Object
+   Begin Object Name="SoundNodeWavePlayer_3"
+      SoundWaveAssetPtr=/Game/Sounds/Interactive_Objects/Gold_Pickup06.Gold_Pickup06
+      GraphNode=SoundCueGraphNode'"Gold_Pickup_Cue:SoundCueGraph_2.SoundCueGraphNode_5"'
+   End Object
+   Begin Object Name="SoundNodeWavePlayer_11"
+      SoundWaveAssetPtr=/Game/Sounds/Interactive_Objects/Gold_Pickup01.Gold_Pickup01
+      GraphNode=SoundCueGraphNode'"Gold_Pickup_Cue:SoundCueGraph_2.SoundCueGraphNode_16"'
+   End Object
+   Begin Object Name="SoundNodeWavePlayer_10"
+      SoundWaveAssetPtr=/Game/Sounds/Interactive_Objects/Gold_Pickup03.Gold_Pickup03
+      GraphNode=SoundCueGraphNode'"Gold_Pickup_Cue:SoundCueGraph_2.SoundCueGraphNode_15"'
+   End Object
+   Begin Object Name="SoundNodeRandom_1"
+      Weights(0)=1.000000
+      Weights(1)=1.000000
+      Weights(2)=1.000000
+      Weights(3)=1.000000
+      Weights(4)=1.000000
+      Weights(5)=1.000000
+      ChildNodes(0)=SoundNodeWavePlayer'"Gold_Pickup_Cue:SoundNodeWavePlayer_3"'
+      ChildNodes(1)=SoundNodeWavePlayer'"Gold_Pickup_Cue:SoundNodeWavePlayer_4"'
+      ChildNodes(2)=SoundNodeWavePlayer'"Gold_Pickup_Cue:SoundNodeWavePlayer_8"'
+      ChildNodes(3)=SoundNodeWavePlayer'"Gold_Pickup_Cue:SoundNodeWavePlayer_9"'
+      ChildNodes(4)=SoundNodeWavePlayer'"Gold_Pickup_Cue:SoundNodeWavePlayer_10"'
+      ChildNodes(5)=SoundNodeWavePlayer'"Gold_Pickup_Cue:SoundNodeWavePlayer_11"'
+      GraphNode=SoundCueGraphNode'"Gold_Pickup_Cue:SoundCueGraph_2.SoundCueGraphNode_17"'
+   End Object
+   Begin Object Name="SoundNodeModulator_0"
+      PitchMin=0.800000
+      PitchMax=1.000000
+      VolumeMin=0.900000
+      VolumeMax=1.100000
+      ChildNodes(0)=SoundNodeRandom'"Gold_Pickup_Cue:SoundNodeRandom_1"'
+      GraphNode=SoundCueGraphNode'"Gold_Pickup_Cue:SoundCueGraph_2.SoundCueGraphNode_7"'
+   End Object
+   Begin Object Name="SoundNodeAttenuation_1"
+      AttenuationOverrides=(bAttenuate=False,LPFRadiusMin=50000.000000,LPFRadiusMax=10000.000000,DistanceAlgorithm=NaturalSound,AttenuationShape=Capsule,AttenuationShapeExtents=(X=5000.000000,Y=1000.000000,Z=0.000000),FalloffDistance=10000.000000)
+      bOverrideAttenuation=True
+      ChildNodes(0)=SoundNodeModulator'"Gold_Pickup_Cue:SoundNodeModulator_0"'
+      GraphNode=SoundCueGraphNode'"Gold_Pickup_Cue:SoundCueGraph_2.SoundCueGraphNode_8"'
+   End Object
+   Begin Object Name="SoundCueGraph_2"
+      Begin Object Name="SoundCueGraphNode_Root_2"
+         NodePosX=-96
+         NodePosY=-112
+         NodeGuid=A8A0F2CE4ACD83CFA9DB98BA56D203CF
+         CustomProperties Pin (PinId=29AE18CD4D1EB572E51DB1B409D1018B,PinType.PinCategory="SoundNode",PinType.PinSubCategory="Root",PinType.PinSubCategoryObject=None,PinType.PinSubCategoryMemberReference=(),PinType.PinValueType=(),PinType.ContainerType=None,PinType.bIsArray=False,PinType.bIsReference=False,PinType.bIsConst=False,PinType.bIsWeakPointer=False,LinkedTo=(SoundCueGraphNode_7 99E6D0924C88DC404173A89AD2347583,),PersistentGuid=00000000000000000000000000000000,bHidden=False,bNotConnectable=False,bDefaultValueIsReadOnly=False,bDefaultValueIsIgnored=False,bAdvancedView=False,bOrphanedPin=False,)
+      End Object
+      Begin Object Name="SoundCueGraphNode_9"
+         SoundNode=SoundNodeWavePlayer'"Gold_Pickup_Cue:SoundNodeWavePlayer_8"'
+         NodePosX=-624
+         NodePosY=-92
+         NodeGuid=D79E9C1C44906F2F168A6DB81E1E3F07
+         CustomProperties Pin (PinId=80709ACE4B3D2AD008B7B88E3046FE57,PinName="Output",Direction="EGPD_Output",PinType.PinCategory="SoundNode",PinType.PinSubCategory="",PinType.PinSubCategoryObject=None,PinType.PinSubCategoryMemberReference=(),PinType.PinValueType=(),PinType.ContainerType=None,PinType.bIsArray=False,PinType.bIsReference=False,PinType.bIsConst=False,PinType.bIsWeakPointer=False,LinkedTo=(SoundCueGraphNode_17 1351B5C14921B570BEA3A6A11EDAA227,),PersistentGuid=00000000000000000000000000000000,bHidden=False,bNotConnectable=False,bDefaultValueIsReadOnly=False,bDefaultValueIsIgnored=False,bAdvancedView=False,bOrphanedPin=False,)
+      End Object
+      Begin Object Name="SoundCueGraphNode_8"
+         SoundNode=SoundNodeAttenuation'"Gold_Pickup_Cue:SoundNodeAttenuation_1"'
+         NodePosX=-128
+         NodePosY=-240
+         NodeGuid=2C4DC67149AACCC0A927929BD1E24202
+         CustomProperties Pin (PinId=2056C6D547B07F253A96C88643382BF7,PinName="Input",PinFriendlyName=" ",PinType.PinCategory="SoundNode",PinType.PinSubCategory="",PinType.PinSubCategoryObject=None,PinType.PinSubCategoryMemberReference=(),PinType.PinValueType=(),PinType.ContainerType=None,PinType.bIsArray=False,PinType.bIsReference=False,PinType.bIsConst=False,PinType.bIsWeakPointer=False,LinkedTo=(SoundCueGraphNode_7 99E6D0924C88DC404173A89AD2347583,),PersistentGuid=00000000000000000000000000000000,bHidden=False,bNotConnectable=False,bDefaultValueIsReadOnly=False,bDefaultValueIsIgnored=False,bAdvancedView=False,bOrphanedPin=False,)
+         CustomProperties Pin (PinId=E10EF79345C2B98ABCCD668BB8ABC1B9,PinName="Output",Direction="EGPD_Output",PinType.PinCategory="SoundNode",PinType.PinSubCategory="",PinType.PinSubCategoryObject=None,PinType.PinSubCategoryMemberReference=(),PinType.PinValueType=(),PinType.ContainerType=None,PinType.bIsArray=False,PinType.bIsReference=False,PinType.bIsConst=False,PinType.bIsWeakPointer=False,PersistentGuid=00000000000000000000000000000000,bHidden=False,bNotConnectable=False,bDefaultValueIsReadOnly=False,bDefaultValueIsIgnored=False,bAdvancedView=False,bOrphanedPin=False,)
+      End Object
+      Begin Object Name="SoundCueGraphNode_7"
+         SoundNode=SoundNodeModulator'"Gold_Pickup_Cue:SoundNodeModulator_0"'
+         NodePosX=-240
+         NodePosY=-112
+         NodeGuid=40DF56FF45E97A48EFD59E901C3F9132
+         CustomProperties Pin (PinId=99E6D0924C88DC404173A89AD2347583,PinName="Output",Direction="EGPD_Output",PinType.PinCategory="SoundNode",PinType.PinSubCategory="",PinType.PinSubCategoryObject=None,PinType.PinSubCategoryMemberReference=(),PinType.PinValueType=(),PinType.ContainerType=None,PinType.bIsArray=False,PinType.bIsReference=False,PinType.bIsConst=False,PinType.bIsWeakPointer=False,LinkedTo=(SoundCueGraphNode_8 2056C6D547B07F253A96C88643382BF7,SoundCueGraphNode_Root_2 29AE18CD4D1EB572E51DB1B409D1018B,),PersistentGuid=00000000000000000000000000000000,bHidden=False,bNotConnectable=False,bDefaultValueIsReadOnly=False,bDefaultValueIsIgnored=False,bAdvancedView=False,bOrphanedPin=False,)
+         CustomProperties Pin (PinId=C11BA8134F8E5FC7F58BFDA212715550,PinName="Input",PinFriendlyName=" ",PinType.PinCategory="SoundNode",PinType.PinSubCategory="",PinType.PinSubCategoryObject=None,PinType.PinSubCategoryMemberReference=(),PinType.PinValueType=(),PinType.ContainerType=None,PinType.bIsArray=False,PinType.bIsReference=False,PinType.bIsConst=False,PinType.bIsWeakPointer=False,LinkedTo=(SoundCueGraphNode_17 F119B9C743106CF09CF8CB9F05057F0F,),PersistentGuid=00000000000000000000000000000000,bHidden=False,bNotConnectable=False,bDefaultValueIsReadOnly=False,bDefaultValueIsIgnored=False,bAdvancedView=False,bOrphanedPin=False,)
+      End Object
+      Begin Object Name="SoundCueGraphNode_6"
+         SoundNode=SoundNodeWavePlayer'"Gold_Pickup_Cue:SoundNodeWavePlayer_4"'
+         NodePosX=-624
+         NodePosY=-162
+         NodeGuid=E9E26E3D4E0D0CAFA240E6B0EFAFCC57
+         CustomProperties Pin (PinId=1E8438044BEE03CBC0F46CB1E8E88322,PinName="Output",Direction="EGPD_Output",PinType.PinCategory="SoundNode",PinType.PinSubCategory="",PinType.PinSubCategoryObject=None,PinType.PinSubCategoryMemberReference=(),PinType.PinValueType=(),PinType.ContainerType=None,PinType.bIsArray=False,PinType.bIsReference=False,PinType.bIsConst=False,PinType.bIsWeakPointer=False,LinkedTo=(SoundCueGraphNode_17 4F278B3145703AD66513A9B24F695DC3,),PersistentGuid=00000000000000000000000000000000,bHidden=False,bNotConnectable=False,bDefaultValueIsReadOnly=False,bDefaultValueIsIgnored=False,bAdvancedView=False,bOrphanedPin=False,)
+      End Object
+      Begin Object Name="SoundCueGraphNode_5"
+         SoundNode=SoundNodeWavePlayer'"Gold_Pickup_Cue:SoundNodeWavePlayer_3"'
+         NodePosX=-624
+         NodePosY=-232
+         NodeGuid=5C307554449361A1204BA0B1215EDE90
+         CustomProperties Pin (PinId=9C80E22249D3C00ECC49DE80D39C6223,PinName="Output",Direction="EGPD_Output",PinType.PinCategory="SoundNode",PinType.PinSubCategory="",PinType.PinSubCategoryObject=None,PinType.PinSubCategoryMemberReference=(),PinType.PinValueType=(),PinType.ContainerType=None,PinType.bIsArray=False,PinType.bIsReference=False,PinType.bIsConst=False,PinType.bIsWeakPointer=False,LinkedTo=(SoundCueGraphNode_17 49AF8C84403450ACAA8E20968AE4D700,),PersistentGuid=00000000000000000000000000000000,bHidden=False,bNotConnectable=False,bDefaultValueIsReadOnly=False,bDefaultValueIsIgnored=False,bAdvancedView=False,bOrphanedPin=False,)
+      End Object
+      Begin Object Name="SoundCueGraphNode_17"
+         SoundNode=SoundNodeRandom'"Gold_Pickup_Cue:SoundNodeRandom_1"'
+         NodePosX=-384
+         NodePosY=-112
+         NodeGuid=2A5FD9994C70157DEED5AEAEB337FBC5
+         CustomProperties Pin (PinId=F119B9C743106CF09CF8CB9F05057F0F,PinName="Output",Direction="EGPD_Output",PinType.PinCategory="SoundNode",PinType.PinSubCategory="",PinType.PinSubCategoryObject=None,PinType.PinSubCategoryMemberReference=(),PinType.PinValueType=(),PinType.ContainerType=None,PinType.bIsArray=False,PinType.bIsReference=False,PinType.bIsConst=False,PinType.bIsWeakPointer=False,LinkedTo=(SoundCueGraphNode_7 C11BA8134F8E5FC7F58BFDA212715550,),PersistentGuid=00000000000000000000000000000000,bHidden=False,bNotConnectable=False,bDefaultValueIsReadOnly=False,bDefaultValueIsIgnored=False,bAdvancedView=False,bOrphanedPin=False,)
+         CustomProperties Pin (PinId=49AF8C84403450ACAA8E20968AE4D700,PinName="Input",PinFriendlyName=" ",PinType.PinCategory="SoundNode",PinType.PinSubCategory="",PinType.PinSubCategoryObject=None,PinType.PinSubCategoryMemberReference=(),PinType.PinValueType=(),PinType.ContainerType=None,PinType.bIsArray=False,PinType.bIsReference=False,PinType.bIsConst=False,PinType.bIsWeakPointer=False,LinkedTo=(SoundCueGraphNode_5 9C80E22249D3C00ECC49DE80D39C6223,),PersistentGuid=00000000000000000000000000000000,bHidden=False,bNotConnectable=False,bDefaultValueIsReadOnly=False,bDefaultValueIsIgnored=False,bAdvancedView=False,bOrphanedPin=False,)
+         CustomProperties Pin (PinId=4F278B3145703AD66513A9B24F695DC3,PinName="Input2",PinFriendlyName=" ",PinType.PinCategory="SoundNode",PinType.PinSubCategory="",PinType.PinSubCategoryObject=None,PinType.PinSubCategoryMemberReference=(),PinType.PinValueType=(),PinType.ContainerType=None,PinType.bIsArray=False,PinType.bIsReference=False,PinType.bIsConst=False,PinType.bIsWeakPointer=False,LinkedTo=(SoundCueGraphNode_6 1E8438044BEE03CBC0F46CB1E8E88322,),PersistentGuid=00000000000000000000000000000000,bHidden=False,bNotConnectable=False,bDefaultValueIsReadOnly=False,bDefaultValueIsIgnored=False,bAdvancedView=False,bOrphanedPin=False,)
+         CustomProperties Pin (PinId=1351B5C14921B570BEA3A6A11EDAA227,PinName="Input3",PinFriendlyName=" ",PinType.PinCategory="SoundNode",PinType.PinSubCategory="",PinType.PinSubCategoryObject=None,PinType.PinSubCategoryMemberReference=(),PinType.PinValueType=(),PinType.ContainerType=None,PinType.bIsArray=False,PinType.bIsReference=False,PinType.bIsConst=False,PinType.bIsWeakPointer=False,LinkedTo=(SoundCueGraphNode_9 80709ACE4B3D2AD008B7B88E3046FE57,),PersistentGuid=00000000000000000000000000000000,bHidden=False,bNotConnectable=False,bDefaultValueIsReadOnly=False,bDefaultValueIsIgnored=False,bAdvancedView=False,bOrphanedPin=False,)
+         CustomProperties Pin (PinId=0D63534043A14762BCD1A9ADCE1563E9,PinName="Input4",PinFriendlyName=" ",PinType.PinCategory="SoundNode",PinType.PinSubCategory="",PinType.PinSubCategoryObject=None,PinType.PinSubCategoryMemberReference=(),PinType.PinValueType=(),PinType.ContainerType=None,PinType.bIsArray=False,PinType.bIsReference=False,PinType.bIsConst=False,PinType.bIsWeakPointer=False,LinkedTo=(SoundCueGraphNode_14 31E58696486A7125E19684BB29316974,),PersistentGuid=00000000000000000000000000000000,bHidden=False,bNotConnectable=False,bDefaultValueIsReadOnly=False,bDefaultValueIsIgnored=False,bAdvancedView=False,bOrphanedPin=False,)
+         CustomProperties Pin (PinId=FF6826574177391BB5180CB913534532,PinName="Input5",PinFriendlyName=" ",PinType.PinCategory="SoundNode",PinType.PinSubCategory="",PinType.PinSubCategoryObject=None,PinType.PinSubCategoryMemberReference=(),PinType.PinValueType=(),PinType.ContainerType=None,PinType.bIsArray=False,PinType.bIsReference=False,PinType.bIsConst=False,PinType.bIsWeakPointer=False,LinkedTo=(SoundCueGraphNode_15 B875E14444B1622E40705B99383D0D84,),PersistentGuid=00000000000000000000000000000000,bHidden=False,bNotConnectable=False,bDefaultValueIsReadOnly=False,bDefaultValueIsIgnored=False,bAdvancedView=False,bOrphanedPin=False,)
+         CustomProperties Pin (PinId=8189A270474CDDF0217518BF7A937133,PinName="Input6",PinFriendlyName=" ",PinType.PinCategory="SoundNode",PinType.PinSubCategory="",PinType.PinSubCategoryObject=None,PinType.PinSubCategoryMemberReference=(),PinType.PinValueType=(),PinType.ContainerType=None,PinType.bIsArray=False,PinType.bIsReference=False,PinType.bIsConst=False,PinType.bIsWeakPointer=False,LinkedTo=(SoundCueGraphNode_16 A7BE23214CFFCC88AB7518B9BE4EB8DD,),PersistentGuid=00000000000000000000000000000000,bHidden=False,bNotConnectable=False,bDefaultValueIsReadOnly=False,bDefaultValueIsIgnored=False,bAdvancedView=False,bOrphanedPin=False,)
+      End Object
+      Begin Object Name="SoundCueGraphNode_16"
+         SoundNode=SoundNodeWavePlayer'"Gold_Pickup_Cue:SoundNodeWavePlayer_11"'
+         NodePosX=-624
+         NodePosY=117
+         NodeGuid=74E635014BA7C00186FD8784E78316C3
+         CustomProperties Pin (PinId=A7BE23214CFFCC88AB7518B9BE4EB8DD,PinName="Output",Direction="EGPD_Output",PinType.PinCategory="SoundNode",PinType.PinSubCategory="",PinType.PinSubCategoryObject=None,PinType.PinSubCategoryMemberReference=(),PinType.PinValueType=(),PinType.ContainerType=None,PinType.bIsArray=False,PinType.bIsReference=False,PinType.bIsConst=False,PinType.bIsWeakPointer=False,LinkedTo=(SoundCueGraphNode_17 8189A270474CDDF0217518BF7A937133,),PersistentGuid=00000000000000000000000000000000,bHidden=False,bNotConnectable=False,bDefaultValueIsReadOnly=False,bDefaultValueIsIgnored=False,bAdvancedView=False,bOrphanedPin=False,)
+      End Object
+      Begin Object Name="SoundCueGraphNode_15"
+         SoundNode=SoundNodeWavePlayer'"Gold_Pickup_Cue:SoundNodeWavePlayer_10"'
+         NodePosX=-624
+         NodePosY=48
+         NodeGuid=B94C899C4128B5B10881969DD1BBC862
+         CustomProperties Pin (PinId=B875E14444B1622E40705B99383D0D84,PinName="Output",Direction="EGPD_Output",PinType.PinCategory="SoundNode",PinType.PinSubCategory="",PinType.PinSubCategoryObject=None,PinType.PinSubCategoryMemberReference=(),PinType.PinValueType=(),PinType.ContainerType=None,PinType.bIsArray=False,PinType.bIsReference=False,PinType.bIsConst=False,PinType.bIsWeakPointer=False,LinkedTo=(SoundCueGraphNode_17 FF6826574177391BB5180CB913534532,),PersistentGuid=00000000000000000000000000000000,bHidden=False,bNotConnectable=False,bDefaultValueIsReadOnly=False,bDefaultValueIsIgnored=False,bAdvancedView=False,bOrphanedPin=False,)
+      End Object
+      Begin Object Name="SoundCueGraphNode_14"
+         SoundNode=SoundNodeWavePlayer'"Gold_Pickup_Cue:SoundNodeWavePlayer_9"'
+         NodePosX=-624
+         NodePosY=-22
+         NodeGuid=DE73D9914F83889A1D7F538B18B639DB
+         CustomProperties Pin (PinId=31E58696486A7125E19684BB29316974,PinName="Output",Direction="EGPD_Output",PinType.PinCategory="SoundNode",PinType.PinSubCategory="",PinType.PinSubCategoryObject=None,PinType.PinSubCategoryMemberReference=(),PinType.PinValueType=(),PinType.ContainerType=None,PinType.bIsArray=False,PinType.bIsReference=False,PinType.bIsConst=False,PinType.bIsWeakPointer=False,LinkedTo=(SoundCueGraphNode_17 0D63534043A14762BCD1A9ADCE1563E9,),PersistentGuid=00000000000000000000000000000000,bHidden=False,bNotConnectable=False,bDefaultValueIsReadOnly=False,bDefaultValueIsIgnored=False,bAdvancedView=False,bOrphanedPin=False,)
+      End Object
+      Schema=Class'"/Script/AudioEditor.SoundCueGraphSchema"'
+      Nodes(0)=SoundCueGraphNode_Root'"SoundCueGraphNode_Root_2"'
+      Nodes(1)=SoundCueGraphNode'"SoundCueGraphNode_7"'
+      Nodes(2)=SoundCueGraphNode'"SoundCueGraphNode_8"'
+      Nodes(3)=SoundCueGraphNode'"SoundCueGraphNode_5"'
+      Nodes(4)=SoundCueGraphNode'"SoundCueGraphNode_6"'
+      Nodes(5)=SoundCueGraphNode'"SoundCueGraphNode_9"'
+      Nodes(6)=SoundCueGraphNode'"SoundCueGraphNode_14"'
+      Nodes(7)=SoundCueGraphNode'"SoundCueGraphNode_15"'
+      Nodes(8)=SoundCueGraphNode'"SoundCueGraphNode_16"'
+      Nodes(9)=SoundCueGraphNode'"SoundCueGraphNode_17"'
+      bAllowDeletion=False
+      GraphGuid=6FB090C1405AE10157A33EA9807BE31C
+   End Object
+   FirstNode=SoundNodeModulator'"SoundNodeModulator_0"'
+   VolumeMultiplier=0.700000
+   AllNodes(0)=SoundNodeModulator'"SoundNodeModulator_0"'
+   AllNodes(1)=SoundNodeAttenuation'"SoundNodeAttenuation_1"'
+   AllNodes(2)=SoundNodeWavePlayer'"SoundNodeWavePlayer_3"'
+   AllNodes(3)=SoundNodeWavePlayer'"SoundNodeWavePlayer_4"'
+   AllNodes(4)=SoundNodeWavePlayer'"SoundNodeWavePlayer_8"'
+   AllNodes(5)=SoundNodeWavePlayer'"SoundNodeWavePlayer_9"'
+   AllNodes(6)=SoundNodeWavePlayer'"SoundNodeWavePlayer_10"'
+   AllNodes(7)=SoundNodeWavePlayer'"SoundNodeWavePlayer_11"'
+   AllNodes(8)=SoundNodeRandom'"SoundNodeRandom_1"'
+   SoundCueGraph=SoundCueGraph'"SoundCueGraph_2"'
+   SoundClassObject=SoundClass'"/Game/Sounds/SoundClassesAndMixes/Mechanics.Mechanics"'
+   bOverrideConcurrency=True
+   Duration=1.615646
+End Object

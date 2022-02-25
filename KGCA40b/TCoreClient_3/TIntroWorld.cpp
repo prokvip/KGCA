@@ -46,6 +46,25 @@ bool	TIntroWorld::Load(std::wstring file)
 	btnObj->Init();
 	btnObj->SetRectDraw({ 0,0, 334,82 });
 	btnObj->SetPosition(TVector2(g_rtClient.right / 2.0f, g_rtClient.bottom / 2.0f));
+
+
+	pTex = I_Texture.Load(L"../../data/ui/main_start_nor.png");
+	TSound* pSound = I_Sound.Load("../../data/Sound/00_Menu.MP3");
+	// 가변인자를 통해서 생성자 직접 호출
+	btnObj->m_pStatePlayList.emplace_back( pTex , pSound);
+	pTex = I_Texture.Load(L"../../data/ui/main_start_pus.png");
+	pSound = I_Sound.Load("../../data/Sound/FootStepSound.wav");
+	// 가변인자를 통해서 생성자 직접 호출
+	btnObj->m_pStatePlayList.emplace_back(pTex, pSound);
+	pTex = I_Texture.Load(L"../../data/ui/main_start_sel.png");
+	pSound = I_Sound.Load("../../data/Sound/FootStepSound_2.wav");
+	// 가변인자를 통해서 생성자 직접 호출
+	btnObj->m_pStatePlayList.emplace_back(pTex, pSound);
+	pTex = I_Texture.Load(L"../../data/ui/main_start_dis.png");
+	pSound = I_Sound.Load("../../data/Sound/PianoSound_00.mp3");
+	// 가변인자를 통해서 생성자 직접 호출
+	btnObj->m_pStatePlayList.emplace_back(pTex, pSound);
+
 	if (!btnObj->Create(m_pd3dDevice, m_pContext,
 		L"../../data/shader/DefaultUI.txt",
 		L"../../data/main_start_nor.png"))

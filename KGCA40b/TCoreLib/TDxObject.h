@@ -50,6 +50,7 @@ public:
 	DWORD		m_dwCollisonType;
 	DWORD		m_dwSelectType;
 	DWORD		m_dwSelectState;
+	DWORD		m_dwPreSelectState;
 	bool		m_bSelect;
 	bool		m_bAlphaBlend;
 public:

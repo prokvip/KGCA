@@ -1,0 +1,62 @@
+Begin Object Class=/Script/Engine.SoundCue Name="Wind04_Loop_Stereo_Cue"
+   Begin Object Class=/Script/AudioEditor.SoundCueGraph Name="SoundCueGraph_6"
+      Begin Object Class=/Script/AudioEditor.SoundCueGraphNode Name="SoundCueGraphNode_0"
+      End Object
+      Begin Object Class=/Script/AudioEditor.SoundCueGraphNode Name="SoundCueGraphNode_45"
+      End Object
+      Begin Object Class=/Script/AudioEditor.SoundCueGraphNode_Root Name="SoundCueGraphNode_Root_6"
+      End Object
+   End Object
+   Begin Object Class=/Script/Engine.SoundNodeEnveloper Name="SoundNodeEnveloper_0"
+   End Object
+   Begin Object Class=/Script/Engine.SoundNodeWavePlayer Name="SoundNodeWavePlayer_30"
+   End Object
+   Begin Object Name="SoundCueGraph_6"
+      Begin Object Name="SoundCueGraphNode_0"
+         SoundNode=SoundNodeEnveloper'"Wind04_Loop_Stereo_Cue:SoundNodeEnveloper_0"'
+         NodePosX=32
+         NodePosY=-144
+         NodeGuid=839CAF5D41A44C935CB65EA0A6C388F9
+         CustomProperties Pin (PinId=B4A98DEF4EB06F8B41158E8B5BE2490B,PinName="Output",Direction="EGPD_Output",PinType.PinCategory="SoundNode",PinType.PinSubCategory="",PinType.PinSubCategoryObject=None,PinType.PinSubCategoryMemberReference=(),PinType.PinValueType=(),PinType.ContainerType=None,PinType.bIsArray=False,PinType.bIsReference=False,PinType.bIsConst=False,PinType.bIsWeakPointer=False,LinkedTo=(SoundCueGraphNode_Root_6 A269CA734C05E4313DDEF5B04554EB4E,),PersistentGuid=00000000000000000000000000000000,bHidden=False,bNotConnectable=False,bDefaultValueIsReadOnly=False,bDefaultValueIsIgnored=False,bAdvancedView=False,bOrphanedPin=False,)
+         CustomProperties Pin (PinId=F79ED84E41E7FC541535A39239B05033,PinName="Input",PinFriendlyName=" ",PinType.PinCategory="SoundNode",PinType.PinSubCategory="",PinType.PinSubCategoryObject=None,PinType.PinSubCategoryMemberReference=(),PinType.PinValueType=(),PinType.ContainerType=None,PinType.bIsArray=False,PinType.bIsReference=False,PinType.bIsConst=False,PinType.bIsWeakPointer=False,LinkedTo=(SoundCueGraphNode_45 2E4E81B0498CB4A646B53DAE9482DDFB,),PersistentGuid=00000000000000000000000000000000,bHidden=False,bNotConnectable=False,bDefaultValueIsReadOnly=False,bDefaultValueIsIgnored=False,bAdvancedView=False,bOrphanedPin=False,)
+      End Object
+      Begin Object Name="SoundCueGraphNode_45"
+         SoundNode=SoundNodeWavePlayer'"Wind04_Loop_Stereo_Cue:SoundNodeWavePlayer_30"'
+         NodePosX=-272
+         NodePosY=-144
+         NodeGuid=8EDB0CFD43DB4BE66A92879DA8236E7B
+         CustomProperties Pin (PinId=2E4E81B0498CB4A646B53DAE9482DDFB,PinName="Output",Direction="EGPD_Output",PinType.PinCategory="SoundNode",PinType.PinSubCategory="",PinType.PinSubCategoryObject=None,PinType.PinSubCategoryMemberReference=(),PinType.PinValueType=(),PinType.ContainerType=None,PinType.bIsArray=False,PinType.bIsReference=False,PinType.bIsConst=False,PinType.bIsWeakPointer=False,LinkedTo=(SoundCueGraphNode_0 F79ED84E41E7FC541535A39239B05033,),PersistentGuid=00000000000000000000000000000000,bHidden=False,bNotConnectable=False,bDefaultValueIsReadOnly=False,bDefaultValueIsIgnored=False,bAdvancedView=False,bOrphanedPin=False,)
+      End Object
+      Begin Object Name="SoundCueGraphNode_Root_6"
+         NodePosX=176
+         NodePosY=-160
+         NodeGuid=C6FA63DD44064C5CC4B97AA7CC7B3D36
+         CustomProperties Pin (PinId=A269CA734C05E4313DDEF5B04554EB4E,PinType.PinCategory="SoundNode",PinType.PinSubCategory="Root",PinType.PinSubCategoryObject=None,PinType.PinSubCategoryMemberReference=(),PinType.PinValueType=(),PinType.ContainerType=None,PinType.bIsArray=False,PinType.bIsReference=False,PinType.bIsConst=False,PinType.bIsWeakPointer=False,LinkedTo=(SoundCueGraphNode_0 B4A98DEF4EB06F8B41158E8B5BE2490B,),PersistentGuid=00000000000000000000000000000000,bHidden=False,bNotConnectable=False,bDefaultValueIsReadOnly=False,bDefaultValueIsIgnored=False,bAdvancedView=False,bOrphanedPin=False,)
+      End Object
+      Schema=Class'"/Script/AudioEditor.SoundCueGraphSchema"'
+      Nodes(0)=SoundCueGraphNode_Root'"SoundCueGraphNode_Root_6"'
+      Nodes(1)=SoundCueGraphNode'"SoundCueGraphNode_45"'
+      Nodes(2)=SoundCueGraphNode'"SoundCueGraphNode_0"'
+      bAllowDeletion=False
+      GraphGuid=7FBE8D4441BB23344EFF5D99E770F331
+   End Object
+   Begin Object Name="SoundNodeEnveloper_0"
+      VolumeCurve=(EditorCurveData=(Keys=((InterpMode=RCIM_Cubic,Value=1.000000),(InterpMode=RCIM_Cubic,Time=5.827855,Value=0.700000,ArriveTangent=0.036244,LeaveTangent=0.036244),(InterpMode=RCIM_Cubic,Time=13.558393,Value=1.491406,ArriveTangent=-0.012062,LeaveTangent=-0.012062),(InterpMode=RCIM_Cubic,Time=22.409298,Value=0.500000,ArriveTangent=-0.012291,LeaveTangent=-0.012291),(InterpMode=RCIM_Cubic,Time=29.131506,Value=1.300000,ArriveTangent=0.039712,LeaveTangent=0.039712),(Time=35.000000,Value=1.000000))))
+      PitchCurve=(EditorCurveData=(Keys=((Value=1.000000))))
+      ChildNodes(0)=SoundNodeWavePlayer'"Wind04_Loop_Stereo_Cue:SoundNodeWavePlayer_30"'
+      GraphNode=SoundCueGraphNode'"Wind04_Loop_Stereo_Cue:SoundCueGraph_6.SoundCueGraphNode_0"'
+   End Object
+   Begin Object Name="SoundNodeWavePlayer_30"
+      SoundWaveAssetPtr=/Game/Sounds/Ambient/Wind04_Loop_Stereo.Wind04_Loop_Stereo
+      bLooping=True
+      GraphNode=SoundCueGraphNode'"Wind04_Loop_Stereo_Cue:SoundCueGraph_6.SoundCueGraphNode_45"'
+   End Object
+   FirstNode=SoundNodeEnveloper'"SoundNodeEnveloper_0"'
+   VolumeMultiplier=1.000000
+   AllNodes(0)=SoundNodeWavePlayer'"SoundNodeWavePlayer_30"'
+   AllNodes(1)=SoundNodeEnveloper'"SoundNodeEnveloper_0"'
+   SoundCueGraph=SoundCueGraph'"SoundCueGraph_6"'
+   SoundClassObject=SoundClass'"/Game/Sounds/SoundClassesAndMixes/Ambient.Ambient"'
+   bOverrideConcurrency=True
+   Duration=10000.000000
+End Object

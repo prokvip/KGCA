@@ -1,5 +1,6 @@
 #include "TCore.h"
 #include "TObjectMgr.h"
+#include "TSoundMgr.h"
 bool	TCore::CoreInit()
 {
 	m_GameTimer.Init();	
@@ -51,6 +52,7 @@ bool	TCore::CoreFrame()
 	m_GameTimer.Frame();
 	TInput::Get().Frame();
 	I_ObjectMgr.Frame();
+	I_Sound.Frame();
 	Frame();
 	m_dxWrite.Frame();
 	return true;
