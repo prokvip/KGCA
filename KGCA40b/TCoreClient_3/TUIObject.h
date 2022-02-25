@@ -29,6 +29,8 @@ public:
 public:	
 	bool	Frame() override;
 	bool	Render()override;
+	bool    SetVertexData()override;
+	bool    SetIndexData()override;
 };
 class TImageObject : public TUIObject
 {

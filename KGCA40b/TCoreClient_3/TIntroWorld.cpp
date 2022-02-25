@@ -25,7 +25,7 @@ bool	TIntroWorld::Load(std::wstring file)
 			 m_pd3dDevice, L"Shader.txt", "VS");
 	TShader* pPShader = I_Shader.CreatePixelShader(
 		m_pd3dDevice, L"Shader.txt","PSAlphaBlend");
-	TImageObject* obj = new TImageObject;
+	/*TImageObject* obj = new TImageObject;
 	obj->Init();
 	obj->SetRectDraw({ 0,0, g_rtClient.right,g_rtClient.bottom });
 	obj->SetPosition(TVector2(g_rtClient.right/2.0f, g_rtClient.bottom/2.0f));
@@ -40,41 +40,56 @@ bool	TIntroWorld::Load(std::wstring file)
 	}
 
 	obj->SetCollisionType(TCollisionType::Ignore, TSelectType::Select_Ignore );
-	m_UIObj.insert(std::make_pair(L"bk", obj));
+	m_UIObj.insert(std::make_pair(L"bk", obj));*/
 
-	TButtonObject* btnObj = new TButtonObject;
-	btnObj->Init();
-	btnObj->SetRectDraw({ 0,0, 334,82 });
-	btnObj->SetPosition(TVector2(g_rtClient.right / 2.0f, g_rtClient.bottom / 2.0f));
+	//TButtonObject* btnObj = new TButtonObject;
+	//btnObj->Init();
+	//btnObj->SetRectDraw({ 0,0, 334,82 });
+	//btnObj->SetPosition(TVector2(g_rtClient.right / 2.0f, g_rtClient.bottom / 2.0f));
 
 
-	pTex = I_Texture.Load(L"../../data/ui/main_start_nor.png");
-	TSound* pSound = I_Sound.Load("../../data/Sound/00_Menu.MP3");
-	// 가변인자를 통해서 생성자 직접 호출
-	btnObj->m_pStatePlayList.emplace_back( pTex , pSound);
-	pTex = I_Texture.Load(L"../../data/ui/main_start_pus.png");
-	pSound = I_Sound.Load("../../data/Sound/FootStepSound.wav");
-	// 가변인자를 통해서 생성자 직접 호출
-	btnObj->m_pStatePlayList.emplace_back(pTex, pSound);
-	pTex = I_Texture.Load(L"../../data/ui/main_start_sel.png");
-	pSound = I_Sound.Load("../../data/Sound/FootStepSound_2.wav");
-	// 가변인자를 통해서 생성자 직접 호출
-	btnObj->m_pStatePlayList.emplace_back(pTex, pSound);
-	pTex = I_Texture.Load(L"../../data/ui/main_start_dis.png");
-	pSound = I_Sound.Load("../../data/Sound/PianoSound_00.mp3");
-	// 가변인자를 통해서 생성자 직접 호출
-	btnObj->m_pStatePlayList.emplace_back(pTex, pSound);
+	//pTex = I_Texture.Load(L"../../data/ui/main_start_nor.png");
+	//TSound* pSound = I_Sound.Load("../../data/Sound/00_Menu.MP3");
+	//// 가변인자를 통해서 생성자 직접 호출
+	//btnObj->m_pStatePlayList.emplace_back( pTex , pSound);
+	//pTex = I_Texture.Load(L"../../data/ui/main_start_pus.png");
+	//pSound = I_Sound.Load("../../data/Sound/FootStepSound.wav");
+	//// 가변인자를 통해서 생성자 직접 호출
+	//btnObj->m_pStatePlayList.emplace_back(pTex, pSound);
+	//pTex = I_Texture.Load(L"../../data/ui/main_start_sel.png");
+	//pSound = I_Sound.Load("../../data/Sound/FootStepSound_2.wav");
+	//// 가변인자를 통해서 생성자 직접 호출
+	//btnObj->m_pStatePlayList.emplace_back(pTex, pSound);
+	//pTex = I_Texture.Load(L"../../data/ui/main_start_dis.png");
+	//pSound = I_Sound.Load("../../data/Sound/PianoSound_00.mp3");
+	//// 가변인자를 통해서 생성자 직접 호출
+	//btnObj->m_pStatePlayList.emplace_back(pTex, pSound);
 
-	if (!btnObj->Create(m_pd3dDevice, m_pContext,
+	//if (!btnObj->Create(m_pd3dDevice, m_pContext,
+	//	L"../../data/shader/DefaultUI.txt",
+	//	L"../../data/main_start_nor.png"))
+	//{
+	//	return false;
+	//}
+	//btnObj->SetCollisionType(TCollisionType::Ignore, TSelectType::Select_Overlap);
+	//m_UIObj.insert(std::make_pair(L"btnStart", btnObj));
+	/// <summary>
+	/// ///////////
+	/// </summary>
+	/// <param name="file"></param>
+	/// <returns></returns>
+	TButtonObject* btnDlg = new TButtonObject;
+	btnDlg->Init();
+	btnDlg->SetRectDraw({ 0,0, g_rtClient.right,g_rtClient.bottom });
+	btnDlg->SetPosition(TVector2(g_rtClient.right /2, g_rtClient.bottom /2));
+	if (!btnDlg->Create(m_pd3dDevice, m_pContext,
 		L"../../data/shader/DefaultUI.txt",
-		L"../../data/main_start_nor.png"))
+		L"../../data/ui/popup_normal.png"))
 	{
 		return false;
 	}
-	btnObj->SetCollisionType(TCollisionType::Ignore, TSelectType::Select_Overlap);
-	m_UIObj.insert(std::make_pair(L"btnStart", btnObj));
-
-
+	btnDlg->SetCollisionType(TCollisionType::Ignore, TSelectType::Select_Overlap);
+	m_UIObj.insert(std::make_pair(L"btnStart", btnDlg));
 	/// <summary>
 	/// 
 	/// </summary>

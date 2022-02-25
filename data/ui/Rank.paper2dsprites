@@ -1,0 +1,37 @@
+{"frames": {
+
+"main_rank1.png":
+{
+	"frame": {"x":1,"y":1,"w":54,"h":56},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":54,"h":56},
+	"sourceSize": {"w":54,"h":56}
+},
+"main_rank2.png":
+{
+	"frame": {"x":1,"y":59,"w":44,"h":49},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":5,"y":5,"w":44,"h":49},
+	"sourceSize": {"w":54,"h":56}
+},
+"main_rank3.png":
+{
+	"frame": {"x":47,"y":59,"w":36,"h":39},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":9,"y":13,"w":36,"h":39},
+	"sourceSize": {"w":54,"h":56}
+}},
+"meta": {
+	"app": "https://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"target": "paper2d", 
+	"image": "Rank.png",
+	"format": "RGBA8888",
+	"size": {"w":128,"h":128},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:638b5496221da8683258af32ec70ae74:80b827facb9624e63242cf5b4ecb6df7:827e1f19c138d7c39c332ed380699b90$"
+}
+}

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<EnemyWaveDatas>
+	<EnemyWaveData waveNo = "1">
+		<type>Rat</type>
+		<spawnPosition>4</spawnPosition>
+		<tagName>enemy</tagName>
+		<amount>1</amount>
+		<MS>3</MS>
+		<AD>1</AD>
+		<HP>10</HP>
+	</EnemyWaveData>
+	<EnemyWaveData waveNo = "1">
+		<type>Pig</type>
+		<spawnPosition>4</spawnPosition>
+		<tagName>boss</tagName>
+		<amount>1</amount>
+		<MS>3</MS>
+		<AD>2</AD>
+		<HP>1</HP>
+	</EnemyWaveData>
+</EnemyWaveDatas>
