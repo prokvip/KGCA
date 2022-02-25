@@ -28,13 +28,13 @@ bool    TUIObject::SetVertexData()
 	float halfWidth = m_fWidth / 2.0f;
 	float halfHeight = m_fHeight / 2.0f;
 	list[0].v = { m_vPos.x - halfWidth, m_vPos.y - halfHeight };
-	list[0].t = { 0,0 };
+	list[0].t = { (float)m_rtOffsetTex.left,(float)m_rtOffsetTex.top };
 	list[3].v = { m_vPos.x + halfWidth, m_vPos.y - halfHeight };
-	list[3].t = { 1,0 };
+	list[3].t = { (float)m_rtOffsetTex.right,(float)m_rtOffsetTex.top };
 	list[12].v = { m_vPos.x - halfWidth, m_vPos.y + halfHeight };
-	list[12].t = { 0, 1};
+	list[12].t = { (float)m_rtOffsetTex.left,(float)m_rtOffsetTex.bottom };
 	list[15].v = { m_vPos.x + halfWidth, m_vPos.y + halfHeight };
-	list[15].t = { 1,1};
+	list[15].t = { (float)m_rtOffsetTex.right,(float)m_rtOffsetTex.bottom };
 	list[5].v = { list[0].v.x + vLT.x, list[0].v.y + vLT.y };
 	list[5].t = { list[0].t.x + tLT.x, list[0].t.y + tLT.y };
 	list[6].v = { list[3].v.x - vRT.x, list[3].v.y + vRT.y };

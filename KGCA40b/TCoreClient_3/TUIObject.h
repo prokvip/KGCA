@@ -27,11 +27,19 @@ class TUIObject : public TObject2D
 public:
 	std::vector<TStatePlayData> m_pStatePlayList;
 	RECT	m_rtOffset;
+	RECT	m_rtOffsetTex;
 public:	
 	bool	Frame() override;
 	bool	Render()override;
 	bool    SetVertexData()override;
 	bool    SetIndexData()override;
+	TUIObject()
+	{
+		m_rtOffsetTex.left = 0;
+		m_rtOffsetTex.top = 0;
+		m_rtOffsetTex.right = 1;
+		m_rtOffsetTex.bottom = 1;
+	}
 };
 class TImageObject : public TUIObject
 {

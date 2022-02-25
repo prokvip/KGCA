@@ -97,7 +97,7 @@ bool	TIntroWorld::Load(std::wstring file)
 	btnObj->SetCollisionType(TCollisionType::Ignore, TSelectType::Select_Overlap);
 	m_UIObj.insert(std::make_pair(L"btnStart", btnObj));
 	/// <summary>
-	/// 
+	/// ¿Ã∆Â∆Æ
 	/// </summary>
 	/// <param name="file"></param>
 	/// <returns></returns>
