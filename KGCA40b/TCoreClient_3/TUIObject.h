@@ -26,6 +26,7 @@ class TUIObject : public TObject2D
 {
 public:
 	std::vector<TStatePlayData> m_pStatePlayList;
+	RECT	m_rtOffset;
 public:	
 	bool	Frame() override;
 	bool	Render()override;

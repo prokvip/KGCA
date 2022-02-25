@@ -11,16 +11,17 @@ bool    TUIObject::SetVertexData()
 	// 8     9     10    11
 	// d lb           rb 
 	// 12    13    14    15 
-	TVector2 vLT = { 50.0f, 50.0f };
-	TVector2 vRT = { 50.0f, 50.0f };
-	TVector2 vLB = { 50.0f, 50.0f };
-	TVector2 vRB = { 50.0f, 50.0f };
+	TVector2 vLT = { (float)m_rtOffset.left,  (float)m_rtOffset.top };
+	TVector2 vRT = { (float)m_rtOffset.right, (float)m_rtOffset.top };
+	TVector2 vLB = { (float)m_rtOffset.left, (float)m_rtOffset.bottom };
+	TVector2 vRB = { (float)m_rtOffset.right, (float)m_rtOffset.bottom };
 
-	TVector2 tLT = { vLT.x/196.0f, vLT.y /124.0f };
-	TVector2 tRT = { vRT.x / 196.0f, vRT.y / 124.0f };
-	TVector2 tLB = { vLB.x / 196.0f, vLB.y / 124.0f };
-	TVector2 tRB = { vRT.x / 196.0f, vRT.y / 124.0f };
-	
+	float fWidth = m_pColorTex->m_TextureDesc.Width;
+	float fHeight = m_pColorTex->m_TextureDesc.Height;
+	TVector2 tLT = { vLT.x / fWidth, vLT.y / fHeight };
+	TVector2 tRT = { vRT.x / fWidth, vRT.y / fHeight };
+	TVector2 tLB = { vLB.x / fWidth, vLB.y / fHeight };
+	TVector2 tRB = { vRT.x / fWidth, vRT.y / fHeight };	
 
 
 	std::vector<SimpleVertex> list(16);
