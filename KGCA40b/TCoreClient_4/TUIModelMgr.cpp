@@ -49,3 +49,13 @@ TUIModel* TUIModelComposed::Clone()
 	}
 	return pModel;
 };
+void  TUIModelComposed::UpdateData()
+{
+	std::list< TUIModel*>::iterator iter;
+	for (iter = m_Components.begin(); iter != m_Components.end();
+		iter++)
+	{
+		(*iter)->UpdateData();
+
+	}
+}

@@ -24,11 +24,12 @@ public:
 	virtual bool	Frame();
 	virtual bool	Render();
 	virtual bool	Release();
-	virtual void Add(TUIModel* pObj);
+	virtual void	Add(TUIModel* pObj);
 	virtual TUIModel* Clone();	
-	bool	Load(ID3D11Device* pd3dDevice, std::wstring filename) {
+	virtual bool	Load(ID3D11Device* pd3dDevice, std::wstring filename) {
 		return true;
 	};
+	virtual void  UpdateData();
 };
 class TUIModelMgr : public TBaseMgr<TUIModel, TUIModelMgr>
 {

@@ -101,13 +101,12 @@ bool	TIntroWorld::CreateModelType()
 	pDlgWindow->m_rtOffset = { 50, 50, 50, 50 };
 	pDlgWindow->SetRectDraw({ 0,0, g_rtClient.right / 3,g_rtClient.bottom / 3 });
 	pDlgWindow->SetPosition(TVector2(400, 300));
-	pDlgWindow->UpdateData();
 	pComposedObj->Add(pDlgWindow);
 	TUIModel* pNewDlgBtn = I_UI.GetPtr(L"btnStart")->Clone();// new TButtonObject(*I_UI.GetPtr(L"btnStart"));
+	pNewDlgBtn->m_csName = L"btnStartClone_ComposedList";
 	pNewDlgBtn->m_pParent = pComposedObj;
 	pNewDlgBtn->SetRectDraw({ 0,0, 100,50 });
 	pNewDlgBtn->AddPosition(TVector2(0, 0));
-	pNewDlgBtn->UpdateData();
 	pComposedObj->Add(pNewDlgBtn);
 	I_UI.m_list.insert(std::make_pair(L"dlgWindow", pComposedObj));
 	return true;
@@ -158,6 +157,7 @@ bool	TIntroWorld::Load(std::wstring file)
 	
 	TUIModel* pNewDlgBtnClone = I_UI.GetPtr(L"dlgWindow")->Clone();
 		pNewDlgBtnClone->m_csName = L"TUIModelComposedClone";
+		pNewDlgBtnClone->UpdateData();
 	m_UIObj.push_back(pNewDlgBtnClone);
 
 	/// <summary>
