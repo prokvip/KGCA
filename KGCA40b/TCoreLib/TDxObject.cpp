@@ -149,7 +149,7 @@ bool	TDxObject::Create(ID3D11Device* pd3dDevice,
 	const TCHAR* szMaskFileName)
 {
 	HRESULT hr;
-	m_rtCollision = TRect(m_vPos, m_fWidth, m_fHeight);
+	/*m_rtCollision = TRect(m_vPos, m_fWidth, m_fHeight);
 	I_ObjectMgr.AddCollisionExecute(this,
 		std::bind(&TBaseObject::HitOverlap, this,
 			std::placeholders::_1,
@@ -157,7 +157,7 @@ bool	TDxObject::Create(ID3D11Device* pd3dDevice,
 	I_ObjectMgr.AddSelectExecute(this,
 		std::bind(&TBaseObject::HitSelect, this,
 			std::placeholders::_1,
-			std::placeholders::_2));
+			std::placeholders::_2));*/
 
 	SetDevice(pd3dDevice, pContext);
 	if (szColorFileName !=nullptr && !LoadTexture(szColorFileName, szMaskFileName))
@@ -319,5 +319,5 @@ TDxObject::TDxObject()
 }
 TDxObject::~TDxObject()
 {
-	Release();
+
 }

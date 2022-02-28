@@ -45,6 +45,8 @@ bool	TCore::GameRun()
 		CoreRender();
 	}
 	CoreRelease();
+
+	MemoryReporting();
 	return true;
 }
 bool	TCore::CoreFrame()
@@ -86,6 +88,8 @@ bool	TCore::CoreRelease()
 	m_GameTimer.Release();
 	TInput::Get().Release();
 	CleapupDevice();
+
+	
 	return true;
 }
 void     TCore::ResizeDevice(UINT iWidth, UINT iHeight)
@@ -115,5 +119,5 @@ TCore::TCore()
 }
 TCore::~TCore()
 {
-
+	
 }

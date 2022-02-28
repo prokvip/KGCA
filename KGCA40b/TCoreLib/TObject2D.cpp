@@ -22,9 +22,14 @@ void		TObject2D::AddPosition(TVector2 vPos)
 	//
 	//   h
 	m_rtCollision = TRect(m_vPos, m_fWidth, m_fHeight);
-	ConvertIndex(m_vPos, m_fWidth, m_fHeight, m_VertexList);
-	m_pContext->UpdateSubresource(
-		m_pVertexBuffer, 0, NULL, &m_VertexList.at(0), 0, 0);
+	//ConvertIndex(m_vPos, m_fWidth, m_fHeight, m_VertexList);
+	SetVertexData();
+	SetIndexData();
+	if (m_pContext != nullptr)
+	{
+		m_pContext->UpdateSubresource(
+			m_pVertexBuffer, 0, NULL, &m_VertexList.at(0), 0, 0);
+	}
 }
 void		TObject2D::SetPosition(TVector2 vPos)
 {
@@ -157,6 +162,7 @@ bool    TObject2D::SetVertexData()
 }
 bool    TObject2D::SetIndexData()
 {
+	m_IndexList.clear();
 	//// 0   1,4
 	//// 2,3  5
 	//DWORD indeces[] = {

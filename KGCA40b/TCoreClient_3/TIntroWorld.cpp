@@ -2,6 +2,11 @@
 #include "TInput.h"
 #include <string>
 #include "TObjectMgr.h"
+// 1,인터페이스 설계( 인트로, 로비, 인게임, 결과 등)
+// 2,게임시스템(룰) : 엔딩조건, 아이템, 케릭터, 맵, 어떤게임을 모작
+// 스케줄.. 
+// 3,파워포인트로 제출(기획(설계,복안)이번주 목요일)
+// 4,3월14일 월요일 제출
 bool	TIntroWorld::Init()
 {
 	TWorld::Init();

@@ -22,7 +22,7 @@ bool	TWorld::Frame()
 {
 	for (auto obj : m_UIObj)
 	{
-		TObject2D* pObj = obj.second;
+		TObject2D* pObj = obj;
 		if (pObj != nullptr)
 		{
 			pObj->Frame();
@@ -30,7 +30,7 @@ bool	TWorld::Frame()
 	}
 	for (auto obj : m_NpcObj)
 	{
-		TObject2D* pObj = obj.second;
+		TObject2D* pObj = obj;
 		if (pObj != nullptr)
 		{
 			pObj->Frame();
@@ -42,7 +42,7 @@ bool	TWorld::Render()
 {
 	for (auto obj : m_UIObj)
 	{
-		TObject2D* pObj = obj.second;
+		TObject2D* pObj = obj;
 		if (pObj != nullptr)
 		{
 			pObj->Render();
@@ -50,7 +50,7 @@ bool	TWorld::Render()
 	}
 	for (auto obj : m_NpcObj)
 	{
-		TObject2D* pObj = obj.second;
+		TObject2D* pObj = obj;
 		if (pObj->m_bDead == false)
 		{
 			pObj->Render();
@@ -62,23 +62,40 @@ bool	TWorld::Release()
 {
 	for (auto obj : m_UIObj)
 	{
-		obj.second->Release();
-		delete obj.second;
+		if (obj != nullptr)
+		{
+			obj->Release();
+			delete obj;
+			obj = nullptr;
+		}
+		
 	}
 	for (auto obj : m_ItemObj)
 	{
-		obj.second->Release();
-		delete obj.second;
+		if (obj != nullptr)
+		{
+			obj->Release();
+			delete obj;
+			obj = nullptr;
+		}
 	}
 	for (auto obj : m_NpcObj)
 	{
-		obj.second->Release();
-		delete obj.second;
+		if (obj != nullptr)
+		{
+			obj->Release();
+			delete obj;
+			obj = nullptr;
+		}
 	}
 	for (auto obj : m_MapObj)
 	{
-		obj.second->Release();
-		delete obj.second;
+		if (obj != nullptr)
+		{
+			obj->Release();
+			delete obj;
+			obj = nullptr;
+		}
 	}
 	m_ItemObj.clear();
 	m_UIObj.clear();

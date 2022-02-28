@@ -76,8 +76,6 @@ bool  TObjectMgr::Frame()
 		TBaseObject* pObjSrc = (TBaseObject*)src.second;
 		if (pObjSrc->m_dwSelectType == TSelectType::Select_Ignore) continue;
 		DWORD dwState = TSelectState::T_DEFAULT;
-		pObjSrc->m_dwSelectState = TSelectState::T_DEFAULT;
-
 		if (TCollision::RectToPoint(
 			pObjSrc->m_rtCollision, (float)g_ptMouse.x, (float)g_ptMouse.y))
 		{
@@ -102,6 +100,19 @@ bool  TObjectMgr::Frame()
 			{
 				CollisionFunction call = colliter->second;
 				call(pObjSrc, dwState);
+			}
+		}
+		else
+		{
+			if (pObjSrc->m_dwSelectState != TSelectState::T_DEFAULT)
+			{
+				pObjSrc->m_dwSelectState = TSelectState::T_DEFAULT;
+				FuncionIterator colliter = m_fnSelectExecute.find(pObjSrc->m_iSelectID);
+				if (colliter != m_fnSelectExecute.end())
+				{
+					CollisionFunction call = colliter->second;
+					call(pObjSrc, dwState);
+				}
 			}
 		}
 		
