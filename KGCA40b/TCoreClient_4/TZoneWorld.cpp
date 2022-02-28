@@ -96,5 +96,6 @@ bool	TZoneWorld::Render()
 bool	TZoneWorld::Release()
 {
 	m_PlayerObj.Release();
+	
 	return true;
 }

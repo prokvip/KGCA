@@ -110,5 +110,5 @@ TWorld::TWorld()
 
 TWorld::~TWorld()
 {
-
+	Release();
 }
