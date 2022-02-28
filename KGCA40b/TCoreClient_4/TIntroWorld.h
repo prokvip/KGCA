@@ -17,6 +17,7 @@ public:
 	TTexture*			m_pColorTex;
 	TWorld*				m_pNextWorld;
 public:
+	bool	CreateModelType();
 	bool	Load(std::wstring file) override;
 	virtual bool	Init();
 	virtual bool	Frame();
