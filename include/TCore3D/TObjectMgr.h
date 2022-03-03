@@ -9,6 +9,7 @@ private:
 	int			m_iExcueteSelectID;
 	std::map<int, TBaseObject*>  m_ObjectList;
 	std::map<int, TBaseObject*>  m_SelectList;
+	
 public:
 	friend TSingleton< TObjectMgr>;
 public:	

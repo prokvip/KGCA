@@ -16,8 +16,13 @@ bool    TUIObject::SetVertexData()
 	TVector2 vLB = { (float)m_rtOffset.left, (float)m_rtOffset.bottom };
 	TVector2 vRB = { (float)m_rtOffset.right, (float)m_rtOffset.bottom };
 
-	float fWidth = m_pColorTex->m_TextureDesc.Width;
-	float fHeight = m_pColorTex->m_TextureDesc.Height;
+	float fWidth = m_fWidth;
+	float fHeight = m_fHeight;
+	if (m_pColorTex != nullptr)
+	{
+		fWidth = m_pColorTex->m_TextureDesc.Width;
+		fHeight = m_pColorTex->m_TextureDesc.Height;
+	}
 	TVector2 tLT = { vLT.x / fWidth, vLT.y / fHeight };
 	TVector2 tRT = { vRT.x / fWidth, vRT.y / fHeight };
 	TVector2 tLB = { vLB.x / fWidth, vLB.y / fHeight };
@@ -209,12 +214,14 @@ void TButtonObject::HitSelect(TBaseObject* pObj, DWORD dwState)
 		}
 	}	
 	m_dwPreSelectState = m_dwSelectState;
-	DisplayText(state.c_str());
+	//DisplayText(state.c_str());
 }
 
 
 bool TListCtrlObject::Create(int xCount, int yCount)
 {
+	UpdateData();
+
 	int iHalfWidth  = m_fWidth / xCount;
 	int iHalfHeight = m_fHeight / yCount;
 	TVector2 pStart = { (float)m_rtDraw.left, (float)m_rtDraw.top };
@@ -225,14 +232,14 @@ bool TListCtrlObject::Create(int xCount, int yCount)
 		for (int iRow = 0; iRow < yCount; iRow++)
 		{
 			TUIModel* pNewBtn = I_UI.GetPtr(L"btnStart")->Clone();
+			pNewBtn->m_pParent = this;
 			pNewBtn->m_csName = L"Btn";
 			pNewBtn->m_csName += std::to_wstring(iRow* yCount+ iCol);
 			pNewBtn->SetRectDraw({ 0,0, iHalfWidth,iHalfHeight });
-			pNewBtn->AddPosition(TVector2(
+			pNewBtn->SetPosition(TVector2(
 				pStart.x + iHalfWidth * iCol,
 				pStart.y + iHalfHeight * iRow));
 			pNewBtn->UpdateData();
-			//pNewBtn->m_dwSelectType = TSelectType::Select_Ignore;
 			Add(pNewBtn);
 		}
 	}
@@ -240,25 +247,12 @@ bool TListCtrlObject::Create(int xCount, int yCount)
 }
 void TListCtrlObject::HitSelect(TBaseObject* pObj, DWORD dwState)
 {
-	std::string state;
-	m_dwPreSelectState = m_dwSelectState;
-	/*std::list< TUIModel*>::iterator iter;
-	if (m_dwSelectState == TSelectState::T_DEFAULT)
-	{
-		for (iter = m_Components.begin(); iter != m_Components.end();
-			iter++)
-		{
-			(*iter)->m_dwSelectType = TSelectType::Select_Ignore;
-		}
+	std::string state="\n";
+	if (m_dwPreSelectState == m_dwSelectState)
+	{		
+		return;
 	}
-	else
-	{
-		for (iter = m_Components.begin(); iter != m_Components.end();
-			iter++)
-		{
-			(*iter)->m_dwSelectType = TSelectType::Select_Overlap;
-		}
-	}	*/
-	
+	m_dwPreSelectState = m_dwSelectState;	
+	state = std::to_string(m_dwSelectState);
 	DisplayText(state.c_str());
 }

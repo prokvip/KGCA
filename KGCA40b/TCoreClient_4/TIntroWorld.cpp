@@ -133,32 +133,32 @@ bool	TIntroWorld::Load(std::wstring file)
 	
 	TUIModel* pNewBK = I_UI.GetPtr(L"bk")->Clone();
 		pNewBK->m_csName = L"TImageObjectClock:bk";
-		pNewBK->AddPosition(TVector2(400, 300));
+		pNewBK->SetPosition(TVector2(400, 300));
 		pNewBK->UpdateData();
 	m_UIObj.push_back(pNewBK);	
 	// 프로토타입 디자인 패턴-> 복제를 통해서 객체 생성/ + 컴포짓(Composite패턴)
 	TUIModel* pNewBtn = I_UI.GetPtr(L"btnStart")->Clone();
 		pNewBtn->m_csName = L"btnStartClone1";
 		pNewBtn->SetRectDraw({ 0,0, 100,50 });
-		pNewBtn->AddPosition(TVector2(300, 25));
+		pNewBtn->SetPosition(TVector2(300, 25));
 		pNewBtn->UpdateData();
 	m_UIObj.push_back(pNewBtn);
 	TUIModel* pNewBtn2 = I_UI.GetPtr(L"btnStart")->Clone();
 		pNewBtn2->m_csName = L"btnStartClone2";
 		pNewBtn2->SetRectDraw({ 0,0, 100,100 });
-		pNewBtn2->AddPosition(TVector2(400, 150));
+		pNewBtn2->SetPosition(TVector2(400, 150));
 		pNewBtn2->UpdateData();
 	m_UIObj.push_back(pNewBtn2);
 	pNewBtn = I_UI.GetPtr(L"btnStart")->Clone();
 		pNewBtn->m_csName = L"btnStartClone3";
 		pNewBtn->SetRectDraw({ 0,0, 100,50 });
-		pNewBtn->AddPosition(TVector2(500, 200));
+		pNewBtn->SetPosition(TVector2(500, 200));
 		pNewBtn->UpdateData();
 	m_UIObj.push_back(pNewBtn);	
 	
 	TUIModel* pNewDlgBtnClone = I_UI.GetPtr(L"dlgWindow")->Clone();
 		pNewDlgBtnClone->m_csName = L"TUIModelComposedClone";
-		pNewDlgBtnClone->AddPosition(TVector2(400, 500));
+		pNewDlgBtnClone->SetPosition(TVector2(400, 500));
 		pNewDlgBtnClone->UpdateData();
 	m_UIObj.push_back(pNewDlgBtnClone);
 
@@ -166,9 +166,10 @@ bool	TIntroWorld::Load(std::wstring file)
 
 	TListCtrlObject* pListCtrl = new TListCtrlObject;	
 	pListCtrl->m_csName = L"TListCtrlObject";
-	pListCtrl->SetRectDraw({ 100,100, 700,10 });	
-	pListCtrl->Create(100,1);
-	pListCtrl->UpdateData();
+	pListCtrl->m_pParent = pNewBK;
+	pListCtrl->SetRectDraw({ 100,100, 100,300 });
+	//pListCtrl->SetPosition(TVector2(400, 300));
+	pListCtrl->Create(1,5);	
 	m_UIObj.push_back(pListCtrl);
 
 	/// <summary>

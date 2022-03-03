@@ -6,6 +6,7 @@
 #include <tchar.h>
 #include <vector>
 #include <list>
+#include <queue>
 #include <map>
 #include <string>
 #include <functional>

@@ -35,10 +35,27 @@ void		TObject2D::AddPosition(TVector2 vPos)
 			m_pVertexBuffer, 0, NULL, &m_VertexList.at(0), 0, 0);
 	}
 }
+/// <summary>
+/// m_rtDraw, m_rtCollision 갱신된다.
+/// </summary>
+/// <param name="vPos"></param>
 void		TObject2D::SetPosition(TVector2 vPos)
 {
 	// 현재위치
 	m_vPos = vPos;	
+	SetRectDraw({
+		(LONG)(m_vPos.x - m_rtDraw.right / 2.0f),
+		(LONG)(m_vPos.y - m_rtDraw.bottom / 2.0f),
+		m_rtDraw.right,
+		m_rtDraw.bottom });
+	m_rtCollision = TRect(m_vPos, m_fWidth, m_fHeight);	
+	SetVertexData();
+	SetIndexData();
+	if (m_pContext != nullptr)
+	{
+		m_pContext->UpdateSubresource(
+			m_pVertexBuffer, 0, NULL, &m_VertexList.at(0), 0, 0);
+	}
 }
 void	TObject2D::Convert(
 	TVector2 center, float fWidth, float fHeight,
