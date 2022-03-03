@@ -9,7 +9,7 @@ class TCore : public TDevice
 public:
 	TTimer		m_GameTimer;
 	TWriteFont  m_dxWrite;
-	ID3D11SamplerState* m_pSamplerState=nullptr;
+	
 private:
 	bool	CoreInit();	
 		bool	CoreFrame();

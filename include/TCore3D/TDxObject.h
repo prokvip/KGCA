@@ -1,7 +1,7 @@
 #pragma once
 #include "TShaderMgr.h"
 #include "TTextureMgr.h"
-
+#include "TDxState.h"
 struct SimpleVertex
 {
 	TVector2 v;
@@ -96,9 +96,6 @@ public:
 	TTexture* m_pMaskTex = nullptr;
 	TShader*  m_pVShader = nullptr;
 	TShader*  m_pPShader = nullptr;
-public:
-	ID3D11BlendState*			m_AlphaBlend;
-	ID3D11BlendState*			m_AlphaBlendDisable;
 	D3D11_TEXTURE2D_DESC		m_TextureDesc;
 public:
 	std::vector<SimpleVertex> m_InitScreenList;

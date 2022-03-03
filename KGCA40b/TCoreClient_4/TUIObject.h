@@ -32,24 +32,6 @@ class TUIObject : public TUIModel
 		pCopy->CreateIndexBuffer();
 		pCopy->CreateConstantBuffer();
 		pCopy->CreateInputLayout();
-		D3D11_BLEND_DESC  blenddesc;
-		ZeroMemory(&blenddesc, sizeof(D3D11_BLEND_DESC));
-		/*bd.AlphaToCoverageEnable;
-		bd.IndependentBlendEnable;*/
-		blenddesc.RenderTarget[0].BlendEnable = TRUE;
-		blenddesc.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
-		blenddesc.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
-		blenddesc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
-		//// A 연산 저장
-		blenddesc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
-		blenddesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
-		blenddesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
-		blenddesc.RenderTarget[0].RenderTargetWriteMask =
-			D3D11_COLOR_WRITE_ENABLE_ALL;
-		HRESULT hr = m_pd3dDevice->CreateBlendState(&blenddesc, &m_AlphaBlend);
-
-		blenddesc.RenderTarget[0].BlendEnable = FALSE;
-		hr = m_pd3dDevice->CreateBlendState(&blenddesc, &m_AlphaBlendDisable);
 		return pCopy;
 	};
 	void  UpdateData()
@@ -90,24 +72,6 @@ class TImageObject : public TUIObject
 		pCopy->CreateIndexBuffer();
 		pCopy->CreateConstantBuffer();
 		pCopy->CreateInputLayout();
-		D3D11_BLEND_DESC  blenddesc;
-		ZeroMemory(&blenddesc, sizeof(D3D11_BLEND_DESC));
-		/*bd.AlphaToCoverageEnable;
-		bd.IndependentBlendEnable;*/
-		blenddesc.RenderTarget[0].BlendEnable = TRUE;
-		blenddesc.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
-		blenddesc.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
-		blenddesc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
-		//// A 연산 저장
-		blenddesc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
-		blenddesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
-		blenddesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
-		blenddesc.RenderTarget[0].RenderTargetWriteMask =
-			D3D11_COLOR_WRITE_ENABLE_ALL;
-		HRESULT hr = m_pd3dDevice->CreateBlendState(&blenddesc, &m_AlphaBlend);
-
-		blenddesc.RenderTarget[0].BlendEnable = FALSE;
-		hr = m_pd3dDevice->CreateBlendState(&blenddesc, &m_AlphaBlendDisable);
 		return pCopy;
 	};
 	void  UpdateData()
@@ -137,24 +101,6 @@ public:
 		pCopy->CreateIndexBuffer();
 		pCopy->CreateConstantBuffer();
 		pCopy->CreateInputLayout();
-		D3D11_BLEND_DESC  blenddesc;
-		ZeroMemory(&blenddesc, sizeof(D3D11_BLEND_DESC));
-		/*bd.AlphaToCoverageEnable;
-		bd.IndependentBlendEnable;*/
-		blenddesc.RenderTarget[0].BlendEnable = TRUE;
-		blenddesc.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
-		blenddesc.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
-		blenddesc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
-		//// A 연산 저장
-		blenddesc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
-		blenddesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
-		blenddesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
-		blenddesc.RenderTarget[0].RenderTargetWriteMask =
-			D3D11_COLOR_WRITE_ENABLE_ALL;
-		HRESULT hr = m_pd3dDevice->CreateBlendState(&blenddesc, &m_AlphaBlend);
-
-		blenddesc.RenderTarget[0].BlendEnable = FALSE;
-		hr = m_pd3dDevice->CreateBlendState(&blenddesc, &m_AlphaBlendDisable);
 		return pCopy;
 	};
 	void  UpdateData()

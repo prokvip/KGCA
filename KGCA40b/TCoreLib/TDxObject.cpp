@@ -202,39 +202,6 @@ bool	TDxObject::Create(ID3D11Device* pd3dDevice,
 	{
 		return false;
 	}
-	// (소스컬러*D3D11_BLEND_SRC_ALPHA) 
-	//                  + 
-	// (대상컬러*D3D11_BLEND_INV_SRC_ALPHA)
-	// 컬러   =  투명컬러값 = (1,1,1,1)
-	// 마스크 =  1.0 - 투명컬러값 = (1,1,1,1)
-
-	// FinalColor = SrcColor*SrcAlpha + DestColor*(1.0f- SrcAlpha) 	    
-	// if SrcAlpha == 0 완전투명
-	//           FinalColor() = SrcColor*0 + DestColor*(1-0)
-	//                FinalColor = DestColor;
-	// if SrcAlpha == 1 완전불투명
-	//           FinalColor() = SrcColor*1 + DestColor*(1-1)
-	//                FinalColor = SrcColor;
-	// 혼합상태 = 소스(지금드로우객체 픽셀) (연산) 대상(백버퍼 객체:픽셀)
-	// 혼합상태 = 픽셀쉐이더 출력 컬러  (연산:사칙연산) 출력버퍼의 컬러
-	D3D11_BLEND_DESC  blenddesc;
-	ZeroMemory(&blenddesc, sizeof(D3D11_BLEND_DESC));
-	/*bd.AlphaToCoverageEnable;
-	bd.IndependentBlendEnable;*/
-	blenddesc.RenderTarget[0].BlendEnable = TRUE;
-	blenddesc.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
-	blenddesc.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
-	blenddesc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
-	//// A 연산 저장
-	blenddesc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
-	blenddesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
-	blenddesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
-	blenddesc.RenderTarget[0].RenderTargetWriteMask =
-		D3D11_COLOR_WRITE_ENABLE_ALL;
-	hr =m_pd3dDevice->CreateBlendState(&blenddesc, &m_AlphaBlend);
-
-	blenddesc.RenderTarget[0].BlendEnable = FALSE;
-	hr = m_pd3dDevice->CreateBlendState(&blenddesc, &m_AlphaBlendDisable);
 	return true;
 }
 bool	TDxObject::Init()
@@ -263,11 +230,11 @@ bool	TDxObject::Render()
 
 	if (m_bAlphaBlend)
 	{
-		m_pContext->OMSetBlendState(m_AlphaBlend, 0, -1);
+		m_pContext->OMSetBlendState(TDxState::m_AlphaBlend, 0, -1);
 	}
 	else
 	{
-		m_pContext->OMSetBlendState(m_AlphaBlendDisable, 0, -1);
+		m_pContext->OMSetBlendState(TDxState::m_AlphaBlendDisable, 0, -1);
 	}
 
 	m_pContext->IASetInputLayout(m_pVertexLayout);
@@ -298,10 +265,7 @@ bool	TDxObject::Render()
 }
 bool	TDxObject::Release()
 {
-	if (m_AlphaBlend) m_AlphaBlend->Release();
-	if (m_AlphaBlendDisable) m_AlphaBlendDisable->Release();	
-	m_AlphaBlend = nullptr;
-	m_AlphaBlendDisable = nullptr;
+
 
 	if (m_pVertexBuffer) m_pVertexBuffer->Release();
 	if (m_pIndexBuffer) m_pIndexBuffer->Release();

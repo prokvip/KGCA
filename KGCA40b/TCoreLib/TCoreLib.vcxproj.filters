@@ -75,6 +75,9 @@
     <ClCompile Include="TVector3.cpp">
       <Filter>Math</Filter>
     </ClCompile>
+    <ClCompile Include="TDxState.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TCore.h">
@@ -133,6 +136,9 @@
     </ClInclude>
     <ClInclude Include="TVector3.h">
       <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="TDxState.h">
+      <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
