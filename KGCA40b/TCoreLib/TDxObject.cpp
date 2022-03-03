@@ -5,7 +5,7 @@ void TBaseObject::HitOverlap(TBaseObject* pObj, DWORD dwState)
 }
 void TBaseObject::HitSelect(TBaseObject* pObj, DWORD dwState)
 {
-
+	int k = 0;
 }
 void    TDxObject::SetDevice(ID3D11Device* pd3dDevice,
 	ID3D11DeviceContext* pContext)

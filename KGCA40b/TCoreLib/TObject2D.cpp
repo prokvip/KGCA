@@ -25,8 +25,7 @@ void		TObject2D::AddPosition(TVector2 vPos)
 	//  10,10f    ~     w(50, 10)
 	//
 	//   h
-	m_rtCollision = TRect(m_vPos, m_fWidth, m_fHeight);
-	//ConvertIndex(m_vPos, m_fWidth, m_fHeight, m_VertexList);
+	m_rtCollision = TRect(m_vPos, m_fWidth, m_fHeight);	
 	SetVertexData();
 	SetIndexData();
 	if (m_pContext != nullptr)
@@ -41,7 +40,6 @@ void		TObject2D::AddPosition(TVector2 vPos)
 /// <param name="vPos"></param>
 void		TObject2D::SetPosition(TVector2 vPos)
 {
-	// 현재위치
 	m_vPos = vPos;	
 	SetRectDraw({
 		(LONG)(m_vPos.x - m_rtDraw.right / 2.0f),

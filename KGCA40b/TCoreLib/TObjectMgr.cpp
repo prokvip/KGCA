@@ -77,7 +77,7 @@ bool  TObjectMgr::Frame()
 		//if (pObjSrc->m_dwSelectType == TSelectType::Select_Ignore) continue;
 		DWORD dwState = TSelectState::T_DEFAULT;
 
-		bool bSelect = true;
+		/*bool bSelect = true;
 		if (pObjSrc->m_pParent != nullptr)
 		{
 			if (pObjSrc->m_pParent->m_dwSelectState == TSelectState::T_DEFAULT||
@@ -85,9 +85,9 @@ bool  TObjectMgr::Frame()
 			{
 				bSelect = false;
 			}
-		}
+		}*/
 
-		if (bSelect &&
+		if (/*bSelect &&*/
 			TCollision::RectToPoint(
 			pObjSrc->m_rtCollision, (float)g_ptMouse.x, (float)g_ptMouse.y))
 		{
