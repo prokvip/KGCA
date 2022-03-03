@@ -32,6 +32,8 @@ bool	TUIModelComposed::Release()
 }
 void TUIModelComposed::Add(TUIModel* pObj)
 {
+	_ASSERT(pObj);
+	pObj->m_pParent = this;
 	m_Components.push_back(pObj);
 }
 TUIModel* TUIModelComposed::Clone()

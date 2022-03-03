@@ -5,6 +5,7 @@
 
 class TUIObject : public TUIModel
 {
+public:
 	TUIModel* Clone()
 	{
 		TUIModel* pCopy = new TUIObject(*this);

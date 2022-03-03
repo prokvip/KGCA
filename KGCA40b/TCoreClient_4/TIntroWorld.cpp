@@ -97,14 +97,12 @@ bool	TIntroWorld::CreateModelType()
 	TUIModelComposed* pComposedObj = new TUIModelComposed;
 	pComposedObj->m_csName = L"TUIModelComposed";
 	TButtonObject* pDlgWindow = (TButtonObject*)I_UI.GetPtr(L"btnDlg")->Clone();
-	pDlgWindow->m_pParent = nullptr;
 	pDlgWindow->m_rtOffset = { 50, 50, 50, 50 };
 	pDlgWindow->SetRectDraw({ 0,0, g_rtClient.right / 3,g_rtClient.bottom / 3 });
 	pDlgWindow->SetPosition(TVector2(400, 300));
 	pComposedObj->Add(pDlgWindow);
 	TUIModel* pNewDlgBtn = I_UI.GetPtr(L"btnStart")->Clone();// new TButtonObject(*I_UI.GetPtr(L"btnStart"));
 	pNewDlgBtn->m_csName = L"btnStartClone_ComposedList";
-	pNewDlgBtn->m_pParent = pDlgWindow;
 	pNewDlgBtn->SetRectDraw({ 0,0, 100,50 });
 	pNewDlgBtn->SetPosition(pDlgWindow->m_vPos+TVector2(0, 0));
 	pComposedObj->Add(pNewDlgBtn);
