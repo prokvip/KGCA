@@ -22,7 +22,7 @@ bool	TIntroWorld::CreateModelType()
 	obj->m_csName = L"TImageObject:bk";
 	obj->Init();
 	obj->SetRectDraw({ 0,0, g_rtClient.right,g_rtClient.bottom });
-	obj->SetPosition(TVector2(g_rtClient.right / 2.0f, g_rtClient.bottom / 2.0f));
+	obj->SetPosition(TVector2(0, 0));
 	obj->m_pColorTex = m_pColorTex;
 	obj->m_pMaskTex = nullptr;
 	obj->m_pVShader = pVShader;
@@ -44,7 +44,7 @@ bool	TIntroWorld::CreateModelType()
 	btnDlg->Init();
 	btnDlg->m_rtOffset = { 50, 50, 50, 50 };
 	btnDlg->SetRectDraw({ 0,0, g_rtClient.right / 3,g_rtClient.bottom / 3 });
-	btnDlg->SetPosition(TVector2(400, 300));
+	btnDlg->SetPosition(TVector2(0, 0));
 	if (!btnDlg->Create(m_pd3dDevice, m_pContext,
 		L"../../data/shader/DefaultUI.txt",
 		L"../../data/ui/popup_normal.png"))
@@ -66,7 +66,7 @@ bool	TIntroWorld::CreateModelType()
 	btnObj->Init();
 	btnObj->m_rtOffset = { 0, 0, 0, 0 };
 	btnObj->SetRectDraw({ 0,0, 334,82 });
-	btnObj->SetPosition(TVector2(g_rtClient.right / 2.0f, g_rtClient.bottom / 2.0f));
+	btnObj->SetPosition(TVector2(0, 0));
 	TTexture* pTex = I_Texture.Load(L"../../data/ui/main_start_nor.png");
 	TSound* pSound = I_Sound.Load("../../data/Sound/00_Menu.MP3");
 	// 가변인자를 통해서 생성자 직접 호출
@@ -100,13 +100,13 @@ bool	TIntroWorld::CreateModelType()
 	pDlgWindow->m_pParent = pComposedObj;
 	pDlgWindow->m_rtOffset = { 50, 50, 50, 50 };
 	pDlgWindow->SetRectDraw({ 0,0, g_rtClient.right / 3,g_rtClient.bottom / 3 });
-	pDlgWindow->SetPosition(TVector2(400, 300));
+	pDlgWindow->AddPosition(TVector2(400, 300));
 	pComposedObj->Add(pDlgWindow);
 	TUIModel* pNewDlgBtn = I_UI.GetPtr(L"btnStart")->Clone();// new TButtonObject(*I_UI.GetPtr(L"btnStart"));
 	pNewDlgBtn->m_csName = L"btnStartClone_ComposedList";
 	pNewDlgBtn->m_pParent = pComposedObj;
 	pNewDlgBtn->SetRectDraw({ 0,0, 100,50 });
-	pNewDlgBtn->AddPosition(TVector2(0, 0));
+	pNewDlgBtn->AddPosition(pDlgWindow->m_vPos+TVector2(0, 0));
 	pComposedObj->Add(pNewDlgBtn);
 	I_UI.m_list.insert(std::make_pair(L"dlgWindow", pComposedObj));
 	return true;
@@ -133,32 +133,43 @@ bool	TIntroWorld::Load(std::wstring file)
 	
 	TUIModel* pNewBK = I_UI.GetPtr(L"bk")->Clone();
 		pNewBK->m_csName = L"TImageObjectClock:bk";
+		pNewBK->AddPosition(TVector2(400, 300));
 		pNewBK->UpdateData();
 	m_UIObj.push_back(pNewBK);	
 	// 프로토타입 디자인 패턴-> 복제를 통해서 객체 생성/ + 컴포짓(Composite패턴)
 	TUIModel* pNewBtn = I_UI.GetPtr(L"btnStart")->Clone();
 		pNewBtn->m_csName = L"btnStartClone1";
 		pNewBtn->SetRectDraw({ 0,0, 100,50 });
-		pNewBtn->AddPosition(TVector2(300, 0));
+		pNewBtn->AddPosition(TVector2(300, 25));
 		pNewBtn->UpdateData();
 	m_UIObj.push_back(pNewBtn);
 	TUIModel* pNewBtn2 = I_UI.GetPtr(L"btnStart")->Clone();
 		pNewBtn2->m_csName = L"btnStartClone2";
-		pNewBtn2->SetRectDraw({ 0,0, 100,50 });
-		pNewBtn2->AddPosition(TVector2(300, 50));
+		pNewBtn2->SetRectDraw({ 0,0, 100,100 });
+		pNewBtn2->AddPosition(TVector2(400, 150));
 		pNewBtn2->UpdateData();
 	m_UIObj.push_back(pNewBtn2);
 	pNewBtn = I_UI.GetPtr(L"btnStart")->Clone();
 		pNewBtn->m_csName = L"btnStartClone3";
 		pNewBtn->SetRectDraw({ 0,0, 100,50 });
-		pNewBtn->AddPosition(TVector2(300, 100));
+		pNewBtn->AddPosition(TVector2(500, 200));
 		pNewBtn->UpdateData();
 	m_UIObj.push_back(pNewBtn);	
 	
 	TUIModel* pNewDlgBtnClone = I_UI.GetPtr(L"dlgWindow")->Clone();
 		pNewDlgBtnClone->m_csName = L"TUIModelComposedClone";
+		pNewDlgBtnClone->AddPosition(TVector2(400, 500));
 		pNewDlgBtnClone->UpdateData();
 	m_UIObj.push_back(pNewDlgBtnClone);
+
+
+
+	TListCtrlObject* pListCtrl = new TListCtrlObject;	
+	pListCtrl->m_csName = L"TListCtrlObject";
+	pListCtrl->SetRectDraw({ 100,100, 700,10 });	
+	pListCtrl->Create(100,1);
+	pListCtrl->UpdateData();
+	m_UIObj.push_back(pListCtrl);
 
 	/// <summary>
 	/// 이펙트

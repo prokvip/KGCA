@@ -211,3 +211,54 @@ void TButtonObject::HitSelect(TBaseObject* pObj, DWORD dwState)
 	m_dwPreSelectState = m_dwSelectState;
 	DisplayText(state.c_str());
 }
+
+
+bool TListCtrlObject::Create(int xCount, int yCount)
+{
+	int iHalfWidth  = m_fWidth / xCount;
+	int iHalfHeight = m_fHeight / yCount;
+	TVector2 pStart = { (float)m_rtDraw.left, (float)m_rtDraw.top };
+	pStart.x += m_fWidth / xCount / 2.0f;
+	pStart.y += m_fHeight / yCount / 2.0f;
+	for (int iCol = 0; iCol < xCount; iCol++)
+	{
+		for (int iRow = 0; iRow < yCount; iRow++)
+		{
+			TUIModel* pNewBtn = I_UI.GetPtr(L"btnStart")->Clone();
+			pNewBtn->m_csName = L"Btn";
+			pNewBtn->m_csName += std::to_wstring(iRow* yCount+ iCol);
+			pNewBtn->SetRectDraw({ 0,0, iHalfWidth,iHalfHeight });
+			pNewBtn->AddPosition(TVector2(
+				pStart.x + iHalfWidth * iCol,
+				pStart.y + iHalfHeight * iRow));
+			pNewBtn->UpdateData();
+			//pNewBtn->m_dwSelectType = TSelectType::Select_Ignore;
+			Add(pNewBtn);
+		}
+	}
+	return true;
+}
+void TListCtrlObject::HitSelect(TBaseObject* pObj, DWORD dwState)
+{
+	std::string state;
+	m_dwPreSelectState = m_dwSelectState;
+	/*std::list< TUIModel*>::iterator iter;
+	if (m_dwSelectState == TSelectState::T_DEFAULT)
+	{
+		for (iter = m_Components.begin(); iter != m_Components.end();
+			iter++)
+		{
+			(*iter)->m_dwSelectType = TSelectType::Select_Ignore;
+		}
+	}
+	else
+	{
+		for (iter = m_Components.begin(); iter != m_Components.end();
+			iter++)
+		{
+			(*iter)->m_dwSelectType = TSelectType::Select_Overlap;
+		}
+	}	*/
+	
+	DisplayText(state.c_str());
+}

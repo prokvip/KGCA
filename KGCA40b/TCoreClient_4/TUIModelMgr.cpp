@@ -2,7 +2,6 @@
 #include "TObjectMgr.h"
 bool	TUIModelComposed::Frame()
 {
-	TUIModelComposed* pModel = new TUIModelComposed;
 	std::list< TUIModel*>::iterator iter;
 	for (iter = m_Components.begin(); iter != m_Components.end();
 		iter++)
@@ -13,7 +12,6 @@ bool	TUIModelComposed::Frame()
 }
 bool	TUIModelComposed::Render()
 {
-	TUIModelComposed* pModel = new TUIModelComposed;
 	std::list< TUIModel*>::iterator iter;
 	for (iter = m_Components.begin(); iter != m_Components.end();
 		iter++)
@@ -24,7 +22,6 @@ bool	TUIModelComposed::Render()
 }
 bool	TUIModelComposed::Release()
 {
-	TUIModelComposed* pModel = new TUIModelComposed;
 	std::list< TUIModel*>::iterator iter;
 	for (iter = m_Components.begin(); iter != m_Components.end();
 		iter++)
@@ -56,6 +53,5 @@ void  TUIModelComposed::UpdateData()
 		iter++)
 	{
 		(*iter)->UpdateData();
-
 	}
 }

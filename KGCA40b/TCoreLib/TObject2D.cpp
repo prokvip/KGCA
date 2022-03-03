@@ -6,8 +6,12 @@ void TObject2D::SetRectSouce(RECT rt)
 void TObject2D::SetRectDraw(RECT rt)
 {
 	m_rtDraw = rt;
+	m_vPos.x = rt.left + (rt.right  / 2.0f);
+	m_vPos.y = rt.top + (rt.bottom / 2.0f);
 	m_fWidth = rt.right;
-	m_fHeight = rt.bottom;	
+	m_fHeight = rt.bottom;
+
+	m_rtCollision = TRect(m_vPos, m_fWidth, m_fHeight);	
 }
 void TObject2D::UpdateRectDraw(RECT rt)
 {	

@@ -38,6 +38,8 @@ class TBaseObject
 {
 public:
 	std::wstring   m_csName;
+public:
+	TBaseObject*   m_pParent = nullptr;
 	bool		m_bDead;
 	int			m_iCollisionID;
 	int			m_iSelectID;

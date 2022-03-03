@@ -33,6 +33,9 @@ public:
 	virtual bool		SetVertexData() override;
 	virtual bool		SetIndexData() override;
 	virtual bool		Frame() override;
+	bool	Load(ID3D11Device* pd3dDevice, std::wstring filename) {
+		return true;
+	};
 public:
 	TObject2D();
 	virtual ~TObject2D();

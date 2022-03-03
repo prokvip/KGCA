@@ -1,28 +1,8 @@
 #pragma once
 #include "TObjectMgr.h"
 #include "TUIModelMgr.h"
-#include "TSoundMgr.h"
-struct TStatePlayData
-{
-	TTexture* pTex;
-	TSound* pSound;
-	TStatePlayData(const TStatePlayData& data)
-	{
-		pTex = data.pTex;
-		pSound = data.pSound;
-		DisplayText("TStatePlayDataCopy\n");
-	}
-	TStatePlayData()
-	{
-		DisplayText("TStatePlayData\n");
-	}
-	TStatePlayData(TTexture* a,TSound* b) 
-	{
-		pTex = a;
-		pSound = b;
-		DisplayText("TStatePlayData\n");
-	}
-};
+
+
 class TUIObject : public TUIModel
 {
 	TUIModel* Clone()
@@ -34,7 +14,7 @@ class TUIObject : public TUIModel
 		pCopy->CreateInputLayout();
 		return pCopy;
 	};
-	void  UpdateData()
+	void  UpdateData() override
 	{
 		m_rtCollision = TRect(m_vPos, m_fWidth, m_fHeight);
 		I_ObjectMgr.AddCollisionExecute(this,
@@ -46,10 +26,7 @@ class TUIObject : public TUIModel
 				std::placeholders::_1,
 				std::placeholders::_2));
 	}
-public:
-	std::vector<TStatePlayData> m_pStatePlayList;
-	RECT	m_rtOffset;
-	RECT	m_rtOffsetTex;
+
 public:	
 	bool	Frame() override;
 	bool	Render()override;
@@ -127,4 +104,39 @@ public:
 public:
 	TButtonObject() {}
 	virtual ~TButtonObject() {}
+};
+class TListCtrlObject : public TUIModelComposed
+{
+public:
+	TUIModel* Clone()
+	{
+		TUIModelComposed* pModel = new TListCtrlObject;
+		std::list< TUIModel*>::iterator iter;
+		for (iter = m_Components.begin(); iter != m_Components.end();
+			iter++)
+		{
+			pModel->Add((*iter)->Clone());
+		}
+		return pModel;
+	};	
+	bool   Create(int xCount, int yCount);
+	void  UpdateData()
+	{
+		m_rtCollision = TRect(m_vPos, m_fWidth, m_fHeight);
+		SetCollisionType(TCollisionType::Ignore, 
+						 TSelectType::Select_Overlap);
+
+		I_ObjectMgr.AddCollisionExecute(this,
+			std::bind(&TBaseObject::HitOverlap, this,
+				std::placeholders::_1,
+				std::placeholders::_2));
+		I_ObjectMgr.AddSelectExecute(this,
+			std::bind(&TBaseObject::HitSelect, this,
+				std::placeholders::_1,
+				std::placeholders::_2));
+	}
+	virtual void	HitSelect(TBaseObject* pObj, DWORD dwState) override;
+public:
+	TListCtrlObject() {}
+	virtual ~TListCtrlObject() {}
 };

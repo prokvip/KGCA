@@ -6,6 +6,8 @@ void TObject2D::SetRectSouce(RECT rt)
 void TObject2D::SetRectDraw(RECT rt)
 {
 	m_rtDraw = rt;
+	m_vPos.x = (rt.right - rt.left) / 2.0f;
+	m_vPos.x = (rt.bottom - rt.top) / 2.0f;
 	m_fWidth = rt.right;
 	m_fHeight = rt.bottom;
 }
