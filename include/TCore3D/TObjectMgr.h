@@ -25,6 +25,7 @@ public:
 	bool  Init();
 	bool  Frame();
 	bool  Release();
+	void  CallRecursive(TBaseObject* pSrcObj, DWORD dwState);
 private:
 	TObjectMgr();
 public:

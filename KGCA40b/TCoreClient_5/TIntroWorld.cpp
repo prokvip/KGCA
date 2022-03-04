@@ -18,7 +18,7 @@ bool	TIntroWorld::CreateModelType()
 	/// <returns></returns>
 	TShader* pVShader = I_Shader.CreateVertexShader(m_pd3dDevice, L"Shader.txt", "VS");
 	TShader* pPShader = I_Shader.CreatePixelShader(m_pd3dDevice, L"Shader.txt", "PSAlphaBlend");
-	TImageObject* obj = new TImageObject;
+	std::shared_ptr<TImageObject> obj(new TImageObject);
 	obj->m_csName = L"TImageObject:bk";
 	obj->Init();
 	obj->SetRectDraw({ 0,0, g_rtClient.right,g_rtClient.bottom });
@@ -39,7 +39,7 @@ bool	TIntroWorld::CreateModelType()
 	/// </summary>
 	/// <param name="file"></param>
 	/// <returns></returns>
-	TButtonObject* btnDlg = new TButtonObject;
+	std::shared_ptr<TButtonObject> btnDlg(new TButtonObject);
 	btnDlg->m_csName = L"TButtonObject:btnDlg";
 	btnDlg->Init();
 	btnDlg->m_rtOffset = { 50, 50, 50, 50 };
@@ -61,7 +61,7 @@ bool	TIntroWorld::CreateModelType()
 	/// </summary>
 	/// <param name="file"></param>
 	/// <returns></returns>
-	TButtonObject* btnObj = new TButtonObject;
+	std::shared_ptr<TButtonObject> btnObj(new TButtonObject);
 	btnObj->m_csName = L"TButtonObject:btnStart";
 	btnObj->Init();
 	btnObj->m_rtOffset = { 0, 0, 0, 0 };
@@ -94,7 +94,7 @@ bool	TIntroWorld::CreateModelType()
 	I_UI.m_list.insert(std::make_pair(L"btnStart", btnObj));
 
 	// 새로운 모델을 생성해서 등록한다.
-	TUIModelComposed* pComposedObj = new TUIModelComposed;
+	std::shared_ptr<TUIModelComposed> pComposedObj(new TUIModelComposed);
 	pComposedObj->m_csName = L"TUIModelComposed";
 	TButtonObject* pDlgWindow = (TButtonObject*)I_UI.GetPtr(L"btnDlg")->Clone();
 	pDlgWindow->m_rtOffset = { 50, 50, 50, 50 };

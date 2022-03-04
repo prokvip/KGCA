@@ -46,6 +46,15 @@ bool  TObjectMgr::Init()
 {
 	return true;
 }
+void  TObjectMgr::CallRecursive(TBaseObject* pSrcObj,DWORD dwState)
+{
+	if (pSrcObj->m_pParent == nullptr)
+	{		
+		return;
+	}
+	CallRecursive(pSrcObj->m_pParent, dwState);
+	pSrcObj->HitSelect(pSrcObj, dwState);
+}
 bool  TObjectMgr::Frame()
 {
 	// collision
@@ -96,7 +105,7 @@ bool  TObjectMgr::Frame()
 				pObjSrc->m_dwSelectState = TSelectState::T_SELECTED;
 			}
 
-
+			CallRecursive(pObjSrc, dwState);
 			FuncionIterator colliter = m_fnSelectExecute.find(pObjSrc->m_iSelectID);
 			if (colliter != m_fnSelectExecute.end())
 			{			
