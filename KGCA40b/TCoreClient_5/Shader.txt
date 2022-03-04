@@ -45,8 +45,11 @@ float4 PS(VS_OUTPUT input) : SV_TARGET
 
 float4 PSAlphaBlend(VS_OUTPUT input) : SV_TARGET
 {	
+	//sample_indexable(texture2d)(float,float,float,float) r0.xyzw, v2.xyxx, t0.xyzw, s0 
 	float4 color = g_txColor.Sample(g_Sample, input.t);		
 	float4 final = color * input.c;
+	//mul o0.xyz, r0.xyzx, v1.xyzx
 	final.a = color.a;
+	//mov o0.w, r0.w  
 	return final;
 }
