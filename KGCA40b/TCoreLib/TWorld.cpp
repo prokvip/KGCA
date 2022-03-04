@@ -22,7 +22,7 @@ bool	TWorld::Frame()
 {
 	for (auto obj : m_UIObj)
 	{
-		TObject2D* pObj = obj;
+		TObject2D* pObj = obj.get();
 		if (pObj != nullptr)
 		{
 			pObj->Frame();
@@ -30,7 +30,7 @@ bool	TWorld::Frame()
 	}
 	for (auto obj : m_NpcObj)
 	{
-		TObject2D* pObj = obj;
+		TObject2D* pObj = obj.get();
 		if (pObj != nullptr)
 		{
 			pObj->Frame();
@@ -42,7 +42,7 @@ bool	TWorld::Render()
 {
 	for (auto obj : m_UIObj)
 	{
-		TObject2D* pObj = obj;
+		TObject2D* pObj = obj.get();
 		if (pObj != nullptr)
 		{
 			pObj->Render();
@@ -50,7 +50,7 @@ bool	TWorld::Render()
 	}
 	for (auto obj : m_NpcObj)
 	{
-		TObject2D* pObj = obj;
+		TObject2D* pObj = obj.get();
 		if (pObj->m_bDead == false)
 		{
 			pObj->Render();
@@ -65,7 +65,6 @@ bool	TWorld::Release()
 		if (obj != nullptr)
 		{
 			obj->Release();
-			delete obj;
 			obj = nullptr;
 		}
 		
@@ -75,7 +74,6 @@ bool	TWorld::Release()
 		if (obj != nullptr)
 		{
 			obj->Release();
-			delete obj;
 			obj = nullptr;
 		}
 	}
@@ -84,7 +82,6 @@ bool	TWorld::Release()
 		if (obj != nullptr)
 		{
 			obj->Release();
-			delete obj;
 			obj = nullptr;
 		}
 	}
@@ -93,7 +90,6 @@ bool	TWorld::Release()
 		if (obj != nullptr)
 		{
 			obj->Release();
-			delete obj;
 			obj = nullptr;
 		}
 	}

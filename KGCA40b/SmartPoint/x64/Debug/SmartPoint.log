@@ -1,0 +1,7 @@
+﻿  Sample.cpp
+E:\00_40b\KGCA40b\SmartPoint\Sample.cpp(90,1): warning C4326: 'main'의 반환 형식이 'int'이어야 하는데 'void'입니다.
+E:\00_40b\KGCA40b\SmartPoint\Sample.cpp(34): warning C4715: 'Manager1::GetPtr': 모든 제어 경로에서 값을 반환하지는 않습니다.
+E:\00_40b\KGCA40b\SmartPoint\Sample.cpp(58): warning C4715: 'Manager1::GetPtr2': 모든 제어 경로에서 값을 반환하지는 않습니다.
+E:\00_40b\KGCA40b\SmartPoint\Sample.cpp(77): warning C4715: 'Manager2::GetPtr': 모든 제어 경로에서 값을 반환하지는 않습니다.
+E:\00_40b\KGCA40b\SmartPoint\Sample.cpp(44): warning C4715: 'Manager1::GetPtr3': 모든 제어 경로에서 값을 반환하지는 않습니다.
+  SmartPoint.vcxproj -> E:\00_40b\KGCA40b\x64\Debug\SmartPoint.exe

@@ -117,16 +117,15 @@ TShader* TShaderMgr::CreateVertexShader(ID3D11Device* pd3dDevice,
 	{
 		return pData;
 	}
-	pData = new TShader;
-	if (!pData->CreateVertexShader(pd3dDevice, filename, entry))
+	std::shared_ptr<TShader> pNewData = std::make_shared<TShader>();
+	if (!pNewData->CreateVertexShader(pd3dDevice, filename, entry))
 	{		
-		delete pData;
 		return nullptr;
 	}
-	pData->m_csName = name;
-	m_list.insert(make_pair(pData->m_csName, pData));
+	pNewData->m_csName = name;
+	m_list.insert(make_pair(pNewData->m_csName, pNewData));
 	m_iIndex++;
-	return pData;
+	return pNewData.get();
 }
 TShader* TShaderMgr::CreatePixelShader(ID3D11Device* pd3dDevice,
 	std::wstring filename, std::string entry)
@@ -137,16 +136,15 @@ TShader* TShaderMgr::CreatePixelShader(ID3D11Device* pd3dDevice,
 	{
 		return pData;
 	}
-	pData = new TShader;
-	if (!pData->CreatePixelShader(pd3dDevice, filename, entry))
+	auto pNewData = std::make_shared<TShader>();
+	if (!pNewData->CreatePixelShader(pd3dDevice, filename, entry))
 	{
-		delete pData;
 		return nullptr;
 	}
-	pData->m_csName = name;
-	m_list.insert(make_pair(pData->m_csName, pData));
+	pNewData->m_csName = name;
+	m_list.insert(make_pair(pNewData->m_csName, pNewData));
 	m_iIndex++;
-	return pData;
+	return pNewData.get();
 }
 TShaderMgr::TShaderMgr()
 {

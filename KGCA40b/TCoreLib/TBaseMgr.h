@@ -8,7 +8,7 @@ public:
 public:
 	int		m_iIndex;
 	ID3D11Device* m_pd3dDevice;
-	std::map<std::wstring, T* >  m_list;
+	std::map<std::wstring, std::shared_ptr<T> >  m_list;
 public:
 	std::wstring Splitpath(std::wstring path, std::wstring entry);
 	virtual void	Set(ID3D11Device* pd3dDevice)
@@ -52,7 +52,7 @@ T* TBaseMgr<T, S>::GetPtr(std::wstring key)
 	auto iter = m_list.find(key);
 	if (iter != m_list.end())
 	{
-		return (*iter).second;
+		return (*iter).second.get();
 	}
 	return nullptr;
 }
@@ -65,16 +65,15 @@ T* TBaseMgr<T, S>::Load(std::wstring filename)
 	{
 		return pData;
 	}
-	pData = new T;
-	if (pData->Load(m_pd3dDevice, filename) == false)
+	std::shared_ptr<T> pNewData = std::make_shared<T>();
+	if (pNewData->Load(m_pd3dDevice, filename) == false)
 	{
-		delete pData;
 		return nullptr;
 	}
-	pData->m_csName = name;
-	m_list.insert(make_pair(pData->m_csName, pData));
+	pNewData->m_csName = name;
+	m_list.insert(make_pair(pNewData->m_csName, pNewData));
 	m_iIndex++;
-	return pData;
+	return pNewData.get();
 }
 template<class T, class S>
 bool	TBaseMgr<T, S>::Init()
@@ -96,8 +95,7 @@ bool	TBaseMgr<T, S>::Release()
 {
 	for (auto data : m_list)
 	{
-		data.second->Release();
-		delete data.second;
+		data.second->Release();		
 	}
 	m_list.clear();
 	return true;

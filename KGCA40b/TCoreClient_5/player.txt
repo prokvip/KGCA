@@ -1,0 +1,4 @@
+GAMEUSER
+91,1,42,56,400,300,42,56 
+../../data/bitmap1.bmp
+../../data/bitmap2.bmp

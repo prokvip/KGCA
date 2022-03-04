@@ -36,6 +36,7 @@ public:
 	bool	Load(ID3D11Device* pd3dDevice, std::wstring filename) {
 		return true;
 	};
+	virtual void  UpdateData() {}
 public:
 	TObject2D();
 	virtual ~TObject2D();

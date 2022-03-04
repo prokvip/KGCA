@@ -8,8 +8,8 @@ public:
 	std::wstring	m_csName;
 	std::wstring	m_szMsg;
 	TCHAR			m_szBuffer[256];
-	ID3D11VertexShader* m_pVertexShader;
-	ID3D11PixelShader*  m_pPixelShader;
+	ID3D11VertexShader* m_pVertexShader = nullptr;
+	ID3D11PixelShader*  m_pPixelShader = nullptr;
 	ID3DBlob* m_pVSCodeResult = nullptr;
 	ID3DBlob* m_pErrorMsgs = nullptr;
 	ID3DBlob* m_pPSCodeResult = nullptr;

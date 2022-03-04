@@ -13,6 +13,9 @@
 #include <iostream>
 #include <atlconv.h> // A2W
 #include "TCollision.h"
+#include <wrl.h> 
+using namespace Microsoft::WRL;
+
 #pragma comment	(lib, "d3d11.lib")
 #ifdef _DEBUG
 #pragma comment	(lib, "TCoreLib_d.lib")

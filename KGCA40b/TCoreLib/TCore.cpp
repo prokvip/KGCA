@@ -7,9 +7,9 @@ bool	TCore::CoreInit()
 	TInput::Get().Init();
 	if( SUCCEEDED(InitDeivice()))
 	{
-		I_Shader.Set(m_pd3dDevice);
-		I_Texture.Set(m_pd3dDevice);
-		TDxState::SetState(m_pd3dDevice);
+		I_Shader.Set(m_pd3dDevice.Get());
+		I_Texture.Set(m_pd3dDevice.Get());
+		TDxState::SetState(m_pd3dDevice.Get());
 		if (m_dxWrite.Init())
 		{
 			IDXGISurface1* pSurface = nullptr;
@@ -55,7 +55,7 @@ bool	TCore::CoreRender()
 	//float color[4] = { 0.1543f, 0.23421f, 0.4323f,1.0f };
 	float color[4] = { 1, 0, 0,1.0f };
 	m_pImmediateContext->ClearRenderTargetView(
-		m_pRenderTargetView,
+		m_pRenderTargetView.Get(),
 		color);
 	m_pImmediateContext->PSSetSamplers(0, 1, &TDxState::m_pSamplerState);
 

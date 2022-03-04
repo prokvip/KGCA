@@ -38,7 +38,7 @@ class TSoundMgr : public TSingleton<TSoundMgr>
 public:
 	friend class TSingleton<TSoundMgr>;
 	FMOD::System* m_pSystem = nullptr;
-	std::map<std::wstring, TSound* >  m_list;
+	std::map<std::wstring, std::shared_ptr<TSound> >  m_list;
 public:
 	TSound*     Load(std::string filename);
 	TSound*		GetPtr(std::wstring key);

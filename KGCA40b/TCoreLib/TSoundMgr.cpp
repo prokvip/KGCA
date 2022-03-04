@@ -137,7 +137,7 @@ TSound* TSoundMgr::GetPtr(std::wstring key)
 	auto iter = m_list.find(key);
 	if (iter != m_list.end())
 	{
-		return (*iter).second;
+		return (*iter).second.get();
 	}
 	return nullptr;
 }
@@ -158,16 +158,14 @@ TSound* TSoundMgr::Load(std::string filename)
 	{
 		if (data.second->m_csName == name)
 		{
-			return data.second;
+			return data.second.get();
 		}
 	}
 
-	TSound* pSound = new TSound;
+	std::shared_ptr<TSound> pSound = std::make_shared<TSound>();
 	FMOD_RESULT ret = m_pSystem->createSound(filename.c_str(),
 		FMOD_DEFAULT, 0,
-		&pSound->m_pSound);	
-
-	
+		&pSound->m_pSound);		
 
 	if (ret != FMOD_OK)
 	{
@@ -177,7 +175,7 @@ TSound* TSoundMgr::Load(std::string filename)
 	
 	pSound->Set(m_pSystem, name, m_iIndex);
 	m_iIndex++;
-	return pSound;
+	return pSound.get();
 }
 bool	TSoundMgr::Init()
 {
@@ -199,8 +197,7 @@ bool	TSoundMgr::Release()
 {
 	for (auto data : m_list)
 	{
-		data.second->Release();
-		delete data.second;
+		data.second->Release();		
 	}
 	m_list.clear();
 

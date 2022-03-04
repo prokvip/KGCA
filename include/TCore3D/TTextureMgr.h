@@ -10,8 +10,8 @@ public:
 	std::wstring	m_csName;
 	std::wstring	m_szMsg;
 	TCHAR			m_szBuffer[256];
-	ID3D11Texture2D* m_pTexture;
-	ID3D11ShaderResourceView* m_pSRV;
+	ComPtr<ID3D11Texture2D> m_pTexture;
+	ComPtr<ID3D11ShaderResourceView> m_pSRV;
 	D3D11_TEXTURE2D_DESC		m_TextureDesc;
 public:
 	bool	Init();

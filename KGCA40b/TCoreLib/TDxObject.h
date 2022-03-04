@@ -102,17 +102,17 @@ public:
 public:
 	std::vector<SimpleVertex> m_InitScreenList;
 	std::vector<SimpleVertex> m_VertexList;
-	ID3D11Buffer* m_pVertexBuffer;
+	ID3D11Buffer* m_pVertexBuffer = nullptr;
 	
 	std::vector<DWORD> m_IndexList;
-	ID3D11Buffer* m_pIndexBuffer;
+	ID3D11Buffer* m_pIndexBuffer = nullptr;
 
 	TConstantData    m_ConstantList;
-	ID3D11Buffer*    m_pConstantBuffer;
+	ID3D11Buffer*    m_pConstantBuffer = nullptr;
 
-	ID3D11InputLayout* m_pVertexLayout;
-	ID3D11Device*		 m_pd3dDevice;	
-	ID3D11DeviceContext* m_pContext;
+	ID3D11InputLayout* m_pVertexLayout = nullptr;
+	ID3D11Device*		 m_pd3dDevice = nullptr;
+	ID3D11DeviceContext* m_pContext=nullptr;
 public:	
 	void    SetDevice(ID3D11Device* m_pd3dDevice,
 					  ID3D11DeviceContext* m_pContext);

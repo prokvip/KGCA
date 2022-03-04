@@ -1,0 +1,33 @@
+//HLSL->c언와 유사하다.
+//정점쉐이더는 반드시 float4:SV_POSITION(레지스터)로 반환한다.
+//정점버퍼의 정점1개마다 호출된다.
+//POSITION(시멘틱:의미구조)
+
+struct VS_OUTPUT
+{
+	float4 p : SV_POSITION;
+	float4 c : COLOR0;    // COLOR0 ~ COLOR1
+	float2 t : TEXCOORD0; // TEXCOORD0 ~ TEXCOORD15
+};
+
+// 상수버퍼(단위:레지스터 단위(float4)로 할당되어야 한다.)
+cbuffer cb0 : register(b0)
+{
+	float4   Color0 : packoffset(c0);
+	float    TimerX : packoffset(c1.x); // Timer.x, Timer.y, Timer.z, Timer.w	
+};
+cbuffer cb1 : register(b1)
+{
+	float4   Color1 : packoffset(c0);
+	float4   Timer1 : packoffset(c1);
+};
+VS_OUTPUT VS(float2 p: POSITION, float2 t : TEXCOORD) 
+{
+	VS_OUTPUT pOut = (VS_OUTPUT)0;
+	float fScaleX = cos(TimerX)*0.5f+0.5f;
+	float fScaleY = sin(TimerX)*0.5f+0.5f;
+	pOut.p = float4(p.x,p.y,0.0f,1.0f);
+	pOut.t = t;
+	pOut.c = Color0;
+	return pOut;
+}

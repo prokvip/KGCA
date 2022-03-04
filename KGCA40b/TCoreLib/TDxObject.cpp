@@ -214,11 +214,13 @@ bool	TDxObject::Frame()
 	return true;
 }
 bool	TDxObject::Render()
-{
+{	
 	if(m_pColorTex!=nullptr)
-		m_pContext->PSSetShaderResources(0, 1, &m_pColorTex->m_pSRV);
+		m_pContext->PSSetShaderResources(0, 1, 
+			m_pColorTex->m_pSRV.GetAddressOf());
 	if (m_pMaskTex != nullptr)
-		m_pContext->PSSetShaderResources(1, 1, &m_pMaskTex->m_pSRV);
+		m_pContext->PSSetShaderResources(1, 1, 
+			m_pMaskTex->m_pSRV.GetAddressOf());
 	if (m_pVShader != nullptr)
 	{
 		m_pContext->VSSetShader(m_pVShader->m_pVertexShader, NULL, 0);
