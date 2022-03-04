@@ -21,8 +21,8 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{7223b5ce-f7dd-4342-8c3c-9e7b15ac2168}</ProjectGuid>
-    <RootNamespace>SmartPoint</RootNamespace>
+    <ProjectGuid>{f2fd7427-d4a9-4d94-982e-9f9baf086204}</ProjectGuid>
+    <RootNamespace>ProiortyQueue</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -79,7 +79,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>../../output/Debug/</OutDir>
-    <IntDir>../../output/Debug/SmartPoint</IntDir>
+    <IntDir>../../output/Debug/ProiortyQueue</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
