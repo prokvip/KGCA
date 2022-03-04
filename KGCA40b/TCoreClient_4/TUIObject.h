@@ -18,6 +18,8 @@ public:
 	void  UpdateData() override
 	{
 		m_rtCollision = TRect(m_vPos, m_fWidth, m_fHeight);
+		SetCollisionType(TCollisionType::Ignore,
+						 TSelectType::Select_Overlap);
 		I_ObjectMgr.AddCollisionExecute(this,
 			std::bind(&TBaseObject::HitOverlap, this,
 				std::placeholders::_1,
@@ -33,6 +35,10 @@ public:
 	bool	Render()override;
 	bool    SetVertexData()override;
 	bool    SetIndexData()override;
+	void    HitSelect(TBaseObject* pObj, DWORD dwState) override
+	{
+		int k = 0;
+	}
 	TUIObject()
 	{
 		m_rtOffsetTex.left = 0;
@@ -52,22 +58,14 @@ class TImageObject : public TUIObject
 		pCopy->CreateInputLayout();
 		return pCopy;
 	};
-	void  UpdateData()
-	{
-		m_rtCollision = TRect(m_vPos, m_fWidth, m_fHeight);
-		I_ObjectMgr.AddCollisionExecute(this,
-			std::bind(&TBaseObject::HitOverlap, this,
-				std::placeholders::_1,
-				std::placeholders::_2));
-		I_ObjectMgr.AddSelectExecute(this,
-			std::bind(&TBaseObject::HitSelect, this,
-				std::placeholders::_1,
-				std::placeholders::_2));
-	}
 public:
 	bool	Init() override;
 	bool	Frame() override;
 	bool	Render()override;
+	void    HitSelect(TBaseObject* pObj, DWORD dwState) override
+	{
+		int k = 0;
+	}
 };
 class TButtonObject : public TUIObject
 {
@@ -81,19 +79,6 @@ public:
 		pCopy->CreateInputLayout();
 		return pCopy;
 	};
-	void  UpdateData()
-	{
-		m_rtCollision = TRect(m_vPos, m_fWidth, m_fHeight);
-		I_ObjectMgr.AddCollisionExecute(this,
-			std::bind(&TBaseObject::HitOverlap, this,
-				std::placeholders::_1,
-				std::placeholders::_2));
-		I_ObjectMgr.AddSelectExecute(this,
-			std::bind(&TBaseObject::HitSelect, this,
-				std::placeholders::_1,
-				std::placeholders::_2));
-	}
-
 	//TButtonObject(const TButtonObject& copy)
 	//{
 	//	TDxObject::CreateVertexBuffer();
@@ -121,7 +106,7 @@ public:
 		return pModel;
 	};	
 	bool   Create(int xCount, int yCount);
-	void  UpdateData()
+	void  UpdateData() override;
 	{
 		m_rtCollision = TRect(m_vPos, m_fWidth, m_fHeight);
 		SetCollisionType(TCollisionType::Ignore, 
