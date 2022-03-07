@@ -1,0 +1,49 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="Sample.cpp" />
+    <ClCompile Include="TObjectNpc2D.cpp" />
+    <ClCompile Include="TPlayerObj2D.cpp" />
+    <ClCompile Include="TStateStop.cpp">
+      <Filter>fsm</Filter>
+    </ClCompile>
+    <ClCompile Include="TStateMove.cpp">
+      <Filter>fsm</Filter>
+    </ClCompile>
+    <ClCompile Include="TState.cpp">
+      <Filter>fsm</Filter>
+    </ClCompile>
+    <ClCompile Include="TFsm.cpp" />
+    <ClCompile Include="TStateAttack.cpp">
+      <Filter>fsm</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Sample.h" />
+    <ClInclude Include="TObjectNpc2D.h" />
+    <ClInclude Include="TPlayerObj2D.h" />
+    <ClInclude Include="TStateStop.h">
+      <Filter>fsm</Filter>
+    </ClInclude>
+    <ClInclude Include="TStateMove.h">
+      <Filter>fsm</Filter>
+    </ClInclude>
+    <ClInclude Include="TState.h">
+      <Filter>fsm</Filter>
+    </ClInclude>
+    <ClInclude Include="TFsm.h" />
+    <ClInclude Include="TStateAttack.h">
+      <Filter>fsm</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="PixelShader.txt" />
+    <Text Include="player.txt" />
+    <Text Include="VertexShader.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="fsm">
+      <UniqueIdentifier>{fc8e5226-23b7-423b-bc39-7107cb3100d5}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

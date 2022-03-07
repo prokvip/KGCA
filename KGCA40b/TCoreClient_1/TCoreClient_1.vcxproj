@@ -145,17 +145,23 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Sample.cpp" />
-    <ClCompile Include="TObject2D.cpp" />
-    <ClCompile Include="TObject3D.cpp" />
+    <ClCompile Include="TFsm.cpp" />
     <ClCompile Include="TObjectNpc2D.cpp" />
     <ClCompile Include="TPlayerObj2D.cpp" />
+    <ClCompile Include="TState.cpp" />
+    <ClCompile Include="TStateAttack.cpp" />
+    <ClCompile Include="TStateMove.cpp" />
+    <ClCompile Include="TStateStop.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Sample.h" />
-    <ClInclude Include="TObject2D.h" />
-    <ClInclude Include="TObject3D.h" />
+    <ClInclude Include="TFsm.h" />
     <ClInclude Include="TObjectNpc2D.h" />
     <ClInclude Include="TPlayerObj2D.h" />
+    <ClInclude Include="TState.h" />
+    <ClInclude Include="TStateAttack.h" />
+    <ClInclude Include="TStateMove.h" />
+    <ClInclude Include="TStateStop.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TCoreLib\TCoreLib.vcxproj">

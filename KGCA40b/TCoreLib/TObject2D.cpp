@@ -41,11 +41,11 @@ void		TObject2D::AddPosition(TVector2 vPos)
 void		TObject2D::SetPosition(TVector2 vPos)
 {
 	m_vPos = vPos;	
-	SetRectDraw({
+	/*SetRectDraw({
 		(LONG)(m_vPos.x - m_rtDraw.right / 2.0f),
 		(LONG)(m_vPos.y - m_rtDraw.bottom / 2.0f),
 		m_rtDraw.right,
-		m_rtDraw.bottom });
+		m_rtDraw.bottom });*/
 	m_rtCollision = TRect(m_vPos, m_fWidth, m_fHeight);	
 	SetVertexData();
 	SetIndexData();

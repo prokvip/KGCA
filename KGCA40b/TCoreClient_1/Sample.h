@@ -8,7 +8,7 @@ class Sample : public TCore
 public:
 	TPlayerObj2D		m_PlayerObj;
 public:
-	std::vector<TObjectNpc2D> m_NpcLlist;
+	std::vector<std::shared_ptr<TObjectNpc2D>> m_NpcLlist;
 	TAsyncSelect		m_Net;
 	HWND				m_hEdit;
 	HWND				m_hButton;
