@@ -13,7 +13,8 @@ bool TTimer::Frame()
 {
     DWORD dwCurrentTime = timeGetTime();
     DWORD dwElapseTime = dwCurrentTime - m_dwBeforeTime;
-    m_fSecondPerFrame = dwElapseTime / 1000.0f;
+    m_fSecondPerFrame = min(0.1f, dwElapseTime / 1000.0f);
+    
     m_fTimer += m_fSecondPerFrame;
 
     g_fSecPerFrame  = m_fSecondPerFrame;

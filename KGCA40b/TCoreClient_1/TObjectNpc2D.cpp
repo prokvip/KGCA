@@ -2,10 +2,10 @@
 #include "TFsm.h"
 bool	TObjectNpc2D::Init()
 {
-	m_pStateArray[0] = new TStateStop(this);
-	m_pStateArray[1] = new TStateMove(this);
-	m_pStateArray[2] = new TStateAttack(this);
-	m_pStateAction = m_pStateArray[0];
+	m_pStateArray[STATE_STOP] = new TStateStop(this);
+	m_pStateArray[STATE_MOVE] = new TStateMove(this);
+	m_pStateArray[STATE_ATTACK] = new TStateAttack(this);
+	m_pStateAction = m_pStateArray[STATE_STOP];
 	m_dwStateAction = m_pStateAction->m_dwStateAI;
 	return true;
 }

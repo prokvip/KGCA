@@ -1,5 +1,6 @@
 #pragma once
 #include "TObject2D.h"
+
 class TState;
 enum T_EnemyState
 {

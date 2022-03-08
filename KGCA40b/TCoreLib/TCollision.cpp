@@ -1,4 +1,22 @@
 #include "TCollision.h"
+bool   TCollision::SphereToPoint(TSphere sp, int x, int y)
+{
+	float fDistance = (sp.vCenter - TVector2(x, y)).Length();
+	if (fDistance <= sp.fRadius)
+	{
+		return true;
+	}
+	return false;
+}
+bool   TCollision::SphereToPoint(TSphere sp, TVector2 v)
+{
+	float fDistance = (sp.vCenter - v).Length();
+	if (fDistance <= sp.fRadius)
+	{
+		return true;
+	}
+	return false;
+}
 bool   TCollision::RectToPoint(TRect rt, int x, int y)
 {
 	if (rt.vMin.x <= x && rt.vMax.x >= x &&

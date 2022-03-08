@@ -113,9 +113,20 @@ struct TBox
 		this->size.y = h;
 	}
 };
+struct TSphere
+{
+	TVector2 vCenter;
+	float    fRadius;
+	TSphere()
+	{
+		fRadius = 3.0f;
+	}
+};
 class TCollision
 {
 public:
+	static bool   SphereToPoint(TSphere rt, int x, int y);
+	static bool   SphereToPoint(TSphere rt, TVector2 v);
 	static bool   RectToPoint(TRect rt, int x, int y);
 	static bool   RectToPoint(TRect rt, TVector2 v);
 	static TCollisionResult    RectToRect(TRect,TRect);

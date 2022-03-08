@@ -2,6 +2,8 @@
 #include "TShaderMgr.h"
 #include "TTextureMgr.h"
 #include "TDxState.h"
+#include "TCollision.h"
+
 struct SimpleVertex
 {
 	TVector2 v;
