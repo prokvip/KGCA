@@ -55,7 +55,7 @@ bool	Sample::Init()
 		return false;
 	}
 
-	for (int iNpc = 0; iNpc < 1; iNpc++)
+	for (int iNpc = 0; iNpc < 10; iNpc++)
 	{	
 		std::shared_ptr<TObjectNpc2D> npc = std::make_shared<TObjectNpc2D>();
 		npc->Init();

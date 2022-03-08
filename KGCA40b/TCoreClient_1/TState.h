@@ -22,10 +22,19 @@ public:
 	TState* m_pStateAction = nullptr;
 	DWORD   m_dwStateAction;
 public:
-	float m_fMoveTimer = 0.0f;
-	float m_fStopTimer = 0.0f;
+	float m_fMoveTimer = 3.0f;
+	float m_fStopTimer = 2.0f;
 public:
 	virtual void SetTransition(DWORD dwEvent) = 0;
+	TObjectAI()
+	{
+		ResetTimer();
+	}
+	void ResetTimer()
+	{
+		m_fMoveTimer = randstep(1.0f, 3.0f);
+		m_fStopTimer = randstep(1.0f, 3.0f);;
+	}
 };
 class TState
 {

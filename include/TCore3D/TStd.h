@@ -25,6 +25,11 @@ using namespace Microsoft::WRL;
 #pragma comment	(lib, "ws2_32.lib")
 using namespace std;
 
+#define randf(x) (x*rand()/(float)RAND_MAX)
+#define randf2(x,off) (off+x*rand()/(float)RAND_MAX)
+#define randstep(fMin,fMax) (fMin+((float)fMax-(float)fMin)*rand()/(float)RAND_MAX)
+#define clamp(x,MinX,MaxX) if (x>MaxX) x=MaxX; else if (x<MinX) x=MinX;
+
 extern RECT		g_rtClient;
 extern HWND		g_hWnd;
 extern float	g_fSecPerFrame;
