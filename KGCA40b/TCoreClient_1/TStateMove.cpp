@@ -1,5 +1,5 @@
 #include "TStateMove.h"
-TVector2 Fun(TVector2 c0, TVector2 c1, TVector2 c2, float t )
+TVector2 BezierCurve2(TVector2 c0, TVector2 c1, TVector2 c2, float t )
 {
 	// { (t*t -2t+1)c0 }  + {(-2(t*t)+2t)c1} + {(t*t)c2}
 	float t2 = t * t;
@@ -52,7 +52,7 @@ void	TStateMove::Process(TObject2D* pPlayer)
 				m_bCurve = false;
 			}
 		}
-		TVector2 vPos = Fun(
+		TVector2 vPos = BezierCurve2(
 			vStart,
 			m_TargetSphere[c0].vCenter,
 			m_TargetSphere[c1].vCenter,
