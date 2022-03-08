@@ -27,10 +27,10 @@ void	TStateMove::Process(TObject2D* pPlayer)
 		return;
 	}*/	
 	
-	if(TCollision::SphereToPoint(m_TargetSphere[m_iPathIndex], m_pOwner->m_vPos))
+	if(TCollision::SphereToPoint(m_MovePatternA[m_iPathIndex], m_pOwner->m_vPos))
 	{
-		m_iPathIndex = rand() % m_TargetSphere.size();
-		if (m_iPathIndex >= m_TargetSphere.size() - 1)
+		m_iPathIndex = rand() % m_MovePatternA.size();
+		if (m_iPathIndex >= m_MovePatternA.size() - 1)
 		{
 			m_iPathIndex = 0;
 		}
@@ -43,9 +43,9 @@ void	TStateMove::Process(TObject2D* pPlayer)
 		static TVector2 vStart = m_pOwner->m_vPos;
 		if (t >= 1.0f)
 		{
-			vStart = m_TargetSphere[c1].vCenter;
-			c0 = min(c0 + 2, m_TargetSphere.size() - 1);
-			c1 = min(c1 + 2, m_TargetSphere.size() - 1);
+			vStart = m_MovePatternA[c1].vCenter;
+			c0 = min(c0 + 2, m_MovePatternA.size() - 1);
+			c1 = min(c1 + 2, m_MovePatternA.size() - 1);
 			t = 0.0f;
 			if (c0 == c1)
 			{
@@ -54,14 +54,14 @@ void	TStateMove::Process(TObject2D* pPlayer)
 		}
 		TVector2 vPos = BezierCurve2(
 			vStart,
-			m_TargetSphere[c0].vCenter,
-			m_TargetSphere[c1].vCenter,
+			m_MovePatternA[c0].vCenter,
+			m_MovePatternA[c1].vCenter,
 			t);
 		m_pOwner->SetPosition(vPos);
 	}
 	else
 	{
-		TVector2 vTarget = m_TargetSphere[m_iPathIndex].vCenter;
+		TVector2 vTarget = m_MovePatternA[m_iPathIndex].vCenter;
 		TVector2 vDir = vTarget - m_pOwner->m_vPos;
 		vDir.Normalize();
 		//m_pOwner->AddPosition(vDir * g_fSecPerFrame*200.0f);
