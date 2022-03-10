@@ -151,6 +151,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SmartPoint", "SmartPoint\Sm
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ProiortyQueue", "ProiortyQueue\ProiortyQueue.vcxproj", "{F2FD7427-D4A9-4D94-982E-9F9BAF086204}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TCoreClient_PathFind", "TCoreClient_PathFind\TCoreClient_PathFind.vcxproj", "{94B42EB5-404D-4BBD-B2AA-7424350BBDD2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -623,6 +625,14 @@ Global
 		{F2FD7427-D4A9-4D94-982E-9F9BAF086204}.Release|x64.Build.0 = Release|x64
 		{F2FD7427-D4A9-4D94-982E-9F9BAF086204}.Release|x86.ActiveCfg = Release|Win32
 		{F2FD7427-D4A9-4D94-982E-9F9BAF086204}.Release|x86.Build.0 = Release|Win32
+		{94B42EB5-404D-4BBD-B2AA-7424350BBDD2}.Debug|x64.ActiveCfg = Debug|x64
+		{94B42EB5-404D-4BBD-B2AA-7424350BBDD2}.Debug|x64.Build.0 = Debug|x64
+		{94B42EB5-404D-4BBD-B2AA-7424350BBDD2}.Debug|x86.ActiveCfg = Debug|Win32
+		{94B42EB5-404D-4BBD-B2AA-7424350BBDD2}.Debug|x86.Build.0 = Debug|Win32
+		{94B42EB5-404D-4BBD-B2AA-7424350BBDD2}.Release|x64.ActiveCfg = Release|x64
+		{94B42EB5-404D-4BBD-B2AA-7424350BBDD2}.Release|x64.Build.0 = Release|x64
+		{94B42EB5-404D-4BBD-B2AA-7424350BBDD2}.Release|x86.ActiveCfg = Release|Win32
+		{94B42EB5-404D-4BBD-B2AA-7424350BBDD2}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -693,6 +703,7 @@ Global
 		{AF3241E1-23F9-4FC2-AEE2-E642A72AA196} = {D11B918C-65AD-4EC8-BFF4-99C2B05C7928}
 		{7223B5CE-F7DD-4342-8C3C-9E7B15AC2168} = {D11B918C-65AD-4EC8-BFF4-99C2B05C7928}
 		{F2FD7427-D4A9-4D94-982E-9F9BAF086204} = {D11B918C-65AD-4EC8-BFF4-99C2B05C7928}
+		{94B42EB5-404D-4BBD-B2AA-7424350BBDD2} = {D11B918C-65AD-4EC8-BFF4-99C2B05C7928}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0E548235-7F46-4E65-A970-38A7E957E481}
