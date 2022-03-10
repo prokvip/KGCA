@@ -4,6 +4,7 @@
 #include "TPlayerObj2D.h"
 #include "TObjectNpc2D.h"
 #include "TMap.h"
+
 class Sample : public TCore
 {
 public:
