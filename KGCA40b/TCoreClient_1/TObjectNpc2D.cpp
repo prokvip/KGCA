@@ -9,6 +9,7 @@ bool	TObjectNpc2D::Init()
 	m_dwStateAction = m_pStateAction->m_dwStateAI;
 	return true;
 }
+
 void	TObjectNpc2D::SetTransition(DWORD dwEvent)
 {
 	m_dwStateAction = I_Fsm.GetTransition(m_dwStateAction, dwEvent);
