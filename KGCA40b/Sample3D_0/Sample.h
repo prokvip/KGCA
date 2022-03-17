@@ -3,7 +3,17 @@
 #include "TObject3D.h"
 class TPlaneObj : public TObject3D
 {
+	TVector3			m_vCamera;
+	TMatrix				m_matWorld;
+	TMatrix				m_matView;
+	TMatrix				m_matProj;
 public:
+	TPlaneObj()
+	{
+		m_vCamera.x = 0.0f;
+		m_vCamera.y = 0.0f;
+		m_vCamera.z = -5.0f;
+	}
 	virtual bool		SetVertexData()
 	{
 		// Local Coord
@@ -44,14 +54,40 @@ public:
 	}
 	virtual bool        Frame()
 	{
+		// world
 		TMatrix matRotate, matScale, matTrans;
 		matRotate.ZRotate(g_fGameTimer);
 		matScale.Scale(cos(g_fGameTimer)*0.5f+0.5f, 1.0f, 1.0f);
 		matTrans.Translation(0,
 			cos(g_fGameTimer) * 0.5f + 0.5f, 0);
-		m_ConstantList.matWorld = matRotate;// matScale* matRotate* matTrans;
+		//m_matWorld = matRotate;
+		m_matWorld.Transpose();
+		// view
+		if (TInput::Get().GetKey(VK_LEFT))
+		{
+			m_vCamera.x -= g_fSecPerFrame * 1.0f;
+		}
+		if (TInput::Get().GetKey(VK_RIGHT))
+		{
+			m_vCamera.x += g_fSecPerFrame * 1.0f;
+		}
+		//TVector3 vEye= m_vCamera;
+		TVector3 vTarget(0, 0, 0);
+		vTarget.x = m_vCamera.x;
+		TVector3 vUp(0, 1, 0);
+		m_matView.CreateViewLook(m_vCamera, vTarget, vUp);
+		m_matView.Transpose();
+		// Projection
+		m_matProj.PerspectiveFovLH(
+			1.0f, 100.0f, TBASIS_PI * 0.5f, 800.0f / 600.0f);
+		m_matProj.Transpose();
+
+
+		m_ConstantList.matWorld = m_matWorld;// matScale* matRotate* matTrans;
+		m_ConstantList.matView = m_matView;
+		m_ConstantList.matProj = m_matProj;
+
 		
-		m_ConstantList.matWorld.Transpose();
 		if (m_pContext != nullptr)
 		{
 			m_pContext->UpdateSubresource(

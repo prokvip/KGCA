@@ -1,9 +1,75 @@
 #include "TDevice.h"
+bool TDevice::CreateDetphStencilView()
+{
+	HRESULT hr;
+	Microsoft::WRL::ComPtr<ID3D11Texture2D> pDSTexture = nullptr;
+	D3D11_TEXTURE2D_DESC DescDepth;
+	DescDepth.Width = g_rtClient.right;
+	DescDepth.Height = g_rtClient.bottom;
+	DescDepth.MipLevels = 1;
+	DescDepth.ArraySize = 1;
+	DescDepth.Format = DXGI_FORMAT_R24G8_TYPELESS;
+	DescDepth.SampleDesc.Count = 1;
+	DescDepth.SampleDesc.Quality = 0;
+	DescDepth.Usage = D3D11_USAGE_DEFAULT;
+
+	// ¹é ¹öÆÛ ±íÀÌ ¹× ½ºÅÙ½Ç ¹öÆÛ »ý¼º
+	DescDepth.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+	if (DescDepth.Format == DXGI_FORMAT_R24G8_TYPELESS || DescDepth.Format == DXGI_FORMAT_D32_FLOAT)
+	{
+		// ±íÀÌ¸Ê Àü¿ë ±íÀÌ¸Ê »ý¼º
+		DescDepth.BindFlags = D3D11_BIND_DEPTH_STENCIL | D3D11_BIND_SHADER_RESOURCE;
+	}
+
+	DescDepth.CPUAccessFlags = 0;
+	DescDepth.MiscFlags = 0;
+	if (FAILED(hr = m_pd3dDevice->CreateTexture2D(&DescDepth, NULL, &pDSTexture)))
+	{
+		return false;
+	}
+
+	///// ½¦ÀÌ´õ ¸®¼Ò½º »ý¼º : ±íÀÌ ¸Ê ½¦µµ¿ì¿¡¼­ »ç¿ëÇÑ´Ù. ///
+	D3D11_DEPTH_STENCIL_VIEW_DESC dsvDesc;
+	D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
+	ZeroMemory(&dsvDesc, sizeof(D3D11_DEPTH_STENCIL_VIEW_DESC));
+	ZeroMemory(&srvDesc, sizeof(D3D11_SHADER_RESOURCE_VIEW_DESC));
+
+	switch (DescDepth.Format)
+	{
+	case DXGI_FORMAT_R32_TYPELESS:
+		dsvDesc.Format = DXGI_FORMAT_D32_FLOAT;
+		srvDesc.Format = DXGI_FORMAT_R32_FLOAT;
+		break;
+	case DXGI_FORMAT_R24G8_TYPELESS:
+		dsvDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+		srvDesc.Format = DXGI_FORMAT_R24_UNORM_X8_TYPELESS;
+		break;
+	}
+	if (srvDesc.Format == DXGI_FORMAT_R32_FLOAT || srvDesc.Format == DXGI_FORMAT_R24_UNORM_X8_TYPELESS)
+	{
+		srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+		srvDesc.Texture2D.MipLevels = 1;
+		if (FAILED(hr = m_pd3dDevice->CreateShaderResourceView(pDSTexture.Get(), &srvDesc, &m_pDsvSRV)))
+		{
+			return false;
+		}
+	}
+
+	dsvDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+	if (FAILED(hr = m_pd3dDevice->CreateDepthStencilView(pDSTexture.Get(), &dsvDesc, &m_pDepthStencilView)))
+	{
+		return false;
+	}
+	//m_pDepthStencilView->GetDesc(&m_DepthStencilDesc);
+	return true;
+}
+
 HRESULT TDevice::InitDeivice()
 {
 	HRESULT hr = S_OK; 
 	CreateDevice();
 	CreateRenderTargetView();
+	CreateDetphStencilView();
 	SetViewport();
 	return hr;
 }

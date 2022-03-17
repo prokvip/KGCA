@@ -33,6 +33,7 @@ bool	Sample::Frame()
 }
 bool	Sample::Render()
 {
+	m_pImmediateContext->OMSetDepthStencilState(TDxState::g_pDSSDepthEnable, 0x00);
 	m_Obj.Render();
 	std::wstring msg = L"FPS:";
 	msg += std::to_wstring(m_GameTimer.m_iFPS);

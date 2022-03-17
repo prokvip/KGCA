@@ -57,6 +57,13 @@ bool	TCore::CoreRender()
 	m_pImmediateContext->ClearRenderTargetView(
 		m_pRenderTargetView.Get(),
 		color);
+	m_pImmediateContext->ClearDepthStencilView(
+		m_pDepthStencilView.Get(), 
+		D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+	m_pImmediateContext->OMSetRenderTargets(1, 
+		m_pRenderTargetView.GetAddressOf(),
+		m_pDepthStencilView.Get());
+
 	m_pImmediateContext->PSSetSamplers(0, 1, &TDxState::m_pSamplerState);
 
 	// 백버퍼에 랜더링 한다.

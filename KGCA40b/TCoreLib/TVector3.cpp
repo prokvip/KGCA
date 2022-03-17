@@ -33,10 +33,11 @@ TVector3 TVector3::operator - (const TVector3& v)
 }
 TVector3 TVector3::operator * (float fValue)
 {
-	this->x *= fValue;
-	this->y *= fValue;
-	this->z *= fValue;
-	return *this;
+	TVector3 ret;
+	ret.x = x * fValue;
+	ret.y = y * fValue;
+	ret.z = z * fValue;
+	return ret;
 }
 TVector3 TVector3::operator / (float fValue)
 {
@@ -121,11 +122,11 @@ float TVector3::Length()
 
 float TVector3::operator | (TVector3 const& v)
 {
-	return x * v.x + y + v.y + z + v.z;
+	return (x * v.x) + (y * v.y) + (z * v.z);
 }
 TVector3 TVector3::operator ^ (TVector3 const& v)
 {
-	return TVector3((y*v.z-z*v.y),
+	return TVector3((y*v.z - z*v.y),
 					(z*v.x - x*v.z), 
 					(x*v.y - y*v.x) );
 }
