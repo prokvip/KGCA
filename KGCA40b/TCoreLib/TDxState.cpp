@@ -2,6 +2,7 @@
 ID3D11BlendState* TDxState::m_AlphaBlend = nullptr;
 ID3D11BlendState* TDxState::m_AlphaBlendDisable = nullptr;
 ID3D11SamplerState* TDxState::m_pSamplerState = nullptr;
+ID3D11RasterizerState* TDxState::g_pRSBackCullSolid =nullptr;
 ID3D11DepthStencilState* TDxState::g_pDSSDepthEnable=nullptr;
 bool TDxState::SetState(ID3D11Device* pd3dDevice)
 {
@@ -51,6 +52,13 @@ bool TDxState::SetState(ID3D11Device* pd3dDevice)
 	sd.MaxLOD = FLT_MIN;
 	hr = pd3dDevice->CreateSamplerState(&sd, &m_pSamplerState);
 
+	D3D11_RASTERIZER_DESC rsDesc;
+	ZeroMemory(&rsDesc, sizeof(rsDesc));
+	rsDesc.DepthClipEnable = TRUE;
+	rsDesc.FillMode = D3D11_FILL_SOLID;
+	rsDesc.CullMode = D3D11_CULL_NONE;
+	if (FAILED(hr = pd3dDevice->CreateRasterizerState(&rsDesc, &TDxState::g_pRSBackCullSolid))) return hr;
+
 
 	D3D11_DEPTH_STENCIL_DESC dsDescDepth;
 	ZeroMemory(&dsDescDepth, sizeof(D3D11_DEPTH_STENCIL_DESC));
@@ -79,6 +87,7 @@ bool TDxState::SetState(ID3D11Device* pd3dDevice)
 }
 bool TDxState::Release()
 {
+	if (g_pRSBackCullSolid) g_pRSBackCullSolid->Release();
 	if (g_pDSSDepthEnable) g_pDSSDepthEnable->Release();
 	if (m_AlphaBlend) m_AlphaBlend->Release();
 	if (m_AlphaBlendDisable) m_AlphaBlendDisable->Release();

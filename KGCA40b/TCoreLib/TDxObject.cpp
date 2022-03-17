@@ -216,6 +216,12 @@ bool	TDxObject::Render()
 	if (m_pMaskTex != nullptr)
 		m_pContext->PSSetShaderResources(1, 1, 
 			m_pMaskTex->m_pSRV.GetAddressOf());
+
+
+	m_pContext->GSSetShader(nullptr, NULL, 0);
+	m_pContext->HSSetShader(nullptr, NULL, 0);
+	m_pContext->DSSetShader(nullptr, NULL, 0);
+
 	if (m_pVShader != nullptr)
 	{
 		m_pContext->VSSetShader(m_pVShader->m_pVertexShader, NULL, 0);
@@ -247,6 +253,7 @@ bool	TDxObject::Render()
 		&Strides, &Offsets);
 	m_pContext->IASetIndexBuffer(m_pIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
 	m_pContext->VSSetConstantBuffers(0, 1, &m_pConstantBuffer);
+	m_pContext->PSSetConstantBuffers(0, 1, &m_pConstantBuffer);
 
 	m_pContext->IASetPrimitiveTopology(
 		D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST
