@@ -93,7 +93,7 @@ public:
 	TMatrix Transpose()
 	{
 		TMatrix matrix;
-		matrix._11 = _11; matrix._21 = _21; matrix._13 = _31; matrix._14 = _41;
+		matrix._11 = _11; matrix._12 = _21; matrix._13 = _31; matrix._14 = _41;
 		matrix._21 = _12; matrix._22 = _22; matrix._23 = _32; matrix._24 = _42;
 		matrix._31 = _13; matrix._32 = _23; matrix._33 = _33; matrix._34 = _43;
 		matrix._41 = _14; matrix._42 = _24; matrix._43 = _34; matrix._44 = _44;
