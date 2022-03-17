@@ -78,6 +78,9 @@
     <ClCompile Include="TDxState.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="TMatrix.cpp">
+      <Filter>Math</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TCore.h">
@@ -139,6 +142,9 @@
     </ClInclude>
     <ClInclude Include="TDxState.h">
       <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="TMatrix.h">
+      <Filter>Math</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

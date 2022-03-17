@@ -94,6 +94,9 @@ struct TIndex
 
 struct TConstantData
 {
+	TMatrix  matWorld;
+	TMatrix  matView;
+	TMatrix  matProj;
 	TVector4 Color;
 	TVector4 Timer;
 };

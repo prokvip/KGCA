@@ -16,18 +16,22 @@ struct VS_OUTPUT
 // 상수버퍼(단위:레지스터 단위(float4)로 할당되어야 한다.)
 cbuffer cb0 : register(b0)
 {
-	float4   Color0 : packoffset(c0);
-	float    TimerX : packoffset(c1.x); // Timer.x, Timer.y, Timer.z, Timer.w	
+	// 1개의 레지스터(x,y,z,w)
+	matrix   g_matWorld : packoffset(c0);
+	matrix   g_matView : packoffset(c4);
+	matrix   g_matProj : packoffset(c8);
+	float4   Color0 : packoffset(c12);
+	float    TimerX : packoffset(c13.x); // Timer.x, Timer.y, Timer.z, Timer.w	
 };
-cbuffer cb1 : register(b1)
-{
-	float4   Color1 : packoffset(c0);
-	float4   Timer1 : packoffset(c1);
-};
+
 VS_OUTPUT VS( VS_INPUT v)
 {
 	VS_OUTPUT pOut = (VS_OUTPUT)0;
-	pOut.p = float4(v.p.xyz, 1.0f);// float4(v.p.x, v.p.y, v.p.z, 1.0f);
+	float4 vLocal = float4(v.p.xyz, 1.0f);// float4(v.p.x, v.p.y, v.p.z, 1.0f);
+	float4 vWorld = mul(vLocal, g_matWorld);
+	float4 vView = mul(vWorld, g_matView);
+	float4 vProj = mul(vView, g_matProj);
+	pOut.p = vProj;
 	pOut.n = v.n;
 	pOut.t = v.t;
 	pOut.c = v.c;
