@@ -15,10 +15,15 @@ public:
 	TVector3(float x, float y, float z);
 	TVector3(const TVector3& v);
 public:
+	void  operator += (const TVector3& v);
+	void  operator -= (const TVector3& v);
+
 	TVector3 operator + (const TVector3& v);
 	TVector3 operator - (const TVector3& v);
 	TVector3 operator * (float fValue);
 	TVector3 operator / (float fValue);
+	float operator | (TVector3 const& v);
+	TVector3 operator ^ (TVector3 const& v);
 	bool operator == (const TVector3& v);
 	bool operator != (const TVector3& v);
 	// ¡§±‘»≠

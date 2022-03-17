@@ -6,6 +6,8 @@ public:
 	RECT				m_rtSource;
 	RECT				m_rtDraw;	
 	TVector4			m_vColor;
+	TVector2	m_vPos;
+	TVector2	m_vDirection;
 public:
 	float  m_fAlpha = 0.0f;
 	bool   m_bFadeIn = false;

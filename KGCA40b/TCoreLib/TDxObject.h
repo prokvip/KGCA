@@ -9,6 +9,14 @@ struct SimpleVertex
 	TVector2 v;
 	TVector2 t;
 };
+struct TVertex
+{
+	TVector3 p; // 위치
+	TVector3 n; // 노말
+	TVector4 c; // 컬러
+	TVector2 t; // 텍셀
+};
+
 enum TCollisionType
 {
 	Block = 0,
@@ -45,9 +53,7 @@ public:
 	bool		m_bDead;
 	int			m_iCollisionID;
 	int			m_iSelectID;
-	float		m_fSpeed;
-	TVector2	m_vPos;
-	TVector2	m_vDirection;
+	float		m_fSpeed;	
 	float		m_fWidth;
 	float		m_fHeight;
 	TRect		m_rtCollision;
@@ -74,9 +80,7 @@ public:
 		m_bAlphaBlend = true;
 		m_dwSelectState = T_DEFAULT;
 		m_iCollisionID = -1;
-		m_iSelectID = -1;
-		m_vDirection.x = 0.0f;
-		m_vDirection.y = 0.0f;
+		m_iSelectID = -1;	
 		m_dwCollisonType = TCollisionType::Ignore;
 		m_dwSelectType = TSelectType::Select_Ignore;
 	}

@@ -83,6 +83,18 @@ TVector3 TVector3::Normal()
 	ret.z = z * length;
 	return ret;
 }
+void TVector3::operator += (const TVector3& v)
+{
+	x += v.x;
+	y += v.y;
+	z += v.z;
+}
+void TVector3::operator -= (const TVector3& v)
+{
+	x -= v.x;
+	y -= v.y;
+	z -= v.z;
+}
 TVector3 TVector3::Normalize()
 {
 	float length = 1.0f / Length();
@@ -105,4 +117,15 @@ float TVector3::Length()
 {
 	float ret = x * x + y * y + z*z;
 	return sqrt(ret);
+}
+
+float TVector3::operator | (TVector3 const& v)
+{
+	return x * v.x + y + v.y + z + v.z;
+}
+TVector3 TVector3::operator ^ (TVector3 const& v)
+{
+	return TVector3((y*v.z-z*v.y),
+					(z*v.x - x*v.z), 
+					(x*v.y - y*v.x) );
 }
