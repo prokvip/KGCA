@@ -71,6 +71,14 @@ public:
 		{
 			m_vCamera.z += g_fSecPerFrame * 1.0f;
 		}
+		if (TInput::Get().GetKey(VK_UP))
+		{
+			m_vCamera.y += g_fSecPerFrame * 1.0f;
+		}
+		if (TInput::Get().GetKey(VK_DOWN))
+		{
+			m_vCamera.y -= g_fSecPerFrame * 1.0f;
+		}
 
 		TVector3 vTarget(0, 0, 0);
 		TVector3 vUp(0, 1, 0);
@@ -79,7 +87,7 @@ public:
 		m_matProj.PerspectiveFovLH(	1.0f, 100.0f, TBASIS_PI * 0.5f, 800.0f / 600.0f);
 
 		m_ConstantList.matWorld = m_matWorld.Transpose();
-		m_ConstantList.matView = m_matView.Transpose();;
+		m_ConstantList.matView = m_matView.Transpose();
 		m_ConstantList.matProj = m_matProj.Transpose();
 
 		TObject3D::Frame();

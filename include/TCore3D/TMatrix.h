@@ -99,12 +99,34 @@ public:
 		matrix._41 = _14; matrix._42 = _24; matrix._43 = _34; matrix._44 = _44;
 		return matrix;
 	}
+	// 외적을 통한 뷰 행렬 계산
+	TMatrix ViewLookAt(TVector3& vPosition,
+		TVector3& vTarget,
+		TVector3& vUp)
+	{
+		TMatrix matrix;
+		TVector3 vDirection = (vTarget - vPosition).Normal();		// Z Axis
+		TVector3 vRightVector = (vUp ^ vDirection).Normal();		// X Axis
+		TVector3 vUpVector = (vDirection ^ vRightVector).Normal();	// Y Axis
+
+		_11 = vRightVector.x;	_12 = vUpVector.x;	_13 = vDirection.x;
+		_21 = vRightVector.y;	_22 = vUpVector.y;	_23 = vDirection.y;
+		_31 = vRightVector.z;	_32 = vUpVector.z;	_33 = vDirection.z;
+
+		_41 = -(vPosition.x * _11 + vPosition.y * _21 + vPosition.z * _31);
+		_42 = -(vPosition.x * _12 + vPosition.y * _22 + vPosition.z * _32);
+		_43 = -(vPosition.x * _13 + vPosition.y * _23 + vPosition.z * _33);
+		memcpy((void*)&matrix, this, 16 * sizeof(float));
+		return matrix;
+	}
+	// 내적을 통한 뷰 행렬 계산
 	TMatrix CreateViewLook(TVector3& vPosition, TVector3& vTarget, TVector3& vUp)
 	{
 		TMatrix matrix;
 		TVector3 vDirection = vTarget - vPosition;
-		vDirection = vDirection.Normal();
+		vDirection = vDirection.Normal();//z
 		float fDot = vUp | vDirection;
+		// 직교의 근사화 작업
 		TVector3 vUpVector = vUp - (vDirection * fDot);
 		vUpVector = vUpVector.Normal();
 		TVector3 vRightVector = vUpVector ^ vDirection;
