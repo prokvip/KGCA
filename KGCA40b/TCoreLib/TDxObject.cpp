@@ -64,7 +64,7 @@ bool	TDxObject::CreateVertexBuffer()
 	//gpu메모리에 버퍼 할당(원하는 할당 크기)
 	D3D11_BUFFER_DESC bd;
 	ZeroMemory(&bd, sizeof(D3D11_BUFFER_DESC));
-	bd.ByteWidth = sizeof(SimpleVertex) * m_VertexList.size();
+	bd.ByteWidth = sizeof(TVertex) * m_VertexList.size();
 	bd.Usage = D3D11_USAGE_DEFAULT;
 	bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 
@@ -126,8 +126,10 @@ bool	TDxObject::CreateInputLayout()
 	// 정점버퍼의 각 정점의 어떤 성분을 정점쉐이더에 전달할 거냐
 	D3D11_INPUT_ELEMENT_DESC layout[] =
 	{
-		{"POSITION",0, DXGI_FORMAT_R32G32_FLOAT, 0,0,  D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{"TEXCOORD",0, DXGI_FORMAT_R32G32_FLOAT, 0,8,  D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{"POSITION",0, DXGI_FORMAT_R32G32B32_FLOAT, 0,0,  D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{"NORMAL",0, DXGI_FORMAT_R32G32B32_FLOAT, 0,12,  D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{"COLOR",0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0,24,  D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{"TEXCOORD",0, DXGI_FORMAT_R32G32_FLOAT, 0,40,  D3D11_INPUT_PER_VERTEX_DATA, 0 },
 	};
 	UINT NumElements = sizeof(layout) / sizeof(layout[0]);
 	HRESULT hr = m_pd3dDevice->CreateInputLayout(
@@ -149,16 +151,6 @@ bool	TDxObject::Create(ID3D11Device* pd3dDevice,
 	const TCHAR* szMaskFileName)
 {
 	HRESULT hr;
-	/*m_rtCollision = TRect(m_vPos, m_fWidth, m_fHeight);
-	I_ObjectMgr.AddCollisionExecute(this,
-		std::bind(&TBaseObject::HitOverlap, this,
-			std::placeholders::_1,
-			std::placeholders::_2));
-	I_ObjectMgr.AddSelectExecute(this,
-		std::bind(&TBaseObject::HitSelect, this,
-			std::placeholders::_1,
-			std::placeholders::_2));*/
-
 	SetDevice(pd3dDevice, pContext);
 	if (szColorFileName !=nullptr && !LoadTexture(szColorFileName, szMaskFileName))
 	{
@@ -244,7 +236,7 @@ bool	TDxObject::Render()
 
 	UINT StartSlot;
 	UINT NumBuffers;
-	UINT Strides = sizeof(SimpleVertex);
+	UINT Strides = sizeof(TVertex);
 	UINT Offsets = 0;
 
 	m_pContext->IASetVertexBuffers(
@@ -267,8 +259,6 @@ bool	TDxObject::Render()
 }
 bool	TDxObject::Release()
 {
-
-
 	if (m_pVertexBuffer) m_pVertexBuffer->Release();
 	if (m_pIndexBuffer) m_pIndexBuffer->Release();
 	if (m_pConstantBuffer) m_pConstantBuffer->Release();	

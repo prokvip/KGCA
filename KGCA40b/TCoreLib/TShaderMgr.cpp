@@ -16,10 +16,13 @@ bool    TShader::CreateVertexShader(ID3D11Device* pd3dDevice,
 	);
 	if (FAILED(hr))
 	{
-		MessageBoxA(NULL,
-			(char*)m_pErrorMsgs->GetBufferPointer(),
-			"ERROR", MB_OK);
-		if (m_pErrorMsgs) m_pErrorMsgs->Release();
+		if (m_pErrorMsgs)
+		{
+			MessageBoxA(NULL,
+				(char*)m_pErrorMsgs->GetBufferPointer(),
+				"ERROR", MB_OK);
+			m_pErrorMsgs->Release();
+		}
 		return false;
 	}
 	hr = pd3dDevice->CreateVertexShader(
@@ -50,10 +53,13 @@ bool    TShader::CreatePixelShader(ID3D11Device* pd3dDevice,
 	);
 	if (FAILED(hr))
 	{
-		MessageBoxA(NULL,
-			(char*)m_pErrorMsgs->GetBufferPointer(),
-			"ERROR", MB_OK);
-		if (m_pErrorMsgs) m_pErrorMsgs->Release();
+		if (m_pErrorMsgs)
+		{
+			MessageBoxA(NULL,
+				(char*)m_pErrorMsgs->GetBufferPointer(),
+				"ERROR", MB_OK);
+			m_pErrorMsgs->Release();
+		}
 		return false;
 	}
 	hr = pd3dDevice->CreatePixelShader(

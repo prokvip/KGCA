@@ -9,14 +9,31 @@ void	Sample::DeleteResizeDevice(UINT iWidth, UINT iHeight)
 }
 bool	Sample::Init()
 {	
+	TTexture* pTex = I_Texture.Load(L"../../data/ui/main_start_nor.png");
+	TShader* pVShader = I_Shader.CreateVertexShader(
+		m_pd3dDevice.Get(), L"Box.hlsl", "VS");
+	TShader* pPShader = I_Shader.CreatePixelShader(
+		m_pd3dDevice.Get(), L"Box.hlsl", "PS");
+	
+	m_Obj.Init();
+	m_Obj.m_pColorTex = pTex;
+	m_Obj.m_pVShader = pVShader;
+	m_Obj.m_pPShader = pPShader;
+	if (!m_Obj.Create(m_pd3dDevice.Get(), 
+		m_pImmediateContext.Get()))
+	{
+		return false;
+	}
 	return true;
 }
 bool	Sample::Frame()
 {	
+	m_Obj.Frame();
 	return true;
 }
 bool	Sample::Render()
 {
+	m_Obj.Render();
 	std::wstring msg = L"FPS:";
 	msg += std::to_wstring(m_GameTimer.m_iFPS);
 	msg += L"  GT:";
@@ -26,6 +43,7 @@ bool	Sample::Render()
 }
 bool	Sample::Release()
 {
+	m_Obj.Release();
 	return true;
 }
 Sample::Sample()

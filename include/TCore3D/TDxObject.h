@@ -107,7 +107,7 @@ public:
 	D3D11_TEXTURE2D_DESC		m_TextureDesc;
 public:
 	std::vector<SimpleVertex> m_InitScreenList;
-	std::vector<SimpleVertex> m_VertexList;
+	std::vector<TVertex> m_VertexList;
 	ID3D11Buffer* m_pVertexBuffer = nullptr;
 	
 	std::vector<DWORD> m_IndexList;

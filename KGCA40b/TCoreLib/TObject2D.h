@@ -3,6 +3,7 @@
 class TObject2D : public TDxObject
 {
 public:
+	std::vector<SimpleVertex> m_VertexList2D;
 	RECT				m_rtSource;
 	RECT				m_rtDraw;	
 	TVector4			m_vColor;

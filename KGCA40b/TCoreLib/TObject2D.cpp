@@ -31,7 +31,7 @@ void		TObject2D::AddPosition(TVector2 vPos)
 	if (m_pContext != nullptr)
 	{
 		m_pContext->UpdateSubresource(
-			m_pVertexBuffer, 0, NULL, &m_VertexList.at(0), 0, 0);
+			m_pVertexBuffer, 0, NULL, &m_VertexList2D.at(0), 0, 0);
 	}
 }
 /// <summary>
@@ -52,7 +52,7 @@ void		TObject2D::SetPosition(TVector2 vPos)
 	if (m_pContext != nullptr)
 	{
 		m_pContext->UpdateSubresource(
-			m_pVertexBuffer, 0, NULL, &m_VertexList.at(0), 0, 0);
+			m_pVertexBuffer, 0, NULL, &m_VertexList2D.at(0), 0, 0);
 	}
 }
 void	TObject2D::Convert(
@@ -176,7 +176,7 @@ void	TObject2D::ConvertIndex(
 }
 bool    TObject2D::SetVertexData()
 {
-	ConvertIndex(m_vPos, m_fWidth, m_fHeight, m_VertexList);	
+	ConvertIndex(m_vPos, m_fWidth, m_fHeight, m_VertexList2D);	
 	return true;
 }
 bool    TObject2D::SetIndexData()
