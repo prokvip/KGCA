@@ -71,26 +71,18 @@ public:
 		{
 			m_vCamera.z += g_fSecPerFrame * 1.0f;
 		}
-		//TVector3 vEye= m_vCamera;
+
 		TVector3 vTarget(0, 0, 0);
-		//vTarget.x = m_vCamera.x;
 		TVector3 vUp(0, 1, 0);
 		m_matView.CreateViewLook(m_vCamera, vTarget, vUp);
 		// Projection
-		m_matProj.PerspectiveFovLH(
-			1.0f, 100.0f, TBASIS_PI * 0.5f, 800.0f / 600.0f);
+		m_matProj.PerspectiveFovLH(	1.0f, 100.0f, TBASIS_PI * 0.5f, 800.0f / 600.0f);
 
-		m_ConstantList.matWorld = m_matWorld.Transpose();// matScale* matRotate* matTrans;
+		m_ConstantList.matWorld = m_matWorld.Transpose();
 		m_ConstantList.matView = m_matView.Transpose();;
 		m_ConstantList.matProj = m_matProj.Transpose();
 
 		TObject3D::Frame();
-		
-		/*if (m_pContext != nullptr)
-		{
-			m_pContext->UpdateSubresource(
-				m_pConstantBuffer, 0, NULL, &m_ConstantList, 0, 0);
-		}*/
 		return true;
 	}
 };
