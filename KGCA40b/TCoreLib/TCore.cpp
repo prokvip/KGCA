@@ -64,7 +64,9 @@ bool	TCore::CoreRender()
 		m_pRenderTargetView.GetAddressOf(),
 		m_pDepthStencilView.Get());
 
-	m_pImmediateContext->PSSetSamplers(0, 1, &TDxState::m_pSamplerState);
+	m_pImmediateContext->PSSetSamplers(0, 1, &TDxState::m_pSamplerState);	
+	m_pImmediateContext->OMSetDepthStencilState(TDxState::g_pDSSDepthEnable, 0x00);
+	m_pImmediateContext->RSSetState(TDxState::g_pRSBackCullSolid);
 
 	// 백버퍼에 랜더링 한다.
 	Render();

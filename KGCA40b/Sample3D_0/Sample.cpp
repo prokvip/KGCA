@@ -9,33 +9,57 @@ void	Sample::DeleteResizeDevice(UINT iWidth, UINT iHeight)
 }
 bool	Sample::Init()
 {	
+	
+
 	TTexture* pTex = I_Texture.Load(L"../../data/ui/main_start_nor.png");
 	TShader* pVShader = I_Shader.CreateVertexShader(
 		m_pd3dDevice.Get(), L"Box.hlsl", "VS");
 	TShader* pPShader = I_Shader.CreatePixelShader(
 		m_pd3dDevice.Get(), L"Box.hlsl", "PS");
 	
-	m_Obj.Init();
-	m_Obj.m_pColorTex = pTex;
-	m_Obj.m_pVShader = pVShader;
-	m_Obj.m_pPShader = pPShader;
-	if (!m_Obj.Create(m_pd3dDevice.Get(), 
+	m_ObjA.Init();
+	m_ObjA.m_pColorTex = pTex;
+	m_ObjA.m_pVShader = pVShader;
+	m_ObjA.m_pPShader = pPShader;
+	if (!m_ObjA.Create(m_pd3dDevice.Get(),
 		m_pImmediateContext.Get()))
 	{
 		return false;
 	}
+	// world
+	//TMatrix matRotate, matScale, matTrans;
+	//matRotate.ZRotate(g_fGameTimer);
+	//matScale.Scale(cos(g_fGameTimer) * 0.5f + 0.5f, 1.0f, 1.0f);
+	//matTrans.Translation(0,	cos(g_fGameTimer) * 0.5f + 0.5f, 0);
+	m_ObjA.m_matWorld.Translation(0.0f, 0.0f, 3.0f);
+
+	m_ObjB.Init();
+	m_ObjB.m_pColorTex = I_Texture.Load(L"../../data/KGCABK.bmp");
+	m_ObjB.m_pVShader = pVShader;
+	m_ObjB.m_pPShader = pPShader;
+	if (!m_ObjB.Create(m_pd3dDevice.Get(),
+		m_pImmediateContext.Get()))
+	{
+		return false;
+	}
+	m_ObjB.m_matWorld.Translation(1.0f, 0.0f, 0.0f);
 	return true;
 }
 bool	Sample::Frame()
 {	
-	m_Obj.Frame();
+	m_Camera.Frame();
+
+	m_ObjA.SetMatrix(nullptr, &m_Camera.m_matView,&m_Camera.m_matProj);
+	m_ObjB.SetMatrix(nullptr, &m_Camera.m_matView,&m_Camera.m_matProj);
+	m_ObjA.Frame();
+	m_ObjB.Frame();
 	return true;
 }
 bool	Sample::Render()
-{
-	//m_pImmediateContext->RSSetState(TDxState::g_pRSBackCullSolid);
-	//m_pImmediateContext->OMSetDepthStencilState(TDxState::g_pDSSDepthEnable, 0x00);
-	m_Obj.Render();
+{	
+	m_ObjB.Render();
+	m_ObjA.Render();
+	
 	std::wstring msg = L"FPS:";
 	msg += std::to_wstring(m_GameTimer.m_iFPS);
 	msg += L"  GT:";
@@ -45,7 +69,8 @@ bool	Sample::Render()
 }
 bool	Sample::Release()
 {
-	m_Obj.Release();
+	m_ObjA.Release();
+	m_ObjB.Release();
 	return true;
 }
 Sample::Sample()
