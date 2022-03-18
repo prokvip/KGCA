@@ -1,4 +1,21 @@
 #include "TObject3D.h"
+void		TObject3D::SetMatrix(TMatrix* matWorld,
+	TMatrix* matView, TMatrix* matProj)
+{
+	m_ConstantList.matWorld = m_matWorld.Transpose();
+	if (matWorld != nullptr)
+	{
+		m_ConstantList.matWorld = matWorld->Transpose();
+	}
+	if (matView != nullptr)
+	{
+		m_ConstantList.matView = matView->Transpose();
+	}
+	if (matProj != nullptr)
+	{
+		m_ConstantList.matProj = matProj->Transpose();
+	}
+}
 void		TObject3D::AddPosition(TVector3 vPos)
 {
 	// 현재위치
@@ -21,13 +38,9 @@ void		TObject3D::AddPosition(TVector3 vPos)
 void		TObject3D::SetPosition(TVector3 vPos)
 {
 	m_vPos = vPos;
-	SetVertexData();
-	SetIndexData();
-	if (m_pContext != nullptr)
-	{
-		m_pContext->UpdateSubresource(
-			m_pVertexBuffer, 0, NULL, &m_VertexList.at(0), 0, 0);
-	}
+	m_matWorld._41 = m_vPos.x;
+	m_matWorld._42 = m_vPos.y;
+	m_matWorld._43 = m_vPos.z;
 }
 bool    TObject3D::SetVertexData()
 {
@@ -67,9 +80,7 @@ bool	TObject3D::Frame()
 		g_fGameTimer,
 		0,
 		0,
-		1.0f);
-	m_pContext->UpdateSubresource(
-		m_pConstantBuffer, 0, NULL, &m_ConstantList, 0, 0);
+		1.0f);	
 	return true;
 }
 TObject3D::TObject3D()

@@ -146,10 +146,12 @@
   <ItemGroup>
     <ClInclude Include="Sample.h" />
     <ClInclude Include="TCamera.h" />
+    <ClInclude Include="TPlaneObj.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Sample.cpp" />
     <ClCompile Include="TCamera.cpp" />
+    <ClCompile Include="TPlaneObj.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Box.hlsl">

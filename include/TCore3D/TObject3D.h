@@ -6,6 +6,7 @@ public:
 	TVector3			m_vPos;
 	TVector3			m_vDirection;
 	TVector4			m_vColor;
+	TMatrix				m_matWorld;
 public:
 	float  m_fAlpha = 0.0f;
 	bool   m_bFadeIn = false;
@@ -23,6 +24,8 @@ public:
 		return true;
 	};
 	virtual void  UpdateData() {}
+	virtual void		SetMatrix(TMatrix* matWorld,
+							TMatrix* matView, TMatrix* matProj);
 public:
 	TObject3D();
 	virtual ~TObject3D();
