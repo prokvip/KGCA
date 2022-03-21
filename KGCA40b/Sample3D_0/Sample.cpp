@@ -21,10 +21,8 @@ bool	Sample::Init()
 	m_MapObj.m_pColorTex = pTex;
 	m_MapObj.m_pVShader = pVShader;
 	m_MapObj.m_pPShader = pPShader;
-	TMatrix matRotate, matScale;
-	matRotate.XRotate(DegreeToRadian(90));
-	matScale.Scale(100, 100.0f, 100.0f);
-	m_MapObj.m_matWorld = matScale * matRotate;
+	// Á¤Á¡°³¼ö ( 2n½Â+1)
+	m_MapObj.CreateMap(128+1, 128+1);
 	if (!m_MapObj.Create(m_pd3dDevice.Get(),m_pImmediateContext.Get()))
 	{
 		return false;
@@ -52,11 +50,6 @@ bool	Sample::Init()
 	}
 	m_ObjB.m_matWorld.Translation(1.0f, 0.0f, 0.0f);
 
-	// world
-	//TMatrix matRotate, matScale, matTrans;
-	//matRotate.ZRotate(g_fGameTimer);
-	//matScale.Scale(cos(g_fGameTimer) * 0.5f + 0.5f, 1.0f, 1.0f);
-	//matTrans.Translation(0,	cos(g_fGameTimer) * 0.5f + 0.5f, 0);
 	return true;
 }
 bool	Sample::Frame()

@@ -2,10 +2,11 @@
 #include "TCore.h"
 #include "TPlaneObj.h"
 #include "TCamera.h"
+#include "TMap.h"
 class Sample : public TCore
 {
 	TCamera		    m_Camera;
-	TPlaneObj       m_MapObj;
+	TMap			m_MapObj;
 	TPlaneObj       m_PlayerObj;
 	TPlaneObj       m_ObjB;
 public:
