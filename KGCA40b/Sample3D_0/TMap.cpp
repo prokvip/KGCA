@@ -28,7 +28,9 @@ bool		TMap::SetVertexData()
 			m_VertexList[index].p.y = 0.0f;
 			m_VertexList[index].p.z = -((iRow - hHalfRow)* m_iCellDistance);
 			m_VertexList[index].n = TVector3(0, 1, 0);
-			m_VertexList[index].c = TVector4(1, 1, 1,1);
+			m_VertexList[index].c = TVector4(randstep(0.0f, 1.0f), 
+				randstep(0.0f, 1.0f), 
+				randstep(0.0f, 1.0f), 1);
 			m_VertexList[index].t = 
 				TVector2(ftxOffetU*iCol, ftxOffetV * iRow);
 		}
