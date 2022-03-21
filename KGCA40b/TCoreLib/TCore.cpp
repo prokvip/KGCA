@@ -42,6 +42,10 @@ bool	TCore::GameRun()
 }
 bool	TCore::CoreFrame()
 {
+	if (TInput::Get().GetKey('V')== KEY_PUSH)
+	{
+		m_bWireFrame = !m_bWireFrame;
+	}
 	m_GameTimer.Frame();
 	TInput::Get().Frame();
 	I_ObjectMgr.Frame();
@@ -66,7 +70,10 @@ bool	TCore::CoreRender()
 
 	m_pImmediateContext->PSSetSamplers(0, 1, &TDxState::m_pSamplerState);	
 	m_pImmediateContext->OMSetDepthStencilState(TDxState::g_pDSSDepthEnable, 0x00);
-	m_pImmediateContext->RSSetState(TDxState::g_pRSBackCullSolid);
+	if( m_bWireFrame)
+		m_pImmediateContext->RSSetState(TDxState::g_pRSBackCullWireFrame);
+	else
+		m_pImmediateContext->RSSetState(TDxState::g_pRSBackCullSolid);
 
 	// 백버퍼에 랜더링 한다.
 	Render();

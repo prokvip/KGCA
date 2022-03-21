@@ -1,12 +1,15 @@
 #include "TMap.h"
-bool		TMap::CreateMap(UINT width, UINT height)
+bool		TMap::CreateMap(UINT width, UINT height,
+	float fDistance)
 {
 	m_iNumCols = width;
 	m_iNumRows = height;
+	m_iCellDistance = fDistance;
 	m_iNumVertices = m_iNumCols * m_iNumRows;
 	m_iNumCellCols = m_iNumCols-1;
 	m_iNumCellRows = m_iNumRows-1;
 	m_iNumFaces = m_iNumCellCols* m_iNumCellRows*2;
+
 	return true;
 }
 bool		TMap::SetVertexData()
@@ -21,9 +24,9 @@ bool		TMap::SetVertexData()
 		for (int iCol = 0; iCol < m_iNumCols; iCol++)
 		{
 			int index = iRow * m_iNumCols + iCol;
-			m_VertexList[index].p.x = (iCol- hHalfCol);
+			m_VertexList[index].p.x = (iCol- hHalfCol)* m_iCellDistance;
 			m_VertexList[index].p.y = 0.0f;
-			m_VertexList[index].p.z = -((iRow - hHalfRow));
+			m_VertexList[index].p.z = -((iRow - hHalfRow)* m_iCellDistance);
 			m_VertexList[index].n = TVector3(0, 1, 0);
 			m_VertexList[index].c = TVector4(1, 1, 1,1);
 			m_VertexList[index].t = 

@@ -3,7 +3,12 @@ ID3D11BlendState* TDxState::m_AlphaBlend = nullptr;
 ID3D11BlendState* TDxState::m_AlphaBlendDisable = nullptr;
 ID3D11SamplerState* TDxState::m_pSamplerState = nullptr;
 ID3D11RasterizerState* TDxState::g_pRSBackCullSolid =nullptr;
+ID3D11RasterizerState* TDxState::g_pRSNoneCullSolid = nullptr;
+ID3D11RasterizerState* TDxState::g_pRSBackCullWireFrame = nullptr;
+ID3D11RasterizerState* TDxState::g_pRSNoneCullWireFrame = nullptr;
 ID3D11DepthStencilState* TDxState::g_pDSSDepthEnable=nullptr;
+ID3D11DepthStencilState* TDxState::g_pDSSDepthDisable = nullptr;
+
 bool TDxState::SetState(ID3D11Device* pd3dDevice)
 {
 	HRESULT hr;
@@ -56,10 +61,29 @@ bool TDxState::SetState(ID3D11Device* pd3dDevice)
 	ZeroMemory(&rsDesc, sizeof(rsDesc));
 	rsDesc.DepthClipEnable = TRUE;
 	rsDesc.FillMode = D3D11_FILL_SOLID;
-	rsDesc.CullMode = D3D11_CULL_NONE;
+	rsDesc.CullMode = D3D11_CULL_BACK;
 	if (FAILED(hr = pd3dDevice->CreateRasterizerState(&rsDesc, &TDxState::g_pRSBackCullSolid))) return hr;
 
+	rsDesc.DepthClipEnable = TRUE;
+	rsDesc.FillMode = D3D11_FILL_SOLID;
+	rsDesc.CullMode = D3D11_CULL_NONE;
+	if (FAILED(hr = pd3dDevice->CreateRasterizerState(&rsDesc, 
+		&TDxState::g_pRSNoneCullSolid))) return hr;
 
+
+	rsDesc.DepthClipEnable = TRUE;
+	rsDesc.FillMode = D3D11_FILL_WIREFRAME;
+	rsDesc.CullMode = D3D11_CULL_BACK;
+	if (FAILED(hr = pd3dDevice->CreateRasterizerState(
+		&rsDesc, &TDxState::g_pRSBackCullWireFrame))) return hr;
+
+	rsDesc.DepthClipEnable = TRUE;
+	rsDesc.FillMode = D3D11_FILL_WIREFRAME;
+	rsDesc.CullMode = D3D11_CULL_NONE;
+	if (FAILED(hr = pd3dDevice->CreateRasterizerState(
+		&rsDesc, &TDxState::g_pRSNoneCullWireFrame))) return hr;
+
+	
 	D3D11_DEPTH_STENCIL_DESC dsDescDepth;
 	ZeroMemory(&dsDescDepth, sizeof(D3D11_DEPTH_STENCIL_DESC));
 	dsDescDepth.DepthEnable = TRUE;
@@ -83,12 +107,27 @@ bool TDxState::SetState(ID3D11Device* pd3dDevice)
 	{
 		return hr;
 	}
+
+	dsDescDepth.DepthEnable = FALSE;
+	if (FAILED(hr = pd3dDevice->CreateDepthStencilState(&dsDescDepth, 
+		&g_pDSSDepthDisable)))
+	{
+		return hr;
+	}
+
+	
 	return true;
 }
 bool TDxState::Release()
 {
 	if (g_pRSBackCullSolid) g_pRSBackCullSolid->Release();
+	if (g_pRSNoneCullSolid) g_pRSNoneCullSolid->Release();
+	if (g_pRSBackCullWireFrame) g_pRSBackCullWireFrame->Release();
+	if (g_pRSNoneCullWireFrame) g_pRSNoneCullWireFrame->Release();
+
 	if (g_pDSSDepthEnable) g_pDSSDepthEnable->Release();
+	if (g_pDSSDepthDisable) g_pDSSDepthDisable->Release();
+
 	if (m_AlphaBlend) m_AlphaBlend->Release();
 	if (m_AlphaBlendDisable) m_AlphaBlendDisable->Release();
 	m_AlphaBlend = nullptr;

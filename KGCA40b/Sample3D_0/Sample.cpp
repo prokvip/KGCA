@@ -16,13 +16,14 @@ bool	Sample::Init()
 		m_pd3dDevice.Get(), L"Box.hlsl", "VS");
 	TShader* pPShader = I_Shader.CreatePixelShader(
 		m_pd3dDevice.Get(), L"Box.hlsl", "PS");
-	
+
 	m_MapObj.Init();
-	m_MapObj.m_pColorTex = pTex;
+	TTexture* pTexMap = I_Texture.Load(L"../../data/map/020.bmp");
+	m_MapObj.m_pColorTex = pTexMap;
 	m_MapObj.m_pVShader = pVShader;
 	m_MapObj.m_pPShader = pPShader;
 	// Á¤Á¡°³¼ö ( 2n½Â+1)
-	m_MapObj.CreateMap(128+1, 128+1);
+	m_MapObj.CreateMap(64+1, 64+1, 1.0f);
 	if (!m_MapObj.Create(m_pd3dDevice.Get(),m_pImmediateContext.Get()))
 	{
 		return false;
@@ -73,7 +74,7 @@ bool	Sample::Frame()
 	m_PlayerObj.SetPosition(m_PlayerObj.m_vPos);
 
 	m_Camera.m_vTarget = m_PlayerObj.m_vPos;
-	m_Camera.m_vCamera = m_PlayerObj.m_vPos + TVector3(0,30.0f,-25.0f);
+	m_Camera.m_vCamera = m_PlayerObj.m_vPos + TVector3(0,10.0f,-15.0f);
 
 	m_Camera.Frame();
 	m_MapObj.Frame();
