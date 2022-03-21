@@ -1,5 +1,18 @@
 #include "TMap.h"
 #include "WICTextureLoader.h"
+bool TMap::Frame()
+{
+	TVector3 vLight(cosf(g_fGameTimer)*100.0f, 
+		            100, 
+					sinf(g_fGameTimer) * 100.0f);
+
+	vLight = vLight.Normal() * -1.0f;
+	m_ConstantList.Color.x = vLight.x;
+	m_ConstantList.Color.y = vLight.y;
+	m_ConstantList.Color.z = vLight.z;
+	m_ConstantList.Color.w = 1.0f;
+	return true;
+}
 bool TMap::CreateHeightMap(const TCHAR* strHeightMapTex)
 {
 	HRESULT hr;	
@@ -111,6 +124,64 @@ bool		TMap::SetIndexData()
 			m_IndexList[iIndex + 5] = m_IndexList[iIndex + 2]+1;
 			
 			iIndex += 6;
+		}
+	}
+
+	iIndex = 0;
+	TVector3 vLight(100, 100, 0);
+	vLight = vLight.Normal() * 1.0f;
+	for (int iRow = 0; iRow < m_iNumCellRows; iRow++)
+	{
+		for (int iCol = 0; iCol < m_iNumCellCols; iCol++)
+		{
+			// 0face
+			TFace face;
+			face.v0 = m_IndexList[iIndex + 0];
+			face.v1 = m_IndexList[iIndex + 1];
+			face.v2 = m_IndexList[iIndex + 2];
+			TVector3 vNormal;
+			TVector3 vE0 = (m_VertexList[face.v1].p - m_VertexList[face.v0].p).Normal();
+			TVector3 vE1 = (m_VertexList[face.v2].p - m_VertexList[face.v0].p).Normal();
+			face.vNomal = (vE0 ^ vE1).Normal();
+
+			m_VertexList[face.v0].n += face.vNomal;
+			m_VertexList[face.v1].n += face.vNomal;
+			m_VertexList[face.v2].n += face.vNomal;
+
+			float fDot = max(0.0f, vLight | face.vNomal);
+			m_VertexList[face.v0].c = TVector4(fDot, fDot, fDot,1);
+			m_VertexList[face.v1].c = TVector4(fDot, fDot, fDot, 1);
+			m_VertexList[face.v2].c = TVector4(fDot, fDot, fDot, 1);
+			m_FaceList.push_back(face);
+
+			// 1face
+			face.v0 = m_IndexList[iIndex + 3];
+			face.v1 = m_IndexList[iIndex + 4];
+			face.v2 = m_IndexList[iIndex + 5];
+			vE0 = (m_VertexList[face.v1].p - m_VertexList[face.v0].p).Normal();
+			vE1 = (m_VertexList[face.v2].p - m_VertexList[face.v0].p).Normal();
+			face.vNomal = (vE0 ^ vE1).Normal();
+
+			m_VertexList[face.v0].n += face.vNomal;
+			m_VertexList[face.v1].n += face.vNomal;
+			m_VertexList[face.v2].n += face.vNomal;
+
+			fDot = max(0.0f, vLight | face.vNomal);
+			m_VertexList[face.v0].c = TVector4(fDot, fDot, fDot, 1);
+			m_VertexList[face.v1].c = TVector4(fDot, fDot, fDot, 1);
+			m_VertexList[face.v2].c = TVector4(fDot, fDot, fDot, 1);
+			m_FaceList.push_back(face);
+
+			iIndex += 6;
+		}
+	}
+	for (int iRow = 0; iRow < m_iNumRows; iRow++)
+	{
+		for (int iCol = 0; iCol < m_iNumCols; iCol++)
+		{
+			m_VertexList[iRow * m_iNumCols + iCol].n.Normalize();
+			float fDot = max(0.0f, vLight | m_VertexList[iRow * m_iNumCols + iCol].n);
+			m_VertexList[iRow * m_iNumCols + iCol].c = TVector4(fDot, fDot, fDot, 1);
 		}
 	}
 	return true;

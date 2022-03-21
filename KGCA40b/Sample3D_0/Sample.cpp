@@ -76,7 +76,7 @@ bool	Sample::Frame()
 	m_PlayerObj.SetPosition(m_PlayerObj.m_vPos);
 
 	m_Camera.m_vTarget = m_PlayerObj.m_vPos;
-	m_Camera.m_vCamera = m_PlayerObj.m_vPos + TVector3(0,100.0f,-300.0f);
+	m_Camera.m_vCamera = m_PlayerObj.m_vPos + TVector3(0,1500.0f,-300.0f);
 
 	m_Camera.Frame();
 	m_MapObj.Frame();

@@ -34,7 +34,8 @@ VS_OUTPUT VS( VS_INPUT v)
 	pOut.p = vProj;
 	pOut.n = v.n;
 	pOut.t = v.t;
-	pOut.c = v.c;
+	float fDot = max(0, dot(pOut.n, -Color0.xyz));
+	pOut.c = float4(fDot, fDot, fDot,1);
 	return pOut;
 }
 Texture2D		g_txColor : register(t0);
