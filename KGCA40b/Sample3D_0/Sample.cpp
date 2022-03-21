@@ -18,12 +18,14 @@ bool	Sample::Init()
 		m_pd3dDevice.Get(), L"Box.hlsl", "PS");
 
 	m_MapObj.Init();
+	m_MapObj.SetDevice(m_pd3dDevice.Get(), m_pImmediateContext.Get());
+	m_MapObj.CreateHeightMap(L"../../data/map/129.jpg");
 	TTexture* pTexMap = I_Texture.Load(L"../../data/map/020.bmp");
 	m_MapObj.m_pColorTex = pTexMap;
 	m_MapObj.m_pVShader = pVShader;
 	m_MapObj.m_pPShader = pPShader;
 	// Á¤Á¡°³¼ö ( 2n½Â+1)
-	m_MapObj.CreateMap(64+1, 64+1, 1.0f);
+	m_MapObj.CreateMap(m_MapObj.m_iNumCols, m_MapObj.m_iNumRows, 10.0f);
 	if (!m_MapObj.Create(m_pd3dDevice.Get(),m_pImmediateContext.Get()))
 	{
 		return false;
@@ -57,24 +59,24 @@ bool	Sample::Frame()
 {	
 	if (TInput::Get().GetKey('A') || TInput::Get().GetKey(VK_LEFT))
 	{
-		m_PlayerObj.m_vPos.x -= g_fSecPerFrame * 10.0f;
+		m_PlayerObj.m_vPos.x -= g_fSecPerFrame * 100.0f;
 	}
 	if (TInput::Get().GetKey('D') || TInput::Get().GetKey(VK_RIGHT))
 	{
-		m_PlayerObj.m_vPos.x += g_fSecPerFrame * 10.0f;
+		m_PlayerObj.m_vPos.x += g_fSecPerFrame * 100.0f;
 	}
 	if (TInput::Get().GetKey('W') || TInput::Get().GetKey(VK_UP))
 	{
-		m_PlayerObj.m_vPos.z += g_fSecPerFrame * 10.0f;
+		m_PlayerObj.m_vPos.z += g_fSecPerFrame * 100.0f;
 	}
 	if (TInput::Get().GetKey('S') || TInput::Get().GetKey(VK_DOWN))
 	{
-		m_PlayerObj.m_vPos.z -= g_fSecPerFrame * 10.0f;
+		m_PlayerObj.m_vPos.z -= g_fSecPerFrame * 100.0f;
 	}
 	m_PlayerObj.SetPosition(m_PlayerObj.m_vPos);
 
 	m_Camera.m_vTarget = m_PlayerObj.m_vPos;
-	m_Camera.m_vCamera = m_PlayerObj.m_vPos + TVector3(0,10.0f,-15.0f);
+	m_Camera.m_vCamera = m_PlayerObj.m_vPos + TVector3(0,100.0f,-300.0f);
 
 	m_Camera.Frame();
 	m_MapObj.Frame();
