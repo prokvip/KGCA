@@ -1,4 +1,18 @@
 #include "TSkyObj.h"
+bool		TSkyObj::LoadTexture(const TCHAR* szColorFileName,
+								 const TCHAR* szMaskFileName)
+{
+
+	m_pTexArray[0] = I_Texture.Load(L"..\\..\\data\\sky\\st00_cm_front.bmp" );
+	m_pTexArray[1] = I_Texture.Load(L"..\\..\\data\\sky\\st00_cm_back.bmp" );
+	m_pTexArray[2] = I_Texture.Load(L"..\\..\\data\\sky\\st00_cm_right.bmp" );
+	m_pTexArray[3] = I_Texture.Load(L"..\\..\\data\\sky\\st00_cm_left.bmp" );
+	m_pTexArray[4] = I_Texture.Load(L"..\\..\\data\\sky\\st00_cm_up.bmp" );
+	m_pTexArray[5] = I_Texture.Load(L"..\\..\\data\\sky\\st00_cm_down.bmp" );
+
+	m_TextureDesc = m_pTexArray[0]->m_TextureDesc;
+	return true;
+}
 bool		TSkyObj::SetVertexData()
 {
 	// Local Coord
@@ -9,164 +23,71 @@ bool		TSkyObj::SetVertexData()
 	m_VertexList.resize(24);
 
 	int index = 0;
-	// +Z plane
-	m_VertexList[index].p = TVector3(1.0f, 1.0f, 1.0f);
-	m_VertexList[index].n = TVector3(0.0f, 0.0f, 1.0f);
-	m_VertexList[index].c = TVector4(1.0f, 1.0f, 1.0f, 1.0f);
-	m_VertexList[index].t = TVector2(0.0f, 0.0f);
-	m_VertexList[++index].p = TVector3(-1.0f, 1.0f, 1.0f);
-	m_VertexList[index].n = TVector3(0.0f, 0.0f, 1.0f);
-	m_VertexList[index].c = TVector4(1.0f, 1.0f, 1.0f, 1.0f);
-	m_VertexList[index].t = TVector2(1.0f, 0.0f);
-	m_VertexList[++index].p = TVector3(1.0f, -1.0f, 1.0f);
-	m_VertexList[index].n = TVector3(0.0f, 0.0f, 1.0f);
-	m_VertexList[index].c = TVector4(1.0f, 1.0f, 1.0f, 1.0f);
-	m_VertexList[index].t = TVector2(0.0f, 1.0f);
-	m_VertexList[++index].p = TVector3(-1.0f, -1.0f, 1.0f);
-	m_VertexList[index].n = TVector3(0.0f, 0.0f, 1.0f);
-	m_VertexList[index].c = TVector4(1.0f, 1.0f, 1.0f, 1.0f);
-	m_VertexList[index].t = TVector2(1.0f, 1.0f);
-	// -Z plane
-	
-	m_VertexList[++index].p = TVector3(-1.0f, 1.0f, -1.0f);
-	m_VertexList[index].n = TVector3(0.0f, 0.0f, -1.0f);
-	m_VertexList[index].c = TVector4(1.0f, 1.0f, 1.0f, 1.0f);
-	m_VertexList[index].t = TVector2(0.0f, 0.0f);
+	// »ó´Ü
+	// 5    6
+	// 1    2
+	// ÇÏ´Ü
+	// 4    7
+	// 0    3  
+	// ¾Õ¸é
+	m_VertexList.resize(24);
+	m_VertexList[0] = TVertex(TVector3(-1.0f, 1.0f, -1.0f), TVector3(0.0f, 0.0f, -1.0f), TVector4(1.0f, 0.0f, 0.0f, 1.0f), TVector2(0.0f, 0.0f));
+	m_VertexList[1] = TVertex(TVector3(1.0f, 1.0f, -1.0f), TVector3(0.0f, 0.0f, -1.0f), TVector4(1.0f, 0.0f, 0.0f, 1.0f), TVector2(1.0f, 0.0f));
+	m_VertexList[2] = TVertex(TVector3(1.0f, -1.0f, -1.0f), TVector3(0.0f, 0.0f, -1.0f), TVector4(1.0f, 0.0f, 0.0f, 1.0f), TVector2(1.0f, 1.0f));
+	m_VertexList[3] = TVertex(TVector3(-1.0f, -1.0f, -1.0f), TVector3(0.0f, 0.0f, -1.0f), TVector4(1.0f, 0.0f, 0.0f, 1.0f), TVector2(0.0f, 1.0f));
+	// µÞ¸é
+	m_VertexList[4] = TVertex(TVector3(1.0f, 1.0f, 1.0f), TVector3(0.0f, 0.0f, 1.0f), TVector4(0.0f, 0.0f, 0.0f, 1.0f), TVector2(0.0f, 0.0f));
+	m_VertexList[5] = TVertex(TVector3(-1.0f, 1.0f, 1.0f), TVector3(0.0f, 0.0f, 1.0f), TVector4(0.0f, 1.0f, 0.0f, 1.0f), TVector2(1.0f, 0.0f));
+	m_VertexList[6] = TVertex(TVector3(-1.0f, -1.0f, 1.0f), TVector3(0.0f, 0.0f, 1.0f), TVector4(0.0f, 1.0f, 0.0f, 1.0f), TVector2(1.0f, 1.0f));
+	m_VertexList[7] = TVertex(TVector3(1.0f, -1.0f, 1.0f), TVector3(0.0f, 0.0f, 1.0f), TVector4(0.0f, 1.0f, 0.0f, 1.0f), TVector2(0.0f, 1.0f));
 
-	m_VertexList[++index].p = TVector3(1.0f, 1.0f, -1.0f);
-	m_VertexList[index].n = TVector3(0.0f, 0.0f, -1.0f);
-	m_VertexList[index].c = TVector4(1.0f, 1.0f, 1.0f, 1.0f);
-	m_VertexList[index].t = TVector2(1.0f, 0.0f);
+	// ¿À¸¥ÂÊ
+	m_VertexList[8] = TVertex(TVector3(1.0f, 1.0f, -1.0f), TVector3(1.0f, 0.0f, 0.0f), TVector4(0.0f, 0.0f, 1.0f, 1.0f), TVector2(0.0f, 0.0f));
+	m_VertexList[9] = TVertex(TVector3(1.0f, 1.0f, 1.0f), TVector3(1.0f, 0.0f, 0.0f), TVector4(0.0f, 0.0f, 1.0f, 1.0f), TVector2(1.0f, 0.0f));
+	m_VertexList[10] = TVertex(TVector3(1.0f, -1.0f, 1.0f), TVector3(1.0f, 0.0f, 0.0f), TVector4(0.0f, 0.0f, 1.0f, 1.0f), TVector2(1.0f, 1.0f));
+	m_VertexList[11] = TVertex(TVector3(1.0f, -1.0f, -1.0f), TVector3(1.0f, 0.0f, 0.0f), TVector4(0.0f, 0.0f, 1.0f, 1.0f), TVector2(0.0f, 1.0f));
 
+	// ¿ÞÂÊ
+	m_VertexList[12] = TVertex(TVector3(-1.0f, 1.0f, 1.0f), TVector3(-1.0f, 0.0f, 0.0f), TVector4(1.0f, 1.0f, 0.0f, 1.0f), TVector2(0.0f, 0.0f));
+	m_VertexList[13] = TVertex(TVector3(-1.0f, 1.0f, -1.0f), TVector3(-1.0f, 0.0f, 0.0f), TVector4(1.0f, 1.0f, 0.0f, 1.0f), TVector2(1.0f, 0.0f));
+	m_VertexList[14] = TVertex(TVector3(-1.0f, -1.0f, -1.0f), TVector3(-1.0f, 0.0f, 0.0f), TVector4(1.0f, 1.0f, 0.0f, 1.0f), TVector2(1.0f, 1.0f));
+	m_VertexList[15] = TVertex(TVector3(-1.0f, -1.0f, 1.0f), TVector3(-1.0f, 0.0f, 0.0f), TVector4(1.0f, 1.0f, 0.0f, 1.0f), TVector2(0.0f, 1.0f));
 
-	m_VertexList[++index].p = TVector3(-1.0f, -1.0f, -1.0f);
-	m_VertexList[index].n = TVector3(0.0f, 0.0f, -1.0f);
-	m_VertexList[index].c = TVector4(1.0f, 1.0f, 1.0f, 1.0f);
-	m_VertexList[index].t = TVector2(0.0f, 1.0f);
+	// À­¸é
+	m_VertexList[16] = TVertex(TVector3(-1.0f, 1.0f, 1.0f), TVector3(0.0f, 1.0f, 0.0f), TVector4(1.0f, 0.5f, 1.0f, 1.0f), TVector2(0.0f, 0.0f));
+	m_VertexList[17] = TVertex(TVector3(1.0f, 1.0f, 1.0f), TVector3(0.0f, 1.0f, 0.0f), TVector4(1.0f, 0.5f, 1.0f, 1.0f), TVector2(1.0f, 0.0f));
+	m_VertexList[18] = TVertex(TVector3(1.0f, 1.0f, -1.0f), TVector3(0.0f, 1.0f, 0.0f), TVector4(1.0f, 0.5f, 1.0f, 1.0f), TVector2(1.0f, 1.0f));
+	m_VertexList[19] = TVertex(TVector3(-1.0f, 1.0f, -1.0f), TVector3(0.0f, 1.0f, 0.0f), TVector4(1.0f, 0.5f, 1.0f, 1.0f), TVector2(0.0f, 1.0f));
 
+	// ¾Æ·§¸é
+	m_VertexList[20] = TVertex(TVector3(-1.0f, -1.0f, -1.0f), TVector3(0.0f, -1.0f, 0.0f), TVector4(0.0f, 1.0f, 1.0f, 1.0f), TVector2(0.0f, 0.0f));
+	m_VertexList[21] = TVertex(TVector3(1.0f, -1.0f, -1.0f), TVector3(0.0f, -1.0f, 0.0f), TVector4(0.0f, 1.0f, 1.0f, 1.0f), TVector2(1.0f, 0.0f));
+	m_VertexList[22] = TVertex(TVector3(1.0f, -1.0f, 1.0f), TVector3(0.0f, -1.0f, 0.0f), TVector4(0.0f, 1.0f, 1.0f, 1.0f), TVector2(1.0f, 1.0f));
+	m_VertexList[23] = TVertex(TVector3(-1.0f, -1.0f, 1.0f), TVector3(0.0f, -1.0f, 0.0f), TVector4(0.0f, 1.0f, 1.0f, 1.0f), TVector2(0.0f, 1.0f));
 
-	m_VertexList[++index].p = TVector3(1.0f, -1.0f, -1.0f);
-	m_VertexList[index].n = TVector3(0.0f, 0.0f, -1.0f);
-	m_VertexList[index].c = TVector4(1.0f, 1.0f, 1.0f, 1.0f);
-	m_VertexList[index].t = TVector2(1.0f, 1.0f);
-
-	
-	// +X plane
-	m_VertexList[++index].p = TVector3(1.0f, 1.0f, -1.0f);
-	m_VertexList[index].n = TVector3(1.0f, 0.0f, 0.0f);
-	m_VertexList[index].c = TVector4(1.0f, 1.0f, 1.0f, 1.0f);
-	m_VertexList[index].t = TVector2(0.0f, 0.0f);
-
-	m_VertexList[++index].p = TVector3(1.0f, 1.0f, 1.0f);
-	m_VertexList[index].n = TVector3(1.0f, 0.0f, 0.0f);
-	m_VertexList[index].c = TVector4(1.0f, 1.0f, 1.0f, 1.0f);
-	m_VertexList[index].t = TVector2(1.0f, 0.0f);
-
-
-	m_VertexList[++index].p = TVector3(1.0f, -1.0f, -1.0f);
-	m_VertexList[index].n = TVector3(1.0f, 0.0f, 0.0f);
-	m_VertexList[index].c = TVector4(1.0f, 1.0f, 1.0f, 1.0f);
-	m_VertexList[index].t = TVector2(0.0f, 1.0f);
-
-
-	m_VertexList[++index].p = TVector3(1.0f, -1.0f, 1.0f);
-	m_VertexList[index].n = TVector3(1.0f, 0.0f, 0.0f);
-	m_VertexList[index].c = TVector4(1.0f, 1.0f, 1.0f, 1.0f);
-	m_VertexList[index].t = TVector2(1.0f, 1.0f);
-
-	// -X plane
-	m_VertexList[++index].p = TVector3(-1.0f, 1.0f, 1.0f);
-	m_VertexList[index].n = TVector3(-1.0f, 0.0f, 0.0f);
-	m_VertexList[index].c = TVector4(1.0f, 1.0f, 1.0f, 1.0f);
-	m_VertexList[index].t = TVector2(0.0f, 0.0f);
-
-	m_VertexList[++index].p = TVector3(-1.0f, 1.0f, -1.0f);
-	m_VertexList[index].n = TVector3(-1.0f, 0.0f, 0.0f);
-	m_VertexList[index].c = TVector4(1.0f, 1.0f, 1.0f, 1.0f);
-	m_VertexList[index].t = TVector2(1.0f, 0.0f);
-
-
-	m_VertexList[++index].p = TVector3(-1.0f, -1.0f, 1.0f);
-	m_VertexList[index].n = TVector3(-1.0f, 0.0f, 0.0f);
-	m_VertexList[index].c = TVector4(1.0f, 1.0f, 1.0f, 1.0f);
-	m_VertexList[index].t = TVector2(0.0f, 1.0f);
-
-
-	m_VertexList[++index].p = TVector3(-1.0f, -1.0f, -1.0f);
-	m_VertexList[index].n = TVector3(-1.0f, 0.0f, 0.0f);
-	m_VertexList[index].c = TVector4(1.0f, 1.0f, 1.0f, 1.0f);
-	m_VertexList[index].t = TVector2(1.0f, 1.0f);
-
-	// -y plane
-	m_VertexList[++index].p = TVector3(-1.0f, -1.0f, -1.0f);
-	m_VertexList[index].n = TVector3(0.0f, -1.0f, 0.0f);
-	m_VertexList[index].c = TVector4(1.0f, 1.0f, 1.0f, 1.0f);
-	m_VertexList[index].t = TVector2(0.0f, 0.0f);
-
-	m_VertexList[++index].p = TVector3(1.0f, -1.0f, -1.0f);
-	m_VertexList[index].n = TVector3(0.0f, -1.0f, 0.0f);
-	m_VertexList[index].c = TVector4(1.0f, 1.0f, 1.0f, 1.0f);
-	m_VertexList[index].t = TVector2(1.0f, 0.0f);
-
-
-	m_VertexList[++index].p = TVector3(-1.0f, -1.0f, 1.0f);
-	m_VertexList[index].n = TVector3(0.0f, -1.0f, 0.0f);
-	m_VertexList[index].c = TVector4(1.0f, 1.0f, 1.0f, 1.0f);
-	m_VertexList[index].t = TVector2(0.0f, 1.0f);
-
-
-	m_VertexList[++index].p = TVector3(1.0f, -1.0f, 1.0f);
-	m_VertexList[index].n = TVector3(0.0f, -1.0f, 0.0f);
-	m_VertexList[index].c = TVector4(1.0f, 1.0f, 1.0f, 1.0f);
-	m_VertexList[index].t = TVector2(1.0f, 1.0f);
-
-	// +y plane
-	m_VertexList[++index].p = TVector3(-1.0f, 1.0f, 1.0f);
-	m_VertexList[index].n = TVector3(0.0f, 1.0f, 0.0f);
-	m_VertexList[index].c = TVector4(1.0f, 1.0f, 1.0f, 1.0f);
-	m_VertexList[index].t = TVector2(0.0f, 0.0f);
-
-	m_VertexList[++index].p = TVector3(1.0f, 1.0f, 1.0f);
-	m_VertexList[index].n = TVector3(0.0f, 1.0f, 0.0f);
-	m_VertexList[index].c = TVector4(1.0f, 1.0f, 1.0f, 1.0f);
-	m_VertexList[index].t = TVector2(1.0f, 0.0f);
-
-
-	m_VertexList[++index].p = TVector3(-1.0f, 1.0f, -1.0f);
-	m_VertexList[index].n = TVector3(0.0f, 1.0f, 0.0f);
-	m_VertexList[index].c = TVector4(1.0f, 1.0f, 1.0f, 1.0f);
-	m_VertexList[index].t = TVector2(0.0f, 1.0f);
-
-
-	m_VertexList[++index].p = TVector3(1.0f, 1.0f, -1.0f);
-	m_VertexList[index].n = TVector3(0.0f, 1.0f, 0.0f);
-	m_VertexList[index].c = TVector4(1.0f, 1.0f, 1.0f, 1.0f);
-	m_VertexList[index].t = TVector2(1.0f, 1.0f);
 	return true;
 }
 bool		TSkyObj::SetIndexData()
 {
-	m_IndexList.push_back(0); m_IndexList.push_back(1); m_IndexList.push_back(2);
-	m_IndexList.push_back(2); m_IndexList.push_back(1); m_IndexList.push_back(3);
-	m_IndexList.push_back(4); m_IndexList.push_back(5); m_IndexList.push_back(6);
-	m_IndexList.push_back(6); m_IndexList.push_back(5); m_IndexList.push_back(7);
-	m_IndexList.push_back(8); m_IndexList.push_back(9); m_IndexList.push_back(10);
-	m_IndexList.push_back(10); m_IndexList.push_back(9); m_IndexList.push_back(11);
-	m_IndexList.push_back(12); m_IndexList.push_back(13); m_IndexList.push_back(14);
-	m_IndexList.push_back(14); m_IndexList.push_back(13); m_IndexList.push_back(15);
-	m_IndexList.push_back(16); m_IndexList.push_back(17); m_IndexList.push_back(18);
-	m_IndexList.push_back(18); m_IndexList.push_back(17); m_IndexList.push_back(19);
-	m_IndexList.push_back(20); m_IndexList.push_back(21); m_IndexList.push_back(22);
-	m_IndexList.push_back(22); m_IndexList.push_back(21); m_IndexList.push_back(23);
+	m_IndexList.resize(36);
+	int iIndex = 0;
+	m_IndexList[iIndex++] = 0; 	m_IndexList[iIndex++] = 1; 	m_IndexList[iIndex++] = 2; 	m_IndexList[iIndex++] = 0;	m_IndexList[iIndex++] = 2; 	m_IndexList[iIndex++] = 3;
+	m_IndexList[iIndex++] = 4; 	m_IndexList[iIndex++] = 5; 	m_IndexList[iIndex++] = 6; 	m_IndexList[iIndex++] = 4;	m_IndexList[iIndex++] = 6; 	m_IndexList[iIndex++] = 7;
+	m_IndexList[iIndex++] = 8; 	m_IndexList[iIndex++] = 9; 	m_IndexList[iIndex++] = 10; m_IndexList[iIndex++] = 8;	m_IndexList[iIndex++] = 10; m_IndexList[iIndex++] = 11;
+	m_IndexList[iIndex++] = 12; m_IndexList[iIndex++] = 13; m_IndexList[iIndex++] = 14; m_IndexList[iIndex++] = 12;	m_IndexList[iIndex++] = 14; m_IndexList[iIndex++] = 15;
+	m_IndexList[iIndex++] = 16; m_IndexList[iIndex++] = 17; m_IndexList[iIndex++] = 18; m_IndexList[iIndex++] = 16;	m_IndexList[iIndex++] = 18; m_IndexList[iIndex++] = 19;
+	m_IndexList[iIndex++] = 20; m_IndexList[iIndex++] = 21; m_IndexList[iIndex++] = 22; m_IndexList[iIndex++] = 20;	m_IndexList[iIndex++] = 22; m_IndexList[iIndex++] = 23;
 
 	return true;
 }
 bool	TSkyObj::PostRender()
 {
-	if (m_IndexList.size() <= 0)
-		m_pContext->Draw(m_VertexList.size(), 0);
-	else
-		m_pContext->DrawIndexed(m_IndexList.size(), 0, 0);
+	for (int iTex = 0; iTex < 6; iTex++)
+	{
+		m_pContext->PSSetShaderResources(0, 1,
+			m_pTexArray[iTex]->m_pSRV.GetAddressOf());
+		m_pContext->DrawIndexed(6, 6*iTex, 0);
+	}
 	return true;
 }
 TSkyObj::TSkyObj()

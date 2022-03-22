@@ -30,6 +30,9 @@
     <ClInclude Include="TSkyObj.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="TBoxObj.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Sample.cpp">
@@ -47,8 +50,12 @@
     <ClCompile Include="TSkyObj.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="TBoxObj.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Box.hlsl" />
+    <FxCompile Include="sky.hlsl" />
   </ItemGroup>
 </Project>

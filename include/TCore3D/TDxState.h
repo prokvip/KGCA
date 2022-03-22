@@ -6,7 +6,8 @@ public:
 public:
 	static ID3D11BlendState* m_AlphaBlend;
 	static ID3D11BlendState* m_AlphaBlendDisable;
-	static ID3D11SamplerState* m_pSamplerState;
+	static ID3D11SamplerState* m_pSSLinear;
+	static ID3D11SamplerState* m_pSSPoint;
 	static ID3D11RasterizerState* g_pRSBackCullWireFrame;
 	static ID3D11RasterizerState* g_pRSNoneCullWireFrame;
 	static ID3D11RasterizerState* g_pRSBackCullSolid;

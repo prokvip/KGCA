@@ -15,6 +15,20 @@ struct TVertex
 	TVector3 n; // 노말
 	TVector4 c; // 컬러
 	TVector2 t; // 텍셀
+	TVertex(TVector3 p1,
+		TVector3 n1,
+		TVector4 c1,
+		TVector2 t1)
+	{
+		p = p1;
+		n = n1;
+		c = c1;
+		t = t1;
+	}
+	TVertex()
+	{
+
+	}
 };
 
 enum TCollisionType

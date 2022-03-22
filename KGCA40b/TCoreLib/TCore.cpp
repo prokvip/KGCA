@@ -68,7 +68,7 @@ bool	TCore::CoreRender()
 		m_pRenderTargetView.GetAddressOf(),
 		m_pDepthStencilView.Get());
 
-	m_pImmediateContext->PSSetSamplers(0, 1, &TDxState::m_pSamplerState);	
+	m_pImmediateContext->PSSetSamplers(0, 1, &TDxState::m_pSSLinear);
 	m_pImmediateContext->OMSetDepthStencilState(TDxState::g_pDSSDepthEnable, 0x00);
 	if( m_bWireFrame)
 		m_pImmediateContext->RSSetState(TDxState::g_pRSBackCullWireFrame);

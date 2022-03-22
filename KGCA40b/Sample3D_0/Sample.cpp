@@ -41,19 +41,16 @@ bool	Sample::Init()
 		return false;
 	}	
 
-	m_SkyObj.Init();
-	m_SkyObj.m_pColorTex = I_Texture.Load(L"../../data/sky/st00_cm_back.bmp");
-	m_SkyObj.m_pVShader = pVShader;
-	m_SkyObj.m_pPShader = pPShader;
-	m_SkyObj.SetPosition(TVector3(0.0f, 0.0f, 0.0f));
-	
-	if (!m_SkyObj.Create(m_pd3dDevice.Get(), m_pImmediateContext.Get()))
+	m_SkyObj.Init();	
+	m_SkyObj.SetPosition(TVector3(0.0f, 0.0f, 0.0f));	
+	if (!m_SkyObj.Create(	m_pd3dDevice.Get(), 
+							m_pImmediateContext.Get(),
+							L"sky.hlsl",
+							L"../../data/sky/xxx.bmp"))
 	{
 		return false;
 	}
-	m_SkyObj.m_matWorld.Scale(3000.0f, 3000.0f, 3000.0f);
-	//
-
+	
 	//m_ObjB.Init();
 	//m_ObjB.m_pColorTex = I_Texture.Load(L"../../data/KGCABK.bmp");
 	//m_ObjB.m_pVShader = pVShader;
@@ -92,7 +89,6 @@ bool	Sample::Frame()
 	matRotate.YRotate(fRadian);
 	matScale.Scale(50, 50, 50);
 	m_PlayerObj.m_matWorld = matScale*matRotate;
-
 	m_PlayerObj.m_vPos.y= m_MapObj.GetHeight(m_PlayerObj.m_vPos.x, m_PlayerObj.m_vPos.z)+50;
 	m_PlayerObj.SetPosition(m_PlayerObj.m_vPos);
 
@@ -100,9 +96,8 @@ bool	Sample::Frame()
 
 	float y = m_MapObj.GetHeight(m_Camera.m_vCamera.x, m_Camera.m_vCamera.z);
 	m_Camera.m_vCamera = m_PlayerObj.m_vPos +
-		TVector3(0, 50, -350);
-						//m_PlayerObj.m_vLook * -1.0f *100.0f +
-						//m_PlayerObj.m_vUp * 20.0f;
+						m_PlayerObj.m_vLook * -1.0f *10.0f +
+						m_PlayerObj.m_vUp * 10.0f;
 
 	m_Camera.Frame();
 	m_MapObj.Frame();
@@ -117,13 +112,14 @@ bool	Sample::Render()
 	m_SkyObj.m_matViewSky._43 = 0;
 	TMatrix matRotation, matScale;
 	matScale.Scale(3000.0f, 3000.0f, 3000.0f);
-	matRotation.YRotate(g_fGameTimer*0.01f);
+	matRotation.YRotate(g_fGameTimer*0.00f);
 	m_SkyObj.m_matWorld = matScale * matRotation;	
 	m_SkyObj.SetMatrix(NULL, &m_SkyObj.m_matViewSky, &m_Camera.m_matProj);
 	m_pImmediateContext->RSSetState(TDxState::g_pRSNoneCullSolid);
+	m_pImmediateContext->PSSetSamplers(0, 1, &TDxState::m_pSSPoint);
 	m_SkyObj.Render();
 
-
+	m_pImmediateContext->PSSetSamplers(0, 1, &TDxState::m_pSSLinear);
 	m_pImmediateContext->RSSetState(TDxState::g_pRSBackCullSolid);
 	m_MapObj.SetMatrix(nullptr, &m_Camera.m_matView, &m_Camera.m_matProj);
 	m_MapObj.Render();
@@ -144,6 +140,7 @@ bool	Sample::Render()
 }
 bool	Sample::Release()
 {
+	m_SkyObj.Release();
 	m_MapObj.Release();
 	m_PlayerObj.Release();
 	m_ObjB.Release();
