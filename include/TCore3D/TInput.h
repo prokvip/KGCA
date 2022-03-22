@@ -11,8 +11,11 @@ enum KeyState
 class TInput
 {
 public:
+	bool  m_bDrag = false;
 	DWORD m_dwKeyState[256];
 	POINT m_ptMouse;
+	POINT m_ptMouseClick;
+	POINT m_ptDeltaMouse;
 	DWORD m_dwMouseState[3];
 	static TInput& Get()
 	{
