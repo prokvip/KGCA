@@ -21,7 +21,7 @@ public:
 	UINT		m_iNumCellCols = 0;
 	UINT		m_iNumCellRows = 0;
 	UINT        m_iNumFaces = 0;
-	float       m_iCellDistance = 1.0f;
+	float       m_fCellDistance = 1.0f;
 	std::vector<float>  m_fHeightList;
 public:
 	virtual bool		CreateHeightMap(const TCHAR* strHeightMapTex);
@@ -29,6 +29,9 @@ public:
 	virtual bool		SetVertexData();
 	virtual bool		SetIndexData();
 	virtual bool		Frame() override;
+	float GetHeight(float fPosX, float fPosZ);
+	float GetHeightmap(int row, int col);
+	float Lerp(float fStart, float fEnd, float fTangent);
 public:
 	TMap();
 	virtual ~TMap();

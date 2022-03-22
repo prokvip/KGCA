@@ -7,6 +7,9 @@ public:
 	TVector3			m_vDirection;
 	TVector4			m_vColor;
 	TMatrix				m_matWorld;
+	TVector3			m_vLight; //x	
+	TVector3			m_vUp; //y 
+	TVector3			m_vLook; // z	
 public:
 	float  m_fAlpha = 0.0f;
 	bool   m_bFadeIn = false;
