@@ -171,6 +171,10 @@ void     TDevice::ResizeDevice(UINT iWidth, UINT iHeight)
 	CreateRenderTargetView();
 	CreateDetphStencilView();
 	SetViewport();
+
+	GetClientRect(m_hWnd, &m_rtClient);
+	GetWindowRect(m_hWnd, &m_rtWindow);
+	g_rtClient = m_rtClient;
 }
 bool	TDevice::CleapupDevice()
 {

@@ -12,6 +12,7 @@ LRESULT  CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
         UINT iWidth = LOWORD(lParam);
         UINT iHeight = HIWORD(lParam);
         g_pWindow->ResizeDevice(iWidth, iHeight);
+
     }break;
     case WM_DESTROY:
     {
