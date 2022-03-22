@@ -1,4 +1,5 @@
 #include "TPlaneObj.h"
+
 bool		TPlaneObj::SetVertexData()
 {
 	// Local Coord

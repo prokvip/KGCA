@@ -3,12 +3,15 @@
 #include "TPlaneObj.h"
 #include "TCamera.h"
 #include "TMap.h"
+#include "TSkyObj.h"
 class Sample : public TCore
 {
 	TCamera		    m_Camera;
 	TMap			m_MapObj;
-	TPlaneObj       m_PlayerObj;
+	TSkyObj       m_PlayerObj;
 	TPlaneObj       m_ObjB;
+
+	TSkyObj       m_SkyObj;
 public:
 	virtual void	CreateResizeDevice(UINT iWidth, UINT iHeight) override;
 	virtual void	DeleteResizeDevice(UINT iWidth, UINT iHeight) override;

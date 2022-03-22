@@ -148,12 +148,14 @@
     <ClInclude Include="TCamera.h" />
     <ClInclude Include="TMap.h" />
     <ClInclude Include="TPlaneObj.h" />
+    <ClInclude Include="TSkyObj.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Sample.cpp" />
     <ClCompile Include="TCamera.cpp" />
     <ClCompile Include="TMap.cpp" />
     <ClCompile Include="TPlaneObj.cpp" />
+    <ClCompile Include="TSkyObj.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Box.hlsl">

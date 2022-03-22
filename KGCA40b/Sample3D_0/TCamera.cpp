@@ -4,7 +4,7 @@ bool TCamera::Init()
 {
 	m_matView.CreateViewLook(m_vCamera, m_vTarget, m_vUp);
 	// Projection
-	m_matProj.PerspectiveFovLH(1.0f, 5000.0f,
+	m_matProj.PerspectiveFovLH(0.1f, 5000.0f,
 		TBASIS_PI * 0.25f,
 		(float)g_rtClient.right / (float)g_rtClient.bottom);
 	return true;

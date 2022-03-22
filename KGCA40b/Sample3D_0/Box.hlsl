@@ -32,9 +32,10 @@ VS_OUTPUT VS( VS_INPUT v)
 	float4 vView = mul(vWorld, g_matView);
 	float4 vProj = mul(vView, g_matProj);
 	pOut.p = vProj;
-	pOut.n = v.n;
+	float3 vNormal = mul(v.n, g_matWorld);
+	pOut.n = normalize(vNormal);
 	pOut.t = v.t;
-	float fDot = max(0, dot(pOut.n, -Color0.xyz));
+	float fDot = max(0.5f, dot(pOut.n, -Color0.xyz));
 	pOut.c = float4(fDot, fDot, fDot,1);
 	return pOut;
 }
@@ -50,7 +51,7 @@ float4 PS(VS_OUTPUT input) : SV_TARGET
 	float4 final = color;
 	// 소스알파(1) = 마스크이미지의 검정색부분은 불투명된다.
 	// 소스알파(0) = 마스크이미지의 흰색부분은   투명된다.
-	final = final * input.c;
+	final = final *input.c;
 	//final.a = 1.0f;	
 	return final;
 }
