@@ -157,6 +157,7 @@ void     TDevice::ResizeDevice(UINT iWidth, UINT iHeight)
 {
 	m_pImmediateContext->OMSetRenderTargets(0,NULL, NULL);
 	if (m_pRenderTargetView)m_pRenderTargetView->Release();
+	if (m_pDepthStencilView)m_pDepthStencilView->Release();
 
 	HRESULT hr = m_pSwapChain->ResizeBuffers(m_SwapChainDesc.BufferCount,
 								iWidth, iHeight,
@@ -168,6 +169,7 @@ void     TDevice::ResizeDevice(UINT iWidth, UINT iHeight)
 
 	}
 	CreateRenderTargetView();
+	CreateDetphStencilView();
 	SetViewport();
 }
 bool	TDevice::CleapupDevice()
