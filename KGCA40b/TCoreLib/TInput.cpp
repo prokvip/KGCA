@@ -18,7 +18,12 @@ bool	TInput::Frame()
 	//클라이언트(윈도우)좌표계
 	ScreenToClient(g_hWnd, &m_ptMouse);
 	g_ptMouse = m_ptMouse;
-	
+	if (m_ptMouse.x < 0 || m_ptMouse.x > g_rtClient.right||
+		m_ptMouse.y < 0 || m_ptMouse.y > g_rtClient.bottom)
+	{
+		m_bDrag = false;		
+	}
+
 	// 마우스 버튼 VK_LBUTTON,  VK_RBUTTON, VK_MBUTTON,
 	for (int iKey = 0; iKey < 256; iKey++)
 	{
