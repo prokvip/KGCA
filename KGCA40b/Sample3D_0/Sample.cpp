@@ -42,7 +42,7 @@ bool	Sample::Init()
 	}	
 
 	m_SkyObj.Init();
-	m_SkyObj.m_pColorTex = I_Texture.Load(L"../../data/charport.bmp");
+	m_SkyObj.m_pColorTex = I_Texture.Load(L"../../data/sky/st00_cm_back.bmp");
 	m_SkyObj.m_pVShader = pVShader;
 	m_SkyObj.m_pPShader = pPShader;
 	m_SkyObj.SetPosition(TVector3(0.0f, 0.0f, 0.0f));
