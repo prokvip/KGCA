@@ -48,7 +48,7 @@ bool	Sample::Init()
 	if (!m_SkyObj.Create(	m_pd3dDevice.Get(), 
 							m_pImmediateContext.Get(),
 							L"sky.hlsl",
-							L"../../data/sky/xxx.bmp"))
+							L"../../data/sky/LobbyCube.dds"))
 	{
 		return false;
 	}
@@ -68,6 +68,7 @@ bool	Sample::Init()
 }
 bool	Sample::Frame()
 {	
+	T::TVector2 dir = TInput::Get().GetDelta();
 	/*if (TInput::Get().GetKey('A') || TInput::Get().GetKey(VK_LEFT))
 	{
 		m_PlayerObj.m_vPos -= m_PlayerObj.m_vRight *  g_fSecPerFrame * 10.0f;
@@ -86,23 +87,17 @@ bool	Sample::Frame()
 	}*/
 	T::TMatrix matRotate;
 	T::TMatrix matScale;
-	static float fRadian = 0.0f;
-	fRadian += (TInput::Get().m_ptDeltaMouse.x / (float)g_rtClient.right)* TBASIS_PI;
-	T::D3DXMatrixRotationY(&matRotate, fRadian);
+
+	T::D3DXMatrixRotationY(&matRotate, -dir.y);
 	T::D3DXMatrixScaling(&matScale, 50, 50, 50);
 	m_PlayerObj.m_matWorld = matScale*matRotate;
 	m_PlayerObj.m_vPos.y= m_MapObj.GetHeight(m_PlayerObj.m_vPos.x, m_PlayerObj.m_vPos.z)+50;
 	m_PlayerObj.SetPosition(m_PlayerObj.m_vPos);
-
 	m_Camera.m_vTarget = m_PlayerObj.m_vPos;
-
 	float y = m_MapObj.GetHeight(m_Camera.m_vCamera.x, m_Camera.m_vCamera.z);
 	/*m_Camera.m_vCamera = m_PlayerObj.m_vPos +
 						m_PlayerObj.m_vLook * -1.0f *5.0f +
 						m_PlayerObj.m_vUp * 5.0f;*/
-
-	static float fRadianX = 0.0f;
-	fRadianX += (TInput::Get().m_ptDeltaMouse.y / (float)g_rtClient.bottom) * TBASIS_PI;
 
 	if (TInput::Get().GetKey('A') || TInput::Get().GetKey(VK_LEFT))
 	{
@@ -121,7 +116,8 @@ bool	Sample::Frame()
 	{
 		m_Camera.MoveLook(-g_fSecPerFrame * 100.0f);
 	}
-	m_Camera.Update(T::TVector4(-fRadianX, -fRadian,0,0));
+	
+	m_Camera.Update(T::TVector4(-dir.x, -dir.y,0,0));
 	m_MapObj.Frame();
 	m_PlayerObj.Frame();
 	return true;

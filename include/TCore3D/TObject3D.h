@@ -6,7 +6,7 @@ public:
 	T::TVector3			m_vPos;
 	T::TVector3			m_vDirection;
 	T::TVector4			m_vColor;
-	T::TMatrix			m_matWorld;
+	T::TMatrix				m_matWorld;
 	T::TVector3			m_vLight; //x	
 	T::TVector3			m_vUp; //y 
 	T::TVector3			m_vLook; // z	

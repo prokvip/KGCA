@@ -11,6 +11,8 @@ enum KeyState
 class TInput
 {
 public:
+	float m_fRadianX = 0.0f;
+	float m_fRadianY = 0.0f;
 	bool  m_bDrag = false;
 	DWORD m_dwKeyState[256];
 	POINT m_ptMouse;
@@ -28,6 +30,7 @@ public:
 	bool	Render();
 	bool	Release();
 	DWORD   GetKey(DWORD dwKey);
+	T::TVector2 GetDelta();
 private:
 	 TInput();
 public:
