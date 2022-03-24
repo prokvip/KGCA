@@ -1,14 +1,14 @@
 #include "TCollision.h"
 bool   TCollision::SphereToPoint(TSphere sp, int x, int y)
 {
-	float fDistance = (sp.vCenter - TMath::TVector2(x, y)).Length();
+	float fDistance = (sp.vCenter - T::TVector2(x, y)).Length();
 	if (fDistance <= sp.fRadius)
 	{
 		return true;
 	}
 	return false;
 }
-bool   TCollision::SphereToPoint(TSphere sp, TMath::TVector2 v)
+bool   TCollision::SphereToPoint(TSphere sp, T::TVector2 v)
 {
 	float fDistance = (sp.vCenter - v).Length();
 	if (fDistance <= sp.fRadius)
@@ -26,7 +26,7 @@ bool   TCollision::RectToPoint(TRect rt, int x, int y)
 	}
 	return false;
 }
-bool   TCollision::RectToPoint(TRect rt, TMath::TVector2 v)
+bool   TCollision::RectToPoint(TRect rt, T::TVector2 v)
 {
 	if (rt.vMin.x <= v.x && rt.vMax.x >= v.x &&
 		rt.vMin.y <= v.y && rt.vMax.y >= v.y)
@@ -44,7 +44,8 @@ TRect   TCollision::UnionRect(TRect rt1, TRect rt2)
 	rt.vMax.y = rt1.vMax.y < rt2.vMax.y ? rt2.vMax.y : rt1.vMax.y;
 	rt.size.x = rt.vMax.x - rt.vMin.x;
 	rt.size.y = rt.vMax.y - rt.vMin.y;
-	rt.vMiddle = (rt.vMin + rt.vMax) / 2.0f;
+	rt.vMiddle = (rt.vMin + rt.vMax);
+	rt.vMiddle /= 2.0f;
 	return rt;
 }
 bool   TCollision::IntersectRect(
@@ -69,7 +70,8 @@ bool   TCollision::IntersectRect(
 
 			pRect->size.x = pRect->vMax.x - pRect->vMin.x;
 			pRect->size.y = pRect->vMax.y - pRect->vMin.y;
-			pRect->vMiddle = (pRect->vMax + pRect->vMin) / 2.0f;
+			pRect->vMiddle = (pRect->vMax + pRect->vMin);
+			pRect->vMiddle /= 2.0f;
 		}
 		return true;
 	}
@@ -116,7 +118,7 @@ bool   TCollision::BoxToPoint(TBox rt, int x, int y, int z)
 	}
 	return false;
 }
-bool   TCollision::BoxToPoint(TBox rt, TMath::TVector3 v)
+bool   TCollision::BoxToPoint(TBox rt, T::TVector3 v)
 {
 	if (rt.vMin.x <= v.x && rt.vMax.x >= v.x &&
 		rt.vMin.y <= v.y && rt.vMax.y >= v.y &&
@@ -138,7 +140,8 @@ TBox   TCollision::UnionBox(TBox rt1, TBox rt2)
 	rt.vMax.z = rt1.vMax.z < rt2.vMax.z ? rt2.vMax.z : rt1.vMax.z;
 
 	rt.size = rt.vMax - rt.vMin;
-	rt.vMiddle = (rt.vMin + rt.vMax) / 2.0f;
+	rt.vMiddle = (rt.vMin + rt.vMax);
+	rt.vMiddle /= 2.0f;
 	return rt;
 }
 bool   TCollision::IntersectBox(
@@ -167,7 +170,8 @@ bool   TCollision::IntersectBox(
 				rt1.vMax.z : rt2.vMax.z;
 
 			pRect->size = pRect->vMax - pRect->vMin;
-			pRect->vMiddle = (pRect->vMax + pRect->vMin) / 2.0f;
+			pRect->vMiddle = (pRect->vMax + pRect->vMin);
+			pRect->vMiddle /= 2.0f;
 		}
 		return true;
 	}

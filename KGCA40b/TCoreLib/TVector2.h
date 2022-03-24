@@ -25,23 +25,23 @@ namespace TMath
 	public:
 		TVector2();
 		TVector2(float x, float y);
-		TVector2(const TMath::TVector2& v);
+		TVector2(const TVector2& v);
 	public:
-		TVector2 operator + (const TMath::TVector2& v);
-		TVector2 operator - (const TMath::TVector2& v);
+		TVector2 operator + (const TVector2& v);
+		TVector2 operator - (const TVector2& v);
 		TVector2 operator * (float fValue);
 		TVector2 operator / (float fValue);
-		TVector2 operator += (const TMath::TVector2& v);
-		TVector2 operator -= (const TMath::TVector2& v);
-		bool operator == (const TMath::TVector2& v);
-		bool operator != (const TMath::TVector2& v);
+		TVector2 operator += (const TVector2& v);
+		TVector2 operator -= (const TVector2& v);
+		bool operator == (const TVector2& v);
+		bool operator != (const TVector2& v);
 		// 정규화
 		TVector2 Normalize();
 		TVector2 Normal();
-		friend TVector2 Normalize(TMath::TVector2& v);
+		friend TVector2 Normalize(TVector2& v);
 		// 크기
 		float Length();
-		float Distance(TMath::TVector2& v);
+		float Distance(TVector2& v);
 	};
 
 	class TVector4 : public TFloat4

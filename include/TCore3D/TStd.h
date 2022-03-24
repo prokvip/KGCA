@@ -17,7 +17,7 @@
 #include <DirectXMath.h>
 #include <DirectXPackedVector.h>
 #include <DirectXCollision.h>
-
+#include "TMath.h"
 using namespace Microsoft::WRL;
 
 #pragma comment	(lib, "d3d11.lib")

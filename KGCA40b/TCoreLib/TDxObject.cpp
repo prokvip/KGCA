@@ -35,9 +35,9 @@ bool    TDxObject::SetIndexData()
 bool    TDxObject::SetConstantData()
 {
 	ZeroMemory(&m_ConstantList, sizeof(TConstantData));
-	m_ConstantList.matWorld = TMath::TMatrix();
-	m_ConstantList.matView = TMath::TMatrix();
-	m_ConstantList.matProj = TMath::TMatrix();
+	m_ConstantList.matWorld = T::TMatrix();
+	m_ConstantList.matView = T::TMatrix();
+	m_ConstantList.matProj = T::TMatrix();
 	m_ConstantList.Color.x = 0.0f;
 	m_ConstantList.Color.y = 1.0f;
 	m_ConstantList.Color.z = 0.0f;

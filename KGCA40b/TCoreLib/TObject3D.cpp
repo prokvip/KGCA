@@ -1,6 +1,6 @@
 #include "TObject3D.h"
-void		TObject3D::SetMatrix(TMath::TMatrix* matWorld,
-	TMath::TMatrix* matView, TMath::TMatrix* matProj)
+void		TObject3D::SetMatrix(T::TMatrix* matWorld,
+	T::TMatrix* matView, T::TMatrix* matProj)
 {
 	m_ConstantList.matWorld = m_matWorld.Transpose();
 	if (matWorld != nullptr)
@@ -26,7 +26,7 @@ void		TObject3D::SetMatrix(TMath::TMatrix* matWorld,
 	m_vLook.y = m_matWorld._32;
 	m_vLook.z = m_matWorld._33;
 }
-void		TObject3D::AddPosition(TMath::TVector3 vPos)
+void		TObject3D::AddPosition(T::TVector3 vPos)
 {
 	// 현재위치
 	m_vPos += vPos;
@@ -45,7 +45,7 @@ void		TObject3D::AddPosition(TMath::TVector3 vPos)
 /// m_rtDraw, m_rtCollision 갱신된다.
 /// </summary>
 /// <param name="vPos"></param>
-void		TObject3D::SetPosition(TMath::TVector3 vPos)
+void		TObject3D::SetPosition(T::TVector3 vPos)
 {
 	m_vPos = vPos;
 	m_matWorld._41 = m_vPos.x;
@@ -86,7 +86,7 @@ bool	TObject3D::Frame()
 	if (m_bFadeIn)	FadeIn();
 	if (m_bFadeOut)	FadeOut();
 	m_ConstantList.Color = m_vColor;
-	m_ConstantList.Timer = TMath::TVector4(
+	m_ConstantList.Timer = T::TVector4(
 		g_fGameTimer,
 		0,
 		0,
@@ -96,7 +96,7 @@ bool	TObject3D::Frame()
 TObject3D::TObject3D()
 {
 	m_fAlpha = 1.0f;
-	m_vColor = TMath::TVector4(1, 1, 1, 1);
+	m_vColor = T::TVector4(1, 1, 1, 1);
 	m_vLight.x = 1;
 	m_vLight.y = 0;
 	m_vLight.z = 0;

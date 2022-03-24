@@ -60,7 +60,7 @@ namespace TMath
 			_21 = -fSin;
 			_22 = fCos;
 		}
-		void Translation(const TMath::TVector3& v)
+		void Translation(const TVector3& v)
 		{
 			_41 = v.x;
 			_42 = v.y;
@@ -72,7 +72,7 @@ namespace TMath
 			_42 = y;
 			_43 = z;
 		}
-		void Scale(const TMath::TVector3& vector)
+		void Scale(const TVector3& vector)
 		{
 			_11 = vector.x;
 			_22 = vector.y;
@@ -102,14 +102,14 @@ namespace TMath
 			return matrix;
 		}
 		// 외적을 통한 뷰 행렬 계산
-		TMatrix ViewLookAt(TMath::TVector3& vPosition,
-			TMath::TVector3& vTarget,
-			TMath::TVector3& vUp)
+		TMatrix ViewLookAt(TVector3& vPosition,
+			TVector3& vTarget,
+			TVector3& vUp)
 		{
 			TMatrix matrix;
-			TMath::TVector3 vDirection = (vTarget - vPosition).Normal();		// Z Axis
-			TMath::TVector3 vRightVector = (vUp ^ vDirection).Normal();		// X Axis
-			TMath::TVector3 vUpVector = (vDirection ^ vRightVector).Normal();	// Y Axis
+			TVector3 vDirection = (vTarget - vPosition).Normal();		// Z Axis
+			TVector3 vRightVector = (vUp ^ vDirection).Normal();		// X Axis
+			TVector3 vUpVector = (vDirection ^ vRightVector).Normal();	// Y Axis
 
 			_11 = vRightVector.x;	_12 = vUpVector.x;	_13 = vDirection.x;
 			_21 = vRightVector.y;	_22 = vUpVector.y;	_23 = vDirection.y;
@@ -122,16 +122,16 @@ namespace TMath
 			return matrix;
 		}
 		// 내적을 통한 뷰 행렬 계산
-		TMatrix CreateViewLook(TMath::TVector3& vPosition, TMath::TVector3& vTarget, TMath::TVector3& vUp)
+		TMatrix CreateViewLook(TVector3& vPosition, TVector3& vTarget, TVector3& vUp)
 		{
 			TMatrix matrix;
-			TMath::TVector3 vDirection = vTarget - vPosition;
+			TVector3 vDirection = vTarget - vPosition;
 			vDirection = vDirection.Normal();//z
 			float fDot = vUp | vDirection;
 			// 직교의 근사화 작업
-			TMath::TVector3 vUpVector = vUp - (vDirection * fDot);
+			TVector3 vUpVector = vUp - (vDirection * fDot);
 			vUpVector = vUpVector.Normal();
-			TMath::TVector3 vRightVector = vUpVector ^ vDirection;
+			TVector3 vRightVector = vUpVector ^ vDirection;
 
 			_11 = vRightVector.x;	_12 = vUpVector.x;	_13 = vDirection.x;
 			_21 = vRightVector.y;	_22 = vUpVector.y;	_23 = vDirection.y;

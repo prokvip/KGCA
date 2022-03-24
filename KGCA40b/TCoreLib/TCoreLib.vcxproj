@@ -158,6 +158,7 @@ copy "..\\..\\output\\Debug\\TCoreLib.lib" "..\\..\\Lib\\TCoreLib_d.lib"
     <ClCompile Include="TDxObject.cpp" />
     <ClCompile Include="TDxState.cpp" />
     <ClCompile Include="TInput.cpp" />
+    <ClCompile Include="TMath.cpp" />
     <ClCompile Include="TMatrix.cpp" />
     <ClCompile Include="TObject2D.cpp" />
     <ClCompile Include="TObject3D.cpp" />
@@ -180,6 +181,7 @@ copy "..\\..\\output\\Debug\\TCoreLib.lib" "..\\..\\Lib\\TCoreLib_d.lib"
     <ClInclude Include="TDxObject.h" />
     <ClInclude Include="TDxState.h" />
     <ClInclude Include="TInput.h" />
+    <ClInclude Include="TMath.h" />
     <ClInclude Include="TMatrix.h" />
     <ClInclude Include="TObject2D.h" />
     <ClInclude Include="TObject3D.h" />
