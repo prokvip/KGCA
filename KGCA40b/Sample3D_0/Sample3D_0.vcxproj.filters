@@ -57,5 +57,6 @@
   <ItemGroup>
     <FxCompile Include="Box.hlsl" />
     <FxCompile Include="sky.hlsl" />
+    <FxCompile Include="map.hlsl" />
   </ItemGroup>
 </Project>

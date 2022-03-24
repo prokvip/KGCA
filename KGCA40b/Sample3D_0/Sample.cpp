@@ -19,11 +19,13 @@ bool	Sample::Init()
 
 	m_MapObj.Init();
 	m_MapObj.SetDevice(m_pd3dDevice.Get(), m_pImmediateContext.Get());
-	m_MapObj.CreateHeightMap(L"../../data/map/129.jpg");// heightMap513.bmp");
+	m_MapObj.CreateHeightMap(L"../../data/map/HEIGHT_MOUNTAIN.bmp");// heightMap513.bmp");
 	TTexture* pTexMap = I_Texture.Load(L"../../data/map/020.bmp");
-	m_MapObj.m_pColorTex = pTexMap;
-	m_MapObj.m_pVShader = pVShader;
-	m_MapObj.m_pPShader = pPShader;
+	m_MapObj.m_pColorTex = pTexMap;	
+	m_MapObj.m_pVShader = I_Shader.CreateVertexShader(
+		m_pd3dDevice.Get(), L"map.hlsl", "VS");;
+	m_MapObj.m_pPShader = I_Shader.CreatePixelShader(
+		m_pd3dDevice.Get(), L"map.hlsl", "PS");;
 	// Á¤Á¡°³¼ö ( 2n½Â+1)
 	m_MapObj.CreateMap(m_MapObj.m_iNumCols, m_MapObj.m_iNumRows, 20.0f);
 	if (!m_MapObj.Create(m_pd3dDevice.Get(),m_pImmediateContext.Get()))
@@ -96,8 +98,8 @@ bool	Sample::Frame()
 
 	float y = m_MapObj.GetHeight(m_Camera.m_vCamera.x, m_Camera.m_vCamera.z);
 	m_Camera.m_vCamera = m_PlayerObj.m_vPos +
-						m_PlayerObj.m_vLook * -1.0f *10.0f +
-						m_PlayerObj.m_vUp * 10.0f;
+						m_PlayerObj.m_vLook * -1.0f *5.0f +
+						m_PlayerObj.m_vUp * 5.0f;
 
 	m_Camera.Frame();
 	m_MapObj.Frame();
@@ -116,10 +118,11 @@ bool	Sample::Render()
 	m_SkyObj.m_matWorld = matScale * matRotation;	
 	m_SkyObj.SetMatrix(NULL, &m_SkyObj.m_matViewSky, &m_Camera.m_matProj);
 	m_pImmediateContext->RSSetState(TDxState::g_pRSNoneCullSolid);
-	m_pImmediateContext->PSSetSamplers(0, 1, &TDxState::m_pSSPoint);
+	m_pImmediateContext->PSSetSamplers(0, 1, &TDxState::m_pSSLinear);
+	m_pImmediateContext->PSSetSamplers(1, 1, &TDxState::m_pSSPoint);
 	m_SkyObj.Render();
 
-	m_pImmediateContext->PSSetSamplers(0, 1, &TDxState::m_pSSLinear);
+	//m_pImmediateContext->PSSetSamplers(0, 1, &TDxState::m_pSSLinear);
 	m_pImmediateContext->RSSetState(TDxState::g_pRSBackCullSolid);
 	m_MapObj.SetMatrix(nullptr, &m_Camera.m_matView, &m_Camera.m_matProj);
 	m_MapObj.Render();

@@ -11,6 +11,7 @@ struct VS_OUTPUT
 	float3 n : NORMAL;
 	float4 c : COLOR0;    // COLOR0 ~ COLOR1
 	float2 t : TEXCOORD0; // TEXCOORD0 ~ TEXCOORD15
+	float3 r  : TEXCOORD1;
 };
 
 // 상수버퍼(단위:레지스터 단위(float4)로 할당되어야 한다.)
@@ -32,15 +33,18 @@ VS_OUTPUT VS( VS_INPUT v)
 	float4 vView = mul(vWorld, g_matView);
 	float4 vProj = mul(vView, g_matProj);
 	pOut.p = vProj;
-	float3 vNormal = mul(v.n, g_matWorld);
+	float3 vNormal = mul(v.n, (float3x3)g_matWorld);
 	pOut.n = normalize(vNormal);
 	pOut.t = v.t;
 	float fDot = max(0.5f, dot(pOut.n, -Color0.xyz));
 	pOut.c = float4(fDot, fDot, fDot,1);
+
+	pOut.r = normalize(vLocal.xyz);
 	return pOut;
 }
 Texture2D		g_txColor : register(t0);
 Texture2D		g_txMask : register(t1);
+TextureCube	    g_txCubeMap : register(t3);
 SamplerState	g_Sample : register(s0);
 
 float4 PS(VS_OUTPUT input) : SV_TARGET
@@ -53,6 +57,8 @@ float4 PS(VS_OUTPUT input) : SV_TARGET
 	// 소스알파(0) = 마스크이미지의 흰색부분은   투명된다.
 	final = final *input.c;
 	//final.a = 1.0f;	
+
+	final = g_txCubeMap.Sample(g_Sample, input.r);
 	return final;
 }
 

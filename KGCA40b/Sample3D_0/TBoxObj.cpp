@@ -142,6 +142,9 @@ bool		TBoxObj::SetVertexData()
 	m_VertexList[index].n = TVector3(0.0f, 1.0f, 0.0f);
 	m_VertexList[index].c = TVector4(1.0f, 1.0f, 1.0f, 1.0f);
 	m_VertexList[index].t = TVector2(1.0f, 1.0f);
+
+	m_pTexCube = I_Texture.Load(L"..\\..\\data\\sky\\LobbyCube.dds");
+
 	return true;
 }
 bool		TBoxObj::SetIndexData()
@@ -166,7 +169,11 @@ bool	TBoxObj::PostRender()
 	if (m_IndexList.size() <= 0)
 		m_pContext->Draw(m_VertexList.size(), 0);
 	else
+	{
+		m_pContext->PSSetShaderResources(3, 1,
+			m_pTexCube->m_pSRV.GetAddressOf());
 		m_pContext->DrawIndexed(m_IndexList.size(), 0, 0);
+	}
 	return true;
 }
 TBoxObj::TBoxObj()
