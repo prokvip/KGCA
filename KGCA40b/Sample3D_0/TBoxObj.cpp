@@ -10,138 +10,138 @@ bool		TBoxObj::SetVertexData()
 
 	int index = 0;
 	// +Z plane
-	m_VertexList[index].p = TVector3(1.0f, 1.0f, 1.0f);
-	m_VertexList[index].n = TVector3(0.0f, 0.0f, 1.0f);
-	m_VertexList[index].c = TVector4(1.0f, 1.0f, 1.0f, 1.0f);
-	m_VertexList[index].t = TVector2(0.0f, 0.0f);
-	m_VertexList[++index].p = TVector3(-1.0f, 1.0f, 1.0f);
-	m_VertexList[index].n = TVector3(0.0f, 0.0f, 1.0f);
-	m_VertexList[index].c = TVector4(1.0f, 1.0f, 1.0f, 1.0f);
-	m_VertexList[index].t = TVector2(1.0f, 0.0f);
-	m_VertexList[++index].p = TVector3(1.0f, -1.0f, 1.0f);
-	m_VertexList[index].n = TVector3(0.0f, 0.0f, 1.0f);
-	m_VertexList[index].c = TVector4(1.0f, 1.0f, 1.0f, 1.0f);
-	m_VertexList[index].t = TVector2(0.0f, 1.0f);
-	m_VertexList[++index].p = TVector3(-1.0f, -1.0f, 1.0f);
-	m_VertexList[index].n = TVector3(0.0f, 0.0f, 1.0f);
-	m_VertexList[index].c = TVector4(1.0f, 1.0f, 1.0f, 1.0f);
-	m_VertexList[index].t = TVector2(1.0f, 1.0f);
+	m_VertexList[index].p = TMath::TVector3(1.0f, 1.0f, 1.0f);
+	m_VertexList[index].n = TMath::TVector3(0.0f, 0.0f, 1.0f);
+	m_VertexList[index].c = TMath::TVector4(1.0f, 1.0f, 1.0f, 1.0f);
+	m_VertexList[index].t = TMath::TVector2(0.0f, 0.0f);
+	m_VertexList[++index].p = TMath::TVector3(-1.0f, 1.0f, 1.0f);
+	m_VertexList[index].n = TMath::TVector3(0.0f, 0.0f, 1.0f);
+	m_VertexList[index].c = TMath::TVector4(1.0f, 1.0f, 1.0f, 1.0f);
+	m_VertexList[index].t = TMath::TVector2(1.0f, 0.0f);
+	m_VertexList[++index].p = TMath::TVector3(1.0f, -1.0f, 1.0f);
+	m_VertexList[index].n = TMath::TVector3(0.0f, 0.0f, 1.0f);
+	m_VertexList[index].c = TMath::TVector4(1.0f, 1.0f, 1.0f, 1.0f);
+	m_VertexList[index].t = TMath::TVector2(0.0f, 1.0f);
+	m_VertexList[++index].p = TMath::TVector3(-1.0f, -1.0f, 1.0f);
+	m_VertexList[index].n = TMath::TVector3(0.0f, 0.0f, 1.0f);
+	m_VertexList[index].c = TMath::TVector4(1.0f, 1.0f, 1.0f, 1.0f);
+	m_VertexList[index].t = TMath::TVector2(1.0f, 1.0f);
 	// -Z plane
 	
-	m_VertexList[++index].p = TVector3(-1.0f, 1.0f, -1.0f);
-	m_VertexList[index].n = TVector3(0.0f, 0.0f, -1.0f);
-	m_VertexList[index].c = TVector4(1.0f, 1.0f, 1.0f, 1.0f);
-	m_VertexList[index].t = TVector2(0.0f, 0.0f);
+	m_VertexList[++index].p = TMath::TVector3(-1.0f, 1.0f, -1.0f);
+	m_VertexList[index].n = TMath::TVector3(0.0f, 0.0f, -1.0f);
+	m_VertexList[index].c = TMath::TVector4(1.0f, 1.0f, 1.0f, 1.0f);
+	m_VertexList[index].t = TMath::TVector2(0.0f, 0.0f);
 
-	m_VertexList[++index].p = TVector3(1.0f, 1.0f, -1.0f);
-	m_VertexList[index].n = TVector3(0.0f, 0.0f, -1.0f);
-	m_VertexList[index].c = TVector4(1.0f, 1.0f, 1.0f, 1.0f);
-	m_VertexList[index].t = TVector2(1.0f, 0.0f);
-
-
-	m_VertexList[++index].p = TVector3(-1.0f, -1.0f, -1.0f);
-	m_VertexList[index].n = TVector3(0.0f, 0.0f, -1.0f);
-	m_VertexList[index].c = TVector4(1.0f, 1.0f, 1.0f, 1.0f);
-	m_VertexList[index].t = TVector2(0.0f, 1.0f);
+	m_VertexList[++index].p = TMath::TVector3(1.0f, 1.0f, -1.0f);
+	m_VertexList[index].n = TMath::TVector3(0.0f, 0.0f, -1.0f);
+	m_VertexList[index].c = TMath::TVector4(1.0f, 1.0f, 1.0f, 1.0f);
+	m_VertexList[index].t = TMath::TVector2(1.0f, 0.0f);
 
 
-	m_VertexList[++index].p = TVector3(1.0f, -1.0f, -1.0f);
-	m_VertexList[index].n = TVector3(0.0f, 0.0f, -1.0f);
-	m_VertexList[index].c = TVector4(1.0f, 1.0f, 1.0f, 1.0f);
-	m_VertexList[index].t = TVector2(1.0f, 1.0f);
+	m_VertexList[++index].p = TMath::TVector3(-1.0f, -1.0f, -1.0f);
+	m_VertexList[index].n = TMath::TVector3(0.0f, 0.0f, -1.0f);
+	m_VertexList[index].c = TMath::TVector4(1.0f, 1.0f, 1.0f, 1.0f);
+	m_VertexList[index].t = TMath::TVector2(0.0f, 1.0f);
+
+
+	m_VertexList[++index].p = TMath::TVector3(1.0f, -1.0f, -1.0f);
+	m_VertexList[index].n = TMath::TVector3(0.0f, 0.0f, -1.0f);
+	m_VertexList[index].c = TMath::TVector4(1.0f, 1.0f, 1.0f, 1.0f);
+	m_VertexList[index].t = TMath::TVector2(1.0f, 1.0f);
 
 	
 	// +X plane
-	m_VertexList[++index].p = TVector3(1.0f, 1.0f, -1.0f);
-	m_VertexList[index].n = TVector3(1.0f, 0.0f, 0.0f);
-	m_VertexList[index].c = TVector4(1.0f, 1.0f, 1.0f, 1.0f);
-	m_VertexList[index].t = TVector2(0.0f, 0.0f);
+	m_VertexList[++index].p = TMath::TVector3(1.0f, 1.0f, -1.0f);
+	m_VertexList[index].n = TMath::TVector3(1.0f, 0.0f, 0.0f);
+	m_VertexList[index].c = TMath::TVector4(1.0f, 1.0f, 1.0f, 1.0f);
+	m_VertexList[index].t = TMath::TVector2(0.0f, 0.0f);
 
-	m_VertexList[++index].p = TVector3(1.0f, 1.0f, 1.0f);
-	m_VertexList[index].n = TVector3(1.0f, 0.0f, 0.0f);
-	m_VertexList[index].c = TVector4(1.0f, 1.0f, 1.0f, 1.0f);
-	m_VertexList[index].t = TVector2(1.0f, 0.0f);
-
-
-	m_VertexList[++index].p = TVector3(1.0f, -1.0f, -1.0f);
-	m_VertexList[index].n = TVector3(1.0f, 0.0f, 0.0f);
-	m_VertexList[index].c = TVector4(1.0f, 1.0f, 1.0f, 1.0f);
-	m_VertexList[index].t = TVector2(0.0f, 1.0f);
+	m_VertexList[++index].p = TMath::TVector3(1.0f, 1.0f, 1.0f);
+	m_VertexList[index].n = TMath::TVector3(1.0f, 0.0f, 0.0f);
+	m_VertexList[index].c = TMath::TVector4(1.0f, 1.0f, 1.0f, 1.0f);
+	m_VertexList[index].t = TMath::TVector2(1.0f, 0.0f);
 
 
-	m_VertexList[++index].p = TVector3(1.0f, -1.0f, 1.0f);
-	m_VertexList[index].n = TVector3(1.0f, 0.0f, 0.0f);
-	m_VertexList[index].c = TVector4(1.0f, 1.0f, 1.0f, 1.0f);
-	m_VertexList[index].t = TVector2(1.0f, 1.0f);
+	m_VertexList[++index].p = TMath::TVector3(1.0f, -1.0f, -1.0f);
+	m_VertexList[index].n = TMath::TVector3(1.0f, 0.0f, 0.0f);
+	m_VertexList[index].c = TMath::TVector4(1.0f, 1.0f, 1.0f, 1.0f);
+	m_VertexList[index].t = TMath::TVector2(0.0f, 1.0f);
+
+
+	m_VertexList[++index].p = TMath::TVector3(1.0f, -1.0f, 1.0f);
+	m_VertexList[index].n = TMath::TVector3(1.0f, 0.0f, 0.0f);
+	m_VertexList[index].c = TMath::TVector4(1.0f, 1.0f, 1.0f, 1.0f);
+	m_VertexList[index].t = TMath::TVector2(1.0f, 1.0f);
 
 	// -X plane
-	m_VertexList[++index].p = TVector3(-1.0f, 1.0f, 1.0f);
-	m_VertexList[index].n = TVector3(-1.0f, 0.0f, 0.0f);
-	m_VertexList[index].c = TVector4(1.0f, 1.0f, 1.0f, 1.0f);
-	m_VertexList[index].t = TVector2(0.0f, 0.0f);
+	m_VertexList[++index].p = TMath::TVector3(-1.0f, 1.0f, 1.0f);
+	m_VertexList[index].n = TMath::TVector3(-1.0f, 0.0f, 0.0f);
+	m_VertexList[index].c = TMath::TVector4(1.0f, 1.0f, 1.0f, 1.0f);
+	m_VertexList[index].t = TMath::TVector2(0.0f, 0.0f);
 
-	m_VertexList[++index].p = TVector3(-1.0f, 1.0f, -1.0f);
-	m_VertexList[index].n = TVector3(-1.0f, 0.0f, 0.0f);
-	m_VertexList[index].c = TVector4(1.0f, 1.0f, 1.0f, 1.0f);
-	m_VertexList[index].t = TVector2(1.0f, 0.0f);
-
-
-	m_VertexList[++index].p = TVector3(-1.0f, -1.0f, 1.0f);
-	m_VertexList[index].n = TVector3(-1.0f, 0.0f, 0.0f);
-	m_VertexList[index].c = TVector4(1.0f, 1.0f, 1.0f, 1.0f);
-	m_VertexList[index].t = TVector2(0.0f, 1.0f);
+	m_VertexList[++index].p = TMath::TVector3(-1.0f, 1.0f, -1.0f);
+	m_VertexList[index].n = TMath::TVector3(-1.0f, 0.0f, 0.0f);
+	m_VertexList[index].c = TMath::TVector4(1.0f, 1.0f, 1.0f, 1.0f);
+	m_VertexList[index].t = TMath::TVector2(1.0f, 0.0f);
 
 
-	m_VertexList[++index].p = TVector3(-1.0f, -1.0f, -1.0f);
-	m_VertexList[index].n = TVector3(-1.0f, 0.0f, 0.0f);
-	m_VertexList[index].c = TVector4(1.0f, 1.0f, 1.0f, 1.0f);
-	m_VertexList[index].t = TVector2(1.0f, 1.0f);
+	m_VertexList[++index].p = TMath::TVector3(-1.0f, -1.0f, 1.0f);
+	m_VertexList[index].n = TMath::TVector3(-1.0f, 0.0f, 0.0f);
+	m_VertexList[index].c = TMath::TVector4(1.0f, 1.0f, 1.0f, 1.0f);
+	m_VertexList[index].t = TMath::TVector2(0.0f, 1.0f);
+
+
+	m_VertexList[++index].p = TMath::TVector3(-1.0f, -1.0f, -1.0f);
+	m_VertexList[index].n = TMath::TVector3(-1.0f, 0.0f, 0.0f);
+	m_VertexList[index].c = TMath::TVector4(1.0f, 1.0f, 1.0f, 1.0f);
+	m_VertexList[index].t = TMath::TVector2(1.0f, 1.0f);
 
 	// -y plane
-	m_VertexList[++index].p = TVector3(-1.0f, -1.0f, -1.0f);
-	m_VertexList[index].n = TVector3(0.0f, -1.0f, 0.0f);
-	m_VertexList[index].c = TVector4(1.0f, 1.0f, 1.0f, 1.0f);
-	m_VertexList[index].t = TVector2(0.0f, 0.0f);
+	m_VertexList[++index].p = TMath::TVector3(-1.0f, -1.0f, -1.0f);
+	m_VertexList[index].n = TMath::TVector3(0.0f, -1.0f, 0.0f);
+	m_VertexList[index].c = TMath::TVector4(1.0f, 1.0f, 1.0f, 1.0f);
+	m_VertexList[index].t = TMath::TVector2(0.0f, 0.0f);
 
-	m_VertexList[++index].p = TVector3(1.0f, -1.0f, -1.0f);
-	m_VertexList[index].n = TVector3(0.0f, -1.0f, 0.0f);
-	m_VertexList[index].c = TVector4(1.0f, 1.0f, 1.0f, 1.0f);
-	m_VertexList[index].t = TVector2(1.0f, 0.0f);
-
-
-	m_VertexList[++index].p = TVector3(-1.0f, -1.0f, 1.0f);
-	m_VertexList[index].n = TVector3(0.0f, -1.0f, 0.0f);
-	m_VertexList[index].c = TVector4(1.0f, 1.0f, 1.0f, 1.0f);
-	m_VertexList[index].t = TVector2(0.0f, 1.0f);
+	m_VertexList[++index].p = TMath::TVector3(1.0f, -1.0f, -1.0f);
+	m_VertexList[index].n = TMath::TVector3(0.0f, -1.0f, 0.0f);
+	m_VertexList[index].c = TMath::TVector4(1.0f, 1.0f, 1.0f, 1.0f);
+	m_VertexList[index].t = TMath::TVector2(1.0f, 0.0f);
 
 
-	m_VertexList[++index].p = TVector3(1.0f, -1.0f, 1.0f);
-	m_VertexList[index].n = TVector3(0.0f, -1.0f, 0.0f);
-	m_VertexList[index].c = TVector4(1.0f, 1.0f, 1.0f, 1.0f);
-	m_VertexList[index].t = TVector2(1.0f, 1.0f);
+	m_VertexList[++index].p = TMath::TVector3(-1.0f, -1.0f, 1.0f);
+	m_VertexList[index].n = TMath::TVector3(0.0f, -1.0f, 0.0f);
+	m_VertexList[index].c = TMath::TVector4(1.0f, 1.0f, 1.0f, 1.0f);
+	m_VertexList[index].t = TMath::TVector2(0.0f, 1.0f);
+
+
+	m_VertexList[++index].p = TMath::TVector3(1.0f, -1.0f, 1.0f);
+	m_VertexList[index].n = TMath::TVector3(0.0f, -1.0f, 0.0f);
+	m_VertexList[index].c = TMath::TVector4(1.0f, 1.0f, 1.0f, 1.0f);
+	m_VertexList[index].t = TMath::TVector2(1.0f, 1.0f);
 
 	// +y plane
-	m_VertexList[++index].p = TVector3(-1.0f, 1.0f, 1.0f);
-	m_VertexList[index].n = TVector3(0.0f, 1.0f, 0.0f);
-	m_VertexList[index].c = TVector4(1.0f, 1.0f, 1.0f, 1.0f);
-	m_VertexList[index].t = TVector2(0.0f, 0.0f);
+	m_VertexList[++index].p = TMath::TVector3(-1.0f, 1.0f, 1.0f);
+	m_VertexList[index].n = TMath::TVector3(0.0f, 1.0f, 0.0f);
+	m_VertexList[index].c = TMath::TVector4(1.0f, 1.0f, 1.0f, 1.0f);
+	m_VertexList[index].t = TMath::TVector2(0.0f, 0.0f);
 
-	m_VertexList[++index].p = TVector3(1.0f, 1.0f, 1.0f);
-	m_VertexList[index].n = TVector3(0.0f, 1.0f, 0.0f);
-	m_VertexList[index].c = TVector4(1.0f, 1.0f, 1.0f, 1.0f);
-	m_VertexList[index].t = TVector2(1.0f, 0.0f);
-
-
-	m_VertexList[++index].p = TVector3(-1.0f, 1.0f, -1.0f);
-	m_VertexList[index].n = TVector3(0.0f, 1.0f, 0.0f);
-	m_VertexList[index].c = TVector4(1.0f, 1.0f, 1.0f, 1.0f);
-	m_VertexList[index].t = TVector2(0.0f, 1.0f);
+	m_VertexList[++index].p = TMath::TVector3(1.0f, 1.0f, 1.0f);
+	m_VertexList[index].n = TMath::TVector3(0.0f, 1.0f, 0.0f);
+	m_VertexList[index].c = TMath::TVector4(1.0f, 1.0f, 1.0f, 1.0f);
+	m_VertexList[index].t = TMath::TVector2(1.0f, 0.0f);
 
 
-	m_VertexList[++index].p = TVector3(1.0f, 1.0f, -1.0f);
-	m_VertexList[index].n = TVector3(0.0f, 1.0f, 0.0f);
-	m_VertexList[index].c = TVector4(1.0f, 1.0f, 1.0f, 1.0f);
-	m_VertexList[index].t = TVector2(1.0f, 1.0f);
+	m_VertexList[++index].p = TMath::TVector3(-1.0f, 1.0f, -1.0f);
+	m_VertexList[index].n = TMath::TVector3(0.0f, 1.0f, 0.0f);
+	m_VertexList[index].c = TMath::TVector4(1.0f, 1.0f, 1.0f, 1.0f);
+	m_VertexList[index].t = TMath::TVector2(0.0f, 1.0f);
+
+
+	m_VertexList[++index].p = TMath::TVector3(1.0f, 1.0f, -1.0f);
+	m_VertexList[index].n = TMath::TVector3(0.0f, 1.0f, 0.0f);
+	m_VertexList[index].c = TMath::TVector4(1.0f, 1.0f, 1.0f, 1.0f);
+	m_VertexList[index].t = TMath::TVector2(1.0f, 1.0f);
 
 	m_pTexCube = I_Texture.Load(L"..\\..\\data\\sky\\LobbyCube.dds");
 

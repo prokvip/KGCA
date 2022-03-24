@@ -3,13 +3,13 @@
 class TObject3D : public TDxObject
 {
 public:
-	TVector3			m_vPos;
-	TVector3			m_vDirection;
-	TVector4			m_vColor;
-	TMatrix				m_matWorld;
-	TVector3			m_vLight; //x	
-	TVector3			m_vUp; //y 
-	TVector3			m_vLook; // z	
+	TMath::TVector3			m_vPos;
+	TMath::TVector3			m_vDirection;
+	TMath::TVector4			m_vColor;
+	TMath::TMatrix				m_matWorld;
+	TMath::TVector3			m_vLight; //x	
+	TMath::TVector3			m_vUp; //y 
+	TMath::TVector3			m_vLook; // z	
 public:
 	float  m_fAlpha = 0.0f;
 	bool   m_bFadeIn = false;
@@ -17,8 +17,8 @@ public:
 	virtual void    FadeIn();
 	virtual void    FadeOut();
 public:
-	virtual void		AddPosition(TVector3 vPos);
-	virtual void		SetPosition(TVector3 vPos);	
+	virtual void		AddPosition(TMath::TVector3 vPos);
+	virtual void		SetPosition(TMath::TVector3 vPos);	
 public:
 	virtual bool		SetVertexData() override;
 	virtual bool		SetIndexData() override;
@@ -27,8 +27,8 @@ public:
 		return true;
 	};
 	virtual void  UpdateData() {}
-	virtual void		SetMatrix(TMatrix* matWorld,
-							TMatrix* matView, TMatrix* matProj);
+	virtual void		SetMatrix(TMath::TMatrix* matWorld,
+							TMath::TMatrix* matView, TMath::TMatrix* matProj);
 public:
 	TObject3D();
 	virtual ~TObject3D();

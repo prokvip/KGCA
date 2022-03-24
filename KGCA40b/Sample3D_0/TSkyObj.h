@@ -3,7 +3,7 @@
 class TSkyObj : public TObject3D
 {
 public:
-	TMatrix				m_matViewSky;
+	TMath::TMatrix				m_matViewSky;
 	TTexture*			m_pTexArray[6];
 	TTexture*			m_pTexCube;
 	ComPtr<ID3D11ShaderResourceView> m_pSRVArray[6];

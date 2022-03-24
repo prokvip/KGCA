@@ -18,7 +18,7 @@ void TObject2D::UpdateRectDraw(RECT rt)
 	m_fWidth = rt.right;
 	m_fHeight = rt.bottom;
 }
-void		TObject2D::AddPosition(TVector2 vPos)
+void		TObject2D::AddPosition(TMath::TVector2 vPos)
 {
 	// 현재위치
 	m_vPos += vPos;
@@ -38,7 +38,7 @@ void		TObject2D::AddPosition(TVector2 vPos)
 /// m_rtDraw, m_rtCollision 갱신된다.
 /// </summary>
 /// <param name="vPos"></param>
-void		TObject2D::SetPosition(TVector2 vPos)
+void		TObject2D::SetPosition(TMath::TVector2 vPos)
 {
 	m_vPos = vPos;	
 	/*SetRectDraw({
@@ -56,7 +56,7 @@ void		TObject2D::SetPosition(TVector2 vPos)
 	}
 }
 void	TObject2D::Convert(
-	TVector2 center, float fWidth, float fHeight,
+	TMath::TVector2 center, float fWidth, float fHeight,
 	std::vector<SimpleVertex>& retList)
 {
 	// 0       1,4
@@ -120,7 +120,7 @@ void	TObject2D::Convert(
 	}
 }
 void	TObject2D::ConvertIndex(
-	TVector2 center, float fWidth, float fHeight,
+	TMath::TVector2 center, float fWidth, float fHeight,
 	std::vector<SimpleVertex>& retList)
 {
 	// 0       1
@@ -215,7 +215,7 @@ bool	TObject2D::Frame()
 	if (m_bFadeIn)	FadeIn();
 	if (m_bFadeOut)	FadeOut();
 	m_ConstantList.Color = m_vColor;
-	m_ConstantList.Timer = TVector4(
+	m_ConstantList.Timer = TMath::TVector4(
 		g_fGameTimer,
 		0,
 		0,
@@ -227,7 +227,7 @@ bool	TObject2D::Frame()
 TObject2D::TObject2D()
 {
 	m_fAlpha = 1.0f;
-	m_vColor = TVector4(1, 1, 1, 1);
+	m_vColor = TMath::TVector4(1, 1, 1, 1);
 	m_rtSource.left = 0; m_rtSource.right = 0;
 	m_rtSource.top  = 0; m_rtSource.bottom = 0;
 	m_rtDraw.left = 0; m_rtDraw.right = g_rtClient.right;

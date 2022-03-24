@@ -1,5 +1,8 @@
 #include "TCamera.h"
 #include "TInput.h"
+#include "SimpleMath.h"
+using namespace DirectX::SimpleMath;
+
 bool TCamera::Init()
 {
 	m_matView.CreateViewLook(m_vCamera, m_vTarget, m_vUp);
@@ -7,6 +10,11 @@ bool TCamera::Init()
 	m_matProj.PerspectiveFovLH(0.1f, 5000.0f,
 		TBASIS_PI * 0.25f,
 		(float)g_rtClient.right / (float)g_rtClient.bottom);
+	return true;
+}
+// vValue.x : pitch, y=yaw, z= roll, w =radius
+bool TCamera::Update(TMath::TVector4 vValue)
+{
 	return true;
 }
 bool TCamera::Frame()
@@ -45,5 +53,5 @@ TCamera::TCamera()
 	m_vCamera.x = 0.0f;
 	m_vCamera.y = 9.0f;
 	m_vCamera.z = -15.0f;
-	m_vDefaultUp = TVector3(0, 1, 0);
+	m_vDefaultUp = TMath::TVector3(0, 1, 0);
 }

@@ -66,7 +66,7 @@ float TMap::Lerp(float fStart, float fEnd, float fTangent)
 }
 bool TMap::Frame()
 {
-	TVector3 vLight(cosf(g_fGameTimer)*100.0f, 
+	TMath::TVector3 vLight(cosf(g_fGameTimer)*100.0f, 
 		            100, 
 					sinf(g_fGameTimer) * 100.0f);
 
@@ -161,12 +161,12 @@ bool		TMap::SetVertexData()
 			m_VertexList[index].p.x = (iCol- hHalfCol)* m_fCellDistance;
 			m_VertexList[index].p.y = m_fHeightList[index];
 			m_VertexList[index].p.z = -((iRow - hHalfRow)* m_fCellDistance);
-			m_VertexList[index].n = TVector3(0, 1, 0);
-			m_VertexList[index].c = TVector4(randstep(0.0f, 1.0f), 
+			m_VertexList[index].n = TMath::TVector3(0, 1, 0);
+			m_VertexList[index].c = TMath::TVector4(randstep(0.0f, 1.0f), 
 				randstep(0.0f, 1.0f), 
 				randstep(0.0f, 1.0f), 1);
 			m_VertexList[index].t = 
-				TVector2(ftxOffetU*iCol, ftxOffetV * iRow);
+				TMath::TVector2(ftxOffetU*iCol, ftxOffetV * iRow);
 		}
 	}
 	return true;
@@ -192,7 +192,7 @@ bool		TMap::SetIndexData()
 	}
 
 	iIndex = 0;
-	TVector3 vLight(100, 100, 0);
+	TMath::TVector3 vLight(100, 100, 0);
 	vLight = vLight.Normal() * 1.0f;
 	for (int iRow = 0; iRow < m_iNumCellRows; iRow++)
 	{
@@ -203,9 +203,9 @@ bool		TMap::SetIndexData()
 			face.v0 = m_IndexList[iIndex + 0];
 			face.v1 = m_IndexList[iIndex + 1];
 			face.v2 = m_IndexList[iIndex + 2];
-			TVector3 vNormal;
-			TVector3 vE0 = (m_VertexList[face.v1].p - m_VertexList[face.v0].p).Normal();
-			TVector3 vE1 = (m_VertexList[face.v2].p - m_VertexList[face.v0].p).Normal();
+			TMath::TVector3 vNormal;
+			TMath::TVector3 vE0 = (m_VertexList[face.v1].p - m_VertexList[face.v0].p).Normal();
+			TMath::TVector3 vE1 = (m_VertexList[face.v2].p - m_VertexList[face.v0].p).Normal();
 			face.vNomal = (vE0 ^ vE1).Normal();
 
 			m_VertexList[face.v0].n += face.vNomal;
@@ -213,9 +213,9 @@ bool		TMap::SetIndexData()
 			m_VertexList[face.v2].n += face.vNomal;
 
 			float fDot = max(0.0f, vLight | face.vNomal);
-			m_VertexList[face.v0].c = TVector4(fDot, fDot, fDot,1);
-			m_VertexList[face.v1].c = TVector4(fDot, fDot, fDot, 1);
-			m_VertexList[face.v2].c = TVector4(fDot, fDot, fDot, 1);
+			m_VertexList[face.v0].c = TMath::TVector4(fDot, fDot, fDot,1);
+			m_VertexList[face.v1].c = TMath::TVector4(fDot, fDot, fDot, 1);
+			m_VertexList[face.v2].c = TMath::TVector4(fDot, fDot, fDot, 1);
 			m_FaceList.push_back(face);
 
 			// 1face
@@ -231,9 +231,9 @@ bool		TMap::SetIndexData()
 			m_VertexList[face.v2].n += face.vNomal;
 
 			fDot = max(0.0f, vLight | face.vNomal);
-			m_VertexList[face.v0].c = TVector4(fDot, fDot, fDot, 1);
-			m_VertexList[face.v1].c = TVector4(fDot, fDot, fDot, 1);
-			m_VertexList[face.v2].c = TVector4(fDot, fDot, fDot, 1);
+			m_VertexList[face.v0].c = TMath::TVector4(fDot, fDot, fDot, 1);
+			m_VertexList[face.v1].c = TMath::TVector4(fDot, fDot, fDot, 1);
+			m_VertexList[face.v2].c = TMath::TVector4(fDot, fDot, fDot, 1);
 			m_FaceList.push_back(face);
 
 			iIndex += 6;
@@ -245,7 +245,7 @@ bool		TMap::SetIndexData()
 		{
 			m_VertexList[iRow * m_iNumCols + iCol].n.Normalize();
 			float fDot = max(0.0f, vLight | m_VertexList[iRow * m_iNumCols + iCol].n);
-			m_VertexList[iRow * m_iNumCols + iCol].c = TVector4(fDot, fDot, fDot, 1);
+			m_VertexList[iRow * m_iNumCols + iCol].c = TMath::TVector4(fDot, fDot, fDot, 1);
 		}
 	}
 	return true;

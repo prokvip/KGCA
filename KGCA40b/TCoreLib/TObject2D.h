@@ -6,9 +6,9 @@ public:
 	std::vector<SimpleVertex> m_VertexList2D;
 	RECT				m_rtSource;
 	RECT				m_rtDraw;	
-	TVector4			m_vColor;
-	TVector2	m_vPos;
-	TVector2	m_vDirection;
+	TMath::TVector4			m_vColor;
+	TMath::TVector2	m_vPos;
+	TMath::TVector2	m_vDirection;
 public:
 	float  m_fAlpha = 0.0f;
 	bool   m_bFadeIn = false;
@@ -18,16 +18,16 @@ public:
 public:	
 	virtual void		SetRectSouce(RECT rt);
 	virtual void		SetRectDraw(RECT rt);
-	virtual void		AddPosition(TVector2 vPos);
-	virtual void		SetPosition(TVector2 vPos);		
+	virtual void		AddPosition(TMath::TVector2 vPos);
+	virtual void		SetPosition(TMath::TVector2 vPos);		
 	virtual void		UpdateRectDraw(RECT rt);
 	// 화면좌표 위치를 중점으로 NDC 변환
-	virtual void	Convert(TVector2 center, float fWidth, float fHeight,
+	virtual void	Convert(TMath::TVector2 center, float fWidth, float fHeight,
 		std::vector<SimpleVertex>& retList);
 	// 화면좌표계를 NDC 변환
 	virtual void	Convert(std::vector<SimpleVertex>& list,
 		std::vector<SimpleVertex>& retList);
-	virtual void	ConvertIndex(TVector2 center, float fWidth, float fHeight,
+	virtual void	ConvertIndex(TMath::TVector2 center, float fWidth, float fHeight,
 		std::vector<SimpleVertex>& retList);
 	// 화면좌표계를 NDC 변환
 	virtual void	ConvertIndex(std::vector<SimpleVertex>& list,

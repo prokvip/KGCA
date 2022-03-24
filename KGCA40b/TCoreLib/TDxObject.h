@@ -6,19 +6,19 @@
 
 struct SimpleVertex
 {
-	TVector2 v;
-	TVector2 t;
+	TMath::TVector2 v;
+	TMath::TVector2 t;
 };
 struct TVertex
 {
-	TVector3 p; // 위치
-	TVector3 n; // 노말
-	TVector4 c; // 컬러
-	TVector2 t; // 텍셀
-	TVertex(TVector3 p1,
-		TVector3 n1,
-		TVector4 c1,
-		TVector2 t1)
+	TMath::TVector3 p; // 위치
+	TMath::TVector3 n; // 노말
+	TMath::TVector4 c; // 컬러
+	TMath::TVector2 t; // 텍셀
+	TVertex(TMath::TVector3 p1,
+		TMath::TVector3 n1,
+		TMath::TVector4 c1,
+		TMath::TVector2 t1)
 	{
 		p = p1;
 		n = n1;
@@ -108,11 +108,11 @@ struct TIndex
 
 struct TConstantData
 {
-	TMatrix  matWorld;
-	TMatrix  matView;
-	TMatrix  matProj;
-	TVector4 Color;
-	TVector4 Timer;
+	TMath::TMatrix  matWorld;
+	TMath::TMatrix  matView;
+	TMath::TMatrix  matProj;
+	TMath::TVector4 Color;
+	TMath::TVector4 Timer;
 };
 class TDxObject : public TBaseObject
 {

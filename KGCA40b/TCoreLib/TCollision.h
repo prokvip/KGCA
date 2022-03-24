@@ -9,10 +9,10 @@ enum TCollisionResult
 // È­¸éÁÂÇ¥°è+¿ÞÂÊ»ó´ÜÀÌ ¿øÁ¡
 struct TRect2D
 {
-	TVector2 vMin;
-	TVector2 vMax;
-	TVector2 vMiddle;
-	TVector2 size;
+	TMath::TVector2 vMin;
+	TMath::TVector2 vMax;
+	TMath::TVector2 vMiddle;
+	TMath::TVector2 size;
 	bool operator == (const TRect2D& v)
 	{
 		if (fabs((vMin - v.vMin).Length()) < 0.0001f)
@@ -25,7 +25,7 @@ struct TRect2D
 		return false;
 	}
 	TRect2D() {};
-	TRect2D(TVector2 vMin, TVector2 vMax)
+	TRect2D(TMath::TVector2 vMin, TMath::TVector2 vMax)
 	{
 		this->vMin = vMin;
 		this->vMax = vMax;
@@ -33,10 +33,10 @@ struct TRect2D
 		size.x = vMax.x - vMin.x;
 		size.y = vMax.y - vMin.y;
 	}
-	TRect2D(TVector2 v, float w, float h)
+	TRect2D(TMath::TVector2 v, float w, float h)
 	{
 		this->vMin = v;
-		this->vMax = vMin + TVector2(w, h);
+		this->vMax = vMin + TMath::TVector2(w, h);
 		vMiddle = (vMax + vMin) / 2.0f;
 		this->size.x = w;
 		this->size.y = h;
@@ -45,10 +45,10 @@ struct TRect2D
 // È­¸éÁÂÇ¥°è+Áß¾ÓÀÌ ¿øÁ¡
 struct TRect
 {
-	TVector2 vMin;
-	TVector2 vMax;
-	TVector2 vMiddle;
-	TVector2 size;
+	TMath::TVector2 vMin;
+	TMath::TVector2 vMax;
+	TMath::TVector2 vMiddle;
+	TMath::TVector2 size;
 	bool operator == (const TRect& v)
 	{
 		if (fabs((vMin - v.vMin).Length()) < 0.0001f)
@@ -61,7 +61,7 @@ struct TRect
 		return false;
 	}
 	TRect() {};
-	TRect(TVector2 vMin, TVector2 vMax)
+	TRect(TMath::TVector2 vMin, TMath::TVector2 vMax)
 	{
 		this->vMin = vMin;
 		this->vMax = vMax;
@@ -69,21 +69,21 @@ struct TRect
 		size.x = vMax.x - vMin.x;
 		size.y = vMax.y - vMin.y;
 	}
-	TRect(TVector2 pos, float w, float h)
+	TRect(TMath::TVector2 pos, float w, float h)
 	{
 		vMiddle = pos;
-		this->vMin = vMiddle - TVector2(w/2.0f, h/2.0f);
-		this->vMax = vMiddle + TVector2(w / 2.0f, h / 2.0f);		
+		this->vMin = vMiddle - TMath::TVector2(w/2.0f, h/2.0f);
+		this->vMax = vMiddle + TMath::TVector2(w / 2.0f, h / 2.0f);		
 		this->size.x = w;
 		this->size.y = h;
 	}
 };
 struct TBox
 {
-	TVector3 vMin;
-	TVector3 vMax;
-	TVector3 vMiddle;
-	TVector3 size;
+	TMath::TVector3 vMin;
+	TMath::TVector3 vMax;
+	TMath::TVector3 vMiddle;
+	TMath::TVector3 size;
 	bool operator == (const TBox& v)
 	{
 		if (fabs((vMin - v.vMin).Length()) < 0.0001f)
@@ -96,7 +96,7 @@ struct TBox
 		return false;
 	}
 	TBox() {};
-	TBox(TVector3 vMin, TVector3 vMax)
+	TBox(TMath::TVector3 vMin, TMath::TVector3 vMax)
 	{
 		this->vMin = vMin;
 		this->vMax = vMax;
@@ -104,10 +104,10 @@ struct TBox
 		size.x = vMax.x - vMin.x;
 		size.y = vMax.y - vMin.y;
 	}
-	TBox(TVector3 v, float w, float h, float q)
+	TBox(TMath::TVector3 v, float w, float h, float q)
 	{
 		this->vMin = v;
-		this->vMax = vMin + TVector3(w, h,q);
+		this->vMax = vMin + TMath::TVector3(w, h,q);
 		vMiddle = (vMax + vMin) / 2.0f;
 		this->size.x = w;
 		this->size.y = h;
@@ -115,7 +115,7 @@ struct TBox
 };
 struct TSphere
 {
-	TVector2 vCenter;
+	TMath::TVector2 vCenter;
 	float    fRadius;
 	TSphere()
 	{
@@ -126,16 +126,16 @@ class TCollision
 {
 public:
 	static bool   SphereToPoint(TSphere rt, int x, int y);
-	static bool   SphereToPoint(TSphere rt, TVector2 v);
+	static bool   SphereToPoint(TSphere rt, TMath::TVector2 v);
 	static bool   RectToPoint(TRect rt, int x, int y);
-	static bool   RectToPoint(TRect rt, TVector2 v);
+	static bool   RectToPoint(TRect rt, TMath::TVector2 v);
 	static TCollisionResult    RectToRect(TRect,TRect);
 	static TCollisionResult    ToRect(TRect rt1, TRect rt2);
 	static TRect  UnionRect(TRect rt1, TRect rt2);
 	static bool  IntersectRect(TRect rt1, TRect rt2, TRect* rt);
 	
 	static bool   BoxToPoint(TBox rt, int x, int y, int z);
-	static bool   BoxToPoint(TBox rt, TVector3 v);
+	static bool   BoxToPoint(TBox rt, TMath::TVector3 v);
 	static TCollisionResult    BoxToBox(TBox, TBox);
 	static TBox   UnionBox(TBox rt1, TBox rt2);
 	static bool  IntersectBox(TBox rt1, TBox rt2, TBox* rt);
