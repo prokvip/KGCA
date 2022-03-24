@@ -3,12 +3,13 @@
 class TCamera
 {
 public:
-	T::TQuaternion			m_qRotation;
+	float				m_fRadius=10.0f;
+	T::TQuaternion		m_qRotation;
 	T::TVector3			m_vCamera;
 	T::TVector3			m_vTarget;
 	T::TVector3			m_vDefaultUp;
 
-	T::TVector3			m_vLight; //x	
+	T::TVector3			m_vRight; //x	
 	T::TVector3			m_vUp; //y 
 	T::TVector3			m_vLook; // z	
 
@@ -18,7 +19,11 @@ public:
 public:
 	virtual bool	Init();
 	virtual bool	Frame();
-	virtual T::TMatrix	Update(T::TVector4 vValue);
+	virtual bool	Update(T::TVector4 vValue);
+	void MoveLook(float fValue);
+	void MoveSide(float fValue);
+	void MoveUp(float fValue);
+	bool UpdateVector();
 	TCamera();
 	virtual ~TCamera() {}
 };

@@ -68,13 +68,13 @@ bool	Sample::Init()
 }
 bool	Sample::Frame()
 {	
-	if (TInput::Get().GetKey('A') || TInput::Get().GetKey(VK_LEFT))
+	/*if (TInput::Get().GetKey('A') || TInput::Get().GetKey(VK_LEFT))
 	{
-		m_PlayerObj.m_vPos -= m_PlayerObj.m_vLight *  g_fSecPerFrame * 10.0f;
+		m_PlayerObj.m_vPos -= m_PlayerObj.m_vRight *  g_fSecPerFrame * 10.0f;
 	}
 	if (TInput::Get().GetKey('D') || TInput::Get().GetKey(VK_RIGHT))
 	{
-		m_PlayerObj.m_vPos += m_PlayerObj.m_vLight * g_fSecPerFrame * 10.0f;
+		m_PlayerObj.m_vPos += m_PlayerObj.m_vRight * g_fSecPerFrame * 10.0f;
 	}
 	if (TInput::Get().GetKey('W') || TInput::Get().GetKey(VK_UP))
 	{
@@ -83,7 +83,7 @@ bool	Sample::Frame()
 	if (TInput::Get().GetKey('S') || TInput::Get().GetKey(VK_DOWN))
 	{
 		m_PlayerObj.m_vPos -= m_PlayerObj.m_vLook * g_fSecPerFrame * 10.0f;
-	}
+	}*/
 	T::TMatrix matRotate;
 	T::TMatrix matScale;
 	static float fRadian = 0.0f;
@@ -97,11 +97,31 @@ bool	Sample::Frame()
 	m_Camera.m_vTarget = m_PlayerObj.m_vPos;
 
 	float y = m_MapObj.GetHeight(m_Camera.m_vCamera.x, m_Camera.m_vCamera.z);
-	m_Camera.m_vCamera = m_PlayerObj.m_vPos +
+	/*m_Camera.m_vCamera = m_PlayerObj.m_vPos +
 						m_PlayerObj.m_vLook * -1.0f *5.0f +
-						m_PlayerObj.m_vUp * 5.0f;
+						m_PlayerObj.m_vUp * 5.0f;*/
 
-	m_Camera.Frame();
+	static float fRadianX = 0.0f;
+	fRadianX += (TInput::Get().m_ptDeltaMouse.y / (float)g_rtClient.bottom) * TBASIS_PI;
+
+	if (TInput::Get().GetKey('A') || TInput::Get().GetKey(VK_LEFT))
+	{
+		m_Camera.MoveSide(-g_fSecPerFrame * 100.0f);
+	}
+	if (TInput::Get().GetKey('D') || TInput::Get().GetKey(VK_RIGHT))
+	{
+		m_Camera.MoveSide(g_fSecPerFrame * 100.0f);
+	}
+	//m_Camera.MoveLook(10.0f);
+	if (TInput::Get().GetKey('W') )
+	{
+		m_Camera.MoveLook(g_fSecPerFrame * 100.0f);
+	}
+	if (TInput::Get().GetKey('S') || TInput::Get().GetKey(VK_DOWN))
+	{
+		m_Camera.MoveLook(-g_fSecPerFrame * 100.0f);
+	}
+	m_Camera.Update(T::TVector4(-fRadianX, -fRadian,0,0));
 	m_MapObj.Frame();
 	m_PlayerObj.Frame();
 	return true;
