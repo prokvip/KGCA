@@ -44,8 +44,8 @@ TRect   TCollision::UnionRect(TRect rt1, TRect rt2)
 	rt.vMax.y = rt1.vMax.y < rt2.vMax.y ? rt2.vMax.y : rt1.vMax.y;
 	rt.size.x = rt.vMax.x - rt.vMin.x;
 	rt.size.y = rt.vMax.y - rt.vMin.y;
-	rt.vMiddle = (rt.vMin + rt.vMax);
-	rt.vMiddle /= 2.0f;
+	rt.vCenter = (rt.vMin + rt.vMax);
+	rt.vCenter /= 2.0f;
 	return rt;
 }
 bool   TCollision::IntersectRect(
@@ -70,8 +70,8 @@ bool   TCollision::IntersectRect(
 
 			pRect->size.x = pRect->vMax.x - pRect->vMin.x;
 			pRect->size.y = pRect->vMax.y - pRect->vMin.y;
-			pRect->vMiddle = (pRect->vMax + pRect->vMin);
-			pRect->vMiddle /= 2.0f;
+			pRect->vCenter = (pRect->vMax + pRect->vMin);
+			pRect->vCenter /= 2.0f;
 		}
 		return true;
 	}
@@ -98,8 +98,8 @@ TCollisionResult   TCollision::ToRect(TRect rt1,TRect rt2)
 	// 거리 판정
 	float fDistanceX;
 	float fDistanceY;
-	fDistanceX = fabs(rt1.vMiddle.x - rt2.vMiddle.x);
-	fDistanceY = fabs(rt1.vMiddle.y - rt2.vMiddle.y);
+	fDistanceX = fabs(rt1.vCenter.x - rt2.vCenter.x);
+	fDistanceY = fabs(rt1.vCenter.y - rt2.vCenter.y);
 	float fToX = rt1.size.x / 2.0f + rt1.size.x / 2.0f;
 	float fToY = rt1.size.y / 2.0f + rt1.size.y / 2.0f;
 	if (fDistanceX < fToX && fDistanceY < fToY)
@@ -140,8 +140,8 @@ TBox   TCollision::UnionBox(TBox rt1, TBox rt2)
 	rt.vMax.z = rt1.vMax.z < rt2.vMax.z ? rt2.vMax.z : rt1.vMax.z;
 
 	rt.size = rt.vMax - rt.vMin;
-	rt.vMiddle = (rt.vMin + rt.vMax);
-	rt.vMiddle /= 2.0f;
+	rt.vCenter = (rt.vMin + rt.vMax);
+	rt.vCenter /= 2.0f;
 	return rt;
 }
 bool   TCollision::IntersectBox(
@@ -170,8 +170,8 @@ bool   TCollision::IntersectBox(
 				rt1.vMax.z : rt2.vMax.z;
 
 			pRect->size = pRect->vMax - pRect->vMin;
-			pRect->vMiddle = (pRect->vMax + pRect->vMin);
-			pRect->vMiddle /= 2.0f;
+			pRect->vCenter = (pRect->vMax + pRect->vMin);
+			pRect->vCenter /= 2.0f;
 		}
 		return true;
 	}

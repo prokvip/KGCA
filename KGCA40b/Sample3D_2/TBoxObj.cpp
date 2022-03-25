@@ -145,6 +145,40 @@ bool		TBoxObj::SetVertexData()
 
 	m_pTexCube = I_Texture.Load(L"..\\..\\data\\sky\\LobbyCube.dds");
 
+
+	// aabb 
+	m_BoxCollision.vMin = T::TVector3(100000, 100000, 100000);
+	m_BoxCollision.vMax = T::TVector3(-100000, -100000, -100000);
+	for (int i = 0; i < m_VertexList.size(); i++)
+	{
+		if (m_BoxCollision.vMin.x > m_VertexList[i].p.x)
+		{
+			m_BoxCollision.vMin.x = m_VertexList[i].p.x;
+		}
+		if (m_BoxCollision.vMin.y > m_VertexList[i].p.y)
+		{
+			m_BoxCollision.vMin.y = m_VertexList[i].p.y;
+		}
+		if (m_BoxCollision.vMin.z > m_VertexList[i].p.z)
+		{
+			m_BoxCollision.vMin.z = m_VertexList[i].p.z;
+		}
+
+		if (m_BoxCollision.vMax.x < m_VertexList[i].p.x)
+		{
+			m_BoxCollision.vMax.x = m_VertexList[i].p.x;
+		}
+		if (m_BoxCollision.vMax.y < m_VertexList[i].p.y)
+		{
+			m_BoxCollision.vMax.y = m_VertexList[i].p.y;
+		}
+		if (m_BoxCollision.vMax.z < m_VertexList[i].p.z)
+		{
+			m_BoxCollision.vMax.z = m_VertexList[i].p.z;
+		}
+	}
+
+
 	return true;
 }
 bool		TBoxObj::SetIndexData()

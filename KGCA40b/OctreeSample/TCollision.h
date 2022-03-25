@@ -10,7 +10,7 @@ struct TRect
 {
 	TVector2 vMin;
 	TVector2 vMax;
-	TVector2 vMiddle;
+	TVector2 vCenter;
 	TVector2 size;
 	bool operator == (const TRect& v)
 	{
@@ -28,7 +28,7 @@ struct TRect
 	{
 		this->vMin = vMin;
 		this->vMax = vMax;
-		vMiddle = (vMax + vMin) / 2.0f;
+		vCenter = (vMax + vMin) / 2.0f;
 		size.x = vMax.x - vMin.x;
 		size.y = vMax.y - vMin.y;
 	}
@@ -36,7 +36,7 @@ struct TRect
 	{
 		this->vMin = v;
 		this->vMax = vMin + TVector2(w, h);
-		vMiddle = (vMax + vMin) / 2.0f;
+		vCenter = (vMax + vMin) / 2.0f;
 		this->size.x = w;
 		this->size.y = h;
 	}
@@ -45,7 +45,7 @@ struct TBox
 {
 	TVector3 vMin;
 	TVector3 vMax;
-	TVector3 vMiddle;
+	TVector3 vCenter;
 	TVector3 size;
 	bool operator == (const TBox& v)
 	{
@@ -63,7 +63,7 @@ struct TBox
 	{
 		this->vMin = vMin;
 		this->vMax = vMax;
-		vMiddle = (vMax + vMin) / 2.0f;
+		vCenter = (vMax + vMin) / 2.0f;
 		size.x = vMax.x - vMin.x;
 		size.y = vMax.y - vMin.y;
 		size.z = vMax.z - vMin.z;
@@ -72,7 +72,7 @@ struct TBox
 	{
 		this->vMin = v;
 		this->vMax = vMin + TVector3(w, h, q);
-		vMiddle = (vMax + vMin) / 2.0f;
+		vCenter = (vMax + vMin) / 2.0f;
 		this->size.x = w;
 		this->size.y = h;
 	}

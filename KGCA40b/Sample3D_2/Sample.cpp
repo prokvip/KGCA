@@ -73,17 +73,20 @@ bool	Sample::Init()
 		return false;
 	}
 	
-	//m_ObjB.Init();
-	//m_ObjB.m_pColorTex = I_Texture.Load(L"../../data/KGCABK.bmp");
-	//m_ObjB.m_pVShader = pVShader;
-	//m_ObjB.m_pPShader = pPShader;
-	//if (!m_ObjB.Create(m_pd3dDevice.Get(),
-	//	m_pImmediateContext.Get()))
-	//{
-	//	return false;
-	//}
-	//m_ObjB.m_matWorld.Translation(1.0f, 0.0f, 0.0f);
-
+	m_ObjList.resize(10);
+	for (int iObj = 0; iObj < m_ObjList.size(); iObj++)
+	{
+		m_ObjList[iObj].Init();
+		m_ObjList[iObj].m_pColorTex = I_Texture.Load(L"../../data/KGCABK.bmp");
+		m_ObjList[iObj].m_pVShader = pVShader;
+		m_ObjList[iObj].m_pPShader = pPShader;
+		m_ObjList[iObj].SetPosition(T::TVector3(-500.0f + iObj*150.0f, 100.0f, 0));
+		if (!m_ObjList[iObj].Create(m_pd3dDevice.Get(),
+			m_pImmediateContext.Get()))
+		{
+			return false;
+		}		
+	}
 	return true;
 }
 bool	Sample::Frame()
@@ -140,6 +143,15 @@ bool	Sample::Frame()
 	m_Camera.Update(T::TVector4(-dir.x, -dir.y,0,0));
 	m_MapObj.Frame();
 	m_PlayerObj.Frame();
+
+	for (auto& obj : m_ObjList)
+	{
+		T::D3DXMatrixScaling(&matScale, 50, 50, 50);
+		obj.m_matWorld = matScale * matRotate;
+		obj.m_vPos.y = m_MapObj.GetHeight(obj.m_vPos.x, obj.m_vPos.z) + 50;
+		obj.SetPosition(obj.m_vPos);
+		obj.Frame();
+	}
 	return true;
 }
 bool	Sample::Render()
@@ -162,11 +174,18 @@ bool	Sample::Render()
 	m_pImmediateContext->RSSetState(TDxState::g_pRSBackCullSolid);
 	m_MapObj.SetMatrix(nullptr, &m_CameraTopView.m_matView,
 		&m_CameraTopView.m_matProj);
-	m_MapObj.Render();
+	//m_MapObj.Render();
 	
 	m_PlayerObj.SetMatrix(nullptr, &m_CameraTopView.m_matView,
 		&m_CameraTopView.m_matProj);
 	m_PlayerObj.Render();	
+
+	for (auto& obj : m_ObjList)
+	{
+		obj.SetMatrix(nullptr,  &m_CameraTopView.m_matView,
+								&m_CameraTopView.m_matProj);
+		obj.Render();
+	}
 
 	m_Camera.SetMatrix(nullptr, &m_CameraTopView.m_matView, 
 								&m_CameraTopView.m_matProj);
@@ -184,8 +203,11 @@ bool	Sample::Release()
 	m_SkyObj.Release();
 	m_MapObj.Release();
 	m_PlayerObj.Release();
-	m_ObjB.Release();
 	m_Camera.Release();
+	for (auto& obj : m_ObjList)
+	{
+		obj.Release();
+	}
 	return true;
 }
 Sample::Sample()

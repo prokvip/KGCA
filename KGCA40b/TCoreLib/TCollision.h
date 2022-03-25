@@ -11,7 +11,7 @@ struct TRect2D
 {
 	T::TVector2 vMin;
 	T::TVector2 vMax;
-	T::TVector2 vMiddle;
+	T::TVector2 vCenter;
 	T::TVector2 size;
 	bool operator == (const TRect2D& v)
 	{
@@ -29,8 +29,8 @@ struct TRect2D
 	{
 		this->vMin = vMin;
 		this->vMax = vMax;
-		vMiddle = (vMax + vMin);
-		vMiddle /= 2.0f;
+		vCenter = (vMax + vMin);
+		vCenter /= 2.0f;
 		size.x = vMax.x - vMin.x;
 		size.y = vMax.y - vMin.y;
 	}
@@ -38,8 +38,8 @@ struct TRect2D
 	{
 		this->vMin = v;
 		this->vMax = vMin + T::TVector2(w, h);
-		vMiddle = (vMax + vMin);
-		vMiddle /= 2.0f;
+		vCenter = (vMax + vMin);
+		vCenter /= 2.0f;
 		this->size.x = w;
 		this->size.y = h;
 	}
@@ -49,7 +49,7 @@ struct TRect
 {
 	T::TVector2 vMin;
 	T::TVector2 vMax;
-	T::TVector2 vMiddle;
+	T::TVector2 vCenter;
 	T::TVector2 size;
 	bool operator == (const TRect& v)
 	{
@@ -67,16 +67,16 @@ struct TRect
 	{
 		this->vMin = vMin;
 		this->vMax = vMax;
-		vMiddle = (vMax + vMin);
-		vMiddle/= 2.0f;
+		vCenter = (vMax + vMin);
+		vCenter/= 2.0f;
 		size.x = vMax.x - vMin.x;
 		size.y = vMax.y - vMin.y;
 	}
 	TRect(T::TVector2 pos, float w, float h)
 	{
-		vMiddle = pos;
-		this->vMin = vMiddle - T::TVector2(w/2.0f, h/2.0f);
-		this->vMax = vMiddle + T::TVector2(w / 2.0f, h / 2.0f);		
+		vCenter = pos;
+		this->vMin = vCenter - T::TVector2(w/2.0f, h/2.0f);
+		this->vMax = vCenter + T::TVector2(w / 2.0f, h / 2.0f);		
 		this->size.x = w;
 		this->size.y = h;
 	}
@@ -85,7 +85,8 @@ struct TBox
 {
 	T::TVector3 vMin;
 	T::TVector3 vMax;
-	T::TVector3 vMiddle;
+	T::TVector3 vCenter;
+	T::TVector3 vAxis[3];
 	T::TVector3 size;
 	bool operator == (const TBox& v)
 	{
@@ -103,8 +104,8 @@ struct TBox
 	{
 		this->vMin = vMin;
 		this->vMax = vMax;
-		vMiddle = (vMax + vMin);
-		vMiddle/= 2.0f;
+		vCenter = (vMax + vMin);
+		vCenter/= 2.0f;
 		size.x = vMax.x - vMin.x;
 		size.y = vMax.y - vMin.y;
 	}
@@ -112,8 +113,8 @@ struct TBox
 	{
 		this->vMin = v;
 		this->vMax = vMin + T::TVector3(w, h,q);
-		vMiddle = (vMax + vMin);
-		vMiddle /= 2.0f;
+		vCenter = (vMax + vMin);
+		vCenter /= 2.0f;
 		this->size.x = w;
 		this->size.y = h;
 	}

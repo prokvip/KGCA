@@ -71,6 +71,7 @@ public:
 	float		m_fWidth;
 	float		m_fHeight;
 	TRect		m_rtCollision;
+	TBox		m_BoxCollision;
 	DWORD		m_dwCollisonType;
 	DWORD		m_dwSelectType;
 	DWORD		m_dwSelectState;

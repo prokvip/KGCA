@@ -26,7 +26,7 @@ TRect   TCollision::UnionRect(TRect rt1, TRect rt2)
 	rt.vMax.y = rt1.vMax.y < rt2.vMax.y ? rt2.vMax.y : rt1.vMax.y;
 	rt.size.x = rt.vMax.x - rt.vMin.x;
 	rt.size.y = rt.vMax.y - rt.vMin.y;
-	rt.vMiddle = (rt.vMin + rt.vMax) / 2.0f;
+	rt.vCenter = (rt.vMin + rt.vMax) / 2.0f;
 	return rt;
 }
 bool   TCollision::IntersectRect(
@@ -51,7 +51,7 @@ bool   TCollision::IntersectRect(
 
 			pRect->size.x = pRect->vMax.x - pRect->vMin.x;
 			pRect->size.y = pRect->vMax.y - pRect->vMin.y;
-			pRect->vMiddle = (pRect->vMax + pRect->vMin) / 2.0f;
+			pRect->vCenter = (pRect->vMax + pRect->vMin) / 2.0f;
 		}
 		return true;
 	}
@@ -116,7 +116,7 @@ TBox   TCollision::UnionBox(TBox rt1, TBox rt2)
 	rt.vMax.z = rt1.vMax.z < rt2.vMax.z ? rt2.vMax.z : rt1.vMax.z;
 
 	rt.size = rt.vMax - rt.vMin;
-	rt.vMiddle = (rt.vMin + rt.vMax) / 2.0f;
+	rt.vCenter = (rt.vMin + rt.vMax) / 2.0f;
 	return rt;
 }
 bool   TCollision::IntersectBox(
@@ -145,7 +145,7 @@ bool   TCollision::IntersectBox(
 				rt1.vMax.z : rt2.vMax.z;
 
 			pRect->size = pRect->vMax - pRect->vMin;
-			pRect->vMiddle = (pRect->vMax + pRect->vMin) / 2.0f;
+			pRect->vCenter = (pRect->vMax + pRect->vMin) / 2.0f;
 		}
 		return true;
 	}

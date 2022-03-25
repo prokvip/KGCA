@@ -325,9 +325,9 @@ BOOL TFrustum::ClassifyOBB(TBox* box)
 			m_Plane[i].y * vDir.y +
 			m_Plane[i].z * vDir.z);
 
-		float pToc = m_Plane[i].x * box->vMiddle.x +
-			m_Plane[i].y * box->vMiddle.y +
-			m_Plane[i].z * box->vMiddle.z + m_Plane[i].w;
+		float pToc = m_Plane[i].x * box->vCenter.x +
+			m_Plane[i].y * box->vCenter.y +
+			m_Plane[i].z * box->vCenter.z + m_Plane[i].w;
 		if (pToc >= sum)
 		{
 			return FALSE;

@@ -71,7 +71,7 @@ void TOctree::BuildTree(TNode* pParent)
 		pParent->m_rt.size.z / 2.0f);
 	BuildTree(pParent->pChild[0]);
 	pParent->pChild[1] = CreateNode(pParent,
-		pParent->m_rt.vMiddle.x,
+		pParent->m_rt.vCenter.x,
 		pParent->m_rt.vMin.y,
 		pParent->m_rt.vMin.z,
 		pParent->m_rt.size.x / 2.0f,
@@ -79,8 +79,8 @@ void TOctree::BuildTree(TNode* pParent)
 		pParent->m_rt.size.z / 2.0f);
 	BuildTree(pParent->pChild[1]);
 	pParent->pChild[2] = CreateNode(pParent,
-		pParent->m_rt.vMiddle.x,
-		pParent->m_rt.vMiddle.y,
+		pParent->m_rt.vCenter.x,
+		pParent->m_rt.vCenter.y,
 		pParent->m_rt.vMin.z,
 		pParent->m_rt.size.x / 2.0f,
 		pParent->m_rt.size.y / 2.0f,
@@ -88,7 +88,7 @@ void TOctree::BuildTree(TNode* pParent)
 	BuildTree(pParent->pChild[2]);
 	pParent->pChild[3] = CreateNode(pParent,
 		pParent->m_rt.vMin.x,
-		pParent->m_rt.vMiddle.y,
+		pParent->m_rt.vCenter.y,
 		pParent->m_rt.vMin.z,
 		pParent->m_rt.size.x / 2.0f,
 		pParent->m_rt.size.y / 2.0f,
@@ -100,31 +100,31 @@ void TOctree::BuildTree(TNode* pParent)
 	pParent->pChild[4] = CreateNode(pParent,
 		pParent->m_rt.vMin.x,
 		pParent->m_rt.vMin.y,
-		pParent->m_rt.vMiddle.z,
+		pParent->m_rt.vCenter.z,
 		pParent->m_rt.size.x / 2.0f,
 		pParent->m_rt.size.y / 2.0f,
 		pParent->m_rt.size.z / 2.0f);
 	BuildTree(pParent->pChild[4]);
 	pParent->pChild[5] = CreateNode(pParent,
-		pParent->m_rt.vMiddle.x,
+		pParent->m_rt.vCenter.x,
 		pParent->m_rt.vMin.y,
-		pParent->m_rt.vMiddle.z,
+		pParent->m_rt.vCenter.z,
 		pParent->m_rt.size.x / 2.0f,
 		pParent->m_rt.size.y / 2.0f,
 		pParent->m_rt.size.z / 2.0f);
 	BuildTree(pParent->pChild[5]);
 	pParent->pChild[6] = CreateNode(pParent,
-		pParent->m_rt.vMiddle.x,
-		pParent->m_rt.vMiddle.y,
-		pParent->m_rt.vMiddle.z,
+		pParent->m_rt.vCenter.x,
+		pParent->m_rt.vCenter.y,
+		pParent->m_rt.vCenter.z,
 		pParent->m_rt.size.x / 2.0f,
 		pParent->m_rt.size.y / 2.0f,
 		pParent->m_rt.size.z / 2.0f);
 	BuildTree(pParent->pChild[6]);
 	pParent->pChild[7] = CreateNode(pParent,
 		pParent->m_rt.vMin.x,
-		pParent->m_rt.vMiddle.y,
-		pParent->m_rt.vMiddle.z,
+		pParent->m_rt.vCenter.y,
+		pParent->m_rt.vCenter.z,
 		pParent->m_rt.size.x / 2.0f,
 		pParent->m_rt.size.y / 2.0f,
 		pParent->m_rt.size.z / 2.0f);

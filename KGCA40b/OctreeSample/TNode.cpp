@@ -42,9 +42,9 @@ TNode::TNode(float x, float y, float z,
 	m_rt.vMax.x = x + w;
 	m_rt.vMax.y = y + h;
 	m_rt.vMax.z = z + q;
-	m_rt.vMiddle.x = x + (w / 2.0f);
-	m_rt.vMiddle.y = y + (h / 2.0f);
-	m_rt.vMiddle.z = z + (h / 2.0f);
+	m_rt.vCenter.x = x + (w / 2.0f);
+	m_rt.vCenter.y = y + (h / 2.0f);
+	m_rt.vCenter.z = z + (h / 2.0f);
 	m_rt.size.x = w;
 	m_rt.size.y = h;
 	m_rt.size.z = q;

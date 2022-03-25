@@ -11,7 +11,7 @@ class Sample : public TCore
 	TCamera			m_CameraTopView;
 	TMap			m_MapObj;
 	TBoxObj			m_PlayerObj;
-	TPlaneObj       m_ObjB;
+	std::vector<TBoxObj> m_ObjList;
 	TSkyObj			m_SkyObj;
 public:
 	virtual void	CreateResizeDevice(UINT iWidth, UINT iHeight) override;

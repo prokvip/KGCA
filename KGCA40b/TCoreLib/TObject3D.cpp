@@ -25,6 +25,14 @@ void		TObject3D::SetMatrix(T::TMatrix* matWorld,
 	m_vLook.x = m_matWorld._31;
 	m_vLook.y = m_matWorld._32;
 	m_vLook.z = m_matWorld._33;
+
+	T::D3DXVec3Normalize(&m_vLight, &m_vLight);
+	T::D3DXVec3Normalize(&m_vUp, &m_vUp);
+	T::D3DXVec3Normalize(&m_vLook, &m_vLook);
+
+	m_BoxCollision.vAxis[0] = m_vLight;
+	m_BoxCollision.vAxis[1] = m_vUp;
+	m_BoxCollision.vAxis[2] = m_vLook;
 }
 void		TObject3D::AddPosition(T::TVector3 vPos)
 {
@@ -91,6 +99,19 @@ bool	TObject3D::Frame()
 		0,
 		0,
 		1.0f);	
+
+	m_BoxCollision.vCenter = m_vPos;
+	T:TMatrix matWorld = m_matWorld;
+	matWorld._41 = 0.0f; matWorld._42 = 0.0f; matWorld._43 = 0.0f;
+	m_BoxCollision.vAxis[0] = T::TVector3(1, 0, 0);
+	m_BoxCollision.vAxis[1] = T::TVector3(0, 1, 0);
+	m_BoxCollision.vAxis[2] = T::TVector3(0, 0, 1);
+
+	m_BoxCollision.size.x = 1.0f;
+	m_BoxCollision.size.y = 1.0f;
+	m_BoxCollision.size.z = 1.0f;
+	m_BoxCollision.vMin = T::TVector3(-1.0f, -1.0f, -1.0f);
+	m_BoxCollision.vMax = T::TVector3(1.0f, 1.0f, 1.0f);
 	return true;
 }
 TObject3D::TObject3D()
@@ -106,6 +127,15 @@ TObject3D::TObject3D()
 	m_vLook.x = 0;
 	m_vLook.y = 0;
 	m_vLook.z = 1;
+
+	m_BoxCollision.vAxis[0] = T::TVector3(1, 0, 0);
+	m_BoxCollision.vAxis[1] = T::TVector3(0, 1, 0);
+	m_BoxCollision.vAxis[2] = T::TVector3(0, 0, 1);
+	m_BoxCollision.size.x = 1.0f;
+	m_BoxCollision.size.y = 1.0f;
+	m_BoxCollision.size.z = 1.0f;
+	m_BoxCollision.vMin = T::TVector3(-1.0f, -1.0f, -1.0f);
+	m_BoxCollision.vMax = T::TVector3(1.0f, 1.0f, 1.0f);
 }
 TObject3D::~TObject3D()
 {
