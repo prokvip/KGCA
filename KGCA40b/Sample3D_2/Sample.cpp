@@ -80,8 +80,10 @@ bool	Sample::Init()
 		m_ObjList[iObj].m_pColorTex = I_Texture.Load(L"../../data/KGCABK.bmp");
 		m_ObjList[iObj].m_pVShader = pVShader;
 		m_ObjList[iObj].m_pPShader = pPShader;
-		m_ObjList[iObj].SetPosition(T::TVector3(-500.0f + iObj*150.0f, 100.0f, 
-			rand() % 500));
+		m_ObjList[iObj].SetPosition(
+			T::TVector3(-300.0f + rand()%600,
+						100.0f, 
+						-300.0f + rand() % 600));
 		if (!m_ObjList[iObj].Create(m_pd3dDevice.Get(),
 			m_pImmediateContext.Get()))
 		{
@@ -149,9 +151,9 @@ bool	Sample::Frame()
 	for (auto& obj : m_ObjList)
 	{
 		T::D3DXMatrixScaling(&matScale, 
-			100 * cosf(g_fGameTimer),
-			100 * cosf(g_fGameTimer), 
-			100 * cosf(g_fGameTimer));
+			10 * cosf(g_fGameTimer),
+			10 * cosf(g_fGameTimer), 
+			10 * cosf(g_fGameTimer));
 		T::D3DXMatrixRotationYawPitchRoll(&matRotateObj, 
 			    cosf(g_fGameTimer*obj.m_vPos.x*0.001f) * XM_PI,
 				sinf(g_fGameTimer*obj.m_vPos.y * 0.001f) * XM_PI,
@@ -165,40 +167,40 @@ bool	Sample::Frame()
 }
 bool	Sample::Render()
 {	
-	//m_SkyObj.m_matViewSky = m_Camera.m_matView;
-	//m_SkyObj.m_matViewSky._41 = 0;
-	//m_SkyObj.m_matViewSky._42 = 0;
-	//m_SkyObj.m_matViewSky._43 = 0;
-	//T::TMatrix matRotation, matScale;
-	//T::D3DXMatrixScaling(&matScale, 10.0f, 10.0f, 10.0f);
-	//T::D3DXMatrixRotationY(&matRotation, g_fGameTimer * 0.00f);
-	//m_SkyObj.m_matWorld = matScale * matRotation;	
-	//m_SkyObj.SetMatrix(NULL, &m_SkyObj.m_matViewSky, &m_Camera.m_matProj);
-	//m_pImmediateContext->RSSetState(TDxState::g_pRSNoneCullSolid);
-	//m_pImmediateContext->PSSetSamplers(0, 1, &TDxState::m_pSSLinear);
-	//m_pImmediateContext->PSSetSamplers(1, 1, &TDxState::m_pSSPoint);
-	//m_SkyObj.Render();
+	m_SkyObj.m_matViewSky = m_Camera.m_matView;
+	m_SkyObj.m_matViewSky._41 = 0;
+	m_SkyObj.m_matViewSky._42 = 0;
+	m_SkyObj.m_matViewSky._43 = 0;
+	T::TMatrix matRotation, matScale;
+	T::D3DXMatrixScaling(&matScale, 10.0f, 10.0f, 10.0f);
+	T::D3DXMatrixRotationY(&matRotation, g_fGameTimer * 0.00f);
+	m_SkyObj.m_matWorld = matScale * matRotation;	
+	m_SkyObj.SetMatrix(NULL, &m_SkyObj.m_matViewSky, &m_Camera.m_matProj);
+	m_pImmediateContext->RSSetState(TDxState::g_pRSNoneCullSolid);
+	m_pImmediateContext->PSSetSamplers(0, 1, &TDxState::m_pSSLinear);
+	m_pImmediateContext->PSSetSamplers(1, 1, &TDxState::m_pSSPoint);
+	m_SkyObj.Render();
 
-	////m_pImmediateContext->PSSetSamplers(0, 1, &TDxState::m_pSSLinear);
-	//m_pImmediateContext->RSSetState(TDxState::g_pRSBackCullSolid);
-	//m_MapObj.SetMatrix(nullptr, &m_CameraTopView.m_matView,
-	//	&m_CameraTopView.m_matProj);
-	////m_MapObj.Render();
-	//
-	//m_PlayerObj.SetMatrix(nullptr, &m_CameraTopView.m_matView,
-	//	&m_CameraTopView.m_matProj);
-	//m_PlayerObj.Render();	
+	//m_pImmediateContext->PSSetSamplers(0, 1, &TDxState::m_pSSLinear);
+	m_pImmediateContext->RSSetState(TDxState::g_pRSBackCullSolid);
+	m_MapObj.SetMatrix(nullptr, &m_Camera.m_matView,&m_Camera.m_matProj);
+	m_MapObj.Render();
+	
+	m_PlayerObj.SetMatrix(nullptr, &m_Camera.m_matView,	&m_Camera.m_matProj);
+	m_PlayerObj.Render();	
 
 	for (auto& obj : m_ObjList)
 	{
-		obj.SetMatrix(nullptr,  &m_CameraTopView.m_matView,
-								&m_CameraTopView.m_matProj);
+		obj.SetMatrix(nullptr,  &m_Camera.m_matView,
+								&m_Camera.m_matProj);
 		if (m_Camera.ClassifyOBB(&obj.m_BoxCollision) == TRUE)
 		{
 			obj.Render();
 		}
 		else
 		{
+			obj.SetMatrix(nullptr, &m_CameraTopView.m_matView,
+									&m_CameraTopView.m_matProj);
 			obj.m_ConstantList.Color = T::TVector4(0, 0, 0, 1);
 			obj.Render();
 		}
