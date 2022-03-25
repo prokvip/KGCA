@@ -30,6 +30,8 @@ public:
 	virtual void		SetMatrix(T::TMatrix* matWorld,
 							T::TMatrix* matView, T::TMatrix* matProj);
 public:
+	virtual void       GenAABB();
+public:
 	TObject3D();
 	virtual ~TObject3D();
 };

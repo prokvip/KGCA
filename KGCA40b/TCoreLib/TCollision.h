@@ -83,6 +83,7 @@ struct TRect
 };
 struct TBox
 {
+	T::TVector3 vList[8];
 	T::TVector3 vMin;
 	T::TVector3 vMax;
 	T::TVector3 vCenter;
@@ -121,7 +122,7 @@ struct TBox
 };
 struct TSphere
 {
-	T::TVector2 vCenter;
+	T::TVector3 vCenter;
 	float    fRadius;
 	TSphere()
 	{
@@ -131,8 +132,8 @@ struct TSphere
 class TCollision
 {
 public:
-	static bool   SphereToPoint(TSphere rt, int x, int y);
-	static bool   SphereToPoint(TSphere rt, T::TVector2 v);
+	static bool   SphereToPoint(TSphere rt, float x, float y, float z);
+	static bool   SphereToPoint(TSphere rt, T::TVector3 v);
 	static bool   RectToPoint(TRect rt, int x, int y);
 	static bool   RectToPoint(TRect rt, T::TVector2 v);
 	static TCollisionResult    RectToRect(TRect,TRect);

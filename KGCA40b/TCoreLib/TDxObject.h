@@ -126,6 +126,7 @@ public:
 public:
 	std::vector<SimpleVertex> m_InitScreenList;
 	std::vector<TVertex> m_VertexList;
+	
 	ID3D11Buffer* m_pVertexBuffer = nullptr;
 	
 	std::vector<DWORD> m_IndexList;

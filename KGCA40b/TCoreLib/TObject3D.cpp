@@ -1,4 +1,69 @@
 #include "TObject3D.h"
+void        TObject3D::GenAABB()
+{
+	// aabb 
+	m_BoxCollision.vMin = T::TVector3(100000, 100000, 100000);
+	m_BoxCollision.vMax = T::TVector3(-100000, -100000, -100000);
+	for (int i = 0; i < m_VertexList.size(); i++)
+	{
+		if (m_BoxCollision.vMin.x > m_VertexList[i].p.x)
+		{
+			m_BoxCollision.vMin.x = m_VertexList[i].p.x;
+		}
+		if (m_BoxCollision.vMin.y > m_VertexList[i].p.y)
+		{
+			m_BoxCollision.vMin.y = m_VertexList[i].p.y;
+		}
+		if (m_BoxCollision.vMin.z > m_VertexList[i].p.z)
+		{
+			m_BoxCollision.vMin.z = m_VertexList[i].p.z;
+		}
+
+		if (m_BoxCollision.vMax.x < m_VertexList[i].p.x)
+		{
+			m_BoxCollision.vMax.x = m_VertexList[i].p.x;
+		}
+		if (m_BoxCollision.vMax.y < m_VertexList[i].p.y)
+		{
+			m_BoxCollision.vMax.y = m_VertexList[i].p.y;
+		}
+		if (m_BoxCollision.vMax.z < m_VertexList[i].p.z)
+		{
+			m_BoxCollision.vMax.z = m_VertexList[i].p.z;
+		}
+	}
+
+	// 4      5
+	// 6      7
+
+	// 0     1
+	// 2     3
+	m_BoxCollision.vList[0] = T::TVector3(	m_BoxCollision.vMin.x,
+											m_BoxCollision.vMax.y, 
+											m_BoxCollision.vMin.z);
+	m_BoxCollision.vList[1] = T::TVector3(	m_BoxCollision.vMax.x,
+											m_BoxCollision.vMax.y,
+											m_BoxCollision.vMin.z);
+	m_BoxCollision.vList[2] = T::TVector3(	m_BoxCollision.vMin.x,
+											m_BoxCollision.vMin.y,
+											m_BoxCollision.vMin.z);
+	m_BoxCollision.vList[3] = T::TVector3(	m_BoxCollision.vMax.x,
+											m_BoxCollision.vMin.y,
+											m_BoxCollision.vMin.z);
+
+	m_BoxCollision.vList[4] = T::TVector3(m_BoxCollision.vMin.x,
+		m_BoxCollision.vMax.y,
+		m_BoxCollision.vMax.z);
+	m_BoxCollision.vList[5] = T::TVector3(m_BoxCollision.vMax.x,
+		m_BoxCollision.vMax.y,
+		m_BoxCollision.vMax.z);
+	m_BoxCollision.vList[6] = T::TVector3(m_BoxCollision.vMin.x,
+		m_BoxCollision.vMin.y,
+		m_BoxCollision.vMax.z);
+	m_BoxCollision.vList[7] = T::TVector3(m_BoxCollision.vMax.x,
+		m_BoxCollision.vMin.y,
+		m_BoxCollision.vMax.z);
+}
 void		TObject3D::SetMatrix(T::TMatrix* matWorld,
 	T::TMatrix* matView, T::TMatrix* matProj)
 {
@@ -32,7 +97,48 @@ void		TObject3D::SetMatrix(T::TMatrix* matWorld,
 
 	m_BoxCollision.vAxis[0] = m_vLight;
 	m_BoxCollision.vAxis[1] = m_vUp;
-	m_BoxCollision.vAxis[2] = m_vLook;
+	m_BoxCollision.vAxis[2] = m_vLook;	
+	
+	// GenAABB();
+	m_BoxCollision.vMin = T::TVector3(100000, 100000, 100000);
+	m_BoxCollision.vMax = T::TVector3(-100000, -100000, -100000);
+	for (int iV = 0; iV < 8; iV++)
+	{
+		T::TVector3 pos;
+		T::D3DXVec3TransformCoord(&pos, &m_BoxCollision.vList[iV], &m_matWorld);
+		if (m_BoxCollision.vMin.x > pos.x)
+		{
+			m_BoxCollision.vMin.x = pos.x;
+		}
+		if (m_BoxCollision.vMin.y > pos.y)
+		{
+			m_BoxCollision.vMin.y = pos.y;
+		}
+		if (m_BoxCollision.vMin.z > pos.z)
+		{
+			m_BoxCollision.vMin.z = pos.z;
+		}
+
+		if (m_BoxCollision.vMax.x < pos.x)
+		{
+			m_BoxCollision.vMax.x = pos.x;
+		}
+		if (m_BoxCollision.vMax.y < pos.y)
+		{
+			m_BoxCollision.vMax.y = pos.y;
+		}
+		if (m_BoxCollision.vMax.z < pos.z)
+		{
+			m_BoxCollision.vMax.z = pos.z;
+		}
+	}
+
+	T:TVector3 vHalf = m_BoxCollision.vMax - m_BoxCollision.vCenter;
+	m_BoxCollision.size.x = fabs(T::D3DXVec3Dot(&m_BoxCollision.vAxis[0], &vHalf));
+	m_BoxCollision.size.y = fabs(T::D3DXVec3Dot(&m_BoxCollision.vAxis[1], &vHalf));
+	m_BoxCollision.size.z = fabs(T::D3DXVec3Dot(&m_BoxCollision.vAxis[2], &vHalf));
+	m_BoxCollision.vCenter = (m_BoxCollision.vMin + m_BoxCollision.vMax);
+	m_BoxCollision.vCenter /= 2.0f;
 }
 void		TObject3D::AddPosition(T::TVector3 vPos)
 {
@@ -99,19 +205,6 @@ bool	TObject3D::Frame()
 		0,
 		0,
 		1.0f);	
-
-	m_BoxCollision.vCenter = m_vPos;
-	T:TMatrix matWorld = m_matWorld;
-	matWorld._41 = 0.0f; matWorld._42 = 0.0f; matWorld._43 = 0.0f;
-	m_BoxCollision.vAxis[0] = T::TVector3(1, 0, 0);
-	m_BoxCollision.vAxis[1] = T::TVector3(0, 1, 0);
-	m_BoxCollision.vAxis[2] = T::TVector3(0, 0, 1);
-
-	m_BoxCollision.size.x = 1.0f;
-	m_BoxCollision.size.y = 1.0f;
-	m_BoxCollision.size.z = 1.0f;
-	m_BoxCollision.vMin = T::TVector3(-1.0f, -1.0f, -1.0f);
-	m_BoxCollision.vMax = T::TVector3(1.0f, 1.0f, 1.0f);
 	return true;
 }
 TObject3D::TObject3D()

@@ -74,6 +74,7 @@ bool		TSkyObj::SetVertexData()
 	m_VertexList[22] = TVertex(T::TVector3(1.0f, -1.0f, 1.0f), T::TVector3(0.0f, -1.0f, 0.0f), T::TVector4(0.0f, 1.0f, 1.0f, 1.0f), T::TVector2(1.0f, 1.0f));
 	m_VertexList[23] = TVertex(T::TVector3(-1.0f, -1.0f, 1.0f), T::TVector3(0.0f, -1.0f, 0.0f), T::TVector4(0.0f, 1.0f, 1.0f, 1.0f), T::TVector2(0.0f, 1.0f));
 
+	GenAABB();
 	return true;
 }
 bool		TSkyObj::SetIndexData()
