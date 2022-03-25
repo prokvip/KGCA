@@ -83,9 +83,12 @@ struct TRect
 };
 struct TBox
 {
+	// aabb
 	T::TVector3 vMin;
 	T::TVector3 vMax;
+	// obb
 	T::TVector3 vMiddle;
+	T::TVector3 vAxis[3];
 	T::TVector3 size;
 	bool operator == (const TBox& v)
 	{
@@ -120,7 +123,7 @@ struct TBox
 };
 struct TSphere
 {
-	T::TVector2 vCenter;
+	T::TVector3 vCenter;
 	float    fRadius;
 	TSphere()
 	{
