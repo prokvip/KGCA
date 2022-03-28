@@ -3,6 +3,7 @@ int TQuadtree::g_iCount = 0;
 void		TQuadtree::Update(TCamera* pCamera)
 {
 	g_pDrawLeafNodes.clear();
+	m_ObjectList.clear();
 	/*for (int iNode = 0; iNode < g_pLeafNodes.size(); iNode++)
 	{
 		if (pCamera->ClassifyOBB(&g_pLeafNodes[iNode]->m_Box) == TRUE)
@@ -17,11 +18,19 @@ void TQuadtree::RenderTile(TNode* pNode)
 	if (pNode == nullptr) return;
 	if (m_pCamera->ClassifyOBB(&pNode->m_Box) == TRUE)
 	{
+		for (auto obj : pNode->m_StaticObjectList)
+		{
+			if (m_pCamera->ClassifyOBB(&obj->box) == TRUE)
+			{
+				m_ObjectList.push_back(obj);
+			}
+		}
 		if( pNode->m_bLeaf == true)
 		{
 			g_pDrawLeafNodes.push_back(pNode);
 			return;
 		}
+		
 		for (int iNode = 0; iNode < pNode->m_pChild.size(); iNode++)
 		{
 			RenderTile(pNode->m_pChild[iNode]);
@@ -57,8 +66,8 @@ bool		TQuadtree::Render()
 		}
 	}*/
 
-	m_ObjectList.clear();
-	RenderObject(m_pRootNode);
+	
+	//RenderObject(m_pRootNode);
 	for (auto obj : m_ObjectList)
 	{
 		obj->pObject->SetMatrix(&obj->matWorld,
