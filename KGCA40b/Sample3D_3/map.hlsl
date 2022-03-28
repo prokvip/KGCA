@@ -24,7 +24,11 @@ cbuffer cb0 : register(b0)
 	float4   Color0 : packoffset(c12);
 	float    TimerX : packoffset(c13.x); // Timer.x, Timer.y, Timer.z, Timer.w	
 };
-
+cbuffer cb1 : register(b1)
+{	
+	float4   vLightDir : packoffset(c0);
+	float4   vLightPos : packoffset(c1);	
+};
 VS_OUTPUT VS( VS_INPUT v)
 {
 	VS_OUTPUT pOut = (VS_OUTPUT)0;
@@ -36,8 +40,8 @@ VS_OUTPUT VS( VS_INPUT v)
 	float3 vNormal = mul(v.n, (float3x3)g_matWorld);
 	pOut.n = normalize(vNormal);
 	pOut.t = v.t;
-	float fDot = max(0.5f, dot(pOut.n, -Color0.xyz));
-	pOut.c = v.c * float4(fDot, fDot, fDot,1);
+	float fDot = max(0.5f, dot(pOut.n, -vLightDir.xyz));
+	pOut.c = v.c * float4(fDot, fDot, fDot,1)* Color0;
 
 	pOut.r = normalize(vLocal.xyz);
 	return pOut;

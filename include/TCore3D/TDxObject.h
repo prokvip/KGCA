@@ -115,6 +115,11 @@ struct TConstantData
 	T::TVector4 Color;
 	T::TVector4 Timer;
 };
+struct TLightData
+{
+	T::TVector4   vLightDir;
+	T::TVector4   vLightPos;
+};
 class TDxObject : public TBaseObject
 {
 public:
@@ -132,8 +137,10 @@ public:
 	std::vector<DWORD> m_IndexList;
 	ID3D11Buffer* m_pIndexBuffer = nullptr;
 
-	TConstantData    m_ConstantList;
-	ID3D11Buffer*    m_pConstantBuffer = nullptr;
+	TConstantData		m_ConstantList;
+	ID3D11Buffer*		m_pConstantBuffer = nullptr;
+	TLightData			m_LightConstantList;
+	ID3D11Buffer*		m_pLightConstantBuffer = nullptr;
 
 	ID3D11InputLayout* m_pVertexLayout = nullptr;
 	ID3D11Device*		 m_pd3dDevice = nullptr;
@@ -160,9 +167,10 @@ public:
 public:
 	virtual bool	Init();
 	virtual bool	Frame();
-	virtual bool	PreRender();
 	virtual bool	Render();
-	virtual bool	PostRender();
+		virtual bool	PreRender();	
+		virtual bool    Draw();
+		virtual bool	PostRender();
 	virtual bool	Release();
 public:
 	TDxObject();

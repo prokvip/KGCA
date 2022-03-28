@@ -188,44 +188,10 @@ bool	Sample::Render()
 	else
 		m_pImmediateContext->RSSetState(TDxState::g_pRSBackCullSolid);
 
-	//m_pImmediateContext->PSSetSamplers(0, 1, &TDxState::m_pSSLinear);
-	//m_pImmediateContext->RSSetState(TDxState::g_pRSBackCullSolid);
+	m_pImmediateContext->PSSetSamplers(0, 1, &TDxState::m_pSSLinear);
 	m_MapObj.SetMatrix(nullptr, &m_Camera.m_matView,&m_Camera.m_matProj);
 	//m_MapObj.Render();	
-	m_Quadtree.Render();
-	
-	/*m_Quadtree.g_pDrawLeafNodes.clear();
-	for (int iNode = 0; iNode < m_Quadtree.g_pLeafNodes.size(); iNode++)
-	{
-		if (m_Camera.ClassifyOBB(&m_Quadtree.g_pLeafNodes[iNode]->m_Box) == TRUE)
-		{
-			m_Quadtree.g_pDrawLeafNodes.push_back(m_Quadtree.g_pLeafNodes[iNode]);
-		}
-	}*/
-	//for (int iNode = 0; iNode < m_Quadtree.g_pDrawLeafNodes.size(); iNode++)
-	//{
-	//		//m_MapObj.SetMatrix(nullptr, &m_Camera.m_matView,&m_Camera.m_matProj);
-	//		m_MapObj.m_ConstantList.Color = T::TVector4(0, -1, 0, 1);
-	//		m_MapObj.m_pContext->UpdateSubresource(
-	//			m_MapObj.m_pConstantBuffer, 0, NULL, &m_MapObj.m_ConstantList, 0, 0);
-
-	//		m_MapObj.m_pContext->IASetIndexBuffer(
-	//			m_Quadtree.g_pDrawLeafNodes[iNode]->m_pIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
-	//		m_MapObj.m_pContext->DrawIndexed(m_Quadtree.g_pDrawLeafNodes[iNode]->m_IndexList.size(), 0, 0);
-	//	//}
-	//	/*else
-	//	{
-	//		m_MapObj.SetMatrix(nullptr, &m_CameraTopView.m_matView,
-	//									&m_CameraTopView.m_matProj);
-	//		m_MapObj.m_ConstantList.Color = T::TVector4(0, 1, 0, 1);
-	//		m_MapObj.m_pContext->UpdateSubresource(
-	//			m_MapObj.m_pConstantBuffer, 0, NULL, &m_MapObj.m_ConstantList, 0, 0);
-
-	//		m_MapObj.m_pContext->IASetIndexBuffer(
-	//			m_Quadtree.g_pLeafNodes[iNode]->m_pIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
-	//		m_MapObj.m_pContext->DrawIndexed(m_Quadtree.g_pLeafNodes[iNode]->m_IndexList.size(), 0, 0);
-	//	}	*/	
-	//}
+	m_Quadtree.Render();	
 
 	m_PlayerObj.SetMatrix(nullptr, &m_Camera.m_matView,	&m_Camera.m_matProj);
 	m_PlayerObj.Render();	
@@ -237,25 +203,44 @@ bool	Sample::Render()
 		if (m_Camera.ClassifyOBB(&obj.m_BoxCollision) == TRUE)
 		{
 			obj.Render();
-		}
-		else
-		{
-			obj.SetMatrix(nullptr, &m_CameraTopView.m_matView,
-									&m_CameraTopView.m_matProj);
-			obj.m_ConstantList.Color = T::TVector4(0, 0, 0, 1);
-			obj.Render();
-		}
+		}		
 	}
-
-	m_Camera.SetMatrix(nullptr, &m_CameraTopView.m_matView, 
-								&m_CameraTopView.m_matProj);
-	m_Camera.Render();	
 	
 	std::wstring msg = L"FPS:";
 	msg += std::to_wstring(m_GameTimer.m_iFPS);
 	msg += L"  GT:";
 	msg += std::to_wstring(m_GameTimer.m_fTimer);
 	m_dxWrite.Draw(msg, g_rtClient, D2D1::ColorF(0, 0, 1, 1));
+
+
+	MiniMapRender();
+	return true;
+}
+
+bool    Sample::MiniMapRender()
+{
+	/*for (int iNode = 0; iNode < m_Quadtree.g_pDrawLeafNodes.size(); iNode++)
+	{
+			m_MapObj.SetMatrix(nullptr, &m_CameraTopView.m_matView,
+										&m_CameraTopView.m_matProj);
+			m_MapObj.m_ConstantList.Color = T::TVector4(0, 1, 0, 1);
+			m_MapObj.m_pContext->UpdateSubresource(
+				m_MapObj.m_pConstantBuffer, 0, NULL, &m_MapObj.m_ConstantList, 0, 0);
+
+			m_MapObj.m_pContext->IASetIndexBuffer(
+				m_Quadtree.g_pDrawLeafNodes[iNode]->m_pIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
+			m_MapObj.m_pContext->DrawIndexed(m_Quadtree.g_pDrawLeafNodes[iNode]->m_IndexList.size(), 0, 0);
+			
+	}*/
+	for (auto& obj : m_ObjList)
+	{
+		obj.SetMatrix(nullptr, &m_CameraTopView.m_matView,
+				&m_CameraTopView.m_matProj);
+		obj.m_ConstantList.Color = T::TVector4(0, 0, 0, 1);
+		obj.Render();		
+	}
+	m_Camera.SetMatrix(nullptr, &m_CameraTopView.m_matView,	&m_CameraTopView.m_matProj);
+	m_Camera.Render();
 	return true;
 }
 bool	Sample::Release()

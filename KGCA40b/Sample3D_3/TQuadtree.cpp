@@ -14,61 +14,17 @@ void		TQuadtree::Update(TCamera* pCamera)
 bool		TQuadtree::Render()
 {
 	m_pMap->PreRender();
+	m_pMap->Draw();
 
-	m_pMap->m_pContext->UpdateSubresource(
-		m_pMap->m_pConstantBuffer, 0, NULL, &m_pMap->m_ConstantList, 0, 0);
-
-	m_pMap->m_pContext->GSSetShader(nullptr, NULL, 0);
-	m_pMap->m_pContext->HSSetShader(nullptr, NULL, 0);
-	m_pMap->m_pContext->DSSetShader(nullptr, NULL, 0);
-	if (m_pMap->m_pVShader != nullptr)
-	{
-		m_pMap->m_pContext->VSSetShader(m_pMap->m_pVShader->m_pVertexShader, NULL, 0);
-	}
-	if (m_pMap->m_pPShader != nullptr)
-	{
-		m_pMap->m_pContext->PSSetShader(m_pMap->m_pPShader->m_pPixelShader, NULL, 0);
-	}
-
-	if (m_pMap->m_bAlphaBlend)
-	{
-		m_pMap->m_pContext->OMSetBlendState(TDxState::m_AlphaBlend, 0, -1);
-	}
-	else
-	{
-		m_pMap->m_pContext->OMSetBlendState(TDxState::m_AlphaBlendDisable, 0, -1);
-	}
-
-	m_pMap->m_pContext->IASetInputLayout(m_pMap->m_pVertexLayout);
-
-
-	UINT StartSlot;
-	UINT NumBuffers;
-	UINT Strides = sizeof(TVertex);
-	UINT Offsets = 0;
-
-	m_pMap->m_pContext->IASetVertexBuffers(	0, 1, &m_pMap->m_pVertexBuffer,	&Strides, &Offsets);
-	//m_pMap->m_pContext->IASetIndexBuffer(m_pMap->m_pIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
-	m_pMap->m_pContext->VSSetConstantBuffers(0, 1, &m_pMap->m_pConstantBuffer);
-	m_pMap->m_pContext->PSSetConstantBuffers(0, 1, &m_pMap->m_pConstantBuffer);
-
-	m_pMap->m_pContext->IASetPrimitiveTopology(
-		D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST
-		//D3D_PRIMITIVE_TOPOLOGY_POINTLIST
-		//D3D_PRIMITIVE_TOPOLOGY_LINELIST
-	);
-
-	//m_pMap->PostRender();
 	for (int iNode = 0; iNode < g_pDrawLeafNodes.size(); iNode++)
 	{
-		m_pMap->m_ConstantList.Color = T::TVector4(0, -1, 0, 1);
+		m_pMap->m_ConstantList.Color = T::TVector4(1, 1, 0, 1);
 		m_pMap->m_pContext->UpdateSubresource(
 			m_pMap->m_pConstantBuffer, 0, NULL, &m_pMap->m_ConstantList, 0, 0);
 
 		m_pMap->m_pContext->IASetIndexBuffer(
 			g_pDrawLeafNodes[iNode]->m_pIndexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
 		m_pMap->m_pContext->DrawIndexed(g_pDrawLeafNodes[iNode]->m_IndexList.size(), 0, 0);
-
 	}
 	return true;
 }

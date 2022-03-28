@@ -199,6 +199,12 @@ bool	TObject3D::Frame()
 {
 	if (m_bFadeIn)	FadeIn();
 	if (m_bFadeOut)	FadeOut();
+
+	/*m_LightConstantList.vLightDir.x = 0.0f;
+	m_LightConstantList.vLightDir.y = 1.0f;
+	m_LightConstantList.vLightDir.z = 0.0f;
+	m_LightConstantList.vLightDir.w = 1.0f;*/
+
 	m_ConstantList.Color = m_vColor;
 	m_ConstantList.Timer = T::TVector4(
 		g_fGameTimer,

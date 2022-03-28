@@ -46,6 +46,16 @@ bool    TDxObject::SetConstantData()
 	m_ConstantList.Timer.y = 1.0f;
 	m_ConstantList.Timer.z = 0.0f;
 	m_ConstantList.Timer.w = 0.0f;
+
+	ZeroMemory(&m_LightConstantList, sizeof(TLightData));
+	m_LightConstantList.vLightDir.x = 0.0f;
+	m_LightConstantList.vLightDir.y = 1.0f;
+	m_LightConstantList.vLightDir.z = 0.0f;
+	m_LightConstantList.vLightDir.w = 1.0f;
+	m_LightConstantList.vLightPos.x = 0.0f;
+	m_LightConstantList.vLightPos.y = 1.0f;
+	m_LightConstantList.vLightPos.z = 0.0f;
+	m_LightConstantList.vLightPos.w = 0.0f;
 	return true;
 }
 bool    TDxObject::CreateVertexShader(const TCHAR* szFile)
@@ -117,6 +127,18 @@ bool	TDxObject::CreateConstantBuffer()
 	sd.pSysMem = &m_ConstantList;
 
 	if (FAILED(hr = m_pd3dDevice->CreateBuffer(&bd, &sd, &m_pConstantBuffer)))
+	{
+		return false;
+	}
+
+	//gpu메모리에 버퍼 할당(원하는 할당 크기)
+	ZeroMemory(&bd, sizeof(D3D11_BUFFER_DESC));
+	bd.ByteWidth = sizeof(TConstantData);
+	bd.Usage = D3D11_USAGE_DEFAULT;
+	bd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	ZeroMemory(&sd, sizeof(D3D11_SUBRESOURCE_DATA));
+	sd.pSysMem = &m_LightConstantList;
+	if (FAILED(hr = m_pd3dDevice->CreateBuffer(&bd, &sd, &m_pLightConstantBuffer)))
 	{
 		return false;
 	}
@@ -208,12 +230,12 @@ bool	TDxObject::Frame()
 {
 	return true;
 }
-bool	TDxObject::Render()
-{	
-	PreRender();
-
+bool    TDxObject::Draw()
+{
 	m_pContext->UpdateSubresource(
 		m_pConstantBuffer, 0, NULL, &m_ConstantList, 0, 0);
+	m_pContext->UpdateSubresource(
+		m_pLightConstantBuffer, 0, NULL, &m_LightConstantList, 0, 0);
 
 	m_pContext->GSSetShader(nullptr, NULL, 0);
 	m_pContext->HSSetShader(nullptr, NULL, 0);
@@ -237,7 +259,7 @@ bool	TDxObject::Render()
 	}
 
 	m_pContext->IASetInputLayout(m_pVertexLayout);
-	
+
 
 	UINT StartSlot;
 	UINT NumBuffers;
@@ -250,13 +272,20 @@ bool	TDxObject::Render()
 	m_pContext->IASetIndexBuffer(m_pIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
 	m_pContext->VSSetConstantBuffers(0, 1, &m_pConstantBuffer);
 	m_pContext->PSSetConstantBuffers(0, 1, &m_pConstantBuffer);
+	m_pContext->VSSetConstantBuffers(1, 1, &m_pLightConstantBuffer);
+	m_pContext->PSSetConstantBuffers(1, 1, &m_pLightConstantBuffer);
 
 	m_pContext->IASetPrimitiveTopology(
 		D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST
 		//D3D_PRIMITIVE_TOPOLOGY_POINTLIST
 		//D3D_PRIMITIVE_TOPOLOGY_LINELIST
 	);
-
+	return true;
+}
+bool	TDxObject::Render()
+{	
+	PreRender();
+	Draw();
 	PostRender();	
 	return true;
 }
@@ -283,6 +312,7 @@ bool	TDxObject::Release()
 	if (m_pVertexBuffer) m_pVertexBuffer->Release();
 	if (m_pIndexBuffer) m_pIndexBuffer->Release();
 	if (m_pConstantBuffer) m_pConstantBuffer->Release();	
+	if(m_pLightConstantBuffer) m_pLightConstantBuffer->Release();
 	if (m_pVertexLayout) m_pVertexLayout->Release();
 	m_pVertexBuffer = nullptr;
 	m_pIndexBuffer = nullptr;

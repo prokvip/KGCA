@@ -72,10 +72,10 @@ bool TMap::Frame()
 
 	T::D3DXVec3Normalize(&vLight, &vLight);
 	vLight = vLight * -1.0f;
-	m_ConstantList.Color.x = vLight.x;
-	m_ConstantList.Color.y = vLight.y;
-	m_ConstantList.Color.z = vLight.z;
-	m_ConstantList.Color.w = 1.0f;
+	m_LightConstantList.vLightDir.x = vLight.x;
+	m_LightConstantList.vLightDir.y = vLight.y;
+	m_LightConstantList.vLightDir.z = vLight.z;
+	m_LightConstantList.vLightDir.w = 1.0f;
 	return true;
 }
 bool TMap::CreateHeightMap(const TCHAR* strHeightMapTex)

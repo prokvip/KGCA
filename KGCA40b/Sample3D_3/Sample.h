@@ -21,6 +21,7 @@ public:
 	virtual bool	Init()  override;
 	virtual bool	Frame()  override;
 	virtual bool	Render()  override;
+	bool    MiniMapRender();
 	virtual bool	Release()  override;	
 public:
 	Sample();
