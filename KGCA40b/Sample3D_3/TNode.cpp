@@ -1,14 +1,14 @@
 #include "TNode.h"
 
-void TNode::AddObject(TObject3D* obj)
+void TNode::AddObject(TMapObject* obj)
 {
-	m_ObjectList.push_back(obj);
+	m_StaticObjectList.push_back(obj);
 }
-void TNode::AddDynamicObject(TObject3D* obj)
+void TNode::AddDynamicObject(TMapObject* obj)
 {
 	m_DynamicObjectList.push_back(obj);
 }
-void TNode::DelDynamicObject(TObject3D* obj)
+void TNode::DelDynamicObject(TMapObject* obj)
 {
 	m_DynamicObjectList.clear();
 }
@@ -16,16 +16,14 @@ TNode::TNode()
 {
 	m_pParent = nullptr;
 	m_iDepth = 0;
-	/*for ( auto obj : m_ObjectList)
-	{*/
-	for (std::list<TObject3D*>::iterator iter = m_ObjectList.begin();
-		iter != m_ObjectList.end();
+	for (std::list<TMapObject*>::iterator iter = m_StaticObjectList.begin();
+		iter != m_StaticObjectList.end();
 		iter++)
 	{
-		TObject3D* pObj = *iter;
+		TMapObject* pObj = *iter;
 		delete pObj;
 	}
-	m_ObjectList.clear();
+	m_StaticObjectList.clear();
 };
 
 // 0, 4, 20 ,24

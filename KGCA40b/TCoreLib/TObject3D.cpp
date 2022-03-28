@@ -67,20 +67,28 @@ void        TObject3D::GenAABB()
 void		TObject3D::SetMatrix(T::TMatrix* matWorld,
 	T::TMatrix* matView, T::TMatrix* matProj)
 {
+	
 	m_ConstantList.matWorld = m_matWorld.Transpose();
 	if (matWorld != nullptr)
 	{
+		m_matWorld = *matWorld;
 		m_ConstantList.matWorld = matWorld->Transpose();
 	}
 	if (matView != nullptr)
 	{
+		m_matView = *matView;
 		m_ConstantList.matView = matView->Transpose();
 	}
 	if (matProj != nullptr)
 	{
+		m_matProj = *matProj;
 		m_ConstantList.matProj = matProj->Transpose();
 	}
-
+	UpdateData();
+	UpdateCollision();
+}
+void		TObject3D::UpdateData()
+{
 	m_vLight.x = m_matWorld._11;
 	m_vLight.y = m_matWorld._12;
 	m_vLight.z = m_matWorld._13;
@@ -94,11 +102,13 @@ void		TObject3D::SetMatrix(T::TMatrix* matWorld,
 	T::D3DXVec3Normalize(&m_vLight, &m_vLight);
 	T::D3DXVec3Normalize(&m_vUp, &m_vUp);
 	T::D3DXVec3Normalize(&m_vLook, &m_vLook);
-
+}
+void		TObject3D::UpdateCollision()
+{
 	m_BoxCollision.vAxis[0] = m_vLight;
 	m_BoxCollision.vAxis[1] = m_vUp;
-	m_BoxCollision.vAxis[2] = m_vLook;	
-	
+	m_BoxCollision.vAxis[2] = m_vLook;
+
 	// GenAABB();
 	m_BoxCollision.vMin = T::TVector3(100000, 100000, 100000);
 	m_BoxCollision.vMax = T::TVector3(-100000, -100000, -100000);

@@ -145,6 +145,10 @@ bool		TMap::CreateMap(UINT width, UINT height,
 	m_iNumCellRows = m_iNumRows-1;
 	m_iNumFaces = m_iNumCellCols* m_iNumCellRows*2;
 
+	m_BoxCollision.vMax.x = (m_iNumCols / 2 * m_fCellDistance);
+	m_BoxCollision.vMin.x = -m_BoxCollision.vMax.x;
+	m_BoxCollision.vMax.z = (m_iNumRows / 2 * m_fCellDistance);
+	m_BoxCollision.vMin.z = -m_BoxCollision.vMax.z;
 	return true;
 }
 bool		TMap::SetVertexData()

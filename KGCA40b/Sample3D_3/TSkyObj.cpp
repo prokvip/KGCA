@@ -1,4 +1,28 @@
 #include "TSkyObj.h"
+void		TSkyObj::SetMatrix(T::TMatrix* matWorld,
+	T::TMatrix* matView, T::TMatrix* matProj)
+{
+	m_ConstantList.matWorld = m_matWorld.Transpose();
+	if (matWorld != nullptr)
+	{
+		m_ConstantList.matWorld = matWorld->Transpose();
+	}
+	if (matView != nullptr)
+	{
+		T::TMatrix matViewSky = *matView;
+		matViewSky._41 = 0;
+		matViewSky._42 = 0;
+		matViewSky._43 = 0;
+		m_ConstantList.matView = matViewSky.Transpose();
+	}
+	if (matProj != nullptr)
+	{
+		m_ConstantList.matProj = matProj->Transpose();
+	}
+
+	UpdateData();
+	UpdateCollision();
+}
 bool		TSkyObj::LoadTexture(const TCHAR* szColorFileName,
 								 const TCHAR* szMaskFileName)
 {
@@ -88,6 +112,16 @@ bool		TSkyObj::SetIndexData()
 	m_IndexList[iIndex++] = 16; m_IndexList[iIndex++] = 17; m_IndexList[iIndex++] = 18; m_IndexList[iIndex++] = 16;	m_IndexList[iIndex++] = 18; m_IndexList[iIndex++] = 19;
 	m_IndexList[iIndex++] = 20; m_IndexList[iIndex++] = 21; m_IndexList[iIndex++] = 22; m_IndexList[iIndex++] = 20;	m_IndexList[iIndex++] = 22; m_IndexList[iIndex++] = 23;
 
+	return true;
+}
+bool		TSkyObj::Render()
+{
+	PreRender();
+	m_pContext->RSSetState(TDxState::g_pRSNoneCullSolid);
+	m_pContext->PSSetSamplers(0, 1, &TDxState::m_pSSLinear);
+	m_pContext->PSSetSamplers(1, 1, &TDxState::m_pSSPoint);
+	Draw();
+	PostRender();
 	return true;
 }
 bool	TSkyObj::PostRender()

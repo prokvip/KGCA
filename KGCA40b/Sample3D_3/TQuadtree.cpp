@@ -3,11 +3,28 @@ int TQuadtree::g_iCount = 0;
 void		TQuadtree::Update(TCamera* pCamera)
 {
 	g_pDrawLeafNodes.clear();
-	for (int iNode = 0; iNode < g_pLeafNodes.size(); iNode++)
+	/*for (int iNode = 0; iNode < g_pLeafNodes.size(); iNode++)
 	{
 		if (pCamera->ClassifyOBB(&g_pLeafNodes[iNode]->m_Box) == TRUE)
 		{
 			g_pDrawLeafNodes.push_back(g_pLeafNodes[iNode]);
+		}
+	}*/
+	RenderTile(m_pRootNode);
+}
+void TQuadtree::RenderTile(TNode* pNode)
+{
+	if (pNode == nullptr) return;
+	if (m_pCamera->ClassifyOBB(&pNode->m_Box) == TRUE)
+	{
+		if( pNode->m_bLeaf == true)
+		{
+			g_pDrawLeafNodes.push_back(pNode);
+			return;
+		}
+		for (int iNode = 0; iNode < pNode->m_pChild.size(); iNode++)
+		{
+			RenderTile(pNode->m_pChild[iNode]);
 		}
 	}
 }
@@ -25,6 +42,30 @@ bool		TQuadtree::Render()
 		m_pMap->m_pContext->IASetIndexBuffer(
 			g_pDrawLeafNodes[iNode]->m_pIndexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
 		m_pMap->m_pContext->DrawIndexed(g_pDrawLeafNodes[iNode]->m_IndexList.size(), 0, 0);
+
+		
+	}
+	/*for (int iNode = 0; iNode < g_pDrawLeafNodes.size(); iNode++)
+	{
+		for (auto obj : g_pDrawLeafNodes[iNode]->m_StaticObjectList)
+		{
+			obj->pObject->SetMatrix(&obj->matWorld,
+				&m_pMap->m_matView,
+				&m_pMap->m_matProj);
+			obj->pObject->m_ConstantList.Color = T::TVector4(1, 1, 1, 1);
+			obj->pObject->Render();
+		}
+	}*/
+
+	m_ObjectList.clear();
+	RenderObject(m_pRootNode);
+	for (auto obj : m_ObjectList)
+	{
+		obj->pObject->SetMatrix(&obj->matWorld,
+			&m_pMap->m_matView,
+			&m_pMap->m_matProj);
+		obj->pObject->m_ConstantList.Color = T::TVector4(1, 1, 1, 1);
+		obj->pObject->Render();
 	}
 	return true;
 }
@@ -172,7 +213,7 @@ bool	TQuadtree::CreateIndexBuffer(TNode* pNode)
 	}
 	return true;
 }
-void		TQuadtree::Init(TMap* pMap, int iMaxDepth)
+void		TQuadtree::Build(TMap* pMap, int iMaxDepth)
 {
 	m_pMap = pMap;
 	m_iMaxDepth = iMaxDepth;
@@ -189,7 +230,7 @@ void		TQuadtree::Init(TMap* pMap, int iMaxDepth)
 										m_iWidth*m_iHeight-1);
 	BuildTree(m_pRootNode);
 }
-void TQuadtree::Init(int iWidth, int iHeight, int iMaxDepth)
+void TQuadtree::Build(int iWidth, int iHeight, int iMaxDepth)
 {
 	m_iMaxDepth = iMaxDepth;
 	m_iWidth = iWidth;
@@ -240,26 +281,58 @@ void TQuadtree::BuildTree(TNode* pParent)
 		BuildTree(pParent->m_pChild[iChild]);
 	}
 }
-bool TQuadtree::AddObject(TObject3D* obj)
+bool TQuadtree::AddObject(TMapObject* obj)
 {
-	TNode* pFindNode = 
-		FindNode(m_pRootNode, obj->m_BoxCollision);
+	TNode* pFindNode = 	FindNode(m_pRootNode, obj->box);
 	if (pFindNode != nullptr)
 	{
 		pFindNode->AddObject(obj);
+		//if (pFindNode->m_bLeaf == false)
+		//{
+		//	m_ObjectList.push_back(obj);
+		//}
 		return true;
 	}
 	return false;
 }
-bool TQuadtree::AddDynamicObject(TObject3D* obj)
+void TQuadtree::RenderObject(TNode* pNode)
+{
+	if (pNode == nullptr) return;
+	if (m_pCamera->ClassifyOBB(&pNode->m_Box) == TRUE)
+	{
+		for (auto obj : pNode->m_StaticObjectList)
+		{
+			m_ObjectList.push_back(obj);
+		}
+		for (int iNode = 0; iNode < pNode->m_pChild.size(); iNode++)
+		{
+			RenderObject(pNode->m_pChild[iNode]);
+		}
+	}
+}
+bool TQuadtree::AddDynamicObject(TMapObject* obj)
 {
 	TNode* pFindNode =
-		FindNode(m_pRootNode, obj->m_BoxCollision);
+		FindNode(m_pRootNode, obj->box);
 	if (pFindNode != nullptr)
 	{
 		//obj->m_iNodeIndex = pFindNode->m_iIndex;
 		pFindNode->AddDynamicObject(obj);
 		return true;
+	}
+	return false;
+}
+// aabb
+bool   TQuadtree::CheckBox(TBox& a, TBox& b)
+{
+	if (a.vMin.x <= b.vMin.x && a.vMin.y <= b.vMin.y &&
+		a.vMin.z <= b.vMin.z)
+	{
+		if (a.vMax.x >= b.vMax.x && a.vMax.y >= b.vMax.y &&
+			a.vMax.z >= b.vMax.z)
+		{
+			return true;
+		}
 	}
 	return false;
 }
@@ -270,9 +343,8 @@ TNode* TQuadtree::FindNode(TNode* pNode, TBox& box)
 		{
 			if (pNode->m_pChild[iNode] != nullptr)
 			{
-				if (TCollision::BoxToBox(
-					pNode->m_pChild[iNode]->m_Box,
-					box))
+				if (CheckBox(pNode->m_pChild[iNode]->m_Box,
+							 box))
 				{
 					g_Queue.push(pNode->m_pChild[iNode]);
 					break;
@@ -289,13 +361,13 @@ TNode* TQuadtree::FindNode(TNode* pNode, TBox& box)
 void TQuadtree::PrintObjectList(TNode* pNode)
 {
 	if (pNode == nullptr) return;
-	for (std::list<TObject3D*>::iterator iter = pNode->m_DynamicObjectList.begin();
+	for (std::list<TMapObject*>::iterator iter = pNode->m_DynamicObjectList.begin();
 		iter != pNode->m_DynamicObjectList.end();
 		iter++)
 	{
-		TObject3D* pObj = *iter;
+		TMapObject* pObj = *iter;
 		std::cout << "[" << pNode->m_iIndex << "]" <<
-			(int)pObj->m_vPos.x <<":"<< (int)pObj->m_vPos.y << " ";
+			(int)pObj->vPos.x <<":"<< (int)pObj->vPos.y << " ";
 	}
 	std::cout << std::endl;
 	for (int iNode = 0; iNode < 4; iNode++)
