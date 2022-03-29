@@ -43,6 +43,10 @@ void		TQuadtree::GetRatio(TNode* pNode)
 	float fRatio = fDistance / m_pCamera->m_fFarDistance;
 	// lod level==> 0 ~ 1 :  0 ~ 0.25,  0.25 ~ 05,  0.5 ~  1.0f
 	pNode->m_iCurrentLod = fRatio * m_iNumLOD; // 0,  1 , 2
+	if (pNode->m_iCurrentLod >= m_iNumLOD)
+	{
+		pNode->m_iCurrentLod = m_iNumLOD - 1;
+	}
 }
 int		TQuadtree::GetLodType(TNode* pNode)
 {
@@ -245,12 +249,12 @@ void		TQuadtree::SetIndexData(TNode* pNode, int iLodLevel)
 			for (DWORD iCol = dwStartCol; iCol < dwEndCol; iCol+= iOffset)
 			{
 				pNode->m_IndexList[iLod][iIndex + 0] = iRow * m_iWidth + iCol;
-				pNode->m_IndexList[iLod][iIndex + 1] = (iRow * m_iWidth + iCol) + 1;
-				pNode->m_IndexList[iLod][iIndex + 2] = (iRow + 1) * m_iWidth + iCol;
+				pNode->m_IndexList[iLod][iIndex + 1] = (iRow * m_iWidth + iCol) + iOffset;
+				pNode->m_IndexList[iLod][iIndex + 2] = (iRow + iOffset) * m_iWidth + iCol;
 
 				pNode->m_IndexList[iLod][iIndex + 3] = pNode->m_IndexList[iLod][iIndex + 2];
 				pNode->m_IndexList[iLod][iIndex + 4] = pNode->m_IndexList[iLod][iIndex + 1];
-				pNode->m_IndexList[iLod][iIndex + 5] = pNode->m_IndexList[iLod][iIndex + 2] + 1;
+				pNode->m_IndexList[iLod][iIndex + 5] = pNode->m_IndexList[iLod][iIndex + 2] + iOffset;
 				iIndex += 6;
 			}
 		}
@@ -259,6 +263,7 @@ void		TQuadtree::SetIndexData(TNode* pNode, int iLodLevel)
 bool	TQuadtree::CreateIndexBuffer(TNode* pNode, int iLodLevel)
 {
 	HRESULT hr;
+	pNode->m_pIndexBuffer.resize(iLodLevel);
 	for (int iLod = 0; iLod < iLodLevel; iLod++)
 	{
 		if (pNode->m_IndexList[iLod].size() <= 0) return true;
