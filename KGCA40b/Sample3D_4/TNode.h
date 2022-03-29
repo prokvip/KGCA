@@ -93,7 +93,7 @@ public:
 	int		m_dwLodType; //0 ~ 16
 	bool	m_bLeaf = false;
 	std::vector<TNode*> m_pChild;
-	std::vector<TNode*> m_pNeighborList; // µø(8)º≠(2)≥≤(4)∫œ(1)
+	std::vector<TNode*> m_pNeighborList; // ∫œ(0)≥≤(1)º≠(2)µø(3)
 	std::vector<int>   m_CornerList; // ¡§¡°¿Œµ¶Ω∫
 	std::list<TMapObject*> m_StaticObjectList;
 	std::list<TMapObject*> m_DynamicObjectList;

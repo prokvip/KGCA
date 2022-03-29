@@ -23,17 +23,21 @@ void   TQuadtree::FindNeighborNode()
 	{
 		node->m_pNeighborList.resize(4);
 		T::TVector3 p;		
-		p.y = 0.0f;
-		p.z = node->m_Box.vCenter.z;
-		p.x = node->m_Box.vMax.x + node->m_Box.size.x;
-		node->m_pNeighborList[0] = CheckBoxtoPoint(p); // 동
-		p.x = node->m_Box.vMin.x - node->m_Box.size.x;
-		node->m_pNeighborList[1] = CheckBoxtoPoint(p); // 서		
 		p.x = node->m_Box.vCenter.x;
-		p.z = node->m_Box.vMin.z - node->m_Box.size.z;
-		node->m_pNeighborList[2] = CheckBoxtoPoint(p); // 남
+		p.y = 0.0f;
 		p.z = node->m_Box.vMax.z + node->m_Box.size.z;
-		node->m_pNeighborList[3] = CheckBoxtoPoint(p); // 북
+		node->m_pNeighborList[0] = CheckBoxtoPoint(p); // 북
+
+		p.z = node->m_Box.vMin.z - node->m_Box.size.z;
+		node->m_pNeighborList[1] = CheckBoxtoPoint(p); // 남
+
+		p.z = node->m_Box.vCenter.z;
+		p.x = node->m_Box.vMin.x - node->m_Box.size.x;
+		node->m_pNeighborList[2] = CheckBoxtoPoint(p); // 서	
+
+		p.x = node->m_Box.vMax.x + node->m_Box.size.x;
+		node->m_pNeighborList[3] = CheckBoxtoPoint(p); // 동		
+		
 	}
 }
 void		TQuadtree::GetRatio(TNode* pNode)
@@ -72,13 +76,13 @@ void		TQuadtree::Update(TCamera* pCamera)
 		GetRatio(node);
 	}
 	// 보이는 노드들의 LOD 타입(0~ 15타입)을 결정
-	int iNumFace = 0;
+	m_iNumFace = 0;
 	for (auto node : g_pDrawLeafNodes)
 	{		
 		GetLodType(node);
 		// 전체 인덱스 버퍼를 1개만 사용한다.
-		//iNumFace += node->m_IndexList.size() / 3;
-		//m_IndexList
+		// LOD버퍼를 저장
+		m_iNumFace += UpdateIndexList(node,m_iNumFace * 3, node->m_iCurrentLod);
 	}
 }
 void TQuadtree::RenderTile(TNode* pNode)
@@ -109,7 +113,13 @@ bool		TQuadtree::Render()
 	m_pMap->PreRender();
 	m_pMap->Draw();
 
-	for (int iNode = 0; iNode < g_pDrawLeafNodes.size(); iNode++)
+	m_pMap->m_pContext->UpdateSubresource(
+		m_pIndexBuffer.Get(), 0, NULL, &m_IndexList.at(0), 0, 0);
+	m_pMap->m_pContext->IASetIndexBuffer(
+		m_pIndexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
+	m_pMap->m_pContext->DrawIndexed(m_iNumFace*3, 0, 0);
+
+	/*for (int iNode = 0; iNode < g_pDrawLeafNodes.size(); iNode++)
 	{
 		m_pMap->m_ConstantList.Color = T::TVector4(1, 1, 0, 1);
 		m_pMap->m_pContext->UpdateSubresource(
@@ -121,7 +131,7 @@ bool		TQuadtree::Render()
 				g_pDrawLeafNodes[iNode]->m_pIndexBuffer[iLod].Get(), DXGI_FORMAT_R32_UINT, 0);
 		m_pMap->m_pContext->DrawIndexed(
 			g_pDrawLeafNodes[iNode]->m_IndexList[iLod].size(), 0, 0);
-	}
+	}*/
 	for (auto obj : m_ObjectList)
 	{
 		obj->pObject->SetMatrix(&obj->matWorld,
@@ -288,7 +298,21 @@ bool	TQuadtree::CreateIndexBuffer(TNode* pNode, int iLodLevel)
 }
 void		TQuadtree::Build(TMap* pMap, int iMaxDepth)
 {
+	HRESULT hr;
 	m_pMap = pMap;
+	m_IndexList.resize(m_pMap->m_IndexList.size());
+	//gpu메모리에 버퍼 할당(원하는 할당 크기)
+	D3D11_BUFFER_DESC bd;
+	ZeroMemory(&bd, sizeof(D3D11_BUFFER_DESC));
+	bd.ByteWidth = sizeof(DWORD) * m_IndexList.size();
+	bd.Usage = D3D11_USAGE_DEFAULT;
+	bd.BindFlags = D3D11_BIND_INDEX_BUFFER;	
+	if (FAILED(hr = m_pMap->m_pd3dDevice->CreateBuffer(&bd, NULL,
+						m_pIndexBuffer.GetAddressOf())))
+	{
+		return;
+	}
+
 	m_iLeafDepth = iMaxDepth;
 	m_iWidth = pMap->m_iNumCols;
 	m_iHeight = pMap->m_iNumRows;
@@ -461,33 +485,180 @@ void TQuadtree::PrintObjectList(TNode* pNode)
 		PrintObjectList(pNode->m_pChild[iNode]);
 	}
 }
+int TQuadtree::UpdateIndexList(TNode* pNode, DWORD dwCurentIndex, DWORD dwNumLevel)
+{
+	if (m_IndexList.size() <=0) return false;
+	int iNumFaces = 0;
 
-//void TQuadtree::BinaryNodePrintInOrder(TNode* pNode)
-//{
-//	if (pNode == nullptr) return;
-//	BinaryNodePrintInOrder(pNode->pChild[0]);
-//	std::cout << pNode->iValue;
-//	BinaryNodePrintInOrder(pNode->pChild[1]);
-//}
-//void TQuadtree::BinaryNodePrintPostOrder(TNode* pNode)
-//{
-//	if (pNode == nullptr) return;
-//	BinaryNodePrintPostOrder(pNode->pChild[0]);
-//	BinaryNodePrintPostOrder(pNode->pChild[1]);
-//	std::cout << pNode->iValue;
-//}
-//void TQuadtree::BinaryNodePrintLevelOrder(TNode* pNode)
-//{
-//	std::cout << pNode->iValue;
-//	do {
-//		if (pNode->pChild[0] != nullptr)
-//			g_Queue.push(pNode->pChild[0]);
-//		if (pNode->pChild[1] != nullptr)
-//			g_Queue.push(pNode->pChild[1]);
-//
-//		if (g_Queue.empty()) break;
-//		pNode = g_Queue.front();
-//		std::cout << pNode->iValue;
-//		g_Queue.pop();
-//	} while (pNode);
-//}
+	DWORD dwTL = pNode->m_CornerList[0];
+	DWORD dwTR = pNode->m_CornerList[1];
+	DWORD dwBL = pNode->m_CornerList[2];
+	DWORD dwBR = pNode->m_CornerList[3];
+
+	DWORD dwStartRow = dwTL / m_iWidth;
+	DWORD dwEndRow = dwBL / m_iWidth;
+
+	DWORD dwStartCol = dwTL % m_iWidth;
+	DWORD dwEndCol = dwTR % m_iWidth;
+
+	DWORD dwOffset = (DWORD)(pow(2.0f, (float)dwNumLevel));
+	DWORD dwCountX = ((dwEndCol - dwStartCol) / dwOffset) - 1;
+	DWORD dwCountY = ((dwEndRow - dwStartRow) / dwOffset) - 1;
+
+
+	DWORD dwYCell = 0;
+	for (DWORD dwRow = dwStartRow; dwRow < dwEndRow; dwRow += dwOffset, dwYCell++)
+	{
+		DWORD dwXCell = 0;
+		for (DWORD dwCol = dwStartCol; dwCol < dwEndCol; dwCol += dwOffset, dwXCell++)
+		{
+			//1	2    2   
+			//0	   5 4
+			DWORD dwNextRow = dwRow + dwOffset;
+			DWORD dwNextCol = dwCol + dwOffset;
+
+			DWORD i0 = dwNextRow * m_iWidth + dwCol;    // 2
+			DWORD i1 = dwRow * m_iWidth + dwCol;		// 0
+			DWORD i2 = dwRow * m_iWidth + dwNextCol;	// 1	
+
+			// 왼쪽, 상단
+			if ((dwXCell == 0 && dwYCell == 0))
+			{
+				DWORD dwType = (pNode->m_dwLodType & 8) + (pNode->m_dwLodType & 1);
+				iNumFaces += SetLodIndexBuffer(pNode, dwCurentIndex,
+					i0,	// 2
+					i1,		// 0
+					i2,	// 1											
+					dwType);
+			}
+			else if ((dwXCell == 0) && (pNode->m_dwLodType & 8))
+			{
+				iNumFaces += SetLodIndexBuffer(pNode, dwCurentIndex,
+					i0,	// 2
+					i1,		// 0
+					i2,	// 1												
+					8);
+			}
+			else if ((dwYCell == 0) && (pNode->m_dwLodType & 1))
+			{
+				iNumFaces += SetLodIndexBuffer(pNode, dwCurentIndex,
+					i0,	// 2
+					i1,		// 0
+					i2,	// 1											
+					1);
+			}
+			else
+			{
+				m_IndexList[dwCurentIndex + 0] = i0;
+				m_IndexList[dwCurentIndex + 1] = i1;
+				m_IndexList[dwCurentIndex + 2] = i2;
+				iNumFaces += 1;
+				dwCurentIndex += 3;
+			}
+
+			DWORD j0 = dwRow * m_iWidth + dwNextCol;		// 2
+			DWORD j1 = dwNextRow * m_iWidth + dwNextCol;	// 3
+			DWORD j2 = dwNextRow * m_iWidth + dwCol;		// 0			
+
+			if ((dwXCell == dwCountX && dwYCell == dwCountY))
+			{
+				DWORD dwType = (pNode->m_dwLodType & 2) + (pNode->m_dwLodType & 4);
+				iNumFaces += SetLodIndexBuffer(pNode, dwCurentIndex,
+					j0,		// 2
+					j1,	// 3
+					j2,		// 0																					
+					dwType);
+			}
+			else if ((dwXCell == dwCountX) && (pNode->m_dwLodType & 2))
+			{
+				iNumFaces += SetLodIndexBuffer(pNode, dwCurentIndex,
+					j0,	// 2
+					j1,	// 3
+					j2,	// 0																					
+					2);
+			}
+			else if ((dwYCell == dwCountY) && (pNode->m_dwLodType & 4))
+			{
+				iNumFaces += SetLodIndexBuffer(pNode, dwCurentIndex,
+					j0,	// 2
+					j1,	// 3
+					j2,	// 0																						
+					4);
+			}
+			else
+			{
+				m_IndexList[dwCurentIndex + 0] = j0;
+				m_IndexList[dwCurentIndex + 1] = j1;
+				m_IndexList[dwCurentIndex + 2] = j2;
+				iNumFaces += 1;
+				dwCurentIndex += 3;
+			}
+		}
+	}
+	return iNumFaces;
+}
+
+int  TQuadtree::SetLodIndexBuffer(TNode* pNode,
+	DWORD& dwCurentIndex,
+	DWORD dwA, DWORD dwB, DWORD dwC,
+	DWORD dwType)
+{
+	int iNumFaces = 0;
+
+	if (dwType == 0)
+	{
+		m_IndexList[dwCurentIndex + 0] = dwA;
+		m_IndexList[dwCurentIndex + 1] = dwB;
+		m_IndexList[dwCurentIndex + 2] = dwC;
+		iNumFaces += 1;
+		dwCurentIndex += 3;
+		return iNumFaces;
+	}
+	if (dwType == 8 || dwType == 2)// 좌우
+	{
+		DWORD dwCenter = (dwA + dwB) / 2;
+		m_IndexList[dwCurentIndex + 0] = dwC;
+		m_IndexList[dwCurentIndex + 1] = dwA;
+		m_IndexList[dwCurentIndex + 2] = dwCenter;
+		m_IndexList[dwCurentIndex + 3] = dwC;
+		m_IndexList[dwCurentIndex + 4] = dwCenter;
+		m_IndexList[dwCurentIndex + 5] = dwB;
+		iNumFaces += 2;
+		dwCurentIndex += 6;
+
+		return iNumFaces;
+	}
+	if (dwType == 1 || dwType == 4)// 상하
+	{
+		DWORD dwCenter = (dwB + dwC) / 2;
+		m_IndexList[dwCurentIndex + 0] = dwA;
+		m_IndexList[dwCurentIndex + 1] = dwB;
+		m_IndexList[dwCurentIndex + 2] = dwCenter;
+		m_IndexList[dwCurentIndex + 3] = dwA;
+		m_IndexList[dwCurentIndex + 4] = dwCenter;
+		m_IndexList[dwCurentIndex + 5] = dwC;
+		iNumFaces += 2;
+		dwCurentIndex += 6;
+		return iNumFaces;
+	}
+	if (dwType == 9 || dwType == 6)// 좌상, 우하
+	{
+		DWORD dwTopCenter = (dwB + dwC) / 2;
+		DWORD dwLeftCenter = (dwA + dwB) / 2;
+
+		m_IndexList[dwCurentIndex + 0] = dwLeftCenter;
+		m_IndexList[dwCurentIndex + 1] = dwB;
+		m_IndexList[dwCurentIndex + 2] = dwTopCenter;
+		m_IndexList[dwCurentIndex + 3] = dwLeftCenter;
+		m_IndexList[dwCurentIndex + 4] = dwTopCenter;
+		m_IndexList[dwCurentIndex + 5] = dwA;
+
+		m_IndexList[dwCurentIndex + 6] = dwA;
+		m_IndexList[dwCurentIndex + 7] = dwTopCenter;
+		m_IndexList[dwCurentIndex + 8] = dwC;
+		iNumFaces += 3;
+		dwCurentIndex += 9;
+		return iNumFaces;
+	}
+	return iNumFaces;
+}

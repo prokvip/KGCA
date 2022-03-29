@@ -20,8 +20,9 @@ public:
 	std::vector<TNode*> g_pDrawLeafNodes;
 	std::vector<TNode*> g_pLeafNodes;
 	std::queue<TNode*> g_Queue;	
-	std::vector<DWORD> m_IndexList;
+	std::vector<DWORD>   m_IndexList;
 	ComPtr<ID3D11Buffer> m_pIndexBuffer = nullptr;
+	int					 m_iNumFace;
 	int g_iValue = 0;
 public:
 	void		Build(int iWidth, int iHeight, int iMaxDepth);
@@ -49,6 +50,9 @@ public:
 	TNode*		CheckBoxtoPoint(T::TVector3 p);
 	void		GetRatio(TNode* pNode);
 	int			GetLodType(TNode* pNode);
+	int			UpdateIndexList(TNode* pNode, DWORD dwCurentIndex, DWORD dwNumLevel);
+	int			SetLodIndexBuffer(TNode* pNode,DWORD& dwCurentIndex,
+							DWORD dwA, DWORD dwB, DWORD dwC,DWORD dwType);
 public:
 	void PrintObjectList(TNode* pNode);
 //	void BinaryNodePrintInOrder(TNode* pNode);

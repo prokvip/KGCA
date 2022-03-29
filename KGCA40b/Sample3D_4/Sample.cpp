@@ -122,7 +122,7 @@ bool	Sample::Init()
 		return false;
 	}
 	m_Quadtree.m_pCamera = &m_Camera;
-	m_Quadtree.Build(&m_MapObj, 5);
+	m_Quadtree.Build(&m_MapObj, 2);
 	CreateMapObject();
 	for (int iObj = 0; iObj < MAX_NUM_OBJECTS; iObj++)
 	{
