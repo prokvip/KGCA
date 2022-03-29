@@ -68,13 +68,13 @@ bool	Sample::Init()
 	m_CameraTopView.CreateViewMatrix(T::TVector3(0, 3000.0f, -1),
 									 T::TVector3(0, 0.0f, 0));
 	m_CameraTopView.CreateProjMatrix(XM_PI * 0.25f,
-		(float)g_rtClient.right / (float)g_rtClient.bottom, 1.0f, 30000.0f);
+		(float)g_rtClient.right / (float)g_rtClient.bottom, 1.0f, 10000.0f);
 
 	m_Camera.Init();
 	m_Camera.CreateViewMatrix(  T::TVector3(0, 500.0f, -100.0f),
 								T::TVector3(0, 0.0f, 0));
 	m_Camera.CreateProjMatrix(XM_PI * 0.25f,
-		(float)g_rtClient.right / (float)g_rtClient.bottom, 0.1f, 2000.0f);
+		(float)g_rtClient.right / (float)g_rtClient.bottom, 0.1f, 5000.0f);
 	m_Camera.m_pColorTex = I_Texture.Load(L"../../data/charport.bmp");
 	m_Camera.m_pVShader = I_Shader.CreateVertexShader(
 		m_pd3dDevice.Get(), L"Box.hlsl", "VSColor");;
