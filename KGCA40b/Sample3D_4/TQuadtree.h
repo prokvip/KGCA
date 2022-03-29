@@ -52,17 +52,23 @@ public:
 	int			GetLodType(TNode* pNode);
 	int			UpdateIndexList(TNode* pNode, DWORD dwCurentIndex, DWORD dwNumLevel);
 	int			SetLodIndexBuffer(TNode* pNode,DWORD& dwCurentIndex,
-							DWORD dwA, DWORD dwB, DWORD dwC,DWORD dwType);
+				DWORD dwA, DWORD dwB, DWORD dwC,DWORD dwType);
+#ifdef _DEBUG
+public:
+	TBoxObj		m_BoxDebug;
+	void		DrawDebugInit(ID3D11Device* pd3dDevice,
+							  ID3D11DeviceContext* pContext);
+	void		DrawDebugRender(TBox* pBox);
+#endif
 public:
 	void PrintObjectList(TNode* pNode);
-//	void BinaryNodePrintInOrder(TNode* pNode);
-//	void BinaryNodePrintPostOrder(TNode* pNode);
-//	void BinaryNodePrintLevelOrder(TNode* pNode);
+
 
 public:
 	TQuadtree() {};
 	virtual ~TQuadtree()
 	{
+		m_BoxDebug.Release();
 		delete m_pRootNode;
 	}
 };

@@ -121,6 +121,7 @@ bool	Sample::Init()
 	{
 		return false;
 	}
+	m_Quadtree.DrawDebugInit(m_pd3dDevice.Get(), m_pImmediateContext.Get());
 	m_Quadtree.m_pCamera = &m_Camera;
 	m_Quadtree.Build(&m_MapObj, 2);
 	CreateMapObject();

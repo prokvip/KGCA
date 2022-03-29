@@ -89,6 +89,6 @@ float4 PSAlphaBlend(VS_OUTPUT input) : SV_TARGET
 float4 PSColor(VS_OUTPUT input) : SV_TARGET
 {
 	float4 vColor = input.c;
-	vColor.a = 0.5f;
+	vColor.a = 0.5f * input.c.a;
 	return vColor;
 }
