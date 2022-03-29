@@ -1,10 +1,81 @@
 #include "TQuadtree.h"
 int TQuadtree::g_iCount = 0;
+
+// 0(0,0)   1(1,0)   4(2,0)   5(3,0)
+// 2(0,1)   3(1,1)   6(2,1)   7(3,1)
+// 8        9        12       13
+// 10(0,3)  11       14       14(3,3)
+TNode*   TQuadtree::CheckBoxtoPoint(T::TVector3 p)
+{
+	for (auto node : g_pLeafNodes)
+	{
+		if (node->m_Box.vMin.x <= p.x && node->m_Box.vMax.x >= p.x &&
+			node->m_Box.vMin.z <= p.z && node->m_Box.vMax.z >= p.z)
+		{
+			return node;
+		}		
+	}
+	return nullptr;
+}
+void   TQuadtree::FindNeighborNode()
+{	
+	for (auto node : g_pLeafNodes)
+	{
+		node->m_pNeighborList.resize(4);
+		T::TVector3 p;		
+		p.y = 0.0f;
+		p.z = node->m_Box.vCenter.z;
+		p.x = node->m_Box.vMax.x + node->m_Box.size.x;
+		node->m_pNeighborList[0] = CheckBoxtoPoint(p); // 동
+		p.x = node->m_Box.vMin.x - node->m_Box.size.x;
+		node->m_pNeighborList[1] = CheckBoxtoPoint(p); // 서		
+		p.x = node->m_Box.vCenter.x;
+		p.z = node->m_Box.vMin.z - node->m_Box.size.z;
+		node->m_pNeighborList[2] = CheckBoxtoPoint(p); // 남
+		p.z = node->m_Box.vMax.z + node->m_Box.size.z;
+		node->m_pNeighborList[3] = CheckBoxtoPoint(p); // 북
+	}
+}
+void		TQuadtree::GetRatio(TNode* pNode)
+{
+	T::TVector3 v = m_pCamera->m_vCamera - pNode->m_Box.vCenter;
+	float fDistance = T::D3DXVec3Length(&v);
+	float fRatio = fDistance / m_pCamera->m_fFarDistance;
+	// lod level==> 0 ~ 1 :  0 ~ 0.25,  0.25 ~ 05,  0.5 ~  1.0f
+	pNode->m_iCurrentLod = fRatio * m_iNumLOD; // 0,  1 , 2
+}
+int		TQuadtree::GetLodType(TNode* pNode)
+{
+	if (pNode->m_pNeighborList.size() <= 0) return 0;
+	int dwType = 0;
+	if (pNode->m_pNeighborList[0] && pNode->m_pNeighborList[0]->m_iCurrentLod < pNode->m_iCurrentLod) dwType += 1;
+	if (pNode->m_pNeighborList[1] && pNode->m_pNeighborList[1]->m_iCurrentLod < pNode->m_iCurrentLod) dwType += 4;
+	if (pNode->m_pNeighborList[2] && pNode->m_pNeighborList[2]->m_iCurrentLod < pNode->m_iCurrentLod) dwType += 8;
+	if (pNode->m_pNeighborList[3] && pNode->m_pNeighborList[3]->m_iCurrentLod < pNode->m_iCurrentLod) dwType += 2;
+
+	pNode->m_dwLodType = dwType;
+	return dwType;
+}
 void		TQuadtree::Update(TCamera* pCamera)
 {
 	g_pDrawLeafNodes.clear();
 	m_ObjectList.clear();
 	RenderTile(m_pRootNode);
+
+	// 전체 노드의 LOD레벨을 저장
+	for (auto node : g_pLeafNodes)
+	{
+		GetRatio(node);
+	}
+	// 보이는 노드들의 LOD 타입(0~ 15타입)을 결정
+	int iNumFace = 0;
+	for (auto node : g_pDrawLeafNodes)
+	{		
+		GetLodType(node);
+		// 전체 인덱스 버퍼를 1개만 사용한다.
+		//iNumFace += node->m_IndexList.size() / 3;
+		//m_IndexList
+	}
 }
 void TQuadtree::RenderTile(TNode* pNode)
 {
@@ -40,9 +111,12 @@ bool		TQuadtree::Render()
 		m_pMap->m_pContext->UpdateSubresource(
 			m_pMap->m_pConstantBuffer, 0, NULL, &m_pMap->m_ConstantList, 0, 0);
 
+		int iLod = g_pDrawLeafNodes[iNode]->m_iCurrentLod;
+		
 		m_pMap->m_pContext->IASetIndexBuffer(
-			g_pDrawLeafNodes[iNode]->m_pIndexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
-		m_pMap->m_pContext->DrawIndexed(g_pDrawLeafNodes[iNode]->m_IndexList.size(), 0, 0);
+				g_pDrawLeafNodes[iNode]->m_pIndexBuffer[iLod].Get(), DXGI_FORMAT_R32_UINT, 0);
+		m_pMap->m_pContext->DrawIndexed(
+			g_pDrawLeafNodes[iNode]->m_IndexList[iLod].size(), 0, 0);
 	}
 	for (auto obj : m_ObjectList)
 	{
@@ -139,69 +213,78 @@ TVector2	TQuadtree::GetHeightFromNode(DWORD dwTL, DWORD dwTR, DWORD dwBL, DWORD 
 
 	return vHeight;
 }
-void		TQuadtree::SetIndexData(TNode* pNode)
+void		TQuadtree::SetIndexData(TNode* pNode, int iLodLevel)
 {
 	// (0) 1    (2)  3  (4)
 	// 5   6     7    8   9
 	// (10) 11  (12) 13 (14)
 	// 15 16    17   18  19
 	// (20) 21  (22) 23 (24)
+	// 16-> 4 -> 1
 	assert(m_pMap);
+	pNode->m_IndexList.resize(iLodLevel);
 
-	DWORD dwStartRow = pNode->m_CornerList[0] / m_iWidth;
-	DWORD dwEndRow = pNode->m_CornerList[2] / m_iWidth;
-
-	DWORD dwStartCol = pNode->m_CornerList[0] % m_iWidth;
-	DWORD dwEndCol = pNode->m_CornerList[1] % m_iWidth;
-
-	DWORD dwCellWidth = (dwEndCol - dwStartCol);
-	DWORD dwCellHeight = (dwEndRow - dwStartRow);
-	// 0,  4, 
-	// 20 ,24
-	int iNumFace = dwCellWidth * dwCellHeight * 2 ;
-	pNode->m_IndexList.resize(iNumFace * 3);
-	UINT iIndex = 0;
-	for (DWORD iRow = dwStartRow; iRow < dwEndRow; iRow++)
+	for (int iLod = 0; iLod < iLodLevel; iLod++)
 	{
-		for (DWORD iCol = dwStartCol; iCol < dwEndCol; iCol++)
-		{
-			pNode->m_IndexList[iIndex + 0] = iRow * m_iWidth + iCol;
-			pNode->m_IndexList[iIndex + 1] = (iRow * m_iWidth + iCol) + 1;
-			pNode->m_IndexList[iIndex + 2] = (iRow + 1) * m_iWidth + iCol;
+		int iOffset = pow(2,iLod);//; 0 ->1, 1-> 2, 2->4
+		DWORD dwStartRow = pNode->m_CornerList[0] / m_iWidth;
+		DWORD dwEndRow = pNode->m_CornerList[2] / m_iWidth;
 
-			pNode->m_IndexList[iIndex + 3] = pNode->m_IndexList[iIndex + 2];
-			pNode->m_IndexList[iIndex + 4] = pNode->m_IndexList[iIndex + 1];
-			pNode->m_IndexList[iIndex + 5] = pNode->m_IndexList[iIndex + 2] + 1;
-			iIndex += 6;
+		DWORD dwStartCol = pNode->m_CornerList[0] % m_iWidth;
+		DWORD dwEndCol = pNode->m_CornerList[1] % m_iWidth;
+
+		DWORD dwCellWidth = (dwEndCol - dwStartCol);
+		DWORD dwCellHeight = (dwEndRow - dwStartRow);
+		// 0,  4, 
+		// 20 ,24
+		int iNumFace = (dwCellWidth * dwCellHeight * 2) /  pow(4,iLod);
+		pNode->m_IndexList[iLod].resize(iNumFace * 3);
+		UINT iIndex = 0;
+		for (DWORD iRow = dwStartRow; iRow < dwEndRow; iRow+= iOffset)
+		{
+			for (DWORD iCol = dwStartCol; iCol < dwEndCol; iCol+= iOffset)
+			{
+				pNode->m_IndexList[iLod][iIndex + 0] = iRow * m_iWidth + iCol;
+				pNode->m_IndexList[iLod][iIndex + 1] = (iRow * m_iWidth + iCol) + 1;
+				pNode->m_IndexList[iLod][iIndex + 2] = (iRow + 1) * m_iWidth + iCol;
+
+				pNode->m_IndexList[iLod][iIndex + 3] = pNode->m_IndexList[iLod][iIndex + 2];
+				pNode->m_IndexList[iLod][iIndex + 4] = pNode->m_IndexList[iLod][iIndex + 1];
+				pNode->m_IndexList[iLod][iIndex + 5] = pNode->m_IndexList[iLod][iIndex + 2] + 1;
+				iIndex += 6;
+			}
 		}
-	}	
+	}
 }
-bool	TQuadtree::CreateIndexBuffer(TNode* pNode)
+bool	TQuadtree::CreateIndexBuffer(TNode* pNode, int iLodLevel)
 {
 	HRESULT hr;
-	if (pNode->m_IndexList.size() <= 0) return true;
-	//gpu메모리에 버퍼 할당(원하는 할당 크기)
-	D3D11_BUFFER_DESC bd;
-	ZeroMemory(&bd, sizeof(D3D11_BUFFER_DESC));
-	bd.ByteWidth = sizeof(DWORD) * pNode->m_IndexList.size();
-	bd.Usage = D3D11_USAGE_DEFAULT;
-	bd.BindFlags = D3D11_BIND_INDEX_BUFFER;
-
-	D3D11_SUBRESOURCE_DATA sd;
-	ZeroMemory(&sd, sizeof(D3D11_SUBRESOURCE_DATA));
-	sd.pSysMem = &pNode->m_IndexList.at(0);
-
-	if (FAILED(hr = m_pMap->m_pd3dDevice->CreateBuffer(&bd, &sd, 
-		pNode->m_pIndexBuffer.GetAddressOf())))
+	for (int iLod = 0; iLod < iLodLevel; iLod++)
 	{
-		return false;
+		if (pNode->m_IndexList[iLod].size() <= 0) return true;
+		//gpu메모리에 버퍼 할당(원하는 할당 크기)
+		D3D11_BUFFER_DESC bd;
+		ZeroMemory(&bd, sizeof(D3D11_BUFFER_DESC));
+		bd.ByteWidth = sizeof(DWORD) * pNode->m_IndexList[iLod].size();
+		bd.Usage = D3D11_USAGE_DEFAULT;
+		bd.BindFlags = D3D11_BIND_INDEX_BUFFER;
+
+		D3D11_SUBRESOURCE_DATA sd;
+		ZeroMemory(&sd, sizeof(D3D11_SUBRESOURCE_DATA));
+		sd.pSysMem = &pNode->m_IndexList[iLod].at(0);
+
+		if (FAILED(hr = m_pMap->m_pd3dDevice->CreateBuffer(&bd, &sd,
+			pNode->m_pIndexBuffer[iLod].GetAddressOf())))
+		{
+			return false;
+		}
 	}
 	return true;
 }
 void		TQuadtree::Build(TMap* pMap, int iMaxDepth)
 {
 	m_pMap = pMap;
-	m_iMaxDepth = iMaxDepth;
+	m_iLeafDepth = iMaxDepth;
 	m_iWidth = pMap->m_iNumCols;
 	m_iHeight = pMap->m_iNumRows;
 	// 0   1  2  3  4
@@ -214,10 +297,17 @@ void		TQuadtree::Build(TMap* pMap, int iMaxDepth)
 										m_iWidth*(m_iHeight-1), 
 										m_iWidth*m_iHeight-1);
 	BuildTree(m_pRootNode);
+	FindNeighborNode();
+
+	for (auto node : g_pLeafNodes)
+	{
+		SetIndexData(node, m_iNumLOD);// *16;
+		CreateIndexBuffer(node, m_iNumLOD);// *16;
+	}
 }
 void TQuadtree::Build(int iWidth, int iHeight, int iMaxDepth)
 {
-	m_iMaxDepth = iMaxDepth;
+	m_iLeafDepth = iMaxDepth;
 	m_iWidth = iWidth;
 	m_iHeight = iHeight;
 	// 0,0  -    a       100,0
@@ -231,17 +321,23 @@ void TQuadtree::Build(int iWidth, int iHeight, int iMaxDepth)
 }
 void TQuadtree::BuildTree(TNode* pParent)
 {
-	if (pParent == nullptr)
+	if (pParent == nullptr )
 	{
 		return;
 	}
-	if (pParent->m_iDepth == m_iMaxDepth)
+	if ((pParent->m_CornerList[1] - pParent->m_CornerList[0]) == 1)
 	{
-		pParent->m_bLeaf = true;
-		SetIndexData(pParent);
-		CreateIndexBuffer(pParent);
-		g_pLeafNodes.push_back(pParent);
+		m_iMaxDepth = pParent->m_iDepth;
+		m_iNumLOD = (m_iMaxDepth - m_iLeafLOD) + 1;
 		return;
+	}
+	if (pParent->m_iDepth == m_iLeafDepth)
+	{
+		m_iLeafLOD = pParent->m_iDepth;
+		pParent->m_bLeaf = true;
+
+		g_pLeafNodes.push_back(pParent);
+		//return;
 	}
 	// (0) 1    (2)  3  (4)
 	// 5   6     7    8   9
