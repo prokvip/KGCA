@@ -1,4 +1,51 @@
 #include "Sample.h"
+// 교점 계산
+bool Sample::GetIntersection(
+				T::TVector3 vStart, T::TVector3 vEnd, 
+				T::TVector3 v0, T::TVector3 v1, T::TVector3 v2,
+				T::TVector3 vNormal)
+{
+	T::TVector3 vDirection = vEnd - vStart;
+	T::TVector3 v0toStart = v0 - vStart;
+	float A = T::D3DXVec3Dot(&vNormal, &vDirection);
+	float a = T::D3DXVec3Dot(&vNormal, &v0toStart);
+	float t = a / A;
+	if (t < 0.0f || t > 1.0f)
+	{
+		return false;
+	}
+	m_vIntersection = vStart + vDirection * t;
+	return true;
+}
+// 영역에 점 포함 여부 테스트 
+bool    Sample::PointInPolygon(T::TVector3 vert, T::TVector3 faceNormal,
+	T::TVector3 v0, T::TVector3 v1, T::TVector3 v2)
+{
+	T::TVector3 e0, e1, e2, iInter, vNormal;
+	e0 = v1 - v0;
+	e1 = v2 - v1;
+	e2 = v0 - v2;
+
+	iInter = vert - v0;
+	T::D3DXVec3Cross(&vNormal, &e0, &iInter);
+	T::D3DXVec3Normalize(&vNormal, &vNormal);
+	float fDot = D3DXVec3Dot(&faceNormal, &vNormal);
+	if (fDot < 0.0f) return false;
+
+	iInter = vert - v1;
+	T::D3DXVec3Cross(&vNormal, &e1, &iInter);
+	T::D3DXVec3Normalize(&vNormal, &vNormal);
+	fDot = T::D3DXVec3Dot(&faceNormal, &vNormal);
+	if (fDot < 0.0f) return false;
+
+	iInter = vert - v2;
+	T::D3DXVec3Cross(&vNormal, &e2, &iInter);
+	T::D3DXVec3Normalize(&vNormal, &vNormal);
+	fDot = T::D3DXVec3Dot(&faceNormal, &vNormal);
+	if (fDot < 0.0f) return false;
+	return true;
+};
+
 void	Sample::CreateResizeDevice(UINT iWidth, UINT iHeight)
 {
 	int k = 0;
@@ -186,6 +233,66 @@ bool	Sample::Frame()
 	m_MapObj.Frame();
 	m_Quadtree.Update(&m_Camera);
 	m_PlayerObj.Frame();
+
+	// 마우스피킹
+	if (TInput::Get().m_dwMouseState[1] == KEY_HOLD)
+	{
+		POINT ptCursor;
+		GetCursorPos(&ptCursor);
+		ScreenToClient(g_hWnd, &ptCursor);
+		//((2S_x - 2X)/ Width) - 1
+		T::TVector3 vView, vProj; // view
+		vProj.x = (((2.0f * ptCursor.x - 2.0f* m_ViewPort.TopLeftX) / m_ViewPort.Width) - 1 ) ;
+		vProj.y = -(((2.0f * ptCursor.y - 2.0f * m_ViewPort.TopLeftY) / m_ViewPort.Height) - 1);
+		vProj.z = 1.0f;
+		vView.x = vProj.x / m_Camera.m_matProj._11;
+		vView.y = vProj.y / m_Camera.m_matProj._22;
+		vView.z = vProj.z;
+		T::TMatrix m;
+		T::D3DXMatrixInverse(&m, nullptr, &m_Camera.m_matView);
+
+		// world
+		T::TRay ray;		
+		ray.direction.x = vView.x*m._11 + vView.y*m._21 + vView.z*m._31;
+		ray.direction.y = vView.x*m._12 + vView.y*m._22 + vView.z*m._32;
+		ray.direction.z = vView.x*m._13 + vView.y*m._23 + vView.z*m._33;
+		ray.position.x = m._41;
+		ray.position.y = m._42;
+		ray.position.z = m._43;
+		T::D3DXVec3Normalize(&ray.direction, &ray.direction);
+		T::TVector3 vStart = ray.position; // 교점
+		T::TVector3 vEnd = ray.position + ray.direction * m_Camera.m_fFarDistance; // 교점
+		for (TFace& tFace : m_MapObj.m_FaceList)
+		{
+			T::TVector3 v0, v1, v2;
+			v0 = m_MapObj.m_VertexList[tFace.v0].p;
+			v1 = m_MapObj.m_VertexList[tFace.v1].p;
+			v2 = m_MapObj.m_VertexList[tFace.v2].p;
+			// 교점 계산
+			if (GetIntersection(vStart, vEnd,v0,v1,v2, tFace.vNomal)==true)
+			{
+				// 교점이 해당 페이스 안에 있는지 여부 판단
+				// 점 포함 테스트
+				if (PointInPolygon(m_vIntersection, tFace.vNomal,
+													v0, v1, v2)== true)
+				{			
+					m_MapObj.m_VertexList[tFace.v0].c = T::TVector4(1,0,0,1);
+					m_MapObj.m_VertexList[tFace.v1].c = T::TVector4(1, 0, 0, 1);
+					m_MapObj.m_VertexList[tFace.v2].c = T::TVector4(1, 0, 0, 1);
+					m_MapObj.m_pContext->UpdateSubresource(
+						m_MapObj.m_pVertexBuffer, 0, NULL, 
+						&m_MapObj.m_VertexList.at(0), 0, 0);
+
+					DisplayText("\n%10.4f, %10.4f, %10.4f ",
+						m_vIntersection.x,
+						m_vIntersection.y,
+						m_vIntersection.z);
+					m_vIntersectionList.push_back(m_vIntersection);
+					//break;
+				}
+			}
+		}
+	}
 	return true;
 }
 bool	Sample::Render()
@@ -200,8 +307,8 @@ bool	Sample::Render()
 
 	m_pImmediateContext->PSSetSamplers(0, 1, &TDxState::m_pSSLinear);
 	m_MapObj.SetMatrix(nullptr, &m_Camera.m_matView,&m_Camera.m_matProj);
-	//m_MapObj.Render();	
-	m_Quadtree.Render();	
+	m_MapObj.Render();	
+	//m_Quadtree.Render();	
 
 	m_PlayerObj.SetMatrix(nullptr, &m_Camera.m_matView,	&m_Camera.m_matProj);
 	m_PlayerObj.Render();		

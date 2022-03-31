@@ -41,7 +41,7 @@ VS_OUTPUT VS( VS_INPUT v)
 	pOut.n = normalize(vNormal);
 	pOut.t = v.t;
 	float fDot = max(0.5f, dot(pOut.n, -vLightDir.xyz));
-	pOut.c = v.c * float4(fDot, fDot, fDot,1)* Color0;
+	pOut.c = v.c;// *float4(fDot, fDot, fDot, 1)* Color0;
 
 	pOut.r = normalize(vLocal.xyz);
 	return pOut;

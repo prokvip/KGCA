@@ -213,7 +213,7 @@ bool		TMap::SetIndexData()
 			T::TVector3 vE0= m_VertexList[face.v1].p - m_VertexList[face.v0].p;
 			T::D3DXVec3Normalize(&vE0, &vE0);
 			T::TVector3 vE1= m_VertexList[face.v2].p - m_VertexList[face.v0].p;
-			T::D3DXVec3Normalize(&vE0, &vE1);
+			T::D3DXVec3Normalize(&vE1, &vE1);
 			
 			T::D3DXVec3Cross(&face.vNomal, &vE0, &vE1);
 			T::D3DXVec3Normalize(&face.vNomal, &face.vNomal);
