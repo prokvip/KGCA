@@ -26,6 +26,10 @@ public:
 		T::TVector3 vNormal);
 	bool PointInPolygon(T::TVector3 vert, T::TVector3 faceNormal,
 		T::TVector3 v0, T::TVector3 v1, T::TVector3 v2);
+	bool IntersectTriangle(
+		const TVector3& orig, const TVector3& dir,
+		TVector3& v0, TVector3& v1, TVector3& v2,
+		FLOAT* t, FLOAT* u, FLOAT* v);
 public:
 	void    CreateMapObject();
 	virtual void	CreateResizeDevice(UINT iWidth, UINT iHeight) override;

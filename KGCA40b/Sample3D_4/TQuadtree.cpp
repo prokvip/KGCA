@@ -120,6 +120,11 @@ bool		TQuadtree::Render()
 	m_pMap->m_pContext->DrawIndexed(m_iNumFace*3, 0, 0);
 
 	// 노드의 바운딩 박스를 랜더링
+	// 	   	// 노드의 바운딩 박스를 랜더링
+	/*for (int iNode = 0; iNode < g_pDrawLeafNodes.size(); iNode++)
+	{
+		DrawDebugRender(&g_pDrawLeafNodes[iNode]->m_Box);
+	}*/
 	//for (int iNode = 0; iNode < g_pDrawLeafNodes.size(); iNode++)
 	//{
 	//	DrawDebugRender(&g_pDrawLeafNodes[iNode]->m_Box);
@@ -164,7 +169,7 @@ TNode* TQuadtree::CreateNode(
 		pNode->m_iDepth = pParent->m_iDepth + 1;
 	}
 	GenBoundingBox(pNode);	
-	//SetIndexData(pNode);
+	//SetIndexData(pNode,1);
 	//CreateIndexBuffer(pNode);
 	return pNode;
 }

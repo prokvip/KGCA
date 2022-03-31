@@ -45,7 +45,65 @@ bool    Sample::PointInPolygon(T::TVector3 vert, T::TVector3 faceNormal,
 	if (fDot < 0.0f) return false;
 	return true;
 };
+bool Sample::IntersectTriangle(
+	const TVector3& orig, const TVector3& dir,
+	TVector3& v0, TVector3& v1, TVector3& v2,
+	FLOAT* t, FLOAT* u, FLOAT* v)
+{
+	// Find vectors for two edges sharing vert0
+	TVector3 edge1 = v1 - v0;
+	TVector3 edge2 = v2 - v0;
 
+	// Begin calculating determinant - also used to calculate U parameter
+	TVector3 pvec;
+	D3DXVec3Cross(&pvec, &dir, &edge2);
+
+	// If determinant is near zero, ray lies in plane of triangle
+	FLOAT det = D3DXVec3Dot(&edge1, &pvec);
+
+	TVector3 tvec; // 내적이 양수가 될 수 있도록 det 방향을 뒤집는다.
+	if (det > 0)
+	{
+		tvec = orig - v0;
+	}
+	else
+	{
+		tvec = v0 - orig;
+		det = -det;
+	}
+
+	if (det < 0.0001f)
+		return false;
+
+	// Calculate U parameter and test bounds
+	*u = D3DXVec3Dot(&tvec, &pvec);
+	if (*u < 0.0f || *u > det)
+		return false;
+
+	// Prepare to test V parameter
+	TVector3 qvec;
+	D3DXVec3Cross(&qvec, &tvec, &edge1);
+
+	// Calculate V parameter and test bounds
+	*v = D3DXVec3Dot(&dir, &qvec);
+	if (*v < 0.0f || *u + *v > det)
+		return false;
+
+	// Calculate t, scale parameters, ray intersects triangle
+	*t = D3DXVec3Dot(&edge2, &qvec);
+	FLOAT fInvDet = 1.0f / det;
+	*t *= fInvDet;
+	*u *= fInvDet;
+	*v *= fInvDet;
+
+	//TVector3 e3 = v2 - v1;
+	//TVector3 vi = orig + (*t) * dir;
+	//TVector3 i0 = v0 + edge1 * (*u) + edge2 * (*v);
+	//
+	//this->vPickRayOrig = orig;
+	//this->vPickRayDir = dir;
+	return true;
+}
 void	Sample::CreateResizeDevice(UINT iWidth, UINT iHeight)
 {
 	int k = 0;
@@ -262,25 +320,71 @@ bool	Sample::Frame()
 		T::D3DXVec3Normalize(&ray.direction, &ray.direction);
 		T::TVector3 vStart = ray.position; // 교점
 		T::TVector3 vEnd = ray.position + ray.direction * m_Camera.m_fFarDistance; // 교점
-		for (TFace& tFace : m_MapObj.m_FaceList)
+		/*for (TFace& tFace : m_MapObj.m_FaceList)
 		{
 			T::TVector3 v0, v1, v2;
+			DWORD i0 = tFace.v0;
+			DWORD i1 = tFace.v1;
+			DWORD i2 = tFace.v2;
 			v0 = m_MapObj.m_VertexList[tFace.v0].p;
 			v1 = m_MapObj.m_VertexList[tFace.v1].p;
-			v2 = m_MapObj.m_VertexList[tFace.v2].p;
-			// 교점 계산
-			if (GetIntersection(vStart, vEnd,v0,v1,v2, tFace.vNomal)==true)
+			v2 = m_MapObj.m_VertexList[tFace.v2].p;*/
+		for (int iNode = 0; iNode < m_Quadtree.g_pDrawLeafNodes.size(); iNode++)
+		{
+			TNode* pNode = m_Quadtree.g_pDrawLeafNodes[iNode];
+
+			/*if (TCollision::CheckBoxToRay(pNode->m_Box, ray) == false)
 			{
-				// 교점이 해당 페이스 안에 있는지 여부 판단
-				// 점 포함 테스트
-				if (PointInPolygon(m_vIntersection, tFace.vNomal,
-													v0, v1, v2)== true)
-				{			
-					m_MapObj.m_VertexList[tFace.v0].c = T::TVector4(1,0,0,1);
-					m_MapObj.m_VertexList[tFace.v1].c = T::TVector4(1, 0, 0, 1);
-					m_MapObj.m_VertexList[tFace.v2].c = T::TVector4(1, 0, 0, 1);
+				continue;
+			}*/
+
+			for (int i = 0; i < pNode->m_IndexList[0].size(); i += 3)
+			{
+				T::TVector3 v0, v1, v2;
+				DWORD i0 = pNode->m_IndexList[0][i + 0];
+				DWORD i1 = pNode->m_IndexList[0][i + 1];
+				DWORD i2 = pNode->m_IndexList[0][i + 2];
+				v0 = m_MapObj.m_VertexList[i0].p;
+				v1 = m_MapObj.m_VertexList[i1].p;
+				v2 = m_MapObj.m_VertexList[i2].p;
+				// 1)교점 계산
+				//if (GetIntersection(vStart, vEnd,v0,v1,v2, tFace.vNomal)==true)
+				//{
+				//	// 교점이 해당 페이스 안에 있는지 여부 판단
+				//	// 점 포함 테스트
+				//	if (PointInPolygon(m_vIntersection, tFace.vNomal,
+				//										v0, v1, v2)== true)
+				//	{			
+				//		m_MapObj.m_VertexList[i0].c = T::TVector4(1,0,0,1);
+				//		m_MapObj.m_VertexList[i1].c = T::TVector4(1, 0, 0, 1);
+				//		m_MapObj.m_VertexList[i2].c = T::TVector4(1, 0, 0, 1);
+				//		m_MapObj.m_pContext->UpdateSubresource(
+				//			m_MapObj.m_pVertexBuffer, 0, NULL, 
+				//			&m_MapObj.m_VertexList.at(0), 0, 0);
+
+				//		DisplayText("\n%10.4f, %10.4f, %10.4f ",
+				//			m_vIntersection.x,
+				//			m_vIntersection.y,
+				//			m_vIntersection.z);
+				//		m_vIntersectionList.push_back(m_vIntersection);
+				//		//break;
+				//	}
+				//}
+
+				//2번 교점
+				float t, u, v;
+				if (IntersectTriangle(ray.position, ray.direction,
+					v0, v1, v2, &t, &u, &v))
+				{
+					m_vIntersection = ray.position + ray.direction * t;
+					//m_MapObj.m_VertexList[tFace.v0].c = T::TVector4(1, 0, 0, 1);
+					//m_MapObj.m_VertexList[tFace.v1].c = T::TVector4(1, 0, 0, 1);
+					//m_MapObj.m_VertexList[tFace.v2].c = T::TVector4(1, 0, 0, 1);
+					m_MapObj.m_VertexList[i0].c = T::TVector4(1, 0, 0, 1);
+					m_MapObj.m_VertexList[i1].c = T::TVector4(1, 0, 0, 1);
+					m_MapObj.m_VertexList[i2].c = T::TVector4(1, 0, 0, 1);
 					m_MapObj.m_pContext->UpdateSubresource(
-						m_MapObj.m_pVertexBuffer, 0, NULL, 
+						m_MapObj.m_pVertexBuffer, 0, NULL,
 						&m_MapObj.m_VertexList.at(0), 0, 0);
 
 					DisplayText("\n%10.4f, %10.4f, %10.4f ",
@@ -288,7 +392,6 @@ bool	Sample::Frame()
 						m_vIntersection.y,
 						m_vIntersection.z);
 					m_vIntersectionList.push_back(m_vIntersection);
-					//break;
 				}
 			}
 		}
@@ -307,8 +410,8 @@ bool	Sample::Render()
 
 	m_pImmediateContext->PSSetSamplers(0, 1, &TDxState::m_pSSLinear);
 	m_MapObj.SetMatrix(nullptr, &m_Camera.m_matView,&m_Camera.m_matProj);
-	m_MapObj.Render();	
-	//m_Quadtree.Render();	
+	//m_MapObj.Render();	
+	m_Quadtree.Render();	
 
 	m_PlayerObj.SetMatrix(nullptr, &m_Camera.m_matView,	&m_Camera.m_matProj);
 	m_PlayerObj.Render();		
