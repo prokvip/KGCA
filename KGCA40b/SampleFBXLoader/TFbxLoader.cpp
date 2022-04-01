@@ -212,6 +212,10 @@ bool	TFbxLoader::Render()
 }
 bool	TFbxLoader::Release()
 {
+	for (int iObj = 0; iObj < m_ObjList.size(); iObj++)
+	{
+		m_ObjList[iObj]->Release();
+	}
 	m_pFbxScene->Destroy();
 	m_pFbxImporter->Destroy();	
 	m_pFbxManager->Destroy();
