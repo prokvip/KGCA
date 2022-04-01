@@ -16,7 +16,11 @@ bool	Sample::Init()
 {	
 	m_FbxObj.Init();
 	//m_FbxObj.Load("../../data/fbx/SM_Barrel.fbx");
-	m_FbxObj.Load("../../data/fbx/SM_Rock.fbx");
+	//m_FbxObj.Load("../../data/fbx/SM_Rock.fbx");
+	//m_FbxObj.Load("../../data/fbx/MultiCameras.fbx");
+	m_FbxObj.Load("../../data/fbx/st00sc00.fbx");
+	//m_FbxObj.Load("../../data/fbx/SM_Tree_Var01.fbx");
+	
 
 	TTexture* pTex = I_Texture.Load(L"../../data/ui/main_start_nor.png");
 	TShader* pVShader = I_Shader.CreateVertexShader(
@@ -52,6 +56,20 @@ bool	Sample::Render()
 {	
 	for (int iObj = 0; iObj < m_FbxObj.m_ObjList.size(); iObj++)
 	{
+		T::TVector3 vLight(cosf(g_fGameTimer) * 100.0f,
+			100,
+			sinf(g_fGameTimer) * 100.0f);
+
+		T::D3DXVec3Normalize(&vLight, &vLight);
+		vLight = vLight * -1.0f;
+		m_FbxObj.m_ObjList[iObj]->m_LightConstantList.vLightDir.x = vLight.x;
+		m_FbxObj.m_ObjList[iObj]->m_LightConstantList.vLightDir.y = vLight.y;
+		m_FbxObj.m_ObjList[iObj]->m_LightConstantList.vLightDir.z = vLight.z;
+		m_FbxObj.m_ObjList[iObj]->m_LightConstantList.vLightDir.w = 1.0f;
+		//m_FbxObj.m_ObjList[iObj]->m_bAlphaBlend = false;
+		/*m_pImmediateContext->OMSetDepthStencilState(
+			TDxState::g_pDSSDepthEnableWriteDisable, 0x00);*/
+
 		m_FbxObj.m_ObjList[iObj]->SetMatrix(nullptr, 
 			&m_pMainCamera->m_matView, 
 			&m_pMainCamera->m_matProj);

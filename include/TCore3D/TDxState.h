@@ -15,6 +15,8 @@ public:
 
 	static  ID3D11DepthStencilState* g_pDSSDepthEnable;
 	static  ID3D11DepthStencilState* g_pDSSDepthDisable;
+	static  ID3D11DepthStencilState* g_pDSSDepthEnableWriteDisable;
+	static  ID3D11DepthStencilState* g_pDSSDepthDisableWriteDisable;
 public:
 	static bool SetState(ID3D11Device* pd3dDevice);
 	static bool Release();

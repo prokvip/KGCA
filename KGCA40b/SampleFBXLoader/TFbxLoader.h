@@ -26,12 +26,21 @@ public:
 	virtual bool	Load(std::string filename);
 	virtual void    PreProcess(FbxNode* node, FbxNode* parent);
 	virtual void	ParseMesh(TFbxObj* pObject);
+	std::string		ParseMaterial(FbxSurfaceMaterial* pMtrl);
+
 	void ReadTextureCoord(	FbxMesh* pFbxMesh, 
 							FbxLayerElementUV* pUVSet, 
 							int vertexIndex, 
 							int uvIndex, 
 							FbxVector2& uv);
-	std::string		ParseMaterial(FbxSurfaceMaterial* pMtrl);
+	
+	FbxColor ReadColor(const FbxMesh* mesh,
+						DWORD dwVertexColorCount,
+						FbxLayerElementVertexColor* pVertexColorSet,
+						DWORD dwDCCIndex, DWORD dwVertexIndex);
+	FbxVector4 ReadNormal(const FbxMesh* mesh,
+		int controlPointIndex,
+		int vertexCounter);
 public:
 	virtual bool	Init();
 	virtual bool	Frame();
