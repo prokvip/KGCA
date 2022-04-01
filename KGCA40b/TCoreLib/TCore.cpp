@@ -23,6 +23,24 @@ bool	TCore::CoreInit()
 			if (pSurface) pSurface->Release();
 		}
 	}
+
+	m_DefaultCamera.Init();
+	m_DefaultCamera.CreateViewMatrix(T::TVector3(0, 500.0f, -100.0f),
+		T::TVector3(0, 0.0f, 0));
+	m_DefaultCamera.CreateProjMatrix(XM_PI * 0.25f,
+		(float)g_rtClient.right / (float)g_rtClient.bottom, 0.1f, 5000.0f);
+	m_DefaultCamera.m_pColorTex = I_Texture.Load(L"../../data/charport.bmp");
+	m_DefaultCamera.m_pVShader = I_Shader.CreateVertexShader(
+		m_pd3dDevice.Get(), L"Box.hlsl", "VSColor");;
+	m_DefaultCamera.m_pPShader = I_Shader.CreatePixelShader(
+		m_pd3dDevice.Get(), L"Box.hlsl", "PSColor");;
+	m_DefaultCamera.SetPosition(T::TVector3(0.0f, 1.0f, 0.0f));
+	if (!m_DefaultCamera.Create(m_pd3dDevice.Get(), m_pImmediateContext.Get()))
+	{
+		return false;
+	}
+
+	m_pMainCamera = &m_DefaultCamera;
 	Init();
 
 	return true;
@@ -48,6 +66,7 @@ bool	TCore::CoreFrame()
 	}
 	m_GameTimer.Frame();
 	TInput::Get().Frame();
+	m_pMainCamera->Frame();
 	I_ObjectMgr.Frame();
 	I_Sound.Frame();
 	Frame();
@@ -91,6 +110,7 @@ bool	TCore::CoreRender()
 bool	TCore::CoreRelease()
 {
 	Release();
+	m_DefaultCamera.Release();
 	TDxState::Release();
 	m_dxWrite.Release();
 	m_GameTimer.Release();

@@ -19,6 +19,15 @@
     <Filter Include="Math">
       <UniqueIdentifier>{34509274-334e-4f55-8038-4cf05db4bce0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="object">
+      <UniqueIdentifier>{41262962-e409-4584-abc7-4cfab9ec3def}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shader">
+      <UniqueIdentifier>{1b4e7c0c-8138-4877-8dd5-858bd4f40dd7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="map">
+      <UniqueIdentifier>{7f1ee5b9-245e-46b3-9d67-da5e81df2be4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="TCore.cpp">
@@ -83,6 +92,30 @@
     </ClCompile>
     <ClCompile Include="TMath.cpp">
       <Filter>Math</Filter>
+    </ClCompile>
+    <ClCompile Include="TBoxObj.cpp">
+      <Filter>object</Filter>
+    </ClCompile>
+    <ClCompile Include="TCamera.cpp">
+      <Filter>object</Filter>
+    </ClCompile>
+    <ClCompile Include="TFrustum.cpp">
+      <Filter>object</Filter>
+    </ClCompile>
+    <ClCompile Include="TNode.cpp">
+      <Filter>object</Filter>
+    </ClCompile>
+    <ClCompile Include="TPlaneObj.cpp">
+      <Filter>object</Filter>
+    </ClCompile>
+    <ClCompile Include="TSkyObj.cpp">
+      <Filter>object</Filter>
+    </ClCompile>
+    <ClCompile Include="TQuadtree.cpp">
+      <Filter>map</Filter>
+    </ClCompile>
+    <ClCompile Include="TMap.cpp">
+      <Filter>map</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -152,8 +185,43 @@
     <ClInclude Include="TMath.h">
       <Filter>Math</Filter>
     </ClInclude>
+    <ClInclude Include="TBoxObj.h">
+      <Filter>object</Filter>
+    </ClInclude>
+    <ClInclude Include="TCamera.h">
+      <Filter>object</Filter>
+    </ClInclude>
+    <ClInclude Include="TFrustum.h">
+      <Filter>object</Filter>
+    </ClInclude>
+    <ClInclude Include="TNode.h">
+      <Filter>object</Filter>
+    </ClInclude>
+    <ClInclude Include="TPlaneObj.h">
+      <Filter>object</Filter>
+    </ClInclude>
+    <ClInclude Include="TSkyObj.h">
+      <Filter>object</Filter>
+    </ClInclude>
+    <ClInclude Include="TQuadtree.h">
+      <Filter>map</Filter>
+    </ClInclude>
+    <ClInclude Include="TMap.h">
+      <Filter>map</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Box.hlsl">
+      <Filter>shader</Filter>
+    </FxCompile>
+    <FxCompile Include="map.hlsl">
+      <Filter>shader</Filter>
+    </FxCompile>
+    <FxCompile Include="sky.hlsl">
+      <Filter>shader</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

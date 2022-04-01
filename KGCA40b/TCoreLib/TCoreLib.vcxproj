@@ -152,18 +152,26 @@ copy "..\\..\\output\\Debug\\TCoreLib.lib" "..\\..\\Lib\\TCoreLib_d.lib"
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="TBaseMgr.cpp" />
+    <ClCompile Include="TBoxObj.cpp" />
+    <ClCompile Include="TCamera.cpp" />
     <ClCompile Include="TCollision.cpp" />
     <ClCompile Include="TCore.cpp" />
     <ClCompile Include="TDevice.cpp" />
     <ClCompile Include="TDxObject.cpp" />
     <ClCompile Include="TDxState.cpp" />
+    <ClCompile Include="TFrustum.cpp" />
     <ClCompile Include="TInput.cpp" />
+    <ClCompile Include="TMap.cpp" />
     <ClCompile Include="TMath.cpp" />
     <ClCompile Include="TMatrix.cpp" />
+    <ClCompile Include="TNode.cpp" />
     <ClCompile Include="TObject2D.cpp" />
     <ClCompile Include="TObject3D.cpp" />
     <ClCompile Include="TObjectMgr.cpp" />
+    <ClCompile Include="TPlaneObj.cpp" />
+    <ClCompile Include="TQuadtree.cpp" />
     <ClCompile Include="TShaderMgr.cpp" />
+    <ClCompile Include="TSkyObj.cpp" />
     <ClCompile Include="TSoundMgr.cpp" />
     <ClCompile Include="TTexturerMgr.cpp" />
     <ClCompile Include="TTimer.cpp" />
@@ -175,18 +183,26 @@ copy "..\\..\\output\\Debug\\TCoreLib.lib" "..\\..\\Lib\\TCoreLib_d.lib"
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TBaseMgr.h" />
+    <ClInclude Include="TBoxObj.h" />
+    <ClInclude Include="TCamera.h" />
     <ClInclude Include="TCollision.h" />
     <ClInclude Include="TCore.h" />
     <ClInclude Include="TDevice.h" />
     <ClInclude Include="TDxObject.h" />
     <ClInclude Include="TDxState.h" />
+    <ClInclude Include="TFrustum.h" />
     <ClInclude Include="TInput.h" />
+    <ClInclude Include="TMap.h" />
     <ClInclude Include="TMath.h" />
     <ClInclude Include="TMatrix.h" />
+    <ClInclude Include="TNode.h" />
     <ClInclude Include="TObject2D.h" />
     <ClInclude Include="TObject3D.h" />
     <ClInclude Include="TObjectMgr.h" />
+    <ClInclude Include="TPlaneObj.h" />
+    <ClInclude Include="TQuadtree.h" />
     <ClInclude Include="TShaderMgr.h" />
+    <ClInclude Include="TSkyObj.h" />
     <ClInclude Include="TSoundMgr.h" />
     <ClInclude Include="TStd.h" />
     <ClInclude Include="TTextureMgr.h" />
@@ -199,6 +215,17 @@ copy "..\\..\\output\\Debug\\TCoreLib.lib" "..\\..\\Lib\\TCoreLib_d.lib"
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Box.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="map.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="sky.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </FxCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

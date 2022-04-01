@@ -4,9 +4,12 @@
 #include "TInput.h"
 #include "TTimer.h"
 #include "TWriteFont.h"
+#include "TCamera.h"
 class TCore : public TDevice
 {
 public:
+	TCamera* m_pMainCamera = nullptr;
+	TCamera  m_DefaultCamera;
 	TTimer		m_GameTimer;
 	TWriteFont  m_dxWrite;
 	bool		m_bWireFrame = false;
