@@ -4,6 +4,9 @@
 class TFbxObj : public TObject3D
 {
 public:
+	TMatrix  m_matLocal;
+	TMatrix  m_matAnim;
+	int		 m_iIndex=-1;
 	FbxNode* m_pFbxParent = nullptr;
 	FbxNode* m_pFbxNode = nullptr;
 	TFbxObj* m_pParentObj = nullptr;
@@ -29,10 +32,11 @@ public:
 	FbxImporter*	m_pFbxImporter;
 	FbxScene*		m_pFbxScene;
 	FbxNode*		m_pRootNode;
-	std::vector<TFbxObj*>  m_ObjList;
+	std::vector<TFbxObj*>  m_DrawList;
+	std::vector<TFbxObj*>  m_TreeList;
 public:
 	virtual bool	Load(std::string filename);
-	virtual void    PreProcess(FbxNode* node, FbxNode* parent);
+	virtual void    PreProcess(FbxNode* node, TFbxObj* fbxParent=nullptr);
 	virtual void	ParseMesh(TFbxObj* pObject);
 	std::string		ParseMaterial(FbxSurfaceMaterial* pMtrl);
 

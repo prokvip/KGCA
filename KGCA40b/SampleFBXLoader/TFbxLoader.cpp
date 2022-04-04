@@ -24,39 +24,47 @@ TMatrix     TFbxLoader::ConvertMatrix(FbxMatrix& m)
 	return mat;
 }
 
-void    TFbxLoader::PreProcess(FbxNode* node, FbxNode* parent)
+void    TFbxLoader::PreProcess(FbxNode* node, TFbxObj* fbxParent)
 {
+	TFbxObj* fbx = nullptr;
 	if (node != nullptr)
 	{
-		FbxMatrix matWorld;
+		fbx = new TFbxObj;
+		fbx->m_pFbxParent = node->GetParent();
+		fbx->m_pFbxNode = node;
+		fbx->m_csName = to_mw(node->GetName());
+		fbx->m_pParentObj = fbxParent;
+		fbx->m_iIndex = m_TreeList.size();
+
 		FbxVector4  scaleLcl= node->LclScaling.Get();
 		FbxVector4  rotateLcl = node->LclRotation.Get();
 		FbxVector4  transLcl = node->LclTranslation.Get();
 		FbxMatrix matLocal(transLcl, rotateLcl, scaleLcl);
-		matWorld = matLocal;
-		if (parent != nullptr)
+		fbx->m_matLocal =	DxConvertMatrix(ConvertMatrix(matLocal));
+
+		/*if (fbx->m_pFbxParent != nullptr)
 		{
-			FbxVector4  scalePar = parent->LclScaling.Get();
-			FbxVector4  rotatePar = parent->LclRotation.Get();
-			FbxVector4  transPar = parent->LclTranslation.Get();
-			FbxMatrix matParent(transPar, rotatePar, scalePar);
-			FbxMatrix matWorld = matLocal * matParent;
-		}
+			FbxVector4  scalePar = fbx->m_pFbxParent->LclScaling.Get();
+			FbxVector4  rotatePar = fbx->m_pFbxParent->LclRotation.Get();
+			FbxVector4  transPar = fbx->m_pFbxParent->LclTranslation.Get();
+			FbxMatrix matParent(transPar, rotatePar, scalePar);			
+			fbx->m_matParent = DxConvertMatrix(ConvertMatrix(matParent));
+		
+		}*/
+		//fbx->m_matWorld = fbx->m_matLocal * fbx->m_matParent;
+		m_TreeList.push_back(fbx);
 	}
 	// camera, light, mesh, shape, animation
-	FbxMesh* pMesh = node->GetMesh();
+	FbxMesh* pMesh = node->GetMesh();	
 	if (pMesh)
 	{
-		TFbxObj* fbx = new TFbxObj;
-		fbx->m_pFbxParent = parent;
-		fbx->m_pFbxNode = node;
-		m_ObjList.push_back(fbx);
+		m_DrawList.push_back(fbx);
 	}
 	int iNumChild = node->GetChildCount();
 	for (int iNode = 0; iNode < iNumChild; iNode++)
 	{
 		FbxNode* child = node->GetChild(iNode);
-		PreProcess(child, node);
+		PreProcess(child, fbx);
 	}
 }
 bool	TFbxLoader::Load(std::string filename)
@@ -65,29 +73,9 @@ bool	TFbxLoader::Load(std::string filename)
 	bRet = m_pFbxImporter->Import(m_pFbxScene);
 	m_pRootNode = m_pFbxScene->GetRootNode();
 	PreProcess(m_pRootNode, nullptr);
-
-	for (int iObj = 0; iObj < m_ObjList.size(); iObj++)
+	for (int iObj = 0; iObj < m_DrawList.size(); iObj++)
 	{
-		FbxNode* node = m_ObjList[iObj]->m_pFbxNode;
-		FbxNode* parent = m_ObjList[iObj]->m_pFbxParent;
-		FbxMatrix matWorld;
-		FbxVector4  scaleLcl = node->LclScaling.Get();
-		FbxVector4  rotateLcl = node->LclRotation.Get();
-		FbxVector4  transLcl = node->LclTranslation.Get();
-		FbxMatrix matLocal(transLcl, rotateLcl, scaleLcl);
-		matWorld = matLocal;
-		/*if (parent != nullptr)
-		{
-			FbxVector4  scalePar = parent->LclScaling.Get();
-			FbxVector4  rotatePar = parent->LclRotation.Get();
-			FbxVector4  transPar = parent->LclTranslation.Get();
-			FbxMatrix matParent(transPar, rotatePar, scalePar);
-			FbxMatrix matWorld = matLocal * matParent;
-		}*/
-		m_ObjList[iObj]->m_matWorld = 
-			DxConvertMatrix(ConvertMatrix(matWorld));
-
-		ParseMesh(m_ObjList[iObj]);		
+		ParseMesh(m_DrawList[iObj]);		
 	}
 	return true;
 }
@@ -267,9 +255,9 @@ bool	TFbxLoader::Render()
 }
 bool	TFbxLoader::Release()
 {
-	for (int iObj = 0; iObj < m_ObjList.size(); iObj++)
+	for (int iObj = 0; iObj < m_DrawList.size(); iObj++)
 	{
-		m_ObjList[iObj]->Release();
+		m_DrawList[iObj]->Release();
 	}
 	m_pFbxScene->Destroy();
 	m_pFbxImporter->Destroy();	
