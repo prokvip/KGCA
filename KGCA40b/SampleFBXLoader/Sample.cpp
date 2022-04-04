@@ -17,10 +17,11 @@ bool	Sample::Init()
 	m_FbxObj.Init();
 	//m_FbxObj.Load("../../data/fbx/SM_Barrel.fbx");
 	//m_FbxObj.Load("../../data/fbx/SM_Rock.fbx");
-	//m_FbxObj.Load("../../data/fbx/MultiCameras.fbx");
+	m_FbxObj.Load("../../data/fbx/MultiCameras.fbx");
 	//m_FbxObj.Load("../../data/fbx/st00sc00.fbx");
-	m_FbxObj.Load("../../data/fbx/SM_Tree_Var01.fbx");
-	
+	//m_FbxObj.Load("../../data/fbx/SM_Tree_Var01.fbx");
+	//m_FbxObj.Load("../../data/fbx/Turret_Deploy1/Turret_Deploy1.fbx");
+
 
 	TTexture* pTex = I_Texture.Load(L"../../data/ui/main_start_nor.png");
 	TShader* pVShader = I_Shader.CreateVertexShader(
@@ -70,8 +71,13 @@ bool	Sample::Render()
 		/*m_pImmediateContext->OMSetDepthStencilState(
 			TDxState::g_pDSSDepthEnableWriteDisable, 0x00);*/
 
-		m_FbxObj.m_ObjList[iObj]->SetMatrix(nullptr, 
+		/*m_FbxObj.m_ObjList[iObj]->SetMatrix(
+			&m_FbxObj.m_ObjList[iObj]->m_matWorld,
 			&m_pMainCamera->m_matView, 
+			&m_pMainCamera->m_matProj);*/
+		m_FbxObj.m_ObjList[iObj]->SetMatrix(
+			nullptr,
+			&m_pMainCamera->m_matView,
 			&m_pMainCamera->m_matProj);
 		m_FbxObj.m_ObjList[iObj]->Render();
 	}

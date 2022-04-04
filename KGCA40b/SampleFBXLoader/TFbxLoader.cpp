@@ -1,8 +1,48 @@
 #define  _CRT_SECURE_NO_WARNINGS
 #include "TFbxLoader.h"
 
+TMatrix     TFbxLoader::DxConvertMatrix(TMatrix m)
+{
+	TMatrix mat;
+	mat._11 = m._11; mat._12 = m._13; mat._13 = m._12;
+	mat._21 = m._31; mat._22 = m._33; mat._23 = m._32;
+	mat._31 = m._21; mat._32 = m._23; mat._33 = m._22;
+	mat._41 = m._41; mat._42 = m._43; mat._43 = m._42;
+	mat._14 = mat._24 = mat._34 = 0.0f;
+	mat._44 = 1.0f;
+	return mat;
+}
+TMatrix     TFbxLoader::ConvertMatrix(FbxMatrix& m)
+{
+	TMatrix mat;
+	float* pMatArray = reinterpret_cast<float*>(&mat);
+	double* pSrcArray = reinterpret_cast<double*>(&m);
+	for (int i = 0; i < 16; i++)
+	{
+		pMatArray[i] = pSrcArray[i];
+	}
+	return mat;
+}
+
 void    TFbxLoader::PreProcess(FbxNode* node, FbxNode* parent)
 {
+	if (node != nullptr)
+	{
+		FbxMatrix matWorld;
+		FbxVector4  scaleLcl= node->LclScaling.Get();
+		FbxVector4  rotateLcl = node->LclRotation.Get();
+		FbxVector4  transLcl = node->LclTranslation.Get();
+		FbxMatrix matLocal(transLcl, rotateLcl, scaleLcl);
+		matWorld = matLocal;
+		if (parent != nullptr)
+		{
+			FbxVector4  scalePar = parent->LclScaling.Get();
+			FbxVector4  rotatePar = parent->LclRotation.Get();
+			FbxVector4  transPar = parent->LclTranslation.Get();
+			FbxMatrix matParent(transPar, rotatePar, scalePar);
+			FbxMatrix matWorld = matLocal * matParent;
+		}
+	}
 	// camera, light, mesh, shape, animation
 	FbxMesh* pMesh = node->GetMesh();
 	if (pMesh)
@@ -28,6 +68,25 @@ bool	TFbxLoader::Load(std::string filename)
 
 	for (int iObj = 0; iObj < m_ObjList.size(); iObj++)
 	{
+		FbxNode* node = m_ObjList[iObj]->m_pFbxNode;
+		FbxNode* parent = m_ObjList[iObj]->m_pFbxParent;
+		FbxMatrix matWorld;
+		FbxVector4  scaleLcl = node->LclScaling.Get();
+		FbxVector4  rotateLcl = node->LclRotation.Get();
+		FbxVector4  transLcl = node->LclTranslation.Get();
+		FbxMatrix matLocal(transLcl, rotateLcl, scaleLcl);
+		matWorld = matLocal;
+		/*if (parent != nullptr)
+		{
+			FbxVector4  scalePar = parent->LclScaling.Get();
+			FbxVector4  rotatePar = parent->LclRotation.Get();
+			FbxVector4  transPar = parent->LclTranslation.Get();
+			FbxMatrix matParent(transPar, rotatePar, scalePar);
+			FbxMatrix matWorld = matLocal * matParent;
+		}*/
+		m_ObjList[iObj]->m_matWorld = 
+			DxConvertMatrix(ConvertMatrix(matWorld));
+
 		ParseMesh(m_ObjList[iObj]);		
 	}
 	return true;

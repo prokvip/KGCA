@@ -52,6 +52,9 @@ public:
 
 	int GetSubMaterialIndex(int iPlygon,FbxLayerElementMaterial* pMtrl);
 public:
+	TMatrix     DxConvertMatrix(TMatrix m);
+	TMatrix     ConvertMatrix(FbxMatrix& m);
+public:
 	virtual bool	Init();
 	virtual bool	Frame();
 	virtual bool	Render();
