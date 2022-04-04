@@ -1,6 +1,12 @@
 #pragma once
 #include "TObject3D.h"
 #include <fbxsdk.h>
+
+struct TTrack
+{
+	UINT	iFrame;
+	TMatrix matTrack;
+};
 class TFbxObj : public TObject3D
 {
 public:
@@ -17,6 +23,8 @@ public:
 	std::vector<TSubVertex>      m_pSubVertexList;
 	std::vector<ID3D11Buffer*>   m_pVBList;
 	std::vector<TTexture*>		 m_pTextureList;
+
+	std::vector<TTrack>			m_AnimTrack;
 public:
 	virtual bool    SetVertexData() override;	
 	virtual bool	CreateVertexBuffer()override;
@@ -58,6 +66,8 @@ public:
 public:
 	TMatrix     DxConvertMatrix(TMatrix m);
 	TMatrix     ConvertMatrix(FbxMatrix& m);
+	TMatrix     ConvertAMatrix(FbxAMatrix& m);
+	void		ParseAnimation();
 public:
 	virtual bool	Init();
 	virtual bool	Frame();
