@@ -8,12 +8,20 @@ public:
 	FbxNode* m_pFbxNode = nullptr;
 	TFbxObj* m_pParentObj = nullptr;
 	std::wstring m_szTexFileName;
+	// submaterial
+	std::vector<std::wstring>  m_szTexFileList;
+	using TSubVertex = std::vector<TVertex>;
+	std::vector<TSubVertex>      m_pSubVertexList;
+	std::vector<ID3D11Buffer*>   m_pVBList;
+	std::vector<TTexture*>		 m_pTextureList;
 public:
-	bool    SetIndexData()
-	{
-			return true;
-	}
+	virtual bool    SetVertexData() override;	
+	virtual bool	CreateVertexBuffer()override;
+	virtual bool    SetIndexData() override;
+	virtual bool	PostRender() override;
+	virtual bool    Release() override;
 };
+
 class TFbxLoader 
 {
 public:
@@ -41,6 +49,8 @@ public:
 	FbxVector4 ReadNormal(const FbxMesh* mesh,
 		int controlPointIndex,
 		int vertexCounter);
+
+	int GetSubMaterialIndex(int iPlygon,FbxLayerElementMaterial* pMtrl);
 public:
 	virtual bool	Init();
 	virtual bool	Frame();

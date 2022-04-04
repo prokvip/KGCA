@@ -150,6 +150,8 @@
   <ItemGroup>
     <ClCompile Include="Sample.cpp" />
     <ClCompile Include="TFbxLoader.cpp" />
+    <ClCompile Include="TFbxObj.cpp" />
+    <ClCompile Include="TFbxVertexLoader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Box.hlsl">

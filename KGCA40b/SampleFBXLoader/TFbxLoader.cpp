@@ -1,186 +1,6 @@
 #define  _CRT_SECURE_NO_WARNINGS
 #include "TFbxLoader.h"
-FbxVector4 TFbxLoader::ReadNormal(const FbxMesh* mesh,
-	int controlPointIndex,
-	int vertexCounter)
-{
-	if (mesh->GetElementNormalCount() < 1) {}
 
-	const FbxGeometryElementNormal* vertexNormal = mesh->GetElementNormal(0);
-	// 노말 획득 
-	FbxVector4 result;
-	// 노말 벡터를 저장할 벡터 
-	switch (vertexNormal->GetMappingMode()) 	// 매핑 모드 
-	{
-		// 제어점 마다 1개의 매핑 좌표가 있다.
-	case FbxGeometryElement::eByControlPoint:
-	{
-		// control point mapping 
-		switch (vertexNormal->GetReferenceMode())
-		{
-		case FbxGeometryElement::eDirect:
-		{
-			result[0] = static_cast<float>(vertexNormal->GetDirectArray().GetAt(controlPointIndex).mData[0]);
-			result[1] = static_cast<float>(vertexNormal->GetDirectArray().GetAt(controlPointIndex).mData[1]);
-			result[2] = static_cast<float>(vertexNormal->GetDirectArray().GetAt(controlPointIndex).mData[2]);
-		} break;
-		case FbxGeometryElement::eIndexToDirect:
-		{
-			int index = vertexNormal->GetIndexArray().GetAt(controlPointIndex);
-			// 인덱스를 얻어온다. 
-			result[0] = static_cast<float>(vertexNormal->GetDirectArray().GetAt(index).mData[0]);
-			result[1] = static_cast<float>(vertexNormal->GetDirectArray().GetAt(index).mData[1]);
-			result[2] = static_cast<float>(vertexNormal->GetDirectArray().GetAt(index).mData[2]);
-		}break;
-		}break;
-	}break;
-	// 정점 마다 1개의 매핑 좌표가 있다.
-	case FbxGeometryElement::eByPolygonVertex:
-	{
-		switch (vertexNormal->GetReferenceMode())
-		{
-		case FbxGeometryElement::eDirect:
-		{
-			result[0] = static_cast<float>(vertexNormal->GetDirectArray().GetAt(vertexCounter).mData[0]);
-			result[1] = static_cast<float>(vertexNormal->GetDirectArray().GetAt(vertexCounter).mData[1]);
-			result[2] = static_cast<float>(vertexNormal->GetDirectArray().GetAt(vertexCounter).mData[2]);
-		}
-		break;
-		case FbxGeometryElement::eIndexToDirect:
-		{
-			int index = vertexNormal->GetIndexArray().GetAt(vertexCounter);
-			// 인덱스를 얻어온다. 
-			result[0] = static_cast<float>(vertexNormal->GetDirectArray().GetAt(index).mData[0]);
-			result[1] = static_cast<float>(vertexNormal->GetDirectArray().GetAt(index).mData[1]);
-			result[2] = static_cast<float>(vertexNormal->GetDirectArray().GetAt(index).mData[2]);
-		}break;
-		}
-	}break;
-	}
-	return result;
-}
-
-FbxColor TFbxLoader::ReadColor(const FbxMesh* mesh,
-	DWORD dwVertexColorCount,
-	FbxLayerElementVertexColor* pVertexColorSet,
-	DWORD dwDCCIndex, DWORD dwVertexIndex)
-{
-	FbxColor Value(1, 1, 1, 1);
-	if (dwVertexColorCount > 0 && pVertexColorSet != NULL)
-	{
-		// Crack apart the FBX dereferencing system for Color coordinates		
-		switch (pVertexColorSet->GetMappingMode())
-		{
-		case FbxLayerElement::eByControlPoint:
-			switch (pVertexColorSet->GetReferenceMode())
-			{
-			case FbxLayerElement::eDirect:
-			{
-				Value = pVertexColorSet->GetDirectArray().GetAt(dwDCCIndex);
-			}break;
-			case FbxLayerElement::eIndexToDirect:
-			{
-				int iColorIndex = pVertexColorSet->GetIndexArray().GetAt(dwDCCIndex);
-				Value = pVertexColorSet->GetDirectArray().GetAt(iColorIndex);
-			}break;
-			}
-		case FbxLayerElement::eByPolygonVertex:
-			switch (pVertexColorSet->GetReferenceMode())
-			{
-			case FbxLayerElement::eDirect:
-			{
-				int iColorIndex = dwVertexIndex;
-				Value = pVertexColorSet->GetDirectArray().GetAt(iColorIndex);
-			}break;
-			case FbxLayerElement::eIndexToDirect:
-			{
-				int iColorIndex = pVertexColorSet->GetIndexArray().GetAt(dwVertexIndex);
-				Value = pVertexColorSet->GetDirectArray().GetAt(iColorIndex);
-			}break;
-			}
-			break;
-		}
-	}
-	return Value;
-}
-
-std::string TFbxLoader::ParseMaterial(FbxSurfaceMaterial* pMtrl)
-{
-	std::string name = pMtrl->GetName();
-	auto Property = pMtrl->FindProperty(FbxSurfaceMaterial::sDiffuse);
-	if (Property.IsValid())
-	{
-		const FbxFileTexture* tex = Property.GetSrcObject<FbxFileTexture>(0);
-		if (tex != nullptr)
-		{
-			const CHAR* szFileName = tex->GetFileName();
-			CHAR Drive[MAX_PATH];
-			CHAR Dir[MAX_PATH];
-			CHAR FName[MAX_PATH];
-			CHAR Ext[MAX_PATH];
-			_splitpath(szFileName, Drive, Dir, FName, Ext);
-			std::string texName = FName;
-			std::string ext = Ext;
-			if (ext == ".tga" || ext == ".TGA")
-			{
-				ext.clear();
-				ext = ".dds";
-			}
-			texName += ext;
-			return texName;
-		}
-	}
-	return std::string("");
-}
-void TFbxLoader::ReadTextureCoord(FbxMesh* pFbxMesh, FbxLayerElementUV* pUVSet, 
-	int vertexIndex, int uvIndex, FbxVector2& uv) 
-{
-	FbxLayerElementUV* pFbxLayerElementUV = pUVSet;
-	if (pFbxLayerElementUV == nullptr) {
-		return;
-	}
-
-	switch (pFbxLayerElementUV->GetMappingMode())
-	{
-	case FbxLayerElementUV::eByControlPoint:
-	{
-		switch (pFbxLayerElementUV->GetReferenceMode())
-		{
-		case FbxLayerElementUV::eDirect:
-		{
-			FbxVector2 fbxUv = pFbxLayerElementUV->GetDirectArray().GetAt(vertexIndex);
-			uv.mData[0] = fbxUv.mData[0];
-			uv.mData[1] = fbxUv.mData[1];
-			break;
-		}
-		case FbxLayerElementUV::eIndexToDirect:
-		{
-			int id = pFbxLayerElementUV->GetIndexArray().GetAt(vertexIndex);
-			FbxVector2 fbxUv = pFbxLayerElementUV->GetDirectArray().GetAt(id);
-			uv.mData[0] = fbxUv.mData[0];
-			uv.mData[1] = fbxUv.mData[1];
-			break;
-		}
-		}
-		break;
-	}
-	case FbxLayerElementUV::eByPolygonVertex:
-	{
-		switch (pFbxLayerElementUV->GetReferenceMode())
-		{
-			// Always enters this part for the example model
-		case FbxLayerElementUV::eDirect:
-		case FbxLayerElementUV::eIndexToDirect:
-		{
-			uv.mData[0] = pFbxLayerElementUV->GetDirectArray().GetAt(uvIndex).mData[0];
-			uv.mData[1] = pFbxLayerElementUV->GetDirectArray().GetAt(uvIndex).mData[1];
-			break;
-		}
-		}
-		break;
-	}
-	}
-}
 void    TFbxLoader::PreProcess(FbxNode* node, FbxNode* parent)
 {
 	// camera, light, mesh, shape, animation
@@ -247,12 +67,16 @@ void	TFbxLoader::ParseMesh(TFbxObj* pObject)
 			{
 				VertexColorSet.push_back(pFbxLayer->GetVertexColors());
 			}
-			/*if (pFbxLayer->GetMaterials() != nullptr)
+			if (pFbxLayer->GetMaterials() != nullptr)
 			{
 				MaterialSet.push_back(pFbxLayer->GetMaterials());
-			}*/
+			}
 		}
 
+		//  1개의 오브젝트가 여러장의 텍스처를 사용한다.
+		//  각각의 텍스처를 이름을 얻고 저장한다.
+		//  어떤 페이스(폴리곤)가 어떤 텍스처를 사용하니?
+		//  같은 텍스처를 사용하는 폴리곤들 끼리 저장한다.
 		int iNumMtrl = pObject->m_pFbxNode->GetMaterialCount();
 		for (int iMtrl = 0; iMtrl < iNumMtrl; iMtrl++)
 		{
@@ -260,9 +84,24 @@ void	TFbxLoader::ParseMesh(TFbxObj* pObject)
 			if (pSurface)
 			{
 				std::string texturename = ParseMaterial(pSurface);
-				pObject->m_szTexFileName = L"../../data/fbx/";
-				pObject->m_szTexFileName += to_mw(texturename);
+				std::wstring szTexFileName = L"../../data/fbx/";
+				szTexFileName += to_mw(texturename);
+				pObject->m_szTexFileList.push_back(szTexFileName);
+				pObject->m_pTextureList.push_back(
+					I_Texture.Load(pObject->m_szTexFileList[iMtrl]));
 			}
+		}
+		if(pObject->m_szTexFileList.size() > 0)
+		{
+			pObject->m_szTexFileName = pObject->m_szTexFileList[0];
+		}
+		if (iNumMtrl > 0)
+		{
+			pObject->m_pSubVertexList.resize(iNumMtrl);
+		}
+		else
+		{
+			pObject->m_pSubVertexList.resize(1);
 		}
 
 		int iBasePolyIndex = 0;
@@ -274,6 +113,12 @@ void	TFbxLoader::ParseMesh(TFbxObj* pObject)
 		{
 			int iPolySize = pFbxMesh->GetPolygonSize(iPoly);
 			iNumFace = iPolySize - 2;
+
+			int iSubMtrl = 0;
+			if (iNumMtrl >= 1 && MaterialSet[0] != nullptr)
+			{
+				iSubMtrl = GetSubMaterialIndex(iPoly, MaterialSet[0]);
+			}
 			for (int iFace = 0; iFace < iNumFace; iFace++)
 			{
 				// 1  2
@@ -337,7 +182,8 @@ void	TFbxLoader::ParseMesh(TFbxObj* pObject)
 					tVertex.n.y = normal.mData[2]; // z
 					tVertex.n.z = normal.mData[1]; // y
 
-					pObject->m_VertexList.push_back(tVertex);//36
+					//pObject->m_VertexList.push_back(tVertex);//36
+					pObject->m_pSubVertexList[iSubMtrl].push_back(tVertex);
 				}
 			}
 

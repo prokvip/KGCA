@@ -17,8 +17,8 @@ bool	Sample::Init()
 	m_FbxObj.Init();
 	//m_FbxObj.Load("../../data/fbx/SM_Barrel.fbx");
 	//m_FbxObj.Load("../../data/fbx/SM_Rock.fbx");
-	//m_FbxObj.Load("../../data/fbx/MultiCameras.fbx");
-	m_FbxObj.Load("../../data/fbx/st00sc00.fbx");
+	m_FbxObj.Load("../../data/fbx/MultiCameras.fbx");
+	//m_FbxObj.Load("../../data/fbx/st00sc00.fbx");
 	//m_FbxObj.Load("../../data/fbx/SM_Tree_Var01.fbx");
 	
 
