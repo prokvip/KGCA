@@ -1,10 +1,10 @@
 #pragma once
 #include "TObject2D.h"
-#include "TObject3D.h"
+#include "TFbxImporter.h"
 using CollisionFunction = std::function<void(TBaseObject*, DWORD)>;
 using SelectFunction = std::function<void(TBaseObject*, DWORD)>;
 
-class TObjectMgr : public TBaseMgr<TObject3D, TObjectMgr>
+class TObjectMgr : public TBaseMgr<TFbxImporter, TObjectMgr>
 {
 	friend class TSingleton<TTextureMgr>;	
 private:

@@ -140,8 +140,10 @@ bool	Sample::Render()
 }
 bool	Sample::Release()
 {
-	m_FbxObj[0].Release();
-	m_FbxObj[1].Release();
+	for (int iObj = 0; iObj < m_FbxObj.size(); iObj++)
+	{
+		m_FbxObj[iObj].Release();
+	}
 	return true;
 }
 Sample::Sample()

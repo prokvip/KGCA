@@ -120,7 +120,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>../../include/dxtk;../../include/fmod;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../include/dxtk;../../include/fmod;../../fbx/include;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -160,6 +160,9 @@ copy "..\\..\\lib\\*.dll" "..\\..\\output\\debug"
     <ClCompile Include="TDevice.cpp" />
     <ClCompile Include="TDxObject.cpp" />
     <ClCompile Include="TDxState.cpp" />
+    <ClCompile Include="TFbxImporter.cpp" />
+    <ClCompile Include="TFbxModel.cpp" />
+    <ClCompile Include="TFbxVertexLoader.cpp" />
     <ClCompile Include="TFrustum.cpp" />
     <ClCompile Include="TInput.cpp" />
     <ClCompile Include="TMap.cpp" />
@@ -191,6 +194,7 @@ copy "..\\..\\lib\\*.dll" "..\\..\\output\\debug"
     <ClInclude Include="TDevice.h" />
     <ClInclude Include="TDxObject.h" />
     <ClInclude Include="TDxState.h" />
+    <ClInclude Include="TFbxImporter.h" />
     <ClInclude Include="TFrustum.h" />
     <ClInclude Include="TInput.h" />
     <ClInclude Include="TMap.h" />

@@ -28,6 +28,9 @@
     <Filter Include="map">
       <UniqueIdentifier>{7f1ee5b9-245e-46b3-9d67-da5e81df2be4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="fbx">
+      <UniqueIdentifier>{953718af-7cb0-44f8-8f9a-4b559af216a5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="TCore.cpp">
@@ -116,6 +119,15 @@
     </ClCompile>
     <ClCompile Include="TMap.cpp">
       <Filter>map</Filter>
+    </ClCompile>
+    <ClCompile Include="TFbxImporter.cpp">
+      <Filter>fbx</Filter>
+    </ClCompile>
+    <ClCompile Include="TFbxModel.cpp">
+      <Filter>fbx</Filter>
+    </ClCompile>
+    <ClCompile Include="TFbxVertexLoader.cpp">
+      <Filter>fbx</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -208,6 +220,9 @@
     </ClInclude>
     <ClInclude Include="TMap.h">
       <Filter>map</Filter>
+    </ClInclude>
+    <ClInclude Include="TFbxImporter.h">
+      <Filter>fbx</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
