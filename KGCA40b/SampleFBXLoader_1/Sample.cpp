@@ -17,9 +17,11 @@ bool	Sample::Init()
 	
 	std::vector<std::string> listname;
 	listname.push_back("../../data/fbx/MultiCameras.fbx");
-	listname.push_back("../../data/fbx/SM_Barrel.fbx");	
-	listname.push_back("../../data/fbx/st00sc00.fbx");
-	listname.push_back("../../data/fbx/SM_Tree_Var01.fbx");
+	listname.push_back("../../data/fbx/MultiCameras.fbx");
+	//listname.push_back("../../data/fbx/SM_Barrel.fbx");	
+	//listname.push_back("../../data/fbx/st00sc00.fbx");
+	//listname.push_back("../../data/fbx/SM_Tree_Var01.fbx");
+	listname.push_back("../../data/fbx/Turret_Deploy1/Turret_Deploy1.fbx");
 	listname.push_back("../../data/fbx/Turret_Deploy1/Turret_Deploy1.fbx");
 
 	m_FbxObj.resize(listname.size());
