@@ -8,12 +8,14 @@ public:
 public:
 	int		m_iIndex;
 	ID3D11Device* m_pd3dDevice;
+	ID3D11DeviceContext* m_pContext;
 	std::map<std::wstring, std::shared_ptr<T> >  m_list;
 public:
 	std::wstring Splitpath(std::wstring path, std::wstring entry);
-	virtual void	Set(ID3D11Device* pd3dDevice)
+	virtual void	Set(ID3D11Device* pd3dDevice, ID3D11DeviceContext* pContext=nullptr)
 	{
 		m_pd3dDevice = pd3dDevice;
+		m_pContext = pContext;
 	}
 	virtual T* Load(std::wstring filename);
 	T* GetPtr(std::wstring key);

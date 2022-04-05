@@ -323,5 +323,21 @@ bool	TFbxImporter::Release()
 
 bool	TFbxImporter::Load(ID3D11Device* pd3dDevice, std::wstring filename)
 {
-	return Load(to_wm(filename).c_str());
+	if (Load(to_wm(filename).c_str()))
+	{
+		CreateConstantBuffer(pd3dDevice);
+		TShader* pVShader = I_Shader.CreateVertexShader(pd3dDevice, L"Box.hlsl", "VS");
+		TShader* pPShader = I_Shader.CreatePixelShader(pd3dDevice, L"Box.hlsl", "PS");
+		for (int iObj = 0; iObj < m_DrawList.size(); iObj++)
+		{
+			m_DrawList[iObj]->Init();
+			m_DrawList[iObj]->m_pVShader = pVShader;
+			m_DrawList[iObj]->m_pPShader = pPShader;
+			if (!m_DrawList[iObj]->Create(pd3dDevice,	m_pContext))
+			{
+				return false;
+			}
+		}
+	}
+	return true;
 }

@@ -19,6 +19,7 @@ bool	Sample::Init()
 	listname.push_back(L"../../data/fbx/Turret_Deploy1/Turret_Deploy1.fbx");
 	listname.push_back(L"../../data/fbx/Turret_Deploy1/Turret_Deploy1.fbx");
 
+	I_ObjectMgr.Set(m_pd3dDevice.Get(), m_pImmediateContext.Get());
 	m_FbxObj.resize(listname.size());
 	for (int iObj = 0; iObj < m_FbxObj.size(); iObj++)
 	{
