@@ -130,6 +130,7 @@
     <PostBuildEvent>
       <Command>copy "*.h" "../../include/TCore3D"
 copy "..\\..\\output\\Debug\\TCoreLib.lib" "..\\..\\Lib\\TCoreLib_d.lib"
+copy "..\\..\\lib\\*.dll" "..\\..\\output\\debug"
 </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>

@@ -16,8 +16,8 @@ bool	Sample::Init()
 {		
 	
 	std::vector<std::string> listname;
-	listname.push_back("../../data/fbx/SM_Barrel.fbx");
 	listname.push_back("../../data/fbx/MultiCameras.fbx");
+	listname.push_back("../../data/fbx/SM_Barrel.fbx");	
 	listname.push_back("../../data/fbx/st00sc00.fbx");
 	listname.push_back("../../data/fbx/SM_Tree_Var01.fbx");
 	listname.push_back("../../data/fbx/Turret_Deploy1/Turret_Deploy1.fbx");
@@ -25,8 +25,8 @@ bool	Sample::Init()
 	m_FbxObj.resize(listname.size());
 	for (int iObj = 0; iObj < m_FbxObj.size(); iObj++)
 	{
-		TFbxLoader* pFbx = &m_FbxObj[iObj];
-		pFbx->m_vPosition.x = iObj * 100.0f;
+		TFbxLoader* pFbx = &m_FbxObj[iObj];		
+		pFbx->SetPosition(T::TVector3(iObj * 100.0f,0,0));
 		pFbx->m_fSpeed = (iObj+1)* 2.0f * 0.5f;
 		pFbx->Init();
 		pFbx->Load(listname[iObj]);
@@ -44,7 +44,6 @@ bool	Sample::Init()
 				I_Texture.Load(pFbx->m_DrawList[iObj]->m_szTexFileName);
 			pFbx->m_DrawList[iObj]->m_pVShader = pVShader;
 			pFbx->m_DrawList[iObj]->m_pPShader = pPShader;
-			//pFbx->m_DrawList[iObj]->SetPosition(T::TVector3(50.0f * iObj, 0, 0));
 			if (!pFbx->m_DrawList[iObj]->Create(
 				m_pd3dDevice.Get(),
 				m_pImmediateContext.Get()))
@@ -78,9 +77,15 @@ bool	Sample::Frame()
 		for (int iObj = 0; iObj < pFbx->m_TreeList.size(); iObj++)
 		{
 			TFbxObj* pObject = pFbx->m_TreeList[iObj];
-			pFbx->m_TreeList[iObj]->m_matAnim = pObject->m_AnimTrack[iFrame].matTrack;
-			pFbx->m_matBoneArray.matBoneWorld[iObj] =
-				pObject->m_AnimTrack[iFrame].matTrack;
+			if (pObject->m_AnimTrack.size() > 0)
+			{
+				pFbx->m_TreeList[iObj]->m_matAnim = pObject->m_AnimTrack[iFrame].matTrack;
+			}
+			if (pObject->m_AnimTrack.size() > 0)
+			{
+				pFbx->m_matBoneArray.matBoneWorld[iObj] =
+					pObject->m_AnimTrack[iFrame].matTrack;
+			}
 			T::D3DXMatrixTranspose(
 				&pFbx->m_matBoneArray.matBoneWorld[iObj],
 				&pFbx->m_matBoneArray.matBoneWorld[iObj]);
@@ -98,10 +103,6 @@ bool	Sample::Render()
 	for (int iObj = 0; iObj < m_FbxObj.size(); iObj++)
 	{
 		TFbxLoader* pFbx = &m_FbxObj[iObj];
-		T::D3DXMatrixTranslation(&pFbx->m_matWorld,
-			pFbx->m_vPosition.x,
-			pFbx->m_vPosition.y,
-			pFbx->m_vPosition.z);
 		m_pImmediateContext.Get()->VSSetConstantBuffers(
 			2, 1, &pFbx->m_pBoneCB);
 		

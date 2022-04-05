@@ -40,8 +40,6 @@ public:
 	float m_fDir = 1.0f;
 	float m_fTime = 0.0f;
 	float m_fSpeed = 1.0f;
-	T::TVector3   m_vPosition;
-	T::TMatrix    m_matWorld;
 	TBoneWorld	  m_matBoneArray;
 public:
 	FbxManager*		m_pFbxManager;

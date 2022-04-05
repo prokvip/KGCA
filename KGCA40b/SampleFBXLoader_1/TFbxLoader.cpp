@@ -38,6 +38,8 @@ void		TFbxLoader::ParseAnimation()
 {
 	FbxTime::SetGlobalTimeMode(FbxTime::eFrames30);
 	FbxAnimStack* stack = m_pFbxScene->GetSrcObject<FbxAnimStack>(0);
+	if (stack == nullptr) return;
+
 	FbxString TakeName = stack->GetName();
 	FbxTakeInfo* TakeInfo = m_pFbxScene->GetTakeInfo(TakeName);
 	FbxTimeSpan LocalTimeSpan = TakeInfo->mLocalTimeSpan;
@@ -102,8 +104,7 @@ bool	TFbxLoader::Load(std::string filename)
 	for (int iObj = 0; iObj < m_DrawList.size(); iObj++)
 	{
 		ParseMesh(m_DrawList[iObj]);		
-	}
-	//m_matBoneArray.resize(m_TreeList.size());	
+	}	
 	return true;
 }
 void	TFbxLoader::ParseMesh(TFbxObj* pObject)
