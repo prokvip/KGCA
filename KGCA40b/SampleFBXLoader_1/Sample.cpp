@@ -27,7 +27,6 @@ bool	Sample::Init()
 	{
 		TFbxLoader* pFbx = &m_FbxObj[iObj];		
 		pFbx->SetPosition(T::TVector3(iObj * 100.0f,0,0));
-		pFbx->m_fSpeed = (iObj+1)* 2.0f * 0.5f;
 		pFbx->Init();
 		pFbx->Load(listname[iObj]);
 		pFbx->CreateConstantBuffer(m_pd3dDevice.Get());
@@ -62,18 +61,18 @@ bool	Sample::Frame()
 {		
 	for (int iObj = 0; iObj < m_FbxObj.size(); iObj++)
 	{
-		TFbxLoader* pFbx = &m_FbxObj[iObj];		
-		pFbx->m_fTime += g_fSecPerFrame * 30 * pFbx->m_fDir * pFbx->m_fSpeed;
-		if (pFbx->m_fTime >= 50.0f)
+		TFbxLoader* pFbx = &m_FbxObj[iObj];			
+		pFbx->m_fTime += g_fSecPerFrame * pFbx->m_Scene.iFrameSpeed * pFbx->m_fDir * pFbx->m_fSpeed;
+		if (pFbx->m_fTime >= pFbx->m_Scene.iEnd)
 		{
 			pFbx->m_fDir *= -1.0f;
 		}
-		if (pFbx->m_fTime <= 0.0f)
+		if (pFbx->m_fTime <= pFbx->m_Scene.iStart)
 		{
 			pFbx->m_fDir *= -1.0f;
 		}
 		int iFrame = pFbx->m_fTime;
-		iFrame = max(0, min(50, iFrame));
+		iFrame = max(0, min(pFbx->m_Scene.iEnd, iFrame));
 		for (int iObj = 0; iObj < pFbx->m_TreeList.size(); iObj++)
 		{
 			TFbxObj* pObject = pFbx->m_TreeList[iObj];

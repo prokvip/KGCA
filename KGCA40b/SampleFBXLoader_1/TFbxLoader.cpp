@@ -50,7 +50,9 @@ void		TFbxLoader::ParseAnimation()
 	FbxTime::EMode TimeMode = FbxTime::GetGlobalTimeMode();
 	FbxLongLong s = start.GetFrameCount(TimeMode);
 	FbxLongLong n = end.GetFrameCount(TimeMode);
-
+	m_Scene.iStart = s;
+	m_Scene.iEnd = n;
+	m_Scene.iFrameSpeed = 30;
 	// 1√ ø° 30 frame 
 	// 1Frame = 160 Tick
 	// 50 Frame 

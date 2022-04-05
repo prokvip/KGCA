@@ -33,10 +33,16 @@ public:
 	virtual bool    Release() override;
 	
 };
-
+struct TScene
+{
+	UINT   iStart;
+	UINT   iEnd;
+	UINT   iFrameSpeed;
+};
 class TFbxLoader : public TObject3D
 {
 public:
+	TScene		m_Scene;
 	float m_fDir = 1.0f;
 	float m_fTime = 0.0f;
 	float m_fSpeed = 1.0f;
