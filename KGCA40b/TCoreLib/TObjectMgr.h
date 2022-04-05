@@ -1,9 +1,12 @@
 #pragma once
 #include "TObject2D.h"
+#include "TObject3D.h"
 using CollisionFunction = std::function<void(TBaseObject*, DWORD)>;
 using SelectFunction = std::function<void(TBaseObject*, DWORD)>;
-class TObjectMgr : public TSingleton< TObjectMgr>
+
+class TObjectMgr : public TBaseMgr<TObject3D, TObjectMgr>
 {
+	friend class TSingleton<TTextureMgr>;	
 private:
 	int			m_iExcueteCollisionID;
 	int			m_iExcueteSelectID;

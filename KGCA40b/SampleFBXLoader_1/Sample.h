@@ -3,7 +3,7 @@
 #include "TFbxLoader.h"
 class Sample : public TCore
 {
-	TFbxLoader		m_FbxObj;
+	std::vector<TFbxLoader>		m_FbxObj;
 public:
 	virtual void	CreateResizeDevice(UINT iWidth, UINT iHeight) override;
 	virtual void	DeleteResizeDevice(UINT iWidth, UINT iHeight) override;
