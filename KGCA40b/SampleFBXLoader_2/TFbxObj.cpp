@@ -52,6 +52,7 @@ bool	TFbxObj::Render()
 	for (int iObj = 0; iObj < m_DrawList.size(); iObj++)
 	{
 		TFbxModel* pFbxObj = m_DrawList[iObj];
+
 		T::TVector3 vLight(cosf(g_fGameTimer) * 100.0f,	100,sinf(g_fGameTimer) * 100.0f);
 		T::D3DXVec3Normalize(&vLight, &vLight);
 		vLight = vLight * -1.0f;
@@ -59,6 +60,8 @@ bool	TFbxObj::Render()
 		pFbxObj->m_LightConstantList.vLightDir.y = vLight.y;
 		pFbxObj->m_LightConstantList.vLightDir.z = vLight.z;
 		pFbxObj->m_LightConstantList.vLightDir.w = 1.0f;
+
+		pFbxObj->SetMatrix(&m_matWorld, &m_matView, &m_matProj);
 		pFbxObj->Render();
 	}
 	return true;

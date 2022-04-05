@@ -12,12 +12,12 @@ bool	Sample::Init()
 {			
 	std::vector<std::wstring> listname;
 	listname.push_back(L"../../data/fbx/MultiCameras.fbx");
-	//listname.push_back(L"../../data/fbx/MultiCameras.fbx");
+	listname.push_back(L"../../data/fbx/MultiCameras.fbx");
 	//listname.push_back(L"../../data/fbx/SM_Barrel.fbx");	
 	//listname.push_back(L"../../data/fbx/st00sc00.fbx");
 	//listname.push_back(L"../../data/fbx/SM_Tree_Var01.fbx");
-	//listname.push_back(L"../../data/fbx/Turret_Deploy1/Turret_Deploy1.fbx");
-	//listname.push_back(L"../../data/fbx/Turret_Deploy1/Turret_Deploy1.fbx");
+	listname.push_back(L"../../data/fbx/Turret_Deploy1/Turret_Deploy1.fbx");
+	listname.push_back(L"../../data/fbx/Turret_Deploy1/Turret_Deploy1.fbx");
 
 	m_FbxObj.resize(listname.size());
 	for (int iObj = 0; iObj < m_FbxObj.size(); iObj++)

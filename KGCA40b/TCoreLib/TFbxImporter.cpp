@@ -312,9 +312,12 @@ bool	TFbxImporter::Release()
 	{
 		m_DrawList[iObj]->Release();
 	}
-	m_pFbxScene->Destroy();
-	m_pFbxImporter->Destroy();	
-	m_pFbxManager->Destroy();
+	if(m_pFbxScene)m_pFbxScene->Destroy();
+	if (m_pFbxImporter)m_pFbxImporter->Destroy();
+	if (m_pFbxManager)m_pFbxManager->Destroy();
+	m_pFbxScene = nullptr;
+	m_pFbxImporter = nullptr;
+	m_pFbxManager = nullptr;
 	return true;
 }
 
