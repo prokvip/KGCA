@@ -169,7 +169,7 @@ void TFbxLoader::ReadTextureCoord(FbxMesh* pFbxMesh, FbxLayerElementUV* pUVSet,
 		switch (pFbxLayerElementUV->GetReferenceMode())
 		{
 			// Always enters this part for the example model
-		case FbxLayerElementUV::eDirect:
+		case FbxLayerElementUV::eDirect: // fbx 5.0 이하일 때
 		case FbxLayerElementUV::eIndexToDirect:
 		{
 			uv.mData[0] = pFbxLayerElementUV->GetDirectArray().GetAt(uvIndex).mData[0];
@@ -185,7 +185,12 @@ void TFbxLoader::ReadTextureCoord(FbxMesh* pFbxMesh, FbxLayerElementUV* pUVSet,
 int TFbxLoader::GetSubMaterialIndex(int iPoly,
 	FbxLayerElementMaterial* pMaterialSetList)
 {
-	// sub mtrl
+	// 매핑방식
+	//eNone,
+	//eByControlPoint,  // 제어점
+	//eByPolygonVertex, //  
+	//eByPolygon, // 폴리곤마다 다를수 있다.
+	//eAllSame - 전체표면에 1개의 매핑좌표가 있다.
 	int iSubMtrl = 0;
 	if (pMaterialSetList != nullptr)
 	{
@@ -193,6 +198,7 @@ int TFbxLoader::GetSubMaterialIndex(int iPoly,
 		{
 		case FbxLayerElement::eByPolygon:
 		{
+			// 매핑 정보가 배열에 저장되는 방식
 			switch (pMaterialSetList->GetReferenceMode())
 			{
 			case FbxLayerElement::eIndex:

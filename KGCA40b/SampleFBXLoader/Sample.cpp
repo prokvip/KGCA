@@ -62,8 +62,7 @@ bool	Sample::Frame()
 		fDir *= -1.0f;
 	}
 	int iFrame = fTime;
-	iFrame = min(50, iFrame);
-	iFrame = max(0, iFrame);
+	iFrame = max(0, min(50, iFrame));
 	for (int iObj = 0; iObj < m_FbxObj.m_TreeList.size(); iObj++)
 	{
 		TFbxObj* pObject = m_FbxObj.m_TreeList[iObj];

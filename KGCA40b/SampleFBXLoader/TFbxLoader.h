@@ -12,7 +12,6 @@ class TFbxObj : public TObject3D
 public:
 	TMatrix  m_matLocal;
 	TMatrix  m_matAnim;
-	int		 m_iIndex=-1;
 	FbxNode* m_pFbxParent = nullptr;
 	FbxNode* m_pFbxNode = nullptr;
 	TFbxObj* m_pParentObj = nullptr;
