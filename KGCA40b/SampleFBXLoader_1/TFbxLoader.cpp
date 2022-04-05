@@ -76,6 +76,7 @@ void    TFbxLoader::PreProcess(FbxNode* node, TFbxObj* fbxParent)
 		fbx->m_pFbxNode = node;
 		fbx->m_csName = to_mw(node->GetName());
 		fbx->m_pParentObj = fbxParent;
+		fbx->m_iIndex = m_TreeList.size();
 		m_TreeList.push_back(fbx);
 	}
 	// camera, light, mesh, shape, animation
@@ -102,6 +103,7 @@ bool	TFbxLoader::Load(std::string filename)
 	{
 		ParseMesh(m_DrawList[iObj]);		
 	}
+	//m_matBoneArray.resize(m_TreeList.size());	
 	return true;
 }
 void	TFbxLoader::ParseMesh(TFbxObj* pObject)
@@ -240,7 +242,7 @@ void	TFbxLoader::ParseMesh(TFbxObj* pObject)
 				tVertex.c.x = color.mRed;
 				tVertex.c.y = color.mGreen;
 				tVertex.c.z = color.mBlue;
-				tVertex.c.w = 1;
+				tVertex.c.w = pObject->m_iIndex;
 
 
 				FbxVector4 normal = ReadNormal(pFbxMesh,
@@ -260,6 +262,28 @@ void	TFbxLoader::ParseMesh(TFbxObj* pObject)
 	}
 	
 }
+bool	TFbxLoader::CreateConstantBuffer(ID3D11Device* pDevice)
+{
+	HRESULT hr;
+	//gpu메모리에 버퍼 할당(원하는 할당 크기)
+	D3D11_BUFFER_DESC bd;
+	ZeroMemory(&bd, sizeof(D3D11_BUFFER_DESC));
+	bd.ByteWidth = sizeof(TBoneWorld);
+	bd.Usage = D3D11_USAGE_DEFAULT;
+	bd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+
+	//D3D11_SUBRESOURCE_DATA sd;
+	//ZeroMemory(&sd, sizeof(D3D11_SUBRESOURCE_DATA));
+	//sd.pSysMem = &m_matBoneArray;
+
+	if (FAILED(hr = pDevice->CreateBuffer(&bd, NULL,
+		&m_pBoneCB)))
+	{
+		return false;
+	}
+	return true;
+}
+
 bool	TFbxLoader::Init()
 {
 	m_pFbxManager = FbxManager::Create();
@@ -277,6 +301,8 @@ bool	TFbxLoader::Render()
 }
 bool	TFbxLoader::Release()
 {
+	if(m_pBoneCB)m_pBoneCB->Release();
+	m_pBoneCB = nullptr;
 	for (int iObj = 0; iObj < m_DrawList.size(); iObj++)
 	{
 		m_DrawList[iObj]->Release();

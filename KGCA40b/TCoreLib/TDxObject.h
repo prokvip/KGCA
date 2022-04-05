@@ -115,6 +115,10 @@ struct TConstantData
 	T::TVector4 Color;
 	T::TVector4 Timer;
 };
+struct TBoneWorld
+{
+	T::TMatrix  matBoneWorld[255];
+};
 struct TLightData
 {
 	T::TVector4   vLightDir;

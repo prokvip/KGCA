@@ -9,7 +9,8 @@ struct TTrack
 };
 class TFbxObj : public TObject3D
 {
-public:
+public:	
+	int		 m_iIndex = -1;
 	TMatrix  m_matLocal;
 	TMatrix  m_matAnim;
 	FbxNode* m_pFbxParent = nullptr;
@@ -30,6 +31,7 @@ public:
 	virtual bool    SetIndexData() override;
 	virtual bool	PostRender() override;
 	virtual bool    Release() override;
+	
 };
 
 class TFbxLoader 
@@ -41,6 +43,8 @@ public:
 	FbxNode*		m_pRootNode;
 	std::vector<TFbxObj*>  m_DrawList;
 	std::vector<TFbxObj*>  m_TreeList;
+	TBoneWorld			   m_matBoneArray;
+	ID3D11Buffer* m_pBoneCB = nullptr;
 public:
 	virtual bool	Load(std::string filename);
 	virtual void    PreProcess(FbxNode* node, TFbxObj* fbxParent=nullptr);
@@ -72,5 +76,6 @@ public:
 	virtual bool	Frame();
 	virtual bool	Render();
 	virtual bool	Release();
+	virtual bool	CreateConstantBuffer(ID3D11Device* pDevice);
 };
 

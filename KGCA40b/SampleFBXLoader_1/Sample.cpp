@@ -21,7 +21,7 @@ bool	Sample::Init()
 	//m_FbxObj.Load("../../data/fbx/st00sc00.fbx");
 	//m_FbxObj.Load("../../data/fbx/SM_Tree_Var01.fbx");
 	m_FbxObj.Load("../../data/fbx/Turret_Deploy1/Turret_Deploy1.fbx");
-
+	m_FbxObj.CreateConstantBuffer(m_pd3dDevice.Get());
 
 	TTexture* pTex = I_Texture.Load(L"../../data/ui/main_start_nor.png");
 	TShader* pVShader = I_Shader.CreateVertexShader(
@@ -67,37 +67,52 @@ bool	Sample::Frame()
 	{
 		TFbxObj* pObject = m_FbxObj.m_TreeList[iObj];
 		m_FbxObj.m_TreeList[iObj]->m_matAnim = pObject->m_AnimTrack[iFrame].matTrack;
+		m_FbxObj.m_matBoneArray.matBoneWorld[iObj] =
+			pObject->m_AnimTrack[iFrame].matTrack;
+		T::D3DXMatrixTranspose(
+			&m_FbxObj.m_matBoneArray.matBoneWorld[iObj],
+			&m_FbxObj.m_matBoneArray.matBoneWorld[iObj]);
 	}
+
+	m_pImmediateContext.Get()->UpdateSubresource(
+		m_FbxObj.m_pBoneCB, 0, NULL, 
+		&m_FbxObj.m_matBoneArray, 0, 0);
 	return true;
 }
 bool	Sample::Render()
 {	
+	m_pImmediateContext.Get()->VSSetConstantBuffers(
+		2, 1, &m_FbxObj.m_pBoneCB);
 	for (int iObj = 0; iObj < m_FbxObj.m_DrawList.size(); iObj++)
 	{
+		TFbxObj* pFbxObj = m_FbxObj.m_DrawList[iObj];
 		T::TVector3 vLight(cosf(g_fGameTimer) * 100.0f,
 			100,
 			sinf(g_fGameTimer) * 100.0f);
 
 		T::D3DXVec3Normalize(&vLight, &vLight);
 		vLight = vLight * -1.0f;
-		m_FbxObj.m_DrawList[iObj]->m_LightConstantList.vLightDir.x = vLight.x;
-		m_FbxObj.m_DrawList[iObj]->m_LightConstantList.vLightDir.y = vLight.y;
-		m_FbxObj.m_DrawList[iObj]->m_LightConstantList.vLightDir.z = vLight.z;
-		m_FbxObj.m_DrawList[iObj]->m_LightConstantList.vLightDir.w = 1.0f;
-		//m_FbxObj.m_DrawList[iObj]->m_bAlphaBlend = false;
+		pFbxObj->m_LightConstantList.vLightDir.x = vLight.x;
+		pFbxObj->m_LightConstantList.vLightDir.y = vLight.y;
+		pFbxObj->m_LightConstantList.vLightDir.z = vLight.z;
+		pFbxObj->m_LightConstantList.vLightDir.w = 1.0f;
+		//pFbxObj->m_bAlphaBlend = false;
 		/*m_pImmediateContext->OMSetDepthStencilState(
 			TDxState::g_pDSSDepthEnableWriteDisable, 0x00);*/
 
-		/*m_FbxObj.m_DrawList[iObj]->SetMatrix(
-			&m_FbxObj.m_DrawList[iObj]->m_matWorld,
+		/*pFbxObj->SetMatrix(
+			&pFbxObj->m_matWorld,
 			&m_pMainCamera->m_matView, 
 			&m_pMainCamera->m_matProj);*/
 
-		m_FbxObj.m_DrawList[iObj]->SetMatrix(
-			&m_FbxObj.m_DrawList[iObj]->m_matAnim,
+		//T::D3DXMatrixIdentity(&pFbxObj->m_matWorld);
+		T::D3DXMatrixRotationY(&pFbxObj->m_matWorld, g_fGameTimer);
+		pFbxObj->SetMatrix(
+			NULL,
+			//&m_FbxObj.m_matBoneArray[pFbxObj->m_iIndex],
 			&m_pMainCamera->m_matView,
 			&m_pMainCamera->m_matProj);
-		m_FbxObj.m_DrawList[iObj]->Render();
+		pFbxObj->Render();
 	}
 	std::wstring msg = L"FPS:";
 	msg += std::to_wstring(m_GameTimer.m_iFPS);

@@ -29,11 +29,18 @@ cbuffer cb1 : register(b1)
 	float4   vLightDir : packoffset(c0);
 	float4   vLightPos : packoffset(c1);
 };
+cbuffer cb2 : register(b2)
+{
+	float4x4 g_matBoneWorld[255]; //65535 / 4
+}
 VS_OUTPUT VS( VS_INPUT v)
 {
 	VS_OUTPUT pOut = (VS_OUTPUT)0;
+	uint  iIndex = v.c.w;
 	float4 vLocal = float4(v.p.xyz, 1.0f);// float4(v.p.x, v.p.y, v.p.z, 1.0f);
-	float4 vWorld = mul(vLocal, g_matWorld);
+	float4 vWorld = mul(vLocal, g_matBoneWorld[iIndex]);
+	vWorld = mul(vWorld, g_matWorld);
+
 	float4 vView = mul(vWorld, g_matView);
 	float4 vProj = mul(vView, g_matProj);
 	pOut.p = vProj;
@@ -41,7 +48,10 @@ VS_OUTPUT VS( VS_INPUT v)
 	pOut.n = normalize(vNormal);
 	pOut.t = v.t;
 	float fDot = max(0.5f, dot(pOut.n, -vLightDir.xyz));
-	pOut.c = v.c*float4(fDot, fDot, fDot, 1);// *Color0;
+
+	
+	float4 vColor = float4(v.c.xyz,1.0f);	
+	pOut.c = vColor *float4(fDot, fDot, fDot,1);// *Color0;
 
 	pOut.r = normalize(vLocal.xyz);
 	return pOut;
