@@ -13,10 +13,6 @@ public:
 	std::vector<TFbxModel*>		 m_DrawList;	
 	ID3D11Buffer*				 m_pBoneCB = nullptr;
 public:
-	//virtual bool    SetVertexData() override;	
-	//virtual bool	CreateVertexBuffer()override;
-	//virtual bool    SetIndexData() override;
-	//virtual bool	PostRender() override;		
 	virtual bool	Init()override;
 	virtual bool	Frame()override;
 	virtual bool	Render()override;
