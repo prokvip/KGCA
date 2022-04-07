@@ -88,7 +88,7 @@ void    TFbxImporter::PreProcess(FbxNode* node, TFbxModel* fbxParent)
 	FbxMesh* pMesh = node->GetMesh();	
 	if (pMesh)
 	{
-		m_DrawList.push_back(fbx);
+		m_DrawList.push_back(fbx);		
 	}
 	int iNumChild = node->GetChildCount();
 	for (int iNode = 0; iNode < iNumChild; iNode++)
@@ -108,7 +108,8 @@ bool	TFbxImporter::Load(std::string filename)
 		for (int iObj = 0; iObj < m_DrawList.size(); iObj++)
 		{
 			ParseMesh(m_DrawList[iObj]);		
-		}	
+		}
+		
 	Release();
 	return true;
 }
@@ -142,9 +143,11 @@ bool	TFbxImporter::ParseMeshSkinning(
 
 			TMatrix matInvBindPos = DxConvertMatrix(ConvertMatrix(matBindPose));
 			matInvBindPos = matInvBindPos.Invert();
+			int iMapIndex = m_pFbxNodeMap.find(pCluster->GetLink())->second;
 			std::string name = pCluster->GetLink()->GetName();
-			m_dxMatrixBindPoseMap.insert(make_pair(name, matInvBindPos));
-			
+			m_dxMatrixBindPoseMap.insert(make_pair(iMapIndex, matInvBindPos));
+			pObject->m_dxMatrixBindPoseMap.insert(make_pair(iMapIndex, matInvBindPos));
+
 			int  dwClusterSize = pCluster->GetControlPointIndicesCount();
 			auto data = m_pFbxNodeMap.find(pCluster->GetLink());			
 			int  iBoneIndex = data->second;			

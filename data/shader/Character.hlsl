@@ -41,13 +41,22 @@ VS_OUTPUT VS(VS_INPUT v)
 	VS_OUTPUT pOut = (VS_OUTPUT)0;
 	uint  iIndex = v.c.w;
 	float4 vLocal = float4(v.p.xyz, 1.0f);// float4(v.p.x, v.p.y, v.p.z, 1.0f);
-	float4 vWorld = mul(vLocal, g_matBoneWorld[iIndex]);
+	//float4 vWorld = mul(vLocal, g_matBoneWorld[iIndex]);
+	float4 vWorld=0;
+	float3 vNormal=0;
+	for (int iBone = 0; iBone < 4; iBone++)
+	{
+		uint iBoneIndex = v.i[iBone];
+		vWorld += mul(vLocal, g_matBoneWorld[iBoneIndex]) * v.w[iBone];
+		vNormal+= mul(v.n, (float3x3)g_matBoneWorld[iBoneIndex]) * v.w[iBone];
+	}
+	
 	vWorld = mul(vWorld, g_matWorld);
+	vNormal = mul(vNormal, (float3x3)g_matWorld);
 
 	float4 vView = mul(vWorld, g_matView);
 	float4 vProj = mul(vView, g_matProj);
-	pOut.p = vProj;
-	float3 vNormal = mul(v.n, (float3x3)g_matWorld);
+	pOut.p = vProj;	
 	pOut.n = normalize(vNormal);
 	pOut.t = v.t;
 	float fDot = max(0.5f, dot(pOut.n, -vLightDir.xyz));
