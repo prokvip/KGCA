@@ -13,6 +13,11 @@ struct TVertexIW
 {
 	float  i[4];
 	float  w[4];
+	TVertexIW()
+	{
+		i[0] = i[1] = i[2] = i[3] = 0;
+		w[0] = w[1] = w[2] = w[3] = 0.0f;
+	}
 };
 // 멀티스트림  (VB[0], VB[1])
 // 인풋레이아웃 ( PNCTIW ) -> 정점쉐이더 전달
