@@ -4,7 +4,7 @@
 class TFbx :public TObject3D
 {
 public:
-	TFbxImporter* m_pImporter;
+	TFbxImporter* m_pImporter=nullptr;
 	float m_fDir = 1.0f;
 	float m_fTime = 0.0f;
 	float m_fSpeed = 1.0f;

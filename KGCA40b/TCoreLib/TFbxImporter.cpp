@@ -145,7 +145,7 @@ bool	TFbxImporter::ParseMeshSkinning(
 			matInvBindPos = matInvBindPos.Invert();
 			int iMapIndex = m_pFbxNodeMap.find(pCluster->GetLink())->second;
 			std::string name = pCluster->GetLink()->GetName();
-			m_dxMatrixBindPoseMap.insert(make_pair(iMapIndex, matInvBindPos));
+			//m_dxMatrixBindPoseMap.insert(make_pair(iMapIndex, matInvBindPos));
 			pObject->m_dxMatrixBindPoseMap.insert(make_pair(iMapIndex, matInvBindPos));
 
 			int  dwClusterSize = pCluster->GetControlPointIndicesCount();
