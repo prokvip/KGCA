@@ -82,6 +82,7 @@ void    TFbxImporter::PreProcess(FbxNode* node, TFbxModel* fbxParent)
 		fbx->m_pParentObj = fbxParent;
 		fbx->m_iIndex = m_TreeList.size();
 		m_TreeList.push_back(fbx);
+		m_pFbxNodeMap.insert(std::make_pair(node, m_pFbxNodeMap.size()));
 	}
 	// camera, light, mesh, shape, animation
 	FbxMesh* pMesh = node->GetMesh();	
@@ -111,9 +112,63 @@ bool	TFbxImporter::Load(std::string filename)
 	Release();
 	return true;
 }
+bool	TFbxImporter::ParseMeshSkinning(
+					FbxMesh* pFbxMesh, 
+					TFbxModel* pObject)
+{
+	int iDeformerCount = pFbxMesh->GetDeformerCount(FbxDeformer::eSkin);
+	if (iDeformerCount == 0)
+	{
+		return false;
+	}
+	// 정점의 개수와 동일한다.
+	int iVertexCount = pFbxMesh->GetControlPointsCount();
+	pObject->m_WeightList.resize(iVertexCount);
+
+	for (int dwDeformerIndex = 0; dwDeformerIndex < iDeformerCount; dwDeformerIndex++)
+	{
+		auto pSkin = reinterpret_cast<FbxSkin*>(pFbxMesh->GetDeformer(dwDeformerIndex, FbxDeformer::eSkin));
+		DWORD dwClusterCount = pSkin->GetClusterCount();
+		// dwClusterCount의 행렬이 전체 정점에 영향을 주었다.
+		for (int dwClusterIndex = 0; dwClusterIndex < dwClusterCount; dwClusterIndex++)
+		{
+			auto pCluster = pSkin->GetCluster(dwClusterIndex);
+			////
+			FbxAMatrix matXBindPose;
+			FbxAMatrix matReferenceGlobalInitPosition;
+			pCluster->GetTransformLinkMatrix(matXBindPose);
+			pCluster->GetTransformMatrix(matReferenceGlobalInitPosition);
+			FbxMatrix matBindPose = matReferenceGlobalInitPosition.Inverse() * matXBindPose;
+
+			TMatrix matInvBindPos = DxConvertMatrix(ConvertMatrix(matBindPose));
+			matInvBindPos = matInvBindPos.Invert();
+			std::string name = pCluster->GetLink()->GetName();
+			m_dxMatrixBindPoseMap.insert(make_pair(name, matInvBindPos));
+			
+			int  dwClusterSize = pCluster->GetControlPointIndicesCount();
+			auto data = m_pFbxNodeMap.find(pCluster->GetLink());			
+			int  iBoneIndex = data->second;			
+			// 영향을 받는 정점들의 인덱스
+			int* pIndices = pCluster->GetControlPointIndices();
+			double* pWeights = pCluster->GetControlPointWeights();
+			// iBoneIndex의 영향을 받는 정점들이 dwClusterSize개 있다.
+			for (int i = 0; i < dwClusterSize; i++)
+			{
+				// n번 정점(pIndices[i])은 iBoneIndex의 행렬에 
+				// pWeights[i]의 가중치로 적용되었다.
+				int iVertexIndex = pIndices[i];
+				float fWeight = pWeights[i];
+				pObject->m_WeightList[iVertexIndex].InsertWeight(iBoneIndex, fWeight);
+			}
+		}
+	}
+	return true;
+}
 void	TFbxImporter::ParseMesh(TFbxModel* pObject)
 {
 	FbxMesh* pFbxMesh = pObject->m_pFbxNode->GetMesh();
+
+	pObject->m_bSkinned = ParseMeshSkinning(pFbxMesh, pObject);
 	// 기하행렬(초기 정점 위치를 변환할 때 사용)
 	FbxAMatrix geom;
 	FbxVector4 trans = pObject->m_pFbxNode->GetGeometricTranslation(FbxNode::eSourcePivot);
@@ -174,10 +229,12 @@ void	TFbxImporter::ParseMesh(TFbxModel* pObject)
 	if (iNumMtrl > 0)
 	{
 		pObject->m_pSubVertexList.resize(iNumMtrl);
+		pObject->m_pSubIWVertexList.resize(iNumMtrl);
 	}
 	else
 	{
 		pObject->m_pSubVertexList.resize(1);
+		pObject->m_pSubIWVertexList.resize(1);
 	}
 
 	int iBasePolyIndex = 0;
@@ -258,8 +315,27 @@ void	TFbxImporter::ParseMesh(TFbxModel* pObject)
 				tVertex.n.y = normal.mData[2]; // z
 				tVertex.n.z = normal.mData[1]; // y
 
+
+				// 가중치
+				TVertexIW iwVertex;
+				if (pObject->m_bSkinned)
+				{
+					TWeight* weight = &pObject->m_WeightList[CornerIndex[iIndex]];
+					for (int i = 0; i < 4; i++)
+					{
+						iwVertex.i[i] = weight->Index[i];
+						iwVertex.w[i] = weight->Weight[i];
+					}
+				}
+				else
+				{
+					// 일반오브젝트 에니메이션을 스키닝 케릭터 화 작업.
+					iwVertex.i[0] = pObject->m_iIndex;
+					iwVertex.w[0] = 1.0f;
+				}
 				//pObject->m_VertexList.push_back(tVertex);//36
 				pObject->m_pSubVertexList[iSubMtrl].push_back(tVertex);
+				pObject->m_pSubIWVertexList[iSubMtrl].push_back(iwVertex);
 			}
 		}
 
@@ -326,8 +402,8 @@ bool	TFbxImporter::Load(ID3D11Device* pd3dDevice, std::wstring filename)
 	if (Load(to_wm(filename).c_str()))
 	{
 		CreateConstantBuffer(pd3dDevice);
-		TShader* pVShader = I_Shader.CreateVertexShader(pd3dDevice, L"Box.hlsl", "VS");
-		TShader* pPShader = I_Shader.CreatePixelShader(pd3dDevice, L"Box.hlsl", "PS");
+		TShader* pVShader = I_Shader.CreateVertexShader(pd3dDevice, L"../../data/shader/Character.hlsl", "VS");
+		TShader* pPShader = I_Shader.CreatePixelShader(pd3dDevice, L"../../data/shader/Character.hlsl", "PS");
 		for (int iObj = 0; iObj < m_DrawList.size(); iObj++)
 		{
 			m_DrawList[iObj]->Init();

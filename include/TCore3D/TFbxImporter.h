@@ -2,15 +2,58 @@
 #include "TObject3D.h"
 #include <fbxsdk.h>
 
+struct PNCT
+{
+	T::TVector3 p;
+	T::TVector3 n;
+	T::TVector4 c;
+	T::TVector2 t;
+};
+struct TVertexIW
+{
+	float  i[4];
+	float  w[4];
+};
+// 멀티스트림  (VB[0], VB[1])
+// 인풋레이아웃 ( PNCTIW ) -> 정점쉐이더 전달
+
 struct TTrack
 {
 	UINT	iFrame;
 	TMatrix matTrack;
 };
+struct TWeight
+{
+	std::vector<int>	Index;  // 영향을 미치는 행렬의 인덱스
+	std::vector<float>  Weight; // 가중치
+	void InsertWeight(int iBoneIndex, float fBoneWeight)
+	{
+		for (DWORD i = 0; i < Index.size(); ++i)
+		{
+			if (fBoneWeight > Weight[i])
+			{
+				for (DWORD j = (Index.size() - 1); j > i; --j)
+				{
+					Index[j] = Index[j - 1];
+					Weight[j] = Weight[j - 1];
+				}
+				Index[i] = iBoneIndex;
+				Weight[i] = fBoneWeight;
+				break;
+			}
+		}
+	}
+	TWeight()
+	{
+		Index.resize(8);
+		Weight.resize(8);
+	}
+};
 class TFbxModel : public TObject3D
 {
 public:	
 	int		 m_iIndex = -1;
+	bool	 m_bSkinned = false;
 	TMatrix  m_matLocal;
 	TMatrix  m_matAnim;
 	FbxNode* m_pFbxParent = nullptr;
@@ -20,8 +63,13 @@ public:
 	// submaterial
 	std::vector<std::wstring>  m_szTexFileList;
 	using TSubVertex = std::vector<TVertex>;
+	using TSubVertexIW = std::vector<TVertexIW>;
 	std::vector<TSubVertex>      m_pSubVertexList;
+	std::vector<TSubVertexIW>    m_pSubIWVertexList;
+	std::vector<TWeight>		 m_WeightList;
+
 	std::vector<ID3D11Buffer*>   m_pVBList;
+	std::vector<ID3D11Buffer*>   m_pVBWeightList;
 	std::vector<TTexture*>		 m_pTextureList;
 
 	std::vector<TTrack>			m_AnimTrack;
@@ -29,6 +77,7 @@ public:
 	virtual bool    SetVertexData() override;	
 	virtual bool	CreateVertexBuffer()override;
 	virtual bool    SetIndexData() override;
+	virtual bool	CreateInputLayout() override;
 	virtual bool	PostRender() override;
 	virtual bool    Release() override;
 	
@@ -52,6 +101,10 @@ public:
 	FbxImporter*	m_pFbxImporter;
 	FbxScene*		m_pFbxScene;
 	FbxNode*		m_pRootNode;
+
+	std::map<std::string, TMatrix> m_dxMatrixBindPoseMap;
+	std::map<FbxNode*, int> m_pFbxNodeMap;
+
 	std::vector<TFbxModel*>  m_DrawList;
 	std::vector<TFbxModel*>  m_TreeList;
 	ID3D11Buffer* m_pBoneCB = nullptr;
@@ -77,6 +130,7 @@ public:
 		int vertexCounter);
 
 	int GetSubMaterialIndex(int iPlygon,FbxLayerElementMaterial* pMtrl);
+	bool	ParseMeshSkinning(FbxMesh* pFbxMesh, TFbxModel* pObject);
 public:
 	TMatrix     DxConvertMatrix(TMatrix m);
 	TMatrix     ConvertMatrix(FbxMatrix& m);

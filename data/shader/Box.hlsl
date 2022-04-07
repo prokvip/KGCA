@@ -29,18 +29,11 @@ cbuffer cb1 : register(b1)
 	float4   vLightDir : packoffset(c0);
 	float4   vLightPos : packoffset(c1);
 };
-cbuffer cb2 : register(b2)
-{
-	float4x4 g_matBoneWorld[255]; //65535 / 4
-}
 VS_OUTPUT VS( VS_INPUT v)
 {
 	VS_OUTPUT pOut = (VS_OUTPUT)0;
-	uint  iIndex = v.c.w;
 	float4 vLocal = float4(v.p.xyz, 1.0f);// float4(v.p.x, v.p.y, v.p.z, 1.0f);
-	float4 vWorld = mul(vLocal, g_matBoneWorld[iIndex]);
-	vWorld = mul(vWorld, g_matWorld);
-
+	float4 vWorld = mul(vLocal, g_matWorld);
 	float4 vView = mul(vWorld, g_matView);
 	float4 vProj = mul(vView, g_matProj);
 	pOut.p = vProj;
@@ -48,10 +41,7 @@ VS_OUTPUT VS( VS_INPUT v)
 	pOut.n = normalize(vNormal);
 	pOut.t = v.t;
 	float fDot = max(0.5f, dot(pOut.n, -vLightDir.xyz));
-
-	
-	float4 vColor = float4(v.c.xyz,1.0f);	
-	pOut.c = vColor *float4(fDot, fDot, fDot,1);// *Color0;
+	pOut.c = v.c * float4(fDot, fDot, fDot,1)* Color0;
 
 	pOut.r = normalize(vLocal.xyz);
 	return pOut;
@@ -81,14 +71,7 @@ float4 PS(VS_OUTPUT input) : SV_TARGET
 	float4 final = color;
 	// 소스알파(1) = 마스크이미지의 검정색부분은 불투명된다.
 	// 소스알파(0) = 마스크이미지의 흰색부분은   투명된다.
-	final = final *input.c;// *Color0;
-	// 알파테스팅 (완전 투명과 완전 불투명 일 때 사용)
-	// 장점 : 순서를 구분하기 어려운 오브젝트 랜더링시 
-	//        정렬된 상태와 유사하게  랜더링된다.
-	if (final.a < 0.5f) 
-	{
-		discard;
-	}
+	final = final * Color0;
 	//final.a = 1.0f;	
 
 	//final = g_txCubeMap.Sample(g_Sample, input.r);

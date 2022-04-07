@@ -229,14 +229,6 @@
     <None Include="ClassDiagram.cd" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Box.hlsl">
-      <Filter>shader</Filter>
-    </FxCompile>
-    <FxCompile Include="map.hlsl">
-      <Filter>shader</Filter>
-    </FxCompile>
-    <FxCompile Include="sky.hlsl">
-      <Filter>shader</Filter>
-    </FxCompile>
+    <FxCompile Include="..\..\data\shader\Character.hlsl" />
   </ItemGroup>
 </Project>
