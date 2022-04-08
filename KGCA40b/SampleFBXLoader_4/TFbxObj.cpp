@@ -98,11 +98,11 @@ bool	TFbx::Render()
 		{
 			for (int inode = 0; inode < m_pMeshImp->m_TreeList.size(); inode++)
 			{		
-				TFbxModel* pFbxtree = m_pMeshImp->m_TreeList[inode];
-				if (pFbxtree->m_AnimTrack.size() > 0)
+				TFbxModel* pFbxModel = m_pMeshImp->m_TreeList[inode];
+				if (pFbxModel->m_AnimTrack.size() > 0)
 				{					
 					m_matBoneArray.matBoneWorld[inode] =
-							pFbxtree->m_AnimTrack[iFrame].matTrack;
+						pFbxModel->m_AnimTrack[iFrame].matTrack;
 					
 				}
 				T::D3DXMatrixTranspose(&m_matBoneArray.matBoneWorld[inode],
