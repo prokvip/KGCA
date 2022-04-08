@@ -69,22 +69,15 @@ bool	TFbx::Render()
 		
 		if (pFbxObj->m_bSkinned)
 		{
-			int iTree = 0;
 			for (int inode = 0; inode < m_pImporter->m_TreeList.size(); inode++)
 			{
 				std::wstring name = m_pImporter->m_TreeList[inode]->m_csName;
 				TFbxModel* pFbxtree = m_pImporter->m_TreeList[inode];
 				TFbxModel* pAnimTrack = nullptr;
-				for (int iObj = 0; iObj < pAnimImp->m_TreeList.size(); iObj++)
+				auto model = pAnimImp->m_pFbxModelMap.find(name);
+				if (model != pAnimImp->m_pFbxModelMap.end())
 				{
-					if (name == pAnimImp->m_TreeList[iObj]->m_csName)
-					{
-						pAnimTrack = pAnimImp->m_TreeList[iObj];
-						break;
-					}
-				}
-				if (pAnimTrack!=nullptr)
-				{
+					pAnimTrack = model->second;
 					auto binepose = pFbxObj->m_dxMatrixBindPoseMap.find(name);
 					if (binepose != pFbxObj->m_dxMatrixBindPoseMap.end()&& pAnimTrack)
 					{
@@ -95,8 +88,7 @@ bool	TFbx::Render()
 					}
 				}
 				T::D3DXMatrixTranspose(&m_matBoneArray.matBoneWorld[inode],
-					&m_matBoneArray.matBoneWorld[inode]);
-				iTree++;
+										&m_matBoneArray.matBoneWorld[inode]);				
 			}
 		}
 		else

@@ -110,6 +110,7 @@ public:
 
 	std::map<std::wstring, TMatrix> m_dxMatrixBindPoseMap;
 	std::map<FbxNode*, int> m_pFbxNodeMap;
+	std::map<std::wstring, TFbxModel*> m_pFbxModelMap;
 
 	std::vector<TFbxModel*>  m_DrawList;
 	std::vector<TFbxModel*>  m_TreeList;

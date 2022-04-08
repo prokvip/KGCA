@@ -83,6 +83,7 @@ void    TFbxImporter::PreProcess(FbxNode* node, TFbxModel* fbxParent)
 		fbx->m_iIndex = m_TreeList.size();
 		m_TreeList.push_back(fbx);
 		m_pFbxNodeMap.insert(std::make_pair(node, fbx->m_iIndex));
+		m_pFbxModelMap.insert(std::make_pair(fbx->m_csName, fbx));
 	}
 	// camera, light, mesh, shape, animation
 	FbxMesh* pMesh = node->GetMesh();	
