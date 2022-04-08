@@ -38,16 +38,16 @@ bool	Sample::Init()
 		pFbx->m_fTime = 0;
 		pFbx->m_pd3dDevice = m_pd3dDevice.Get();
 		pFbx->m_pContext = m_pImmediateContext.Get();
-		pFbx->m_pImporter = I_ObjectMgr.Load(listname[iObj]);
-		pFbx->m_DrawList.resize(pFbx->m_pImporter->m_DrawList.size());
+		pFbx->m_pMeshImp = I_ObjectMgr.Load(listname[iObj]);
+		pFbx->m_DrawList.resize(pFbx->m_pMeshImp->m_DrawList.size());
 		pFbx->SetPosition(T::TVector3(iObj * 100.0f, 0, 0));
-		for (int iDraw = 0; iDraw < pFbx->m_pImporter->m_DrawList.size(); iDraw++)
+		for (int iDraw = 0; iDraw < pFbx->m_pMeshImp->m_DrawList.size(); iDraw++)
 		{
-			pFbx->m_pImporter->m_DrawList[iDraw]->m_pContext = m_pImmediateContext.Get();
+			pFbx->m_pMeshImp->m_DrawList[iDraw]->m_pContext = m_pImmediateContext.Get();
 		}
 	}
 
-	m_FbxObj[0].m_pAnimImporter = m_FbxObj[1].m_pImporter;
+	m_FbxObj[0].m_pAnimImporter = m_FbxObj[1].m_pMeshImp;
 	m_pMainCamera->CreateViewMatrix(T::TVector3(0, 25.0f, -50.0f),T::TVector3(0, 0.0f, 0));
 	return true;
 }

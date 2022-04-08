@@ -77,7 +77,7 @@ public:
 	std::vector<ID3D11Buffer*>   m_pVBWeightList;
 	std::vector<TTexture*>		 m_pTextureList;
 
-	std::vector<TTrack>			m_AnimTrack;
+	std::vector<TTrack>					m_AnimTrack;
 	std::map<std::wstring, TMatrix>		m_dxMatrixBindPoseMap;
 public:
 	virtual bool    SetVertexData() override;	
@@ -108,9 +108,8 @@ public:
 	FbxScene*		m_pFbxScene;
 	FbxNode*		m_pRootNode;
 
-	std::map<std::wstring, TMatrix> m_dxMatrixBindPoseMap;
-	std::map<FbxNode*, int> m_pFbxNodeMap;
-	std::map<std::wstring, TFbxModel*> m_pFbxModelMap;
+	std::map<FbxNode*, int>				m_pFbxNodeMap;
+	std::map<std::wstring, TFbxModel*>	m_pFbxModelMap;
 
 	std::vector<TFbxModel*>  m_DrawList;
 	std::vector<TFbxModel*>  m_TreeList;

@@ -6,20 +6,20 @@ bool	TFbx::Init()
 }
 bool	TFbx::Frame()
 {
-	/*m_fTime += g_fSecPerFrame * m_pImporter->m_Scene.iFrameSpeed * m_fDir * m_fSpeed;
-	if (m_fTime >= m_pImporter->m_Scene.iEnd)
+	/*m_fTime += g_fSecPerFrame * m_pMeshImp->m_Scene.iFrameSpeed * m_fDir * m_fSpeed;
+	if (m_fTime >= m_pMeshImp->m_Scene.iEnd)
 	{
 		m_fDir *= -1.0f;
 	}
-	if (m_fTime <= m_pImporter->m_Scene.iStart)
+	if (m_fTime <= m_pMeshImp->m_Scene.iStart)
 	{
 		m_fDir *= -1.0f;
 	}
 	int iFrame = m_fTime;
-	iFrame = max(0, min(m_pImporter->m_Scene.iEnd, iFrame));*/
-	/*for (int iObj = 0; iObj < m_pImporter->m_TreeList.size(); iObj++)
+	iFrame = max(0, min(m_pMeshImp->m_Scene.iEnd, iFrame));*/
+	/*for (int iObj = 0; iObj < m_pMeshImp->m_TreeList.size(); iObj++)
 	{
-		TFbxModel* pObject = m_pImporter->m_TreeList[iObj];
+		TFbxModel* pObject = m_pMeshImp->m_TreeList[iObj];
 		if (pObject->m_AnimTrack.size() > 0)
 		{
 			auto binepose = pObject->m_matBindPoseMap.find(pObject->m_iIndex);
@@ -49,7 +49,7 @@ bool	TFbx::Render()
 	}
 	else
 	{
-		pAnimImp = m_pImporter;
+		pAnimImp = m_pMeshImp;
 	}
 	m_fTime += g_fSecPerFrame * pAnimImp->m_Scene.iFrameSpeed * m_fDir * m_fSpeed;
 	if (m_fTime >= pAnimImp->m_Scene.iEnd)
@@ -63,39 +63,42 @@ bool	TFbx::Render()
 	int iFrame = m_fTime;
 	iFrame = max(0, min(pAnimImp->m_Scene.iEnd-1, iFrame));
 
-	for (int iObj = 0; iObj < m_pImporter->m_DrawList.size(); iObj++)
+	for (int iObj = 0; iObj < m_pMeshImp->m_DrawList.size(); iObj++)
 	{
-		TFbxModel* pFbxObj = m_pImporter->m_DrawList[iObj];
-		
+		TFbxModel* pFbxObj = m_pMeshImp->m_DrawList[iObj];		
 		if (pFbxObj->m_bSkinned)
-		{
-			for (int inode = 0; inode < m_pImporter->m_TreeList.size(); inode++)
+		{			
+			for( auto data : pAnimImp->m_pFbxModelMap)
 			{
-				std::wstring name = m_pImporter->m_TreeList[inode]->m_csName;
-				TFbxModel* pFbxtree = m_pImporter->m_TreeList[inode];
-				TFbxModel* pAnimTrack = nullptr;
-				auto model = pAnimImp->m_pFbxModelMap.find(name);
-				if (model != pAnimImp->m_pFbxModelMap.end())
+				std::wstring name = data.first;
+				TFbxModel* pAnimModel = data.second;
+				auto model = m_pMeshImp->m_pFbxModelMap.find(name);
+				if (model == m_pMeshImp->m_pFbxModelMap.end())
 				{
-					pAnimTrack = model->second;
-					auto binepose = pFbxObj->m_dxMatrixBindPoseMap.find(name);
-					if (binepose != pFbxObj->m_dxMatrixBindPoseMap.end()&& pAnimTrack)
-					{
-						TMatrix matInverseBindpose = binepose->second;
-						m_matBoneArray.matBoneWorld[inode] =
-							matInverseBindpose *
-							pAnimTrack->m_AnimTrack[iFrame].matTrack;
-					}
+					continue; // error
 				}
-				T::D3DXMatrixTranspose(&m_matBoneArray.matBoneWorld[inode],
-										&m_matBoneArray.matBoneWorld[inode]);				
+				TFbxModel* pTreeModel = model->second;
+				if (pTreeModel == nullptr)
+				{
+					continue; // error
+				}
+				auto binepose = pFbxObj->m_dxMatrixBindPoseMap.find(name);
+				if (binepose != pFbxObj->m_dxMatrixBindPoseMap.end()&& pAnimModel)
+				{
+					TMatrix matInverseBindpose = binepose->second;
+					m_matBoneArray.matBoneWorld[pTreeModel->m_iIndex] =
+						matInverseBindpose *
+						pAnimModel->m_AnimTrack[iFrame].matTrack;
+				}
+				T::D3DXMatrixTranspose( &m_matBoneArray.matBoneWorld[pTreeModel->m_iIndex],
+										&m_matBoneArray.matBoneWorld[pTreeModel->m_iIndex]);
 			}
 		}
 		else
 		{
-			for (int inode = 0; inode < m_pImporter->m_TreeList.size(); inode++)
+			for (int inode = 0; inode < m_pMeshImp->m_TreeList.size(); inode++)
 			{		
-				TFbxModel* pFbxtree = m_pImporter->m_TreeList[inode];
+				TFbxModel* pFbxtree = m_pMeshImp->m_TreeList[inode];
 				if (pFbxtree->m_AnimTrack.size() > 0)
 				{					
 					m_matBoneArray.matBoneWorld[inode] =
@@ -107,8 +110,8 @@ bool	TFbx::Render()
 			}
 		}
 
-		m_pContext->UpdateSubresource(m_pImporter->m_pBoneCB, 0, NULL, &m_matBoneArray, 0, 0);
-		m_pContext->VSSetConstantBuffers(2, 1, &m_pImporter->m_pBoneCB);
+		m_pContext->UpdateSubresource(m_pMeshImp->m_pBoneCB, 0, NULL, &m_matBoneArray, 0, 0);
+		m_pContext->VSSetConstantBuffers(2, 1, &m_pMeshImp->m_pBoneCB);
 
 		T::TVector3 vLight(cosf(g_fGameTimer) * 100.0f,	100,sinf(g_fGameTimer) * 100.0f);
 		T::D3DXVec3Normalize(&vLight, &vLight);
