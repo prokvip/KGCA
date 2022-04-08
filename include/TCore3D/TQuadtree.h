@@ -68,7 +68,9 @@ public:
 	TQuadtree() {};
 	virtual ~TQuadtree()
 	{
+#ifdef _DEBUG
 		m_BoxDebug.Release();
+#endif
 		delete m_pRootNode;
 	}
 };

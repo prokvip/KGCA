@@ -83,6 +83,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
+    <OutDir>../../output/Release/TCoreLib</OutDir>
+    <IntDir>../../output/Release/TCoreLib</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -142,6 +144,7 @@ copy "..\\..\\lib\\*.dll" "..\\..\\output\\debug"
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>../../include/dxtk;../../include/fmod;../../fbx/include;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -150,6 +153,12 @@ copy "..\\..\\lib\\*.dll" "..\\..\\output\\debug"
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <Lib />
+    <PostBuildEvent>
+      <Command>copy "*.h" "../../include/TCore3D"
+copy "..\\..\\output\\Debug\\TCoreLib.lib" "..\\..\\Lib\\TCoreLib_r.lib"
+copy "..\\..\\lib\\*.dll" "..\\..\\output\\release"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="TBaseMgr.cpp" />
@@ -224,6 +233,7 @@ copy "..\\..\\lib\\*.dll" "..\\..\\output\\debug"
   <ItemGroup>
     <FxCompile Include="..\..\data\shader\Character.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </FxCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -669,6 +669,7 @@ int  TQuadtree::SetLodIndexBuffer(TNode* pNode,
 	}
 	return iNumFaces;
 }
+#ifdef _DEBUG
 void TQuadtree::DrawDebugInit(ID3D11Device* pd3dDevice,
 	ID3D11DeviceContext* pContext)
 {
@@ -683,6 +684,7 @@ void TQuadtree::DrawDebugInit(ID3D11Device* pd3dDevice,
 		return;
 	}
 }
+
 void TQuadtree::DrawDebugRender(TBox*  pBox)
 {
 	pBox->vList[0] = T::TVector3(pBox->vMin.x,
@@ -717,6 +719,7 @@ void TQuadtree::DrawDebugRender(TBox*  pBox)
 	// 2     3
 	int index = 0;
 	// +z
+
 	m_BoxDebug.m_VertexList[index].p = pBox->vList[5];
 	m_BoxDebug.m_VertexList[index].n = T::TVector3(0.0f, 0.0f, 1.0f);
 	m_BoxDebug.m_VertexList[index].c = T::TVector4(0.0f, 0.0f, 1.0f, 1.0f);
@@ -847,3 +850,4 @@ void TQuadtree::DrawDebugRender(TBox*  pBox)
 		m_BoxDebug.m_pVertexBuffer, 0, NULL, &m_BoxDebug.m_VertexList.at(0), 0, 0);
 	m_BoxDebug.PostRender();
 }
+#endif
