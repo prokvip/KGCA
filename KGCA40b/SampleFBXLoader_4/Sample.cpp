@@ -28,14 +28,14 @@ bool	Sample::Init()
 	//listname.push_back(L"../../data/fbx/st00sc00.fbx");
 	//listname.push_back(L"../../data/fbx/SM_Tree_Var01.fbx");
 	//listname.push_back(L"../../data/fbx/Turret_Deploy1/Turret_Deploy1.fbx");
-	listname.push_back(L"../../data/fbx/Turret_Deploy1/Turret_Deploy1.fbx");
+	//listname.push_back(L"../../data/fbx/Turret_Deploy1/Turret_Deploy1.fbx");
 
 	I_ObjectMgr.Set(m_pd3dDevice.Get(), m_pImmediateContext.Get());
 	m_FbxObj.resize(listname.size());
 	for (int iObj = 0; iObj < m_FbxObj.size(); iObj++)
 	{
 		TFbx* pFbx = &m_FbxObj[iObj];
-		pFbx->m_fTime = 0;
+		pFbx->Init();
 		pFbx->m_pd3dDevice = m_pd3dDevice.Get();
 		pFbx->m_pContext = m_pImmediateContext.Get();
 		pFbx->m_pMeshImp = I_ObjectMgr.Load(listname[iObj]);

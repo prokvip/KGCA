@@ -66,9 +66,12 @@ void		TFbxImporter::ParseAnimation()
 			FbxAMatrix matGlobal =	m_TreeList[iObj]->m_pFbxNode->EvaluateGlobalTransform(time);			
 			tTrack.iFrame = t;
 			tTrack.matTrack = DxConvertMatrix(ConvertAMatrix(matGlobal));
+			// 행렬분해
+			// 행렬을 분해(SRT)
+			T::D3DXMatrixDecompose(&tTrack.s, &tTrack.r, &tTrack.t,	&tTrack.matTrack);
 			m_TreeList[iObj]->m_AnimTrack.push_back(tTrack);		
 		}
-	}
+	}	
 }
 void    TFbxImporter::PreProcess(FbxNode* node, TFbxModel* fbxParent)
 {

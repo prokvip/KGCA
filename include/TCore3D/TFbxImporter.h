@@ -26,6 +26,10 @@ struct TTrack
 {
 	UINT	iFrame;
 	TMatrix matTrack;
+	// SRT
+	T::TVector3	   s;
+	T::TQuaternion r;
+	T::TVector3    t;
 };
 struct TWeight
 {
@@ -79,6 +83,7 @@ public:
 
 	std::vector<TTrack>					m_AnimTrack;
 	std::map<std::wstring, TMatrix>		m_dxMatrixBindPoseMap;
+	TMatrix aaa[255];
 public:
 	virtual bool    SetVertexData() override;	
 	virtual bool	CreateVertexBuffer()override;

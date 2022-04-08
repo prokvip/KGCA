@@ -93,7 +93,7 @@ float4 PS(VS_OUTPUT input) : SV_TARGET
 	float4 final = color;
 	// 소스알파(1) = 마스크이미지의 검정색부분은 불투명된다.
 	// 소스알파(0) = 마스크이미지의 흰색부분은   투명된다.
-	final = color * input.c;// *Color0;
+	final = color + input.c;// *Color0;
 	// 알파테스팅 (완전 투명과 완전 불투명 일 때 사용)
 	// 장점 : 순서를 구분하기 어려운 오브젝트 랜더링시 
 	//        정렬된 상태와 유사하게  랜더링된다.

@@ -2,6 +2,7 @@
 #include "TFbxObj.h"
 bool	TFbx::Init()
 {	
+	m_fTime = 61;
 	return true;
 }
 bool	TFbx::Frame()
@@ -40,6 +41,37 @@ bool	TFbx::Frame()
 	}	*/
 	return true;
 }
+T::TMatrix TFbx::Interplate(TFbxImporter* pAnimImp, TFbxModel* pModel, float fTime)
+{
+	T::TMatrix matAnim;
+	TScene tScene = pAnimImp->m_Scene;
+	int iStart = max(tScene.iStart, fTime);
+	int iEnd = min(tScene.iEnd, fTime + 1);
+	// º¸°£ = A ~ 7.5f ~ B
+	//       9.5f <=10   ~     20 -> 20.1
+	TTrack A = pModel->m_AnimTrack[iStart];
+	TTrack B = pModel->m_AnimTrack[iEnd];
+	float s = fTime- (float)iStart; // 0~1
+	T::TVector3 pos;
+	T::D3DXVec3Lerp(&pos, &A.t, &B.t, s);
+	T::TVector3 scale;
+	T::D3DXVec3Lerp(&scale, &A.s, &B.s, s);
+	T::TQuaternion rotation;
+	T::D3DXQuaternionSlerp(&rotation, &A.r, &B.r, s);
+	T::TMatrix matScale;
+	T::D3DXMatrixScaling(&matScale, scale.x, scale.y, scale.z);
+	T::TMatrix matRotation;
+	T::D3DXMatrixRotationQuaternion(&matRotation, &rotation);
+	
+	matAnim = matScale * matRotation;
+	matAnim._41 = pos.x;
+	matAnim._42 = pos.y;
+	matAnim._43 = pos.z;
+	//T::TMatrix matTrans;
+	//T::D3DXMatrixTranslation(&matTrans, pos.x, pos.y, pos.z);
+	//matAnim = pModel->m_AnimTrack[(int)fTime].matTrack;
+	return matAnim;
+}
 bool	TFbx::Render()
 {		
 	TFbxImporter* pAnimImp = nullptr;
@@ -51,15 +83,13 @@ bool	TFbx::Render()
 	{
 		pAnimImp = m_pMeshImp;
 	}
-	m_fTime += g_fSecPerFrame * pAnimImp->m_Scene.iFrameSpeed * m_fDir * m_fSpeed;
+	m_fTime += g_fSecPerFrame * pAnimImp->m_Scene.iFrameSpeed * m_fDir * 0.33f;// m_fSpeed;
 	if (m_fTime >= pAnimImp->m_Scene.iEnd)
 	{
-		m_fDir *= -1.0f;
+		//m_fDir *= -1.0f;
+		m_fTime = pAnimImp->m_Scene.iStart;
 	}
-	if (m_fTime <= pAnimImp->m_Scene.iStart)
-	{
-		m_fDir *= -1.0f;
-	}
+
 	int iFrame = m_fTime;
 	iFrame = max(0, min(pAnimImp->m_Scene.iEnd-1, iFrame));
 
@@ -87,8 +117,9 @@ bool	TFbx::Render()
 				{
 					TMatrix matInverseBindpose = binepose->second;
 					m_matBoneArray.matBoneWorld[pTreeModel->m_iIndex] =
-						matInverseBindpose *
-						pAnimModel->m_AnimTrack[iFrame].matTrack;
+						matInverseBindpose *				
+						Interplate(pAnimImp, pAnimModel, m_fTime);
+						//pAnimModel->m_AnimTrack[iFrame].matTrack;
 				}
 				T::D3DXMatrixTranspose( &m_matBoneArray.matBoneWorld[pTreeModel->m_iIndex],
 										&m_matBoneArray.matBoneWorld[pTreeModel->m_iIndex]);
@@ -102,7 +133,8 @@ bool	TFbx::Render()
 				if (pFbxModel->m_AnimTrack.size() > 0)
 				{					
 					m_matBoneArray.matBoneWorld[inode] =
-						pFbxModel->m_AnimTrack[iFrame].matTrack;
+						Interplate(pAnimImp, pFbxModel, m_fTime);
+						//pFbxModel->m_AnimTrack[iFrame].matTrack;
 					
 				}
 				T::D3DXMatrixTranspose(&m_matBoneArray.matBoneWorld[inode],
