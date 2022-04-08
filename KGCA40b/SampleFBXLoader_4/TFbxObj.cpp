@@ -42,17 +42,26 @@ bool	TFbx::Frame()
 }
 bool	TFbx::Render()
 {		
-	m_fTime += g_fSecPerFrame * m_pImporter->m_Scene.iFrameSpeed * m_fDir * m_fSpeed;
-	if (m_fTime >= m_pImporter->m_Scene.iEnd)
+	TFbxImporter* pAnimImp = nullptr;
+	if (m_pAnimImporter!=nullptr)
+	{
+		pAnimImp = m_pAnimImporter;
+	}
+	else
+	{
+		pAnimImp = m_pImporter;
+	}
+	m_fTime += g_fSecPerFrame * pAnimImp->m_Scene.iFrameSpeed * m_fDir * m_fSpeed;
+	if (m_fTime >= pAnimImp->m_Scene.iEnd)
 	{
 		m_fDir *= -1.0f;
 	}
-	if (m_fTime <= m_pImporter->m_Scene.iStart)
+	if (m_fTime <= pAnimImp->m_Scene.iStart)
 	{
 		m_fDir *= -1.0f;
 	}
 	int iFrame = m_fTime;
-	iFrame = max(0, min(m_pImporter->m_Scene.iEnd, iFrame)); 
+	iFrame = max(0, min(pAnimImp->m_Scene.iEnd-1, iFrame));
 
 	for (int iObj = 0; iObj < m_pImporter->m_DrawList.size(); iObj++)
 	{
@@ -61,28 +70,32 @@ bool	TFbx::Render()
 		if (pFbxObj->m_bSkinned)
 		{
 			int iTree = 0;
-			for (auto& bone : pFbxObj->m_dxMatrixBindPoseMap)
+			for (int inode = 0; inode < m_pImporter->m_TreeList.size(); inode++)
 			{
-				int iBoneIndex = bone.first;
-				TFbxModel* pFbxtree = m_pImporter->m_TreeList[iBoneIndex];
-				if (pFbxtree->m_AnimTrack.size() > 0)
+				std::wstring name = m_pImporter->m_TreeList[inode]->m_csName;
+				TFbxModel* pFbxtree = m_pImporter->m_TreeList[inode];
+				TFbxModel* pAnimTrack = nullptr;
+				for (int iObj = 0; iObj < pAnimImp->m_TreeList.size(); iObj++)
 				{
-					auto binepose = pFbxObj->m_dxMatrixBindPoseMap.find(pFbxtree->m_iIndex);
-					if (binepose != pFbxObj->m_dxMatrixBindPoseMap.end())
+					if (name == pAnimImp->m_TreeList[iObj]->m_csName)
 					{
-						TMatrix matInverseBindpose = binepose->second;
-						m_matBoneArray.matBoneWorld[iBoneIndex] =
-							matInverseBindpose *
-							pFbxtree->m_AnimTrack[iFrame].matTrack;
-					}
-					else
-					{
-						m_matBoneArray.matBoneWorld[iBoneIndex] =
-							pFbxtree->m_AnimTrack[iFrame].matTrack;
+						pAnimTrack = pAnimImp->m_TreeList[iObj];
+						break;
 					}
 				}
-				T::D3DXMatrixTranspose(&m_matBoneArray.matBoneWorld[iBoneIndex],
-					&m_matBoneArray.matBoneWorld[iBoneIndex]);
+				if (pAnimTrack!=nullptr)
+				{
+					auto binepose = pFbxObj->m_dxMatrixBindPoseMap.find(name);
+					if (binepose != pFbxObj->m_dxMatrixBindPoseMap.end()&& pAnimTrack)
+					{
+						TMatrix matInverseBindpose = binepose->second;
+						m_matBoneArray.matBoneWorld[inode] =
+							matInverseBindpose *
+							pAnimTrack->m_AnimTrack[iFrame].matTrack;
+					}
+				}
+				T::D3DXMatrixTranspose(&m_matBoneArray.matBoneWorld[inode],
+					&m_matBoneArray.matBoneWorld[inode]);
 				iTree++;
 			}
 		}

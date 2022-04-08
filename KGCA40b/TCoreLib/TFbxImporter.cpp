@@ -82,7 +82,7 @@ void    TFbxImporter::PreProcess(FbxNode* node, TFbxModel* fbxParent)
 		fbx->m_pParentObj = fbxParent;
 		fbx->m_iIndex = m_TreeList.size();
 		m_TreeList.push_back(fbx);
-		m_pFbxNodeMap.insert(std::make_pair(node, m_pFbxNodeMap.size()));
+		m_pFbxNodeMap.insert(std::make_pair(node, fbx->m_iIndex));
 	}
 	// camera, light, mesh, shape, animation
 	FbxMesh* pMesh = node->GetMesh();	
@@ -143,14 +143,11 @@ bool	TFbxImporter::ParseMeshSkinning(
 
 			TMatrix matInvBindPos = DxConvertMatrix(ConvertMatrix(matBindPose));
 			matInvBindPos = matInvBindPos.Invert();
-			int iMapIndex = m_pFbxNodeMap.find(pCluster->GetLink())->second;
-			std::string name = pCluster->GetLink()->GetName();
-			//m_dxMatrixBindPoseMap.insert(make_pair(iMapIndex, matInvBindPos));
-			pObject->m_dxMatrixBindPoseMap.insert(make_pair(iMapIndex, matInvBindPos));
+			int  iBoneIndex = m_pFbxNodeMap.find(pCluster->GetLink())->second;
+			std::wstring name = m_TreeList[iBoneIndex]->m_csName;
+			pObject->m_dxMatrixBindPoseMap.insert(make_pair(name, matInvBindPos));
 
-			int  dwClusterSize = pCluster->GetControlPointIndicesCount();
-			auto data = m_pFbxNodeMap.find(pCluster->GetLink());			
-			int  iBoneIndex = data->second;			
+			int  dwClusterSize = pCluster->GetControlPointIndicesCount();			
 			// 영향을 받는 정점들의 인덱스
 			int* pIndices = pCluster->GetControlPointIndices();
 			double* pWeights = pCluster->GetControlPointWeights();

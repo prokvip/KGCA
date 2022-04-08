@@ -78,7 +78,7 @@ public:
 	std::vector<TTexture*>		 m_pTextureList;
 
 	std::vector<TTrack>			m_AnimTrack;
-	std::map<int, TMatrix>		m_dxMatrixBindPoseMap;
+	std::map<std::wstring, TMatrix>		m_dxMatrixBindPoseMap;
 public:
 	virtual bool    SetVertexData() override;	
 	virtual bool	CreateVertexBuffer()override;
@@ -108,7 +108,7 @@ public:
 	FbxScene*		m_pFbxScene;
 	FbxNode*		m_pRootNode;
 
-	std::map<int, TMatrix> m_dxMatrixBindPoseMap;
+	std::map<std::wstring, TMatrix> m_dxMatrixBindPoseMap;
 	std::map<FbxNode*, int> m_pFbxNodeMap;
 
 	std::vector<TFbxModel*>  m_DrawList;
