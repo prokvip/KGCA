@@ -191,6 +191,17 @@ void	TFbxImporter::ParseMesh(TFbxModel* pObject)
 	std::vector<FbxLayerElementVertexColor*> VertexColorSet;
 	std::vector<FbxLayerElementMaterial*> MaterialSet;
 	int iLayerCount = pFbxMesh->GetLayerCount();
+
+	if (iLayerCount == 0 || pFbxMesh->GetLayer(0)->GetNormals() == nullptr)
+	{
+		pFbxMesh->InitNormals();
+#if (FBXSDK_VERSION_MAJOR >= 2015)
+		pFbxMesh->GenerateNormals();
+#else
+		pFbxMesh->ComputeVertexNormals();
+#endif
+	}
+
 	for (int iLayer = 0; iLayer < iLayerCount; iLayer++)
 	{
 		FbxLayer* pFbxLayer = pFbxMesh->GetLayer(iLayer);

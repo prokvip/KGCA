@@ -124,7 +124,7 @@ float4 PS(VS_OUTPUT input) : SV_TARGET
 	// 소스알파(1) = 마스크이미지의 검정색부분은 불투명된다.
 	// 소스알파(0) = 마스크이미지의 흰색부분은   투명된다.
 	final = color*mask;// *mask;// *Color0;	
-	final = final + Specular(input.n);
+	final = final +Specular(input.n);
 	final.a = 1.0f;
 	// 알파테스팅 (완전 투명과 완전 불투명 일 때 사용)
 	// 장점 : 순서를 구분하기 어려운 오브젝트 랜더링시 
@@ -137,7 +137,7 @@ float4 PS(VS_OUTPUT input) : SV_TARGET
 
 	//final = g_txCubeMap.Sample(g_Sample, input.r);
 	
-	return final;
+	return final;// float4(fDot, fDot, fDot, 1.0f);
 }
 
 float4 PSAlphaBlend(VS_OUTPUT input) : SV_TARGET

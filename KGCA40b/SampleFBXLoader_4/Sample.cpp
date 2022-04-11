@@ -11,8 +11,8 @@ void	Sample::DeleteResizeDevice(UINT iWidth, UINT iHeight)
 bool	Sample::Init()
 {			
 	std::vector<std::wstring> listname;
-	//listname.push_back(L"../../data/fbx/Greystone.fbx");
-	//listname.push_back(L"../../data/fbx/idle.fbx");
+	listname.push_back(L"../../data/fbx/Greystone.fbx");
+	listname.push_back(L"../../data/fbx/idle.fbx");
 	listname.push_back(L"../../data/fbx/Man.fbx");
 	// 0 ~ 60  idel
 	// 61 ~91  walk;
@@ -48,7 +48,7 @@ bool	Sample::Init()
 		}
 	}
 
-	//m_FbxObj[0].m_pAnimImporter = m_FbxObj[1].m_pMeshImp;
+	m_FbxObj[0].m_pAnimImporter = m_FbxObj[1].m_pMeshImp;
 	m_pMainCamera->CreateViewMatrix(T::TVector3(0, 25.0f, -50.0f),T::TVector3(0, 0.0f, 0));
 
 	m_pLightTex = I_Texture.Load(L"../../data/pung00.dds");
