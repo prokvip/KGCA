@@ -1,7 +1,7 @@
 #pragma once
 #include "TObject3D.h"
 #include <fbxsdk.h>
-
+#include "TCamera.h"
 struct PNCT
 {
 	T::TVector3 p;
@@ -83,7 +83,8 @@ public:
 
 	std::vector<TTrack>					m_AnimTrack;
 	std::map<std::wstring, TMatrix>		m_dxMatrixBindPoseMap;
-	TMatrix aaa[255];
+public:
+	TCamera* m_pMainCamera;
 public:
 	virtual bool    SetVertexData() override;	
 	virtual bool	CreateVertexBuffer()override;

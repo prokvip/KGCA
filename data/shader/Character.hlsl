@@ -1,3 +1,4 @@
+//#define HALF_VECTOR
 struct VS_INPUT
 {
 	float3 p : POSITION;
@@ -31,6 +32,8 @@ cbuffer cb1 : register(b1)
 {
 	float4   vLightDir : packoffset(c0);
 	float4   vLightPos : packoffset(c1);
+	float4   vEyeDir   : packoffset(c2);
+	float4   vEyePos   : packoffset(c3);
 };
 cbuffer cb2 : register(b2)
 {
@@ -85,15 +88,44 @@ Texture2D		g_txMask : register(t1);
 TextureCube	    g_txCubeMap : register(t3);
 SamplerState	g_Sample : register(s0);
 
+float Specular(float3 vNormal)
+{
+	// Specular Lighting
+	float  fPower = 0.0f;
+#ifndef HALF_VECTOR
+	float3 R = reflect(vLightDir, vNormal);
+	fPower = pow(saturate(dot(R, -vEyeDir)), 5.0f);
+#else
+	float3 vHalf = normalize(-vLightDir + -vEyeDir);
+	fPower = pow(saturate(dot(vNormal, vHalf)), 5.0f);
+#endif	
+	float4 specular = float4(fPower, fPower, fPower,1.0f);
+	return fPower;
+}
+
+float Diffuse(float3 vNormal)
+{
+	float fIntensity = max(0,
+		dot(vNormal, normalize(-vLightDir)));
+	//float4 diffuse = fIntensity;
+	return fIntensity;
+}
+
 float4 PS(VS_OUTPUT input) : SV_TARGET
 {
 	//텍스처에서 t좌표에 해당하는 컬러값(픽셀) 반환
 	float4 color = g_txColor.Sample(g_Sample, input.t);
-	float4 mask = g_txMask.Sample(g_Sample, input.t);
+	//float fDot = Diffuse(input.n) + Specular(input.n);
 	float4 final = color;
+	float fDot = max(0.1f, Diffuse(input.n));
+	// 0 ~ 1 -> 0.0f ~ 0.5f
+	float2 uv = float2(fDot, 0.5f);
+	float4 mask = g_txMask.Sample(g_Sample, uv);
 	// 소스알파(1) = 마스크이미지의 검정색부분은 불투명된다.
 	// 소스알파(0) = 마스크이미지의 흰색부분은   투명된다.
-	final = color + input.c;// *Color0;
+	final = color*mask;// *mask;// *Color0;	
+	final = final + Specular(input.n);
+	final.a = 1.0f;
 	// 알파테스팅 (완전 투명과 완전 불투명 일 때 사용)
 	// 장점 : 순서를 구분하기 어려운 오브젝트 랜더링시 
 	//        정렬된 상태와 유사하게  랜더링된다.
@@ -104,6 +136,7 @@ float4 PS(VS_OUTPUT input) : SV_TARGET
 	//final.a = 1.0f;	
 
 	//final = g_txCubeMap.Sample(g_Sample, input.r);
+	
 	return final;
 }
 

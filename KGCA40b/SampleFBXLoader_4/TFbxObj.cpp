@@ -152,7 +152,20 @@ bool	TFbx::Render()
 		pFbxObj->m_LightConstantList.vLightDir.y = vLight.y;
 		pFbxObj->m_LightConstantList.vLightDir.z = vLight.z;
 		pFbxObj->m_LightConstantList.vLightDir.w = 1.0f;
-
+		pFbxObj->m_LightConstantList.vCameraDir.x = 
+			m_pMainCamera->m_vLook.x;
+		pFbxObj->m_LightConstantList.vCameraDir.y = 
+			m_pMainCamera->m_vLook.y;
+		pFbxObj->m_LightConstantList.vCameraDir.z = 
+			m_pMainCamera->m_vLook.z;
+		pFbxObj->m_LightConstantList.vCameraDir.w = 1.0f;
+		pFbxObj->m_LightConstantList.vCameraPos.x = 
+			m_pMainCamera->m_vCamera.x;
+		pFbxObj->m_LightConstantList.vCameraPos.y = 
+			m_pMainCamera->m_vCamera.y;
+		pFbxObj->m_LightConstantList.vCameraPos.z = 
+			m_pMainCamera->m_vCamera.z;
+		pFbxObj->m_LightConstantList.vCameraPos.w = 1.0f;
 		pFbxObj->SetMatrix(&m_matWorld, &m_matView, &m_matProj);
 		pFbxObj->Render();
 	}

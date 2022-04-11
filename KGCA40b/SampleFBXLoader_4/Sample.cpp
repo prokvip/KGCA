@@ -11,8 +11,8 @@ void	Sample::DeleteResizeDevice(UINT iWidth, UINT iHeight)
 bool	Sample::Init()
 {			
 	std::vector<std::wstring> listname;
-	listname.push_back(L"../../data/fbx/Greystone.fbx");
-	listname.push_back(L"../../data/fbx/idle.fbx");
+	//listname.push_back(L"../../data/fbx/Greystone.fbx");
+	//listname.push_back(L"../../data/fbx/idle.fbx");
 	listname.push_back(L"../../data/fbx/Man.fbx");
 	// 0 ~ 60  idel
 	// 61 ~91  walk;
@@ -36,6 +36,7 @@ bool	Sample::Init()
 	{
 		TFbx* pFbx = &m_FbxObj[iObj];
 		pFbx->Init();
+		pFbx->m_pMainCamera = m_pMainCamera;
 		pFbx->m_pd3dDevice = m_pd3dDevice.Get();
 		pFbx->m_pContext = m_pImmediateContext.Get();
 		pFbx->m_pMeshImp = I_ObjectMgr.Load(listname[iObj]);
@@ -47,8 +48,11 @@ bool	Sample::Init()
 		}
 	}
 
-	m_FbxObj[0].m_pAnimImporter = m_FbxObj[1].m_pMeshImp;
+	//m_FbxObj[0].m_pAnimImporter = m_FbxObj[1].m_pMeshImp;
 	m_pMainCamera->CreateViewMatrix(T::TVector3(0, 25.0f, -50.0f),T::TVector3(0, 0.0f, 0));
+
+	m_pLightTex = I_Texture.Load(L"../../data/pung00.dds");
+
 	return true;
 }
 bool	Sample::Frame()
@@ -61,6 +65,8 @@ bool	Sample::Frame()
 }
 bool	Sample::Render()
 {		
+	m_pImmediateContext->PSSetShaderResources(
+		1, 1, m_pLightTex->m_pSRV.GetAddressOf());
 	for (int iObj = 0; iObj < m_FbxObj.size(); iObj++)
 	{
 		m_FbxObj[iObj].SetMatrix(nullptr,&m_pMainCamera->m_matView,&m_pMainCamera->m_matProj);
