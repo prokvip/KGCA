@@ -11,6 +11,7 @@ void	Sample::DeleteResizeDevice(UINT iWidth, UINT iHeight)
 bool	Sample::Init()
 {			
 	std::vector<std::wstring> listname;
+	// Greystone.fbx  LOD ¸Þ½¬ 5°³ 
 	listname.push_back(L"../../data/fbx/Greystone.fbx");
 	listname.push_back(L"../../data/fbx/idle.fbx");
 	listname.push_back(L"../../data/fbx/Man.fbx");

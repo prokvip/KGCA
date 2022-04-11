@@ -93,7 +93,7 @@ bool	TFbx::Render()
 	int iFrame = m_fTime;
 	iFrame = max(0, min(pAnimImp->m_Scene.iEnd-1, iFrame));
 
-	for (int iObj = 0; iObj < m_pMeshImp->m_DrawList.size(); iObj++)
+	for (int iObj = 0; iObj < m_pMeshImp->m_DrawList.size(); iObj++)	
 	{
 		TFbxModel* pFbxObj = m_pMeshImp->m_DrawList[iObj];	
 		if (_tcsstr(pFbxObj->m_csName.c_str(), L"LOD") != nullptr)// != L"SK_Mannequin_LOD0")
