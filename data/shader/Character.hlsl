@@ -66,7 +66,7 @@ VS_OUTPUT VS(VS_INPUT v)
 
 
 	float4 vColor = float4(v.c.xyz, 1.0f);
-	pOut.c = float4(0.2f+fDot, 0.2f+fDot, 0.2f+fDot, 1);// *Color0;
+	pOut.c = float4(fDot, fDot, fDot, 1);// *Color0;
 
 	pOut.r = normalize(vLocal.xyz);
 	return pOut;
@@ -137,7 +137,7 @@ float4 PS(VS_OUTPUT input) : SV_TARGET
 
 	//final = g_txCubeMap.Sample(g_Sample, input.r);
 	
-	return final;// float4(fDot, fDot, fDot, 1.0f);
+	return float4(fDot, fDot, fDot, 1.0f);
 }
 
 float4 PSAlphaBlend(VS_OUTPUT input) : SV_TARGET

@@ -28,7 +28,7 @@ bool	Sample::Init()
 	//listname.push_back(L"../../data/fbx/st00sc00.fbx");
 	//listname.push_back(L"../../data/fbx/SM_Tree_Var01.fbx");
 	//listname.push_back(L"../../data/fbx/Turret_Deploy1/Turret_Deploy1.fbx");
-	//listname.push_back(L"../../data/fbx/Turret_Deploy1/Turret_Deploy1.fbx");
+	listname.push_back(L"../../data/fbx/Turret_Deploy1/Turret_Deploy1.fbx");
 
 	I_ObjectMgr.Set(m_pd3dDevice.Get(), m_pImmediateContext.Get());
 	m_FbxObj.resize(listname.size());
@@ -50,7 +50,8 @@ bool	Sample::Init()
 
 	m_FbxObj[0].m_pAnimImporter = m_FbxObj[1].m_pMeshImp;
 	m_pMainCamera->CreateViewMatrix(T::TVector3(0, 25.0f, -50.0f),T::TVector3(0, 0.0f, 0));
-
+	m_pMainCamera->CreateProjMatrix(XM_PI * 0.25f,
+		(float)g_rtClient.right / (float)g_rtClient.bottom, 0.1f, 1000.0f);
 	m_pLightTex = I_Texture.Load(L"../../data/pung00.dds");
 
 	return true;

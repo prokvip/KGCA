@@ -140,6 +140,9 @@ public:
 	FbxVector4 ReadNormal(const FbxMesh* mesh,
 		int controlPointIndex,
 		int vertexCounter);
+	FbxVector4 ReadNormal(const FbxMesh* mesh,
+		DWORD dwVertexNormalCount, FbxLayerElementNormal* VertexNormalSets,
+		int controlPointIndex, int iVertexIndex);
 
 	int GetSubMaterialIndex(int iPlygon,FbxLayerElementMaterial* pMtrl);
 	bool	ParseMeshSkinning(FbxMesh* pFbxMesh, TFbxModel* pObject);

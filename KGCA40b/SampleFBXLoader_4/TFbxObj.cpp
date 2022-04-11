@@ -95,7 +95,15 @@ bool	TFbx::Render()
 
 	for (int iObj = 0; iObj < m_pMeshImp->m_DrawList.size(); iObj++)
 	{
-		TFbxModel* pFbxObj = m_pMeshImp->m_DrawList[iObj];		
+		TFbxModel* pFbxObj = m_pMeshImp->m_DrawList[iObj];	
+		if (_tcsstr(pFbxObj->m_csName.c_str(), L"LOD") != nullptr)// != L"SK_Mannequin_LOD0")
+		{
+			if (_tcsstr(pFbxObj->m_csName.c_str(), L"LOD0") == nullptr)// != L"SK_Mannequin_LOD0")
+			{
+				continue;
+			}
+		}
+
 		if (pFbxObj->m_bSkinned)
 		{			
 			for( auto data : pAnimImp->m_pFbxModelMap)

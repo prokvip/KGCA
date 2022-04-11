@@ -1,5 +1,70 @@
 #define  _CRT_SECURE_NO_WARNINGS
 #include "TFbxImporter.h"
+// 정점 노말을 읽는 함수 
+FbxVector4 TFbxImporter::ReadNormal(const FbxMesh* mesh,
+	DWORD dwVertexNormalCount, FbxLayerElementNormal* VertexNormalSets,
+	int controlPointIndex, int iVertexIndex)
+{
+	FbxVector4 result(0, 0, 0);
+	if (dwVertexNormalCount < 1)
+	{
+		return result;
+	}
+	int iVertexNormalLayer = mesh->GetElementNormalCount();
+
+	const FbxGeometryElementNormal* vertexNormal = mesh->GetElementNormal(0);
+	// 노말 획득 
+
+	// 노말 벡터를 저장할 벡터 
+	switch (VertexNormalSets->GetMappingMode()) 	// 매핑 모드 
+	{
+		// 제어점 마다 1개의 매핑 좌표가 있다.
+	case FbxGeometryElement::eByControlPoint:
+	{
+		// control point mapping 
+		switch (VertexNormalSets->GetReferenceMode())
+		{
+		case FbxGeometryElement::eDirect:
+		{
+			result[0] = static_cast<float>(VertexNormalSets->GetDirectArray().GetAt(controlPointIndex).mData[0]);
+			result[1] = static_cast<float>(VertexNormalSets->GetDirectArray().GetAt(controlPointIndex).mData[1]);
+			result[2] = static_cast<float>(VertexNormalSets->GetDirectArray().GetAt(controlPointIndex).mData[2]);
+		} break;
+		case FbxGeometryElement::eIndexToDirect:
+		{
+			int index = VertexNormalSets->GetIndexArray().GetAt(controlPointIndex);
+			// 인덱스를 얻어온다. 
+			result[0] = static_cast<float>(VertexNormalSets->GetDirectArray().GetAt(index).mData[0]);
+			result[1] = static_cast<float>(VertexNormalSets->GetDirectArray().GetAt(index).mData[1]);
+			result[2] = static_cast<float>(VertexNormalSets->GetDirectArray().GetAt(index).mData[2]);
+		}break;
+		}break;
+	}break;
+	// 정점 마다 1개의 매핑 좌표가 있다.
+	case FbxGeometryElement::eByPolygonVertex:
+	{
+		switch (vertexNormal->GetReferenceMode())
+		{
+		case FbxGeometryElement::eDirect:
+		{
+			result[0] = static_cast<float>(VertexNormalSets->GetDirectArray().GetAt(iVertexIndex).mData[0]);
+			result[1] = static_cast<float>(VertexNormalSets->GetDirectArray().GetAt(iVertexIndex).mData[1]);
+			result[2] = static_cast<float>(VertexNormalSets->GetDirectArray().GetAt(iVertexIndex).mData[2]);
+		}
+		break;
+		case FbxGeometryElement::eIndexToDirect:
+		{
+			int index = VertexNormalSets->GetIndexArray().GetAt(iVertexIndex);
+			// 인덱스를 얻어온다. 
+			result[0] = static_cast<float>(VertexNormalSets->GetDirectArray().GetAt(index).mData[0]);
+			result[1] = static_cast<float>(VertexNormalSets->GetDirectArray().GetAt(index).mData[1]);
+			result[2] = static_cast<float>(VertexNormalSets->GetDirectArray().GetAt(index).mData[2]);
+		}break;
+		}
+	}break;
+	}
+	return result;
+}
 FbxVector4 TFbxImporter::ReadNormal(const FbxMesh* mesh,
 	int controlPointIndex,
 	int vertexCounter)

@@ -190,6 +190,7 @@ void	TFbxImporter::ParseMesh(TFbxModel* pObject)
 	std::vector<FbxLayerElementUV*> VertexUVSet;
 	std::vector<FbxLayerElementVertexColor*> VertexColorSet;
 	std::vector<FbxLayerElementMaterial*> MaterialSet;
+	std::vector<FbxLayerElementNormal*>		VertexNormalSets;
 	int iLayerCount = pFbxMesh->GetLayerCount();
 
 	if (iLayerCount == 0 || pFbxMesh->GetLayer(0)->GetNormals() == nullptr)
@@ -212,6 +213,10 @@ void	TFbxImporter::ParseMesh(TFbxModel* pObject)
 		if (pFbxLayer->GetVertexColors() != nullptr)
 		{
 			VertexColorSet.push_back(pFbxLayer->GetVertexColors());
+		}
+		if (pFbxLayer->GetNormals() != NULL)
+		{
+			VertexNormalSets.push_back(pFbxLayer->GetNormals());
 		}
 		if (pFbxLayer->GetMaterials() != nullptr)
 		{
@@ -275,24 +280,27 @@ void	TFbxImporter::ParseMesh(TFbxModel* pObject)
 			int VertexIndex[3] = { 0, iFace + 2, iFace + 1 };
 				 
 			int CornerIndex[3];
-			CornerIndex[0] = pFbxMesh->GetPolygonVertex(iPoly, VertexIndex[0]);
-			CornerIndex[1] = pFbxMesh->GetPolygonVertex(iPoly, VertexIndex[1]);
-			CornerIndex[2] = pFbxMesh->GetPolygonVertex(iPoly, VertexIndex[2]);
+			CornerIndex[0] = pFbxMesh->GetPolygonVertex(iPoly, 0);
+			CornerIndex[1] = pFbxMesh->GetPolygonVertex(iPoly, iFace+2);
+			CornerIndex[2] = pFbxMesh->GetPolygonVertex(iPoly, iFace+1);
+
+			// uv
+			int u[3];
+			u[0] = pFbxMesh->GetTextureUVIndex(iPoly, 0);
+			u[1] = pFbxMesh->GetTextureUVIndex(iPoly, iFace + 2);
+			u[2] = pFbxMesh->GetTextureUVIndex(iPoly, iFace + 1);
+
 			for (int iIndex = 0; iIndex < 3; iIndex++)
 			{
+				int DCCIndex = CornerIndex[iIndex];
 				TVertex tVertex;	
-				// Max(x,z,y) ->(dx)x,y,z    
-				FbxVector4 v = pVertexPositions[CornerIndex[iIndex]];
-				v = geom.MultT(v);
+				// Max(x,z,y) ->(dx)x,y,z    		
+				auto v = geom.MultT(pVertexPositions[DCCIndex]);
 				tVertex.p.x = v.mData[0];
 				tVertex.p.y = v.mData[2];
 				tVertex.p.z = v.mData[1];
 
-				// uv
-				int u[3];
-				u[0] = pFbxMesh->GetTextureUVIndex(iPoly, VertexIndex[0]);
-				u[1] = pFbxMesh->GetTextureUVIndex(iPoly, VertexIndex[1]);
-				u[2] = pFbxMesh->GetTextureUVIndex(iPoly, VertexIndex[2]);
+				
 				if (VertexUVSet.size() > 0)
 				{
 					FbxLayerElementUV* pUVSet = VertexUVSet[0];
@@ -300,7 +308,7 @@ void	TFbxImporter::ParseMesh(TFbxModel* pObject)
 					ReadTextureCoord(
 						pFbxMesh,
 						pUVSet,
-						CornerIndex[iIndex],
+						DCCIndex,
 						u[iIndex],
 						uv);
 					tVertex.t.x = uv.mData[0];
@@ -313,7 +321,7 @@ void	TFbxImporter::ParseMesh(TFbxModel* pObject)
 					color = ReadColor(pFbxMesh,
 						VertexColorSet.size(),
 						VertexColorSet[0],
-						CornerIndex[iIndex],
+						DCCIndex,
 						iBasePolyIndex + VertexIndex[iIndex]);
 				}
 				tVertex.c.x = color.mRed;
@@ -321,21 +329,40 @@ void	TFbxImporter::ParseMesh(TFbxModel* pObject)
 				tVertex.c.z = color.mBlue;
 				tVertex.c.w = pObject->m_iIndex;
 
-
-				FbxVector4 normal = ReadNormal(pFbxMesh,
-					CornerIndex[iIndex],
-					iBasePolyIndex + VertexIndex[iIndex]);
-				normal = normalMatrix.MultT(normal);
-				tVertex.n.x = normal.mData[0]; // x
-				tVertex.n.y = normal.mData[2]; // z
-				tVertex.n.z = normal.mData[1]; // y
+				if (VertexNormalSets.size() <=0)
+				{
+					FbxVector4 normal = ReadNormal(pFbxMesh,
+						DCCIndex,
+						iBasePolyIndex + VertexIndex[iIndex]);
+					normal = normalMatrix.MultT(normal);
+					normal.Normalize();
+					tVertex.n.x = normal.mData[0]; // x
+					tVertex.n.y = normal.mData[2]; // z
+					tVertex.n.z = normal.mData[1]; // y		
+					D3DXVec3Normalize(&tVertex.n, &tVertex.n);
+				}
+				else
+				{
+					// Store vertex normal
+					FbxVector4 finalNorm = ReadNormal(pFbxMesh, VertexNormalSets.size(),
+						VertexNormalSets[0],
+						DCCIndex,
+						iBasePolyIndex + VertexIndex[iIndex]);// dwTriangleIndex * 3 + dwCornerIndex);
+					finalNorm.mData[3] = 0.0;
+					finalNorm = normalMatrix.MultT(finalNorm);
+					finalNorm.Normalize();
+					tVertex.n.x = finalNorm.mData[0];
+					tVertex.n.y = finalNorm.mData[2];
+					tVertex.n.z = finalNorm.mData[1];	
+					D3DXVec3Normalize(&tVertex.n, &tVertex.n);
+				}
 
 
 				// °¡ÁßÄ¡
 				TVertexIW iwVertex;
 				if (pObject->m_bSkinned)
 				{
-					TWeight* weight = &pObject->m_WeightList[CornerIndex[iIndex]];
+					TWeight* weight = &pObject->m_WeightList[DCCIndex];
 					for (int i = 0; i < 4; i++)
 					{
 						iwVertex.i[i] = weight->Index[i];
