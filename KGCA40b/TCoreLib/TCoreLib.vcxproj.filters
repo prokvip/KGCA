@@ -230,5 +230,8 @@
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\..\data\shader\Character.hlsl" />
+    <FxCompile Include="..\..\data\shader\sky.hlsl">
+      <Filter>shader</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

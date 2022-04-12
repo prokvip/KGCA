@@ -41,6 +41,19 @@ bool	TCore::CoreInit()
 	}
 
 	m_pMainCamera = &m_DefaultCamera;
+
+
+	m_SkyObj.Init();
+	m_SkyObj.SetPosition(T::TVector3(0.0f, 0.0f, 0.0f));
+
+	if (!m_SkyObj.Create(m_pd3dDevice.Get(),
+		m_pImmediateContext.Get(),
+		L"../../data/shader/sky.hlsl",
+		L"../../data/sky/skybox02.dds"))
+	{
+		return false;
+	}
+
 	Init();
 
 	return true;
@@ -67,6 +80,7 @@ bool	TCore::CoreFrame()
 	m_GameTimer.Frame();
 	TInput::Get().Frame();
 	m_pMainCamera->Frame();
+	m_SkyObj.Frame();
 	I_ObjectMgr.Frame();
 	I_Sound.Frame();
 	Frame();
@@ -96,6 +110,20 @@ bool	TCore::CoreRender()
 	else
 		m_pImmediateContext->RSSetState(TDxState::g_pRSBackCullSolid);
 
+	m_SkyObj.m_matView = m_pMainCamera->m_matView;
+	m_SkyObj.m_matView._41 = 0;
+	m_SkyObj.m_matView._42 = 0;
+	m_SkyObj.m_matView._43 = 0;
+	T::TMatrix matRotation, matScale;
+	/*T::D3DXMatrixScaling(&matScale, 3000.0f, 3000.0f, 3000.0f);
+	T::D3DXMatrixRotationY(&matRotation, g_fGameTimer * 0.00f);
+	m_SkyObj.m_matWorld = matScale * matRotation;*/
+	m_SkyObj.SetMatrix(NULL, &m_SkyObj.m_matView, &m_pMainCamera->m_matProj);
+	m_pImmediateContext->RSSetState(TDxState::g_pRSNoneCullSolid);
+	//m_pImmediateContext->PSSetSamplers(0, 1, &TDxState::m_pSSLinear);
+	//m_pImmediateContext->PSSetSamplers(1, 1, &TDxState::m_pSSPoint);
+	m_SkyObj.Render();
+	m_pImmediateContext->RSSetState(TDxState::g_pRSBackCullSolid);
 	// 백버퍼에 랜더링 한다.
 	Render();
 
@@ -110,6 +138,7 @@ bool	TCore::CoreRender()
 bool	TCore::CoreRelease()
 {
 	Release();
+	//m_SkyObj.Release();
 	m_DefaultCamera.Release();
 	TDxState::Release();
 	m_dxWrite.Release();

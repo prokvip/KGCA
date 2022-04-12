@@ -5,9 +5,11 @@
 #include "TTimer.h"
 #include "TWriteFont.h"
 #include "TCamera.h"
+#include "TSkyObj.h"
 class TCore : public TDevice
 {
 public:
+	TSkyObj	 m_SkyObj;
 	TCamera* m_pMainCamera = nullptr;
 	TCamera  m_DefaultCamera;
 	TTimer		m_GameTimer;

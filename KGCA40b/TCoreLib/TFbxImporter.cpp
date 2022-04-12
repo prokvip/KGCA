@@ -412,6 +412,18 @@ bool	TFbxImporter::Init()
 	m_pFbxManager = FbxManager::Create();
 	m_pFbxImporter = FbxImporter::Create(m_pFbxManager, "");
 	m_pFbxScene = FbxScene::Create(m_pFbxManager, "");	
+	
+	FbxAxisSystem	 m_SceneAxisSystem = m_pFbxScene->GetGlobalSettings().GetAxisSystem();
+	FbxAxisSystem::MayaZUp.ConvertScene(m_pFbxScene);
+	m_SceneAxisSystem = m_pFbxScene->GetGlobalSettings().GetAxisSystem();
+
+	FbxSystemUnit	m_SceneSystemUnit = m_pFbxScene->GetGlobalSettings().GetSystemUnit();
+	if (m_SceneSystemUnit.GetScaleFactor() != 1.0f)
+	{
+		FbxSystemUnit::cm.ConvertScene(m_pFbxScene);
+	}
+
+
 	return true;
 }
 bool	TFbxImporter::Frame()

@@ -68,7 +68,7 @@ VS_OUTPUT VS(VS_INPUT v)
 	float4 vColor = float4(v.c.xyz, 1.0f);
 	pOut.c = float4(fDot, fDot, fDot, 1);// *Color0;
 
-	pOut.r = normalize(vLocal.xyz);
+	pOut.r = reflect(vEyeDir.xyz, pOut.n);
 	return pOut;
 }
 VS_OUTPUT VSColor(VS_INPUT v)
@@ -135,9 +135,10 @@ float4 PS(VS_OUTPUT input) : SV_TARGET
 	}
 	//final.a = 1.0f;	
 
-	//final = g_txCubeMap.Sample(g_Sample, input.r);
-	
-	return float4(fDot, fDot, fDot, 1.0f);
+	float4 vCube = g_txCubeMap.Sample(g_Sample, input.r);
+	final = lerp(final, vCube, 0.3f);
+	final.a = 1.0f;
+	return final;
 }
 
 float4 PSAlphaBlend(VS_OUTPUT input) : SV_TARGET
