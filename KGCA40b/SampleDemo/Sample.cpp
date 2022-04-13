@@ -21,7 +21,7 @@ bool	Sample::LoadMap()
 		return false;
 	}
 	m_Quadtree.m_pCamera = m_pMainCamera;
-	m_Quadtree.Build(&m_MapObj, 0);
+	m_Quadtree.Build(&m_MapObj, 5);
 	/*CreateMapObject();
 	for (int iObj = 0; iObj < MAX_NUM_OBJECTS; iObj++)
 	{
@@ -33,8 +33,8 @@ bool    Sample::LoadFbx()
 {
 	std::vector<std::wstring> listname;
 	// Greystone.fbx  LOD ¸Þ½¬ 5°³ 
-	//listname.push_back(L"../../data/fbx/Greystone.fbx");
-	//listname.push_back(L"../../data/fbx/idle.fbx");
+	listname.push_back(L"../../data/fbx/Greystone.fbx");
+	listname.push_back(L"../../data/fbx/idle.fbx");
 	listname.push_back(L"../../data/fbx/Man.fbx");
 	// 0 ~ 60  idel
 	// 61 ~91  walk;
@@ -70,7 +70,7 @@ bool    Sample::LoadFbx()
 		}
 	}
 
-	//m_FbxObj[0].m_pAnimImporter = m_FbxObj[1].m_pMeshImp;
+	m_FbxObj[0].m_pAnimImporter = m_FbxObj[1].m_pMeshImp;
 	return true;
 }
 bool	Sample::Init()
@@ -87,7 +87,7 @@ bool	Sample::Init()
 
 	m_pMainCamera->CreateViewMatrix(T::TVector3(0, 25.0f, -50.0f),T::TVector3(0, 0.0f, 0));
 	m_pMainCamera->CreateProjMatrix(XM_PI * 0.25f,
-		(float)g_rtClient.right / (float)g_rtClient.bottom, 0.1f, 10000.0f);
+		(float)g_rtClient.right / (float)g_rtClient.bottom, 0.1f, 3000.0f);
 	m_pLightTex = I_Texture.Load(L"../../data/pung00.dds");
 
 	return true;
