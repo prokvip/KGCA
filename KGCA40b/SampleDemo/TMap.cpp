@@ -151,6 +151,10 @@ bool		TMap::CreateMap(UINT width, UINT height,
 	m_BoxCollision.vMin.z = -m_BoxCollision.vMax.z;
 	return true;
 }
+float		TMap::GetHeight(int index)
+{
+	return m_fHeightList[index];
+}
 bool		TMap::SetVertexData()
 {
 	m_VertexList.resize(m_iNumVertices);	
@@ -164,7 +168,7 @@ bool		TMap::SetVertexData()
 		{
 			int index = iRow * m_iNumCols + iCol;
 			m_VertexList[index].p.x = (iCol- hHalfCol)* m_fCellDistance;
-			m_VertexList[index].p.y = m_fHeightList[index]*3.0f;
+			m_VertexList[index].p.y = GetHeight(index);
 			m_VertexList[index].p.z = -((iRow - hHalfRow)* m_fCellDistance);
 			m_VertexList[index].n = T::TVector3(0, 1, 0);
 			m_VertexList[index].c = T::TVector4(randstep(0.0f, 1.0f), 

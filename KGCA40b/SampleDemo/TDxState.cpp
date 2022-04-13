@@ -3,6 +3,7 @@ ID3D11BlendState* TDxState::m_AlphaBlend = nullptr;
 ID3D11BlendState* TDxState::m_AlphaBlendDisable = nullptr;
 ID3D11SamplerState* TDxState::m_pSSLinear = nullptr;
 ID3D11SamplerState* TDxState::m_pSSPoint = nullptr;
+ID3D11RasterizerState* TDxState::g_pRSCurrent = nullptr;
 ID3D11RasterizerState* TDxState::g_pRSBackCullSolid =nullptr;
 ID3D11RasterizerState* TDxState::g_pRSNoneCullSolid = nullptr;
 ID3D11RasterizerState* TDxState::g_pRSBackCullWireFrame = nullptr;
@@ -153,4 +154,13 @@ bool TDxState::Release()
 	if (m_pSSLinear)m_pSSLinear->Release();
 	if (m_pSSPoint)m_pSSPoint->Release();
 	return true;
+}
+
+
+ID3D11RasterizerState* TDxState::ApplyRS(ID3D11RasterizerState* rs)
+{	
+	ID3D11RasterizerState* pOldRS = g_pRSCurrent;
+	g_pImmediateContext->RSSetState(rs);
+	g_pRSCurrent = rs;
+	return pOldRS;
 }

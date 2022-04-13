@@ -110,42 +110,45 @@ void TQuadtree::RenderTile(TNode* pNode)
 }
 bool		TQuadtree::Render()
 {
-	m_pMap->PreRender();
-	m_pMap->Draw();
-
-	m_pMap->m_pContext->UpdateSubresource(
-		m_pIndexBuffer.Get(), 0, NULL, &m_IndexList.at(0), 0, 0);
-	m_pMap->m_pContext->IASetIndexBuffer(
-		m_pIndexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
-	m_pMap->m_pContext->DrawIndexed(m_iNumFace*3, 0, 0);
-
-	// 노드의 바운딩 박스를 랜더링
-	// 	   	// 노드의 바운딩 박스를 랜더링
-	/*for (int iNode = 0; iNode < g_pDrawLeafNodes.size(); iNode++)
+	if (m_pMap)
 	{
-		DrawDebugRender(&g_pDrawLeafNodes[iNode]->m_Box);
-	}*/
-	//for (int iNode = 0; iNode < g_pDrawLeafNodes.size(); iNode++)
-	//{
-	//	DrawDebugRender(&g_pDrawLeafNodes[iNode]->m_Box);
-	//	/*m_pMap->m_ConstantList.Color = T::TVector4(1, 1, 0, 1);
-	//	m_pMap->m_pContext->UpdateSubresource(
-	//		m_pMap->m_pConstantBuffer, 0, NULL, &m_pMap->m_ConstantList, 0, 0);
+		m_pMap->PreRender();
+		m_pMap->Draw();
 
-	//	int iLod = g_pDrawLeafNodes[iNode]->m_iCurrentLod;
-	//	
-	//	m_pMap->m_pContext->IASetIndexBuffer(
-	//			g_pDrawLeafNodes[iNode]->m_pIndexBuffer[iLod].Get(), DXGI_FORMAT_R32_UINT, 0);
-	//	m_pMap->m_pContext->DrawIndexed(
-	//		g_pDrawLeafNodes[iNode]->m_IndexList[iLod].size(), 0, 0);*/
-	//}
-	for (auto obj : m_ObjectList)
-	{
-		obj->pObject->SetMatrix(&obj->matWorld,
-			&m_pMap->m_matView,
-			&m_pMap->m_matProj);
-		obj->pObject->m_ConstantList.Color = T::TVector4(1, 1, 1, 1);
-		obj->pObject->Render();
+		m_pMap->m_pContext->UpdateSubresource(
+			m_pIndexBuffer.Get(), 0, NULL, &m_IndexList.at(0), 0, 0);
+		m_pMap->m_pContext->IASetIndexBuffer(
+			m_pIndexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
+		m_pMap->m_pContext->DrawIndexed(m_iNumFace * 3, 0, 0);
+
+		// 노드의 바운딩 박스를 랜더링
+		// 	   	// 노드의 바운딩 박스를 랜더링
+		/*for (int iNode = 0; iNode < g_pDrawLeafNodes.size(); iNode++)
+		{
+			DrawDebugRender(&g_pDrawLeafNodes[iNode]->m_Box);
+		}*/
+		//for (int iNode = 0; iNode < g_pDrawLeafNodes.size(); iNode++)
+		//{
+		//	DrawDebugRender(&g_pDrawLeafNodes[iNode]->m_Box);
+		//	/*m_pMap->m_ConstantList.Color = T::TVector4(1, 1, 0, 1);
+		//	m_pMap->m_pContext->UpdateSubresource(
+		//		m_pMap->m_pConstantBuffer, 0, NULL, &m_pMap->m_ConstantList, 0, 0);
+
+		//	int iLod = g_pDrawLeafNodes[iNode]->m_iCurrentLod;
+		//	
+		//	m_pMap->m_pContext->IASetIndexBuffer(
+		//			g_pDrawLeafNodes[iNode]->m_pIndexBuffer[iLod].Get(), DXGI_FORMAT_R32_UINT, 0);
+		//	m_pMap->m_pContext->DrawIndexed(
+		//		g_pDrawLeafNodes[iNode]->m_IndexList[iLod].size(), 0, 0);*/
+		//}
+		for (auto obj : m_ObjectList)
+		{
+			obj->pObject->SetMatrix(&obj->matWorld,
+				&m_pMap->m_matView,
+				&m_pMap->m_matProj);
+			obj->pObject->m_ConstantList.Color = T::TVector4(1, 1, 1, 1);
+			obj->pObject->Render();
+		}
 	}
 	return true;
 }
@@ -336,10 +339,13 @@ void		TQuadtree::Build(TMap* pMap, int iMaxDepth)
 	FindNeighborNode();
 
 	for (auto node : g_pLeafNodes)
-	{
+	{		
+		//SetVertexData(node, m_iNumLOD);// *16;
+		//CreateVertexBuffer(node, m_iNumLOD);// *16;	
 		SetIndexData(node, m_iNumLOD);// *16;
 		CreateIndexBuffer(node, m_iNumLOD);// *16;
 	}
+	
 }
 void TQuadtree::Build(int iWidth, int iHeight, int iMaxDepth)
 {

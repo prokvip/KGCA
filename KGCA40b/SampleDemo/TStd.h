@@ -46,7 +46,8 @@ extern HWND		g_hWnd;
 extern float	g_fSecPerFrame;
 extern float	g_fGameTimer;
 extern POINT	g_ptMouse;
-
+extern ID3D11Device* g_pd3dDevice;
+extern ID3D11DeviceContext* g_pImmediateContext;
 static std::wstring to_mw(const std::string& _src)
 {
 	USES_CONVERSION;

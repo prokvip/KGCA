@@ -117,11 +117,12 @@ bool		TSkyObj::SetIndexData()
 bool		TSkyObj::Render()
 {
 	PreRender();
-	m_pContext->RSSetState(TDxState::g_pRSNoneCullSolid);
+	auto rs = TDxState::ApplyRS(TDxState::g_pRSNoneCullSolid);
 	m_pContext->PSSetSamplers(0, 1, &TDxState::m_pSSLinear);
 	m_pContext->PSSetSamplers(1, 1, &TDxState::m_pSSPoint);
 	Draw();
 	PostRender();
+	TDxState::ApplyRS(rs);
 	return true;
 }
 bool	TSkyObj::PostRender()

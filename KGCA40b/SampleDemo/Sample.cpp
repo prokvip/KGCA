@@ -8,12 +8,33 @@ void	Sample::DeleteResizeDevice(UINT iWidth, UINT iHeight)
 {
 	int k = 0;
 }
-bool	Sample::Init()
-{			
+bool	Sample::LoadMap()
+{
+	m_MapObj.Init();
+	m_MapObj.SetDevice(m_pd3dDevice.Get(), m_pImmediateContext.Get());
+	m_MapObj.CreateHeightMap(L"../../data/map/heightMap513.bmp");
+	m_MapObj.CreateMap(m_MapObj.m_iNumCols, m_MapObj.m_iNumRows, 10.0f);
+	if (!m_MapObj.Create(m_pd3dDevice.Get(), m_pImmediateContext.Get(),
+		L"../../data/shader/map.hlsl",
+		L"../../data/map/020.bmp"))
+	{
+		return false;
+	}
+	m_Quadtree.m_pCamera = m_pMainCamera;
+	m_Quadtree.Build(&m_MapObj, 0);
+	/*CreateMapObject();
+	for (int iObj = 0; iObj < MAX_NUM_OBJECTS; iObj++)
+	{
+		m_Quadtree.AddObject(m_pObjList[iObj]);
+	}*/
+	return true;
+}
+bool    Sample::LoadFbx()
+{
 	std::vector<std::wstring> listname;
 	// Greystone.fbx  LOD ¸Þ½¬ 5°³ 
-	listname.push_back(L"../../data/fbx/Greystone.fbx");
-	listname.push_back(L"../../data/fbx/idle.fbx");
+	//listname.push_back(L"../../data/fbx/Greystone.fbx");
+	//listname.push_back(L"../../data/fbx/idle.fbx");
 	listname.push_back(L"../../data/fbx/Man.fbx");
 	// 0 ~ 60  idel
 	// 61 ~91  walk;
@@ -49,16 +70,32 @@ bool	Sample::Init()
 		}
 	}
 
-	m_FbxObj[0].m_pAnimImporter = m_FbxObj[1].m_pMeshImp;
+	//m_FbxObj[0].m_pAnimImporter = m_FbxObj[1].m_pMeshImp;
+	return true;
+}
+bool	Sample::Init()
+{			
+	LoadMap();
+	LoadFbx();	
+	//for (int iObj = 0; iObj < m_FbxObj.size(); iObj++)
+	//{
+	//	TFbx* pFbx = &m_FbxObj[iObj];
+	///*	TMapObject obj;
+	//	obj.pObject = pFbx;*/
+	//	m_Quadtree.AddObject(pFbx);
+	//}
+
 	m_pMainCamera->CreateViewMatrix(T::TVector3(0, 25.0f, -50.0f),T::TVector3(0, 0.0f, 0));
 	m_pMainCamera->CreateProjMatrix(XM_PI * 0.25f,
-		(float)g_rtClient.right / (float)g_rtClient.bottom, 0.1f, 1000.0f);
+		(float)g_rtClient.right / (float)g_rtClient.bottom, 0.1f, 10000.0f);
 	m_pLightTex = I_Texture.Load(L"../../data/pung00.dds");
 
 	return true;
 }
 bool	Sample::Frame()
 {		
+	m_MapObj.Frame();
+	m_Quadtree.Update(m_pMainCamera);
 	for (int iObj = 0; iObj < m_FbxObj.size(); iObj++)
 	{
 		m_FbxObj[iObj].Frame();
@@ -67,8 +104,15 @@ bool	Sample::Frame()
 }
 bool	Sample::Render()
 {		
-	m_pImmediateContext->PSSetShaderResources(
-		1, 1, m_pLightTex->m_pSRV.GetAddressOf());
+	m_MapObj.SetMatrix(nullptr, &m_pMainCamera->m_matView, &m_pMainCamera->m_matProj);
+	//m_MapObj.Render();
+	m_Quadtree.Render();
+
+	if (m_pLightTex)
+	{
+		m_pImmediateContext->PSSetShaderResources(
+			1, 1, m_pLightTex->m_pSRV.GetAddressOf());
+	}
 	for (int iObj = 0; iObj < m_FbxObj.size(); iObj++)
 	{
 		m_FbxObj[iObj].SetMatrix(nullptr,&m_pMainCamera->m_matView,&m_pMainCamera->m_matProj);
@@ -83,6 +127,8 @@ bool	Sample::Render()
 }
 bool	Sample::Release()
 {
+	m_MapObj.Release();
+
 	for (int iObj = 0; iObj < m_FbxObj.size(); iObj++)
 	{
 		m_FbxObj[iObj].Release();

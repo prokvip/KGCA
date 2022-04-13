@@ -105,10 +105,14 @@ bool	TCore::CoreRender()
 	m_pImmediateContext->PSSetSamplers(1, 1, &TDxState::m_pSSPoint);
 
 	m_pImmediateContext->OMSetDepthStencilState(TDxState::g_pDSSDepthEnable, 0x00);
-	if( m_bWireFrame)
-		m_pImmediateContext->RSSetState(TDxState::g_pRSBackCullWireFrame);
+	if (m_bWireFrame)
+	{
+		TDxState::ApplyRS(TDxState::g_pRSBackCullWireFrame);
+	}
 	else
-		m_pImmediateContext->RSSetState(TDxState::g_pRSBackCullSolid);
+	{
+		TDxState::ApplyRS(TDxState::g_pRSBackCullSolid);
+	}
 
 	m_SkyObj.m_matView = m_pMainCamera->m_matView;
 	m_SkyObj.m_matView._41 = 0;
@@ -118,12 +122,9 @@ bool	TCore::CoreRender()
 	/*T::D3DXMatrixScaling(&matScale, 3000.0f, 3000.0f, 3000.0f);
 	T::D3DXMatrixRotationY(&matRotation, g_fGameTimer * 0.00f);
 	m_SkyObj.m_matWorld = matScale * matRotation;*/
-	m_SkyObj.SetMatrix(NULL, &m_SkyObj.m_matView, &m_pMainCamera->m_matProj);
-	m_pImmediateContext->RSSetState(TDxState::g_pRSNoneCullSolid);
-	//m_pImmediateContext->PSSetSamplers(0, 1, &TDxState::m_pSSLinear);
-	//m_pImmediateContext->PSSetSamplers(1, 1, &TDxState::m_pSSPoint);
+	
+	m_SkyObj.SetMatrix(NULL, &m_SkyObj.m_matView, &m_pMainCamera->m_matProj);	
 	m_SkyObj.Render();
-	m_pImmediateContext->RSSetState(TDxState::g_pRSBackCullSolid);
 	// 백버퍼에 랜더링 한다.
 	Render();
 
@@ -138,7 +139,7 @@ bool	TCore::CoreRender()
 bool	TCore::CoreRelease()
 {
 	Release();
-	//m_SkyObj.Release();
+	m_SkyObj.Release();
 	m_DefaultCamera.Release();
 	TDxState::Release();
 	m_dxWrite.Release();
