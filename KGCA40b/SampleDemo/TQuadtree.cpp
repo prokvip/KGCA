@@ -56,10 +56,27 @@ int		TQuadtree::GetLodType(TNode* pNode)
 {
 	if (pNode->m_pNeighborList.size() <= 0) return 0;
 	int dwType = 0;
-	if (pNode->m_pNeighborList[0] && pNode->m_pNeighborList[0]->m_iCurrentLod < pNode->m_iCurrentLod) dwType += 1;
-	if (pNode->m_pNeighborList[1] && pNode->m_pNeighborList[1]->m_iCurrentLod < pNode->m_iCurrentLod) dwType += 4;
-	if (pNode->m_pNeighborList[2] && pNode->m_pNeighborList[2]->m_iCurrentLod < pNode->m_iCurrentLod) dwType += 8;
-	if (pNode->m_pNeighborList[3] && pNode->m_pNeighborList[3]->m_iCurrentLod < pNode->m_iCurrentLod) dwType += 2;
+	if (pNode->m_pNeighborList[0] && pNode->m_pNeighborList[0]->m_iCurrentLod < pNode->m_iCurrentLod)
+	{
+		dwType += 1;
+		// lod 레벨 2이상일 경우에 사용 가능하다.
+		//pNode->m_dwLodValue[3] = pNode->m_iCurrentLod - pNode->m_pNeighborList[0]->m_iCurrentLod;
+	}
+	if (pNode->m_pNeighborList[1] && pNode->m_pNeighborList[1]->m_iCurrentLod < pNode->m_iCurrentLod)
+	{
+		dwType += 4;
+		//pNode->m_dwLodValue[1] = pNode->m_iCurrentLod - pNode->m_pNeighborList[1]->m_iCurrentLod;
+	}
+	if (pNode->m_pNeighborList[2] && pNode->m_pNeighborList[2]->m_iCurrentLod < pNode->m_iCurrentLod)
+	{
+		dwType += 8;
+		//pNode->m_dwLodValue[0] = pNode->m_iCurrentLod - pNode->m_pNeighborList[2]->m_iCurrentLod;
+	}
+	if (pNode->m_pNeighborList[3] && pNode->m_pNeighborList[3]->m_iCurrentLod < pNode->m_iCurrentLod)
+	{
+		dwType += 2;
+		//pNode->m_dwLodValue[2] = pNode->m_iCurrentLod - pNode->m_pNeighborList[3]->m_iCurrentLod;
+	}
 
 	pNode->m_dwLodType = dwType;
 	return dwType;
@@ -544,6 +561,7 @@ int TQuadtree::UpdateIndexList(TNode* pNode, DWORD dwCurentIndex, DWORD dwNumLev
 					i2,	// 1											
 					dwType);
 			}
+			// 왼쪽
 			else if ((dwXCell == 0) && (pNode->m_dwLodType & 8))
 			{
 				iNumFaces += SetLodIndexBuffer(pNode, dwCurentIndex,
@@ -552,6 +570,7 @@ int TQuadtree::UpdateIndexList(TNode* pNode, DWORD dwCurentIndex, DWORD dwNumLev
 					i2,	// 1												
 					8);
 			}
+			// 위쪽
 			else if ((dwYCell == 0) && (pNode->m_dwLodType & 1))
 			{
 				iNumFaces += SetLodIndexBuffer(pNode, dwCurentIndex,
@@ -573,6 +592,7 @@ int TQuadtree::UpdateIndexList(TNode* pNode, DWORD dwCurentIndex, DWORD dwNumLev
 			DWORD j1 = dwNextRow * m_iWidth + dwNextCol;	// 3
 			DWORD j2 = dwNextRow * m_iWidth + dwCol;		// 0			
 
+			// 오른쪽, 하단
 			if ((dwXCell == dwCountX && dwYCell == dwCountY))
 			{
 				DWORD dwType = (pNode->m_dwLodType & 2) + (pNode->m_dwLodType & 4);
@@ -582,6 +602,7 @@ int TQuadtree::UpdateIndexList(TNode* pNode, DWORD dwCurentIndex, DWORD dwNumLev
 					j2,		// 0																					
 					dwType);
 			}
+			// 오른쪽
 			else if ((dwXCell == dwCountX) && (pNode->m_dwLodType & 2))
 			{
 				iNumFaces += SetLodIndexBuffer(pNode, dwCurentIndex,
@@ -590,6 +611,7 @@ int TQuadtree::UpdateIndexList(TNode* pNode, DWORD dwCurentIndex, DWORD dwNumLev
 					j2,	// 0																					
 					2);
 			}
+			// 하단
 			else if ((dwYCell == dwCountY) && (pNode->m_dwLodType & 4))
 			{
 				iNumFaces += SetLodIndexBuffer(pNode, dwCurentIndex,
