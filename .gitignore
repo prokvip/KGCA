@@ -51,3 +51,8 @@
 /fbx/lib/release
 /dxtk/DirectXTK-main
 /DirectXTK-main.zip
+/KGCA40b/SampleDemo/x64/Release
+/lib/fmod/fmod_vc.lib
+/lib/fmod/fmodL_vc.lib
+/lib/dxtk/DirectXTK_r.lib
+/lib/dxtk/DirectXTK_d.lib
