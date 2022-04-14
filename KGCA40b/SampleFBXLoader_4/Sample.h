@@ -13,6 +13,9 @@ public:
 	virtual bool	Render()  override;
 	virtual bool	Release()  override;	
 public:
+	void	DisplayErrorBox(const WCHAR* lpszFunction);
+	DWORD	LoadAllPath(const TCHAR* argv, std::vector<std::wstring>& list);
+public:
 	Sample();
 	virtual ~Sample();
 };

@@ -1,5 +1,95 @@
 #include "Sample.h"
 #include "TObjectMgr.h"
+#include <tchar.h> 
+#include <stdio.h>
+#include <strsafe.h>
+
+DWORD  Sample::LoadAllPath( const TCHAR* argv , std::vector<std::wstring>& list)
+{
+	WIN32_FIND_DATA ffd;
+	LARGE_INTEGER filesize;
+	TCHAR szDir[MAX_PATH];
+	size_t length_of_arg;
+	HANDLE hFind = INVALID_HANDLE_VALUE;
+	DWORD dwError = 0;
+
+	StringCchLength(argv, MAX_PATH, &length_of_arg);
+	if (length_of_arg > (MAX_PATH - 3))
+	{
+		//_tprintf(TEXT("\nDirectory path is too long.\n"));
+		return (-1);
+	}
+
+	StringCchCopy(szDir, MAX_PATH, argv);
+	StringCchCat(szDir, MAX_PATH, TEXT("\\*"));
+
+	// Find the first file in the directory.
+
+	hFind = FindFirstFile(szDir, &ffd);
+
+	if (INVALID_HANDLE_VALUE == hFind)
+	{
+		DisplayErrorBox(TEXT("FindFirstFile"));
+		return dwError;
+	}
+
+	do
+	{
+		if (ffd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
+		{
+			//_tprintf(TEXT("  %s   <DIR>\n"), ffd.cFileName);
+		}
+		else
+		{
+			filesize.LowPart = ffd.nFileSizeLow;
+			filesize.HighPart = ffd.nFileSizeHigh;
+			std::wstring path = argv;
+			path += L"/";
+			path += ffd.cFileName;
+			list.push_back(path);
+			//_tprintf(TEXT("  %s   %ld bytes\n"), ffd.cFileName, filesize.QuadPart);
+		}
+	}    while (FindNextFile(hFind, &ffd) != 0);
+
+	dwError = GetLastError();
+	if (dwError != ERROR_NO_MORE_FILES)
+	{
+		DisplayErrorBox(TEXT("FindFirstFile"));
+	}
+
+	FindClose(hFind);
+	return dwError;
+}
+
+
+void Sample::DisplayErrorBox(const WCHAR* lpszFunction)
+{
+	LPVOID lpMsgBuf;
+	LPVOID lpDisplayBuf;
+	DWORD dw = GetLastError();
+
+	FormatMessage(
+		FORMAT_MESSAGE_ALLOCATE_BUFFER |
+		FORMAT_MESSAGE_FROM_SYSTEM |
+		FORMAT_MESSAGE_IGNORE_INSERTS,
+		NULL,
+		dw,
+		MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+		(LPTSTR)&lpMsgBuf,
+		0, NULL);
+
+	lpDisplayBuf = (LPVOID)LocalAlloc(LMEM_ZEROINIT,
+		(lstrlen((LPCTSTR)lpMsgBuf) + lstrlen((LPCTSTR)lpszFunction) + 40) * sizeof(TCHAR));
+	StringCchPrintf((LPTSTR)lpDisplayBuf,
+		LocalSize(lpDisplayBuf) / sizeof(TCHAR),
+		TEXT("%s failed with error %d: %s"),
+		lpszFunction, dw, lpMsgBuf);
+	MessageBox(NULL, (LPCTSTR)lpDisplayBuf, TEXT("Error"), MB_OK);
+
+	LocalFree(lpMsgBuf);
+	LocalFree(lpDisplayBuf);
+}
+
 void	Sample::CreateResizeDevice(UINT iWidth, UINT iHeight)
 {
 	int k = 0;
@@ -9,12 +99,15 @@ void	Sample::DeleteResizeDevice(UINT iWidth, UINT iHeight)
 	int k = 0;
 }
 bool	Sample::Init()
-{			
+{		
 	std::vector<std::wstring> listname;
-	// Greystone.fbx  LOD 메쉬 5개 
+	// Greystone.fbx  LOD 메쉬 5개 	
 	listname.push_back(L"../../data/fbx/Greystone.fbx");
 	listname.push_back(L"../../data/fbx/idle.fbx");
 	listname.push_back(L"../../data/fbx/Man.fbx");
+	LoadAllPath(L"../../data/fbx/AdvancedVillagePack/Meshes", listname);	
+	
+	
 	// 0 ~ 60  idel
 	// 61 ~91  walk;
 	// 92 ~ 116	  run
@@ -29,7 +122,7 @@ bool	Sample::Init()
 	//listname.push_back(L"../../data/fbx/st00sc00.fbx");
 	//listname.push_back(L"../../data/fbx/SM_Tree_Var01.fbx");
 	//listname.push_back(L"../../data/fbx/Turret_Deploy1/Turret_Deploy1.fbx");
-	listname.push_back(L"../../data/fbx/Turret_Deploy1/Turret_Deploy1.fbx");
+	//listname.push_back(L"../../data/fbx/Turret_Deploy1/Turret_Deploy1.fbx");
 
 	I_ObjectMgr.Set(m_pd3dDevice.Get(), m_pImmediateContext.Get());
 	m_FbxObj.resize(listname.size());

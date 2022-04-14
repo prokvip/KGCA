@@ -75,6 +75,7 @@ bool    Sample::LoadFbx()
 }
 bool	Sample::Init()
 {			
+	
 	LoadMap();
 	LoadFbx();	
 	//for (int iObj = 0; iObj < m_FbxObj.size(); iObj++)
