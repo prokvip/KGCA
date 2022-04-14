@@ -112,6 +112,7 @@ struct TConstantData
 	T::TMatrix  matWorld;
 	T::TMatrix  matView;
 	T::TMatrix  matProj;
+	T::TMatrix  matNormal;
 	T::TVector4 Color;
 	T::TVector4 Timer;
 };

@@ -8,6 +8,7 @@ struct VS_INPUT
 
 	float4 i : INDEX;
 	float4 w : WEIGHT;
+	float3 tan : TANGENT;
 };
 struct VS_OUTPUT
 {
@@ -16,6 +17,8 @@ struct VS_OUTPUT
 	float4 c : COLOR0;    // COLOR0 ~ COLOR1
 	float2 t : TEXCOORD0; // TEXCOORD0 ~ TEXCOORD15
 	float3 r  : TEXCOORD1;
+	float3 l  : TEXCOORD2;
+	float3 e  : TEXCOORD3;
 };
 
 // 상수버퍼(단위:레지스터 단위(float4)로 할당되어야 한다.)
@@ -25,8 +28,9 @@ cbuffer cb0 : register(b0)
 	matrix   g_matWorld : packoffset(c0);
 	matrix   g_matView : packoffset(c4);
 	matrix   g_matProj : packoffset(c8);
-	float4   Color0 : packoffset(c12);
-	float    TimerX : packoffset(c13.x); // Timer.x, Timer.y, Timer.z, Timer.w	
+	matrix	 g_matNormal : packoffset(c12);
+	float4   Color0 : packoffset(c16);
+	float    TimerX : packoffset(c17.x); // Timer.x, Timer.y, Timer.z, Timer.w	
 };
 cbuffer cb1 : register(b1)
 {
@@ -55,19 +59,22 @@ VS_OUTPUT VS(VS_INPUT v)
 	}
 	
 	vWorld = mul(vWorld, g_matWorld);
-	vNormal = mul(vNormal, (float3x3)g_matWorld);
+	vNormal = mul(vNormal, (float3x3)g_matNormal);
 
 	float4 vView = mul(vWorld, g_matView);
 	float4 vProj = mul(vView, g_matProj);
 	pOut.p = vProj;	
 	pOut.n = normalize(vNormal);
-	pOut.t = v.t;
-	float fDot = max(0.5f, dot(pOut.n, -vLightDir.xyz));
+	pOut.t = v.t*10;
+	
+	float3 T = normalize(mul(v.tan, (float3x3)g_matNormal));
+	float3 B = normalize(cross(vNormal, T));
 
-
-	float4 vColor = float4(v.c.xyz, 1.0f);
-	pOut.c = float4(fDot, fDot, fDot, 1);// *Color0;
-
+	float3x3 tanMat = { T.x, B.x, vNormal.x,
+						T.y, B.y, vNormal.y,
+						T.z, B.z, vNormal.z };	
+	pOut.l = normalize(mul(-vLightDir.xyz, tanMat));
+	pOut.e = normalize(mul(vEyeDir.xyz, tanMat));
 	pOut.r = reflect(vEyeDir.xyz, pOut.n);
 	return pOut;
 }
@@ -86,46 +93,49 @@ VS_OUTPUT VSColor(VS_INPUT v)
 Texture2D		g_txColor : register(t0);
 Texture2D		g_txMask : register(t1);
 TextureCube	    g_txCubeMap : register(t3);
+Texture2D	    g_txNormalMap : register(t4);
 SamplerState	g_Sample : register(s0);
 
-float Specular(float3 vNormal)
-{
-	// Specular Lighting
-	float  fPower = 0.0f;
-#ifndef HALF_VECTOR
-	float3 R = reflect(vLightDir, vNormal);
-	fPower = pow(saturate(dot(R, -vEyeDir)), 5.0f);
-#else
-	float3 vHalf = normalize(-vLightDir + -vEyeDir);
-	fPower = pow(saturate(dot(vNormal, vHalf)), 5.0f);
-#endif	
-	float4 specular = float4(fPower, fPower, fPower,1.0f);
-	return fPower;
-}
+//float Specular(float3 vNormal)
+//{
+//	// Specular Lighting
+//	float  fPower = 0.0f;
+//#ifndef HALF_VECTOR
+//	float3 R = reflect(vLightDir, vNormal);
+//	fPower = pow(saturate(dot(R, -vEyeDir)), 5.0f);
+//#else
+//	float3 vHalf = normalize(-vLightDir + -vEyeDir);
+//	fPower = pow(saturate(dot(vNormal, vHalf)), 5.0f);
+//#endif	
+//	float4 specular = float4(fPower, fPower, fPower,1.0f);
+//	return fPower;
+//}
 
-float Diffuse(float3 vNormal)
-{
-	float fIntensity = max(0,
-		dot(vNormal, normalize(-vLightDir)));
-	//float4 diffuse = fIntensity;
-	return fIntensity;
-}
+//float Diffuse(float3 vNormal)
+//{
+//	float fIntensity = max(0,
+//		dot(vNormal, normalize(-vLightDir)));
+//	//float4 diffuse = fIntensity;
+//	return fIntensity;
+//}
 
 float4 PS(VS_OUTPUT input) : SV_TARGET
 {
 	//텍스처에서 t좌표에 해당하는 컬러값(픽셀) 반환
 	float4 color = g_txColor.Sample(g_Sample, input.t);
-	//float fDot = Diffuse(input.n) + Specular(input.n);
-	float4 final = color;
-	float fDot = max(0.1f, Diffuse(input.n));
-	// 0 ~ 1 -> 0.0f ~ 0.5f
-	float2 uv = float2(fDot, 0.5f);
-	float4 mask = g_txMask.Sample(g_Sample, uv);
-	// 소스알파(1) = 마스크이미지의 검정색부분은 불투명된다.
-	// 소스알파(0) = 마스크이미지의 흰색부분은   투명된다.
-	final = color*mask;// *mask;// *Color0;	
-	final = final +Specular(input.n);
-	final.a = 1.0f;
+	float4 normal = g_txNormalMap.Sample(g_Sample, input.t);
+	normal = normalize((normal - 0.5f) * 2.0f);
+	float  fDot = saturate(dot(normal.xyz, input.l));
+	float4 final = color * float4(fDot,fDot, fDot, 1);
+	//float fDot = max(0.1f, Diffuse(input.n));
+	//// 0 ~ 1 -> 0.0f ~ 0.5f
+	//float2 uv = float2(fDot, 0.5f);
+	//float4 mask = g_txMask.Sample(g_Sample, uv);
+	//// 소스알파(1) = 마스크이미지의 검정색부분은 불투명된다.
+	//// 소스알파(0) = 마스크이미지의 흰색부분은   투명된다.
+	//final = color*mask;// *mask;// *Color0;	
+	//final = final +Specular(input.n);
+	//final.a = 1.0f;
 	// 알파테스팅 (완전 투명과 완전 불투명 일 때 사용)
 	// 장점 : 순서를 구분하기 어려운 오브젝트 랜더링시 
 	//        정렬된 상태와 유사하게  랜더링된다.
@@ -133,12 +143,10 @@ float4 PS(VS_OUTPUT input) : SV_TARGET
 	{
 		discard;
 	}
-	//final.a = 1.0f;	
-
 	float4 vCube = g_txCubeMap.Sample(g_Sample, input.r);
 	final = lerp(final, vCube, 0.3f);
 	final.a = 1.0f;
-	return final;
+	return float4(fDot, fDot, fDot, 1);
 }
 
 float4 PSAlphaBlend(VS_OUTPUT input) : SV_TARGET

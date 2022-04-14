@@ -5,6 +5,7 @@ class Sample : public TCore
 {
 	std::vector<TFbx>		m_FbxObj;
 	TTexture* m_pLightTex;
+	TTexture* m_pNormalMap;
 public:
 	virtual void	CreateResizeDevice(UINT iWidth, UINT iHeight) override;
 	virtual void	DeleteResizeDevice(UINT iWidth, UINT iHeight) override;

@@ -1,5 +1,73 @@
 #define  _CRT_SECURE_NO_WARNINGS
 #include "TFbxImporter.h"
+FbxVector4 TFbxImporter::ReadTangent(const FbxMesh* mesh,
+	DWORD dwVertexTangentCount, FbxGeometryElementTangent* VertexTangentSets,
+	DWORD dwDCCIndex, DWORD dwVertexIndex)
+{
+	FbxVector4 ret(0, 0, 0);
+	if (dwVertexTangentCount < 1)
+	{
+		return ret;
+	}
+	int dwVertexTangentCountLayer = mesh->GetElementTangentCount();
+	const FbxGeometryElementTangent* vertexTangent = mesh->GetElementTangent(0);
+	if (vertexTangent != nullptr)
+	{
+		switch (vertexTangent->GetMappingMode())
+		{
+		case FbxGeometryElement::eByControlPoint:
+		{
+			switch (vertexTangent->GetReferenceMode())
+			{
+			case FbxGeometryElement::eDirect:
+			{
+				ret[0] = static_cast<float>(vertexTangent->GetDirectArray().GetAt(dwDCCIndex).mData[0]);
+				ret[1] = static_cast<float>(vertexTangent->GetDirectArray().GetAt(dwDCCIndex).mData[1]);
+				ret[2] = static_cast<float>(vertexTangent->GetDirectArray().GetAt(dwDCCIndex).mData[2]);
+			}break;
+			case FbxGeometryElement::eIndexToDirect:
+			{
+				int index = vertexTangent->GetIndexArray().GetAt(dwDCCIndex);
+				ret[0] = static_cast<float>(vertexTangent->GetDirectArray().GetAt(index).mData[0]);
+				ret[1] = static_cast<float>(vertexTangent->GetDirectArray().GetAt(index).mData[1]);
+				ret[2] = static_cast<float>(vertexTangent->GetDirectArray().GetAt(index).mData[2]);
+			}break;
+			default:
+			{
+				assert(0);
+			}break;
+			}break;
+		}
+
+		case FbxGeometryElement::eByPolygonVertex:
+		{
+			switch (vertexTangent->GetReferenceMode())
+			{
+			case FbxGeometryElement::eDirect:
+			{
+				int iTangentIndex = dwVertexIndex;
+				ret[0] = static_cast<float>(vertexTangent->GetDirectArray().GetAt(iTangentIndex).mData[0]);
+				ret[1] = static_cast<float>(vertexTangent->GetDirectArray().GetAt(iTangentIndex).mData[1]);
+				ret[2] = static_cast<float>(vertexTangent->GetDirectArray().GetAt(iTangentIndex).mData[2]);
+			} break;
+			case FbxGeometryElement::eIndexToDirect:
+			{
+				int iTangentIndex = vertexTangent->GetIndexArray().GetAt(dwVertexIndex);
+				ret[0] = static_cast<float>(vertexTangent->GetDirectArray().GetAt(iTangentIndex).mData[0]);
+				ret[1] = static_cast<float>(vertexTangent->GetDirectArray().GetAt(iTangentIndex).mData[1]);
+				ret[2] = static_cast<float>(vertexTangent->GetDirectArray().GetAt(iTangentIndex).mData[2]);
+			} break;
+			default:
+			{
+				assert(0);
+			}
+			} break;
+		}
+		}
+	}
+	return ret;
+}
+
 // 정점 노말을 읽는 함수 
 FbxVector4 TFbxImporter::ReadNormal(const FbxMesh* mesh,
 	DWORD dwVertexNormalCount, FbxLayerElementNormal* VertexNormalSets,

@@ -189,18 +189,25 @@ void	TFbxImporter::ParseMesh(TFbxModel* pObject)
 	// 레이어 ( 1번에 랜더링, 여러번에 걸쳐서 랜더링 개념)
 	std::vector<FbxLayerElementUV*> VertexUVSet;
 	std::vector<FbxLayerElementVertexColor*> VertexColorSet;
+	std::vector<FbxLayerElementTangent*> VertexTangentSet;
 	std::vector<FbxLayerElementMaterial*> MaterialSet;
 	std::vector<FbxLayerElementNormal*>		VertexNormalSets;
 	int iLayerCount = pFbxMesh->GetLayerCount();
-
+	bool bFlag = false;
+	
 	if (iLayerCount == 0 || pFbxMesh->GetLayer(0)->GetNormals() == nullptr)
 	{
 		pFbxMesh->InitNormals();
 #if (FBXSDK_VERSION_MAJOR >= 2015)
-		pFbxMesh->GenerateNormals();
+		pFbxMesh->GenerateNormals();		
 #else
 		pFbxMesh->ComputeVertexNormals();
 #endif
+	}
+
+	if (pFbxMesh->GetLayer(0)->GetTangents() == nullptr)
+	{
+		bFlag = pFbxMesh->GenerateTangentsData(0);
 	}
 
 	for (int iLayer = 0; iLayer < iLayerCount; iLayer++)
@@ -213,6 +220,10 @@ void	TFbxImporter::ParseMesh(TFbxModel* pObject)
 		if (pFbxLayer->GetVertexColors() != nullptr)
 		{
 			VertexColorSet.push_back(pFbxLayer->GetVertexColors());
+		}
+		if (pFbxLayer->GetTangents() != nullptr)
+		{
+			VertexTangentSet.push_back(pFbxLayer->GetTangents());
 		}
 		if (pFbxLayer->GetNormals() != NULL)
 		{
@@ -357,9 +368,27 @@ void	TFbxImporter::ParseMesh(TFbxModel* pObject)
 					D3DXVec3Normalize(&tVertex.n, &tVertex.n);
 				}
 
-
 				// 가중치
 				TVertexIW iwVertex;
+
+				FbxGeometryElementTangent* vertexTangent = pFbxMesh->GetElementTangent(0);
+				if (vertexTangent != nullptr)
+				{					
+					FbxVector4 tangent = ReadTangent(pFbxMesh, 
+						VertexTangentSet.size(),
+						vertexTangent,
+						DCCIndex,
+						iBasePolyIndex + VertexIndex[iIndex]);
+					iwVertex.tan.x = (FLOAT)tangent.mData[0];
+					iwVertex.tan.y = (FLOAT)tangent.mData[2];
+					iwVertex.tan.z = (FLOAT)tangent.mData[1];
+				}
+				else
+				{
+					iwVertex.tan = { 0,0,0 };
+				}
+
+				
 				if (pObject->m_bSkinned)
 				{
 					TWeight* weight = &pObject->m_WeightList[DCCIndex];
@@ -410,6 +439,12 @@ bool	TFbxImporter::CreateConstantBuffer(ID3D11Device* pDevice)
 bool	TFbxImporter::Init()
 {
 	m_pFbxManager = FbxManager::Create();
+	//FbxIOSettings* ios = FbxIOSettings::Create(m_pFbxManager, IOSROOT);
+	//if (ios == nullptr) return false;
+	//m_pFbxManager->SetIOSettings(ios);
+	//bool bTangent = ios->GetBoolProp(IMP_FBX_TANGENT, true);
+	//ios->SetBoolProp(IMP_FBX_TANGENT, true);
+
 	m_pFbxImporter = FbxImporter::Create(m_pFbxManager, "");
 	m_pFbxScene = FbxScene::Create(m_pFbxManager, "");	
 	
@@ -422,8 +457,6 @@ bool	TFbxImporter::Init()
 	{
 		FbxSystemUnit::cm.ConvertScene(m_pFbxScene);
 	}
-
-
 	return true;
 }
 bool	TFbxImporter::Frame()

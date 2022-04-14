@@ -102,10 +102,13 @@ bool	Sample::Init()
 {		
 	std::vector<std::wstring> listname;
 	// Greystone.fbx  LOD ¸Þ½¬ 5°³ 	
-	listname.push_back(L"../../data/fbx/Greystone.fbx");
-	listname.push_back(L"../../data/fbx/idle.fbx");
-	listname.push_back(L"../../data/fbx/Man.fbx");
-	LoadAllPath(L"../../data/fbx/AdvancedVillagePack/Meshes", listname);	
+	listname.push_back(L"../../data/fbx/box1.fbx");
+	listname.push_back(L"../../data/fbx/SM_Barrel.fbx");
+	//listname.push_back(L"../../data/fbx/Greystone.fbx");
+	//listname.push_back(L"../../data/fbx/idle.fbx");
+	
+	//listname.push_back(L"../../data/fbx/Man.fbx");
+	//LoadAllPath(L"../../data/fbx/AdvancedVillagePack/Meshes", listname);	
 	
 	
 	// 0 ~ 60  idel
@@ -142,11 +145,13 @@ bool	Sample::Init()
 		}
 	}
 
-	m_FbxObj[0].m_pAnimImporter = m_FbxObj[1].m_pMeshImp;
+	//m_FbxObj[0].m_pAnimImporter = m_FbxObj[1].m_pMeshImp;
 	m_pMainCamera->CreateViewMatrix(T::TVector3(0, 25.0f, -50.0f),T::TVector3(0, 0.0f, 0));
 	m_pMainCamera->CreateProjMatrix(XM_PI * 0.25f,
 		(float)g_rtClient.right / (float)g_rtClient.bottom, 0.1f, 1000.0f);
 	m_pLightTex = I_Texture.Load(L"../../data/pung00.dds");
+
+	m_pNormalMap = I_Texture.Load(L"../../data/NormalMap/tileADOT3.jpg");
 
 	return true;
 }
@@ -162,6 +167,8 @@ bool	Sample::Render()
 {		
 	m_pImmediateContext->PSSetShaderResources(
 		1, 1, m_pLightTex->m_pSRV.GetAddressOf());
+	m_pImmediateContext->PSSetShaderResources(
+		4, 1, m_pNormalMap->m_pSRV.GetAddressOf());
 	for (int iObj = 0; iObj < m_FbxObj.size(); iObj++)
 	{
 		m_FbxObj[iObj].SetMatrix(nullptr,&m_pMainCamera->m_matView,&m_pMainCamera->m_matProj);

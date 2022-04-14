@@ -10,9 +10,10 @@ struct PNCT
 	T::TVector2 t;
 };
 struct TVertexIW
-{
+{	
 	float  i[4];
 	float  w[4];
+	T::TVector3 tan;
 	TVertexIW()
 	{
 		i[0] = i[1] = i[2] = i[3] = 0;
@@ -143,7 +144,9 @@ public:
 	FbxVector4 ReadNormal(const FbxMesh* mesh,
 		DWORD dwVertexNormalCount, FbxLayerElementNormal* VertexNormalSets,
 		int controlPointIndex, int iVertexIndex);
-
+	FbxVector4 ReadTangent(const FbxMesh* mesh,
+		DWORD dwVertexTangentCount, FbxGeometryElementTangent* VertexTangentSets,
+		DWORD dwDCCIndex, DWORD dwVertexIndex);
 	int GetSubMaterialIndex(int iPlygon,FbxLayerElementMaterial* pMtrl);
 	bool	ParseMeshSkinning(FbxMesh* pFbxMesh, TFbxModel* pObject);
 public:
