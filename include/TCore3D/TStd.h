@@ -18,6 +18,8 @@
 #include <DirectXPackedVector.h>
 #include <DirectXCollision.h>
 #include "TMath.h"
+
+class TBoxObj;
 using namespace Microsoft::WRL;
 
 #pragma comment	(lib, "d3d11.lib")
@@ -46,7 +48,7 @@ extern HWND		g_hWnd;
 extern float	g_fSecPerFrame;
 extern float	g_fGameTimer;
 extern POINT	g_ptMouse;
-
+extern TBoxObj* g_pBoxDebug;
 static std::wstring to_mw(const std::string& _src)
 {
 	USES_CONVERSION;

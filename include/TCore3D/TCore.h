@@ -39,6 +39,12 @@ public:
 		return true;
 	};
 public:
+
+public:
+	TBoxObj		m_BoxDebug;
+	void		DrawDebugInit(ID3D11Device* pd3dDevice,	ID3D11DeviceContext* pContext);
+
+public:
 	TCore();
 	virtual ~TCore();
 };

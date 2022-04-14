@@ -113,7 +113,7 @@ void		TObject3D::UpdateCollision()
 	m_BoxCollision.vAxis[1] = m_vUp;
 	m_BoxCollision.vAxis[2] = m_vLook;
 
-	// GenAABB();
+	
 	m_BoxCollision.vMin = T::TVector3(100000, 100000, 100000);
 	m_BoxCollision.vMax = T::TVector3(-100000, -100000, -100000);
 	for (int iV = 0; iV < 8; iV++)

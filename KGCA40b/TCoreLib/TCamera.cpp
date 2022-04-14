@@ -79,21 +79,31 @@ bool TCamera::Frame()
 	T::TVector2 dir = TInput::Get().GetDelta();
 	if (TInput::Get().GetKey('A') || TInput::Get().GetKey(VK_LEFT))
 	{
-		MoveSide(-g_fSecPerFrame * 100.0f);
+		MoveSide(-g_fSecPerFrame * m_fSpeed);
 	}
 	if (TInput::Get().GetKey('D') || TInput::Get().GetKey(VK_RIGHT))
 	{
-		MoveSide(g_fSecPerFrame * 100.0f);
+		MoveSide(g_fSecPerFrame * m_fSpeed);
 	}
 	//m_Camera.MoveLook(10.0f);
 	if (TInput::Get().GetKey('W'))
 	{
-		MoveLook(g_fSecPerFrame * 100.0f);
+		MoveLook(g_fSecPerFrame * m_fSpeed);
 	}
 	if (TInput::Get().GetKey('S') || TInput::Get().GetKey(VK_DOWN))
 	{
-		MoveLook(-g_fSecPerFrame * 100.0f);
+		MoveLook(-g_fSecPerFrame * m_fSpeed);
 	}
+
+	if (TInput::Get().GetKey(VK_SPACE))
+	{
+		m_fSpeed += g_fSecPerFrame * 500.0f;
+	}
+	else
+	{
+		m_fSpeed -= g_fSecPerFrame * 1000.0f;
+	}
+	if (m_fSpeed < 100.0f) m_fSpeed = 100.0f;
 
 	Update(T::TVector4(-dir.x, -dir.y, 0, 0));
 	return true;
@@ -107,4 +117,5 @@ TCamera::TCamera()
 	m_vTarget.y = 0;
 	m_vTarget.z = 100;
 	m_vUp = m_vDefaultUp = T::TVector3(0, 1, 0);
+	m_fSpeed = 100.0f;
 }

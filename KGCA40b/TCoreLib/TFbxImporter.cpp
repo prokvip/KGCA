@@ -500,7 +500,8 @@ bool	TFbxImporter::Load(ID3D11Device* pd3dDevice, std::wstring filename)
 			{
 				return false;
 			}
-		}
+			m_DrawList[iObj]->GenAABB();
+		}		
 	}
 	return true;
 }

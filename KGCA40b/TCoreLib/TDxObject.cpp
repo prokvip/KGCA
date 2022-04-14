@@ -220,6 +220,7 @@ bool	TDxObject::Create(ID3D11Device* pd3dDevice,
 	{
 		return false;
 	}
+	
 	return true;
 }
 bool	TDxObject::Init()

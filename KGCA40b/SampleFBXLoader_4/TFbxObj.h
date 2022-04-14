@@ -18,6 +18,8 @@ public:
 	virtual bool	Frame()override;
 	virtual bool	Render()override;
 	virtual bool    Release() override;
+	void			GenAABB()override;
 public:
+	
 	T::TMatrix Interplate(TFbxImporter* pAnimImp,TFbxModel* pModel, float fFrame);
 };

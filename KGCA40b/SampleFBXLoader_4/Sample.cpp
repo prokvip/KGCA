@@ -3,7 +3,7 @@
 #include <tchar.h> 
 #include <stdio.h>
 #include <strsafe.h>
-
+#include "TBoxObj.h"
 DWORD  Sample::LoadAllPath( const TCHAR* argv , std::vector<std::wstring>& list)
 {
 	WIN32_FIND_DATA ffd;
@@ -101,14 +101,14 @@ void	Sample::DeleteResizeDevice(UINT iWidth, UINT iHeight)
 bool	Sample::Init()
 {		
 	std::vector<std::wstring> listname;
-	// Greystone.fbx  LOD 메쉬 5개 	
-	listname.push_back(L"../../data/fbx/box1.fbx");
-	listname.push_back(L"../../data/fbx/SM_Barrel.fbx");
+	//// Greystone.fbx  LOD 메쉬 5개 	
+	//listname.push_back(L"../../data/fbx/box1.fbx");
+	//listname.push_back(L"../../data/fbx/SM_Barrel.fbx");
 	//listname.push_back(L"../../data/fbx/Greystone.fbx");
 	//listname.push_back(L"../../data/fbx/idle.fbx");
 	
 	//listname.push_back(L"../../data/fbx/Man.fbx");
-	//LoadAllPath(L"../../data/fbx/AdvancedVillagePack/Meshes", listname);	
+	LoadAllPath(L"../../data/fbx/AdvancedVillagePack/Meshes", listname);	
 	
 	
 	// 0 ~ 60  idel
@@ -138,7 +138,12 @@ bool	Sample::Init()
 		pFbx->m_pContext = m_pImmediateContext.Get();
 		pFbx->m_pMeshImp = I_ObjectMgr.Load(listname[iObj]);
 		pFbx->m_DrawList.resize(pFbx->m_pMeshImp->m_DrawList.size());
-		pFbx->SetPosition(T::TVector3(iObj * 100.0f, 0, 0));
+		int iRow = iObj / 10;
+		int iCol = iObj / 10;
+		int iOffRow = iObj % 10;
+		int iOffCol = iObj % 10;
+		pFbx->SetPosition(T::TVector3(	iOffCol*300.0f, 0, 
+										iRow * 300.0f));
 		for (int iDraw = 0; iDraw < pFbx->m_pMeshImp->m_DrawList.size(); iDraw++)
 		{
 			pFbx->m_pMeshImp->m_DrawList[iDraw]->m_pContext = m_pImmediateContext.Get();
@@ -147,12 +152,9 @@ bool	Sample::Init()
 
 	//m_FbxObj[0].m_pAnimImporter = m_FbxObj[1].m_pMeshImp;
 	m_pMainCamera->CreateViewMatrix(T::TVector3(0, 25.0f, -50.0f),T::TVector3(0, 0.0f, 0));
-	m_pMainCamera->CreateProjMatrix(XM_PI * 0.25f,
-		(float)g_rtClient.right / (float)g_rtClient.bottom, 0.1f, 1000.0f);
+	m_pMainCamera->CreateProjMatrix(XM_PI * 0.25f,	(float)g_rtClient.right / (float)g_rtClient.bottom, 0.1f, 50000.0f);
 	m_pLightTex = I_Texture.Load(L"../../data/pung00.dds");
-
 	m_pNormalMap = I_Texture.Load(L"../../data/NormalMap/tileADOT3.jpg");
-
 	return true;
 }
 bool	Sample::Frame()
@@ -165,14 +167,23 @@ bool	Sample::Frame()
 }
 bool	Sample::Render()
 {		
-	m_pImmediateContext->PSSetShaderResources(
-		1, 1, m_pLightTex->m_pSRV.GetAddressOf());
-	m_pImmediateContext->PSSetShaderResources(
-		4, 1, m_pNormalMap->m_pSRV.GetAddressOf());
+	m_pImmediateContext->PSSetShaderResources(1, 1, m_pLightTex->m_pSRV.GetAddressOf());
+	m_pImmediateContext->PSSetShaderResources(4, 1, m_pNormalMap->m_pSRV.GetAddressOf());
 	for (int iObj = 0; iObj < m_FbxObj.size(); iObj++)
 	{
 		m_FbxObj[iObj].SetMatrix(nullptr,&m_pMainCamera->m_matView,&m_pMainCamera->m_matProj);
 		m_FbxObj[iObj].Render();
+	}
+
+	for (int iObj = 0; iObj < m_FbxObj.size(); iObj++)
+	{
+		for (int iDraw = 0; iDraw < m_FbxObj[iObj].m_DrawList.size(); iDraw++)
+		{
+			g_pBoxDebug->SetMatrix(&m_FbxObj[iObj].m_pMeshImp->m_DrawList[iDraw]->m_matWorld, 
+				&m_pMainCamera->m_matView, 
+				&m_pMainCamera->m_matProj);
+			g_pBoxDebug->DrawDebugRender(&m_FbxObj[iObj].m_pMeshImp->m_DrawList[iDraw]->m_BoxCollision);
+		}
 	}
 	std::wstring msg = L"FPS:";
 	msg += std::to_wstring(m_GameTimer.m_iFPS);

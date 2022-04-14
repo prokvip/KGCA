@@ -1,6 +1,8 @@
 #include "TCore.h"
 #include "TObjectMgr.h"
 #include "TSoundMgr.h"
+
+TBoxObj* g_pBoxDebug = nullptr;
 bool	TCore::CoreInit()
 {
 	m_GameTimer.Init();	
@@ -53,6 +55,10 @@ bool	TCore::CoreInit()
 	{
 		return false;
 	}
+
+
+	DrawDebugInit(m_pd3dDevice.Get(),m_pImmediateContext.Get());
+	g_pBoxDebug = &m_BoxDebug;
 
 	Init();
 
@@ -138,7 +144,8 @@ bool	TCore::CoreRender()
 bool	TCore::CoreRelease()
 {
 	Release();
-	//m_SkyObj.Release();
+	m_BoxDebug.Release();
+	m_SkyObj.Release();
 	m_DefaultCamera.Release();
 	TDxState::Release();
 	m_dxWrite.Release();
@@ -168,6 +175,22 @@ void     TCore::ResizeDevice(UINT iWidth, UINT iHeight)
 
 	CreateResizeDevice(iWidth, iHeight);
 }
+
+void TCore::DrawDebugInit(ID3D11Device* pd3dDevice,ID3D11DeviceContext* pContext)
+{
+	m_BoxDebug.m_pColorTex = I_Texture.Load(L"../../data/charport.bmp");
+	m_BoxDebug.m_pVShader = I_Shader.CreateVertexShader(
+		pd3dDevice, L"Box.hlsl", "VSColor");
+	m_BoxDebug.m_pPShader = I_Shader.CreatePixelShader(
+		pd3dDevice, L"Box.hlsl", "PSColor");
+	m_BoxDebug.SetPosition(T::TVector3(0.0f, 1.0f, 0.0f));
+	if (!m_BoxDebug.Create(pd3dDevice, pContext))
+	{
+		return;
+	}
+}
+
+
 TCore::TCore()
 {
 

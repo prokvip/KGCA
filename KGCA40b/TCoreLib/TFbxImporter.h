@@ -93,7 +93,7 @@ public:
 	virtual bool	CreateInputLayout() override;
 	virtual bool	PostRender() override;
 	virtual bool    Release() override;
-	
+	virtual void    GenAABB()override;
 };
 struct TScene
 {
