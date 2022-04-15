@@ -20,6 +20,7 @@ class Sample : public TCore
 	std::vector<TFbx>		m_FbxObj;
 	TQuadObject				m_QuadObj;
 	TTexture* m_pLightTex;
+	TTexture* m_pNormalMap;
 public:
 	virtual void	CreateResizeDevice(UINT iWidth, UINT iHeight) override;
 	virtual void	DeleteResizeDevice(UINT iWidth, UINT iHeight) override;
@@ -30,6 +31,9 @@ public:
 public:
 	bool	LoadMap();
 	bool    LoadFbx();
+public:
+	void	DisplayErrorBox(const WCHAR* lpszFunction);
+	DWORD	LoadAllPath(const TCHAR* argv, std::vector<std::wstring>& list);
 public:
 	void		RenderIntoBuffer(ID3D11DeviceContext* pContext);
 	void		RenderMRT(ID3D11DeviceContext* pContext);

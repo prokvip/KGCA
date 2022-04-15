@@ -1,57 +1,92 @@
 #include "Sample.h"
 #include "TObjectMgr.h"
-void ClearD3D11DeviceContext(ID3D11DeviceContext* pd3dDeviceContext)
+#include <strsafe.h>
+#include "TBoxObj.h"
+
+DWORD  Sample::LoadAllPath(const TCHAR* argv, std::vector<std::wstring>& list)
 {
-	if (pd3dDeviceContext == NULL) return;
+	WIN32_FIND_DATA ffd;
+	LARGE_INTEGER filesize;
+	TCHAR szDir[MAX_PATH];
+	size_t length_of_arg;
+	HANDLE hFind = INVALID_HANDLE_VALUE;
+	DWORD dwError = 0;
 
-	ID3D11ShaderResourceView* pSRVs[16] = { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 };
-	ID3D11RenderTargetView* pRTVs[16] = { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 };
-	ID3D11DepthStencilView* pDSV = NULL;
-	ID3D11Buffer* pBuffers[16] = { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 };
-	ID3D11SamplerState* pSamplers[16] = { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 };
-	UINT StrideOffset[16] = { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 };
+	StringCchLength(argv, MAX_PATH, &length_of_arg);
+	if (length_of_arg > (MAX_PATH - 3))
+	{
+		//_tprintf(TEXT("\nDirectory path is too long.\n"));
+		return (-1);
+	}
 
-	// Shaders
-	pd3dDeviceContext->VSSetShader(NULL, NULL, 0);
-	pd3dDeviceContext->HSSetShader(NULL, NULL, 0);
-	pd3dDeviceContext->DSSetShader(NULL, NULL, 0);
-	pd3dDeviceContext->GSSetShader(NULL, NULL, 0);
-	pd3dDeviceContext->PSSetShader(NULL, NULL, 0);
+	StringCchCopy(szDir, MAX_PATH, argv);
+	StringCchCat(szDir, MAX_PATH, TEXT("\\*"));
 
-	// IA clear
-	pd3dDeviceContext->IASetVertexBuffers(0, 16, pBuffers, StrideOffset, StrideOffset);
-	pd3dDeviceContext->IASetIndexBuffer(NULL, DXGI_FORMAT_R32_UINT, 0);
-	pd3dDeviceContext->IASetInputLayout(NULL);
+	// Find the first file in the directory.
 
-	// Constant buffers
-	pd3dDeviceContext->VSSetConstantBuffers(0, 14, pBuffers);
-	pd3dDeviceContext->HSSetConstantBuffers(0, 14, pBuffers);
-	pd3dDeviceContext->DSSetConstantBuffers(0, 14, pBuffers);
-	pd3dDeviceContext->GSSetConstantBuffers(0, 14, pBuffers);
-	pd3dDeviceContext->PSSetConstantBuffers(0, 14, pBuffers);
+	hFind = FindFirstFile(szDir, &ffd);
 
-	// Resources
-	pd3dDeviceContext->VSSetShaderResources(0, 16, pSRVs);
-	pd3dDeviceContext->HSSetShaderResources(0, 16, pSRVs);
-	pd3dDeviceContext->DSSetShaderResources(0, 16, pSRVs);
-	pd3dDeviceContext->GSSetShaderResources(0, 16, pSRVs);
-	pd3dDeviceContext->PSSetShaderResources(0, 16, pSRVs);
+	if (INVALID_HANDLE_VALUE == hFind)
+	{
+		DisplayErrorBox(TEXT("FindFirstFile"));
+		return dwError;
+	}
 
-	// Samplers
-	pd3dDeviceContext->VSSetSamplers(0, 16, pSamplers);
-	pd3dDeviceContext->HSSetSamplers(0, 16, pSamplers);
-	pd3dDeviceContext->DSSetSamplers(0, 16, pSamplers);
-	pd3dDeviceContext->GSSetSamplers(0, 16, pSamplers);
-	pd3dDeviceContext->PSSetSamplers(0, 16, pSamplers);
+	do
+	{
+		if (ffd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
+		{
+			//_tprintf(TEXT("  %s   <DIR>\n"), ffd.cFileName);
+		}
+		else
+		{
+			filesize.LowPart = ffd.nFileSizeLow;
+			filesize.HighPart = ffd.nFileSizeHigh;
+			std::wstring path = argv;
+			path += L"/";
+			path += ffd.cFileName;
+			list.push_back(path);
+			//_tprintf(TEXT("  %s   %ld bytes\n"), ffd.cFileName, filesize.QuadPart);
+		}
+	} while (FindNextFile(hFind, &ffd) != 0);
 
-	// Render targets
-	pd3dDeviceContext->OMSetRenderTargets(8, pRTVs, pDSV);
+	dwError = GetLastError();
+	if (dwError != ERROR_NO_MORE_FILES)
+	{
+		DisplayErrorBox(TEXT("FindFirstFile"));
+	}
 
-	// States
-	FLOAT blendFactor[4] = { 0,0,0,0 };
-	pd3dDeviceContext->OMSetBlendState(NULL, blendFactor, 0xFFFFFFFF);
-	pd3dDeviceContext->OMSetDepthStencilState(NULL, 0);
-	pd3dDeviceContext->RSSetState(NULL);
+	FindClose(hFind);
+	return dwError;
+}
+
+
+void Sample::DisplayErrorBox(const WCHAR* lpszFunction)
+{
+	LPVOID lpMsgBuf;
+	LPVOID lpDisplayBuf;
+	DWORD dw = GetLastError();
+
+	FormatMessage(
+		FORMAT_MESSAGE_ALLOCATE_BUFFER |
+		FORMAT_MESSAGE_FROM_SYSTEM |
+		FORMAT_MESSAGE_IGNORE_INSERTS,
+		NULL,
+		dw,
+		MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+		(LPTSTR)&lpMsgBuf,
+		0, NULL);
+
+	lpDisplayBuf = (LPVOID)LocalAlloc(LMEM_ZEROINIT,
+		(lstrlen((LPCTSTR)lpMsgBuf) + lstrlen((LPCTSTR)lpszFunction) + 40) * sizeof(TCHAR));
+	StringCchPrintf((LPTSTR)lpDisplayBuf,
+		LocalSize(lpDisplayBuf) / sizeof(TCHAR),
+		TEXT("%s failed with error %d: %s"),
+		lpszFunction, dw, lpMsgBuf);
+	MessageBox(NULL, (LPCTSTR)lpDisplayBuf, TEXT("Error"), MB_OK);
+
+	LocalFree(lpMsgBuf);
+	LocalFree(lpDisplayBuf);
 }
 void	Sample::CreateResizeDevice(UINT iWidth, UINT iHeight)
 {
@@ -88,7 +123,9 @@ bool    Sample::LoadFbx()
 	// Greystone.fbx  LOD ¸Þ½¬ 5°³ 
 	listname.push_back(L"../../data/fbx/Greystone.fbx");
 	listname.push_back(L"../../data/fbx/idle.fbx");
-	listname.push_back(L"../../data/fbx/Man.fbx");
+	//listname.push_back(L"../../data/fbx/Man.fbx");
+	LoadAllPath(L"../../data/fbx/AdvancedVillagePack/Meshes", listname);
+
 	// 0 ~ 60  idel
 	// 61 ~91  walk;
 	// 92 ~ 116	  run
@@ -103,7 +140,7 @@ bool    Sample::LoadFbx()
 	//listname.push_back(L"../../data/fbx/st00sc00.fbx");
 	//listname.push_back(L"../../data/fbx/SM_Tree_Var01.fbx");
 	//listname.push_back(L"../../data/fbx/Turret_Deploy1/Turret_Deploy1.fbx");
-	listname.push_back(L"../../data/fbx/Turret_Deploy1/Turret_Deploy1.fbx");
+	//listname.push_back(L"../../data/fbx/Turret_Deploy1/Turret_Deploy1.fbx");
 
 	I_ObjectMgr.Set(m_pd3dDevice.Get(), m_pImmediateContext.Get());
 	m_FbxObj.resize(listname.size());
@@ -116,7 +153,11 @@ bool    Sample::LoadFbx()
 		pFbx->m_pContext = m_pImmediateContext.Get();
 		pFbx->m_pMeshImp = I_ObjectMgr.Load(listname[iObj]);
 		pFbx->m_DrawList.resize(pFbx->m_pMeshImp->m_DrawList.size());
-		pFbx->SetPosition(T::TVector3(iObj * 100.0f, 0, 0));
+		int iRow = iObj / 10;
+		int iCol = iObj / 10;
+		int iOffRow = iObj % 10;
+		int iOffCol = iObj % 10;
+		pFbx->SetPosition(T::TVector3(iOffCol * 300.0f, 1000,	iRow * 300.0f));
 		for (int iDraw = 0; iDraw < pFbx->m_pMeshImp->m_DrawList.size(); iDraw++)
 		{
 			pFbx->m_pMeshImp->m_DrawList[iDraw]->m_pContext = m_pImmediateContext.Get();
@@ -136,7 +177,7 @@ bool	Sample::Init()
 	}
 
 	LoadMap();
-	//LoadFbx();
+	LoadFbx();
 
 
 	m_QuadObj.CreateTextures(m_pd3dDevice.Get(), 
@@ -147,8 +188,9 @@ bool	Sample::Init()
 	m_pMainCamera->CreateViewMatrix(T::TVector3(0, 100.0f, -300.0f), T::TVector3(0, 0.0f, 0));
 	m_pMainCamera->CreateProjMatrix(XM_PI * 0.25f,
 		(float)g_rtClient.right / (float)g_rtClient.bottom, 0.1f, 5000.0f);
+	
 	m_pLightTex = I_Texture.Load(L"../../data/pung00.dds");
-
+	m_pNormalMap = I_Texture.Load(L"../../data/NormalMap/tileADOT3.jpg");
 	return true;
 }
 bool	Sample::Frame()
@@ -171,6 +213,19 @@ bool	Sample::Render()
 	m_QuadObj.SetMatrix(nullptr, nullptr, nullptr);
 	m_QuadObj.Render();
 
+
+#ifdef _DEBUG
+	for (int iObj = 0; iObj < m_FbxObj.size(); iObj++)
+	{
+		for (int iDraw = 0; iDraw < m_FbxObj[iObj].m_DrawList.size(); iDraw++)
+		{
+			g_pBoxDebug->SetMatrix(&m_FbxObj[iObj].m_pMeshImp->m_DrawList[iDraw]->m_matWorld,
+				&m_pMainCamera->m_matView,
+				&m_pMainCamera->m_matProj);
+			g_pBoxDebug->DrawDebugRender(&m_FbxObj[iObj].m_pMeshImp->m_DrawList[iDraw]->m_BoxCollision);
+		}
+	}
+#endif
 	std::wstring msg = L"FPS:";
 	msg += std::to_wstring(m_GameTimer.m_iFPS);
 	msg += L"  GT:";
@@ -229,11 +284,11 @@ void Sample::RenderMRT(ID3D11DeviceContext* pContext)
 	m_MapObj.SetMatrix(nullptr, &m_pMainCamera->m_matView, &m_pMainCamera->m_matProj);
 	m_Quadtree.Render();
 
+
 	if (m_pLightTex)
-	{
-		m_pImmediateContext->PSSetShaderResources(
-			1, 1, m_pLightTex->m_pSRV.GetAddressOf());
-	}
+		m_pImmediateContext->PSSetShaderResources(1, 1, m_pLightTex->m_pSRV.GetAddressOf());
+	if (m_pNormalMap)
+		m_pImmediateContext->PSSetShaderResources(4, 1, m_pNormalMap->m_pSRV.GetAddressOf());
 	for (int iObj = 0; iObj < m_FbxObj.size(); iObj++)
 	{
 		m_FbxObj[iObj].SetMatrix(nullptr, &m_pMainCamera->m_matView, &m_pMainCamera->m_matProj);

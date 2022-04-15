@@ -27,7 +27,9 @@ public:
 	virtual bool	CreateDetphStencilView();
 	virtual bool	SetViewport();
 	virtual bool	CleapupDevice();
-	void			ResizeDevice(UINT iWidth, UINT iHeight);
+public:
+	void ResizeDevice(UINT iWidth, UINT iHeight);
+	void ClearD3D11DeviceContext(ID3D11DeviceContext* pd3dDeviceContext);
 public:
 	TDevice();
 	virtual ~TDevice();
