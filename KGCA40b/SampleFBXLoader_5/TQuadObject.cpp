@@ -1,4 +1,5 @@
 #include "TQuadObject.h"
+#include "TInput.h"
 HRESULT TQuadObject::CreateConstantBuffer(ID3D11Device* pd3dDevice)
 {
 	HRESULT hr;
@@ -139,23 +140,24 @@ HRESULT TQuadObject::CreateTextures(ID3D11Device* pDevice, UINT iWidth, UINT iHe
 }
 bool TQuadObject::Frame()
 {
-	//if(g_InputData.bZKey)
-	//{
-	//	m_MaskValue.g_fMask += 3.0f*g_fSecPerFrame;
-	//	if (m_MaskValue.g_fMask > 30.0f)
-	//		m_MaskValue.g_fMask = 30;
-	//}
-	//if (g_InputData.bCKey)
-	//{
-	//	m_MaskValue.g_fMask -= 3.0f*g_fSecPerFrame;
-	//	if (m_MaskValue.g_fMask < 3.0f)
-	//		m_MaskValue.g_fMask = 3;
-	//}
+	if(TInput::Get().GetKey('Z'))
+	{
+		m_MaskValue.g_fMask += 10.0f*g_fSecPerFrame;
+		if (m_MaskValue.g_fMask > 30.0f)
+			m_MaskValue.g_fMask = 30;
+	}
+	if (TInput::Get().GetKey('X'))
+	{
+		m_MaskValue.g_fMask -= 10.0f*g_fSecPerFrame;
+		if (m_MaskValue.g_fMask < 3.0f)
+			m_MaskValue.g_fMask = 3;
+	}
 	return true;
 }
 bool TQuadObject::Render()
 {
 	PreRender();
+	Draw();
 
 	m_pContext->PSSetShaderResources(0, 1, m_pColorSRV.GetAddressOf());
 	m_pContext->PSSetShaderResources(1, 1, m_pNormalDepthSRV.GetAddressOf());

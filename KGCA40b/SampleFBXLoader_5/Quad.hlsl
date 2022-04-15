@@ -140,21 +140,13 @@ float4 Sobel( float3 vTex, Texture2D tex2D )
 	// 0 0 0
 	// 1 2 1
 	float4 SobelY = -tl - 2.0f *t - tr + bl + 2.0f *b + br;
-
-	//float3 N = normalize(float3(-SobelX.x, -SobelY.x, 1.0f));
-	//N = N *0.5f +0.5f;
-
 	float4 SobelResult = abs(SobelX) + abs(SobelY);
-	float deltaNormal = (SobelResult.x + SobelResult.y + SobelResult.z ) / 3;
-	float deltaDepth = SobelResult.w;
-		
-	if (deltaNormal < 0.9f && deltaDepth < 0.05f)
-	{
-		return float4(1,1,1,0);
-	} else 
-	{
-		return float4(0,0,0,1);
-	}	
+	float deltaNormal = 1.0f- 
+		min(1.0f, 32.0f * pow((SobelResult.x + SobelResult.y + SobelResult.z ) / 3, 2.0f));
+	float fDepth = 1.0f - 
+		min(1.0f, 32.0f * pow(tl.a - br.a, 2.0f) + pow(bl.a - tr.a, 2.0f));
+	deltaNormal = deltaNormal*fDepth;
+	return float4(deltaNormal, deltaNormal, deltaNormal,1);
 }
 
 // 한 방향만의 마스크 생성
@@ -191,30 +183,26 @@ float4 GaussianPixelShader(float3 vTex, Texture2D tex2D)
     return color;
 }
 
-float4 PS( VS_OUTPUT input) : SV_Target
+float4 PS(VS_OUTPUT input) : SV_Target
 {
     float4 vTexture = g_txColor.Sample(g_samLinear,input.t);
 	float4 vNormalColor = g_txNormalDepth.Sample(g_samLinear,input.t);	
-	// 배경에는 alpha=0 이 기입되어 있다.
-	if( vTexture.w < 0.1f )
+	// 스카이오브젝트 랜더링에 사용
+	if (vTexture.w < 0.01f)
 	{
-		discard;	
+		discard;
 	}
-	// 내부 경계 및 외부 경계  	
-	float4 vEdgeColor =  Sobel(float3(input.t, 0.0f),g_txNormalDepth);
+//	// 내부 경계 및 외부 경계  	
+	float4 vEdgeColor =  Sobel(float3(input.t, 0.0f), g_txNormalDepth);
 	float4 vFinal = vEdgeColor *vTexture;
-	
 #ifdef GAUSSIAN_BLUR
 	float4 vBlur = GaussianBlur(float3(input.t, 0.0f), g_txColor);
 #else
 	float4 vBlur = Blur(float3(input.t, 0.0f), g_txColor);
 #endif
-	
 	float4 vSharp = Sharp(float3(input.t, 0.0f), g_txColor);	
-	float4 cBlur = lerp( vSharp, vBlur, vNormalColor.w );
-
-	vFinal = lerp( cBlur, vFinal, vNormalColor.w );
-	vFinal.w = 1.0f;
-	//float4 vColor = float4(vNormalColor.w,vNormalColor.w, vNormalColor.w, 1.0f);
+	float4 cSharp_Blur = lerp(  vBlur, vSharp,vNormalColor.w );
+	vFinal = lerp(cSharp_Blur, vFinal, vNormalColor.w );
+	vFinal.a = 1;
 	return vFinal;
 }

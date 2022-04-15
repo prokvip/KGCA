@@ -3,6 +3,10 @@ ID3D11BlendState* TDxState::m_AlphaBlend = nullptr;
 ID3D11BlendState* TDxState::m_AlphaBlendDisable = nullptr;
 ID3D11SamplerState* TDxState::m_pSSLinear = nullptr;
 ID3D11SamplerState* TDxState::m_pSSPoint = nullptr;
+ID3D11SamplerState* TDxState::g_pSSMirrorLinear = nullptr;
+ID3D11SamplerState* TDxState::g_pSSMirrorPoint = nullptr;
+ID3D11SamplerState* TDxState::g_pSSClampLinear = nullptr;
+ID3D11SamplerState* TDxState::g_pSSClampPoint = nullptr;
 ID3D11RasterizerState* TDxState::g_pRSBackCullSolid =nullptr;
 ID3D11RasterizerState* TDxState::g_pRSNoneCullSolid = nullptr;
 ID3D11RasterizerState* TDxState::g_pRSBackCullWireFrame = nullptr;
@@ -60,6 +64,44 @@ bool TDxState::SetState(ID3D11Device* pd3dDevice)
 	hr = pd3dDevice->CreateSamplerState(&sd, &m_pSSLinear);
 	sd.Filter = D3D11_FILTER_MIN_MAG_MIP_POINT;
 	hr = pd3dDevice->CreateSamplerState(&sd, &m_pSSPoint);
+
+	sd.AddressU = D3D11_TEXTURE_ADDRESS_MIRROR;
+	sd.AddressV = D3D11_TEXTURE_ADDRESS_MIRROR;
+	sd.AddressW = D3D11_TEXTURE_ADDRESS_MIRROR;
+	sd.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+	if (FAILED(hr = pd3dDevice->CreateSamplerState(&sd, &g_pSSMirrorLinear)))
+	{
+		return hr;
+	}
+
+
+	sd.AddressU = D3D11_TEXTURE_ADDRESS_MIRROR;
+	sd.AddressV = D3D11_TEXTURE_ADDRESS_MIRROR;
+	sd.AddressW = D3D11_TEXTURE_ADDRESS_MIRROR;
+	sd.Filter = D3D11_FILTER_MIN_MAG_MIP_POINT;
+	if (FAILED(hr = pd3dDevice->CreateSamplerState(&sd, &g_pSSMirrorPoint)))
+	{
+		return hr;
+	}
+
+
+	sd.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
+	sd.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
+	sd.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
+	sd.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+	if (FAILED(hr = pd3dDevice->CreateSamplerState(&sd, &g_pSSClampLinear)))
+	{
+		return hr;
+	}
+
+	sd.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
+	sd.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
+	sd.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
+	sd.Filter = D3D11_FILTER_MIN_MAG_MIP_POINT;
+	if (FAILED(hr = pd3dDevice->CreateSamplerState(&sd, &g_pSSClampPoint)))
+	{
+		return hr;
+	}
 
 	D3D11_RASTERIZER_DESC rsDesc;
 	ZeroMemory(&rsDesc, sizeof(rsDesc));
@@ -150,7 +192,11 @@ bool TDxState::Release()
 	m_AlphaBlend = nullptr;
 	m_AlphaBlendDisable = nullptr;
 
-	if (m_pSSLinear)m_pSSLinear->Release();
-	if (m_pSSPoint)m_pSSPoint->Release();
+	if (m_pSSLinear)m_pSSLinear->Release(); m_pSSLinear = NULL;
+	if (m_pSSPoint)m_pSSPoint->Release(); m_pSSPoint = NULL;
+	if (g_pSSMirrorLinear)	g_pSSMirrorLinear->Release(); g_pSSMirrorLinear = NULL;
+	if (g_pSSMirrorPoint)	g_pSSMirrorPoint->Release(); g_pSSMirrorPoint = NULL;
+	if (g_pSSClampLinear)	g_pSSClampLinear->Release(); g_pSSClampLinear = NULL;
+	if (g_pSSClampPoint)	g_pSSClampPoint->Release(); g_pSSClampPoint = NULL;
 	return true;
 }

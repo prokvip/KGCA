@@ -6,34 +6,6 @@ Texture2D	g_txNormalMap	: register (t1);
 Texture2D	g_txHeightMap	: register (t2);
 SamplerState g_samLinear: register (s0);
 
-cbuffer cb0 : register(b0)
-{
-	matrix	g_matWorld		: packoffset(c0);
-	matrix	g_matView		: packoffset(c4);
-	matrix	g_matProj		: packoffset(c8);
-	float4  g_MeshColor     : packoffset(c12);
-};
-
-//-----------------------------------------------------------------------------
-//상수 버퍼
-//-----------------------------------------------------------------------------
-cbuffer cbObjectChangesEveryFrame: register(b1)
-{
-	// Global
-	matrix				g_matNormal;
-	float3				cb_vLightVector;
-	float3				cb_vEyePos;
-	float3				cb_vEyeDir;
-};
-
-cbuffer cbObjectNeverChanges: register(b2)
-{
-	// Global	
-	float4				cb_AmbientLightColor: packoffset(c0);
-	float4				cb_DiffuseLightColor: packoffset(c1);
-	float3				cb_SpecularLightColor: packoffset(c2);
-	float				cb_SpecularPower : packoffset(c2.w);
-};
 
 struct PNCT2_VS_INPUT
 {
