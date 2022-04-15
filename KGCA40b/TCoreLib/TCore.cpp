@@ -74,7 +74,7 @@ bool	TCore::GameRun()
 	}
 	CoreRelease();
 
-	MemoryReporting();
+	//MemoryReporting();
 	return true;
 }
 bool	TCore::CoreFrame()

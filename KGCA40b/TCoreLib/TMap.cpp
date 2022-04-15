@@ -266,6 +266,10 @@ bool		TMap::SetIndexData()
 	}
 	return true;
 }
+float		TMap::GetHeight(int index)
+{
+	return m_fHeightList[index];
+}
 TMap::TMap()
 {
 

@@ -27,6 +27,7 @@ public:
 	virtual bool		SetVertexData();
 	virtual bool		SetIndexData();
 	virtual bool		Frame() override;
+	virtual float		GetHeight(int index);
 	float GetHeight(float fPosX, float fPosZ);
 	float GetHeightmap(int row, int col);
 	float Lerp(float fStart, float fEnd, float fTangent);
