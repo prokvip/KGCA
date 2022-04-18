@@ -13,8 +13,8 @@ bool	TInput::Init()
 T::TVector2 TInput::GetDelta()
 {
 	T::TVector2 ret;
-	m_fRadianY += (TInput::Get().m_ptDeltaMouse.x / (float)g_rtClient.right) * TBASIS_PI;
-	m_fRadianX += (TInput::Get().m_ptDeltaMouse.y / (float)g_rtClient.bottom) * TBASIS_PI;
+	m_fRadianY = (TInput::Get().m_ptDeltaMouse.x / (float)g_rtClient.right) * TBASIS_PI;
+	m_fRadianX = (TInput::Get().m_ptDeltaMouse.y / (float)g_rtClient.bottom) * TBASIS_PI;
 	return TVector2(m_fRadianX, m_fRadianY);
 }
 bool	TInput::Frame() 

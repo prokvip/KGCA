@@ -6,7 +6,7 @@ public:
 	float				m_fNearDistance= 0.01f;
 	float				m_fFarDistance = 1000.0f;
 
-	float				m_fRadius=10.0f;
+	
 	T::TQuaternion		m_qRotation;
 	T::TVector3			m_vCamera;
 	T::TVector3			m_vTarget;
@@ -15,6 +15,11 @@ public:
 	T::TVector3			m_vRight; //x	
 	T::TVector3			m_vUp; //y 
 	T::TVector3			m_vLook; // z	
+	
+	float			m_fPitch =0.0f;
+	float			m_fYaw = 0.0f;
+	float			m_fRoll = 0.0f;
+	float			m_fRadius = 10.0f;
 
 	T::TMatrix				m_matWorld;
 	T::TMatrix				m_matView;

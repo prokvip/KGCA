@@ -10,6 +10,13 @@ void TCamera::CreateViewMatrix(T::TVector3 p,
 	m_vTarget = t;
 	m_vUp = u;
 	T::D3DXMatrixLookAtLH(&m_matView, &m_vCamera, &m_vTarget, &m_vUp);	
+
+	T::TMatrix mInvView;
+	D3DXMatrixInverse(&mInvView, NULL, &m_matView);
+	TVector3* pZBasis = (TVector3*)&mInvView._31;
+	m_fYaw = atan2f(pZBasis->x, pZBasis->z);
+	float fLen = sqrtf(pZBasis->z * pZBasis->z + pZBasis->x * pZBasis->x);
+	m_fPitch = -atan2f(pZBasis->y, fLen);
 	UpdateVector();
 }
 void TCamera::CreateProjMatrix(float fovy, float Aspect, float zn, float zf)
@@ -33,11 +40,15 @@ bool TCamera::Init()
 // vValue.x : pitch, y=yaw, z= roll, w =radius
 bool TCamera::Update(T::TVector4 vDirValue)
 {
+	m_fPitch += vDirValue.x;
+	m_fYaw += vDirValue.y;
+	m_fRoll += vDirValue.z;
+
 	T::TMatrix matRotation;
 	T::D3DXQuaternionRotationYawPitchRoll(&m_qRotation,
-		vDirValue.y,
-		vDirValue.x,
-		vDirValue.z);
+		m_fYaw,
+		m_fPitch,
+		m_fRoll);
 
 	m_vCamera += m_vLook * vDirValue.w;
 	m_fRadius += vDirValue.w;

@@ -31,6 +31,9 @@
     <Filter Include="fbx">
       <UniqueIdentifier>{953718af-7cb0-44f8-8f9a-4b559af216a5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Camera">
+      <UniqueIdentifier>{92795e13-49a1-42b1-ae13-28dd63eda5b8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="TCore.cpp">
@@ -99,12 +102,6 @@
     <ClCompile Include="TBoxObj.cpp">
       <Filter>object</Filter>
     </ClCompile>
-    <ClCompile Include="TCamera.cpp">
-      <Filter>object</Filter>
-    </ClCompile>
-    <ClCompile Include="TFrustum.cpp">
-      <Filter>object</Filter>
-    </ClCompile>
     <ClCompile Include="TNode.cpp">
       <Filter>object</Filter>
     </ClCompile>
@@ -128,6 +125,12 @@
     </ClCompile>
     <ClCompile Include="TFbxVertexLoader.cpp">
       <Filter>fbx</Filter>
+    </ClCompile>
+    <ClCompile Include="TCamera.cpp">
+      <Filter>Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="TFrustum.cpp">
+      <Filter>Camera</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -200,12 +203,6 @@
     <ClInclude Include="TBoxObj.h">
       <Filter>object</Filter>
     </ClInclude>
-    <ClInclude Include="TCamera.h">
-      <Filter>object</Filter>
-    </ClInclude>
-    <ClInclude Include="TFrustum.h">
-      <Filter>object</Filter>
-    </ClInclude>
     <ClInclude Include="TNode.h">
       <Filter>object</Filter>
     </ClInclude>
@@ -223,6 +220,12 @@
     </ClInclude>
     <ClInclude Include="TFbxImporter.h">
       <Filter>fbx</Filter>
+    </ClInclude>
+    <ClInclude Include="TCamera.h">
+      <Filter>Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="TFrustum.h">
+      <Filter>Camera</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

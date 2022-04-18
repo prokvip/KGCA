@@ -289,10 +289,25 @@ void Sample::RenderMRT(ID3D11DeviceContext* pContext)
 		m_pImmediateContext->PSSetShaderResources(1, 1, m_pLightTex->m_pSRV.GetAddressOf());
 	if (m_pNormalMap)
 		m_pImmediateContext->PSSetShaderResources(4, 1, m_pNormalMap->m_pSRV.GetAddressOf());
-	for (int iObj = 0; iObj < m_FbxObj.size(); iObj++)
+	for (int iObj = 0; iObj < 1; iObj++)
 	{
 		m_FbxObj[iObj].SetMatrix(nullptr, &m_pMainCamera->m_matView, &m_pMainCamera->m_matProj);
 		m_FbxObj[iObj].Render();
+
+		TVector3 vLight = TVector3(-1000, 2000, 0);
+		D3DXVec3Normalize(&vLight, &vLight);
+		TVector4 pLight = TVector4(vLight.x, vLight.y, vLight.z, 1.0f);
+		TPlane pPlane = TPlane(0, 1, 0, -m_FbxObj[iObj].m_vPos.y);
+		TVector4 p(pPlane.x, pPlane.y, pPlane.z, pPlane.w);
+		TMatrix matShadow;
+		D3DXMatrixShadow(&matShadow, &pLight, &pPlane);
+		//ApplyRS(m_pImmediateContext.Get(), TDxState::g_pRSNoneCullSolid);
+
+		TMatrix matSaveWorld = m_FbxObj[iObj].m_matWorld;
+			matShadow = m_FbxObj[iObj].m_matWorld * matShadow;
+			m_FbxObj[iObj].SetMatrix(&matShadow, &m_pMainCamera->m_matView, &m_pMainCamera->m_matProj);
+			m_FbxObj[iObj].Render();
+		m_FbxObj[iObj].m_matWorld = matSaveWorld;
 	}
 	ClearD3D11DeviceContext(pContext);
 }
