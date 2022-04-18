@@ -299,6 +299,9 @@ void Sample::RenderMRT(ID3D11DeviceContext* pContext)
 		m_FbxObj[iObj].Render();
 
 		TVector3 vLight = TVector3(1000, 2000, 0);
+		TMatrix matRotation;
+		D3DXMatrixRotationY(&matRotation, g_fGameTimer);
+		D3DXVec3TransformCoord(&vLight, &vLight, &matRotation);
 		D3DXVec3Normalize(&vLight, &vLight);
 		TVector4 pLight = TVector4(vLight.x, vLight.y, vLight.z, 1.0f);
 		TPlane pPlane = TPlane(0, 1, 0, -(m_FbxObj[iObj].m_vPos.y+1.1f));

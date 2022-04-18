@@ -158,5 +158,5 @@ float4 PSAlphaBlend(VS_OUTPUT input) : SV_TARGET
 
 float4 PSColor(VS_OUTPUT input) : SV_TARGET
 {	
-	return float4( 0.3f, 0.3f, 0.3f, 0.5f);
+	return float4( 0.1f, 0.1f, 0.1f, 1);
 }
