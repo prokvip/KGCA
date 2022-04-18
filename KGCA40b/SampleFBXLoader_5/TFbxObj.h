@@ -20,6 +20,6 @@ public:
 	virtual bool    Release() override;
 	void			GenAABB()override;
 public:
-	
+	bool	RenderShadow(TShader* pShader);
 	T::TMatrix Interplate(TFbxImporter* pAnimImp,TFbxModel* pModel, float fFrame);
 };

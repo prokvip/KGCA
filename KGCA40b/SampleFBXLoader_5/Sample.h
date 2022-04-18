@@ -19,6 +19,7 @@ class Sample : public TCore
 	TQuadtree				m_Quadtree;
 	std::vector<TFbx>		m_FbxObj;
 	TQuadObject				m_QuadObj;
+	TShader*				m_pShadowPShader = nullptr;
 	TTexture* m_pLightTex;
 	TTexture* m_pNormalMap;
 public:

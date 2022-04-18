@@ -157,7 +157,8 @@ bool    Sample::LoadFbx()
 		int iCol = iObj / 10;
 		int iOffRow = iObj % 10;
 		int iOffCol = iObj % 10;
-		pFbx->SetPosition(T::TVector3(iOffCol * 300.0f, 1000,	iRow * 300.0f));
+		float fHeight = m_MapObj.TMap::GetHeight(m_FbxObj[iObj].m_vPos.x, m_FbxObj[iObj].m_vPos.z);
+		pFbx->SetPosition(T::TVector3(iOffCol * 300.0f, fHeight, iRow * 300.0f));		
 		for (int iDraw = 0; iDraw < pFbx->m_pMeshImp->m_DrawList.size(); iDraw++)
 		{
 			pFbx->m_pMeshImp->m_DrawList[iDraw]->m_pContext = m_pImmediateContext.Get();
@@ -175,6 +176,8 @@ bool	Sample::Init()
 		MessageBox(0, _T("m_QuadObj ½ÇÆÐ"), _T("Fatal error"), MB_OK);
 		return 0;
 	}
+	m_pShadowPShader = I_Shader.CreatePixelShader(m_pd3dDevice.Get(), 
+		L"Character.hlsl", "PSColor");
 
 	LoadMap();
 	LoadFbx();
@@ -185,7 +188,8 @@ bool	Sample::Init()
 	m_QuadObj.SetBuffer(m_pd3dDevice.Get());
 	m_QuadObj.ComputeKernel(9);
 
-	m_pMainCamera->CreateViewMatrix(T::TVector3(0, 100.0f, -300.0f), T::TVector3(0, 0.0f, 0));
+	m_pMainCamera->CreateViewMatrix(T::TVector3(0, 500.0f, -500.0f), 
+									m_FbxObj[0].m_vPos);
 	m_pMainCamera->CreateProjMatrix(XM_PI * 0.25f,
 		(float)g_rtClient.right / (float)g_rtClient.bottom, 0.1f, 5000.0f);
 	
@@ -294,7 +298,7 @@ void Sample::RenderMRT(ID3D11DeviceContext* pContext)
 		m_FbxObj[iObj].SetMatrix(nullptr, &m_pMainCamera->m_matView, &m_pMainCamera->m_matProj);
 		m_FbxObj[iObj].Render();
 
-		TVector3 vLight = TVector3(-1000, 2000, 0);
+		TVector3 vLight = TVector3(1000, 2000, 0);
 		D3DXVec3Normalize(&vLight, &vLight);
 		TVector4 pLight = TVector4(vLight.x, vLight.y, vLight.z, 1.0f);
 		TPlane pPlane = TPlane(0, 1, 0, -m_FbxObj[iObj].m_vPos.y);
@@ -306,7 +310,7 @@ void Sample::RenderMRT(ID3D11DeviceContext* pContext)
 		TMatrix matSaveWorld = m_FbxObj[iObj].m_matWorld;
 			matShadow = m_FbxObj[iObj].m_matWorld * matShadow;
 			m_FbxObj[iObj].SetMatrix(&matShadow, &m_pMainCamera->m_matView, &m_pMainCamera->m_matProj);
-			m_FbxObj[iObj].Render();
+			m_FbxObj[iObj].RenderShadow(m_pShadowPShader);
 		m_FbxObj[iObj].m_matWorld = matSaveWorld;
 	}
 	ClearD3D11DeviceContext(pContext);
