@@ -120,22 +120,53 @@ HRESULT TQuadObject::CreateTextures(ID3D11Device* pDevice, UINT iWidth, UINT iHe
 	DescDepth.Height = iHeight;
 	DescDepth.MipLevels = 1;
 	DescDepth.ArraySize = 1;
-	DescDepth.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	DescDepth.Format = DXGI_FORMAT_R24G8_TYPELESS;
 	DescDepth.SampleDesc.Count = 1;
 	DescDepth.SampleDesc.Quality = 0;
 	DescDepth.Usage = D3D11_USAGE_DEFAULT;
 	DescDepth.BindFlags = D3D11_BIND_DEPTH_STENCIL;
 	DescDepth.CPUAccessFlags = 0;
 	DescDepth.MiscFlags = 0;
+
+	if (DescDepth.Format == DXGI_FORMAT_R24G8_TYPELESS || DescDepth.Format == DXGI_FORMAT_D32_FLOAT)
+	{
+		// ±íÀÌ¸Ê Àü¿ë ±íÀÌ¸Ê »ý¼º
+		DescDepth.BindFlags = D3D11_BIND_DEPTH_STENCIL | D3D11_BIND_SHADER_RESOURCE;
+	}
 	V_RETURN(pDevice->CreateTexture2D(&DescDepth, NULL, &pDSTexture));
 
-	D3D11_DEPTH_STENCIL_VIEW_DESC dsvd;
-	ZeroMemory(&dsvd, sizeof(dsvd));
-	dsvd.Format = DescDepth.Format;
-	dsvd.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
-	dsvd.Texture2D.MipSlice = 0;
+	///// ½¦ÀÌ´õ ¸®¼Ò½º »ý¼º : ±íÀÌ ¸Ê ½¦µµ¿ì¿¡¼­ »ç¿ëÇÑ´Ù. ///
+	D3D11_DEPTH_STENCIL_VIEW_DESC dsvDesc;
+	D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
+	ZeroMemory(&dsvDesc, sizeof(D3D11_DEPTH_STENCIL_VIEW_DESC));
+	ZeroMemory(&srvDesc, sizeof(D3D11_SHADER_RESOURCE_VIEW_DESC));
 
-	V_RETURN(pDevice->CreateDepthStencilView(pDSTexture.Get(), &dsvd, &m_pDepthStencilView));
+	switch (DescDepth.Format)
+	{
+	case DXGI_FORMAT_R32_TYPELESS:
+		dsvDesc.Format = DXGI_FORMAT_D32_FLOAT;
+		srvDesc.Format = DXGI_FORMAT_R32_FLOAT;
+		break;
+	case DXGI_FORMAT_R24G8_TYPELESS:
+		dsvDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+		srvDesc.Format = DXGI_FORMAT_R24_UNORM_X8_TYPELESS;
+		break;
+	}
+	if (srvDesc.Format == DXGI_FORMAT_R32_FLOAT || srvDesc.Format == DXGI_FORMAT_R24_UNORM_X8_TYPELESS)
+	{
+		srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+		srvDesc.Texture2D.MipLevels = 1;
+		if (FAILED(hr = pDevice->CreateShaderResourceView(pDSTexture.Get(), &srvDesc, m_pDsvSRV.GetAddressOf())))
+		{
+			return hr;
+		}
+	}
+
+	dsvDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+	if (FAILED(hr = pDevice->CreateDepthStencilView(pDSTexture.Get(), &dsvDesc, m_pDepthStencilView.GetAddressOf())))
+	{
+		return hr;
+	}
 	return S_OK;
 }
 bool TQuadObject::Frame()

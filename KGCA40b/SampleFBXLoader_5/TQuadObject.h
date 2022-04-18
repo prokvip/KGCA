@@ -23,6 +23,7 @@ public:
 	ComPtr<ID3D11ShaderResourceView>    m_pNormalDepthSRV;
 	ComPtr<ID3D11RenderTargetView>      m_pNormalDepthRTV;
 	ComPtr<ID3D11DepthStencilView>		m_pDepthStencilView;
+	ComPtr<ID3D11ShaderResourceView>	m_pDsvSRV;// ±Ì¿Ãπˆ∆€ ∏Æº“Ω∫∫‰
 	ComPtr<ID3D11Buffer>				m_pMaskCB;
 	VSCB							    m_MaskValue;
 
