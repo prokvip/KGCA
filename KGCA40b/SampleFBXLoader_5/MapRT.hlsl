@@ -39,7 +39,7 @@ VS_OUTPUT VS( VS_INPUT v)
 	pOut.p = vProj;
 	float3 vNormal = mul(v.n, (float3x3)g_matWorld);
 	pOut.n = normalize(vNormal);
-	pOut.t = v.t*4.0f;
+	pOut.t = v.t*10.0f;
 	float fDot = max(0.2f, dot(pOut.n, -vLightDir.xyz));
 	pOut.c = v.c*float4(fDot, fDot, fDot,1);
 	float fNear = 0.1f;

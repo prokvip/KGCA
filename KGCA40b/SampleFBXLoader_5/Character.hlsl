@@ -119,35 +119,51 @@ float Diffuse(float3 vNormal)
 	return fIntensity;
 }
 
-float4 PS(VS_OUTPUT input) : SV_TARGET
+//float4 PS(VS_OUTPUT input) : SV_TARGET
+//{
+//	//텍스처에서 t좌표에 해당하는 컬러값(픽셀) 반환
+//	float4 color = g_txColor.Sample(g_Sample, input.t);
+//	float4 normal = g_txNormalMap.Sample(g_Sample, input.t);
+//	normal = normalize((normal - 0.5f) * 2.0f);
+//	float  fDot = saturate(dot(normal.xyz, input.l));
+//	float4 final = color * float4(fDot,fDot, fDot, 1);	
+//	// 0 ~ 1 -> 0.0f ~ 0.5f
+//	float2 uv = float2(fDot, 0.5f);
+//	//float4 mask = g_txMask.Sample(g_Sample, uv);
+//	// 소스알파(1) = 마스크이미지의 검정색부분은 불투명된다.
+//	// 소스알파(0) = 마스크이미지의 흰색부분은   투명된다.
+//	//final = color*mask;// *mask;// *Color0;	
+//	final = final * Specular(normal);
+//	final.a = 1.0f;
+//	/* 알파테스팅 (완전 투명과 완전 불투명 일 때 사용)
+//	 장점 : 순서를 구분하기 어려운 오브젝트 랜더링시 
+//	        정렬된 상태와 유사하게  랜더링된다.*/
+//	//if (final.a < 0.5f)
+//	//{
+//	//	discard;
+//	//}
+//	float4 vCube = g_txCubeMap.Sample(g_Sample, input.r);
+//	final = lerp(final, vCube, 0.5f);
+//	final.a = 1.0f;
+//	return final;
+//}
+struct PBUFFER_OUTPUT
 {
+	float4 color0 : SV_TARGET0;
+	float4 color1 : SV_TARGET1;
+};
+
+PBUFFER_OUTPUT PS(VS_OUTPUT input) : SV_TARGET
+{
+	PBUFFER_OUTPUT output;
 	//텍스처에서 t좌표에 해당하는 컬러값(픽셀) 반환
 	float4 color = g_txColor.Sample(g_Sample, input.t);
-	float4 normal = g_txNormalMap.Sample(g_Sample, input.t);
-	normal = normalize((normal - 0.5f) * 2.0f);
-	float  fDot = saturate(dot(normal.xyz, input.l));
-	float4 final = color * float4(fDot,fDot, fDot, 1);	
-	// 0 ~ 1 -> 0.0f ~ 0.5f
-	float2 uv = float2(fDot, 0.5f);
-	//float4 mask = g_txMask.Sample(g_Sample, uv);
-	// 소스알파(1) = 마스크이미지의 검정색부분은 불투명된다.
-	// 소스알파(0) = 마스크이미지의 흰색부분은   투명된다.
-	//final = color*mask;// *mask;// *Color0;	
-	final = final * Specular(normal);
-	final.a = 1.0f;
-	/* 알파테스팅 (완전 투명과 완전 불투명 일 때 사용)
-	 장점 : 순서를 구분하기 어려운 오브젝트 랜더링시 
-	        정렬된 상태와 유사하게  랜더링된다.*/
-	//if (final.a < 0.5f)
-	//{
-	//	discard;
-	//}
-	float4 vCube = g_txCubeMap.Sample(g_Sample, input.r);
-	final = lerp(final, vCube, 0.5f);
-	final.a = 1.0f;
-	return final;
+	output.color0 = color;
+	float3 vNormal = input.n * 0.5f + 0.5f;
+	// 필수->알파블랜딩 =OFF;
+	output.color1 = float4(vNormal, input.c.a);
+	return output;
 }
-
 float4 PSAlphaBlend(VS_OUTPUT input) : SV_TARGET
 {
 	float4 color = g_txColor.Sample(g_Sample, input.t);

@@ -490,7 +490,7 @@ bool	TFbxImporter::Load(ID3D11Device* pd3dDevice, std::wstring filename)
 	{
 		CreateConstantBuffer(pd3dDevice);
 		TShader* pVShader = I_Shader.CreateVertexShader(pd3dDevice, L"../../data/shader/Character.hlsl", "VS");
-		TShader* pPShader = I_Shader.CreatePixelShader(pd3dDevice, L"../../data/shader/Character.hlsl", "PS");
+		TShader* pPShader = I_Shader.CreatePixelShader(pd3dDevice, L"../../data/shader/Character.hlsl", "PSMRT");
 		for (int iObj = 0; iObj < m_DrawList.size(); iObj++)
 		{
 			m_DrawList[iObj]->Init();
