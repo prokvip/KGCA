@@ -290,7 +290,7 @@ bool	TFbx::RenderShadow(TShader* pShader)
 
 		pFbxObj->PreRender();
 		pFbxObj->Draw();
-		if (m_pPShader != nullptr)
+		if (pShader != nullptr)
 		{
 			m_pContext->PSSetShader(pShader->m_pPixelShader, NULL, 0);
 		}

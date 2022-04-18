@@ -101,7 +101,7 @@ bool	Sample::LoadMap()
 	m_MapObj.Init();
 	m_MapObj.SetDevice(m_pd3dDevice.Get(), m_pImmediateContext.Get());
 	m_MapObj.CreateHeightMap(L"../../data/map/heightMap513.bmp");
-	m_MapObj.CreateMap(m_MapObj.m_iNumCols, m_MapObj.m_iNumRows, 10.0f);
+	m_MapObj.CreateMap(m_MapObj.m_iNumCols, m_MapObj.m_iNumRows, 100.0f);
 	if (!m_MapObj.Create(m_pd3dDevice.Get(), m_pImmediateContext.Get(),
 		L"MapRT.hlsl",
 		L"../../data/map/002.jpg"))
@@ -293,7 +293,7 @@ void Sample::RenderMRT(ID3D11DeviceContext* pContext)
 		m_pImmediateContext->PSSetShaderResources(1, 1, m_pLightTex->m_pSRV.GetAddressOf());
 	if (m_pNormalMap)
 		m_pImmediateContext->PSSetShaderResources(4, 1, m_pNormalMap->m_pSRV.GetAddressOf());
-	for (int iObj = 0; iObj < 1; iObj++)
+	for (int iObj = 0; iObj < m_FbxObj.size(); iObj++)
 	{
 		m_FbxObj[iObj].SetMatrix(nullptr, &m_pMainCamera->m_matView, &m_pMainCamera->m_matProj);
 		m_FbxObj[iObj].Render();
@@ -301,7 +301,7 @@ void Sample::RenderMRT(ID3D11DeviceContext* pContext)
 		TVector3 vLight = TVector3(1000, 2000, 0);
 		D3DXVec3Normalize(&vLight, &vLight);
 		TVector4 pLight = TVector4(vLight.x, vLight.y, vLight.z, 1.0f);
-		TPlane pPlane = TPlane(0, 1, 0, -m_FbxObj[iObj].m_vPos.y);
+		TPlane pPlane = TPlane(0, 1, 0, -(m_FbxObj[iObj].m_vPos.y+1.1f));
 		TVector4 p(pPlane.x, pPlane.y, pPlane.z, pPlane.w);
 		TMatrix matShadow;
 		D3DXMatrixShadow(&matShadow, &pLight, &pPlane);

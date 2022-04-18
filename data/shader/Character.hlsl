@@ -138,14 +138,14 @@ float4 PS(VS_OUTPUT input) : SV_TARGET
 	/* 알파테스팅 (완전 투명과 완전 불투명 일 때 사용)
 	 장점 : 순서를 구분하기 어려운 오브젝트 랜더링시 
 	        정렬된 상태와 유사하게  랜더링된다.*/
-	if (final.a < 0.5f)
-	{
-		discard;
-	}
+	//if (final.a < 0.5f)
+	//{
+	//	discard;
+	//}
 	float4 vCube = g_txCubeMap.Sample(g_Sample, input.r);
 	final = lerp(final, vCube, 0.5f);
 	final.a = 1.0f;
-	return final;
+	return float4(fDot, fDot, fDot,1);
 }
 
 float4 PSAlphaBlend(VS_OUTPUT input) : SV_TARGET
