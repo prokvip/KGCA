@@ -29,7 +29,9 @@ cbuffer cb1 : register(b1)
 {	
 	float4   vLightDir : packoffset(c0);
 	float4   vLightPos : packoffset(c1);	
-	matrix   g_matLight: packoffset(c2);
+	float4   vEyeDir : packoffset(c2);
+	float4   vEyePos : packoffset(c3);
+	matrix   g_matLight: packoffset(c4);
 };
 VS_OUTPUT VS( VS_INPUT v)
 {
@@ -75,7 +77,7 @@ PBUFFER_OUTPUT PS(VS_OUTPUT input) : SV_TARGET
 	float4 mask = g_txMask.Sample(g_SampleClamp, LightUV);
 	if (mask.r > 0.5f)
 	{
-		output.color0 = color * float4(0.5f, 0.5f,0.5f,1);
+		output.color0 = color * float4(0.1f, 0.1f,0.1f,1);
 	}
 	else
 	{

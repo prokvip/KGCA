@@ -101,7 +101,7 @@ bool	Sample::LoadMap()
 	m_MapObj.Init();
 	m_MapObj.SetDevice(m_pd3dDevice.Get(), m_pImmediateContext.Get());
 	m_MapObj.CreateHeightMap(L"../../data/map/heightMap513.bmp");
-	m_MapObj.CreateMap(m_MapObj.m_iNumCols, m_MapObj.m_iNumRows, 100.0f);
+	m_MapObj.CreateMap(m_MapObj.m_iNumCols, m_MapObj.m_iNumRows, 15.0f);
 	if (!m_MapObj.Create(m_pd3dDevice.Get(), m_pImmediateContext.Get(),
 		L"MapRT.hlsl",
 		L"../../data/map/002.jpg"))
@@ -124,7 +124,7 @@ bool    Sample::LoadFbx()
 	listname.push_back(L"../../data/fbx/Greystone.fbx");
 	listname.push_back(L"../../data/fbx/idle.fbx");
 	//listname.push_back(L"../../data/fbx/Man.fbx");
-	//LoadAllPath(L"../../data/fbx/AdvancedVillagePack/Meshes", listname);
+	LoadAllPath(L"../../data/fbx/AdvancedVillagePack/Meshes", listname);
 
 	// 0 ~ 60  idel
 	// 61 ~91  walk;
@@ -159,7 +159,8 @@ bool    Sample::LoadFbx()
 		int iOffRow = iObj % 10;
 		int iOffCol = iObj % 10;
 		float fHeight = m_MapObj.TMap::GetHeight(m_FbxObj[iObj].m_vPos.x, m_FbxObj[iObj].m_vPos.z);
-		pFbx->SetPosition(T::TVector3(iOffCol * 300.0f, fHeight, iRow * 300.0f));		
+		pFbx->SetPosition(T::TVector3(-1500.0f+iOffCol * 300.0f, fHeight, 
+			-1500.0f + iRow * 300.0f));
 		for (int iDraw = 0; iDraw < pFbx->m_pMeshImp->m_DrawList.size(); iDraw++)
 		{
 			pFbx->m_pMeshImp->m_DrawList[iDraw]->m_pContext = m_pImmediateContext.Get();
@@ -189,17 +190,17 @@ bool	Sample::Init()
 	m_QuadObj.SetBuffer(m_pd3dDevice.Get());
 	m_QuadObj.ComputeKernel(9);
 
-	m_pMainCamera->CreateViewMatrix(T::TVector3(0, 500.0f, -500.0f), 
+	m_pMainCamera->CreateViewMatrix(T::TVector3(0, 500.0f, -1000.0f), 
 									m_FbxObj[0].m_vPos);
 	m_pMainCamera->CreateProjMatrix(XM_PI * 0.25f,
-		(float)g_rtClient.right / (float)g_rtClient.bottom, 0.1f, 5000.0f);
+		(float)g_rtClient.right / (float)g_rtClient.bottom, 0.1f, 30000.0f);
 	
 	m_pLightTex = I_Texture.Load(L"../../data/pung00.dds");
 	m_pNormalMap = I_Texture.Load(L"../../data/NormalMap/tileADOT3.jpg");
 
-	m_vLightPos = TVector3(0, 1000, 10);
-	T::D3DXVec3Normalize(&m_vLightDir, &m_vLightDir);
-	m_dxRT.Create(m_pd3dDevice.Get(), 2048, 2048);
+	m_vLightPos = TVector3(10, 8000, 10);
+	T::D3DXVec3Normalize(&m_vLightDir, &m_vLightPos);
+	m_dxRT.Create(m_pd3dDevice.Get(), 4048, 4048);
 	m_pProjShadowVShader = I_Shader.CreateVertexShader(m_pd3dDevice.Get(),
 		L"ProjShadow.hlsl", "VS");
 	m_pProjShadowPShader = I_Shader.CreatePixelShader(m_pd3dDevice.Get(),
@@ -216,9 +217,9 @@ bool	Sample::Frame()
 {
 	TMatrix matRotation;
 	TVector3 vLight = m_vLightPos;
-	D3DXMatrixRotationY(&matRotation, g_fGameTimer);
+	D3DXMatrixRotationY(&matRotation, 0);// g_fGameTimer);
 	D3DXVec3TransformCoord(&vLight, &vLight, &matRotation);
-	D3DXVec3Normalize(&m_vLightDir, &m_vLightDir);
+	D3DXVec3Normalize(&m_vLightDir, &vLight);
 
 	m_QuadObj.Frame();
 	m_MapObj.Frame();
@@ -235,10 +236,10 @@ bool	Sample::Frame()
 		// 1패스:그림자맵 생성
 		//-----------------------------------------------------		
 		TVector3 vEye = vLight;
-		TVector3 vLookat = TVector3(0, 0, 0);
+		TVector3 vLookat = { 0,0,0 };
 		TVector3 vUp = TVector3(0.0f, 1.0f, 0.0f);
 		D3DXMatrixLookAtLH(&m_matViewLight, &vEye, &vLookat, &vUp);
-		D3DXMatrixPerspectiveFovLH(&m_matProjLight, XM_PI / 2, 1, 0.1f, 5000.0f);
+		D3DXMatrixPerspectiveFovLH(&m_matProjLight, XM_PI / 4, 1, 0.1f, 30000.0f);
 		RenderShadow(&m_matViewLight, &m_matProjLight);		
 		m_dxRT.End(m_pImmediateContext.Get());
 	}
@@ -254,13 +255,16 @@ void Sample::RenderShadow(TMatrix* matView, TMatrix* matProj)
 	ApplyDSS(m_pImmediateContext.Get(), TDxState::g_pDSSDepthEnable);
 	ApplyRS(m_pImmediateContext.Get(), TDxState::g_pRSBackCullSolid);
 	
-	//m_MapObj.m_bAlphaBlend = false;
-	//m_MapObj.SetMatrix(nullptr, matProj, matProj);
-	//m_Quadtree.PreRender();
-	//m_pImmediateContext.Get()->VSSetShader(m_pProjShadowVShader->m_pVertexShader, NULL, 0);
-	//m_pImmediateContext.Get()->PSSetShader(m_pProjShadowPShader->m_pPixelShader, NULL, 0);
-	//m_Quadtree.PostRender();
+	m_MapObj.m_bAlphaBlend = false;
+	m_MapObj.SetMatrix(nullptr, matProj, matProj);
+	m_Quadtree.PreRender();
+	m_pImmediateContext.Get()->VSSetShader(m_pProjShadowVShader->m_pVertexShader, NULL, 0);
+	m_pImmediateContext.Get()->PSSetShader(m_pProjShadowPShader->m_pPixelShader, NULL, 0);
+	//ApplyBS(m_pImmediateContext.Get(), TDxState::m_BSNoneColor);
+	m_Quadtree.PostRender();
 
+
+	//ApplyBS(m_pImmediateContext.Get(), TDxState::m_AlphaBlend);
 	for (int iObj = 0; iObj < m_FbxObj.size(); iObj++)
 	{
 		m_FbxObj[iObj].SetMatrix(nullptr, matView, matProj);
@@ -346,7 +350,8 @@ void Sample::RenderMRT(ID3D11DeviceContext* pContext)
 	
 	m_MapObj.m_bAlphaBlend = false;
 	m_MapObj.SetMatrix(nullptr, &m_pMainCamera->m_matView, &m_pMainCamera->m_matProj);
-	m_MapObj.m_LightConstantList.matLight = m_matViewLight * m_matProjLight * m_matTex;
+	m_MapObj.m_LightConstantList.matLight =
+		m_matViewLight * m_matProjLight *m_matTex;
 	T::D3DXMatrixTranspose( &m_MapObj.m_LightConstantList.matLight,
 							&m_MapObj.m_LightConstantList.matLight);
 	m_pImmediateContext->PSSetSamplers(1, 1, &TDxState::g_pSSClampLinear);
@@ -364,7 +369,7 @@ void Sample::RenderMRT(ID3D11DeviceContext* pContext)
 		m_FbxObj[iObj].SetMatrix(nullptr, &m_pMainCamera->m_matView, &m_pMainCamera->m_matProj);
 		m_FbxObj[iObj].Render();
 		
-		TVector4 pLight = TVector4(m_vLightDir.x, m_vLightDir.y, m_vLightDir.z, 1.0f);
+		/*TVector4 pLight = TVector4(m_vLightDir.x, m_vLightDir.y, m_vLightDir.z, 1.0f);
 		TPlane pPlane = TPlane(0, 1, 0, -(m_FbxObj[iObj].m_vPos.y+1.1f));
 		TVector4 p(pPlane.x, pPlane.y, pPlane.z, pPlane.w);
 		TMatrix matShadow;
@@ -374,7 +379,7 @@ void Sample::RenderMRT(ID3D11DeviceContext* pContext)
 			matShadow = m_FbxObj[iObj].m_matWorld * matShadow;
 			m_FbxObj[iObj].SetMatrix(&matShadow, &m_pMainCamera->m_matView, &m_pMainCamera->m_matProj);
 			m_FbxObj[iObj].RenderShadow(m_pShadowPShader);
-		m_FbxObj[iObj].m_matWorld = matSaveWorld;
+		m_FbxObj[iObj].m_matWorld = matSaveWorld;*/
 	}
 	ClearD3D11DeviceContext(pContext);
 }

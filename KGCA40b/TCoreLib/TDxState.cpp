@@ -1,6 +1,7 @@
 #include "TDxState.h"
 ID3D11BlendState* TDxState::m_AlphaBlend = nullptr;
 ID3D11BlendState* TDxState::m_AlphaBlendDisable = nullptr;
+ID3D11BlendState* TDxState::m_BSNoneColor = nullptr;
 ID3D11SamplerState* TDxState::m_pSSLinear = nullptr;
 ID3D11SamplerState* TDxState::m_pSSPoint = nullptr;
 ID3D11SamplerState* TDxState::g_pSSMirrorLinear = nullptr;
@@ -52,6 +53,8 @@ bool TDxState::SetState(ID3D11Device* pd3dDevice)
 	blenddesc.RenderTarget[0].BlendEnable = FALSE;
 	hr = pd3dDevice->CreateBlendState(&blenddesc, &m_AlphaBlendDisable);
 
+	blenddesc.RenderTarget[0].RenderTargetWriteMask = 0;
+	hr = pd3dDevice->CreateBlendState(&blenddesc, &m_BSNoneColor);
 
 	D3D11_SAMPLER_DESC sd;
 	ZeroMemory(&sd, sizeof(D3D11_SAMPLER_DESC));
@@ -189,9 +192,10 @@ bool TDxState::Release()
 	if (g_pDSSDepthDisableWriteDisable) g_pDSSDepthDisableWriteDisable->Release();
 	if (m_AlphaBlend) m_AlphaBlend->Release();
 	if (m_AlphaBlendDisable) m_AlphaBlendDisable->Release();
+	if (m_BSNoneColor) m_AlphaBlendDisable->Release();
 	m_AlphaBlend = nullptr;
 	m_AlphaBlendDisable = nullptr;
-
+	m_BSNoneColor = nullptr;
 	if (m_pSSLinear)m_pSSLinear->Release(); m_pSSLinear = NULL;
 	if (m_pSSPoint)m_pSSPoint->Release(); m_pSSPoint = NULL;
 	if (g_pSSMirrorLinear)	g_pSSMirrorLinear->Release(); g_pSSMirrorLinear = NULL;
