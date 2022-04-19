@@ -101,7 +101,7 @@ bool	Sample::LoadMap()
 	m_MapObj.Init();
 	m_MapObj.SetDevice(m_pd3dDevice.Get(), m_pImmediateContext.Get());
 	m_MapObj.CreateHeightMap(L"../../data/map/heightMap513.bmp");
-	m_MapObj.CreateMap(m_MapObj.m_iNumCols, m_MapObj.m_iNumRows, 15.0f);
+	m_MapObj.CreateMap(m_MapObj.m_iNumCols, m_MapObj.m_iNumRows, 10.0f);
 	if (!m_MapObj.Create(m_pd3dDevice.Get(), m_pImmediateContext.Get(),
 		L"MapRT.hlsl",
 		L"../../data/map/002.jpg"))
@@ -158,9 +158,9 @@ bool    Sample::LoadFbx()
 		int iCol = iObj / 10;
 		int iOffRow = iObj % 10;
 		int iOffCol = iObj % 10;
-		float fHeight = m_MapObj.TMap::GetHeight(m_FbxObj[iObj].m_vPos.x, m_FbxObj[iObj].m_vPos.z);
-		pFbx->SetPosition(T::TVector3(-1500.0f+iOffCol * 300.0f, fHeight+100.0f, 
-			-1500.0f + iRow * 300.0f));
+		T::TVector3 vPos = { -2000.0f + iOffCol * 300.0f,0, -2000.0f + iRow * 300.0f };
+		vPos.y = m_MapObj.TMap::GetHeight(vPos.x, vPos.z);
+		pFbx->SetPosition(vPos);
 		for (int iDraw = 0; iDraw < pFbx->m_pMeshImp->m_DrawList.size(); iDraw++)
 		{
 			pFbx->m_pMeshImp->m_DrawList[iDraw]->m_pContext = m_pImmediateContext.Get();
@@ -190,7 +190,7 @@ bool	Sample::Init()
 	m_QuadObj.SetBuffer(m_pd3dDevice.Get());
 	m_QuadObj.ComputeKernel(9);
 
-	m_pMainCamera->CreateViewMatrix(	T::TVector3(0, 500.0f, -1000.0f), 
+	m_pMainCamera->CreateViewMatrix(	T::TVector3(0, 1000.0f, -10.0f), 
 										T::TVector3(0, 0.0f, 0.0f));
 	m_pMainCamera->CreateProjMatrix(XM_PI * 0.25f,
 		(float)g_rtClient.right / (float)g_rtClient.bottom, 0.1f, 30000.0f);
@@ -261,7 +261,7 @@ void Sample::RenderShadow(TMatrix* matView, TMatrix* matProj)
 	m_pImmediateContext.Get()->VSSetShader(m_pProjShadowVShader->m_pVertexShader, NULL, 0);
 	m_pImmediateContext.Get()->PSSetShader(m_pProjShadowPShader->m_pPixelShader, NULL, 0);
 	ApplyBS(m_pImmediateContext.Get(), TDxState::m_BSNoneColor);
-	m_Quadtree.PostRender();
+	//m_Quadtree.PostRender();
 
 
 	ApplyBS(m_pImmediateContext.Get(), TDxState::m_AlphaBlend);
