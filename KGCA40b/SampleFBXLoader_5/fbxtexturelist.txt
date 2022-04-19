@@ -1,0 +1,2 @@
+125 
+ButterflyBody.FBX 	T_Pack_01_D.TGA 	T_Pack_01_N.TGA
