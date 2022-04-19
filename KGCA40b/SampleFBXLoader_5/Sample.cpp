@@ -159,7 +159,7 @@ bool    Sample::LoadFbx()
 		int iOffRow = iObj % 10;
 		int iOffCol = iObj % 10;
 		float fHeight = m_MapObj.TMap::GetHeight(m_FbxObj[iObj].m_vPos.x, m_FbxObj[iObj].m_vPos.z);
-		pFbx->SetPosition(T::TVector3(-1500.0f+iOffCol * 300.0f, fHeight, 
+		pFbx->SetPosition(T::TVector3(-1500.0f+iOffCol * 300.0f, fHeight+100.0f, 
 			-1500.0f + iRow * 300.0f));
 		for (int iDraw = 0; iDraw < pFbx->m_pMeshImp->m_DrawList.size(); iDraw++)
 		{
@@ -190,15 +190,15 @@ bool	Sample::Init()
 	m_QuadObj.SetBuffer(m_pd3dDevice.Get());
 	m_QuadObj.ComputeKernel(9);
 
-	m_pMainCamera->CreateViewMatrix(T::TVector3(0, 500.0f, -1000.0f), 
-									m_FbxObj[0].m_vPos);
+	m_pMainCamera->CreateViewMatrix(	T::TVector3(0, 500.0f, -1000.0f), 
+										T::TVector3(0, 0.0f, 0.0f));
 	m_pMainCamera->CreateProjMatrix(XM_PI * 0.25f,
 		(float)g_rtClient.right / (float)g_rtClient.bottom, 0.1f, 30000.0f);
 	
 	m_pLightTex = I_Texture.Load(L"../../data/pung00.dds");
 	m_pNormalMap = I_Texture.Load(L"../../data/NormalMap/tileADOT3.jpg");
 
-	m_vLightPos = TVector3(10, 8000, 10);
+	m_vLightPos = TVector3(500, 8000, 100);
 	T::D3DXVec3Normalize(&m_vLightDir, &m_vLightPos);
 	m_dxRT.Create(m_pd3dDevice.Get(), 4048, 4048);
 	m_pProjShadowVShader = I_Shader.CreateVertexShader(m_pd3dDevice.Get(),
@@ -217,7 +217,7 @@ bool	Sample::Frame()
 {
 	TMatrix matRotation;
 	TVector3 vLight = m_vLightPos;
-	D3DXMatrixRotationY(&matRotation, 0);// g_fGameTimer);
+	D3DXMatrixRotationY(&matRotation, g_fGameTimer);
 	D3DXVec3TransformCoord(&vLight, &vLight, &matRotation);
 	D3DXVec3Normalize(&m_vLightDir, &vLight);
 
@@ -256,15 +256,15 @@ void Sample::RenderShadow(TMatrix* matView, TMatrix* matProj)
 	ApplyRS(m_pImmediateContext.Get(), TDxState::g_pRSBackCullSolid);
 	
 	m_MapObj.m_bAlphaBlend = false;
-	m_MapObj.SetMatrix(nullptr, matProj, matProj);
+	m_MapObj.SetMatrix(nullptr, matView, matProj);
 	m_Quadtree.PreRender();
 	m_pImmediateContext.Get()->VSSetShader(m_pProjShadowVShader->m_pVertexShader, NULL, 0);
 	m_pImmediateContext.Get()->PSSetShader(m_pProjShadowPShader->m_pPixelShader, NULL, 0);
-	//ApplyBS(m_pImmediateContext.Get(), TDxState::m_BSNoneColor);
+	ApplyBS(m_pImmediateContext.Get(), TDxState::m_BSNoneColor);
 	m_Quadtree.PostRender();
 
 
-	//ApplyBS(m_pImmediateContext.Get(), TDxState::m_AlphaBlend);
+	ApplyBS(m_pImmediateContext.Get(), TDxState::m_AlphaBlend);
 	for (int iObj = 0; iObj < m_FbxObj.size(); iObj++)
 	{
 		m_FbxObj[iObj].SetMatrix(nullptr, matView, matProj);
