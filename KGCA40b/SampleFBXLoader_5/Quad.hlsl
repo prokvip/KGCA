@@ -187,23 +187,23 @@ float4 GaussianPixelShader(float3 vTex, Texture2D tex2D)
 float4 PS(VS_OUTPUT input) : SV_Target
 {
     float4 vTexture = g_txColor.Sample(g_samLinear,input.t);
-//	float4 vNormalColor = g_txNormalDepth.Sample(g_samLinear,input.t);	
-//	// 스카이오브젝트 랜더링에 사용
-//	if (vTexture.w < 0.01f)
-//	{
-//		discard;
-//	}
-////	// 내부 경계 및 외부 경계  	
-//	float4 vEdgeColor =  Sobel(float3(input.t, 0.0f), g_txNormalDepth);
-//	float4 vFinal = vEdgeColor *vTexture;
-//#ifdef GAUSSIAN_BLUR
-//	float4 vBlur = GaussianBlur(float3(input.t, 0.0f), g_txColor);
-//#else
-//	float4 vBlur = Blur(float3(input.t, 0.0f), g_txColor);
-//#endif
-//	float4 vSharp = Sharp(float3(input.t, 0.0f), g_txColor);	
-//	float4 cSharp_Blur = lerp(  vBlur, vSharp,vNormalColor.w );
-//	vFinal = lerp(cSharp_Blur, vFinal, vNormalColor.w );
-//	vFinal.a = 1;
-	return vTexture;
+	float4 vNormalColor = g_txNormalDepth.Sample(g_samLinear,input.t);	
+	// 스카이오브젝트 랜더링에 사용
+	if (vTexture.w < 0.01f)
+	{
+		discard;
+	}
+//	// 내부 경계 및 외부 경계  	
+	float4 vEdgeColor =  Sobel(float3(input.t, 0.0f), g_txNormalDepth);
+	float4 vFinal = vEdgeColor *vTexture;
+#ifdef GAUSSIAN_BLUR
+	float4 vBlur = GaussianBlur(float3(input.t, 0.0f), g_txColor);
+#else
+	float4 vBlur = Blur(float3(input.t, 0.0f), g_txColor);
+#endif
+	float4 vSharp = Sharp(float3(input.t, 0.0f), g_txColor);	
+	float4 cSharp_Blur = lerp(  vBlur, vSharp,vNormalColor.w );
+	vFinal = lerp(cSharp_Blur, vFinal, vNormalColor.w );
+	vFinal.a = 1;
+	return vFinal;
 }

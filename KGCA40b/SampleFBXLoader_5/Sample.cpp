@@ -200,7 +200,7 @@ bool	Sample::Init()
 
 	m_vLightPos = TVector3(500, 8000, 100);
 	T::D3DXVec3Normalize(&m_vLightDir, &m_vLightPos);
-	m_dxRT.Create(m_pd3dDevice.Get(), 4048, 4048);
+	m_dxRT.Create(m_pd3dDevice.Get(), 4096*2, 4096 * 2);
 	m_pProjShadowVShader = I_Shader.CreateVertexShader(m_pd3dDevice.Get(),
 		L"ProjShadow.hlsl", "VS");
 	m_pProjShadowPShader = I_Shader.CreatePixelShader(m_pd3dDevice.Get(),
