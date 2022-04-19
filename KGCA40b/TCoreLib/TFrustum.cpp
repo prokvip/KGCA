@@ -246,7 +246,7 @@ void		TFrustum::CreateFrustum(T::TMatrix& matView,
 		m_VertexList[++index].p = m_vFrustum[3];
 		m_VertexList[++index].p = m_vFrustum[7];
 		// -X plane
-		m_VertexList[++index].p = m_vFrustum[5];;
+		m_VertexList[++index].p = m_vFrustum[5];
 		m_VertexList[++index].p = m_vFrustum[1];
 		m_VertexList[++index].p = m_vFrustum[4];
 		m_VertexList[++index].p = m_vFrustum[0];
@@ -268,7 +268,7 @@ void		TFrustum::CreateFrustum(T::TMatrix& matView,
 	//+z
 	m_Plane[1] = T::TPlane(m_vFrustum[6], m_vFrustum[5], m_vFrustum[4]);
 	// -x
-	m_Plane[2] = T::TPlane(m_vFrustum[5], m_vFrustum[1], m_vFrustum[0]);
+	m_Plane[2] = T::TPlane(m_vFrustum[5], m_vFrustum[1], m_vFrustum[4]);
 	//+x
 	m_Plane[3] = T::TPlane(m_vFrustum[2], m_vFrustum[6], m_vFrustum[7]);
 	//-y
