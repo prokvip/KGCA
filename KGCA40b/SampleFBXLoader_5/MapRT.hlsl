@@ -75,7 +75,7 @@ PBUFFER_OUTPUT PS(VS_OUTPUT input) : SV_TARGET
 	float4 color = g_txColor.Sample(g_Sample, input.t);
 	float2 LightUV = float2( input.L.xy / input.L.w);
 	float4 mask = g_txMask.Sample(g_SampleClamp, LightUV);
-	if (mask.r > 0.5f)
+	if (mask.r > 0.0f)
 	{
 		output.color0 = color * float4(0.5f, 0.5f,0.5f,1);
 	}

@@ -5,6 +5,8 @@ class TFbx :public TObject3D
 {
 public:
 	TCamera* m_pMainCamera;
+	UINT     m_iShadowID = 0;
+	TVector4 m_vShadowColor;
 public:
 	TFbxImporter* m_pMeshImp;
 	TFbxImporter* m_pAnimImporter;

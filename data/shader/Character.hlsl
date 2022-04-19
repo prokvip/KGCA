@@ -38,6 +38,7 @@ cbuffer cb1 : register(b1)
 	float4   vLightPos : packoffset(c1);
 	float4   vEyeDir   : packoffset(c2);
 	float4   vEyePos   : packoffset(c3);
+	matrix   g_matLight: packoffset(c4);
 };
 cbuffer cb2 : register(b2)
 {

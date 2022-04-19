@@ -14,7 +14,6 @@ public:
 	}
 	virtual ~TSampleMap() {}
 };
-
 class Sample : public TCore
 {
 	TSampleMap				m_MapObj;

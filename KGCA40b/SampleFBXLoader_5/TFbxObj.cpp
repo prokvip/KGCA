@@ -124,10 +124,7 @@ bool	TFbx::Render()
 				if (binepose != pFbxObj->m_dxMatrixBindPoseMap.end()&& pAnimModel)
 				{
 					TMatrix matInverseBindpose = binepose->second;
-					m_matBoneArray.matBoneWorld[pTreeModel->m_iIndex] =
-						matInverseBindpose *				
-						Interplate(pAnimImp, pAnimModel, m_fTime);
-						//pAnimModel->m_AnimTrack[iFrame].matTrack;
+					m_matBoneArray.matBoneWorld[pTreeModel->m_iIndex] =	matInverseBindpose *Interplate(pAnimImp, pAnimModel, m_fTime);					
 				}
 				T::D3DXMatrixTranspose( &m_matBoneArray.matBoneWorld[pTreeModel->m_iIndex],
 										&m_matBoneArray.matBoneWorld[pTreeModel->m_iIndex]);
@@ -140,13 +137,9 @@ bool	TFbx::Render()
 				TFbxModel* pFbxModel = m_pMeshImp->m_TreeList[inode];
 				if (pFbxModel->m_AnimTrack.size() > 0)
 				{					
-					m_matBoneArray.matBoneWorld[inode] =
-						Interplate(pAnimImp, pFbxModel, m_fTime);
-						//pFbxModel->m_AnimTrack[iFrame].matTrack;
-					
+					m_matBoneArray.matBoneWorld[inode] =Interplate(pAnimImp, pFbxModel, m_fTime);										
 				}
-				T::D3DXMatrixTranspose(&m_matBoneArray.matBoneWorld[inode],
-					&m_matBoneArray.matBoneWorld[inode]);
+				T::D3DXMatrixTranspose(&m_matBoneArray.matBoneWorld[inode],	&m_matBoneArray.matBoneWorld[inode]);
 			}
 		}
 
@@ -160,25 +153,25 @@ bool	TFbx::Render()
 		pFbxObj->m_LightConstantList.vLightDir.y = vLight.y;
 		pFbxObj->m_LightConstantList.vLightDir.z = vLight.z;
 		pFbxObj->m_LightConstantList.vLightDir.w = 1.0f;
-		pFbxObj->m_LightConstantList.vCameraDir.x = 
-			m_pMainCamera->m_vLook.x;
-		pFbxObj->m_LightConstantList.vCameraDir.y = 
-			m_pMainCamera->m_vLook.y;
-		pFbxObj->m_LightConstantList.vCameraDir.z = 
-			m_pMainCamera->m_vLook.z;
+		pFbxObj->m_LightConstantList.vCameraDir.x = m_pMainCamera->m_vLook.x;
+		pFbxObj->m_LightConstantList.vCameraDir.y = m_pMainCamera->m_vLook.y;
+		pFbxObj->m_LightConstantList.vCameraDir.z = m_pMainCamera->m_vLook.z;
 		pFbxObj->m_LightConstantList.vCameraDir.w = 1.0f;
-		pFbxObj->m_LightConstantList.vCameraPos.x = 
-			m_pMainCamera->m_vCamera.x;
-		pFbxObj->m_LightConstantList.vCameraPos.y = 
-			m_pMainCamera->m_vCamera.y;
-		pFbxObj->m_LightConstantList.vCameraPos.z = 
-			m_pMainCamera->m_vCamera.z;
+		pFbxObj->m_LightConstantList.vCameraPos.x = m_pMainCamera->m_vCamera.x;
+		pFbxObj->m_LightConstantList.vCameraPos.y = m_pMainCamera->m_vCamera.y;
+		pFbxObj->m_LightConstantList.vCameraPos.z = m_pMainCamera->m_vCamera.z;
 		pFbxObj->m_LightConstantList.vCameraPos.w = 1.0f;
-		pFbxObj->SetMatrix(&m_matWorld, &m_matView, &m_matProj);
-		pFbxObj->m_bAlphaBlend = m_bAlphaBlend;
 		
+		pFbxObj->m_ConstantList.Timer.x = m_iShadowID;
+		pFbxObj->m_ConstantList.Color = m_vShadowColor;
+		pFbxObj->m_LightConstantList.matLight = m_LightConstantList.matLight;
+		pFbxObj->SetMatrix(&m_matWorld, &m_matView, &m_matProj);
+		
+		pFbxObj->m_bAlphaBlend = m_bAlphaBlend;		
 		pFbxObj->PreRender();
 		pFbxObj->Draw();
+		m_pContext->UpdateSubresource(pFbxObj->m_pConstantBuffer, 0, NULL, &pFbxObj->m_ConstantList, 0, 0);
+		m_pContext->PSSetConstantBuffers(0, 1, &pFbxObj->m_pConstantBuffer);
 		pFbxObj->PostRender();	
 	}
 	return true;
@@ -251,13 +244,10 @@ bool	TFbx::RenderShadow(TShader* pShader)
 				TFbxModel* pFbxModel = m_pMeshImp->m_TreeList[inode];
 				if (pFbxModel->m_AnimTrack.size() > 0)
 				{
-					m_matBoneArray.matBoneWorld[inode] =
-						Interplate(pAnimImp, pFbxModel, m_fTime);
+					m_matBoneArray.matBoneWorld[inode] =Interplate(pAnimImp, pFbxModel, m_fTime);
 					//pFbxModel->m_AnimTrack[iFrame].matTrack;
-
 				}
-				T::D3DXMatrixTranspose(&m_matBoneArray.matBoneWorld[inode],
-					&m_matBoneArray.matBoneWorld[inode]);
+				T::D3DXMatrixTranspose(&m_matBoneArray.matBoneWorld[inode],	&m_matBoneArray.matBoneWorld[inode]);
 			}
 		}
 
@@ -271,28 +261,27 @@ bool	TFbx::RenderShadow(TShader* pShader)
 		pFbxObj->m_LightConstantList.vLightDir.y = vLight.y;
 		pFbxObj->m_LightConstantList.vLightDir.z = vLight.z;
 		pFbxObj->m_LightConstantList.vLightDir.w = 1.0f;
-		pFbxObj->m_LightConstantList.vCameraDir.x =
-			m_pMainCamera->m_vLook.x;
-		pFbxObj->m_LightConstantList.vCameraDir.y =
-			m_pMainCamera->m_vLook.y;
-		pFbxObj->m_LightConstantList.vCameraDir.z =
-			m_pMainCamera->m_vLook.z;
+		pFbxObj->m_LightConstantList.vCameraDir.x =	m_pMainCamera->m_vLook.x;
+		pFbxObj->m_LightConstantList.vCameraDir.y =	m_pMainCamera->m_vLook.y;
+		pFbxObj->m_LightConstantList.vCameraDir.z =	m_pMainCamera->m_vLook.z;
 		pFbxObj->m_LightConstantList.vCameraDir.w = 1.0f;
-		pFbxObj->m_LightConstantList.vCameraPos.x =
-			m_pMainCamera->m_vCamera.x;
-		pFbxObj->m_LightConstantList.vCameraPos.y =
-			m_pMainCamera->m_vCamera.y;
-		pFbxObj->m_LightConstantList.vCameraPos.z =
-			m_pMainCamera->m_vCamera.z;
+		pFbxObj->m_LightConstantList.vCameraPos.x =	m_pMainCamera->m_vCamera.x;
+		pFbxObj->m_LightConstantList.vCameraPos.y =	m_pMainCamera->m_vCamera.y;
+		pFbxObj->m_LightConstantList.vCameraPos.z =	m_pMainCamera->m_vCamera.z;
 		pFbxObj->m_LightConstantList.vCameraPos.w = 1.0f;
-		pFbxObj->SetMatrix(&m_matWorld, &m_matView, &m_matProj);
 		
+
+		pFbxObj->m_ConstantList.Timer.x = m_iShadowID;
+		pFbxObj->m_ConstantList.Color = m_vShadowColor;
+		pFbxObj->SetMatrix(&m_matWorld, &m_matView, &m_matProj);
 
 		pFbxObj->PreRender();
 		pFbxObj->Draw();
 		if (pShader != nullptr)
 		{
 			m_pContext->PSSetShader(pShader->m_pPixelShader, NULL, 0);
+			m_pContext->UpdateSubresource(pFbxObj->m_pConstantBuffer, 0, NULL, &pFbxObj->m_ConstantList, 0, 0);
+			m_pContext->PSSetConstantBuffers(0, 1, &pFbxObj->m_pConstantBuffer);
 		}
 		auto bAlphaBlend = pFbxObj->m_bAlphaBlend;
 		pFbxObj->m_bAlphaBlend = true;

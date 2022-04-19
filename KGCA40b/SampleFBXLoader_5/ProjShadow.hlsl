@@ -4,8 +4,9 @@ cbuffer cb0 : register(b0)
 	matrix   g_matWorld : packoffset(c0);
 	matrix   g_matView : packoffset(c4);
 	matrix   g_matProj : packoffset(c8);
-	float4   Color0 : packoffset(c12);
-	float    TimerX : packoffset(c13.x); // Timer.x, Timer.y, Timer.z, Timer.w	
+	matrix	 g_matNormal : packoffset(c12);
+	float4   Color0 : packoffset(c16);	
+	float    TimerX : packoffset(c17.x); // Timer.x, Timer.y, Timer.z, Timer.w	
 };
 struct VS_OUTPUT
 {
@@ -25,5 +26,5 @@ VS_OUTPUT VS( float4 p : POSITION )
 
 float4 PS(VS_OUTPUT vIn) : SV_Target
 {
-	return float4(1,1,1,1);
+	return Color0;
 }
