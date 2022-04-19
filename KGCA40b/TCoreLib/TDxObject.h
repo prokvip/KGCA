@@ -126,6 +126,7 @@ struct TLightData
 	T::TVector4   vLightPos;
 	T::TVector4   vCameraDir;
 	T::TVector4   vCameraPos;
+	T::TMatrix	  matLight;// w*v*p*t
 };
 class TDxObject : public TBaseObject
 {

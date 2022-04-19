@@ -11,7 +11,8 @@ struct VS_OUTPUT
 	float3 n : NORMAL;
 	float4 c : COLOR0;    // COLOR0 ~ COLOR1
 	float2 t : TEXCOORD0; // TEXCOORD0 ~ TEXCOORD15
-	float3 r  : TEXCOORD1;	
+	float3 r : TEXCOORD1;	
+	float4 L : TEXCOORD2;
 };
 
 // 상수버퍼(단위:레지스터 단위(float4)로 할당되어야 한다.)
@@ -28,6 +29,7 @@ cbuffer cb1 : register(b1)
 {	
 	float4   vLightDir : packoffset(c0);
 	float4   vLightPos : packoffset(c1);	
+	matrix   g_matLight: packoffset(c2);
 };
 VS_OUTPUT VS( VS_INPUT v)
 {
@@ -37,6 +39,9 @@ VS_OUTPUT VS( VS_INPUT v)
 	float4 vView = mul(vWorld, g_matView);
 	float4 vProj = mul(vView, g_matProj);
 	pOut.p = vProj;
+	
+	pOut.L = mul(vWorld, g_matLight);
+	
 	float3 vNormal = mul(v.n, (float3x3)g_matWorld);
 	pOut.n = normalize(vNormal);
 	pOut.t = v.t*10.0f;
@@ -53,6 +58,7 @@ Texture2D		g_txColor : register(t0);
 Texture2D		g_txMask : register(t1);
 TextureCube	    g_txCubeMap : register(t3);
 SamplerState	g_Sample : register(s0);
+SamplerState	g_SampleClamp : register(s1);
 
 struct PBUFFER_OUTPUT
 {
@@ -65,7 +71,16 @@ PBUFFER_OUTPUT PS(VS_OUTPUT input) : SV_TARGET
 	PBUFFER_OUTPUT output;
 	//텍스처에서 t좌표에 해당하는 컬러값(픽셀) 반환
 	float4 color = g_txColor.Sample(g_Sample, input.t);
-	output.color0 = color;
+	float2 LightUV = float2( input.L.xy / input.L.w);
+	float4 mask = g_txMask.Sample(g_SampleClamp, LightUV);
+	if (mask.r > 0.5f)
+	{
+		output.color0 = color * float4(0.5f, 0.5f,0.5f,1);
+	}
+	else
+	{
+		output.color0 = color;
+	}
 	float3 vNormal = input.n * 0.5f + 0.5f;
 	// 필수->알파블랜딩 =OFF;
 	output.color1 = float4(vNormal, input.c.a);

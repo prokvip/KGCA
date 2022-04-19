@@ -4,6 +4,7 @@
 #include "TMap.h"
 #include "TQuadtree.h"
 #include "TQuadObject.h"
+#include "TDxRT.h"
 class TSampleMap : public TMap
 {
 public:
@@ -22,6 +23,17 @@ class Sample : public TCore
 	TShader*				m_pShadowPShader = nullptr;
 	TTexture* m_pLightTex;
 	TTexture* m_pNormalMap;
+public:
+	TShader*  m_pProjShadowVShader = nullptr;
+	TShader*  m_pProjShadowPShader = nullptr;
+	TDxRT	  m_dxRT;
+	TVector3  m_vLightPos;
+	TVector3  m_vLightDir;
+	TMatrix	  m_matShadow;
+	TMatrix	  m_matViewLight;
+	TMatrix	  m_matProjLight;
+	TMatrix	  m_matTex;
+	void		RenderShadow(TMatrix* matView, TMatrix* matProj);
 public:
 	virtual void	CreateResizeDevice(UINT iWidth, UINT iHeight) override;
 	virtual void	DeleteResizeDevice(UINT iWidth, UINT iHeight) override;

@@ -1,4 +1,5 @@
 #include "TDevice.h"
+ID3D11Device* g_pd3dDevice = nullptr;
 bool TDevice::CreateDetphStencilView()
 {
 	HRESULT hr;
@@ -118,6 +119,8 @@ bool	TDevice::CreateDevice()
 	}	
 	DXGI_SWAP_CHAIN_DESC scd;
 	m_pSwapChain->GetDesc(&scd);
+
+	g_pd3dDevice = m_pd3dDevice.Get();
 	return true;
 }
 bool	TDevice::CreateRenderTargetView()

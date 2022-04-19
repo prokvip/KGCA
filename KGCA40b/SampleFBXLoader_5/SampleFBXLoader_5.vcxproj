@@ -151,11 +151,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Sample.h" />
+    <ClInclude Include="TDxRT.h" />
     <ClInclude Include="TFbxObj.h" />
     <ClInclude Include="TQuadObject.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Sample.cpp" />
+    <ClCompile Include="TDxRT.cpp" />
     <ClCompile Include="TFbxObj.cpp" />
     <ClCompile Include="TQuadObject.cpp" />
   </ItemGroup>
@@ -172,6 +174,10 @@
     <FxCompile Include="MapRT.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="ProjShadow.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="Quad.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>

@@ -1,7 +1,9 @@
 #pragma once
 #include "TBaseMgr.h"
+
 #include "DDSTextureLoader.h"
 #include "WICTextureLoader.h"
+
 #pragma comment	(lib, "d3dcompiler.lib")
 class TTexture
 {
@@ -27,6 +29,9 @@ public:
 class TTextureMgr : public TBaseMgr<TTexture, TTextureMgr>					
 {
 	friend class TSingleton<TTextureMgr>;
+public:
+	static HRESULT SaveFile(ID3D11DeviceContext* pContext, ID3D11Texture2D* pRes, T_STR name);
+	static HRESULT SaveFile(ID3D11DeviceContext* pContext, IDXGISwapChain* pSwapChain, T_STR name);
 private:
 	TTextureMgr() {};
 public:

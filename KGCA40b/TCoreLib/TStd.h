@@ -2,6 +2,7 @@
 #include <winsock2.h>
 #include <windows.h>
 #include <d3d11.h>
+#include <dxgi.h>
 #include <dxgidebug.h>
 #include <tchar.h>
 #include <vector>
@@ -23,6 +24,8 @@ class TBoxObj;
 using namespace Microsoft::WRL;
 
 #pragma comment	(lib, "d3d11.lib")
+#pragma comment( lib, "dxguid.lib" )
+#pragma comment( lib, "dxgi.lib" )
 #ifdef _DEBUG
 #pragma comment	(lib, "TCoreLib_d.lib")
 #else
@@ -49,6 +52,23 @@ extern float	g_fSecPerFrame;
 extern float	g_fGameTimer;
 extern POINT	g_ptMouse;
 extern TBoxObj* g_pBoxDebug;
+extern ID3D11Device* g_pd3dDevice;
+
+typedef basic_string<TCHAR>				T_STR;
+typedef basic_string<wchar_t>			W_STG;
+typedef basic_string<char>				C_STR;
+typedef vector<T_STR>					T_STR_VECTOR;
+typedef basic_string<TCHAR>::iterator	T_ITOR;
+typedef basic_string<wchar_t>::iterator	W_ITOR;
+typedef basic_string<char>::iterator	C_ITOR;
+typedef vector<T_STR>					T_ARRAY_ITOR;
+typedef vector<DWORD>				DWORD_VECTOR;
+typedef	vector< DWORD >::iterator	DWORD_VECTOR_ITOR;
+typedef list<DWORD>					DWORD_LIST;
+typedef list<DWORD>::iterator		DWORD_LIST_ITOR;
+typedef list< HANDLE >				HANDLE_LIST;
+typedef	list< HANDLE >::iterator	HANDLE_LIST_ITOR;
+
 static std::wstring to_mw(const std::string& _src)
 {
 	USES_CONVERSION;

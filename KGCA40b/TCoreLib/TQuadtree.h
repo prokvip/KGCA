@@ -42,7 +42,9 @@ public:
 	void		SetIndexData(TNode* pNode, int iLodLevel);
 	bool		CreateIndexBuffer(TNode* pNode, int iLodLevel);
 	void		Update(TCamera* pCamera);
+	bool		PreRender();
 	bool		Render();
+	bool		PostRender();
 	void		RenderObject(TNode* pNode);
 	void		RenderTile(TNode* pNode);
 public:
