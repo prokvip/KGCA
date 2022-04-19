@@ -271,6 +271,7 @@ void Sample::RenderShadow(TMatrix* matView, TMatrix* matProj)
 		m_FbxObj[iObj].RenderShadow(m_pProjShadowPShader);
 	}	
 }
+
 bool	Sample::Render()
 {
 	RenderIntoBuffer(m_pImmediateContext.Get());
