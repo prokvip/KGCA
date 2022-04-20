@@ -24,6 +24,7 @@ class Sample : public TCore
 	TTexture*	m_pLightTex;
 	TTexture*	m_pNormalMap;
 	bool		m_bDepthShadow = true;
+	ComPtr<ID3D11RasterizerState>  m_pRSSlopeScaledDepthBias;
 public:
 	TShader*	m_pProjShadowVShader = nullptr;
 	TShader*	m_pProjShadowPShader = nullptr;

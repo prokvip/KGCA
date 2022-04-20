@@ -12,10 +12,13 @@ public:
 	static ID3D11SamplerState* g_pSSMirrorPoint;
 	static ID3D11SamplerState* g_pSSClampLinear;
 	static ID3D11SamplerState* g_pSSClampPoint;
+	static ID3D11SamplerState* g_pSSShadowMap;
+
 	static ID3D11RasterizerState* g_pRSBackCullWireFrame;
 	static ID3D11RasterizerState* g_pRSNoneCullWireFrame;
 	static ID3D11RasterizerState* g_pRSBackCullSolid;
 	static ID3D11RasterizerState* g_pRSNoneCullSolid;
+	static ID3D11RasterizerState* g_pRSSlopeScaledDepthBias;
 
 	static  ID3D11DepthStencilState* g_pDSSDepthEnable;
 	static  ID3D11DepthStencilState* g_pDSSDepthDisable;

@@ -90,6 +90,18 @@ bool    Sample::LoadFbx()
 bool	Sample::Init()
 {
 	HRESULT hr;
+
+	D3D11_RASTERIZER_DESC rsDesc;
+	ZeroMemory(&rsDesc, sizeof(rsDesc));
+	rsDesc.DepthClipEnable = TRUE;
+	rsDesc.FillMode = D3D11_FILL_SOLID;
+	rsDesc.CullMode = D3D11_CULL_BACK;
+	rsDesc.DepthBias = 10000;
+	rsDesc.DepthBiasClamp = 0.0f;
+	rsDesc.SlopeScaledDepthBias = 1.0f;
+	if (FAILED(hr = m_pd3dDevice->CreateRasterizerState(&rsDesc, m_pRSSlopeScaledDepthBias.GetAddressOf())))
+		return false;
+
 	if (FAILED(m_QuadObj.Create(m_pd3dDevice.Get(), m_pImmediateContext.Get(), L"Quad.hlsl")))
 	{
 		MessageBox(0, _T("m_QuadObj ½ÇÆÐ"), _T("Fatal error"), MB_OK);
@@ -116,7 +128,7 @@ bool	Sample::Init()
 	
 	if (m_bDepthShadow)
 	{
-		m_dxRT.Create(m_pd3dDevice.Get(), 4096 * 4, 4096 * 4, DXGI_FORMAT_D32_FLOAT);
+		m_dxRT.Create(m_pd3dDevice.Get(), 4096 * 4, 4096 * 4, DXGI_FORMAT_R24G8_TYPELESS);// DXGI_FORMAT_D32_FLOAT);
 		m_pDepthShadowVShader = I_Shader.CreateVertexShader(m_pd3dDevice.Get(), L"DepthShadow.hlsl", "VS");
 		m_pDepthShadowPShader = I_Shader.CreatePixelShader(m_pd3dDevice.Get(), L"DepthShadow.hlsl", "PS");
 	}
@@ -160,7 +172,9 @@ bool	Sample::Frame()
 		TVector3 vLookat = { 0,0,0 };
 		TVector3 vUp = TVector3(0.0f, 1.0f, 0.0f);
 		D3DXMatrixLookAtLH(&m_matViewLight, &vEye, &vLookat, &vUp);
-		D3DXMatrixPerspectiveFovLH(&m_matProjLight, XM_PI / 4, 1, 0.1f, 20000.0f);
+		//D3DXMatrixPerspectiveFovLH(&m_matProjLight, XM_PI / 4, 1, 0.1f, 20000.0f);
+		D3DXMatrixOrthoOffCenterLH(&m_matProjLight,
+			-6000 / 2, 6000.0f / 2, -6000.0f / 2, 6000.0f / 2, 0.0f, 20000.0f);
 		if (m_bDepthShadow)
 		{
 			RenderDepthShadow(&m_matViewLight, &m_matProjLight);
@@ -181,7 +195,7 @@ bool	Sample::Frame()
 void Sample::RenderDepthShadow(TMatrix* matView, TMatrix* matProj)
 {
 	ApplyDSS(m_pImmediateContext.Get(), TDxState::g_pDSSDepthEnable);
-	ApplyRS(m_pImmediateContext.Get(), TDxState::g_pRSNoneCullSolid);	
+	ApplyRS(m_pImmediateContext.Get(), m_pRSSlopeScaledDepthBias.Get());// TDxState::g_pRSSlopeScaledDepthBias);
 
 	m_MapObj.m_bAlphaBlend = false;
 	m_MapObj.m_ConstantList.Color.z = 0.1f;
@@ -287,14 +301,16 @@ void Sample::RenderMRT(ID3D11DeviceContext* pContext)
 {
 	pContext->OMSetDepthStencilState(TDxState::g_pDSSDepthEnable, 0x00);
 	ApplyBS(pContext, TDxState::m_AlphaBlendDisable);
-	
+	ApplySS(pContext, TDxState::g_pSSShadowMap, 2);
+
 	m_MapObj.m_bAlphaBlend = false;
 	m_MapObj.SetMatrix(nullptr, &m_pMainCamera->m_matView, &m_pMainCamera->m_matProj);
 	m_MapObj.m_LightConstantList.matLight = m_matViewLight * m_matProjLight *m_matTex;
 	T::D3DXMatrixTranspose( &m_MapObj.m_LightConstantList.matLight,&m_MapObj.m_LightConstantList.matLight);
 	m_pImmediateContext->PSSetSamplers(1, 1, &TDxState::g_pSSClampLinear);
 	m_Quadtree.PreRender();	
-		pContext->PSSetShaderResources(1, 1,m_dxRT.m_pSRV.GetAddressOf());
+		pContext->PSSetShaderResources(1, 1,m_dxRT.m_pDsvSRV.GetAddressOf());
+		ApplySS(pContext, TDxState::g_pSSShadowMap, 2);
 	m_Quadtree.PostRender();
 
 	if (m_pLightTex)	pContext->PSSetShaderResources(1, 1, m_pLightTex->m_pSRV.GetAddressOf());

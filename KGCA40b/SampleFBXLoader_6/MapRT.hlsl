@@ -60,6 +60,7 @@ Texture2D		g_txMask : register(t1);
 TextureCube	    g_txCubeMap : register(t3);
 SamplerState	g_Sample : register(s0);
 SamplerState	g_SampleClamp : register(s1);
+SamplerComparisonState g_samComShadowMap: register (s2);
 
 struct PBUFFER_OUTPUT
 {
@@ -73,16 +74,18 @@ PBUFFER_OUTPUT PS(VS_OUTPUT input) : SV_TARGET
 	//텍스처에서 t좌표에 해당하는 컬러값(픽셀) 반환
 	float4 color = g_txColor.Sample(g_Sample, input.t);
 	float3 LightUV = float3( input.L.xyz / input.L.w);
-	float4 mask = g_txMask.Sample(g_SampleClamp, LightUV.xy);
-	if (mask.r < LightUV.z)
+	//float4 mask = g_txMask.Sample(g_SampleClamp, LightUV.xy);
+	float mask = g_txMask.SampleCmpLevelZero(g_samComShadowMap,LightUV.xy,LightUV.z).r;
+	mask = max(0.5f, mask);
+	/*if (mask.r < LightUV.z)
 	{
 		output.color0 = color * float4(0.5f, 0.5f,0.5f,1);
 	}
 	else
 	{
 		output.color0 = color;
-	}
-	//output.color0 = mask;
+	}*/
+	output.color0 = color * float4(mask,mask,mask, 1);
 	float3 vNormal = input.n * 0.5f + 0.5f;
 	// 필수->알파블랜딩 =OFF;
 	output.color1 = float4(vNormal, input.c.a);
