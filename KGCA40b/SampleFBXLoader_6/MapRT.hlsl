@@ -49,10 +49,8 @@ VS_OUTPUT VS( VS_INPUT v)
 	pOut.n = normalize(vNormal);
 	pOut.t = v.t*10.0f;
 	float fDot = max(0.2f, dot(pOut.n, -vLightDir.xyz));
-	pOut.c = v.c*float4(fDot, fDot, fDot,1);
-	float fNear = 0.1f;
-	float fFar = 5000.0f;
-	pOut.c.w = (pOut.p.w - fNear) / (fFar - fNear);
+	pOut.c = v.c*float4(fDot, fDot, fDot,1);	
+	pOut.c.w = pOut.L.z / pOut.L.w;// (pOut.p.w - Color0.z) / (Color0.w - Color0.z);
 
 	pOut.r = normalize(vLocal.xyz);
 	return pOut;
@@ -74,9 +72,9 @@ PBUFFER_OUTPUT PS(VS_OUTPUT input) : SV_TARGET
 	PBUFFER_OUTPUT output;
 	//텍스처에서 t좌표에 해당하는 컬러값(픽셀) 반환
 	float4 color = g_txColor.Sample(g_Sample, input.t);
-	float2 LightUV = float2( input.L.xy / input.L.w);
-	float4 mask = g_txMask.Sample(g_SampleClamp, LightUV);
-	if (mask.r > 0.0f)
+	float3 LightUV = float3( input.L.xyz / input.L.w);
+	float4 mask = g_txMask.Sample(g_SampleClamp, LightUV.xy);
+	if (mask.r < LightUV.z)
 	{
 		output.color0 = color * float4(0.5f, 0.5f,0.5f,1);
 	}
@@ -84,6 +82,7 @@ PBUFFER_OUTPUT PS(VS_OUTPUT input) : SV_TARGET
 	{
 		output.color0 = color;
 	}
+	//output.color0 = mask;
 	float3 vNormal = input.n * 0.5f + 0.5f;
 	// 필수->알파블랜딩 =OFF;
 	output.color1 = float4(vNormal, input.c.a);

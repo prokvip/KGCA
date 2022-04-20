@@ -22,13 +22,16 @@ VS_OUTPUT VS( float4 p : POSITION )
 	output.p = mul(p, g_matWorld);
 	output.p = mul(output.p, g_matView);
 	output.p = mul(output.p, g_matProj);
-	float fNear = 0.1f;
-	float fFar = 5000.0f;
-	output.c = (output.p.w - fNear) / (fFar - fNear);
+	//float fNear = 0.1f;
+	//float fFar = 20000.0f;
+	output.c = (output.p.w - Color0.z) / (Color0.w - Color0.z);
     return output;
 }
 
 float4 PS(VS_OUTPUT vIn) : SV_Target
 {
-	return vIn.c;
+	//float fNear = 0.1f;
+	//float fFar = 20000.0f;
+	float color = (vIn.p.w - Color0.z) / (Color0.w - Color0.z);
+	return float4(color, color, color, 1);
 }

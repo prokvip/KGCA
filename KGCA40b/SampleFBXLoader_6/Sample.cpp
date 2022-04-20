@@ -37,7 +37,7 @@ bool    Sample::LoadFbx()
 	listname.push_back(L"../../data/fbx/Greystone.fbx");
 	listname.push_back(L"../../data/fbx/idle.fbx");
 	//listname.push_back(L"../../data/fbx/Man.fbx");
-	LoadAllPath(L"../../data/fbx/AdvancedVillagePack/Meshes", listname);
+	T::LoadAllPath(L"../../data/fbx/AdvancedVillagePack/Meshes", listname);
 
 	// 0 ~ 60  idel
 	// 61 ~91  walk;
@@ -67,8 +67,8 @@ bool    Sample::LoadFbx()
 		pFbx->m_pd3dDevice = m_pd3dDevice.Get();
 		pFbx->m_pContext = m_pImmediateContext.Get();
 		pFbx->m_pMeshImp = I_ObjectMgr.Load(listname[iObj]);	
-		pFbx->m_pVShader = I_Shader.CreateVertexShader(g_pd3dDevice, L"../../data/shader/Character.hlsl", "VS");
-		pFbx->m_pPShader = I_Shader.CreatePixelShader(g_pd3dDevice, L"../../data/shader/Character.hlsl", "PSMRT");		
+		pFbx->m_pVShader = I_Shader.CreateVertexShader(g_pd3dDevice, L"Character.hlsl", "VS");
+		pFbx->m_pPShader = I_Shader.CreatePixelShader(g_pd3dDevice, L"Character.hlsl", "PSMRT");		
 
 		pFbx->m_DrawList.resize(pFbx->m_pMeshImp->m_DrawList.size());
 		int iRow = iObj / 10;
@@ -111,7 +111,7 @@ bool	Sample::Init()
 	m_pLightTex = I_Texture.Load(L"../../data/pung00.dds");
 	m_pNormalMap = I_Texture.Load(L"../../data/NormalMap/tileADOT3.jpg");
 
-	m_vLightPos = TVector3(500, 8000, 100);
+	m_vLightPos = TVector3(5000, 8000, 100);
 	T::D3DXVec3Normalize(&m_vLightDir, &m_vLightPos);
 	
 	if (m_bDepthShadow)
@@ -160,7 +160,7 @@ bool	Sample::Frame()
 		TVector3 vLookat = { 0,0,0 };
 		TVector3 vUp = TVector3(0.0f, 1.0f, 0.0f);
 		D3DXMatrixLookAtLH(&m_matViewLight, &vEye, &vLookat, &vUp);
-		D3DXMatrixPerspectiveFovLH(&m_matProjLight, XM_PI / 4, 1, 0.1f, 30000.0f);
+		D3DXMatrixPerspectiveFovLH(&m_matProjLight, XM_PI / 4, 1, 0.1f, 20000.0f);
 		if (m_bDepthShadow)
 		{
 			RenderDepthShadow(&m_matViewLight, &m_matProjLight);
@@ -184,16 +184,21 @@ void Sample::RenderDepthShadow(TMatrix* matView, TMatrix* matProj)
 	ApplyRS(m_pImmediateContext.Get(), TDxState::g_pRSNoneCullSolid);	
 
 	m_MapObj.m_bAlphaBlend = false;
-	m_MapObj.SetMatrix(nullptr, matView, matProj);
-	m_Quadtree.PreRender();
-	m_pImmediateContext.Get()->VSSetShader(m_pDepthShadowVShader->m_pVertexShader, NULL, 0);
+	m_MapObj.m_ConstantList.Color.z = 0.1f;
+	m_MapObj.m_ConstantList.Color.w = 20000.0f;
+
+	m_MapObj.SetMatrix(nullptr, matView, matProj);	
+	m_MapObj.PreRender();
+	m_MapObj.Draw();
+	//m_pImmediateContext.Get()->VSSetShader(m_pDepthShadowVShader->m_pVertexShader, NULL, 0);
 	m_pImmediateContext.Get()->PSSetShader(m_pDepthShadowPShader->m_pPixelShader, NULL, 0);
-	//ApplyBS(m_pImmediateContext.Get(), TDxState::m_BSNoneColor);
-	m_Quadtree.PostRender();	
+	m_MapObj.PostRender();
 
 	ApplyBS(m_pImmediateContext.Get(), TDxState::m_AlphaBlend);
 	for (int iObj = 0; iObj < m_FbxObj.size(); iObj++)
 	{
+		m_FbxObj[iObj].m_vShadowColor.z = 0.1f;
+		m_FbxObj[iObj].m_vShadowColor.w = 20000.0f;
 		m_FbxObj[iObj].SetMatrix(nullptr, matView, matProj);
 		m_FbxObj[iObj].RenderShadow(m_pDepthShadowPShader);
 	}	
@@ -212,8 +217,7 @@ void Sample::RenderProjectionShadow(TMatrix* matView, TMatrix* matProj)
 bool	Sample::Render()
 {
 	ApplyRS(m_pImmediateContext.Get(), TDxState::g_pRSBackCullSolid);
-	RenderIntoBuffer(m_pImmediateContext.Get());
-	
+	RenderIntoBuffer(m_pImmediateContext.Get());	
 	ApplySS(m_pImmediateContext.Get(), TDxState::m_pSSLinear);
 	ApplySS(m_pImmediateContext.Get(), TDxState::g_pSSClampLinear);
 	m_QuadObj.SetMatrix(nullptr, nullptr, nullptr);

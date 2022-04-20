@@ -154,8 +154,8 @@ bool    Sample::LoadFbx()
 		pFbx->m_pd3dDevice = m_pd3dDevice.Get();
 		pFbx->m_pContext = m_pImmediateContext.Get();
 		pFbx->m_pMeshImp = I_ObjectMgr.Load(listname[iObj]);
-		pFbx->m_pVShader = I_Shader.CreateVertexShader(g_pd3dDevice, L"../../data/shader/Character.hlsl", "VS");
-		pFbx->m_pPShader = I_Shader.CreatePixelShader(g_pd3dDevice, L"../../data/shader/Character.hlsl", "PSMRT");
+		pFbx->m_pVShader = I_Shader.CreateVertexShader(g_pd3dDevice, L"Character.hlsl", "VS");
+		pFbx->m_pPShader = I_Shader.CreatePixelShader(g_pd3dDevice, L"Character.hlsl", "PSMRT");
 		pFbx->m_DrawList.resize(pFbx->m_pMeshImp->m_DrawList.size());
 		int iRow = iObj / 10;
 		int iCol = iObj / 10;

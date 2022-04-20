@@ -23,7 +23,7 @@ class Sample : public TCore
 	TShader*				m_pShadowPShader = nullptr;
 	TTexture*	m_pLightTex;
 	TTexture*	m_pNormalMap;
-	bool		m_bDepthShadow = false;
+	bool		m_bDepthShadow = true;
 public:
 	TShader*	m_pProjShadowVShader = nullptr;
 	TShader*	m_pProjShadowPShader = nullptr;

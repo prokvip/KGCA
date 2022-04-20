@@ -205,5 +205,5 @@ float4 PS(VS_OUTPUT input) : SV_Target
 	float4 cSharp_Blur = lerp(  vBlur, vSharp,vNormalColor.w );
 	vFinal = lerp(cSharp_Blur, vFinal, vNormalColor.w );
 	vFinal.a = 1;
-	return vFinal;
+	return vTexture;
 }
