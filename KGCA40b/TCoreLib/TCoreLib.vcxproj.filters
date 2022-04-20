@@ -69,9 +69,6 @@
     <ClCompile Include="TWorld.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="TBaseMgr.cpp">
-      <Filter>Manager</Filter>
-    </ClCompile>
     <ClCompile Include="TObjectMgr.cpp">
       <Filter>Manager</Filter>
     </ClCompile>

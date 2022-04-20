@@ -161,7 +161,6 @@ copy "..\\..\\lib\\*.dll" "..\\..\\output\\release"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="TBaseMgr.cpp" />
     <ClCompile Include="TBoxObj.cpp" />
     <ClCompile Include="TCamera.cpp" />
     <ClCompile Include="TCollision.cpp" />

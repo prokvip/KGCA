@@ -50,9 +50,6 @@ public:
 	bool	LoadMap();
 	bool    LoadFbx();
 public:
-	void	DisplayErrorBox(const WCHAR* lpszFunction);
-	DWORD	LoadAllPath(const TCHAR* argv, std::vector<std::wstring>& list);
-public:
 	void		RenderIntoBuffer(ID3D11DeviceContext* pContext);
 	void		RenderMRT(ID3D11DeviceContext* pContext);
 public:
