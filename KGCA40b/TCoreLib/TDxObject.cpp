@@ -256,18 +256,13 @@ bool    TDxObject::Draw()
 	{
 		m_pContext->OMSetBlendState(TDxState::m_AlphaBlendDisable, 0, -1);
 	}
-
 	m_pContext->IASetInputLayout(m_pVertexLayout);
-
 
 	UINT StartSlot;
 	UINT NumBuffers;
 	UINT Strides = sizeof(TVertex);
 	UINT Offsets = 0;
-
-	m_pContext->IASetVertexBuffers(
-		0, 1, &m_pVertexBuffer,
-		&Strides, &Offsets);
+	m_pContext->IASetVertexBuffers(0, 1, &m_pVertexBuffer,&Strides, &Offsets);
 	m_pContext->IASetIndexBuffer(m_pIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
 	m_pContext->VSSetConstantBuffers(0, 1, &m_pConstantBuffer);
 	m_pContext->PSSetConstantBuffers(0, 1, &m_pConstantBuffer);
@@ -293,12 +288,8 @@ bool	TDxObject::PreRender()
 	ID3D11ShaderResourceView* nullSRV = nullptr;
 	if (m_pColorTex != nullptr)
 		m_pContext->PSSetShaderResources(0, 1,m_pColorTex->m_pSRV.GetAddressOf());
-	///else
-	///	m_pContext->PSSetShaderResources(0, 1, &nullSRV);
 	if (m_pMaskTex != nullptr)
 		m_pContext->PSSetShaderResources(1, 1,m_pMaskTex->m_pSRV.GetAddressOf());
-	//else
-	//	m_pContext->PSSetShaderResources(1, 1, &nullSRV);
 	return true;
 }
 bool	TDxObject::PostRender()

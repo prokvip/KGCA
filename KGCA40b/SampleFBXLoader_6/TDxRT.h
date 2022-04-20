@@ -22,7 +22,7 @@ public:
 	ID3D11RenderTargetView* m_pOldRTV;
 	ID3D11DepthStencilView* m_pOldDSV;
 public:
-	HRESULT	Create(ID3D11Device* pd3dDevice, FLOAT Width = 1024, FLOAT Height = 1024, DXGI_FORMAT dsTexFormat = DXGI_FORMAT_R24G8_TYPELESS);
+	HRESULT	Create(ID3D11Device* pd3dDevice, FLOAT Width = 1024, FLOAT Height = 1024, DXGI_FORMAT dsTexFormat= DXGI_FORMAT_R24G8_TYPELESS);
 	HRESULT CreateCubeMap(ID3D11Device* pd3dDevice, FLOAT fWidth = 1024, FLOAT fHeight = 1024);
 
 	void	Set(ID3D11Device* pDevice, FLOAT TopLeftX, FLOAT TopLeftY, FLOAT Width, FLOAT Height,

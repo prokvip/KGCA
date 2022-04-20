@@ -102,9 +102,7 @@ bool	Sample::LoadMap()
 	m_MapObj.SetDevice(m_pd3dDevice.Get(), m_pImmediateContext.Get());
 	m_MapObj.CreateHeightMap(L"../../data/map/heightMap513.bmp");
 	m_MapObj.CreateMap(m_MapObj.m_iNumCols, m_MapObj.m_iNumRows, 10.0f);
-	if (!m_MapObj.Create(m_pd3dDevice.Get(), m_pImmediateContext.Get(),
-		L"MapRT.hlsl",
-		L"../../data/map/002.jpg"))
+	if (!m_MapObj.Create(m_pd3dDevice.Get(), m_pImmediateContext.Get(),L"MapRT.hlsl",L"../../data/map/002.jpg"))
 	{
 		return false;
 	}
@@ -153,9 +151,10 @@ bool    Sample::LoadFbx()
 		pFbx->m_pMainCamera = m_pMainCamera;
 		pFbx->m_pd3dDevice = m_pd3dDevice.Get();
 		pFbx->m_pContext = m_pImmediateContext.Get();
-		pFbx->m_pMeshImp = I_ObjectMgr.Load(listname[iObj]);
+		pFbx->m_pMeshImp = I_ObjectMgr.Load(listname[iObj]);	
 		pFbx->m_pVShader = I_Shader.CreateVertexShader(g_pd3dDevice, L"../../data/shader/Character.hlsl", "VS");
-		pFbx->m_pPShader = I_Shader.CreatePixelShader(g_pd3dDevice, L"../../data/shader/Character.hlsl", "PSMRT");
+		pFbx->m_pPShader = I_Shader.CreatePixelShader(g_pd3dDevice, L"../../data/shader/Character.hlsl", "PSMRT");		
+
 		pFbx->m_DrawList.resize(pFbx->m_pMeshImp->m_DrawList.size());
 		int iRow = iObj / 10;
 		int iCol = iObj / 10;
@@ -199,10 +198,20 @@ bool	Sample::Init()
 
 	m_vLightPos = TVector3(500, 8000, 100);
 	T::D3DXVec3Normalize(&m_vLightDir, &m_vLightPos);
-	m_dxRT.Create(m_pd3dDevice.Get(), 4096*4, 4096 * 4);
-	m_pProjShadowVShader = I_Shader.CreateVertexShader(m_pd3dDevice.Get(),L"ProjShadow.hlsl", "VS");
-	m_pProjShadowPShader = I_Shader.CreatePixelShader(m_pd3dDevice.Get(),L"ProjShadow.hlsl", "PS");
-
+	
+	if (m_bDepthShadow)
+	{
+		m_dxRT.Create(m_pd3dDevice.Get(), 4096 * 4, 4096 * 4, DXGI_FORMAT_D32_FLOAT);
+		m_pDepthShadowVShader = I_Shader.CreateVertexShader(m_pd3dDevice.Get(), L"DepthShadow.hlsl", "VS");
+		m_pDepthShadowPShader = I_Shader.CreatePixelShader(m_pd3dDevice.Get(), L"DepthShadow.hlsl", "PS");
+	}
+	else
+	{
+		m_dxRT.Create(m_pd3dDevice.Get(), 4096 * 4, 4096 * 4, DXGI_FORMAT_R24G8_TYPELESS);
+		m_pProjShadowVShader = I_Shader.CreateVertexShader(m_pd3dDevice.Get(), L"ProjShadow.hlsl", "VS");
+		m_pProjShadowPShader = I_Shader.CreatePixelShader(m_pd3dDevice.Get(), L"ProjShadow.hlsl", "PS");
+	}
+	
 	m_matTex = TMatrix(   0.5f, 0.0f, 0.0f, 0.0f
 							, 0.0f, -0.5f, 0.0f, 0.0f
 							, 0.0f, 0.0f, 1.0f, 0.0f
@@ -237,7 +246,14 @@ bool	Sample::Frame()
 		TVector3 vUp = TVector3(0.0f, 1.0f, 0.0f);
 		D3DXMatrixLookAtLH(&m_matViewLight, &vEye, &vLookat, &vUp);
 		D3DXMatrixPerspectiveFovLH(&m_matProjLight, XM_PI / 4, 1, 0.1f, 30000.0f);
-		RenderShadow(&m_matViewLight, &m_matProjLight);		
+		if (m_bDepthShadow)
+		{
+			RenderDepthShadow(&m_matViewLight, &m_matProjLight);
+		}
+		else
+		{
+			RenderProjectionShadow(&m_matViewLight, &m_matProjLight);
+		}
 		m_dxRT.End(m_pImmediateContext.Get());
 	}
 
@@ -247,25 +263,36 @@ bool	Sample::Frame()
 	}
 	return true;
 }
-void Sample::RenderShadow(TMatrix* matView, TMatrix* matProj)
+void Sample::RenderDepthShadow(TMatrix* matView, TMatrix* matProj)
 {
 	ApplyDSS(m_pImmediateContext.Get(), TDxState::g_pDSSDepthEnable);
-	ApplyRS(m_pImmediateContext.Get(), TDxState::g_pRSNoneCullSolid);
-	
-	//m_MapObj.m_bAlphaBlend = false;
-	//m_MapObj.SetMatrix(nullptr, matView, matProj);
-	//m_Quadtree.PreRender();
-	//m_pImmediateContext.Get()->VSSetShader(m_pProjShadowVShader->m_pVertexShader, NULL, 0);
-	//m_pImmediateContext.Get()->PSSetShader(m_pProjShadowPShader->m_pPixelShader, NULL, 0);
+	ApplyRS(m_pImmediateContext.Get(), TDxState::g_pRSNoneCullSolid);	
+
+	m_MapObj.m_bAlphaBlend = false;
+	m_MapObj.SetMatrix(nullptr, matView, matProj);
+	m_Quadtree.PreRender();
+	m_pImmediateContext.Get()->VSSetShader(m_pDepthShadowVShader->m_pVertexShader, NULL, 0);
+	m_pImmediateContext.Get()->PSSetShader(m_pDepthShadowPShader->m_pPixelShader, NULL, 0);
 	//ApplyBS(m_pImmediateContext.Get(), TDxState::m_BSNoneColor);
-	//m_Quadtree.PostRender();
+	m_Quadtree.PostRender();	
 
 	ApplyBS(m_pImmediateContext.Get(), TDxState::m_AlphaBlend);
 	for (int iObj = 0; iObj < m_FbxObj.size(); iObj++)
 	{
 		m_FbxObj[iObj].SetMatrix(nullptr, matView, matProj);
-		m_FbxObj[iObj].RenderShadow(m_pProjShadowPShader);
+		m_FbxObj[iObj].RenderShadow(m_pDepthShadowPShader);
 	}	
+}
+void Sample::RenderProjectionShadow(TMatrix* matView, TMatrix* matProj)
+{
+	ApplyDSS(m_pImmediateContext.Get(), TDxState::g_pDSSDepthEnable);
+	ApplyRS(m_pImmediateContext.Get(), TDxState::g_pRSNoneCullSolid);
+	ApplyBS(m_pImmediateContext.Get(), TDxState::m_AlphaBlend);
+	for (int iObj = 0; iObj < m_FbxObj.size(); iObj++)
+	{
+		m_FbxObj[iObj].SetMatrix(nullptr, matView, matProj);
+		m_FbxObj[iObj].RenderShadow(m_pProjShadowPShader);
+	}
 }
 bool	Sample::Render()
 {
