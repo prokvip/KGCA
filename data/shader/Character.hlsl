@@ -19,6 +19,7 @@ struct VS_OUTPUT
 	float3 r  : TEXCOORD1;
 	float3 l  : TEXCOORD2;
 	float3 e  : TEXCOORD3;
+	float4 shadow  : TEXCOORD4;
 };
 
 // 상수버퍼(단위:레지스터 단위(float4)로 할당되어야 한다.)
@@ -61,6 +62,7 @@ VS_OUTPUT VS(VS_INPUT v)
 	
 	vWorld = mul(vWorld, g_matWorld);
 	vNormal = mul(vNormal, (float3x3)g_matNormal);
+	pOut.shadow = mul(vWorld, g_matLight);
 
 	float4 vView = mul(vWorld, g_matView);
 	float4 vProj = mul(vView, g_matProj);
@@ -95,7 +97,10 @@ Texture2D		g_txColor : register(t0);
 Texture2D		g_txMask : register(t1);
 TextureCube	    g_txCubeMap : register(t3);
 Texture2D	    g_txNormalMap : register(t4);
+Texture2D	    g_txShadowMap : register(t5);
+
 SamplerState	g_Sample : register(s0);
+SamplerState	g_SampleClamp : register(s1);
 
 float Specular(float3 vNormal)
 {
@@ -130,6 +135,16 @@ PBUFFER_OUTPUT PSMRT(VS_OUTPUT input) : SV_TARGET
 	PBUFFER_OUTPUT output;
 	//텍스처에서 t좌표에 해당하는 컬러값(픽셀) 반환
 	float4 color = g_txColor.Sample(g_Sample, input.t);
+	float4 shadow = g_txShadowMap.Sample(g_SampleClamp, input.shadow.xy / input.shadow.w);
+	uint id = shadow * 255.0f;
+	if ( id != (uint)TimerX  &&shadow.r > 0.0f)
+	{
+		color = color * float4(0.5f, 0.5f, 0.5f, 1);
+	}
+	else
+	{
+		color = color;
+	}
 	float4 normal = g_txNormalMap.Sample(g_Sample, input.t);
 	normal = normalize((normal - 0.5f) * 2.0f);
 	float  fDot = saturate(dot(normal.xyz, input.l));
