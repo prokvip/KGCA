@@ -7,14 +7,12 @@ void TBaseObject::HitSelect(TBaseObject* pObj, DWORD dwState)
 {
 	int k = 0;
 }
-void    TDxObject::SetDevice(ID3D11Device* pd3dDevice,
-	ID3D11DeviceContext* pContext)
+void    TDxObject::SetDevice(ID3D11Device* pd3dDevice,ID3D11DeviceContext* pContext)
 {
 	m_pd3dDevice = pd3dDevice;
 	m_pContext   = pContext;
 }
-bool    TDxObject::LoadTexture(const TCHAR* szColorFileName,
-	const TCHAR* szMaskFileName)
+bool    TDxObject::LoadTexture(const TCHAR* szColorFileName,const TCHAR* szMaskFileName)
 {
 	m_pColorTex = I_Texture.Load(szColorFileName);
 	if (szMaskFileName != nullptr)
@@ -60,14 +58,12 @@ bool    TDxObject::SetConstantData()
 }
 bool    TDxObject::CreateVertexShader(const TCHAR* szFile)
 {
-	m_pVShader = I_Shader.CreateVertexShader(m_pd3dDevice,
-		szFile, "VS");
+	m_pVShader = I_Shader.CreateVertexShader(m_pd3dDevice,	szFile, "VS");
 	return true;
 }
 bool    TDxObject::CreatePixelShader(const TCHAR* szFile)
 {
-	m_pPShader = I_Shader.CreatePixelShader(m_pd3dDevice,
-		szFile, "PS");
+	m_pPShader = I_Shader.CreatePixelShader(m_pd3dDevice,szFile, "PS");
 	return true;
 }
 bool	TDxObject::CreateVertexBuffer()
@@ -84,7 +80,6 @@ bool	TDxObject::CreateVertexBuffer()
 	D3D11_SUBRESOURCE_DATA sd;
 	ZeroMemory(&sd, sizeof(D3D11_SUBRESOURCE_DATA));
 	sd.pSysMem = &m_VertexList.at(0);
-
 	if (FAILED(hr = m_pd3dDevice->CreateBuffer(&bd, &sd, &m_pVertexBuffer)))
 	{
 		return false;
@@ -105,7 +100,6 @@ bool	TDxObject::CreateIndexBuffer()
 	D3D11_SUBRESOURCE_DATA sd;
 	ZeroMemory(&sd, sizeof(D3D11_SUBRESOURCE_DATA));
 	sd.pSysMem = &m_IndexList.at(0);
-
 	if (FAILED(hr = m_pd3dDevice->CreateBuffer(&bd, &sd, &m_pIndexBuffer)))
 	{
 		return false;
@@ -125,12 +119,10 @@ bool	TDxObject::CreateConstantBuffer()
 	D3D11_SUBRESOURCE_DATA sd;
 	ZeroMemory(&sd, sizeof(D3D11_SUBRESOURCE_DATA));
 	sd.pSysMem = &m_ConstantList;
-
 	if (FAILED(hr = m_pd3dDevice->CreateBuffer(&bd, &sd, &m_pConstantBuffer)))
 	{
 		return false;
 	}
-
 	//gpu메모리에 버퍼 할당(원하는 할당 크기)
 	ZeroMemory(&bd, sizeof(D3D11_BUFFER_DESC));
 	bd.ByteWidth = sizeof(TConstantData);
@@ -232,11 +224,8 @@ bool	TDxObject::Frame()
 }
 bool    TDxObject::Draw()
 {
-	m_pContext->UpdateSubresource(
-		m_pConstantBuffer, 0, NULL, &m_ConstantList, 0, 0);
-	m_pContext->UpdateSubresource(
-		m_pLightConstantBuffer, 0, NULL, &m_LightConstantList, 0, 0);
-
+	m_pContext->UpdateSubresource(m_pConstantBuffer, 0, NULL, &m_ConstantList, 0, 0);
+	m_pContext->UpdateSubresource(m_pLightConstantBuffer, 0, NULL, &m_LightConstantList, 0, 0);
 	m_pContext->GSSetShader(nullptr, NULL, 0);
 	m_pContext->HSSetShader(nullptr, NULL, 0);
 	m_pContext->DSSetShader(nullptr, NULL, 0);
@@ -248,7 +237,6 @@ bool    TDxObject::Draw()
 	{
 		m_pContext->PSSetShader(m_pPShader->m_pPixelShader, NULL, 0);
 	}
-
 	if (m_bAlphaBlend)
 	{
 		m_pContext->OMSetBlendState(TDxState::m_AlphaBlend, 0, -1);
@@ -257,24 +245,19 @@ bool    TDxObject::Draw()
 	{
 		m_pContext->OMSetBlendState(TDxState::m_AlphaBlendDisable, 0, -1);
 	}
-
 	m_pContext->IASetInputLayout(m_pVertexLayout);
-
 
 	UINT StartSlot;
 	UINT NumBuffers;
 	UINT Strides = sizeof(TVertex);
 	UINT Offsets = 0;
 
-	m_pContext->IASetVertexBuffers(
-		0, 1, &m_pVertexBuffer,
-		&Strides, &Offsets);
+	m_pContext->IASetVertexBuffers(0, 1, &m_pVertexBuffer,&Strides, &Offsets);
 	m_pContext->IASetIndexBuffer(m_pIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
 	m_pContext->VSSetConstantBuffers(0, 1, &m_pConstantBuffer);
 	m_pContext->PSSetConstantBuffers(0, 1, &m_pConstantBuffer);
 	m_pContext->VSSetConstantBuffers(1, 1, &m_pLightConstantBuffer);
 	m_pContext->PSSetConstantBuffers(1, 1, &m_pLightConstantBuffer);
-
 	m_pContext->IASetPrimitiveTopology(
 		D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST
 		//D3D_PRIMITIVE_TOPOLOGY_POINTLIST
