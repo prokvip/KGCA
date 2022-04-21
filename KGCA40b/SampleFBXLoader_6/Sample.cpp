@@ -150,7 +150,7 @@ bool	Sample::Frame()
 {
 	TMatrix matRotation;
 	TVector3 vLight = m_vLightPos;
-	D3DXMatrixRotationY(&matRotation, g_fGameTimer);
+	D3DXMatrixRotationY(&matRotation, 0);// g_fGameTimer);
 	D3DXVec3TransformCoord(&vLight, &vLight, &matRotation);
 	D3DXVec3Normalize(&m_vLightDir, &vLight);
 

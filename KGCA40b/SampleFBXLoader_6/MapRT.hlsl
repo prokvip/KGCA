@@ -68,6 +68,29 @@ struct PBUFFER_OUTPUT
 	float4 color1 : SV_TARGET1;
 };
 
+
+float PS_NO_CMP(float4 uvw)
+{
+	float SMAP_SIZE = 4096 * 4;
+	float LightAmount = 0.0f;
+	float2 uv = uvw.xy / uvw.w;
+	float2 texelpos = SMAP_SIZE * uv;
+	float2 lerps = frac(texelpos);
+	float sourcevals[4];
+	sourcevals[0] = (g_txMask.Sample(g_SampleClamp, uv) < uvw.z / uvw.w)
+		? 0.0f : 1.0f;
+	sourcevals[1] = (g_txMask.Sample(g_SampleClamp, uv + float2(1.0 / SMAP_SIZE, 0)) < uvw.z / uvw.w)
+		? 0.0f : 1.0f;
+	sourcevals[2] = (g_txMask.Sample(g_SampleClamp, uv + float2(0, 1.0 / SMAP_SIZE)) < uvw.z / uvw.w)
+		? 0.0f : 1.0f;
+	sourcevals[3] = (g_txMask.Sample(g_SampleClamp, uv + float2(1.0 / SMAP_SIZE, 1.0 / SMAP_SIZE)) < uvw.z / uvw.w)
+		? 0.0f : 1.0f;
+	LightAmount = lerp(lerp(sourcevals[0], sourcevals[1], lerps.x),
+		lerp(sourcevals[2], sourcevals[3], lerps.x),
+		lerps.y);
+	return  0.5f;// LightAmount;
+}
+
 PBUFFER_OUTPUT PS(VS_OUTPUT input) : SV_TARGET
 {
 	PBUFFER_OUTPUT output;
