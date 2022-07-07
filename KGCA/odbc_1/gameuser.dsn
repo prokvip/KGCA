@@ -1,9 +1,0 @@
-[ODBC]
-DRIVER=SQL Server Native Client 11.0
-UID=sa
-PWD=kgca!@34
-DATABASE=kgcagame
-WSID=TOPLACE
-APP=Microsoft¢ç Windows¢ç Operating System
-SERVER=127.0.0.1
-Description=gameuserlist

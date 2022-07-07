@@ -1,8 +1,0 @@
-//HLSL->c언와 유사하다.
-//정점쉐이더는 반드시 float4:SV_POSITION(레지스터)로 반환한다.
-//정점버퍼의 정점1개마다 호출된다.
-//POSITION(시멘틱:의미구조)
-float4 VS(float2 p: POSITION) : SV_POSITION
-{
-	return float4(p.x,p.y,0.0f,1.0f);
-}
