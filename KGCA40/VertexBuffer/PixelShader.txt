@@ -1,5 +1,0 @@
-
-float4 PS( in float4 p : SV_POSITION) : SV_TARGET
-{
-	return float4(1,1,0,1);
-}
