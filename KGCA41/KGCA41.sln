@@ -7,6 +7,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "KGCA41", "KGCA41\KGCA41.vcx
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FileIO_0", "FileIO_0\FileIO_0.vcxproj", "{EFB31166-26A8-4034-A8E1-603012F602DE}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FileIO_1", "FileIO_1\FileIO_1.vcxproj", "{0CF790A2-5B30-46B0-835A-B901661523A7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -31,6 +33,14 @@ Global
 		{EFB31166-26A8-4034-A8E1-603012F602DE}.Release|x64.Build.0 = Release|x64
 		{EFB31166-26A8-4034-A8E1-603012F602DE}.Release|x86.ActiveCfg = Release|Win32
 		{EFB31166-26A8-4034-A8E1-603012F602DE}.Release|x86.Build.0 = Release|Win32
+		{0CF790A2-5B30-46B0-835A-B901661523A7}.Debug|x64.ActiveCfg = Debug|x64
+		{0CF790A2-5B30-46B0-835A-B901661523A7}.Debug|x64.Build.0 = Debug|x64
+		{0CF790A2-5B30-46B0-835A-B901661523A7}.Debug|x86.ActiveCfg = Debug|Win32
+		{0CF790A2-5B30-46B0-835A-B901661523A7}.Debug|x86.Build.0 = Debug|Win32
+		{0CF790A2-5B30-46B0-835A-B901661523A7}.Release|x64.ActiveCfg = Release|x64
+		{0CF790A2-5B30-46B0-835A-B901661523A7}.Release|x64.Build.0 = Release|x64
+		{0CF790A2-5B30-46B0-835A-B901661523A7}.Release|x86.ActiveCfg = Release|Win32
+		{0CF790A2-5B30-46B0-835A-B901661523A7}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
