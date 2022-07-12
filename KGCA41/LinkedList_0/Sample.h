@@ -46,7 +46,7 @@ void   push_front(TStudent* pNewNode, TStudent* pLinkNode);
 void   erase(TStudent* pNode);
 TStudent* Find(int iAge);
 TStudent* NewNode();
-
+void    sort();
 
 
 TStudent* NewNode()
@@ -262,4 +262,19 @@ void clear()
 		free(pNode);
 		pNode = pNext;
 	}
+}
+void    sort()
+{
+	// 1, 리스트에서 가장 작은 노드 검색한다.
+	// 2, 맨앞에 추가한다. 기존 데이터 이동한다.
+	// 3, (직전에 추가된 Next)반복한다.
+	// 4, 추가노드의 이동이후에 pNext==g_pTail
+
+	// 1, 빈파일 생성, 가장 작은 노드 -> 출력 -> 삭제
+	// 2, 반복 (g_pHead->pNext== g_pTail)
+	// 3, 파일 로드.
+
+	// 1, 제2 연결리스트 생성
+	// 2, 가장 작은 노드 -> 제2 연결리스트 추가 -> 삭제
+	// 2, 반복 (g_pHead->pNext== g_pTail)
 }
