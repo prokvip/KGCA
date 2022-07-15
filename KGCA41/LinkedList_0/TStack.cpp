@@ -1,17 +1,17 @@
 #include "TStack.h"
-TStudent* TStack::begin() {
-	return TLinkedList::begin();
-};
-TStudent* TStack::end() {
-	return TLinkedList::end();
-};
-TStudent* TStack::next() {
-	return TLinkedList::next();
-};
-TStudent* TStack::Find(int index)
-{
-	return TLinkedList::Find(index);
-}
+//TStudent* TStack::begin() {
+//	return TLinkedList::begin();
+//};
+//TStudent* TStack::end() {
+//	return TLinkedList::end();
+//};
+//TStudent* TStack::next() {
+//	return TLinkedList::next();
+//};
+//TStudent* TStack::Find(int index)
+//{
+//	return TLinkedList::Find(index);
+//}
 void    TStack::clear()
 {
 	TLinkedList::clear();

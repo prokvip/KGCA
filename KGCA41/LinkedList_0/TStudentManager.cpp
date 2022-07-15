@@ -64,10 +64,11 @@ void TStudentManager::AllPrint()
 	//	m_List.pop();
 	//}
 
-	for (TStudent* pNode = m_List.begin();
+	for (TStudent* pNode = m_List.m_pHead->m_pNext;
 		pNode != m_List.end();
 		pNode = m_List.next())
 	{
+		m_List.m_pCurNode = pNode;
 		Print(pNode);
 	}
 }
