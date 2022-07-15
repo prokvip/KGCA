@@ -1,4 +1,5 @@
-#include "Sample.h"
+#include "TStudentManager.h"
+#include <iostream>
 void Clear()
 {
 	system("cls");
@@ -9,8 +10,9 @@ void Clear()
 }
 void main()
 {	
+	TStudentManager mgr;
+	
 	srand(time(NULL));
-	Init();
 	int iWork = 1;
 	while (iWork)
 	{
@@ -25,47 +27,45 @@ void main()
 		{
 			case 0:
 			{				
-				InitData(3);			
+				mgr.InitData(3);
 			}break;
 			case 1:
 			{
-				AllPrint();
+				mgr.AllPrint();
 			}break;
-			case 2:
+			/*case 2:
 			{
-				TStudent* pFind = Find(3);
+				TStudent* pFind = mgr.m_List.Find(3);
 				if (pFind != nullptr)
 				{
-					Print(pFind);
+					mgr.Print(pFind);
 				}
-			}break;
-			case 3 :
+			}break;*/
+			/*case 3 :
 			{
-				TStudent* pFind = Find(2);
+				TStudent* pFind = mgr.m_List.Find(3);
 				if (pFind != nullptr)
 				{
-					Print(pFind);
-					erase(pFind);
+					mgr.Print(pFind);
+					mgr.m_List.erase(pFind);
 					system("cls");
-					AllPrint();
+					mgr.AllPrint();
 				}
-			}break;
-			case 4:
+			}break;*/
+			/*case 4:
 			{
-				push_back(NewNode());
-			}break;
-			case 5:
+				mgr.m_List.push_back(mgr.NewNode());
+			}break;*/
+			/*case 5:
 			{
-				TStudent* pFind = Find(2);
+				TStudent* pFind = mgr.m_List.Find(2);
 				if (pFind != nullptr)
 				{
-					push_front(NewNode(), pFind);
-					AllPrint();
+					mgr.m_List.push_front(mgr.NewNode(), pFind);
+					mgr.AllPrint();
 				}
-			}break;
+			}break;*/
 		}
-	}
-	
-	clear();
-	Release();	
+	}	
+	mgr.m_List.clear();
 }
