@@ -10,7 +10,7 @@ protected:
 	TStudent* m_pCurNode = NULL;
 public:
 	static int	  m_iCounter;
-private:
+public:
 	TStudent*	begin();
 	TStudent*	end();
 	TStudent*	next();
