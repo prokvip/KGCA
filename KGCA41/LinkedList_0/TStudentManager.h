@@ -1,9 +1,10 @@
 #pragma once
-#include "TStack.h"
+#include "TLinkedList.h"
+#include <iostream>
 class TStudentManager
 {
 public:
-	TStack m_List;
+	TLinkedList m_List;
 public:
 	void		InitData(int iCounter);
 	void		AllPrint();

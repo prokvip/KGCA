@@ -18,6 +18,7 @@ struct TStudent
 	float		m_fAverage;
 	TStudent*	m_pNext;
 	TStudent*	m_pPrev;	
+public:
 	TStudent();
 	~TStudent();
 };

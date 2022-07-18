@@ -1,6 +1,30 @@
 #include "TLinkedList.h"
 int	  TLinkedList::m_iCounter = 0;
-
+TStudent* TLinkedList::operator ++(void)
+{
+	TStudent* pTemp = m_pCurNode->m_pNext;
+	m_pCurNode = pTemp;
+	return pTemp;
+}
+TStudent* TLinkedList::operator ++(int)
+{
+	return nullptr;
+}
+TStudent* TLinkedList::operator [](int index)
+{
+	TStudent* pSave = m_pCurNode;
+		TStudent* pCur = begin();
+		for (int iCnt = 0; iCnt < index; iCnt++)
+		{
+			pCur = next();
+		}
+	m_pCurNode = pSave;
+	return pCur;
+}
+int		TLinkedList::size()
+{
+	return m_iCounter;
+}
 TLinkedList::~TLinkedList()
 {
 	delete m_pHead;

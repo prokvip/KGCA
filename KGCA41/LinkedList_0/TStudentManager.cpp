@@ -1,14 +1,14 @@
 #include "TStudentManager.h"
 void TStudentManager::InitData(int iCounter)
 {
-	for (int iNode = 0; iNode < iCounter; iNode++)
-	{
-		m_List.push(NewNode());
-	}
-	/*for (int iNode = iCounter; iNode < iCounter * 2; iNode++)
+	//for (int iNode = 0; iNode < iCounter; iNode++)
+	//{
+	//	m_List.push(NewNode());
+	//}
+	for (int iNode = iCounter; iNode < iCounter * 2; iNode++)
 	{
 		m_List.push_front(NewNode());
-	}*/
+	}
 }
 TStudent* TStudentManager::NewNode()
 {
@@ -53,22 +53,22 @@ void TStudentManager::Print(int index)
 }
 void TStudentManager::AllPrint()
 {
-	//while (1)
-	//{
-	//	TStudent* pData = m_List.top();
-	//	if (pData == m_List.end())
-	//	{
-	//		break;
-	//	}
-	//	Print(pData);
-	//	m_List.pop();
-	//}
+	for (int iData = 0; iData < m_List.size(); iData++)
+	{
+		Print(m_List[iData]);
+	}
 
-	for (TStudent* pNode = m_List.m_pHead->m_pNext;
+	for (TStudent* pNode = m_List.begin();
 		pNode != m_List.end();
 		pNode = m_List.next())
 	{
-		m_List.m_pCurNode = pNode;
 		Print(pNode);
 	}
+
+	for (TStudent* pNode = m_List.begin();
+		pNode != m_List.end();
+		pNode = ++m_List)
+	{
+		Print(pNode);
+	}	
 }

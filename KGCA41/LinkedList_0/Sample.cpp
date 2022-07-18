@@ -33,15 +33,15 @@ void main()
 			{
 				mgr.AllPrint();
 			}break;
-			/*case 2:
+			case 2:
 			{
 				TStudent* pFind = mgr.m_List.Find(3);
 				if (pFind != nullptr)
 				{
 					mgr.Print(pFind);
 				}
-			}break;*/
-			/*case 3 :
+			}break;
+			case 3 :
 			{
 				TStudent* pFind = mgr.m_List.Find(3);
 				if (pFind != nullptr)
@@ -51,12 +51,12 @@ void main()
 					system("cls");
 					mgr.AllPrint();
 				}
-			}break;*/
-			/*case 4:
+			}break;
+			case 4:
 			{
 				mgr.m_List.push_back(mgr.NewNode());
-			}break;*/
-			/*case 5:
+			}break;
+			case 5:
 			{
 				TStudent* pFind = mgr.m_List.Find(2);
 				if (pFind != nullptr)
@@ -64,7 +64,7 @@ void main()
 					mgr.m_List.push_front(mgr.NewNode(), pFind);
 					mgr.AllPrint();
 				}
-			}break;*/
+			}break;
 		}
 	}	
 	mgr.m_List.clear();
