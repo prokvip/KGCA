@@ -1,4 +1,14 @@
 #include "TStudent.h"
+std::ostream& operator << (std::ostream& os, TStudent& data)
+{
+	data.Print();
+	return os;
+}
+std::istream& operator >> (std::istream& is, TStudent& data)
+{
+	return is;
+}
+
 TStudent::TStudent()
 {
 	m_pNext = m_pPrev = nullptr;

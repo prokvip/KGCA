@@ -1,4 +1,14 @@
 #include "TStudentManager.h"
+std::ostream& operator << (std::ostream& os, TStudentManager& mgr)
+{
+	os << mgr.m_List;
+	return os;
+}
+std::istream& operator >> (std::iostream& is, TStudentManager& mgr)
+{
+	//is >> mgr.m_List;
+	return is;
+}
 void TStudentManager::InitData(int iCounter)
 {
 	//for (int iNode = 0; iNode < iCounter; iNode++)
@@ -29,46 +39,31 @@ TStudent* TStudentManager::NewNode()
 }
 void TStudentManager::Print(TStudent* pNode)
 {
-	printf("%s\t%d\t%d\t%d\t%d\t%d\t%-6.2f\n",
-		pNode->m_szName,
-		pNode->m_iAge,
-		pNode->m_iKor,
-		pNode->m_iEng,
-		pNode->m_iMat,
-		pNode->m_iTotal,
-		pNode->m_fAverage);
+	pNode->Print();
 }
 void TStudentManager::Print(int index)
 {
 	TStudent* pFind = m_List.Find(index);
 	if (pFind == nullptr) return;
-	printf("%s\t%d\t%d\t%d\t%d\t%d\t%-6.2f\n",
-		pFind->m_szName,
-		pFind->m_iAge,
-		pFind->m_iKor,
-		pFind->m_iEng,
-		pFind->m_iMat,
-		pFind->m_iTotal,
-		pFind->m_fAverage);
+	pFind->Print();
 }
 void TStudentManager::AllPrint()
 {
-	for (int iData = 0; iData < m_List.size(); iData++)
-	{
-		Print(m_List[iData]);
-	}
-
+	//for (int iData = 0; iData < m_List.size(); iData++)
+	//{
+	//	Print(m_List[iData]);
+	//}
 	for (TStudent* pNode = m_List.begin();
 		pNode != m_List.end();
 		pNode = m_List.next())
 	{
-		Print(pNode);
+		std::cout << *pNode;
 	}
 
-	for (TStudent* pNode = m_List.begin();
-		pNode != m_List.end();
-		pNode = ++m_List)
-	{
-		Print(pNode);
-	}	
+	//for (TStudent* pNode = m_List.begin();
+	//	pNode != m_List.end();
+	//	pNode = ++m_List)
+	//{
+	//	Print(pNode);
+	//}	
 }

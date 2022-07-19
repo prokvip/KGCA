@@ -1,5 +1,19 @@
 #include "TLinkedList.h"
 int	  TLinkedList::m_iCounter = 0;
+std::ostream& operator << (std::ostream& os, TLinkedList& list)
+{
+	for (TStudent* pNode = list.begin();
+		pNode != list.end();
+		pNode = list.next())
+	{
+		os << *pNode;
+	}
+	return os;
+}
+std::istream& operator >> (std::iostream& is, TLinkedList& list)
+{
+	return is;
+}
 TStudent* TLinkedList::operator ++(void)
 {
 	TStudent* pTemp = m_pCurNode->m_pNext;

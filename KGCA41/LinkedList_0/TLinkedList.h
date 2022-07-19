@@ -32,6 +32,9 @@ public:
 	TStudent*	Find(int iAge);
 	void		sort();
 public:
+	friend std::ostream& operator << (std::ostream& os, TLinkedList& list);
+	friend std::istream& operator >> (std::istream& is, TLinkedList& list);
+public:
 	TLinkedList();
 	~TLinkedList();
 };

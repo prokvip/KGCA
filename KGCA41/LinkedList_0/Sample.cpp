@@ -1,5 +1,6 @@
 #include "TStudentManager.h"
 #include <iostream>
+
 void Clear()
 {
 	system("cls");
@@ -31,7 +32,7 @@ void main()
 			}break;
 			case 1:
 			{
-				mgr.AllPrint();
+				std::cout << mgr;//	mgr.AllPrint();
 			}break;
 			case 2:
 			{
