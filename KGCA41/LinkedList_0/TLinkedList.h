@@ -25,81 +25,63 @@ public:
 	TNode<T>* m_pCurNode = NULL;
 public:
 	static int	  m_iCounter;
-//public:
-//	TNode<T>* operator ++(void);
-//	TNode<T>* operator ++(int);
-//	TNode<T>* operator [](int);
-//public:
-//	TNode<T>*	begin();
-//	TNode<T>*	end();
-//	TNode<T>*	next();
-//	TNode<T>*	rbegin();
-//	TNode<T>*	rend();
-//	TNode<T>*	rnext();
-//	int			size();
-//public:
-//	void		clear();	
+public:
+	TNode<T>* operator ++(void);
+	TNode<T>* operator ++(int);
+	TNode<T>* operator [](int);
+public:
+	TNode<T>*	begin();
+	TNode<T>*	end();
+	TNode<T>*	next();
+	TNode<T>*	rbegin();
+	TNode<T>*	rend();
+	TNode<T>*	rnext();
+	int			size();
+public:
+	void		clear();	
 	void		push_back(T pData);
-//	void		push_front(T* pData);
-//	void		push_back(T* pData, T* pSelectData);
-//	void		push_front(T* pData, T* pSelectData);
-//	void		erase(T* pNode);
-//	T*	Find(int iAge);
+	void		push_front(T pData);
+	void		push_back(T , TNode<T>* );
+	void		push_front(T pData, TNode<T>* pSelectData);
+	TNode<T>*   erase(TNode<T>* pNode);
+	T			Find(T data);
 //	void		sort();
-//public:
-//	friend std::ostream& operator << (std::ostream& os, TLinkedList& list);
-//	friend std::istream& operator >> (std::istream& is, TLinkedList& list);
 public:
 	TLinkedList();
 	~TLinkedList();
 };
 template<class T>
 int	  TLinkedList<T>::m_iCounter = 0;
-//template<class T>
-//std::ostream& operator << (std::ostream& os, TLinkedList<TNode<T>>& list)
-//{
-//	for (TNode<T>* pNode = list.begin();
-//		pNode != list.end();
-//		pNode = list.next())
-//	{
-//		os << *pNode;
-//	}
-//	return os;
-//}
-//template<class T>
-//std::istream& operator >> (std::iostream& is, TLinkedList<TNode<T>>& list)
-//{
-//	return is;
-//}
-//template<class T>
-//TNode<T>* TLinkedList<T>::operator ++(void)
-//{
-//	TNode<T>* pTemp = m_pCurNode->m_pNext;
-//	m_pCurNode = pTemp;
-//	return pTemp;
-//}
-//template<class T>
-//TNode<T>* TLinkedList<T>::operator ++(int)
-//{
-//	return nullptr;
-//}
-//template<class T>
-//TNode<T>* TLinkedList<T>::operator [](int index)
-//{
-//	TNode<T>* pSave = m_pCurNode;
-//	TNode<T>* pCur = begin();
-//	for (int iCnt = 0; iCnt < index; iCnt++)
-//	{
-//		pCur = next();
-//	}
-//	m_pCurNode = pSave;
-//	return pCur;
-//}
-//template<class T>
-//int		TLinkedList<T>::size()
-//{
-//	return m_iCounter;
-//}
+
+template<class T>
+TNode<T>* TLinkedList<T>::operator ++(void)
+{
+	TNode<T>* pTemp = m_pCurNode->m_pNext;
+	m_pCurNode = pTemp;
+	return pTemp;
+}
+template<class T>
+TNode<T>* TLinkedList<T>::operator ++(int)
+{
+	return nullptr;
+}
+template<class T>
+TNode<T>* TLinkedList<T>::operator [](int index)
+{
+	TNode<T>* pSave = m_pCurNode;
+	TNode<T>* pCur = begin();
+	for (int iCnt = 0; iCnt < index; iCnt++)
+	{
+		pCur = next();
+	}
+	m_pCurNode = pSave;
+	return pCur;
+}
+template<class T>
+int		TLinkedList<T>::size()
+{
+	return m_iCounter;
+}
 template<class T>
 TLinkedList<T>::~TLinkedList()
 {
@@ -134,128 +116,145 @@ void   TLinkedList<T>::push_back(T pNewData)
 }
 //// pLinkNode != NULL 일때는 pLinkNode->m_pNext= pNewNode 삽입된다.
 //// pLinkNode == NULL 일때는 m_pNext->m_pNext = pNewNode 삽입된다.
-//template<class T>
-//void   TLinkedList<T>::push_back(T* pNewNode, T* pLinkNode)
-//{
-//	_ASSERT(pLinkNode);
-//	_ASSERT(pLinkNode != m_pTail);
-//	if (pLinkNode == NULL)
-//	{
-//		push_back(pNewNode);
-//	}
-//	else
-//	{
-//		// pLinkNode <-> pNext => pLinkNode<->pNewNode<->pNext;
-//		int* pNext = pLinkNode->m_pNext;
-//		pLinkNode->m_pNext = pNewNode;
-//		pNewNode->m_pNext = pNext;
-//		pNext->m_pPrev = pNewNode;
-//		pNewNode->m_pPrev = pLinkNode;
-//		m_iCounter++;
-//	}
-//
-//}
-//// pLinkNode != NULL 일때는 pLinkNode->m_pNext= pNewNode 삽입된다.
-//// pLinkNode == NULL 일때는 m_pHead->m_pNext = pNewNode 삽입된다.
-//template<class T>
-//void   TLinkedList<T>::push_front(T* pNewNode)
-//{
-//	// m_pHead -> pNext =>  m_pHead->pNewNode->pNext
-//	TNode<T>* pNext = m_pHead->m_pNext;
-//	m_pHead->m_pNext = pNewNode;
-//	pNewNode->m_pNext = pNext;
-//
-//	pNext->m_pPrev = pNewNode;
-//	pNewNode->m_pPrev = m_pHead;
-//
-//	m_iCounter++;
-//}
-//template<class T>
-//void   TLinkedList<T>::push_front(T* pNewNode, T* pLinkNode)
-//{
-//	_ASSERT(pLinkNode);
-//	_ASSERT(pLinkNode != m_pHead);
-//	if (pLinkNode == NULL)
-//	{
-//		push_front(pNewNode);
-//	}
-//	else
-//	{
-//		// pPrev <-> pLinkNode => pPrev<->pNewNode<->pLinkNode;
-//		TNode<T>* pPrev = pLinkNode->m_pPrev;
-//
-//		pPrev->m_pNext = pNewNode;
-//		pNewNode->m_pNext = pLinkNode;
-//		pLinkNode->m_pPrev = pNewNode;
-//		pNewNode->m_pPrev = pPrev;
-//
-//		m_iCounter++;
-//	}
-//}
-//template<class T>
-//T* TLinkedList<T>::Find(int iAge)
-//{
-//	for (TNode<T>* pNode = m_pHead->m_pNext;
-//		pNode != m_pTail;
-//		pNode = pNode->m_pNext)
-//	{
-//		if (pNode->m_iAge == iAge)
-//		{
-//			return pNode;
-//		}
-//	}
-//	return nullptr;
-//}
-//template<class T>
-//TNode<T>* TLinkedList<T>::begin() {
-//	m_pCurNode = m_pHead->m_pNext;
-//	return m_pHead->m_pNext;
-//}
-//template<class T>
-//TNode<T>* TLinkedList<T>::end() { return m_pTail; }
-//template<class T>
-//TNode<T>* TLinkedList<T>::next() {
-//	TNode<T>* pTemp = m_pCurNode->m_pNext;
-//	m_pCurNode = pTemp;
-//	return pTemp;
-//}
-//template<class T>
-//TNode<T>* TLinkedList<T>::rbegin() {
-//	m_pCurNode = m_pTail->m_pPrev;
-//	return m_pTail->m_pPrev;
-//}
-//template<class T>
-//TNode<T>* TLinkedList<T>::rend() { return m_pHead; }
-//template<class T>
-//TNode<T>* TLinkedList<T>::rnext() {
-//	TNode<T>* pTemp = m_pCurNode->m_pPrev;
-//	m_pCurNode = pTemp;
-//	return pTemp;
-//}
-//template<class T>
-//void   TLinkedList<T>::erase(T* pNode)
-//{
-//	_ASSERT(pNode);
-//	_ASSERT(pNode != m_pHead);
-//	_ASSERT(pNode != m_pTail);
-//	TNode<T>* pPrev = pNode->m_pPrev;
-//	TNode<T>* pNext = pNode->m_pNext;
-//	free(pNode);
-//	pNode = nullptr;
-//	pPrev->m_pNext = pNext;
-//	pNext->m_pPrev = pPrev;
-//}
-//template<class T>
-//void TLinkedList<T>::clear()
-//{
-//	TNode<T>* pNode = m_pHead->m_pNext;
-//	while (pNode != m_pTail)
-//	{
-//		TNode<T>* pNext = pNode->m_pNext;
-//		free(pNode);
-//		pNode = pNext;
-//	}
-//}
+template<class T>
+void   TLinkedList<T>::push_back(T pNewData, TNode<T>* pLinkNode)
+{
+	_ASSERT(pNewData);
+	TNode<T>* pNewNode = new TNode<T>();
+	pNewNode->m_pData = pNewData;
+
+	_ASSERT(pLinkNode);
+	_ASSERT(pLinkNode != m_pTail);
+	if (pLinkNode == NULL)
+	{
+		push_back(pNewNode);
+	}
+	else
+	{
+		// pLinkNode <-> pNext => pLinkNode<->pNewNode<->pNext;
+		TNode<T>* pNext = pLinkNode->m_pNext;
+		pLinkNode->m_pNext = pNewNode;
+		pNewNode->m_pNext = pNext;
+		pNext->m_pPrev = pNewNode;
+		pNewNode->m_pPrev = pLinkNode;
+		m_iCounter++;
+	}
+
+}
+// pLinkNode != NULL 일때는 pLinkNode->m_pNext= pNewNode 삽입된다.
+// pLinkNode == NULL 일때는 m_pHead->m_pNext = pNewNode 삽입된다.
+template<class T>
+void   TLinkedList<T>::push_front(T pNewData)
+{
+	_ASSERT(pNewData);
+	TNode<T>* pNewNode = new TNode<T>();
+	pNewNode->m_pData = pNewData;
+
+	// m_pHead -> pNext =>  m_pHead->pNewNode->pNext
+	TNode<T>* pNext = m_pHead->m_pNext;
+	m_pHead->m_pNext = pNewNode;
+	pNewNode->m_pNext = pNext;
+
+	pNext->m_pPrev = pNewNode;
+	pNewNode->m_pPrev = m_pHead;
+
+	m_iCounter++;
+}
+template<class T>
+void   TLinkedList<T>::push_front(T pNewData, TNode<T>* pLinkNode)
+{
+	_ASSERT(pNewData);
+	TNode<T>* pNewNode = new TNode<T>();
+	pNewNode->m_pData = pNewData;
+
+	_ASSERT(pLinkNode);
+	_ASSERT(pLinkNode != m_pHead);
+	if (pLinkNode == NULL)
+	{
+		push_front(pNewNode);
+	}
+	else
+	{
+		// pPrev <-> pLinkNode => pPrev<->pNewNode<->pLinkNode;
+		TNode<T>* pPrev = pLinkNode->m_pPrev;
+
+		pPrev->m_pNext = pNewNode;
+		pNewNode->m_pNext = pLinkNode;
+		pLinkNode->m_pPrev = pNewNode;
+		pNewNode->m_pPrev = pPrev;
+
+		m_iCounter++;
+	}
+}
+template<class T>
+T TLinkedList<T>::Find(T data)
+{
+	for (TNode<T>* pNode = m_pHead->m_pNext;
+		pNode != m_pTail;
+		pNode = pNode->m_pNext)
+	{
+		if (pNode->m_pData == data)
+		{
+			return pNode->m_pData;
+		}
+	}
+	return nullptr;
+}
+template<class T>
+TNode<T>* TLinkedList<T>::begin() 
+{
+	m_pCurNode = m_pHead->m_pNext;
+	return m_pHead->m_pNext;
+}
+template<class T>
+TNode<T>* TLinkedList<T>::end() { return m_pTail; }
+template<class T>
+TNode<T>* TLinkedList<T>::next() 
+{
+	TNode<T>* pTemp = m_pCurNode->m_pNext;
+	m_pCurNode = pTemp;
+	return pTemp;
+}
+template<class T>
+TNode<T>* TLinkedList<T>::rbegin() 
+{
+	m_pCurNode = m_pTail->m_pPrev;
+	return m_pTail->m_pPrev;
+}
+template<class T>
+TNode<T>* TLinkedList<T>::rend() { return m_pHead; }
+template<class T>
+TNode<T>* TLinkedList<T>::rnext() 
+{
+	TNode<T>* pTemp = m_pCurNode->m_pPrev;
+	m_pCurNode = pTemp;
+	return pTemp;
+}
+template<class T>
+TNode<T>*   TLinkedList<T>::erase(TNode<T>* pNode)
+{
+	_ASSERT(pNode);
+	_ASSERT(pNode != m_pHead);
+	_ASSERT(pNode != m_pTail);
+	TNode<T>* pPrev = pNode->m_pPrev;
+	TNode<T>* pNext = pNode->m_pNext;
+	free(pNode);
+	pNode = nullptr;
+	pPrev->m_pNext = pNext;
+	pNext->m_pPrev = pPrev;
+	return pNext;
+}
+template<class T>
+void TLinkedList<T>::clear()
+{
+	TNode<T>* pNode = m_pHead->m_pNext;
+	while (pNode != m_pTail)
+	{
+		TNode<T>* pNext = pNode->m_pNext;
+		free(pNode);
+		pNode = pNext;
+	}
+}
 //template<class T>
 //void    TLinkedList<T>::sort()
 //{
