@@ -142,15 +142,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Sample.cpp" />
-    <ClCompile Include="TStack.cpp" />
-    <ClCompile Include="TStudent.cpp" />
-    <ClCompile Include="TStudentManager.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="TStack.h" />
-    <ClInclude Include="TStudent.h" />
     <ClInclude Include="TLinkedList.h" />
-    <ClInclude Include="TStudentManager.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />
