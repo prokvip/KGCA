@@ -1,20 +1,20 @@
 #pragma once
 #include "TLinkedList.h"
 //class TStudentManager;
-
-class TStack : private TLinkedList
+template<class T>
+class TStack : private TLinkedList<T>
 {
 	//friend class TStudentManager;
 private:
-	TStudent* begin();
-	TStudent* end();
-	TStudent* next();
-	TStudent* Find(int index);
+	T* begin();
+	T* end();
+	T* next();
+	T* Find(int index);
 public:
 	void		clear();
-	void		push(TStudent* pNewNode);
+	void		push(T* pNewNode);
 	void		pop();
-	TStudent*	top();	
+	T*	top();
 private:
 	int iValue=8;
 public:

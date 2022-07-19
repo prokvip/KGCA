@@ -9,8 +9,9 @@
 #include <conio.h> //_getche
 #include <crtdbg.h> // _ASSERT
 
-struct TStudent
-{
+struct TBase {
+	TBase() ;
+	~TBase();
 	char		m_szName[4];
 	int			m_iAge;
 	int			m_iKor;
@@ -18,12 +19,10 @@ struct TStudent
 	int			m_iMat;
 	int			m_iTotal;
 	float		m_fAverage;
-	TStudent*	m_pNext;
-	TStudent*	m_pPrev;	
+	
 public:
-	friend std::ostream& operator << (std::ostream& os, TStudent& list);
-	friend std::istream& operator >> (std::istream& is, TStudent& list);
-
+	friend std::ostream& operator << (std::ostream& os, TBase& list);
+	friend std::istream& operator >> (std::istream& is, TBase& list);
 	void Print()
 	{
 		std::cout << std::setw(8) << std::left
@@ -33,11 +32,23 @@ public:
 			<< m_iEng << std::setw(8) << std::left
 			<< m_iMat << std::setw(8) << std::left
 			<< m_iTotal << std::setw(8) << std::left
-			<< m_fAverage 
+			<< m_fAverage
 			<< std::endl;
 	}
-public:
-	TStudent();
-	~TStudent();
+};
+
+struct TStudent : public TBase
+{	
+	TStudent* m_pNext;
+	TStudent* m_pPrev;
+	TStudent() {};
+	~TStudent() {};
+};
+struct TItem : public TBase
+{	
+	TItem* m_pNext;
+	TItem* m_pPrev;
+	TItem() {};
+	~TItem() {};
 };
 

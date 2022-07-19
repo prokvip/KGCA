@@ -1,17 +1,17 @@
 #include "TStudent.h"
-std::ostream& operator << (std::ostream& os, TStudent& data)
+std::ostream& operator << (std::ostream& os, TBase& data)
 {
 	data.Print();
 	return os;
 }
-std::istream& operator >> (std::istream& is, TStudent& data)
+std::istream& operator >> (std::istream& is, TBase& data)
 {
 	return is;
 }
 
-TStudent::TStudent()
+TBase::TBase()
 {
-	m_pNext = m_pPrev = nullptr;
+	//m_pNext = m_pPrev = nullptr;
 	m_szName[0] = 0;
 	m_iAge = 0;
 	m_iKor = 0;
@@ -20,7 +20,7 @@ TStudent::TStudent()
 	m_iTotal = 0;
 	m_fAverage = 0;
 }
-TStudent::~TStudent()
+TBase::~TBase()
 {
 
 }

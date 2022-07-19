@@ -1,7 +1,7 @@
 #include "TStudentManager.h"
 std::ostream& operator << (std::ostream& os, TStudentManager& mgr)
 {
-	os << mgr.m_List;
+	//os << mgr.m_List;
 	return os;
 }
 std::istream& operator >> (std::iostream& is, TStudentManager& mgr)
@@ -20,10 +20,10 @@ void TStudentManager::InitData(int iCounter)
 		m_List.push_front(NewNode());
 	}
 }
-TStudent* TStudentManager::NewNode()
+TItem* TStudentManager::NewNode()
 {
-	TStudent* pNewNode = new TStudent;
-	pNewNode->m_iAge = TLinkedList::m_iCounter + 1;
+	TItem* pNewNode = new TItem;
+	pNewNode->m_iAge = TLinkedList<TItem>::m_iCounter + 1;
 	pNewNode->m_szName[0] = 65 + rand() % 26;
 	pNewNode->m_szName[1] = 65 + rand() % 26;
 	pNewNode->m_szName[2] = 65 + rand() % 26;
@@ -37,13 +37,13 @@ TStudent* TStudentManager::NewNode()
 	pNewNode->m_fAverage = pNewNode->m_iTotal / 3;
 	return pNewNode;
 }
-void TStudentManager::Print(TStudent* pNode)
+void TStudentManager::Print(TItem* pNode)
 {
 	pNode->Print();
 }
 void TStudentManager::Print(int index)
 {
-	TStudent* pFind = m_List.Find(index);
+	TItem* pFind = m_List.Find(index);
 	if (pFind == nullptr) return;
 	pFind->Print();
 }
@@ -53,14 +53,14 @@ void TStudentManager::AllPrint()
 	//{
 	//	Print(m_List[iData]);
 	//}
-	for (TStudent* pNode = m_List.begin();
+	for (TItem* pNode = m_List.begin();
 		pNode != m_List.end();
 		pNode = m_List.next())
 	{
 		std::cout << *pNode;
 	}
 
-	//for (TStudent* pNode = m_List.begin();
+	//for (TItem* pNode = m_List.begin();
 	//	pNode != m_List.end();
 	//	pNode = ++m_List)
 	//{

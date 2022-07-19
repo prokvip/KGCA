@@ -32,11 +32,12 @@ void main()
 			}break;
 			case 1:
 			{
-				std::cout << mgr;//	mgr.AllPrint();
+				//std::cout << mgr;//	
+				mgr.AllPrint();
 			}break;
 			case 2:
 			{
-				TStudent* pFind = mgr.m_List.Find(3);
+				TItem* pFind = mgr.m_List.Find(3);
 				if (pFind != nullptr)
 				{
 					mgr.Print(pFind);
@@ -44,7 +45,7 @@ void main()
 			}break;
 			case 3 :
 			{
-				TStudent* pFind = mgr.m_List.Find(3);
+				TItem* pFind = mgr.m_List.Find(3);
 				if (pFind != nullptr)
 				{
 					mgr.Print(pFind);
@@ -59,7 +60,7 @@ void main()
 			}break;
 			case 5:
 			{
-				TStudent* pFind = mgr.m_List.Find(2);
+				TItem* pFind = mgr.m_List.Find(2);
 				if (pFind != nullptr)
 				{
 					mgr.m_List.push_front(mgr.NewNode(), pFind);

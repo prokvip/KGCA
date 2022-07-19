@@ -1,37 +1,46 @@
 #include "TStack.h"
-TStudent* TStack::begin() {
+template<class T>
+T* TStack<T>::begin() {
 	return TLinkedList::begin();
 };
-TStudent* TStack::end() {
+template<class T>
+T* TStack<T>::end() {
 	return TLinkedList::end();
 };
-TStudent* TStack::next() {
+template<class T>
+T* TStack<T>::next() {
 	return TLinkedList::next();
 };
-TStudent* TStack::Find(int index)
+template<class T>
+T* TStack<T>::Find(int index)
 {
 	return TLinkedList::Find(index);
 }
-void    TStack::clear()
+template<class T>
+void    TStack<T>::clear()
 {
 	TLinkedList::clear();
 }
-void	TStack::push(TStudent* pNewNode)
+template<class T>
+void	TStack<T>::push(T* pNewNode)
 {
 	push_back(pNewNode);
 }
-void    TStack::pop()
+template<class T>
+void    TStack<T>::pop()
 {
 	erase(top());
 }
-TStudent* TStack::top()
+template<class T>
+T* TStack<T>::top()
 {
 	return begin();
 }
-
-TStack::TStack() 	
+template<class T>
+TStack<T>::TStack()
 {
 }
-TStack::~TStack()
+template<class T>
+TStack<T>::~TStack()
 {
 }

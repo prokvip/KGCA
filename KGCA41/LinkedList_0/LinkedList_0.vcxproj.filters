@@ -18,9 +18,6 @@
     <ClCompile Include="Sample.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="TLinkedList.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="TStudent.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
