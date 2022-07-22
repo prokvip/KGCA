@@ -19,11 +19,11 @@ std::istream& operator >> (std::iostream& is, TItem& data)
 void main()
 {	
 	TLinkedList<int> list;
+	list.push_back(4);
 	list.push_back(1);
-	list.push_back(2);
-	list.push_back(3);
+	list.push_back(5);
+	list.push_front(2);
 	list.push_front(3);
-	list.push_front(4);
 
 	for (TNode<int>* node = list.m_pHead->m_pNext;
 		node != list.m_pTail;

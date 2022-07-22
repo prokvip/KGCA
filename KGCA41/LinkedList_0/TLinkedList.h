@@ -44,8 +44,7 @@ public:
 	void		push_back(T , TNode<T>* );
 	void		push_front(T pData, TNode<T>* pSelectData);
 	TNode<T>*   erase(TNode<T>* pNode);
-	T			Find(T data);
-//	void		sort();
+	T			Find(T data);	
 public:
 	TLinkedList();
 	~TLinkedList();
@@ -186,6 +185,7 @@ void   TLinkedList<T>::push_front(T pNewData, TNode<T>* pLinkNode)
 		m_iCounter++;
 	}
 }
+
 template<class T>
 T TLinkedList<T>::Find(T data)
 {
@@ -200,6 +200,7 @@ T TLinkedList<T>::Find(T data)
 	}
 	return nullptr;
 }
+
 template<class T>
 TNode<T>* TLinkedList<T>::begin() 
 {
