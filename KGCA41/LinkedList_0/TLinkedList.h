@@ -279,6 +279,8 @@ void TLinkedList<T>::clear()
 		free(pNode);
 		pNode = pNext;
 	}
+	m_pHead->m_pNext = m_pTail;
+	m_pTail->m_pPrev = m_pHead;
 }
 template<class T>
 void TLinkedList<T>::swap(TNode<T>* a, TNode<T>* b)
