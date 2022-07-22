@@ -37,6 +37,7 @@ public:
 	TNode<T>*	rend();
 	TNode<T>*	rnext();
 	int			size();
+	void		reset();
 public:
 	void		clear();	
 	void		push_back(T pData);
@@ -114,12 +115,16 @@ TLinkedList<T>::TLinkedList()
 {
 	m_pHead = new TNode<T>;
 	m_pTail = new TNode<T>;
+	reset();	
+}
+template<class T>
+void TLinkedList<T>::reset()
+{
 	m_pHead->m_pNext = m_pTail;
 	m_pHead->m_pPrev = NULL;
 	m_pTail->m_pNext = NULL;
 	m_pTail->m_pPrev = m_pHead;
 	m_pNext = m_pHead;
-
 	CallFunction = &TLinkedList<T>::Descending;
 }
 template<class T>
@@ -279,8 +284,7 @@ void TLinkedList<T>::clear()
 		free(pNode);
 		pNode = pNext;
 	}
-	m_pHead->m_pNext = m_pTail;
-	m_pTail->m_pPrev = m_pHead;
+	reset();
 }
 template<class T>
 void TLinkedList<T>::swap(TNode<T>* a, TNode<T>* b)
