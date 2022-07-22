@@ -45,6 +45,28 @@ public:
 	void		push_front(T pData, TNode<T>* pSelectData);
 	TNode<T>*   erase(TNode<T>* pNode);
 	T			Find(T data);	
+	void		swap(TNode<T>* a, TNode<T>* b);
+	void		sort();
+	void		sort_if(bool (*SwapFunction) (TNode<T>* a, TNode<T>* b));
+	void		shuffle();
+	typedef bool (TLinkedList<T>::*SORTFUNCTION) (TNode<T>* a, TNode<T>* b);
+	SORTFUNCTION CallFunction;
+	bool Ascending(TNode<T>* a, TNode<T>* b) //오름차순
+	{
+		if (a->m_pData < b->m_pData)
+		{
+			return true;
+		}
+		return false;
+	}
+	bool Descending(TNode<T>* a, TNode<T>* b) //내림차순
+	{
+		if (a->m_pData > b->m_pData)
+		{
+			return true;
+		}
+		return false;
+	}
 public:
 	TLinkedList();
 	~TLinkedList();
@@ -97,6 +119,8 @@ TLinkedList<T>::TLinkedList()
 	m_pTail->m_pNext = NULL;
 	m_pTail->m_pPrev = m_pHead;
 	m_pNext = m_pHead;
+
+	CallFunction = &TLinkedList<T>::Descending;
 }
 template<class T>
 void   TLinkedList<T>::push_back(T pNewData)
@@ -256,6 +280,74 @@ void TLinkedList<T>::clear()
 		pNode = pNext;
 	}
 }
+template<class T>
+void TLinkedList<T>::swap(TNode<T>* a, TNode<T>* b)
+{
+	TNode<T>* pPrevA = a->m_pPrev;
+	TNode<T>* pNextA = a->m_pNext;
+	TNode<T>* pPrevB = b->m_pPrev;
+	TNode<T>* pNextB = b->m_pNext;
+	if (a->m_pNext != b)
+	{
+		pPrevA->m_pNext = b; 	b->m_pNext = pNextA;
+		pNextA->m_pPrev = b;	b->m_pPrev = pPrevA;
+
+		pPrevB->m_pNext = a;	a->m_pNext = pNextB;
+		pNextB->m_pPrev = a;	a->m_pPrev = pPrevB;
+	}
+	else
+	{
+		pPrevA->m_pNext = b;	b->m_pNext = a;		a->m_pNext = pNextB;
+		pNextB->m_pPrev = a;	a->m_pPrev = b;		b->m_pPrev = pPrevA;
+	}
+}
+
+template<class T>
+void TLinkedList<T>::sort()
+{
+	if (m_pHead->m_pNext == m_pTail) return;
+	TNode<T>* pEnd = m_pTail;
+	TNode<T>* pSelectNode = m_pHead->m_pNext;
+	while (pSelectNode->m_pNext != pEnd)
+	{
+		for (TNode<T>* pNode = pSelectNode->m_pNext;pNode != pEnd;	pNode = pNode->m_pNext)
+		{
+			if ((this->*CallFunction)(pSelectNode, pNode))
+			{
+				pSelectNode = pNode;
+			}
+		}
+		if (pSelectNode != pEnd->m_pPrev)
+		{
+			swap(pSelectNode, pEnd->m_pPrev);
+		}
+		pEnd = pSelectNode;
+		pSelectNode = m_pHead->m_pNext;
+	}
+}
+template<class T>
+void TLinkedList<T>::sort_if(bool (*SwapFunction) (TNode<T>* a, TNode<T>* b))
+{
+	if (m_pHead->m_pNext == m_pTail) return;
+	TNode<T>* pEnd = m_pTail;
+	TNode<T>* pSelectNode = m_pHead->m_pNext;
+	while (pSelectNode->m_pNext != pEnd)
+	{
+		for (TNode<T>* pNode = pSelectNode->m_pNext; pNode != pEnd; pNode = pNode->m_pNext)
+		{
+			if (SwapFunction(pSelectNode, pNode))
+			{
+				pSelectNode = pNode;
+			}
+		}
+		if (pSelectNode != pEnd->m_pPrev)
+		{
+			swap(pSelectNode, pEnd->m_pPrev);
+		}
+		pEnd = pSelectNode;
+		pSelectNode = m_pHead->m_pNext;
+	}
+}
 //template<class T>
 //void    TLinkedList<T>::sort()
 //{
@@ -272,3 +364,32 @@ void TLinkedList<T>::clear()
 //	// 2, 가장 작은 노드 -> 제2 연결리스트 추가 -> 삭제
 //	// 2, 반복 (m_pHead->pNext== m_pTail)
 //}
+
+template<class T>
+void    TLinkedList<T>::shuffle()
+{
+	if (m_pHead->m_pNext == m_pTail) return;
+	TNode<T>* pEnd = m_pTail;
+	TNode<T>* pSelectNode = m_pHead->m_pNext;
+	while (pSelectNode->m_pNext != pEnd)
+	{
+		for (TNode<T>* pNode = pSelectNode->m_pNext; pNode != pEnd; pNode = pNode->m_pNext)
+		{
+			if (rand() % size() == 0)
+			{
+				CallFunction = &TLinkedList<T>::Descending;
+				if ((this->*CallFunction)(pSelectNode, pNode))
+				{
+					pSelectNode = pNode;
+				}
+			}
+			CallFunction = &TLinkedList<T>::Ascending;
+		}
+		if (pSelectNode != pEnd->m_pPrev)
+		{
+			swap(pSelectNode, pEnd->m_pPrev);
+		}
+		pEnd = pSelectNode;
+		pSelectNode = m_pHead->m_pNext;
+	}
+}

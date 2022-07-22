@@ -16,23 +16,81 @@ std::istream& operator >> (std::iostream& is, TItem& data)
 {
 	return is;
 }
-void main()
-{	
-	TLinkedList<int> list;
-	list.push_back(4);
-	list.push_back(1);
-	list.push_back(5);
-	list.push_front(2);
-	list.push_front(3);
 
+bool Ascending(TNode<int>* a, TNode<int>* b) //오름차순
+{
+	if (a->m_pData < b->m_pData)
+	{
+		return true;
+	}
+	return false;
+}
+bool Descending(TNode<int>* a, TNode<int>* b) //내림차순
+{
+	if (a->m_pData > b->m_pData)
+	{
+		return true;
+	}
+	return false;
+}
+bool AscendingItem(TNode<TItem*>* a, TNode<TItem*>* b) //오름차순
+{
+	if (a->m_pData->iValue < b->m_pData->iValue)
+	{
+		return true;
+	}
+	return false;
+}
+bool DescendingItem(TNode<TItem*>* a, TNode<TItem*>* b) //내림차순
+{
+	if (a->m_pData->iValue > b->m_pData->iValue)
+	{
+		return true;
+	}
+	return false;
+}
+
+void main()
+{
+	srand(time(NULL));
+	TLinkedList<int> list;
+	for (int iCnt = 0; iCnt < 10; iCnt++)
+	{
+		int iValue = rand() % 100;
+		list.push_back(iValue);
+		std::cout << iValue << " ";
+	}
+	std::cout << std::endl;
+	list.sort_if(Descending);// Ascending);
+	for (TNode<int>* node = list.m_pHead->m_pNext;
+		node != list.m_pTail;
+		node = node->m_pNext)
+	{
+		int iData = node->m_pData;
+		std::cout << iData << " ";
+	}
+	std::cout << std::endl;
+	list.shuffle();
+
+	for (TNode<int>* node = list.m_pHead->m_pNext;
+		node != list.m_pTail;
+		node = node->m_pNext)
+	{
+		int iData = node->m_pData;
+		std::cout << iData << " ";
+	}
+	std::cout << std::endl;
+	list.sort();
 	for (TNode<int>* node = list.m_pHead->m_pNext;
 		node != list.m_pTail;
 		node = node->m_pNext)
 	{		
 		int iData = node->m_pData;
-		std::cout << iData << std::endl;
+		std::cout << iData << " ";
 	}
 	list.clear();
+	list.sort();
+	std::cout << std::endl;
 
 	TLinkedList<TItem*> list2;
 	list2.push_back(new TItem(4));
@@ -47,6 +105,9 @@ void main()
 		TItem* pData = list2[iNode]->m_pData;
 		std::cout << *pData;
 	}
+	//list2.sort();
+	list2.sort_if(AscendingItem);
+	std::cout << std::endl;
 
 	for (TNode<TItem*>* node = list2.begin();
 		node != list2.end();
