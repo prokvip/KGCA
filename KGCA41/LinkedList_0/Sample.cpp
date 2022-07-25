@@ -50,6 +50,18 @@ bool DescendingItem(TNode<TItem*>* a, TNode<TItem*>* b) //내림차순
 	return false;
 }
 
+template<class T>
+void Print(TLinkedList<T>& list)
+{
+	for (TNode<T>* node = list.m_pHead->m_pNext;
+		node != list.m_pTail;
+		node = node->m_pNext)
+	{
+		int iData = node->m_pData;
+		std::cout << iData << " ";
+	}
+	std::cout << std::endl;
+}
 void main()
 {
 	srand(time(NULL));
@@ -61,33 +73,25 @@ void main()
 		std::cout << iValue << " ";
 	}
 	std::cout << std::endl;
+	list.sort();
+	Print(list);
+
+	list.CallFunction = &TLinkedList<int>::Ascending;
+	
+	list.sort();
+	Print(list);
+	
+	list.shuffle();
+	Print(list);
+	
 	list.sort_if(Descending);// Ascending);
-	for (TNode<int>* node = list.m_pHead->m_pNext;
-		node != list.m_pTail;
-		node = node->m_pNext)
-	{
-		int iData = node->m_pData;
-		std::cout << iData << " ";
-	}
-	std::cout << std::endl;
+	Print(list);
 	list.shuffle();
 
-	for (TNode<int>* node = list.m_pHead->m_pNext;
-		node != list.m_pTail;
-		node = node->m_pNext)
-	{
-		int iData = node->m_pData;
-		std::cout << iData << " ";
-	}
-	std::cout << std::endl;
+	Print(list);
 	list.sort();
-	for (TNode<int>* node = list.m_pHead->m_pNext;
-		node != list.m_pTail;
-		node = node->m_pNext)
-	{		
-		int iData = node->m_pData;
-		std::cout << iData << " ";
-	}
+	Print(list);
+
 	list.clear();
 	list.sort();
 	std::cout << std::endl;
