@@ -6,13 +6,12 @@ template <class T>
 class TNode
 {
 public:
-	T m_pData;
-	TNode* m_pNext;
-	TNode* m_pPrev;
+	T m_pData;	
+	TLinkedList<TNode*> m_pChild;
 	TNode() {
 		m_pNext = m_pPrev = nullptr;
 	}
-	~TNode() {		
+	~TNode() {				
 	}
 };
 
