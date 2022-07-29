@@ -15,11 +15,14 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Sample.cpp">
+    <ClCompile Include="Tree_1.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="THashTable.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
     <ClInclude Include="TLinkedList.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
