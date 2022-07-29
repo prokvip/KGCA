@@ -24,7 +24,7 @@
 //		std::cout << this->m_iIndex << " ";
 //	}
 //};
-int g_iData[] = { 5,23,67,3,7,3,6,3,1,8 };
+int g_iData[] = { 44,17,88,32,28,29,65,54,82,76,80,78,97 };
 //int g_iCounter = 0;
 //TNode* g_pRoot = nullptr;
 //
@@ -102,11 +102,13 @@ void main()
 {
 	srand(time(NULL));
 	TTable<int, TItem*> list;
-	for (int iCnt = 0; iCnt < 10; iCnt++)
+	for (int iCnt = 0; iCnt < _countof(g_iData); iCnt++)
 	{
-		TItem* pItem = new TItem(rand());
+		TItem* pItem = new TItem(g_iData[iCnt]);
 		list.insert(pItem->iValue, pItem);
 	}
+	list.erase(32);
+	list.erase(65);
 	TItem* pFindItem = list.bst(8);
 
 	using DATA = TBucket<int, TItem*>*;

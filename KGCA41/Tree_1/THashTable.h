@@ -71,13 +71,33 @@ public:
 	{
 		return m_Table.size();
 	}
+	void		erase(K k);	
+	TBstNode<K, T>* removeBst(K k, TBstNode<K, T>* t);
 	void		CreateBinarySearchTree(TBstNode<K,T>* pBstNode, TBUCKET* pData);
 	TBstNode<K, T>* RecursiveBST(TBstNode<K, T>* pNode, K key);
+	TBstNode<K, T>* findMin(TBstNode<K, T>* t)
+	{
+		if (t == NULL)
+			return NULL;
+		else if (t->m_pChild[0] == NULL)
+			return t;
+		else
+			return findMin(t->m_pChild[0]);
+	}
+	TBstNode<K, T>* findMax(TBstNode<K, T>* t) {
+		if (t == NULL)
+			return NULL;
+		else if (t->m_pChild[1] == NULL)
+			return t;
+		else
+			return findMax(t->m_pChild[1]);
+	}
 };
 template < class K, class T>
 T TTable<K, T>::bst(K key)
 {
 	TBstNode<K, T>* pFindNode = RecursiveBST(m_pBstRoot, key);
+	if (pFindNode == nullptr) return nullptr;
 	return pFindNode->m_Data;
 }
 template < class K, class T>
@@ -115,7 +135,7 @@ template < class K, class T>
 void	TTable<K,T>::insert(K k, T t)
 {
 	TBucket<K, T>* pNewBucket = new TBucket<K, T>(k, t);
-	int hash = pNewBucket->hash(k);
+	//int hash = pNewBucket->hash(k);
 	//m_Table[hash].push_back(pNewBucket);
 	m_Table.push_back(pNewBucket);
 	if (m_pBstRoot == nullptr)
@@ -128,8 +148,7 @@ void	TTable<K,T>::insert(K k, T t)
 	CreateBinarySearchTree(m_pBstRoot, pNewBucket);
 }
 template < class K, class T>
-void TTable<K, T>::CreateBinarySearchTree(TBstNode<K, T>* pBstNode,
-	TBUCKET* pData)
+void TTable<K, T>::CreateBinarySearchTree(TBstNode<K, T>* pBstNode, TBUCKET* pData)
 {
 	// ·çÆ® >= iValue ==> ¿ÞÂÊ
 	if (pBstNode->m_key >= pData->m_Key)
@@ -161,4 +180,43 @@ void TTable<K, T>::CreateBinarySearchTree(TBstNode<K, T>* pBstNode,
 			CreateBinarySearchTree(pBstNode->m_pChild[1], pData);
 		}
 	}
+}
+
+template < class K, class T>
+void	TTable<K, T>::erase(K k)
+{	
+	m_pBstRoot = removeBst(k, m_pBstRoot);
+}
+template < class K, class T>
+TBstNode<K, T>* TTable<K, T>::removeBst(K k, TBstNode<K, T>* t)
+{
+	TBstNode<K, T>* temp;
+	if (t == NULL)
+	{
+		return NULL;
+	}
+	else if (k < t->m_key)
+	{
+		t->m_pChild[0] = removeBst(k, t->m_pChild[0]);
+	}
+	else if (k > t->m_key)
+	{
+		t->m_pChild[1] = removeBst(k, t->m_pChild[1]);
+	}
+	else if (t->m_pChild[0] && t->m_pChild[1])
+	{
+		temp = findMin(t->m_pChild[1]);
+		t->m_key = temp->m_key;
+		t->m_pChild[1] = removeBst(t->m_key, t->m_pChild[1]);
+	}
+	else
+	{
+		temp = t;
+		if (t->m_pChild[0] == NULL)
+			t = t->m_pChild[1];
+		else if (t->m_pChild[1] == NULL)
+			t = t->m_pChild[0];
+		delete temp;
+	}
+	return t;
 }
