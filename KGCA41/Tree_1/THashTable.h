@@ -1,5 +1,8 @@
 #pragma once
 #include "TLinkedList.h"
+
+const int g_iBucketSize = 100;
+
 template < class K, class T>
 class TBstNode
 {
@@ -23,6 +26,10 @@ class TBucket
 public:
 	K m_Key;
 	T m_pData;
+	int   hash(int iBucketSize)
+	{
+		return m_Key % iBucketSize;
+	}
 	TBucket(K k, T t)
 	{
 		m_Key = k;
@@ -37,8 +44,21 @@ class TBucket<char*,T>
 public:
 	char* m_Key;
 	T m_pData;
+	int iLength;
+	int   hash(int iBucketSize)
+	{
+		unsigned long hash = 5381;
+		int c = 0;
+		for (int i = 0; i < iLength; i++)
+		{
+			TCHAR value = m_Key[i];
+			hash += value;
+		}
+		return hash % iBucketSize;
+	}
 	TBucket(char* k, T t)
 	{
+		iLength = strlen(k) + 1;
 		m_Key = new char[strlen(k)+1];
 		memcpy(m_Key, k, sizeof(char) * strlen(k) + 1);
 		m_pData = t;
@@ -54,26 +74,34 @@ class TTable
 public:
 	//typedef TBucket<K, T> TBUCKET;
 	using TBUCKET = TBucket<K, T>;
-	TLinkedList<TBUCKET*>	m_Table;// [10] ;
-	TBstNode<K, T>*			m_pBstRoot;
+	TLinkedList<TBUCKET*>	m_Table;
+	TLinkedList<TBUCKET*>	m_TableHash[g_iBucketSize];
+	TBstNode<K, T>* m_pBstRoot;
+	//int g_iBucketSize = 0;
+	/*TTable(int iSize)
+	{
+		g_iBucketSize = iSize;
+		m_TableHash = new TLinkedList<TBUCKET*>[iSize];
+	}*/
 public:
 	int			hash(K key)// int
 	{
 		unsigned long hash = 0x45AB904C;
 		unsigned long val = static_cast<unsigned long>(key);
 		hash = (hash + val) << 5;
-		return (hash ^ (hash >> 16)) % 10;		
-	}	
+		return (hash ^ (hash >> 16)) % 10;
+	}
 	void		insert(K k, T t);
+	T			find(K k);
 	void		clear();
 	T			bst(K key);
 	int			size()
 	{
 		return m_Table.size();
 	}
-	void		erase(K k);	
+	void		erase(K k);
 	TBstNode<K, T>* removeBst(K k, TBstNode<K, T>* t);
-	void		CreateBinarySearchTree(TBstNode<K,T>* pBstNode, TBUCKET* pData);
+	void		CreateBinarySearchTree(TBstNode<K, T>* pBstNode, TBUCKET* pData);
 	TBstNode<K, T>* RecursiveBST(TBstNode<K, T>* pNode, K key);
 	TBstNode<K, T>* findMin(TBstNode<K, T>* t)
 	{
@@ -93,6 +121,24 @@ public:
 			return findMax(t->m_pChild[1]);
 	}
 };
+
+template < class K, class T>
+T TTable<K, T>::find(K k)
+{
+	TBucket<K, T>  temp(k, nullptr);
+	int hash = temp.hash(g_iBucketSize);
+	for( TNode<TBUCKET*>* bucket = m_TableHash[hash].begin();
+		bucket != m_TableHash[hash].end();
+		bucket = m_TableHash[hash].next())
+	{
+		if (bucket->m_pData->m_Key == k)
+		{
+			TBUCKET* pDataBucket = bucket->m_pData;
+			return pDataBucket->m_pData;
+		}
+	}
+	return nullptr;
+}
 template < class K, class T>
 T TTable<K, T>::bst(K key)
 {
@@ -135,9 +181,10 @@ template < class K, class T>
 void	TTable<K,T>::insert(K k, T t)
 {
 	TBucket<K, T>* pNewBucket = new TBucket<K, T>(k, t);
-	//int hash = pNewBucket->hash(k);
-	//m_Table[hash].push_back(pNewBucket);
+	int hash = pNewBucket->hash(g_iBucketSize);
+	m_TableHash[hash].push_back(pNewBucket);
 	m_Table.push_back(pNewBucket);
+
 	if (m_pBstRoot == nullptr)
 	{
 		m_pBstRoot = new TBstNode<K, T>;

@@ -107,10 +107,12 @@ void main()
 		TItem* pItem = new TItem(g_iData[iCnt]);
 		list.insert(pItem->iValue, pItem);
 	}
+	TItem* pFindItem = list.find(82);
+
 	list.erase(32);
 	list.erase(65);
-	TItem* pFindItem = list.bst(8);
-
+	pFindItem = list.bst(8);
+/*
 	using DATA = TBucket<int, TItem*>*;
 	using TNODE = TNode<DATA>*;
 	for (TNODE pBucket = list.m_Table.begin();
@@ -121,7 +123,8 @@ void main()
 		std::cout << pData->m_Key << ":" << pData->m_pData->iValue << std::endl;
 	}
 	std::cout << std::endl;
-	list.clear();
+	list.clear();*/
+
 	/*TTable<char*, TItem*> list2;
 	for (int iCnt = 0; iCnt < 10; iCnt++)
 	{
