@@ -13,19 +13,18 @@ public:
     {
         return iValue == p.iValue;
     }
-  
     TItem(int i) : iValue(i)
     {
 
     }
 };
-struct isValue
+struct IsCmp
 {
-    int m_value;
-    isValue(int value) : m_value(value) {}
-    bool operator()(const TItem* cls) 
+    int m_iValue;
+    IsCmp(int value) : m_iValue(value) {}
+    bool operator()(const TItem* item) 
     {
-        return (cls->iValue == m_value);
+        return (item->iValue == m_iValue);
     }
 };
 bool  compare(TItem* a, TItem* b)
@@ -59,10 +58,8 @@ int main()
         list.insert(list.end(), new TItem(20 + i));
     }
     std::sort(list.begin(), list.end(), compare);
-    g_iFindValue = 17;
-
-    // find_if -> operator ()
-    std::vector<TItem*>::iterator iter = std::find_if(list.begin(), list.end(), isValue(17));
+     // find_if -> operator ()
+    std::vector<TItem*>::iterator iter = std::find_if(list.begin(), list.end(), IsCmp(17));
     list.erase(iter);
 
     //int iValue1 = list.front();
