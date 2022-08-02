@@ -169,6 +169,14 @@ int main()
                 result2.begin(), result2.end(), 
         std::back_inserter(resultMerge));
     listInt.clear();
+    std::vector<int> ret;
+    //ret = resultMerge;
+    ret.assign(resultMerge.begin(), resultMerge.end());
+    for (int i = 0; i < ret.size(); i++)
+    {
+        int value = ret.at(i);
+        std::cout << " " << ret[i] << value;
+    }
     /// <summary>
     /// //
     /// </summary>
