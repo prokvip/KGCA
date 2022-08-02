@@ -2,7 +2,15 @@
 //
 
 #include <iostream>
+#include <vector> // 배열
 #include <list> // 배열
+#include <stack>
+#include <queue>
+#include <deque>
+#include <set>
+#include <map>
+#include <unordered_map>
+#include <unordered_set>
 #include <algorithm> // 배열
 
 class TItem
@@ -84,7 +92,11 @@ int   Gen()
 }
 
 int Sum10(int i) { return i + 10; };
-
+template<class T>
+void PRINT(T& i)
+{       
+    std::cout << " " << i;
+}
 int main()
 {
     std::list<TItem> list1;   
@@ -161,6 +173,8 @@ int main()
     int iValue1 = listInt.front();
     int iValue2 = listInt.back();
     listInt.pop_back();
+    // item, character, ui, map, sound: public object
+    std::for_each(listInt.begin(), listInt.end(), PRINT<int>);
 
     for (std::list<int>::iterator iter = listInt.begin();
         iter != listInt.end();
