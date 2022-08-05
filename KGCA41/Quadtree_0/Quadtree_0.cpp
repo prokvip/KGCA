@@ -1,4 +1,22 @@
 ﻿#include <iostream>
+#include <vector>
+#include <queue>
+
+class TObject
+{
+public:
+    float  m_fX;
+    float  m_fY;
+    float  m_fWidth;
+    float  m_fHeight;
+    TObject()
+    {
+        m_fX = rand() % 100;
+        m_fY = rand() % 100;
+        m_fWidth = 2.0f + (rand() % 10);
+        m_fHeight = 2.0f + (rand() % 10);
+    }
+};
 class TNode
 {
 public:
@@ -7,6 +25,7 @@ public:
     float   m_fWidth;
     float   m_fHeight;
     int    m_iDepth;
+    std::vector<TObject*>  m_ObjectList;
     TNode* m_pChild[4];
     TNode* m_pParent;
 public:
@@ -32,6 +51,8 @@ public:
         delete m_pChild[3];
     }
 };
+
+std::queue<TNode*> g_Queue;
 class TQuadtree
 {
 public:
@@ -42,6 +63,9 @@ public:
              float fPosX, float fPosY,
              float fWidth, float fHeight);
     void    Buildtree(TNode* pNode);
+    void    AddObject(TObject* pObj);
+    TNode*  FindNode(TNode* pNode, TObject* pObj);
+    bool    RectToRect(TNode* pNode, TObject* pObj);
     ~TQuadtree()
     {
         delete m_pRootNode;
@@ -89,11 +113,68 @@ TNode* TQuadtree::CreateNode(
     TNode* pNode = new TNode(pParent,x, y, w, h);    
     return pNode;
 }
+// 1번 : 완전히 포함하는 노드에 추가하자.
+// 2번 : 걸쳐만 있어도 노드에 추가하자.
+void    TQuadtree::AddObject(TObject* pObj)
+{
+    TNode* pFindNode = FindNode(m_pRootNode, pObj);
+    if( pFindNode != nullptr)
+    {
+        pFindNode->m_ObjectList.push_back(pObj);
+    }    
+}
+TNode* TQuadtree::FindNode(TNode* pNode, TObject* pObj)
+{
+    do {
+        for (int iNode = 0; iNode < 4; iNode++)
+        {
+            if (pNode->m_pChild[iNode] != nullptr)
+            {
+                bool bIn = RectToRect(pNode->m_pChild[iNode], pObj);
+                if (bIn > 0)
+                {
+                    g_Queue.push(pNode->m_pChild[iNode]);
+                    break;
+                }
+            }
+        }
+        if (g_Queue.empty()) break;
+        pNode = g_Queue.front();
+        g_Queue.pop();
+    } while (pNode);
+    return pNode;
+}
+bool    TQuadtree::RectToRect(TNode* pNode, TObject* pObj)
+{
+    //  |             |
+    if (pNode->m_fX <= pObj->m_fX)
+    {
+        if ((pNode->m_fX+pNode->m_fWidth) >= pObj->m_fX + pObj->m_fWidth)
+        {
+            if (pNode->m_fY <= pObj->m_fY)
+            {
+                if ((pNode->m_fY + pNode->m_fHeight) >= pObj->m_fY + pObj->m_fHeight)
+                {
+                    return true;
+                }
+            }
+        }
+    }
+    return false;
+}
 int main()
 {
     TQuadtree quadtree;
     quadtree.Create(100.0f, 100.0f);
-
+    for (int iObj = 0; iObj < 10; iObj++)
+    {
+        TObject* pObj = new TObject;
+        quadtree.AddObject(pObj);
+    }
+    //while (1)
+    //{
+    //    //quadtree.MoveObject();
+    //}
     //화면좌표계(x1,y1,w,h) <-> p1(x1,y1)----- p2(x2,x2)
     //0,0 -> x       50,0         100(x), 0(y)        
     //|    0                  1
