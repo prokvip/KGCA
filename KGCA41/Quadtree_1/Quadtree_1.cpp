@@ -8,17 +8,14 @@ public:
     TRect m_rt;
     void   SetPosition(float x, float y, float w, float h)
     {
-        m_rt.x = x;
-        m_rt.y = y;
-        m_rt.w = w;
-        m_rt.h = h;
+        m_rt.Set(x,y,w,h);
     }
     TObject()
     {
-        m_rt.x = 20 + (rand() % 80);
-        m_rt.y = 20 + (rand() % 80);
-        m_rt.w = 10.0f + (rand() % 10);
-        m_rt.h = 10.0f + (rand() % 10);
+        m_rt.Set(   20 + (rand() % 80), 
+                    20 + (rand() % 80),
+                    5.0f + (rand() % 5),
+                    5.0f + (rand() % 5));
     }
 };
 class TNode
@@ -32,10 +29,7 @@ public:
 public:
     TNode(TNode* pParent, float x, float y, float w, float h)
     {
-        m_rt.x = x;
-        m_rt.y = y;
-        m_rt.w = w;
-        m_rt.h = h;
+        m_rt.Set(x, y, w, h);
         m_iDepth = 0;
         m_pParent = nullptr;
         if (pParent != nullptr)
@@ -191,7 +185,7 @@ int main()
     //list2 = list1;
 
     TObject player;
-    player.SetPosition(10, 10, 30, 30);
+    player.SetPosition(50, 50, 20, 20);
     TQuadtree quadtree;
     quadtree.Create(100.0f, 100.0f);
     for (int iObj = 0; iObj < 100; iObj++)
@@ -200,8 +194,7 @@ int main()
         quadtree.AddObject(pObj);
     }
     while (1)
-    {
-        //TNode* pNodePlayer = quadtree.FindNode(quadtree.m_pRootNode, &player);
+    {        
         std::vector<TObject*> list = quadtree.Collision(&player);
         std::cout << "player:"
             << player.m_rt.x << "," << player.m_rt.y << ","

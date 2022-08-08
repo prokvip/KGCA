@@ -3,25 +3,14 @@ TCollisionType TCollision::RectToRect(TRect& a, TRect& b)
 {
     // 0 : 완전제외(0)
     // 1 : 완전포함(1) -> 걸쳐져 있는 상태(2)
-    // x1(10)----30------x2(40)
-    float x1 = a.x;
-    float y1 = a.y;
-    float x2 = a.x + a.w;
-    float y2 = a.y + a.h;
-
-    float z1 = b.x;
-    float w1 = b.y;
-    float z2 = b.x + b.w;
-    float w2 = b.y + b.h;
-
+    // a.x(10)----30------a.x2(40)
     // 합집합
     float fMinX;   float fMinY;
     float fMaxX;   float fMaxY;
-    fMinX = x1 < z1 ? x1 : z1;
-    fMinY = y1 < w1 ? y1 : w1;
-    fMaxX = x2 > z2 ? x2 : z2;
-    fMaxY = y2 > w2 ? y2 : w2;
-
+    fMinX = a.x < b.x ? a.x : b.x;
+    fMinY = a.y < b.y ? a.y : b.y;
+    fMaxX = a.x2 > b.x2 ? a.x2 : b.x2;
+    fMaxY = a.y2 > b.y2 ? a.y2 : b.y2;
     //  가로 판정
     if ((a.w + b.w) >= (fMaxX - fMinX))
     {
@@ -29,6 +18,13 @@ TCollisionType TCollision::RectToRect(TRect& a, TRect& b)
         if ((a.h + b.h) >= (fMaxY - fMinY))
         {
             // 교차한다. 교집합
+            float x, y, x2, y2;
+            TRect rt;
+            x = a.x > b.x ? a.x: b.y;
+            y = a.y > b.y ? a.y : b.y;
+            x2 = a.x2 < b.x2 ? a.x2 : b.x2;
+            y2 = a.y2 < b.y2 ? a.y2 : b.y2;
+            rt.Set(x, y, x2-x, y2-y);
             return TCollisionType::RECT_OVERLAP;
         }
     }
