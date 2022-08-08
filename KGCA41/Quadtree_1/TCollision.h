@@ -16,8 +16,8 @@ struct TVector2D
 };
 struct Rect
 {
-    float  x;
-    float  y;
+    float  x1;
+    float  y1;
     float  w;
     float  h;
 };
@@ -29,9 +29,9 @@ struct TRect : Rect
     float  cy;
     bool   operator == (TRect& dest)
     {
-        if (fabs(x-dest.x) < 0.001f)
+        if (fabs(x1-dest.x1) < 0.001f)
         {
-            if (fabs(y - dest.y) < 0.001f)
+            if (fabs(y1 - dest.y1) < 0.001f)
             {
                 if (fabs(w - dest.w) < 0.001f)
                 {
@@ -50,8 +50,8 @@ struct TRect : Rect
     }
     void  Set(float x, float y, float z, float w)
     {
-        this->x = x;
-        this->y = y;
+        this->x1 = x;
+        this->y1 = y;
         this->w = z;
         this->h = w;
         x2 = x + w;
