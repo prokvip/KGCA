@@ -1,4 +1,5 @@
-﻿#include "TCollision.h"
+﻿#include <windows.h>
+#include "TCollision.h"
 
 
 class TObject
@@ -66,7 +67,6 @@ public:
     void    Buildtree(TNode* pNode);
     void    AddObject(TObject* pObj);
     TNode* FindNode(TNode* pNode, TObject* pObj);
-    bool    RectToInRect(TNode* pNode, TObject* pObj);
     void    GetCollisitionObject(TNode* pNode,
         TObject* obj,
         std::vector<TObject*>& list);
@@ -134,7 +134,9 @@ TNode* TQuadtree::FindNode(TNode* pNode, TObject* pObj)
         {
             if (pNode->m_pChild[iNode] != nullptr)
             {
-                bool bIn = RectToInRect(pNode->m_pChild[iNode], pObj);
+                bool bIn = TCollision::RectToInRect(
+                        pNode->m_pChild[iNode]->m_rt, 
+                        pObj->m_rt);
                 if (bIn > 0)
                 {
                     g_Queue.push(pNode->m_pChild[iNode]);
@@ -148,30 +150,11 @@ TNode* TQuadtree::FindNode(TNode* pNode, TObject* pObj)
     } while (pNode);
     return pNode;
 }
-bool    TQuadtree::RectToInRect(TNode* pNode, TObject* pObj)
-{
-    //  |             |
-    if (pNode->m_rt.x <= pObj->m_rt.x)
-    {
-        if ((pNode->m_rt.x + pNode->m_rt.w) >= pObj->m_rt.x + pObj->m_rt.w)
-        {
-            if (pNode->m_rt.y <= pObj->m_rt.y)
-            {
-                if ((pNode->m_rt.y + pNode->m_rt.h) >= pObj->m_rt.y + pObj->m_rt.h)
-                {
-                    return true;
-                }
-            }
-        }
-    }
-    return false;
-}
 
 std::vector<TObject*> TQuadtree::Collision(TObject* pObj)
 {
     std::vector<TObject*> list;
-    GetCollisitionObject(this->m_pRootNode, pObj,
-        list);
+    GetCollisitionObject(this->m_pRootNode, pObj, list);
     return list;
 };
 void  TQuadtree::GetCollisitionObject(TNode* pNode,
@@ -216,20 +199,47 @@ int main()
         TObject* pObj = new TObject;
         quadtree.AddObject(pObj);
     }
-    //TNode* pNodePlayer = quadtree.FindNode(quadtree.m_pRootNode, &player);
-    std::vector<TObject*> list = quadtree.Collision(&player);
-    if (!list.empty())
+    while (1)
     {
-        for (int iObj = 0; iObj < list.size(); iObj++)
+        //TNode* pNodePlayer = quadtree.FindNode(quadtree.m_pRootNode, &player);
+        std::vector<TObject*> list = quadtree.Collision(&player);
+        std::cout << "player:"
+            << player.m_rt.x << "," << player.m_rt.y << ","
+            << player.m_rt.w << "," << player.m_rt.h
+            << std::endl;
+        if (!list.empty())
         {
-            std::cout << list[iObj]->m_rt.x <<
-                list[iObj]->m_rt.y << std::endl;
+            for (int iObj = 0; iObj < list.size(); iObj++)
+            {
+                std::cout << "object:"
+                    << list[iObj]->m_rt.x << "," << list[iObj]->m_rt.y << ","
+                    << list[iObj]->m_rt.w << "," << list[iObj]->m_rt.h
+                    << std::endl;
+            }
         }
+        static float fDirectionX = 10.0f;
+        if (rand() % 2 == 0)
+        {
+            fDirectionX *= -1.0f;
+        }
+        static float fDirectionY = 10.0f;
+        if (rand() % 2 == 0)
+        {
+            fDirectionY *= -1.0f;
+        }
+        player.m_rt.x = player.m_rt.x + fDirectionX;
+        player.m_rt.y = player.m_rt.y + fDirectionY;
+
+        player.m_rt.x = min(player.m_rt.x, 100.0f);
+        player.m_rt.x = max(player.m_rt.x, 0);
+        player.m_rt.y = min(player.m_rt.y, 100.0f);
+        player.m_rt.y = max(player.m_rt.y, 0);
+
+        player.SetPosition( player.m_rt.x, 
+                            player.m_rt.y, 30, 30);
+        Sleep(1000);
+        system("cls");
     }
-    //while (1)
-    //{
-    //    //quadtree.MoveObject();
-    //}
     //화면좌표계(x1,y1,w,h) <-> p1(x1,y1)----- p2(x2,x2)
     //0,0 -> x       50,0         100(x), 0(y)        
     //|    0                  1

@@ -142,6 +142,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Quadtree_1.cpp" />
+    <ClCompile Include="TCollision.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TCollision.h" />
