@@ -9,6 +9,11 @@ enum TCollisionType
 	RECT_IN,
 	RECT_OVERLAP,
 };
+struct TVector2D
+{
+    float x;
+    float y;
+};
 struct Rect
 {
     float  x;
@@ -51,6 +56,8 @@ struct TRect : Rect
         this->h = w;
         x2 = x + w;
         y2 = y + h;
+        cx = (x + x2) / 2.0f;
+        cy = (y + y2) / 2.0f;
     }
 };
 
