@@ -165,7 +165,7 @@ void  TQuadtree::GetCollisitionObject(TNode* pNode,
             list.push_back(pNode->m_ObjectList[iObj]);
         }
     }
-    if (pNode->m_pChild[0] == nullptr)
+    if (pNode->m_pChild[0] != nullptr)
     {
         for (int iChild = 0; iChild < 4; iChild++)
         {
@@ -188,11 +188,15 @@ int main()
     player.SetPosition(50, 50, 20, 20);
     TQuadtree quadtree;
     quadtree.Create(100.0f, 100.0f);
-    for (int iObj = 0; iObj < 100; iObj++)
+    for (int iObj = 0; iObj < 10; iObj++)
     {
         TObject* pObj = new TObject;
         quadtree.AddObject(pObj);
     }
+    TObject* pObj = new TObject;
+    pObj->m_rt.Set(50, 50, 20, 20);
+    quadtree.AddObject(pObj);
+   
     while (1)
     {        
         std::vector<TObject*> list = quadtree.Collision(&player);

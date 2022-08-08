@@ -22,6 +22,23 @@ struct TRect : Rect
     float  y2;//y+h
     float  cx;
     float  cy;
+    bool   operator == (TRect& dest)
+    {
+        if (fabs(x-dest.x) < 0.001f)
+        {
+            if (fabs(y - dest.y) < 0.001f)
+            {
+                if (fabs(w - dest.w) < 0.001f)
+                {
+                    if (fabs(h - dest.h) < 0.001f)
+                    {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
     TRect(){}
     TRect(float x, float y, float z, float w) {
         Set(x, y, z, w);

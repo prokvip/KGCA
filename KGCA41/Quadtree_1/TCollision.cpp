@@ -19,12 +19,16 @@ TCollisionType TCollision::RectToRect(TRect& a, TRect& b)
         {
             // 교차한다. 교집합
             float x, y, x2, y2;
-            TRect rt;
+            TRect Intersect;
             x = a.x > b.x ? a.x: b.y;
             y = a.y > b.y ? a.y : b.y;
             x2 = a.x2 < b.x2 ? a.x2 : b.x2;
             y2 = a.y2 < b.y2 ? a.y2 : b.y2;
-            rt.Set(x, y, x2-x, y2-y);
+            Intersect.Set(x, y, x2-x, y2-y);
+            if (Intersect == a || Intersect == b)
+            {
+                return TCollisionType::RECT_IN;
+            }
             return TCollisionType::RECT_OVERLAP;
         }
     }
