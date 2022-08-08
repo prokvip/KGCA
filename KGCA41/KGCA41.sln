@@ -45,6 +45,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PriorityQueue", "PriorityQu
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Quadtree_0", "Quadtree_0\Quadtree_0.vcxproj", "{B5A0A6F5-8052-437B-9516-4565E653EEA3}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Quadtree_1", "Quadtree_1\Quadtree_1.vcxproj", "{2C920EDD-5846-4094-BDEA-282A2B4FD66B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -197,6 +199,14 @@ Global
 		{B5A0A6F5-8052-437B-9516-4565E653EEA3}.Release|x64.Build.0 = Release|x64
 		{B5A0A6F5-8052-437B-9516-4565E653EEA3}.Release|x86.ActiveCfg = Release|Win32
 		{B5A0A6F5-8052-437B-9516-4565E653EEA3}.Release|x86.Build.0 = Release|Win32
+		{2C920EDD-5846-4094-BDEA-282A2B4FD66B}.Debug|x64.ActiveCfg = Debug|x64
+		{2C920EDD-5846-4094-BDEA-282A2B4FD66B}.Debug|x64.Build.0 = Debug|x64
+		{2C920EDD-5846-4094-BDEA-282A2B4FD66B}.Debug|x86.ActiveCfg = Debug|Win32
+		{2C920EDD-5846-4094-BDEA-282A2B4FD66B}.Debug|x86.Build.0 = Debug|Win32
+		{2C920EDD-5846-4094-BDEA-282A2B4FD66B}.Release|x64.ActiveCfg = Release|x64
+		{2C920EDD-5846-4094-BDEA-282A2B4FD66B}.Release|x64.Build.0 = Release|x64
+		{2C920EDD-5846-4094-BDEA-282A2B4FD66B}.Release|x86.ActiveCfg = Release|Win32
+		{2C920EDD-5846-4094-BDEA-282A2B4FD66B}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
