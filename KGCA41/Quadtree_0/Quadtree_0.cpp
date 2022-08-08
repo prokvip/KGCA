@@ -282,10 +282,10 @@ int main()
     //list2 = list1;
 
     TObject player;
-    player.SetPosition(40, 60, 30, 30);
+    player.SetPosition(10, 10, 30, 30);
     TQuadtree quadtree;
     quadtree.Create(100.0f, 100.0f);
-    for (int iObj = 0; iObj < 10; iObj++)
+    for (int iObj = 0; iObj < 100; iObj++)
     {
         TObject* pObj = new TObject;
         quadtree.AddObject(pObj);
