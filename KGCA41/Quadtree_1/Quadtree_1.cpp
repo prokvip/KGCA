@@ -5,10 +5,20 @@
 class TObject
 {
 public:
-    TRect m_rt;
+    TRect   m_rt;
+    TCircle m_Circle;
+    void   SetCircle(float x, float y, float w, float h)
+    {
+        m_Circle.cx = x;
+        m_Circle.cy = y;
+        float x1 = w/2.0f;
+        float y1 = h/2.0f;
+        m_Circle.fRadius = sqrt(x1 * x1 + y1 * y1);
+    }
     void   SetPosition(float x, float y, float w, float h)
     {
         m_rt.Set(x,y,w,h);
+        SetCircle(m_rt.cx, m_rt.cy, m_rt.w, m_rt.h);
     }
     TObject()
     {
@@ -16,6 +26,7 @@ public:
                     20 + (rand() % 80),
                     5.0f + (rand() % 5),
                     5.0f + (rand() % 5));
+        SetCircle(m_rt.cx, m_rt.cy, m_rt.w, m_rt.h);
     }
 };
 class TNode
@@ -158,11 +169,16 @@ void  TQuadtree::GetCollisitionObject(TNode* pNode,
     if (pNode == nullptr) return;
     for (int iObj = 0; iObj < pNode->m_ObjectList.size(); iObj++)
     {
-        if (TCollision::RectToRect(
-            pNode->m_ObjectList[iObj]->m_rt, 
-            pSrcObject->m_rt))
+        if (TCollision::CircleToCircle(
+            pNode->m_ObjectList[iObj]->m_Circle,
+            pSrcObject->m_Circle))
         {
-            list.push_back(pNode->m_ObjectList[iObj]);
+            if (TCollision::RectToRect(
+                pNode->m_ObjectList[iObj]->m_rt,
+                pSrcObject->m_rt))
+            {
+                list.push_back(pNode->m_ObjectList[iObj]);
+            }
         }
     }
     if (pNode->m_pChild[0] != nullptr)
@@ -185,18 +201,26 @@ int main()
     //list2 = list1;
 
     TObject player;
-    player.SetPosition(50, 50, 20, 20);
+    player.SetPosition(0, 100, 20, 20);
     TQuadtree quadtree;
     quadtree.Create(100.0f, 100.0f);
+    float fDistance = 0.0f;
     for (int iObj = 0; iObj < 10; iObj++)
     {
         TObject* pObj = new TObject;
-        quadtree.AddObject(pObj);
+        quadtree.AddObject(pObj);        
     }
-    TObject* pObj = new TObject;
-    pObj->m_rt.Set(50, 50, 20, 20);
+ /*   TObject* pObj = new TObject;
+    pObj->SetPosition(100, 0, 20, 20);
     quadtree.AddObject(pObj);
-   
+
+    if (TCollision::CircleToCircle(
+        player.m_Circle,
+        pObj->m_Circle))
+    {
+
+    }*/
+
     while (1)
     {        
         std::vector<TObject*> list = quadtree.Collision(&player);

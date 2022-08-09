@@ -53,3 +53,16 @@ bool    TCollision::RectToInRect(TRect& a, TRect& b)
     }
     return false;
 }
+
+bool   TCollision::CircleToCircle(TCircle& a, TCircle& b)
+{
+    float fSumRadius = a.fRadius + b.fRadius;
+    float x = a.cx - b.cx;
+    float y = a.cy - b.cy;
+    float fDistance = sqrt(x * x + y * y);
+    if (fDistance <= fSumRadius)
+    {
+        return true;
+    }
+    return false;
+}

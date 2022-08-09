@@ -14,6 +14,18 @@ struct TVector2D
     float x;
     float y;
 };
+struct TCircle
+{
+    float cx;
+    float cy;
+    float fRadius;
+    TCircle() {};
+    TCircle(float x, float y, float r) {
+        cx = x;
+        cy = y;
+        fRadius = r;
+    };
+};
 struct Rect
 {
     float  x1;
@@ -56,7 +68,7 @@ struct TRect : Rect
         this->h = w;
         x2 = x + w;
         y2 = y + h;
-        cx = (x + x2) / 2.0f;
+        cx = (x + x1) / 2.0f;
         cy = (y + y2) / 2.0f;
     }
 };
@@ -66,4 +78,5 @@ class TCollision
 public:
     static TCollisionType   RectToRect(TRect& a, TRect& b);
     static bool             RectToInRect(TRect& a, TRect& b);
+    static bool             CircleToCircle(TCircle& a, TCircle& b);
 };
