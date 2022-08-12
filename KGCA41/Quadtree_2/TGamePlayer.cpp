@@ -32,7 +32,7 @@ void TGamePlayer::Frame(float fDeltaTime, float fGameTime)
     m_vVelocity += linearAcc;
     //벡터의 직전의 방정식
     //결과벡터 = 시작벡터 + 방향벡터* speed * t(거리 내지는 시간) 
-    vPos = vPos + m_vVelocity* m_fSpeed;
+    vPos = vPos + m_vVelocity;
     
     if (vPos.x > 100.0f)
     {

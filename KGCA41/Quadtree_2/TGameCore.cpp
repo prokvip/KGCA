@@ -82,7 +82,7 @@ bool TGameCore::Run()
         Render();
         Sleep(fDelay);
         system("cls");
-        fGameTimer += 0.1f;
+        fGameTimer += fDelay / 1000.0f;
     }
     Release();   
     return true;
