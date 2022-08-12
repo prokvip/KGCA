@@ -34,12 +34,22 @@ void TGamePlayer::Frame(float fDeltaTime, float fGameTime)
     //결과벡터 = 시작벡터 + 방향벡터* speed * t(거리 내지는 시간) 
     vPos = vPos + m_vVelocity;
     
+    if (m_vForces.Length() == 0.0f)
+    {
+        m_vVelocity *= m_fFriction;
+        m_fFriction -= fDeltaTime;
+        if (0 >= m_fFriction)
+        {
+            m_fFriction = 0.0f;
+        }
+    }
     if (vPos.x > 100.0f)
     {
         vPos.x = 100.0f;
         m_vForces = TVector2D(0, 0);
         m_vVelocity = TVector2D(0, 0);
         m_vDirection *= -1.0f;
+        m_fFriction = 1.0f;
     }
     if (vPos.x < 0.0f)
     {
@@ -47,12 +57,14 @@ void TGamePlayer::Frame(float fDeltaTime, float fGameTime)
         m_vForces = TVector2D(0, 0);
         m_vVelocity = TVector2D(0, 0);
         m_vDirection.x = 1.0f;
+        m_fFriction = 1.0f;
     }
     if (vPos.y > 100.0f)
     {
         vPos.y = 100.0f;
         m_vForces = TVector2D(0, 0);
         m_vDirection.y = -1.0f;
+        m_fFriction = 1.0f;
     }
     if (vPos.y < 0.0f)
     {
@@ -60,6 +72,7 @@ void TGamePlayer::Frame(float fDeltaTime, float fGameTime)
         m_vForces = TVector2D(0, 0);
         m_vVelocity = TVector2D(0, 0);
         m_vDirection.y = 1.0f;
+        m_fFriction = 1.0f;
     }
 
     m_vDirection.Normalized();

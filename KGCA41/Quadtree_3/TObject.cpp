@@ -29,7 +29,7 @@ TObject::TObject()
     m_vDirection.x = cos(rand());
     m_vDirection.y = sin(rand());
     m_vDirection.Normalized();
-    m_vFriction = TVector2D(10,10);
+    m_fFriction = 0.0f;
     m_fMass = 100.0f;
     m_fSpeed = 10.0f;    
 }

@@ -11,7 +11,7 @@ public:
     TVector2D   m_vAcceleration;
     TVector2D   m_vVelocity;
     TVector2D   m_vForces;
-    TVector2D   m_vFriction;
+    float       m_fFriction;
     float       m_fMass;    
     float       m_fSpeed;
 public:
