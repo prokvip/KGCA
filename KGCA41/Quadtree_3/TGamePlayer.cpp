@@ -34,14 +34,16 @@ void TGamePlayer::Frame(float fDeltaTime, float fGameTime)
     //결과벡터 = 시작벡터 + 방향벡터* speed * t(거리 내지는 시간) 
     vPos = vPos + m_vVelocity;
     
-    if (m_vForces.Length() == 0.0f)
-    {
-        m_vVelocity *= m_fFriction;
-        m_fFriction -= fDeltaTime;
+    if (m_vForces.Length() == 0.0f && 
+        m_vVelocity.Length() > 0.0f)
+    {        
+        m_fFriction -= fDeltaTime;        
         if (0 >= m_fFriction)
-        {
-            m_fFriction = 0.0f;
+        {               
+            m_vVelocity = { 0,0 };
+            m_fFriction = 1.0f;
         }
+        m_vVelocity *= m_fFriction;
     }
     if (vPos.x > 100.0f)
     {
