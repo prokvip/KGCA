@@ -41,6 +41,7 @@ bool TGameCore::Frame(float fDeltaTime, float fGameTime)
     return false;
 }
 
+
 bool TGameCore::Render()
 {
     std::cout << "player:"
