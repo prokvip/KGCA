@@ -1,6 +1,6 @@
 #include "TQuadtree.h"
 
-std::queue<TNode*> g_Queue;
+
 void   TQuadtree::DynamicObjectReset(TNode* pNode)
 {
     if (pNode == nullptr) return;
@@ -72,6 +72,7 @@ void    TQuadtree::AddDynamicObject(TObject* pObj)
 }
 TNode* TQuadtree::FindNode(TNode* pNode, TObject* pObj)
 {
+    std::queue<TNode*> g_Queue;
     do {
         for (int iNode = 0; iNode < 4; iNode++)
         {

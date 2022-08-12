@@ -143,14 +143,22 @@
   <ItemGroup>
     <ClCompile Include="Quadtree_2.cpp" />
     <ClCompile Include="TCollision.cpp" />
+    <ClCompile Include="TGameCore.cpp" />
+    <ClCompile Include="TGamePlayer.cpp" />
+    <ClCompile Include="TMapObject.cpp" />
     <ClCompile Include="TNode.cpp" />
+    <ClCompile Include="TNonCharacter.cpp" />
     <ClCompile Include="TObject.cpp" />
     <ClCompile Include="TQuadtree.cpp" />
     <ClCompile Include="TVector.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TCollision.h" />
+    <ClInclude Include="TGameCore.h" />
+    <ClInclude Include="TGamePlayer.h" />
+    <ClInclude Include="TMapObject.h" />
     <ClInclude Include="TNode.h" />
+    <ClInclude Include="TNonCharacter.h" />
     <ClInclude Include="TObject.h" />
     <ClInclude Include="TQuadtree.h" />
     <ClInclude Include="TVector.h" />

@@ -20,39 +20,9 @@ public:
         m_rt.Set(x, y, w, h);
         SetCircle(m_rt.cx, m_rt.cy, m_rt.w, m_rt.h);
     }
-    void   Frame()
-    {
-        TVector2D vPos(m_rt.x1, m_rt.y1);
-        // 벡터의 직전의 방정식
-       //  결과벡터 = 시작벡터 + 방향벡터* t(거리 내지는 시간) 
-
-        TVector2D vTmp = m_vDirection * 1.0f;
-        vPos = vPos + vTmp;
-        m_rt.x1 = vPos.x;
-        m_rt.y1 = vPos.y;
-
-        if (vPos.x > 100.0f)
-        {
-            m_rt.x1 = 100.0f;
-            m_vDirection.x *= -1.0f;
-        }
-        if (vPos.x < 0.0f)
-        {
-            m_rt.x1 = 0.0f;
-            m_vDirection.x *= -1.0f;
-        }
-        if (vPos.y > 100.0f)
-        {
-            m_rt.y1 = 100.0f;
-            m_vDirection.y *= -1.0f;
-        }
-        if (vPos.y < 0.0f)
-        {
-            m_rt.y1 = 0.0f;
-            m_vDirection.y *= -1.0f;
-        }
-        SetPosition(m_rt.x1, m_rt.y1, 30, 30);
-    }
+public:
+    virtual void   Frame() {};
+public:
     TObject()
     {
         m_rt.Set(20 + (rand() % 80),
