@@ -78,8 +78,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>../../output/Debug/Quadtree_2</OutDir>
-    <IntDir>../../output/Debug/Quadtree_2</IntDir>
+    <OutDir>../../output/Debug/Quadtree_3</OutDir>
+    <IntDir>../../output/Debug/Quadtree_3</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
