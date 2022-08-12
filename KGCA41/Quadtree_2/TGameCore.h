@@ -13,7 +13,7 @@ public:
     std::vector<TObject*>   DrawList;
 public:
     bool    Init();     // 초기화	
-    bool    Frame();    // 실시간 계산
+    bool    Frame(float fDeltaTime, float fGameTime);    // 실시간 계산
     bool    Render();   // 화면에 드로우
     bool    Release();  // 소멸하자
     bool	Run();      // 실행하자

@@ -7,7 +7,7 @@
    //0,100          50,100       100,100 
 bool TGameCore::Init()
 {
-    player.SetPosition(0, 100, 10, 10);
+    player.SetPosition(50, 50, 10, 10);
     quadtree.Create(100.0f, 100.0f);
     for (int iObj = 0; iObj < 10; iObj++)
     {
@@ -25,16 +25,16 @@ bool TGameCore::Init()
     return false;
 }
 
-bool TGameCore::Frame()
+bool TGameCore::Frame(float fDeltaTime, float fGameTime)
 {
     quadtree.DynamicObjectReset(quadtree.m_pRootNode);
     for (auto obj : npcList)
     {
         TObject* pObject = obj.second;
-        pObject->Frame();
+        pObject->Frame(fDeltaTime, fGameTime);
         quadtree.AddDynamicObject(pObject);
     }
-    player.Frame();
+    player.Frame(fDeltaTime, fGameTime);
 
     DrawList = quadtree.Collision(&player);
     
@@ -75,11 +75,12 @@ bool TGameCore::Run()
 {
     Init();
     float  fGameTimer = 0.0f;
-    while (fGameTimer < 10.0f)
+    float  fDelay = 10;
+    while (fGameTimer < 60.0f)
     {
-        Frame();
+        Frame(fDelay/1000.0f, fGameTimer);
         Render();
-        Sleep(100);
+        Sleep(fDelay);
         system("cls");
         fGameTimer += 0.1f;
     }

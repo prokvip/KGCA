@@ -3,6 +3,6 @@
 class TGamePlayer :  public TObject
 {
 public:
-	void	Frame() override;
+	void	Frame(float fDeltaTime, float fGameTime) override;
 };
 

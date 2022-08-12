@@ -1,4 +1,5 @@
 #pragma once
+#include <windows.h>
 #include <iostream>
 #include <math.h>
 #define T_PI 3.141592f
@@ -27,7 +28,10 @@ public:
 	TVector2D operator + (TVector2D& v);
 	TVector2D operator - (TVector2D& v);
 	TVector2D operator * (float scala);
+	TVector2D operator / (float scala);
 	TVector2D operator *= (float scala);
+	TVector2D operator += (TVector2D& v);
+	TVector2D operator -= (TVector2D& v);
 	bool      operator == (TVector2D& v);
 public:
 	float     LengthSquared();

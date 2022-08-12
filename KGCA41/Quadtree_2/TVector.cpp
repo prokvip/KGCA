@@ -25,10 +25,26 @@ TVector2D TVector2D::operator * (float scala)
 {
 	return TVector2D(x *scala, y * scala);
 }
+TVector2D TVector2D::operator / (float scala)
+{
+	return TVector2D(x / scala, y / scala);
+}
 TVector2D TVector2D::operator *= (float scala)
 {
 	x *= scala;
 	y *= scala;
+	return *this;
+}
+TVector2D TVector2D::operator += (TVector2D& v)
+{
+	x += v.x;
+	y += v.y;
+	return *this;
+}
+TVector2D TVector2D::operator -= (TVector2D& v)
+{
+	x -= v.x;
+	y -= v.y;
 	return *this;
 }
 bool      TVector2D::operator == (TVector2D& v)
