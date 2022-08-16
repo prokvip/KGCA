@@ -58,7 +58,28 @@ bool      TVector2D::operator == (TVector2D& v)
 	}
 	return false;
 }
-
+bool      TVector2D::operator <= (TVector2D& b)
+{
+	if (x <= b.x)
+	{
+		if (y <= b.y)
+		{
+			return true;
+		}
+	}
+	return false;
+}
+bool      TVector2D::operator >= (TVector2D& b)
+{
+	if (x >= b.x)
+	{
+		if (y >= b.y)
+		{
+			return true;			
+		}
+	}
+	return false;
+}
 float TVector2D::LengthSquared()
 {
 	return (x*x + y*y);
@@ -147,6 +168,34 @@ TVector TVector::operator -= (TVector& v)
 	y -= v.y;
 	z -= v.z;
 	return *this;
+}
+bool      TVector::operator <= (TVector& b)
+{
+	if (x <= b.x)
+	{		
+		if (y <= b.y)
+		{				
+			if (z <= b.z)
+			{						
+				return true;						
+			}
+		}		
+	}
+	return false;
+}
+bool      TVector::operator >= (TVector& b)
+{
+	if (x >= b.x)
+	{
+		if (y >= b.y)
+		{
+			if (z >= b.z)
+			{
+				return true;
+			}
+		}
+	}
+	return false;
 }
 bool      TVector::operator == (TVector& v)
 {

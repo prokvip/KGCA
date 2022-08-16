@@ -145,6 +145,7 @@
     <ClCompile Include="TCollision.cpp" />
     <ClCompile Include="TGameCore.cpp" />
     <ClCompile Include="TNode.cpp" />
+    <ClCompile Include="TObject.cpp" />
     <ClCompile Include="TOctree.cpp" />
     <ClCompile Include="TSpacePartition.cpp" />
     <ClCompile Include="TVector.cpp" />
@@ -153,6 +154,7 @@
     <ClInclude Include="TCollision.h" />
     <ClInclude Include="TGameCore.h" />
     <ClInclude Include="TNode.h" />
+    <ClInclude Include="TObject.h" />
     <ClInclude Include="TOctree.h" />
     <ClInclude Include="TSpacePartition.h" />
     <ClInclude Include="TVector.h" />

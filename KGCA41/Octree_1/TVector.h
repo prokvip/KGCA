@@ -44,6 +44,8 @@ public:
 	TVector2D operator += (TVector2D& v);
 	TVector2D operator -= (TVector2D& v);
 	bool      operator == (TVector2D& v);
+	bool      operator <= (TVector2D& v);
+	bool      operator >= (TVector2D& v);
 public:
 	float     LengthSquared();
 	float     Length();
@@ -67,6 +69,8 @@ public:
 	TVector operator += (TVector& v);
 	TVector operator -= (TVector& v);
 	bool      operator == (TVector& v);
+	bool      operator <= (TVector& v);
+	bool      operator >= (TVector& v);
 public:
 	float     LengthSquared();
 	float     Length();

@@ -4,22 +4,22 @@
 #include <queue>
 #include <iostream>
 #include "TCollision.h"
-//#include "TObject2D.h"
+#include "TObject.h"
 class TNode
 {
 public:
     TBox   m_Box;
     int    m_iDepth;
-    //std::vector<TObject2D*>  m_ObjectStaticList;
-    //std::vector<TObject2D*>  m_ObjectDynamicList;
+    std::vector<TObject*>  m_ObjectStaticList;
+    std::vector<TObject*>  m_ObjectDynamicList;
     std::vector<TNode*>    m_pChild;    
     TNode* m_pParent;
 public:
     TNode(TNode* pParent, 
-        float x, float y, float z,
-        float w, float h, float d)
+          TVector vPos,
+          TVector vSize)
     {
-        m_Box.Set(x, y, z, w, h, d);
+        m_Box.Set(vPos, vSize);
         m_iDepth = 0;
         m_pParent = nullptr;
         if (pParent != nullptr)

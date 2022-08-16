@@ -1,6 +1,6 @@
 #pragma once
 #include "TNode.h"
-//#include "TObject.h"
+#include "TObject.h"
 
 class TSpacePartition
 {
@@ -9,21 +9,16 @@ public:
 public:
 	//virtual std::vector<TObject*> Collision(TObject* pObj)
 	//{
-	//	std::vector<TObject2D*> ret;
+	//	std::vector<TObject*> ret;
 	//	return ret;
 	//}
-	virtual void    Create( float fWidth, 
-							float fHeight,
-							float fDepth)
-	{
-		return;
-	}
-//public:
-//	virtual void    AddStaticObject(TObject* pObj);
-//	virtual void    AddDynamicObject(TObject* pObj);
-//	virtual void    DynamicObjectReset(TNode* pNode);
-//	virtual TNode*  FindNode(TNode* pNode, TObject2D* pObj);
-//	virtual bool    IsNodeInObject(TNode* pNode, TObject2D* pObj);
+	virtual void    Create(TVector vPos, TVector vSize);
+public:
+	virtual void    AddStaticObject(TObject* pObj);
+	virtual void    AddDynamicObject(TObject* pObj);
+	virtual void    DynamicObjectReset(TNode* pNode);
+	virtual TNode*  FindNode(TNode* pNode, TObject* pObj);
+	virtual bool    IsNodeInObject(TNode* pNode, TObject* pObj);
 public:
 	TSpacePartition();
 	virtual ~TSpacePartition();

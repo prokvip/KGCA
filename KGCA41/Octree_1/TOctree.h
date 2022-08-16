@@ -1,12 +1,13 @@
 #pragma once
 #include "TSpacePartition.h"
+
+static const int g_iMaxOctreeChild = 8;
 class TOctree :  public TSpacePartition
 {
 public:
-	void    Create(float fWidth,float fHeight,float fDepth) override;
-	TNode*	CreateNode(TNode* pParent,
-						float x, float y, float z,
-						float w, float h, float d);
+	void    Create(TVector vPos, TVector vSize) override;
+	TNode*	CreateNode(TNode* pParent,TVector vPos,TVector vSize);
 	void	Buildtree(TNode* pNode);
+	bool    IsNodeInObject(TNode* pNode, TObject* pObj);
 };
 

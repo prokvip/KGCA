@@ -9,9 +9,9 @@ class TGameCore
 public:
     //TGamePlayer2D           m_Player2D;   
     TSpacePartition*        m_pWorldSP;
-    //std::map<int, TObject2D*> m_npcList;
-    //std::map<int, TObject2D*> m_AllObjectList;
-    //std::vector<TObject2D*>   m_DrawList;
+    std::map<int, TObject*> m_npcList;
+    std::map<int, TObject*> m_AllObjectList;
+    std::vector<TObject*>   m_DrawList;
 public:
     bool    Init();     // 초기화	
     bool    Frame(float fDeltaTime, float fGameTime);    // 실시간 계산

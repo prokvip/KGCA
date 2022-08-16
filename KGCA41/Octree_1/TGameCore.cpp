@@ -7,20 +7,20 @@
    //0,100          50,100       100,100 
 bool TGameCore::Init()
 {    
-   /* for (int iObj = 0; iObj < 10; iObj++)
+    for (int iObj = 0; iObj < 10; iObj++)
     {
-        TObject2D* pObj = new TMapObject2D;
+        TObject* pObj = new TObject;
         m_AllObjectList.insert(std::make_pair(iObj, pObj));
         m_pWorldSP->AddStaticObject(pObj);
     }
     for (int iObj = 0; iObj < 10; iObj++)
     {
-        TObject2D* pObj = new TNonCharacter2D;
+        TObject* pObj = new TObject;
         m_npcList.insert(std::make_pair(iObj, pObj));
         m_AllObjectList.insert(std::make_pair(iObj, pObj));
         m_pWorldSP->AddDynamicObject(pObj);
-    }*/
-    return false;
+    }
+    return true;
 }
 
 bool TGameCore::Frame(float fDeltaTime, float fGameTime)
@@ -28,7 +28,7 @@ bool TGameCore::Frame(float fDeltaTime, float fGameTime)
    /* m_pWorldSP->DynamicObjectReset(m_pWorldSP->m_pRootNode);
     for (auto obj : m_npcList)
     {
-        TObject2D* pObject = obj.second;
+        TObject* pObject = obj.second;
         pObject->Frame(fDeltaTime, fGameTime);
         m_pWorldSP->AddDynamicObject(pObject);
     }
@@ -42,16 +42,16 @@ bool TGameCore::Frame(float fDeltaTime, float fGameTime)
 bool TGameCore::Render()
 {
     /*std::cout << "m_Player2D:"
-        << m_Player2D.m_rt.x1 << "," << m_Player2D.m_rt.y1 << ","
-        << m_Player2D.m_rt.x2 << "," << m_Player2D.m_rt.y2
+        << m_Player2D.m_Box.x1 << "," << m_Player2D.m_Box.y1 << ","
+        << m_Player2D.m_Box.x2 << "," << m_Player2D.m_Box.y2
         << std::endl;
     if (!m_DrawList.empty())
     {
         for (int iObj = 0; iObj < m_DrawList.size(); iObj++)
         {
             std::cout << "object:"
-                << m_DrawList[iObj]->m_rt.x1 << "," << m_DrawList[iObj]->m_rt.y1 << ","
-                << m_DrawList[iObj]->m_rt.x2 << "," << m_DrawList[iObj]->m_rt.y2
+                << m_DrawList[iObj]->m_Box.x1 << "," << m_DrawList[iObj]->m_Box.y1 << ","
+                << m_DrawList[iObj]->m_Box.x2 << "," << m_DrawList[iObj]->m_Box.y2
                 << std::endl;
         }
     }*/
