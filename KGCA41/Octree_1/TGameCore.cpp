@@ -60,12 +60,12 @@ bool TGameCore::Render()
 
 bool TGameCore::Release()
 {
-  /*  for (auto object : m_AllObjectList)
+    for (auto object : m_AllObjectList)
     {
         delete object.second;
     }
     m_AllObjectList.clear();
-    m_npcList.clear();*/
+    m_npcList.clear();
     return false;
 }
 
