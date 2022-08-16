@@ -6,9 +6,8 @@
    //     2                  3 
    //0,100          50,100       100,100 
 bool TGameCore::Init()
-{
-    
-    for (int iObj = 0; iObj < 10; iObj++)
+{    
+   /* for (int iObj = 0; iObj < 10; iObj++)
     {
         TObject2D* pObj = new TMapObject2D;
         m_AllObjectList.insert(std::make_pair(iObj, pObj));
@@ -20,13 +19,13 @@ bool TGameCore::Init()
         m_npcList.insert(std::make_pair(iObj, pObj));
         m_AllObjectList.insert(std::make_pair(iObj, pObj));
         m_pWorldSP->AddDynamicObject(pObj);
-    }
+    }*/
     return false;
 }
 
 bool TGameCore::Frame(float fDeltaTime, float fGameTime)
 {
-    m_pWorldSP->DynamicObjectReset(m_pWorldSP->m_pRootNode);
+   /* m_pWorldSP->DynamicObjectReset(m_pWorldSP->m_pRootNode);
     for (auto obj : m_npcList)
     {
         TObject2D* pObject = obj.second;
@@ -35,14 +34,14 @@ bool TGameCore::Frame(float fDeltaTime, float fGameTime)
     }
     m_Player2D.Frame(fDeltaTime, fGameTime);
 
-    m_DrawList = m_pWorldSP->Collision(&m_Player2D);
+    m_DrawList = m_pWorldSP->Collision(&m_Player2D);*/
     
     return false;
 }
 
 bool TGameCore::Render()
 {
-    std::cout << "m_Player2D:"
+    /*std::cout << "m_Player2D:"
         << m_Player2D.m_rt.x1 << "," << m_Player2D.m_rt.y1 << ","
         << m_Player2D.m_rt.x2 << "," << m_Player2D.m_rt.y2
         << std::endl;
@@ -55,18 +54,18 @@ bool TGameCore::Render()
                 << m_DrawList[iObj]->m_rt.x2 << "," << m_DrawList[iObj]->m_rt.y2
                 << std::endl;
         }
-    }
+    }*/
     return false;
 }
 
 bool TGameCore::Release()
 {
-    for (auto object : m_AllObjectList)
+  /*  for (auto object : m_AllObjectList)
     {
         delete object.second;
     }
     m_AllObjectList.clear();
-    m_npcList.clear();
+    m_npcList.clear();*/
     return false;
 }
 
@@ -75,7 +74,7 @@ bool TGameCore::Run()
     Init();
     float  fGameTimer = 0.0f;
     float  fDelay = 10;
-    while (fGameTimer < 60.0f)
+    while (fGameTimer < 10.0f)
     {
         Frame(fDelay/1000.0f, fGameTimer);
         Render();
