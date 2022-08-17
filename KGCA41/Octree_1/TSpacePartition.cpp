@@ -27,10 +27,7 @@ void    TSpacePartition::AddDynamicObject(TObject* pObj)
         pFindNode->m_ObjectDynamicList.push_back(pObj);
     }
 }
-bool   TSpacePartition::IsNodeInObject(TNode* pNode, TObject* pObj)
-{
-    return true;
-}
+
 TNode* TSpacePartition::FindNode(TNode* pNode, TObject* pObj)
 {
     std::queue<TNode*> g_Queue;
@@ -52,6 +49,54 @@ TNode* TSpacePartition::FindNode(TNode* pNode, TObject* pObj)
         g_Queue.pop();
     } while (pNode);
     return pNode;
+}
+std::vector<TObject*> TSpacePartition::CollisionQuery(TObject* pObj)
+{
+    std::vector<TObject*> list;
+    GetCollisitionObject(this->m_pRootNode, pObj, list);
+    return list;
+};
+void  TSpacePartition::GetCollisitionObject(TNode* pNode,
+    TObject* pSrcObject,
+    std::vector<TObject*>& list)
+{
+    if (pNode == nullptr) return;
+    for (int iObj = 0; iObj < pNode->m_ObjectStaticList.size(); iObj++)
+    {
+        if (IsCollision( pNode->m_ObjectStaticList[iObj],pSrcObject))
+        {
+            list.push_back(pNode->m_ObjectStaticList[iObj]);
+        }       
+    }
+    for (int iObj = 0; iObj < pNode->m_ObjectDynamicList.size(); iObj++)
+    {
+        if (IsCollision(pNode->m_ObjectDynamicList[iObj],pSrcObject))
+        {
+            list.push_back(pNode->m_ObjectDynamicList[iObj]);
+        }        
+    }
+    if (pNode->m_pChild[0] != nullptr)
+    {
+        for (int iChild = 0; iChild < pNode->m_pChild.size(); iChild++)
+        {
+            if (IsCollision(pNode->m_pChild[iChild],pSrcObject))
+            {
+                GetCollisitionObject(pNode->m_pChild[iChild], pSrcObject, list);
+            }          
+        }
+    }
+}
+bool   TSpacePartition::IsNodeInObject(TNode* pNode, TObject* pObj)
+{
+    return true;
+}
+bool   TSpacePartition::IsCollision(TObject* pDest, TObject* pSrc)
+{
+    return true;
+}
+bool   TSpacePartition::IsCollision(TNode* pNode, TObject* pSrc)
+{
+    return true;
 }
 TSpacePartition::TSpacePartition()
 {

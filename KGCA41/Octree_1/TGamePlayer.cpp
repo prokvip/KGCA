@@ -2,8 +2,8 @@
 
 void TGamePlayer::Frame(float fDeltaTime, float fGameTime)
 {    
-    m_fSpeed = 10.0f;
-    m_fMass = 100.0f;
+    m_fSpeed = 30.0f;
+    m_fMass = 10.0f;
     TVector vPos = m_Box.vMin;
     TVector vSize = m_Box.vSize;
     // 벡터의 직전의 방정식
@@ -29,7 +29,7 @@ void TGamePlayer::Frame(float fDeltaTime, float fGameTime)
     AddForces(vKeyForce);
 
     m_vAcceleration = m_vForces / m_fMass;
-    TVector linearAcc = m_vAcceleration *fDeltaTime;
+    TVector linearAcc = m_vAcceleration;
     m_vVelocity += linearAcc;
     //벡터의 직전의 방정식
     //결과벡터 = 시작벡터 + 방향벡터* speed * t(거리 내지는 시간) 
@@ -77,7 +77,21 @@ void TGamePlayer::Frame(float fDeltaTime, float fGameTime)
         m_vDirection.y = 1.0f;
         m_fFriction = 1.0f;
     }
-
+    if (vPos.z > 100.0f)
+    {
+        vPos.z = 100.0f;
+        m_vForces = TVector(0, 0, 0);
+        m_fFriction = 1.0f;
+        m_vDirection.z *= -1.0f;
+    }
+    if (vPos.z < 0.0f)
+    {
+        vPos.z = 0.0f;
+        m_vForces = TVector(0, 0, 0);
+        m_vVelocity = TVector(0, 0, 0);
+        m_fFriction = 1.0f;
+        m_vDirection.z *= -1.0f;
+    }
     m_vDirection.Normalized();
     SetPosition(vPos, vSize);
 }

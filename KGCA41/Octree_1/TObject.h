@@ -1,9 +1,10 @@
 #pragma once
 #include "TCollision.h"
-
+#include <string>
 class TObject
 {
 public:
+    std::string  m_csName;
     TVector    m_vDirection;
     TBox       m_Box;
     TSphere    m_Sphere;
@@ -19,8 +20,10 @@ public:
     void   SetSphere(TBox box);
     void   SetPosition(TVector p, TVector s);
 public:
+    virtual void   Init();
     virtual void   Frame(float fDeltaTime, float fGameTime);
     virtual void   AddForces(TVector f);
 public:
     TObject();
+    TObject(std::string name);
 };

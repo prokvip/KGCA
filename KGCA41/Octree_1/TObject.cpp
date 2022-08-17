@@ -22,7 +22,7 @@ void   TObject::SetPosition(TVector vPos, TVector vSize)
 
 void   TObject::Frame(float fDeltaTime, float fGameTime) {};
 
-TObject::TObject()
+void   TObject::Init()
 {
     TVector vPos, vSize;
     vPos.x = 20 + (rand() % 80);
@@ -39,5 +39,14 @@ TObject::TObject()
     m_vDirection.Normalized();
     m_fFriction = 0.0f;
     m_fMass = 100.0f;
-    m_fSpeed = 10.0f;    
+    m_fSpeed = 10.0f;
+}
+TObject::TObject()
+{
+    Init();
+}
+TObject::TObject(std::string name)
+{
+    Init();
+    m_csName = name;
 }

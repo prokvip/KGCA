@@ -1,13 +1,13 @@
 #pragma once
 //#include "TQuadtree.h"
 #include "TOctree.h"
-//#include "TGamePlayer2D.h"
+#include "TGamePlayer.h"
 //#include "TMapObject2d.h"
 #include "TEnemy.h"
 class TGameCore
 {
 public:
-    //TGamePlayer2D           m_Player2D;   
+    TGamePlayer             m_Player;   
     TSpacePartition*        m_pWorldSP;
     std::map<int, TObject*> m_npcList;
     std::map<int, TObject*> m_AllObjectList;

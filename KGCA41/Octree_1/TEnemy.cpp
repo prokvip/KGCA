@@ -40,5 +40,15 @@ void TEnemy::Frame(float fDeltaTime, float fGameTime)
         vPos.y = 0.0f;
         m_vDirection.y *= -1.0f;
     }
+    if (vPos.z > 100.0f)
+    {
+        vPos.z = 100.0f;
+        m_vDirection.z *= -1.0f;
+    }
+    if (vPos.z < 0.0f)
+    {
+        vPos.z = 0.0f;
+        m_vDirection.z *= -1.0f;
+    }
     SetPosition(vPos, vSize);
 }

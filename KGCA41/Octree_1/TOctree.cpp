@@ -56,3 +56,22 @@ bool   TOctree::IsNodeInObject(TNode* pNode, TObject* pObj)
 {
     return TCollision::BoxToInBox( pNode->m_Box,pObj->m_Box);
 }
+bool   TOctree::IsCollision(TObject* pDest, TObject* pSrc)
+{
+    if (TCollision::SphereToSphere(pDest->m_Sphere,pSrc->m_Sphere))
+    {
+        if (TCollision::BoxToBox(pDest->m_Box,pSrc->m_Box))
+        {
+            return true;
+        }
+    }
+    return false;
+}
+bool   TOctree::IsCollision(TNode* pNode, TObject* pSrc)
+{
+    if (TCollision::BoxToBox(pNode->m_Box,pSrc->m_Box))
+    {
+        return true;
+    }
+    return false;
+}

@@ -9,13 +9,18 @@ bool TGameCore::Init()
 {    
     for (int iObj = 0; iObj < 10; iObj++)
     {
-        TObject* pObj = new TObject;
+        std::string name = std::to_string(iObj);
+        name += " Static";
+        TObject* pObj = new TObject(name);
         m_AllObjectList.insert(std::make_pair(iObj, pObj));
         m_pWorldSP->AddStaticObject(pObj);
     }
     for (int iObj = 0; iObj < 10; iObj++)
     {
+        std::string name = std::to_string(iObj);
+        name += " Dynamic";
         TObject* pObj = new TEnemy;
+        pObj->m_csName = name;
         m_npcList.insert(std::make_pair(iObj, pObj));
         m_AllObjectList.insert(std::make_pair(10+iObj, pObj));
         m_pWorldSP->AddDynamicObject(pObj);
@@ -32,27 +37,26 @@ bool TGameCore::Frame(float fDeltaTime, float fGameTime)
         pObject->Frame(fDeltaTime, fGameTime);
         m_pWorldSP->AddDynamicObject(pObject);
     }
-    //m_Player2D.Frame(fDeltaTime, fGameTime);
-    //m_DrawList = m_pWorldSP->Collision(&m_Player2D);    
+    m_Player.Frame(fDeltaTime, fGameTime);
+    m_DrawList = m_pWorldSP->CollisionQuery(&m_Player);
     return false;
 }
 
 bool TGameCore::Render()
 {
-    /*std::cout << "m_Player2D:"
-        << m_Player2D.m_Box.x1 << "," << m_Player2D.m_Box.y1 << ","
-        << m_Player2D.m_Box.x2 << "," << m_Player2D.m_Box.y2
-        << std::endl;
+    std::cout << "m_Player:"
+        << m_Player.m_Box.vMin.x << "," << m_Player.m_Box.vMin.y << ","
+        << m_Player.m_Box.vMin.z << std::endl;
     if (!m_DrawList.empty())
     {
         for (int iObj = 0; iObj < m_DrawList.size(); iObj++)
         {
-            std::cout << "object:"
-                << m_DrawList[iObj]->m_Box.x1 << "," << m_DrawList[iObj]->m_Box.y1 << ","
-                << m_DrawList[iObj]->m_Box.x2 << "," << m_DrawList[iObj]->m_Box.y2
-                << std::endl;
+            std::cout << m_DrawList[iObj]->m_csName << ","
+                << m_DrawList[iObj]->m_Box.vMin.x << "," 
+                << m_DrawList[iObj]->m_Box.vMin.y << ","
+                << m_DrawList[iObj]->m_Box.vMin.z << std::endl;
         }
-    }*/
+    }
     return false;
 }
 
