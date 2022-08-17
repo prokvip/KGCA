@@ -143,7 +143,9 @@
   <ItemGroup>
     <ClCompile Include="Sample.cpp" />
     <ClCompile Include="TCollision.cpp" />
+    <ClCompile Include="TEnemy.cpp" />
     <ClCompile Include="TGameCore.cpp" />
+    <ClCompile Include="TGamePlayer.cpp" />
     <ClCompile Include="TNode.cpp" />
     <ClCompile Include="TObject.cpp" />
     <ClCompile Include="TOctree.cpp" />
@@ -152,7 +154,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TCollision.h" />
+    <ClInclude Include="TEnemy.h" />
     <ClInclude Include="TGameCore.h" />
+    <ClInclude Include="TGamePlayer.h" />
     <ClInclude Include="TNode.h" />
     <ClInclude Include="TObject.h" />
     <ClInclude Include="TOctree.h" />

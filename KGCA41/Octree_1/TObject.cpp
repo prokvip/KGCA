@@ -12,12 +12,11 @@ void   TObject::SetSphere(TBox box)
 {
     m_Sphere.vCenter = box.vCenter;    
     // v0  -vC-  v1
-    m_Sphere.fRadius = ((box.vMax + box.vMin) / 2.0f).Length();
-    //m_Sphere.fRadius = (box.vCenter - box.vMin).Length();
+    m_Sphere.fRadius = (box.vSize*0.5f).Length();    
 }
-void   TObject::SetPosition(TVector vCenter, TVector vSize)
+void   TObject::SetPosition(TVector vPos, TVector vSize)
 {
-    m_Box.Set(vCenter, vSize);
+    m_Box.Set(vPos, vSize);
     SetSphere(m_Box);
 }
 

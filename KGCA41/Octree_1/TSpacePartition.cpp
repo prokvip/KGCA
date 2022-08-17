@@ -1,8 +1,5 @@
 #include "TSpacePartition.h"
-void    TSpacePartition::Create(TVector vPos, TVector vSize)
-{
-	return;
-}
+
 void   TSpacePartition::DynamicObjectReset(TNode* pNode)
 {
     if (pNode == nullptr) return;
@@ -42,9 +39,7 @@ TNode* TSpacePartition::FindNode(TNode* pNode, TObject* pObj)
         {
             if (pNode->m_pChild[iNode] != nullptr)
             {
-                bool bIn = IsNodeInObject(
-                    pNode->m_pChild[iNode],
-                    pObj);
+                bool bIn = IsNodeInObject(pNode->m_pChild[iNode],pObj);
                 if (bIn > 0)
                 {
                     g_Queue.push(pNode->m_pChild[iNode]);

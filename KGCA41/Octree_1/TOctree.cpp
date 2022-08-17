@@ -54,6 +54,5 @@ void TOctree::Buildtree(TNode* pNode)
 
 bool   TOctree::IsNodeInObject(TNode* pNode, TObject* pObj)
 {
-    return TCollision::BoxToInBox( pNode->m_Box,
-                            pObj->m_Box);
+    return TCollision::BoxToInBox( pNode->m_Box,pObj->m_Box);
 }

@@ -3,7 +3,7 @@ TCollisionType   TCollision::BoxToBox(TBox& a, TBox& b)
 {
     return TCollisionType::RECT_OUT;
 }
-bool             TCollision::BoxToInBox(TBox& a, TBox& b)
+bool   TCollision::BoxToInBox(TBox& a, TBox& b)
 {
     //  |             |
     if (a.vMin <= b.vMin)

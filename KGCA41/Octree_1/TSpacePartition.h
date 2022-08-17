@@ -12,7 +12,7 @@ public:
 	//	std::vector<TObject*> ret;
 	//	return ret;
 	//}
-	virtual void    Create(TVector vPos, TVector vSize);
+	virtual void    Create(TVector vPos, TVector vSize)=0;
 public:
 	virtual void    AddStaticObject(TObject* pObj);
 	virtual void    AddDynamicObject(TObject* pObj);

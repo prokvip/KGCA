@@ -3,7 +3,7 @@
 #include "TOctree.h"
 //#include "TGamePlayer2D.h"
 //#include "TMapObject2d.h"
-//#include "TNonCharacter2d.h"
+#include "TEnemy.h"
 class TGameCore
 {
 public:

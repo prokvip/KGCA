@@ -171,25 +171,25 @@ TVector TVector::operator -= (TVector& v)
 }
 bool      TVector::operator <= (TVector& b)
 {
-	if (x <= b.x)
-	{		
-		if (y <= b.y)
-		{				
-			if (z <= b.z)
-			{						
-				return true;						
+	if (fabs(x - b.x) <= T_Epsilon)
+	{
+		if (fabs(y - b.y) <= T_Epsilon)
+		{
+			if (fabs(z - b.z) <= T_Epsilon)
+			{
+				return true;
 			}
-		}		
+		}
 	}
 	return false;
 }
 bool      TVector::operator >= (TVector& b)
 {
-	if (x >= b.x)
+	if (fabs(x - b.x) >= T_Epsilon)
 	{
-		if (y >= b.y)
+		if (fabs(y - b.y) >= T_Epsilon)
 		{
-			if (z >= b.z)
+			if (fabs(z - b.z) >= T_Epsilon)
 			{
 				return true;
 			}

@@ -15,9 +15,9 @@ bool TGameCore::Init()
     }
     for (int iObj = 0; iObj < 10; iObj++)
     {
-        TObject* pObj = new TObject;
+        TObject* pObj = new TEnemy;
         m_npcList.insert(std::make_pair(iObj, pObj));
-        m_AllObjectList.insert(std::make_pair(iObj, pObj));
+        m_AllObjectList.insert(std::make_pair(10+iObj, pObj));
         m_pWorldSP->AddDynamicObject(pObj);
     }
     return true;
@@ -25,17 +25,15 @@ bool TGameCore::Init()
 
 bool TGameCore::Frame(float fDeltaTime, float fGameTime)
 {
-   /* m_pWorldSP->DynamicObjectReset(m_pWorldSP->m_pRootNode);
+    m_pWorldSP->DynamicObjectReset(m_pWorldSP->m_pRootNode);
     for (auto obj : m_npcList)
     {
         TObject* pObject = obj.second;
         pObject->Frame(fDeltaTime, fGameTime);
         m_pWorldSP->AddDynamicObject(pObject);
     }
-    m_Player2D.Frame(fDeltaTime, fGameTime);
-
-    m_DrawList = m_pWorldSP->Collision(&m_Player2D);*/
-    
+    //m_Player2D.Frame(fDeltaTime, fGameTime);
+    //m_DrawList = m_pWorldSP->Collision(&m_Player2D);    
     return false;
 }
 
@@ -66,7 +64,7 @@ bool TGameCore::Release()
     }
     m_AllObjectList.clear();
     m_npcList.clear();
-    return false;
+    return true;
 }
 
 bool TGameCore::Run()
