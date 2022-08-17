@@ -1,5 +1,5 @@
 #pragma once
-//#include "TQuadtree.h"
+#include "TQuadtree.h"
 #include "TOctree.h"
 #include "TGamePlayer.h"
 //#include "TMapObject2d.h"
@@ -12,6 +12,10 @@ public:
     std::map<int, TObject*> m_npcList;
     std::map<int, TObject*> m_AllObjectList;
     std::vector<TObject*>   m_DrawList;
+
+    std::map<int, TObject2D*> m_npcList2D;
+    std::map<int, TObject2D*> m_AllObjectList2D;
+    std::vector<TObject2D*>   m_DrawList2D;
 public:
     bool    Init();     // 초기화	
     bool    Frame(float fDeltaTime, float fGameTime);    // 실시간 계산

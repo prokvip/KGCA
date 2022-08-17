@@ -149,6 +149,7 @@
     <ClCompile Include="TNode.cpp" />
     <ClCompile Include="TObject.cpp" />
     <ClCompile Include="TOctree.cpp" />
+    <ClCompile Include="TQuadtree.cpp" />
     <ClCompile Include="TSpacePartition.cpp" />
     <ClCompile Include="TVector.cpp" />
   </ItemGroup>
@@ -160,6 +161,7 @@
     <ClInclude Include="TNode.h" />
     <ClInclude Include="TObject.h" />
     <ClInclude Include="TOctree.h" />
+    <ClInclude Include="TQuadtree.h" />
     <ClInclude Include="TSpacePartition.h" />
     <ClInclude Include="TVector.h" />
   </ItemGroup>

@@ -6,7 +6,7 @@
    //     2                  3 
    //0,100          50,100       100,100 
 bool TGameCore::Init()
-{    
+{ 
     for (int iObj = 0; iObj < 10; iObj++)
     {
         std::string name = std::to_string(iObj);
@@ -30,7 +30,7 @@ bool TGameCore::Init()
 
 bool TGameCore::Frame(float fDeltaTime, float fGameTime)
 {
-    m_pWorldSP->DynamicObjectReset(m_pWorldSP->m_pRootNode);
+    m_pWorldSP->DynamicObjectReset();
     for (auto obj : m_npcList)
     {
         TObject* pObject = obj.second;

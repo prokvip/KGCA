@@ -5,7 +5,21 @@
 #include <iostream>
 #include "TCollision.h"
 #include "TObject.h"
-class TNode
+class TNode2D
+{
+public:
+    TRect   m_rt;
+    int     m_iDepth;
+    std::vector<TObject2D*>     m_ObjectStaticList2D;
+    std::vector<TObject2D*>     m_ObjectDynamicList2D;
+    std::vector<TNode2D*>       m_pChild2D;
+    TNode2D* m_pParent;
+public:
+    TNode2D();
+    TNode2D(TNode2D* pParent, TVector2D p, TVector2D s);
+    ~TNode2D();
+};
+class TNode : public TNode2D
 {
 public:
     TBox   m_Box;
@@ -15,24 +29,9 @@ public:
     std::vector<TNode*>    m_pChild;    
     TNode* m_pParent;
 public:
-    TNode(TNode* pParent, 
-          TVector vPos,
-          TVector vSize)
-    {
-        m_Box.Set(vPos, vSize);
-        m_iDepth = 0;
-        m_pParent = nullptr;
-        if (pParent != nullptr)
-        {
-            m_pParent = pParent;
-            m_iDepth = pParent->m_iDepth + 1;
-        }        
-    }
-    ~TNode()
-    {
-        for (int iChild = 0; iChild < m_pChild.size(); iChild++)
-        {
-            delete m_pChild[iChild];
-        }
-    }
+    TNode();
+    TNode(TNode* pParent,
+        TVector vPos,
+        TVector vSize);
+    ~TNode();
 };
