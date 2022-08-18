@@ -1,7 +1,7 @@
 #include "TOctree.h"
-std::vector<TObject*> TOctree::CollisionQuery(TObject* pObj)
+std::vector<TBaseObject*> TOctree::CollisionQuery(TBaseObject* pObj)
 {
-    std::vector<TObject*> list;
+    std::vector<TBaseObject*> list;
     GetCollisitionObject(m_pRootNode, pObj, list);
     return list;
 };
@@ -71,11 +71,11 @@ void TOctree::Buildtree(TNode* pNode)
     }
 }
 
-bool   TOctree::IsNodeInObject(TNode* pNode, TObject* pObj)
+bool   TOctree::IsNodeInObject(TNode* pNode, TBaseObject* pObj)
 {
     return TCollision::BoxToInBox( pNode->m_Box,pObj->m_Box);
 }
-bool   TOctree::IsCollision(TObject* pDest, TObject* pSrc)
+bool   TOctree::IsCollision(TBaseObject* pDest, TBaseObject* pSrc)
 {
     if (TCollision::SphereToSphere(pDest->m_Sphere,pSrc->m_Sphere))
     {
@@ -86,7 +86,7 @@ bool   TOctree::IsCollision(TObject* pDest, TObject* pSrc)
     }
     return false;
 }
-bool   TOctree::IsCollision(TNode* pNode, TObject* pSrc)
+bool   TOctree::IsCollision(TNode* pNode, TBaseObject* pSrc)
 {
     if (TCollision::BoxToBox(pNode->m_Box,pSrc->m_Box))
     {
@@ -95,7 +95,7 @@ bool   TOctree::IsCollision(TNode* pNode, TObject* pSrc)
     return false;
 }
 
-void    TOctree::AddStaticObject(TObject* pObj)
+void    TOctree::AddStaticObject(TBaseObject* pObj)
 {
     TNode* pFindNode = FindNode(m_pRootNode, pObj);
     if (pFindNode != nullptr)
@@ -103,7 +103,7 @@ void    TOctree::AddStaticObject(TObject* pObj)
         pFindNode->m_ObjectStaticList.push_back(pObj);
     }
 }
-void    TOctree::AddDynamicObject(TObject* pObj)
+void    TOctree::AddDynamicObject(TBaseObject* pObj)
 {
     TNode* pFindNode = FindNode(m_pRootNode, pObj);
     if (pFindNode != nullptr)
@@ -112,7 +112,7 @@ void    TOctree::AddDynamicObject(TObject* pObj)
     }
 }
 
-TNode* TOctree::FindNode(TNode* pNode, TObject* pObj)
+TNode* TOctree::FindNode(TNode* pNode, TBaseObject* pObj)
 {
     std::queue<TNode*> g_Queue;
     do {
@@ -135,8 +135,8 @@ TNode* TOctree::FindNode(TNode* pNode, TObject* pObj)
     return pNode;
 }
 void  TOctree::GetCollisitionObject(TNode* pNode,
-    TObject* pSrcObject,
-    std::vector<TObject*>& list)
+    TBaseObject* pSrcObject,
+    std::vector<TBaseObject*>& list)
 {
     if (pNode == nullptr) return;
     for (int iObj = 0; iObj < pNode->m_ObjectStaticList.size(); iObj++)

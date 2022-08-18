@@ -1,7 +1,23 @@
 #include "TObject.h"
+void   TObject2D::Init()
+{
+    }
 void        TObject2D::AddForces(TVector2D f)
 {
     m_vForces2D += f;
+}
+void   TObject2D::SetCircle(TVector2D c, TVector2D s)
+{
+    m_Circle.cx = c.x;
+    m_Circle.cy = c.y;
+    float x1 = s.x / 2.0f;
+    float y1 = s.y / 2.0f;
+    m_Circle.fRadius = sqrt(x1 * x1 + y1 * y1);
+}
+void   TObject2D::SetPosition(TVector2D p, TVector2D s)
+{
+    m_rt.Set(p.x, p.y, s.x, s.y);
+    SetCircle(m_rt.cx, m_rt.cy, m_rt.w, m_rt.h);
 }
 void   TObject2D::SetCircle(float x, float y, float w, float h)
 {

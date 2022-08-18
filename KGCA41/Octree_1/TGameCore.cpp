@@ -11,7 +11,11 @@ bool TGameCore::Init()
     {
         std::string name = std::to_string(iObj);
         name += " Static";
-        TObject* pObj = new TObject(name);
+#ifdef OCTREE
+        TBaseObject* pObj = new TObject(name);
+#else
+        TBaseObject* pObj = new TObject2D(name);
+#endif
         m_AllObjectList.insert(std::make_pair(iObj, pObj));
         m_pWorldSP->AddStaticObject(pObj);
     }
@@ -19,7 +23,11 @@ bool TGameCore::Init()
     {
         std::string name = std::to_string(iObj);
         name += " Dynamic";
-        TObject* pObj = new TEnemy;
+#ifdef OCTREE
+        TBaseObject* pObj = new TEnemy;
+#else
+        TBaseObject* pObj = new TEnemy2D;
+#endif       
         pObj->m_csName = name;
         m_npcList.insert(std::make_pair(iObj, pObj));
         m_AllObjectList.insert(std::make_pair(10+iObj, pObj));
@@ -33,18 +41,24 @@ bool TGameCore::Frame(float fDeltaTime, float fGameTime)
     m_pWorldSP->DynamicObjectReset();
     for (auto obj : m_npcList)
     {
-        TObject* pObject = obj.second;
+        TBaseObject* pObject = obj.second;
         pObject->Frame(fDeltaTime, fGameTime);
         m_pWorldSP->AddDynamicObject(pObject);
     }
+#ifdef OCTREE
     m_Player.Frame(fDeltaTime, fGameTime);
     m_DrawList = m_pWorldSP->CollisionQuery(&m_Player);
+#else
+    m_Player2D.Frame(fDeltaTime, fGameTime);
+    m_DrawList = m_pWorldSP->CollisionQuery(&m_Player2D);
+#endif
     return false;
 }
 
 bool TGameCore::Render()
 {
-    std::cout << "m_Player:"
+#ifdef OCTREE
+    std::cout << "Player3D:"
         << m_Player.m_Box.vMin.x << "," << m_Player.m_Box.vMin.y << ","
         << m_Player.m_Box.vMin.z << std::endl;
     if (!m_DrawList.empty())
@@ -57,6 +71,19 @@ bool TGameCore::Render()
                 << m_DrawList[iObj]->m_Box.vMin.z << std::endl;
         }
     }
+#else
+    std::cout << "Player2D:"
+        << m_Player2D.m_rt.x1 << "," << m_Player2D.m_rt.y1 << std::endl;
+    if (!m_DrawList.empty())
+    {
+        for (int iObj = 0; iObj < m_DrawList.size(); iObj++)
+        {
+            std::cout << m_DrawList[iObj]->m_csName << ","
+                << m_DrawList[iObj]->m_rt.x1 << ","
+                << m_DrawList[iObj]->m_rt.y1 << std::endl;
+        }
+    }
+#endif
     return false;
 }
 

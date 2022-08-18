@@ -3,25 +3,22 @@
 
 static const int g_iMaxOctreeChild = 8;
 class TOctree :  public TSpacePartition
-{
-	TNode*  m_pRootNode;
+{	
 public:
-	void     DynamicReset(TNode* pNode);
-	virtual void    DynamicObjectReset();
-
+	void    DynamicObjectReset()override;;	
 	void    Create(TVector vPos, TVector vSize) override;
-	bool    IsNodeInObject(TNode* pNode, TObject* pObj);
-	bool    IsCollision(TObject* pDest, TObject* pSrc);
-	bool	IsCollision(TNode* pNode, TObject* pSrc);
+	void    AddStaticObject(TBaseObject* pObj)override;
+	void    AddDynamicObject(TBaseObject* pObj)override;
+	TNode*  FindNode(TNode* pNode, TBaseObject* pObj)override;
+	std::vector<TBaseObject*> CollisionQuery(TBaseObject* pObj)override;
 public:
+	void    DynamicReset(TNode* pNode);	
+	bool    IsNodeInObject(TNode* pNode, TBaseObject* pObj);
+	bool    IsCollision(TBaseObject* pDest, TBaseObject* pSrc);
+	bool	IsCollision(TNode* pNode, TBaseObject* pSrc);
 	TNode*	CreateNode(TNode* pParent,TVector vPos,TVector vSize);
 	void	Buildtree(TNode* pNode);	
-	void    AddStaticObject(TObject* pObj);
-    void    AddDynamicObject(TObject* pObj);
-    TNode*  FindNode(TNode* pNode, TObject* pObj);
-    std::vector<TObject*> CollisionQuery(TObject* pObj);
-    void   GetCollisitionObject(TNode* pNode,
-				TObject* pSrcObject,
-				std::vector<TObject*>& list);
+    void    GetCollisitionObject(TNode* pNode,TBaseObject* pSrcObject,
+								 std::vector<TBaseObject*>& list);
 };
 

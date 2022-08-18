@@ -1,9 +1,5 @@
 #include "TNode.h"
-TNode2D::TNode2D()
-{
-
-}
-TNode2D::TNode2D(TNode2D* pParent, TVector2D p, TVector2D s)
+TNode::TNode(TNode* pParent, TVector2D p, TVector2D s)
 {
     m_rt.Set(p.x, p.y, s.x, s.y);
     m_iDepth = 0;
@@ -13,16 +9,8 @@ TNode2D::TNode2D(TNode2D* pParent, TVector2D p, TVector2D s)
         m_pParent = pParent;
         m_iDepth = pParent->m_iDepth + 1;
     }
-    m_pChild2D.resize(4);
+    m_pChild.resize(4);
 }
-TNode2D::~TNode2D()
-{
-    delete m_pChild2D[0];
-    delete m_pChild2D[1];
-    delete m_pChild2D[2];
-    delete m_pChild2D[3];
-}
-
 TNode::TNode()
 {
 

@@ -64,7 +64,7 @@ struct TRect : Rect
         this->h = w;
         x2 = x + w;
         y2 = y + h;
-        cx = (x + x1) / 2.0f;
+        cx = (x + x2) / 2.0f;
         cy = (y + y2) / 2.0f;
     }
 };

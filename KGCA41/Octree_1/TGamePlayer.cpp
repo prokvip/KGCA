@@ -95,3 +95,64 @@ void TGamePlayer::Frame(float fDeltaTime, float fGameTime)
     m_vDirection.Normalized();
     SetPosition(vPos, vSize);
 }
+void TGamePlayer2D::Frame(float fDeltaTime, float fGameTime)
+{
+    m_fSpeed = 30.0f;
+    m_fMass = 10.0f;
+    TVector2D vPos(m_rt.x1, m_rt.y1);
+    TVector2D vSize(m_rt.w, m_rt.h);
+    TVector2D vKeyForce = m_vDirection2D * m_fSpeed * fDeltaTime;
+    AddForces(vKeyForce);
+
+    m_vAcceleration2D = m_vForces2D / m_fMass;
+    TVector2D linearAcc = m_vAcceleration2D;
+    m_vVelocity2D += linearAcc;
+    //벡터의 직전의 방정식
+    //결과벡터 = 시작벡터 + 방향벡터* speed * t(거리 내지는 시간) 
+    vPos = vPos + m_vVelocity2D;
+
+    if ( /*fabs(m_vForces2D.Length()) <= T_Epsilon &&*/
+        fabs(m_vVelocity2D.Length()) > T_Epsilon)
+    {
+        m_fFriction -= fDeltaTime;
+        if (0 >= m_fFriction)
+        {
+            m_vVelocity2D = { 0,0 };
+            m_fFriction = 1.0f;
+        }
+        m_vVelocity2D *= m_fFriction;
+    }
+    if (vPos.x > 100.0f)
+    {
+        vPos.x = 100.0f;
+        m_vForces2D = TVector2D(0, 0);
+        m_vVelocity2D = TVector2D(0, 0);
+        m_vDirection2D *= -1.0f;
+        m_fFriction = 1.0f;
+    }
+    if (vPos.x < 0.0f)
+    {
+        vPos.x = 0.0f;
+        m_vForces2D = TVector2D(0, 0);
+        m_vVelocity2D = TVector2D(0, 0);
+        m_vDirection2D.x = 1.0f;
+        m_fFriction = 1.0f;
+    }
+    if (vPos.y > 100.0f)
+    {
+        vPos.y = 100.0f;
+        m_vForces2D = TVector2D(0, 0);
+        m_vDirection2D.y = -1.0f;
+        m_fFriction = 1.0f;
+    }
+    if (vPos.y < 0.0f)
+    {
+        vPos.y = 0.0f;
+        m_vForces2D = TVector2D(0, 0);
+        m_vVelocity2D = TVector2D(0, 0);
+        m_vDirection2D.y = 1.0f;
+        m_fFriction = 1.0f;
+    }    
+    m_vDirection2D.Normalized();
+    SetPosition(vPos, vSize);
+}
