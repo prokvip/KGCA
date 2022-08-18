@@ -37,13 +37,13 @@ struct TRect : Rect
     float  cy;
     bool   operator == (TRect& dest)
     {
-        if (fabs(x1 - dest.x1) < 0.001f)
+        if (fabs(x1 - dest.x1) < T_Epsilon)
         {
-            if (fabs(y1 - dest.y1) < 0.001f)
+            if (fabs(y1 - dest.y1) < T_Epsilon)
             {
-                if (fabs(w - dest.w) < 0.001f)
+                if (fabs(w - dest.w) < T_Epsilon)
                 {
-                    if (fabs(h - dest.h) < 0.001f)
+                    if (fabs(h - dest.h) < T_Epsilon)
                     {
                         return true;
                     }

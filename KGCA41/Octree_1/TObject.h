@@ -40,6 +40,7 @@ public:
     virtual void   AddForces(TVector2D f);
 public:
     TObject2D();
+    TObject2D(std::string name);
 };
 class TObject : public TObject2D
 {

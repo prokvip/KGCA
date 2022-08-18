@@ -1,8 +1,6 @@
 #include "TObject.h"
-void   TObject2D::Init()
-{
-    }
-void        TObject2D::AddForces(TVector2D f)
+
+void   TObject2D::AddForces(TVector2D f)
 {
     m_vForces2D += f;
 }
@@ -34,8 +32,7 @@ void   TObject2D::SetPosition(float x, float y, float w, float h)
 }
 
 void   TObject2D::Frame(float fDeltaTime, float fGameTime) {};
-
-TObject2D::TObject2D()
+void   TObject2D::Init()
 {
     m_rt.Set(20 + (rand() % 80),
         20 + (rand() % 80),
@@ -49,7 +46,15 @@ TObject2D::TObject2D()
     m_fMass = 100.0f;
     m_fSpeed = 10.0f;
 }
-
+TObject2D::TObject2D()
+{
+    Init();
+}
+TObject2D::TObject2D(std::string name)
+{
+    Init();
+    m_csName = name;
+}
 ////////////////////////////////////////////////////////
 void        TObject::AddForces(TVector f)
 {

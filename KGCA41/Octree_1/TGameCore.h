@@ -3,7 +3,7 @@
 #include "TOctree.h"
 #include "TGamePlayer.h"
 #include "TEnemy.h"
-#define   OCTREE
+//#define   OCTREE
 class TGameCore
 {
 public:

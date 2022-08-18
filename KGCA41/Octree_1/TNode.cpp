@@ -8,8 +8,7 @@ TNode::TNode(TNode* pParent, TVector2D p, TVector2D s)
     {
         m_pParent = pParent;
         m_iDepth = pParent->m_iDepth + 1;
-    }
-    m_pChild.resize(4);
+    }    
 }
 TNode::TNode()
 {
