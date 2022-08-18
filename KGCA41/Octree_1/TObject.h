@@ -42,7 +42,7 @@ public:
     TObject2D();
     TObject2D(std::string name);
 };
-class TObject : public TObject2D
+class TObject : public TBaseObject
 {
 public:
     void   SetSphere(TVector vCenter, float radius);

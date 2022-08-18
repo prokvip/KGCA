@@ -1,161 +1,175 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
   <Class Name="TCollision" Collapsed="true">
-    <Position X="12" Y="0.5" Width="1.5" />
+    <Position X="10" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAEQAAQAAAAAAQAAAAAAAAAAAAQAAgAAA=</HashCode>
       <FileName>TCollision.h</FileName>
     </TypeIdentifier>
   </Class>
+  <Class Name="TEnemy" Collapsed="true">
+    <Position X="7.5" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAE=</HashCode>
+      <FileName>TEnemy.h</FileName>
+    </TypeIdentifier>
+  </Class>
   <Class Name="TEnemy2D" Collapsed="true">
-    <Position X="2.75" Y="4.75" Width="1.5" />
+    <Position X="3" Y="3.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAE=</HashCode>
       <FileName>TEnemy.h</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="TGameCore" Collapsed="true">
-    <Position X="13.75" Y="0.5" Width="1.5" />
+    <Position X="11.75" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAABAAAAAAAAABAAAEAAAgAAAAAAAACBACABAAAAM=</HashCode>
       <FileName>TGameCore.h</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="TGamePlayer2D" Collapsed="true">
-    <Position X="0.5" Y="4.75" Width="1.5" />
+  <Class Name="TGamePlayer" Collapsed="true">
+    <Position X="5.25" Y="3.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAE=</HashCode>
       <FileName>TGamePlayer.h</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="TNode">
-    <Position X="3.5" Y="7.75" Width="1.5" />
+  <Class Name="TGamePlayer2D" Collapsed="true">
+    <Position X="0.75" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAE=</HashCode>
+      <FileName>TGamePlayer.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TNode" Collapsed="true">
+    <Position X="10" Y="1.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>QAAAAAAAIAAAgIAAAAgAIAAAAAwEAAAAAAAAAAAAAAA=</HashCode>
       <FileName>TNode.h</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="TBaseObject" Collapsed="true">
-    <Position X="1.75" Y="0.5" Width="1.5" />
+    <Position X="4" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>CAAAAAAAAGAAgAAgQEAAEBAAAAAECAAAoQACQAAAAAE=</HashCode>
       <FileName>TObject.h</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="TObject2D">
+  <Class Name="TObject2D" Collapsed="true">
     <Position X="1.75" Y="1.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAACAAEAAgE=</HashCode>
       <FileName>TObject.h</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="TObject">
-    <Position X="0.5" Y="3.25" Width="1.5" />
+  <Class Name="TObject" Collapsed="true">
+    <Position X="6.25" Y="1.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAQAAAAgAAAAACBAAAAAE=</HashCode>
       <FileName>TObject.h</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="TOctree">
-    <Position X="4.5" Y="1.75" Width="1.5" />
+  <Class Name="TOctree" Collapsed="true">
+    <Position X="0.5" Y="5.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAUAAAAAAEAAAAEEAAAACBAABAEAAQAgAAAAAAAA=</HashCode>
       <FileName>TOctree.h</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="TQuadtree">
-    <Position X="6.75" Y="1.75" Width="1.5" />
+  <Class Name="TQuadtree" Collapsed="true">
+    <Position X="2.75" Y="5.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAEAAAAAAEAAAAEEAAAACBAABAkAAQAggAAAAAAA=</HashCode>
       <FileName>TQuadtree.h</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="TSpacePartition" Collapsed="true">
-    <Position X="5.75" Y="0.5" Width="1.5" />
+    <Position X="1.75" Y="4.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAEAAAAAgAABAAAAAAAAAAAAAAALAEAAQAAAAAAAgAA=</HashCode>
       <FileName>TSpacePartition.h</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="TVector2D" Collapsed="true">
-    <Position X="0.5" Y="7.75" Width="1.5" />
+    <Position X="6.5" Y="8.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAEAAAAAAAAAAAAAAQBAAAAAAgAAAEAgAAAAAAA=</HashCode>
       <FileName>TVector.h</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="TVector" Collapsed="true">
-    <Position X="5.5" Y="4.75" Width="1.5" />
+    <Position X="10" Y="6" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAEAAAAAAAAAAAAAAQBAAAAAAAAAAEAgIAAAAAA=</HashCode>
       <FileName>TVector.h</FileName>
     </TypeIdentifier>
   </Class>
   <Struct Name="TCircle" Collapsed="true">
-    <Position X="12" Y="1.75" Width="1.5" />
+    <Position X="10" Y="2.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAEAAAAAAAAACAEAAAAAAAAAAgAA=</HashCode>
       <FileName>TCollision.h</FileName>
     </TypeIdentifier>
   </Struct>
   <Struct Name="Rect" Collapsed="true">
-    <Position X="9.5" Y="0.5" Width="1.5" />
+    <Position X="12.5" Y="7.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAQQgAAAAAAAA=</HashCode>
       <FileName>TCollision.h</FileName>
     </TypeIdentifier>
   </Struct>
   <Struct Name="TRect" Collapsed="true">
-    <Position X="9.5" Y="1.75" Width="1.5" />
+    <Position X="12.5" Y="8.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAABAAAAEAAAQAAAwAAAAAAAgAAAAAAgAA=</HashCode>
       <FileName>TCollision.h</FileName>
     </TypeIdentifier>
   </Struct>
   <Struct Name="TSphere" Collapsed="true">
-    <Position X="13.75" Y="1.75" Width="1.5" />
+    <Position X="11.75" Y="2.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAgAAAAEAAIAAAAAAAAAA=</HashCode>
       <FileName>TCollision.h</FileName>
     </TypeIdentifier>
   </Struct>
   <Struct Name="Box" Collapsed="true">
-    <Position X="6.5" Y="6.5" Width="1.5" />
+    <Position X="9.5" Y="7.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAACAAAAA=</HashCode>
       <FileName>TCollision.h</FileName>
     </TypeIdentifier>
   </Struct>
   <Struct Name="TBox" Collapsed="true">
-    <Position X="6.5" Y="7.75" Width="1.5" />
+    <Position X="9.5" Y="8.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAABAAAAAAQAQAAgAAAAAAAAAAIAAAAAAA=</HashCode>
       <FileName>TCollision.h</FileName>
     </TypeIdentifier>
   </Struct>
   <Struct Name="TFloat2" Collapsed="true">
-    <Position X="0.5" Y="6.5" Width="1.5" />
+    <Position X="6.5" Y="7.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>TVector.h</FileName>
     </TypeIdentifier>
   </Struct>
   <Struct Name="TFloat3" Collapsed="true">
-    <Position X="5.5" Y="3.5" Width="1.5" />
+    <Position X="10" Y="4.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>TVector.h</FileName>
     </TypeIdentifier>
   </Struct>
   <Enum Name="TCollisionType" Collapsed="true">
-    <Position X="13.75" Y="3" Width="1.5" />
+    <Position X="11.75" Y="4" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AQEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAA=</HashCode>
       <FileName>TCollision.h</FileName>
     </TypeIdentifier>
   </Enum>
   <Enum Name="SP_TYPE" Collapsed="true">
-    <Position X="12" Y="3" Width="1.5" />
+    <Position X="10" Y="4" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQQBAA=</HashCode>
       <FileName>TSpacePartition.h</FileName>
