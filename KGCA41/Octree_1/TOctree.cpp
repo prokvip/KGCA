@@ -1,4 +1,14 @@
 #include "TOctree.h"
+TBaseObject* TOctree::NewStaticObject(std::string name)
+{
+    TBaseObject* pObj = new TObject(name);
+    return pObj;
+}
+TBaseObject* TOctree::NewDynamicObject(std::string name)
+{
+    TBaseObject* pObj = new TEnemy(name);
+    return pObj;
+}
 std::vector<TBaseObject*> TOctree::CollisionQuery(TBaseObject* pObj)
 {
     std::vector<TBaseObject*> list;

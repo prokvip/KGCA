@@ -4,6 +4,8 @@ static const int g_iMaxQuadtreeChild = 4;
 class TQuadtree : public TSpacePartition
 {
 public:
+    TBaseObject* NewStaticObject(std::string name)override;
+    TBaseObject* NewDynamicObject(std::string name)override;
     void    DynamicObjectReset()override;;
     void    Create(TVector2D vPos, TVector2D vSize) override;
     void    AddStaticObject(TBaseObject* pObj)override;

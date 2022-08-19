@@ -25,8 +25,8 @@ public:
 public:
     virtual void   Init() {};
     virtual void   Frame(float fDeltaTime, float fGameTime) {};
+    virtual void   Render() {};
 };
-
 class TObject2D : public TBaseObject
 {
 public:
@@ -37,6 +37,7 @@ public:
 public:
     virtual void   Init() override;
     virtual void   Frame(float fDeltaTime, float fGameTime)override;
+    virtual void   Render() override;
     virtual void   AddForces(TVector2D f);
 public:
     TObject2D();
@@ -51,6 +52,7 @@ public:
 public:
     virtual void   Init() override;
     virtual void   Frame(float fDeltaTime, float fGameTime)override;
+    virtual void   Render() override;
 public:
     virtual void   AddForces(TVector f);
 public:

@@ -1,6 +1,6 @@
 #pragma once
 #include "TNode.h"
-#include "TObject.h"
+#include "TEnemy.h"
 enum SP_TYPE
 {
 	T_QUADTREE,
@@ -14,6 +14,8 @@ private:
 protected:
 	TNode*		m_pRootNode;
 public:
+	virtual TBaseObject*    NewStaticObject(std::string name)=0;
+	virtual TBaseObject* NewDynamicObject(std::string name)=0;
 	virtual void    DynamicObjectReset();
 public:
 	virtual void    Create(TVector2D vPos, TVector2D vSize);

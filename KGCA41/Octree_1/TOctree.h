@@ -5,6 +5,8 @@ static const int g_iMaxOctreeChild = 8;
 class TOctree :  public TSpacePartition
 {	
 public:
+	TBaseObject* NewStaticObject(std::string name)override;
+	TBaseObject* NewDynamicObject(std::string name)override;
 	void    DynamicObjectReset()override;;	
 	void    Create(TVector vPos, TVector vSize) override;
 	void    AddStaticObject(TBaseObject* pObj)override;

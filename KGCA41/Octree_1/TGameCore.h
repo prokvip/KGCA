@@ -3,12 +3,12 @@
 #include "TOctree.h"
 #include "TGamePlayer.h"
 #include "TEnemy.h"
-#define   OCTREE
+//#define   OCTREE
+template<class T>
 class TGameCore
 {
 public:
-    TGamePlayer             m_Player;   
-    TGamePlayer2D           m_Player2D;
+    TPlayer<T>*            m_pPlayer;
 public:
     TSpacePartition*        m_pWorldSP;
     std::map<int, TBaseObject*> m_npcList;

@@ -1,4 +1,32 @@
 #include "TEnemy.h"
+TEnemy2D::TEnemy2D()
+{
+
+}
+TEnemy2D::TEnemy2D(std::string name) : TObject2D(name)
+{
+
+}
+void   TEnemy2D::Render() 
+{
+    std::cout << m_csName << ","
+        << m_rt.x1 << ","
+        << m_rt.y1 << std::endl;
+};
+TEnemy::TEnemy()
+{
+
+}
+TEnemy::TEnemy(std::string name) : TObject(name)
+{
+
+}
+void   TEnemy::Render() {
+    std::cout << m_csName << ","
+        << m_Box.vMin.x << ","
+        << m_Box.vMin.y << ","
+        << m_Box.vMin.z << std::endl;
+};
 
 // 뉴턴의 운동법칙
 // 1)관성의 법칙:상태를 유지 할려는 특성

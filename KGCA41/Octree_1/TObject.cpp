@@ -32,6 +32,11 @@ void   TObject2D::SetPosition(float x, float y, float w, float h)
 }
 
 void   TObject2D::Frame(float fDeltaTime, float fGameTime) {};
+void   TObject2D::Render() {
+    std::cout << m_csName << ","
+        << m_rt.x1 << ","
+        << m_rt.y1 << std::endl;
+};
 void   TObject2D::Init()
 {
     m_rt.Set(20 + (rand() % 80),
@@ -78,7 +83,12 @@ void   TObject::SetPosition(TVector vPos, TVector vSize)
 }
 
 void   TObject::Frame(float fDeltaTime, float fGameTime) {};
-
+void   TObject::Render() {
+    std::cout << m_csName << ","
+        << m_Box.vMin.x << ","
+        << m_Box.vMin.y << ","
+        << m_Box.vMin.z << std::endl;
+};
 void   TObject::Init()
 {
     TVector vPos, vSize;

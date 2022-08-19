@@ -5,17 +5,14 @@
    //y 0,50         50,50        100,50   
    //     2                  3 
    //0,100          50,100       100,100 
-bool TGameCore::Init()
+template<class T>
+bool TGameCore<T>::Init()
 { 
     for (int iObj = 0; iObj < 10; iObj++)
     {
         std::string name = std::to_string(iObj);
         name += " Static";
-#ifdef OCTREE
-        TBaseObject* pObj = new TObject(name);
-#else
-        TBaseObject* pObj = new TObject2D(name);
-#endif
+        TBaseObject* pObj = m_pWorldSP->NewStaticObject(name);
         m_AllObjectList.insert(std::make_pair(iObj, pObj));
         m_pWorldSP->AddStaticObject(pObj);
     }
@@ -23,20 +20,15 @@ bool TGameCore::Init()
     {
         std::string name = std::to_string(iObj);
         name += " Dynamic";
-#ifdef OCTREE
-        TBaseObject* pObj = new TEnemy;
-#else
-        TBaseObject* pObj = new TEnemy2D;
-#endif       
-        pObj->m_csName = name;
+        TBaseObject* pObj = m_pWorldSP->NewDynamicObject(name);
         m_npcList.insert(std::make_pair(iObj, pObj));
         m_AllObjectList.insert(std::make_pair(10+iObj, pObj));
         m_pWorldSP->AddDynamicObject(pObj);
     }
     return true;
 }
-
-bool TGameCore::Frame(float fDeltaTime, float fGameTime)
+template<class T>
+bool TGameCore<T>::Frame(float fDeltaTime, float fGameTime)
 {
     m_pWorldSP->DynamicObjectReset();
     for (auto obj : m_npcList)
@@ -45,49 +37,25 @@ bool TGameCore::Frame(float fDeltaTime, float fGameTime)
         pObject->Frame(fDeltaTime, fGameTime);
         m_pWorldSP->AddDynamicObject(pObject);
     }
-#ifdef OCTREE
-    m_Player.Frame(fDeltaTime, fGameTime);
-    m_DrawList = m_pWorldSP->CollisionQuery(&m_Player);
-#else
-    m_Player2D.Frame(fDeltaTime, fGameTime);
-    m_DrawList = m_pWorldSP->CollisionQuery(&m_Player2D);
-#endif
+    m_pPlayer->Frame(fDeltaTime, fGameTime);
+    m_DrawList = m_pWorldSP->CollisionQuery(m_pPlayer->GetImp());
     return false;
 }
-
-bool TGameCore::Render()
+template<class T>
+bool TGameCore<T>::Render()
 {
-#ifdef OCTREE
-    std::cout << "Player3D:"
-        << m_Player.m_Box.vMin.x << "," << m_Player.m_Box.vMin.y << ","
-        << m_Player.m_Box.vMin.z << std::endl;
+    m_pPlayer->Render();
     if (!m_DrawList.empty())
     {
         for (int iObj = 0; iObj < m_DrawList.size(); iObj++)
         {
-            std::cout << m_DrawList[iObj]->m_csName << ","
-                << m_DrawList[iObj]->m_Box.vMin.x << "," 
-                << m_DrawList[iObj]->m_Box.vMin.y << ","
-                << m_DrawList[iObj]->m_Box.vMin.z << std::endl;
+            m_DrawList[iObj]->Render();
         }
     }
-#else
-    std::cout << "Player2D:"
-        << m_Player2D.m_rt.x1 << "," << m_Player2D.m_rt.y1 << std::endl;
-    if (!m_DrawList.empty())
-    {
-        for (int iObj = 0; iObj < m_DrawList.size(); iObj++)
-        {
-            std::cout << m_DrawList[iObj]->m_csName << ","
-                << m_DrawList[iObj]->m_rt.x1 << ","
-                << m_DrawList[iObj]->m_rt.y1 << std::endl;
-        }
-    }
-#endif
     return false;
 }
-
-bool TGameCore::Release()
+template<class T>
+bool TGameCore<T>::Release()
 {
     for (auto object : m_AllObjectList)
     {
@@ -97,8 +65,8 @@ bool TGameCore::Release()
     m_npcList.clear();
     return true;
 }
-
-bool TGameCore::Run()
+template<class T>
+bool TGameCore<T>::Run()
 {
     Init();
     float  fGameTimer = 0.0f;

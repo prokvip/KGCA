@@ -1,4 +1,14 @@
 #include "TQuadtree.h"
+TBaseObject* TQuadtree::NewStaticObject(std::string name)
+{
+    TBaseObject* pObj = new TObject2D(name);
+    return pObj;
+}
+TBaseObject* TQuadtree::NewDynamicObject(std::string name)
+{
+    TBaseObject* pObj = new TEnemy2D(name);
+    return pObj;
+}
 void    TQuadtree::AddStaticObject(TBaseObject* pObj)
 {
     TNode* pFindNode = FindNode(m_pRootNode, pObj);
