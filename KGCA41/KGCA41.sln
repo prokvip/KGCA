@@ -47,6 +47,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ReplaceMent", "ReplaceMent"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Quadtree", "Quadtree\Quadtree.vcxproj", "{01264C0D-6ADD-4B26-8C6B-9051A3F71202}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Octree_1", "Octree_1\Octree_1.vcxproj", "{304AA990-91A1-4472-84EF-867E98542DBE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -199,6 +201,14 @@ Global
 		{01264C0D-6ADD-4B26-8C6B-9051A3F71202}.Release|x64.Build.0 = Release|x64
 		{01264C0D-6ADD-4B26-8C6B-9051A3F71202}.Release|x86.ActiveCfg = Release|Win32
 		{01264C0D-6ADD-4B26-8C6B-9051A3F71202}.Release|x86.Build.0 = Release|Win32
+		{304AA990-91A1-4472-84EF-867E98542DBE}.Debug|x64.ActiveCfg = Debug|x64
+		{304AA990-91A1-4472-84EF-867E98542DBE}.Debug|x64.Build.0 = Debug|x64
+		{304AA990-91A1-4472-84EF-867E98542DBE}.Debug|x86.ActiveCfg = Debug|Win32
+		{304AA990-91A1-4472-84EF-867E98542DBE}.Debug|x86.Build.0 = Debug|Win32
+		{304AA990-91A1-4472-84EF-867E98542DBE}.Release|x64.ActiveCfg = Release|x64
+		{304AA990-91A1-4472-84EF-867E98542DBE}.Release|x64.Build.0 = Release|x64
+		{304AA990-91A1-4472-84EF-867E98542DBE}.Release|x86.ActiveCfg = Release|Win32
+		{304AA990-91A1-4472-84EF-867E98542DBE}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
