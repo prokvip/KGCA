@@ -29,6 +29,7 @@ struct Rect
     float  w;
     float  h;
 };
+
 struct TRect : Rect
 {
     float  x2;//x+w
