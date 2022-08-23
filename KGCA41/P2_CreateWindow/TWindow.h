@@ -13,6 +13,6 @@ public:
 	bool		Run();
 public:
 	ATOM		MyRegisterClass(HINSTANCE hInstance);
-	BOOL		InitInstance(HINSTANCE hInstance);
+	BOOL		InitInstance();
 };
 

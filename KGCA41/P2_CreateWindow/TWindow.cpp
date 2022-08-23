@@ -8,25 +8,23 @@ LRESULT CALLBACK WndProc(
     switch (message)
     {   
     case WM_DESTROY:
-        PostQuitMessage(0);
+        PostQuitMessage(0); // 메세지큐에 직접 WM_QUIT
         break;
-    default:
-        return DefWindowProc(hWnd, message, wParam, lParam);
     }
-    return 0;
+    // 메세지 내가 처리 불가 니가 대신 해줘.
+    return  DefWindowProc(hWnd, message, wParam, lParam);
 }
-BOOL TWindow::InitInstance(
-    HINSTANCE hInstance)
+BOOL TWindow::InitInstance()
 {
     // 운영체제에 등록한 윈도우를 생성한다.
     HWND hWnd = CreateWindowW(
-        L"홍길동윈도우",
+        L"KGCA윈도우",
         L"여기는 우리집입니다.",
         WS_OVERLAPPEDWINDOW,
-        CW_USEDEFAULT, 0, 
-        CW_USEDEFAULT, 0, 
+        0, 0, 
+        800, 600, 
         nullptr, nullptr, 
-        hInstance, nullptr);
+        m_hInstance, nullptr);
 
     if (!hWnd)
     {
@@ -45,19 +43,14 @@ ATOM TWindow::MyRegisterClass(HINSTANCE hInstance)
 {
     WNDCLASSEXW  wcex;    
     ZeroMemory(&wcex, sizeof(WNDCLASSEX));
-
     wcex.cbSize = sizeof(WNDCLASSEX);
     wcex.style = CS_HREDRAW | CS_VREDRAW;
     wcex.hInstance = hInstance;
-    wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1); 
-    wcex.lpszClassName = L"홍길동윈도우";// 이름
+    wcex.hbrBackground = CreateSolidBrush(RGB(89, 58, 255));
+    wcex.lpszClassName = L"KGCA윈도우";// 이름
     // 윈도우 메세지를 받을 함수를 지정한다.    
     wcex.lpfnWndProc = WndProc;  // 전화번호  
-    
-    //wcex.hIcon = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_CREATEWINDOW));
-    //wcex.hCursor = LoadCursor(nullptr, IDC_ARROW);
-    //wcex.lpszMenuName = MAKEINTRESOURCEW(IDC_CREATEWINDOW);
-    //wcex.hIconSm = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
+    wcex.hCursor = LoadCursor(nullptr, IDC_WAIT);
     return RegisterClassEx(&wcex);
 }
 bool		TWindow::Init()
@@ -65,7 +58,7 @@ bool		TWindow::Init()
     // 윈도우 등록
     WORD ret = MyRegisterClass(m_hInstance);
     // 애플리케이션 초기화를 수행합니다:
-    if (!InitInstance(m_hInstance))
+    if (!InitInstance())
     {
         return FALSE;
     }
@@ -86,12 +79,20 @@ bool		TWindow::Release()
 
 bool        TWindow::Run()
 {
-    MSG msg;
-    // 기본 메시지 루프입니다:
-    while (GetMessage(&msg, nullptr, 0, 0))
+    MSG msg = { 0, };
+    while (WM_QUIT != msg.message)
     {
-        TranslateMessage(&msg);
-        DispatchMessage(&msg);
+        // 장점 : 메세지큐에 메세지가 없어도 반환됨.
+        if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
+        {
+            TranslateMessage(&msg); // 메세지 번역
+            DispatchMessage(&msg);  // 메세지 프로시져에 전달한다.
+        }
+        else
+        {
+            Frame();
+            Render();
+        }
     }
     return true;
 }
