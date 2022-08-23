@@ -32,9 +32,7 @@ BOOL TWindow::InitInstance(
     {
         return FALSE;
     }
-
     ShowWindow(hWnd, SW_SHOW);
-    //UpdateWindow(hWnd);
     return TRUE;
 }
 
@@ -52,9 +50,9 @@ ATOM TWindow::MyRegisterClass(HINSTANCE hInstance)
     wcex.style = CS_HREDRAW | CS_VREDRAW;
     wcex.hInstance = hInstance;
     wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1); 
-    wcex.lpszClassName = L"홍길동윈도우";
+    wcex.lpszClassName = L"홍길동윈도우";// 이름
     // 윈도우 메세지를 받을 함수를 지정한다.    
-    wcex.lpfnWndProc = WndProc;    
+    wcex.lpfnWndProc = WndProc;  // 전화번호  
     
     //wcex.hIcon = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_CREATEWINDOW));
     //wcex.hCursor = LoadCursor(nullptr, IDC_ARROW);

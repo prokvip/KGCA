@@ -3,7 +3,8 @@
 class TWindow
 {
 public:
-	HINSTANCE   m_hInstance;
+	HINSTANCE   m_hInstance;	// 접수번호
+	HWND		m_hWnd;			// 등기번호
 public:
 	bool		Init(); // 초기화
 	bool		Frame();// 실시간 계산
