@@ -1,7 +1,6 @@
 #include "Sample.h"
 bool		Sample::Init()
 {
-    TWindow::Init();
     return true;
 }
 bool		Sample::Frame()
@@ -17,17 +16,11 @@ bool		Sample::Release()
     return true;
 }
 
-int APIENTRY wWinMain(
-    HINSTANCE hInstance,
-    HINSTANCE hPrevInstance,
-    LPWSTR    lpCmdLine,
-    int       nCmdShow)
-{
-    Sample demo;
-    demo.m_hInstance = hInstance;
-    demo.Init();
-    demo.Run();
-    demo.Release();
-    //MessageBox(NULL, L"test", L"title", MB_OK);
-    return 1;
-}
+GAME_RUN(P2_CreateWidnow, 1024, 768)
+
+//GAME_START1
+//    Sample demo; 
+//    demo.SetWindow(hInstance); 
+//    demo.Run(); 
+//    return 1;
+//GAME_END

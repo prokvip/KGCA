@@ -142,6 +142,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Sample.h" />
+    <ClInclude Include="TStd.h" />
     <ClInclude Include="TWindow.h" />
   </ItemGroup>
   <ItemGroup>

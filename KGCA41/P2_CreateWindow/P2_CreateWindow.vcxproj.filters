@@ -21,6 +21,9 @@
     <ClInclude Include="Sample.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="TStd.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="TWindow.cpp">

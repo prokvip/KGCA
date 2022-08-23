@@ -14,15 +14,15 @@ LRESULT CALLBACK WndProc(
     // 메세지 내가 처리 불가 니가 대신 해줘.
     return  DefWindowProc(hWnd, message, wParam, lParam);
 }
-BOOL TWindow::InitInstance()
+BOOL TWindow::InitInstance(const WCHAR* szTitle, UINT iWidth, UINT iHeight)
 {
     // 운영체제에 등록한 윈도우를 생성한다.
     HWND hWnd = CreateWindowW(
         L"KGCA윈도우",
-        L"여기는 우리집입니다.",
+        szTitle,
         WS_OVERLAPPEDWINDOW,
         0, 0, 
-        800, 600, 
+        iWidth, iHeight,
         nullptr, nullptr, 
         m_hInstance, nullptr);
 
@@ -39,13 +39,13 @@ BOOL TWindow::InitInstance()
 /// </summary>
 /// <param name="hInstance"></param>
 /// <returns></returns>
-ATOM TWindow::MyRegisterClass(HINSTANCE hInstance)
+ATOM TWindow::MyRegisterClass()
 {
     WNDCLASSEXW  wcex;    
     ZeroMemory(&wcex, sizeof(WNDCLASSEX));
     wcex.cbSize = sizeof(WNDCLASSEX);
     wcex.style = CS_HREDRAW | CS_VREDRAW;
-    wcex.hInstance = hInstance;
+    wcex.hInstance = m_hInstance;
     wcex.hbrBackground = CreateSolidBrush(RGB(89, 58, 255));
     wcex.lpszClassName = L"KGCA윈도우";// 이름
     // 윈도우 메세지를 받을 함수를 지정한다.    
@@ -53,15 +53,21 @@ ATOM TWindow::MyRegisterClass(HINSTANCE hInstance)
     wcex.hCursor = LoadCursor(nullptr, IDC_WAIT);
     return RegisterClassEx(&wcex);
 }
-bool		TWindow::Init()
+bool		TWindow::SetWindow(HINSTANCE hInstance,
+                     const WCHAR* szTitle, UINT iWidth, UINT iHeight)
 {   
     // 윈도우 등록
-    WORD ret = MyRegisterClass(m_hInstance);
+    m_hInstance = hInstance;
+    WORD ret = MyRegisterClass();
     // 애플리케이션 초기화를 수행합니다:
-    if (!InitInstance())
+    if (!InitInstance(szTitle, iWidth, iHeight))
     {
         return FALSE;
     }
+    return true;
+}
+bool		TWindow::Init()
+{
     return true;
 }
 bool		TWindow::Frame()
@@ -79,6 +85,8 @@ bool		TWindow::Release()
 
 bool        TWindow::Run()
 {
+    Init();
+
     MSG msg = { 0, };
     while (WM_QUIT != msg.message)
     {
@@ -94,5 +102,7 @@ bool        TWindow::Run()
             Render();
         }
     }
+    Release();
+
     return true;
 }
