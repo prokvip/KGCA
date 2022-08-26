@@ -27,13 +27,8 @@ bool		TDevice::Frame()
 }
 bool		TDevice::Render()
 {
-    static float fTimer = 0.0f;
-    fTimer += 0.0001f;
     m_pImmediateContext->OMSetRenderTargets(1, &m_pRTV, NULL);
-    float color[4] = {  cosf(fTimer) * 0.5f + 0.5f,
-                        sinf(fTimer) * 0.5f + 0.5f,
-                        cosf(fTimer * 2) * 0.5f + 0.5f,
-                         1.0f };
+    float color[4] = { 1.0f,1.0f,1.0f,1.0f };
     m_pImmediateContext->ClearRenderTargetView(m_pRTV, color);
     m_pSwapChain->Present(0, 0);
     return true;
