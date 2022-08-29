@@ -1,0 +1,12 @@
+// 픽쉘 마다 호출된다.
+//v0-------v1
+/////////
+//////
+////
+//v2
+
+// 해당 픽쉘(SV_Target레지스터에)의 컬러를 반환한다.
+float4 PSMain(float4 p : SV_POSITION) : SV_Target
+{
+	return float4(1,1,0,1);
+}
