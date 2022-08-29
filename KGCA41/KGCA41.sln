@@ -75,6 +75,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "P3_CreateDevice_0", "P3_Cre
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CreateTriangle", "CreateTriangle\CreateTriangle.vcxproj", "{F723041D-CD67-43B4-BB44-5111C90D974A}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CreateTriangle1", "CreateTriangle1\CreateTriangle1.vcxproj", "{75BB44BA-D8C2-4E41-9893-9DC36B4AD02D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -315,6 +317,14 @@ Global
 		{F723041D-CD67-43B4-BB44-5111C90D974A}.Release|x64.Build.0 = Release|x64
 		{F723041D-CD67-43B4-BB44-5111C90D974A}.Release|x86.ActiveCfg = Release|Win32
 		{F723041D-CD67-43B4-BB44-5111C90D974A}.Release|x86.Build.0 = Release|Win32
+		{75BB44BA-D8C2-4E41-9893-9DC36B4AD02D}.Debug|x64.ActiveCfg = Debug|x64
+		{75BB44BA-D8C2-4E41-9893-9DC36B4AD02D}.Debug|x64.Build.0 = Debug|x64
+		{75BB44BA-D8C2-4E41-9893-9DC36B4AD02D}.Debug|x86.ActiveCfg = Debug|Win32
+		{75BB44BA-D8C2-4E41-9893-9DC36B4AD02D}.Debug|x86.Build.0 = Debug|Win32
+		{75BB44BA-D8C2-4E41-9893-9DC36B4AD02D}.Release|x64.ActiveCfg = Release|x64
+		{75BB44BA-D8C2-4E41-9893-9DC36B4AD02D}.Release|x64.Build.0 = Release|x64
+		{75BB44BA-D8C2-4E41-9893-9DC36B4AD02D}.Release|x86.ActiveCfg = Release|Win32
+		{75BB44BA-D8C2-4E41-9893-9DC36B4AD02D}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -348,6 +358,7 @@ Global
 		{DACA6E2F-BD6D-4BED-9B6A-4CB6BEF2A670} = {72D70A84-1E80-4C18-85B6-B85D335DC161}
 		{2BB135D4-5637-4067-BBF8-49D36DD8A117} = {72D70A84-1E80-4C18-85B6-B85D335DC161}
 		{F723041D-CD67-43B4-BB44-5111C90D974A} = {72D70A84-1E80-4C18-85B6-B85D335DC161}
+		{75BB44BA-D8C2-4E41-9893-9DC36B4AD02D} = {72D70A84-1E80-4C18-85B6-B85D335DC161}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1E3333A5-9F00-49C1-9B35-DDA8A9FD343B}
