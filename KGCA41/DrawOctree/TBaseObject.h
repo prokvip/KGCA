@@ -26,6 +26,7 @@ public:
 	HRESULT		CreateShader();
 	HRESULT     CreateVertexLayout();
 public:
+	virtual bool		Create(); // 초기화
 	virtual bool		Init(); // 초기화
 	virtual bool		Frame();// 실시간 계산
 	virtual bool		Frame(float fDeltaTime, float fGameTime) { return true; };
@@ -49,7 +50,9 @@ public:
 	TCircle     m_Circle;
 	TVector2D   m_vAcceleration2D;
 	TVector2D   m_vVelocity2D;
-	TVector2D   m_vForces2D;	
-
+	TVector2D   m_vForces2D;
+public:
+	TBaseObject();
+	virtual ~TBaseObject();
 };
 

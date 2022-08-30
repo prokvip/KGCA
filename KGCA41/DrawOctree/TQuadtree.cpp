@@ -124,12 +124,19 @@ void  TQuadtree::GetCollisitionObject(TNode* pNode,
     }
     for (int iObj = 0; iObj < pNode->m_ObjectDynamicList.size(); iObj++)
     {
-        if (TCollision::CircleToCircle(
+        if (TCollision::RectToRect(
+            pNode->m_ObjectDynamicList[iObj]->m_rt,
+            pSrcObject->m_rt))
+        {
+            list.push_back(pNode->m_ObjectDynamicList[iObj]);
+        }
+
+        /*if (TCollision::CircleToCircle(
             pNode->m_ObjectDynamicList[iObj]->m_Circle,
             pSrcObject->m_Circle))
         {
             list.push_back(pNode->m_ObjectDynamicList[iObj]);
-        }
+        }*/
     }
     if (pNode->m_pChild[0] != nullptr)
     {

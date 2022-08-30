@@ -11,6 +11,8 @@ public:
 	UINT		m_iClientWidth;
 	UINT		m_iClientHeight;
 	bool		m_bGameRun;
+	float		m_fGameTimer = 0.0f;
+	float		m_fElapseTimer = 10.0f;
 #ifdef _DEBUG
 	std::vector<UINT>  msglist;
 #endif

@@ -4,10 +4,10 @@
 class TObject2D : public TBaseObject
 {
 public:
-    void   SetCircle(float x, float y, float w, float h);
-    void   SetPosition(float x, float y, float w, float h);
-    void   SetCircle(TVector2D p, TVector2D s);
-    void   SetPosition(TVector2D p, TVector2D s);
+    virtual void   SetCircle(float x, float y, float w, float h);
+    virtual void   SetPosition(float x, float y, float w, float h);
+    virtual void   SetCircle(TVector2D p, TVector2D s);
+    virtual void   SetPosition(TVector2D p, TVector2D s);
 public:
     virtual bool   Init() override;
     virtual bool   Frame(float fDeltaTime, float fGameTime)override;
@@ -20,9 +20,9 @@ public:
 class TObject : public TBaseObject
 {
 public:
-    void   SetSphere(TVector vCenter, float radius);
-    void   SetSphere(TBox box);
-    void   SetPosition(TVector p, TVector s);
+    virtual void   SetSphere(TVector vCenter, float radius);
+    virtual void   SetSphere(TBox box);
+    virtual void   SetPosition(TVector p, TVector s);
 public:
     virtual bool   Init() override;
     virtual bool   Frame(float fDeltaTime, float fGameTime)override;

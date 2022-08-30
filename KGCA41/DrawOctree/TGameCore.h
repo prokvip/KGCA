@@ -8,7 +8,10 @@ template<class T>
 class TGameCore
 {
 public:
-    TPlayer<T>*            m_pPlayer;
+public:
+    ID3D11Device*           m_pd3dDevice = nullptr;// 디바이스 객체
+    ID3D11DeviceContext*    m_pImmediateContext = nullptr;
+    TPlayer<T>*             m_pPlayer;
 public:
     TSpacePartition*        m_pWorldSP;
     std::map<int, TBaseObject*> m_npcList;

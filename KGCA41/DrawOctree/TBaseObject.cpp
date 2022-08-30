@@ -136,7 +136,7 @@ HRESULT TBaseObject::CreateVertexLayout()
         &m_pVertexLayout);
     return hr;
 }
-bool	TBaseObject::Init()
+bool	TBaseObject::Create()
 {
     if (FAILED(CreateVertexBuffer()))
     {
@@ -152,18 +152,21 @@ bool	TBaseObject::Init()
     }
     return true;
 }
+bool	TBaseObject::Init()
+{   
+    return true;
+}
 bool	TBaseObject::Frame()
-{
-    m_VertexList[0].p = { -1.0f, 1.0f, 0.0f };
-    m_VertexList[0].c = { 1.0f, 0.0f, 0.0f, 0.0f };
-    // gpu update
-    m_pImmediateContext->UpdateSubresource(
-        m_pVertexBuffer, 0, NULL,
-        &m_VertexList.at(0), 0, 0 );
+{   
     return true;
 }
 bool	TBaseObject::Render()
 {
+    // gpu update
+    m_pImmediateContext->UpdateSubresource(
+        m_pVertexBuffer, 0, NULL,
+        &m_VertexList.at(0), 0, 0);
+
     // 삼각형 랜더링
     UINT stride = sizeof(SimpleVertex); // 정점1개의 바이트용량
     UINT offset = 0; // 정점버퍼에서 출발지점(바이트)
@@ -187,4 +190,11 @@ bool	TBaseObject::Release()
     if (m_pVSCode) m_pVSCode->Release();
     if (m_pPSCode) m_pPSCode->Release();
     return true;
+}
+
+
+TBaseObject::TBaseObject() {}
+TBaseObject::~TBaseObject()
+{
+    Release();
 }
