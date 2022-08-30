@@ -146,13 +146,17 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Sample.cpp" />
+    <ClCompile Include="TBaseObject.cpp" />
     <ClCompile Include="TDevice.cpp" />
+    <ClCompile Include="TVector.cpp" />
     <ClCompile Include="TWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Sample.h" />
+    <ClInclude Include="TBaseObject.h" />
     <ClInclude Include="TDevice.h" />
     <ClInclude Include="TStd.h" />
+    <ClInclude Include="TVector.h" />
     <ClInclude Include="TWindow.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
