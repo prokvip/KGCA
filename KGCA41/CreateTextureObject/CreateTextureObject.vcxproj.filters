@@ -54,6 +54,6 @@
   <ItemGroup>
     <Text Include="PixelShader.txt" />
     <Text Include="VertexShader.txt" />
-    <Text Include="Shape.txt" />
+    <Text Include="DefaultShape.txt" />
   </ItemGroup>
 </Project>

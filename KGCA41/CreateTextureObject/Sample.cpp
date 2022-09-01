@@ -3,7 +3,7 @@ bool	Sample::Init()
 {     
     m_object.Create(m_pd3dDevice, m_pImmediateContext,
                     L"../../data/kgcabk.bmp",
-                    L"Shape.txt");
+                    L"../../data/shader/DefaultShape.txt");
     return true;
 }
 bool		Sample::Frame()
