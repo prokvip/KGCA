@@ -1,0 +1,17 @@
+// 픽쉘 마다 호출된다.
+//v0-------v1
+/////////
+//////
+////
+//v2
+Texture2D    g_txTexutureA	: register(t0);
+SamplerState g_SampleA		: register(s0);
+
+// 해당 픽쉘(SV_Target레지스터에)의 컬러를 반환한다.
+float4 PSMain(	float4 p : SV_POSITION, 
+				float4 c : COLOR0,
+				float2 t : TEXCOORD0) : SV_Target
+{
+	return g_txTexutureA.Sample(g_SampleA , t);
+	//return float4(t.x, t.y, 0,1);
+}
