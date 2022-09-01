@@ -3,7 +3,8 @@
 #include "TBaseObject.h"
 class Sample : public TDevice
 {
-	std::vector<TBaseObject*> m_pObjectList;
+	std::vector<TBaseObject*> m_pObjectList;	
+	int m_iTexIndex = 0;
 public:
 	bool		Init(); // 초기화
 	bool		Frame();// 실시간 계산

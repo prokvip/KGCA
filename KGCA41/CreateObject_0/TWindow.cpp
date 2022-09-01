@@ -134,6 +134,13 @@ bool        TWindow::Run()
 
     MSG msg = { 0, };
     m_bGameRun = true;
+
+    m_fGameTimer = 0.0f;
+    m_fElapseTimer = 10.0f;
+    DWORD dwBeforeTime = timeGetTime(); //(1000: 1ÃÊ)
+    UINT fps = 0;
+    UINT counter = 0;
+    float fFps = 0.0f;
     while (m_bGameRun)
     {
         if (WM_QUIT == msg.message)
@@ -153,6 +160,27 @@ bool        TWindow::Run()
                 m_bGameRun = false;
             }
         }
+
+        DWORD dwCurrentTime = timeGetTime();
+        DWORD dwElapseTime = dwCurrentTime - dwBeforeTime;
+        m_fElapseTimer = dwElapseTime / 1000.0f;
+        m_fGameTimer += m_fElapseTimer;
+        std::wstring timer = std::to_wstring(m_fGameTimer);
+        dwBeforeTime = dwCurrentTime;
+
+        counter++;
+        fFps += m_fElapseTimer;
+        if (fFps >= 1.0f)
+        {
+            fps = counter;
+            counter = 0;
+            fFps = fFps - 1.0f;
+        }
+        timer += L"   ";
+        timer += std::to_wstring(fps);
+        timer += L"\n";
+        OutputDebugString(timer.c_str());
+        
     }
     TCoreRelease();
 

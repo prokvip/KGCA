@@ -166,7 +166,7 @@
     <ClInclude Include="TWindow.h" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="VertexShader.txt" />
+    <Text Include="..\..\data\shader\DefaultShape.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

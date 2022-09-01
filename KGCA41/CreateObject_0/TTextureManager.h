@@ -11,6 +11,7 @@ private:
 	std::map<std::wstring, TTexture*> m_List;
 public:
 	TTexture* Load(std::wstring name);
+	TTexture* Find(std::wstring name);
 	bool	  Release();
 private:
 	TTextureManager();

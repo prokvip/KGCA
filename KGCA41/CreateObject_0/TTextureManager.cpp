@@ -10,11 +10,9 @@ TTexture* TTextureManager::Load(std::wstring name)
 {
     HRESULT hr;
     // 중복제거
-    auto iter = m_List.find(name);
-    if (iter != m_List.end())
-    {
-        return iter->second;
-    }
+    auto data = Find(name);
+    if (data != nullptr) return data;
+
     TTexture* pNewData = new TTexture;
     if (pNewData)
     {
@@ -26,7 +24,15 @@ TTexture* TTextureManager::Load(std::wstring name)
     }
 	return pNewData;
 }
-
+TTexture* TTextureManager::Find(std::wstring name)
+{
+    auto iter = m_List.find(name);
+    if (iter != m_List.end())
+    {
+        return iter->second;
+    }
+    return nullptr;
+}
 TTextureManager::TTextureManager()
 {
 }
