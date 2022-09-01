@@ -1,3 +1,12 @@
+// download https://github.com/microsoft/DirectXTK
+// DirectXTK_Desktop_2019.sln
+// build -> DirectXTK.lib(bin)
+//          inc 모든 파일
+// ../../inlude/DXTK -> all copy
+// ../../lib -> DirectXTK.lib copy
+// CreateTexture 프로젝트 -> 속성 -> C/C++(일반)-> 추가포함디렉토리 -> ../../include/dxtk;
+// CreateTexture 프로젝트 -> 속성 -> 링커-> 추가라이브러리디렉토리 -> DirectXTK.lib;
+
 #pragma once
 #include "TDevice.h"
 //#include "../../include/dxtk/WICTextureLoader.h"
