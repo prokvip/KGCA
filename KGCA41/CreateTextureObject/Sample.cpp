@@ -1,8 +1,9 @@
 #include "Sample.h"
 bool	Sample::Init()
-{ 
-    m_object.SetDevice(m_pd3dDevice, m_pImmediateContext);
-    m_object.Create(L"../../data/4.jpg");
+{     
+    m_object.Create(m_pd3dDevice, m_pImmediateContext,
+                    L"../../data/kgcabk.bmp",
+                    L"Shape.txt");
     return true;
 }
 bool		Sample::Frame()

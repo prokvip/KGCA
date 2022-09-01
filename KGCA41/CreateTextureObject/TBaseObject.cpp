@@ -71,16 +71,16 @@ HRESULT TBaseObject::CreateVertexBuffer()
         &m_pVertexBuffer);
     return hr;
 }
-HRESULT TBaseObject::CreateShader()
+HRESULT TBaseObject::CreateShader(std::wstring filename)
 {
     HRESULT hr;
     // 정점쉐이더 컴파일 
     ID3DBlob* pErrorCode = nullptr;
     hr = D3DCompileFromFile(
-        L"VertexShader.txt",
+        filename.c_str(),
         NULL,
         NULL,
-        "main",
+        "VS",
         "vs_5_0",
         0,
         0,
@@ -103,10 +103,10 @@ HRESULT TBaseObject::CreateShader()
 
     // 픽쉘쉐이더 컴파일  
     hr = D3DCompileFromFile(
-        L"PixelShader.txt",
+        filename.c_str(),
         NULL,
         NULL,
-        "PSMain",
+        "PS",
         "ps_5_0",
         0,
         0,
@@ -168,13 +168,18 @@ HRESULT TBaseObject::LoadTexture(std::wstring filename)
         &m_pTextureSRV);
     return hr;
 }
-bool	TBaseObject::Create(std::wstring texName)
+bool	TBaseObject::Create(
+    ID3D11Device* pd3dDevice,
+    ID3D11DeviceContext* pContext,
+    const wchar_t* texName,
+    const wchar_t* shaderName)
 {
+    SetDevice(pd3dDevice, pContext);
     if (FAILED(CreateVertexBuffer()))
     {
         return false;
     }
-    if (FAILED(CreateShader()))
+    if (FAILED(CreateShader(shaderName)))
     {
         return false;
     }

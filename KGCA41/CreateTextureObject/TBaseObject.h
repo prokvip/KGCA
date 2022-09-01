@@ -26,11 +26,15 @@ public:
 	ID3DBlob* m_pPSCode = nullptr;
 public:
 	HRESULT		CreateVertexBuffer();
-	HRESULT		CreateShader();
+	HRESULT		CreateShader(std::wstring filename);
 	HRESULT     CreateVertexLayout();
 	HRESULT		LoadTexture(std::wstring filename);
 public:
-	virtual bool		Create(std::wstring texName);
+	virtual bool		Create(
+		ID3D11Device* pd3dDevice, 
+		ID3D11DeviceContext* pContext,
+		const wchar_t* texName = 0,
+		const wchar_t* shaderName=0);
 public:
 	virtual bool		Init(); // 초기화
 	virtual bool		Frame();// 실시간 계산
