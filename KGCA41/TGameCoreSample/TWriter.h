@@ -14,7 +14,9 @@ public:
 	ID2D1RenderTarget*  m_d2dRT;
 	IDWriteTextFormat*  m_pTextFormat;
 	ID2D1SolidColorBrush* m_pTextColor;
-	std::wstring		m_szDefaultText ;
+	std::wstring		m_szDefaultText;
+
+	IDWriteTextLayout* m_pTextLayout;//
 public:
 	virtual bool		Init(); // 초기화
 	virtual bool		Frame();// 실시간 계산
@@ -22,5 +24,6 @@ public:
 	virtual bool		Release();// 소멸 및 삭제
 public:
 	bool		Set(IDXGISurface1* dxgiSurface);
+	bool		Draw(float x, float y, std::wstring text, D2D1_COLOR_F color = {0,0,0,1});
 };
 
