@@ -18,7 +18,7 @@
 extern HWND g_hWnd;
 extern RECT g_rtClient;
 extern float g_fGameTimer;
-extern float g_fElapseTimer;
+extern float g_fSecondPerFrame;
 
 #define GAME_START int APIENTRY wWinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,LPWSTR    lpCmdLine,int       nCmdShow){
 #define GAME_WINDOW(s,x,y) Sample demo;demo.SetWindow(hInstance,L#s,x,y);demo.Run();return 1;

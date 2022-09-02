@@ -1,7 +1,7 @@
 #include "TTimer.h"
 
 float g_fGameTimer = 0.0f;
-float g_fElapseTimer= 0.0f;
+float g_fSecondPerFrame = 0.0f;
 
 bool		TTimer::Init()
 {
@@ -28,7 +28,7 @@ bool		TTimer::Frame()
     }
 
     g_fGameTimer    = m_fGameTimer;
-    g_fElapseTimer  = m_fElapseTimer;
+    g_fSecondPerFrame = m_fElapseTimer;
     m_dwBeforeTime  = dwCurrentTime;
     return true;
 }
