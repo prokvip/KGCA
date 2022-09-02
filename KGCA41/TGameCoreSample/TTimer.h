@@ -1,6 +1,6 @@
 #pragma once
 #include "TStd.h"
-class TTimer
+class TTimer : public TSingleton<TTimer>
 {
 public:
 	float m_fGameTimer = 0.0f;
@@ -17,3 +17,4 @@ public:
 	virtual bool		Release();// ¼Ò¸ê ¹× »èÁ¦
 };
 
+#define I_Timer TTimer::GetInstance()

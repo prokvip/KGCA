@@ -5,8 +5,6 @@
 class TGameCore : public TDevice
 {
 public:
-	TTimer		m_Timer;
-	TInput		m_Input;
 	bool m_bGameRun = true;
 public:
 	virtual bool		Init() {return true;}; // √ ±‚»≠

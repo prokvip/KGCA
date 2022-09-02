@@ -7,7 +7,7 @@ enum KeyState
 	KEY_PUSH,
 	KEY_HOLD,
 };
-class TInput
+class TInput : public TSingleton<TInput>
 {
 private:
 	DWORD		m_dwKeyState[256]; // mouse 버튼 + 키버튼
@@ -21,4 +21,4 @@ public:
 public:
 	DWORD  GetKey(DWORD dwKey);
 };
-
+#define I_Input TInput::GetInstance()
