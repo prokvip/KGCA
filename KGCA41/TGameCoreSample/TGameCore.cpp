@@ -7,11 +7,13 @@ bool		TGameCore::TCoreInit()
         return false;
     }
     m_Timer.Init();
+    m_Input.Init();
     return Init();
 }
 bool		TGameCore::TCoreFrame()
 {
     m_Timer.Frame();
+    m_Input.Frame();
     return Frame();
 }
 bool		TGameCore::TCorePreRender()
@@ -26,6 +28,7 @@ bool		TGameCore::TCoreRender()
     TCorePreRender();
         Render();
         m_Timer.Render();
+        m_Input.Render();
     TCorePostRender();
     return true;
 }
@@ -38,6 +41,7 @@ bool		TGameCore::TCoreRelease()
 {
     Release();
     m_Timer.Release();
+    m_Input.Release();
     TDevice::Release();
     return true;
 }

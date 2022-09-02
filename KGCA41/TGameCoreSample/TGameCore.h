@@ -1,10 +1,12 @@
 #pragma once
 #include "TDevice.h"
 #include "TTimer.h"
+#include "TInput.h"
 class TGameCore : public TDevice
 {
 public:
 	TTimer		m_Timer;
+	TInput		m_Input;
 	bool m_bGameRun = true;
 public:
 	virtual bool		Init() {return true;}; // √ ±‚»≠

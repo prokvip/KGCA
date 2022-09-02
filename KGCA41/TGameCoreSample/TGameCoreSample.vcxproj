@@ -146,6 +146,7 @@
     <ClCompile Include="Sample.cpp" />
     <ClCompile Include="TDevice.cpp" />
     <ClCompile Include="TGameCore.cpp" />
+    <ClCompile Include="TInput.cpp" />
     <ClCompile Include="TTimer.cpp" />
     <ClCompile Include="TWindow.cpp" />
   </ItemGroup>
@@ -153,6 +154,7 @@
     <ClInclude Include="Sample.h" />
     <ClInclude Include="TDevice.h" />
     <ClInclude Include="TGameCore.h" />
+    <ClInclude Include="TInput.h" />
     <ClInclude Include="TStd.h" />
     <ClInclude Include="TTimer.h" />
     <ClInclude Include="TWindow.h" />
