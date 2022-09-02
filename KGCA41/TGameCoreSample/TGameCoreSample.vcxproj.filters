@@ -33,6 +33,9 @@
     <ClCompile Include="TInput.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="TWriter.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Sample.h">
@@ -54,6 +57,9 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="TInput.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="TWriter.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

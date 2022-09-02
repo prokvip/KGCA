@@ -2,10 +2,13 @@
 #include "TDevice.h"
 #include "TTimer.h"
 #include "TInput.h"
+#include "TWriter.h"
 class TGameCore : public TDevice
 {
 public:
 	bool m_bGameRun = true;
+	TWriter				m_Writer;
+	IDXGISurface1* m_pBackBuffer;
 public:
 	virtual bool		Init() {return true;}; // 초기화
 	virtual bool		Frame() { return true; }; // 실시간 계산

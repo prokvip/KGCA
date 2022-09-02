@@ -9,12 +9,18 @@ bool		TGameCore::TCoreInit()
     }
     I_Timer.Init();
     I_Input.Init();
+    m_Writer.Init();
+
+    m_pSwapChain->GetBuffer(0, __uuidof(IDXGISurface1),
+            (void**)&m_pBackBuffer);
+    m_Writer.Set(m_pBackBuffer);    
     return Init();
 }
 bool		TGameCore::TCoreFrame()
 {
     I_Timer.Frame();
     I_Input.Frame();
+    m_Writer.Frame();
     return Frame();
 }
 bool		TGameCore::TCorePreRender()
@@ -30,6 +36,8 @@ bool		TGameCore::TCoreRender()
         Render();
         I_Timer.Render();
         I_Input.Render();
+        m_Writer.m_szDefaultText = I_Timer.m_szTimer;
+        m_Writer.Render();
     TCorePostRender();
     return true;
 }
@@ -40,9 +48,11 @@ bool		TGameCore::TCorePostRender()
 }
 bool		TGameCore::TCoreRelease()
 {
+    m_pBackBuffer->Release();
     Release();
     I_Timer.Release();
     I_Input.Release();
+    m_Writer.Release();
     TDevice::Release();
     return true;
 }
