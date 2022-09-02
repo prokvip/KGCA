@@ -11,6 +11,7 @@ bool		Sample::Frame()
  * 0x3A - 0x40 : unassigned
  * VK_A - VK_Z are the same as ASCII 'A' - 'Z' (0x41 - 0x5A)
  */
+    POINT ptPos = I_Input.m_ptPos;
     if( I_Input.GetKey(VK_LBUTTON) == KEY_PUSH)
     {
         INT K = 0;
