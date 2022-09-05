@@ -149,7 +149,7 @@ bool	TBaseObject::Frame()
         &m_VertexList.at(0), 0, 0 );
     return true;
 }
-bool		TBaseObject::Render()
+bool		TBaseObject::PreRender()
 {
     // 삼각형 랜더링
     UINT stride = sizeof(SimpleVertex); // 정점1개의 바이트용량
@@ -164,8 +164,18 @@ bool		TBaseObject::Render()
     m_pImmediateContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     // tex
     ID3D11ShaderResourceView* srv = m_pTexture->GetSRV();
-    m_pImmediateContext->PSSetShaderResources(0, 1, &srv);
+    m_pImmediateContext->PSSetShaderResources(0, 1, &srv);    
+    return true;
+}
+bool		TBaseObject::PostRender()
+{  
     m_pImmediateContext->Draw(m_VertexList.size(), 0);
+    return true;
+}
+bool		TBaseObject::Render()
+{
+    PreRender();
+    PostRender();
     return true;
 }
 bool		TBaseObject::Release()

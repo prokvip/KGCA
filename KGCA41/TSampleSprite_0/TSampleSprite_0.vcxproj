@@ -177,6 +177,9 @@
     <ClInclude Include="TWindow.h" />
     <ClInclude Include="TWriter.h" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="DefaultShapeMask.txt" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

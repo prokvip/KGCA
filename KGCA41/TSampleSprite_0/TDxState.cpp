@@ -1,6 +1,6 @@
 #include "TDxState.h"
 ID3D11SamplerState* TDxState::g_pDefaultSS = nullptr;
-
+ID3D11BlendState* TDxState::g_pDefaultBS = nullptr;
 bool TDxState::SetState(ID3D11Device* pd3dDevice)
 {
     HRESULT hr;
