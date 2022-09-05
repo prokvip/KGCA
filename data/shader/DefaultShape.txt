@@ -42,5 +42,5 @@ struct PS_input
 float4 PS(	PS_input input) : SV_Target
 {
 	float4 vColor = g_txTexutureA.Sample(g_SampleA , input.t);	
-	return vColor* float4(1,0,0,1);
+	return vColor;
 }

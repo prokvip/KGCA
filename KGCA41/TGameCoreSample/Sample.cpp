@@ -4,7 +4,7 @@ bool	Sample::Init()
 {        
     return true;
 }
-bool		Sample::Frame()
+bool	Sample::Frame()
 {
 /*
  * VK_0 - VK_9 are the same as ASCII '0' - '9' (0x30 - 0x39)
@@ -23,7 +23,7 @@ bool		Sample::Frame()
    
     return true;
 }
-bool		Sample::Render()
+bool	Sample::Render()
 {
     if (I_Input.GetKey('W') == KEY_HOLD)
     {
@@ -43,10 +43,9 @@ bool		Sample::Render()
     }
     return true;
 }
-bool		Sample::Release()
+bool	Sample::Release()
 {   
     return true;
 }
-
 
 GAME_RUN(TGameCore, 1024, 768)
