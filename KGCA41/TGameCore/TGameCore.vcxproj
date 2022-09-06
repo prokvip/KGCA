@@ -154,6 +154,8 @@ copy "TGameCore_d.lib" "..\\..\\lib\\"</Command>
     </Link>
     <Lib>
       <OutputFile>TGameCore_R.lib</OutputFile>
+      <AdditionalDependencies>
+      </AdditionalDependencies>
     </Lib>
     <PostBuildEvent>
       <Command>copy "*.h" "..\\..\\include"
@@ -161,10 +163,12 @@ copy "TGameCore_R.lib" "..\\..\\lib\\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="TDevice.h" />
     <ClInclude Include="TStd.h" />
     <ClInclude Include="TWindow.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="TDevice.cpp" />
     <ClCompile Include="TWindow.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

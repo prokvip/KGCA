@@ -1,7 +1,9 @@
 #pragma once
-#include "TWindow.h"
+#include "TDevice.h"
 //#define TCORE
-class Sample : public TWindow
+class Sample : public TDevice
 {
+public:
+	virtual bool		Run() override;
 };
 
