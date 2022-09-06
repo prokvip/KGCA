@@ -5,7 +5,7 @@
 #include <list>
 #include <set>
 #include <string>
-//#define TCORE
+#define TCORE
 extern HWND g_hWnd;
 extern RECT g_rtClient;
 
