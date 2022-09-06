@@ -83,6 +83,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
+    <OutDir>../../output/Release/TGameCore</OutDir>
+    <IntDir>../../output/Release/TGameCore</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -127,11 +129,11 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <OutputFile>TGameCore.lib</OutputFile>
+      <OutputFile>TGameCore_d.lib</OutputFile>
     </Lib>
     <PostBuildEvent>
       <Command>copy "*.h" "..\\..\\include"
-copy "TGameCore.lib" "..\\..\\lib\\TGameCore.lib"</Command>
+copy "TGameCore_d.lib" "..\\..\\lib\\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -150,6 +152,13 @@ copy "TGameCore.lib" "..\\..\\lib\\TGameCore.lib"</Command>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <Lib>
+      <OutputFile>TGameCore_R.lib</OutputFile>
+    </Lib>
+    <PostBuildEvent>
+      <Command>copy "*.h" "..\\..\\include"
+copy "TGameCore_R.lib" "..\\..\\lib\\"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="TStd.h" />

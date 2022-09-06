@@ -4,6 +4,7 @@ HWND g_hWnd;
 RECT g_rtClient;
 TWindow* g_pWindow = nullptr;
 
+
 LRESULT CALLBACK WndProc(
     HWND hWnd, 
     UINT message, 
