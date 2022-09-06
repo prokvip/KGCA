@@ -126,6 +126,13 @@
       </SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <Lib>
+      <OutputFile>TGameCore.lib</OutputFile>
+    </Lib>
+    <PostBuildEvent>
+      <Command>copy "*.h" "..\\..\\include"
+copy "TGameCore.lib" "..\\..\\lib\\TGameCore.lib"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>

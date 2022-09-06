@@ -147,6 +147,11 @@
   <ItemGroup>
     <ClCompile Include="Sample.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\TGameCore\TGameCore.vcxproj">
+      <Project>{665e0ce5-e135-453e-8a17-2a9b66bb933d}</Project>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

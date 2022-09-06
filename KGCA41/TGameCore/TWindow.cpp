@@ -1,7 +1,9 @@
 #include "TWindow.h"
+
 HWND g_hWnd;
 RECT g_rtClient;
 TWindow* g_pWindow = nullptr;
+
 LRESULT CALLBACK WndProc(
     HWND hWnd, 
     UINT message, 
@@ -116,7 +118,13 @@ bool        TWindow::Run()
         {
             TranslateMessage(&msg); // 메세지 번역
             DispatchMessage(&msg);  // 메세지 프로시져에 전달한다.
-        }        
+        }   
+#ifdef TCORE
+        else
+        {
+            return true;
+        }
+#endif
     }
     return false;
 }
