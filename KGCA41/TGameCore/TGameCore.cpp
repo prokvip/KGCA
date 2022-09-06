@@ -2,11 +2,14 @@
 bool		TGameCore::TCoreInit()
 {
 	TDevice::Init();
+	I_Input.Init();
+	I_Timer.Init();
     return Init();
 }
 bool		TGameCore::TCoreFrame()
 {
-	TDevice::Frame();
+	I_Input.Frame();
+	I_Timer.Frame();
     return Frame();
 }
 bool		TGameCore::TCorePreRender()
@@ -20,6 +23,8 @@ bool		TGameCore::TCoreRender()
 {  	
 	TCorePreRender();
 	Render();
+	I_Input.Render();
+	I_Timer.Render();
 	TCorePostRender();
     return true;
 }
@@ -30,6 +35,9 @@ bool		TGameCore::TCorePostRender()
 }
 bool		TGameCore::TCoreRelease()
 {   
+	Release();
+	I_Input.Release();
+	I_Timer.Release();
 	TDevice::Release();
     return true;
 }

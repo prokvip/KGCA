@@ -1,5 +1,7 @@
 #pragma once
 #include "TDevice.h"
+#include "TInput.h"
+#include "TTimer.h"
 class TGameCore : public TDevice
 {
 public:
