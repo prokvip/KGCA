@@ -32,6 +32,7 @@ bool		TGameCore::TCoreRender()
 		Render();
 		I_Input.Render();
 		I_Timer.Render();
+		m_Writer.m_szDefaultText = I_Timer.m_szTimer;
 		m_Writer.Render();
 	TCorePostRender();
     return true;

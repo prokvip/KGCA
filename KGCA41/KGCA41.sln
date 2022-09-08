@@ -109,6 +109,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TTextInput", "TSampleInput\
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TSampleTriangle", "TSampleTriangle\TSampleTriangle.vcxproj", "{77E4EEB1-C5EF-4DFB-8459-111E71B967E4}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TSampleBaseObject", "TSampleBaseObject\TSampleBaseObject.vcxproj", "{7C9A2842-E8A1-4671-A19A-A3F389E4B0DA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|ARM = Debug|ARM
@@ -673,6 +675,18 @@ Global
 		{77E4EEB1-C5EF-4DFB-8459-111E71B967E4}.Release|x64.Build.0 = Release|x64
 		{77E4EEB1-C5EF-4DFB-8459-111E71B967E4}.Release|x86.ActiveCfg = Release|Win32
 		{77E4EEB1-C5EF-4DFB-8459-111E71B967E4}.Release|x86.Build.0 = Release|Win32
+		{7C9A2842-E8A1-4671-A19A-A3F389E4B0DA}.Debug|ARM.ActiveCfg = Debug|Win32
+		{7C9A2842-E8A1-4671-A19A-A3F389E4B0DA}.Debug|ARM64.ActiveCfg = Debug|Win32
+		{7C9A2842-E8A1-4671-A19A-A3F389E4B0DA}.Debug|x64.ActiveCfg = Debug|x64
+		{7C9A2842-E8A1-4671-A19A-A3F389E4B0DA}.Debug|x64.Build.0 = Debug|x64
+		{7C9A2842-E8A1-4671-A19A-A3F389E4B0DA}.Debug|x86.ActiveCfg = Debug|Win32
+		{7C9A2842-E8A1-4671-A19A-A3F389E4B0DA}.Debug|x86.Build.0 = Debug|Win32
+		{7C9A2842-E8A1-4671-A19A-A3F389E4B0DA}.Release|ARM.ActiveCfg = Release|Win32
+		{7C9A2842-E8A1-4671-A19A-A3F389E4B0DA}.Release|ARM64.ActiveCfg = Release|Win32
+		{7C9A2842-E8A1-4671-A19A-A3F389E4B0DA}.Release|x64.ActiveCfg = Release|x64
+		{7C9A2842-E8A1-4671-A19A-A3F389E4B0DA}.Release|x64.Build.0 = Release|x64
+		{7C9A2842-E8A1-4671-A19A-A3F389E4B0DA}.Release|x86.ActiveCfg = Release|Win32
+		{7C9A2842-E8A1-4671-A19A-A3F389E4B0DA}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
