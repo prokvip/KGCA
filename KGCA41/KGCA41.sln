@@ -113,6 +113,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TSampleBaseObject", "TSampl
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TSampleBaseObjectCore", "TSampleBaseObjectCore\TSampleBaseObjectCore.vcxproj", "{C93AEFCE-D701-4B16-B947-F1FAA93E2BAF}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TSampleTexture", "TSampleTexture\TSampleTexture.vcxproj", "{8FE83016-DBF3-4290-B4DD-8100D5502075}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|ARM = Debug|ARM
@@ -701,6 +703,18 @@ Global
 		{C93AEFCE-D701-4B16-B947-F1FAA93E2BAF}.Release|x64.Build.0 = Release|x64
 		{C93AEFCE-D701-4B16-B947-F1FAA93E2BAF}.Release|x86.ActiveCfg = Release|Win32
 		{C93AEFCE-D701-4B16-B947-F1FAA93E2BAF}.Release|x86.Build.0 = Release|Win32
+		{8FE83016-DBF3-4290-B4DD-8100D5502075}.Debug|ARM.ActiveCfg = Debug|Win32
+		{8FE83016-DBF3-4290-B4DD-8100D5502075}.Debug|ARM64.ActiveCfg = Debug|Win32
+		{8FE83016-DBF3-4290-B4DD-8100D5502075}.Debug|x64.ActiveCfg = Debug|x64
+		{8FE83016-DBF3-4290-B4DD-8100D5502075}.Debug|x64.Build.0 = Debug|x64
+		{8FE83016-DBF3-4290-B4DD-8100D5502075}.Debug|x86.ActiveCfg = Debug|Win32
+		{8FE83016-DBF3-4290-B4DD-8100D5502075}.Debug|x86.Build.0 = Debug|Win32
+		{8FE83016-DBF3-4290-B4DD-8100D5502075}.Release|ARM.ActiveCfg = Release|Win32
+		{8FE83016-DBF3-4290-B4DD-8100D5502075}.Release|ARM64.ActiveCfg = Release|Win32
+		{8FE83016-DBF3-4290-B4DD-8100D5502075}.Release|x64.ActiveCfg = Release|x64
+		{8FE83016-DBF3-4290-B4DD-8100D5502075}.Release|x64.Build.0 = Release|x64
+		{8FE83016-DBF3-4290-B4DD-8100D5502075}.Release|x86.ActiveCfg = Release|Win32
+		{8FE83016-DBF3-4290-B4DD-8100D5502075}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

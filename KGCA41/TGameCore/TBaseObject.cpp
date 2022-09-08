@@ -163,9 +163,13 @@ HRESULT TBaseObject::CreateVertexLayout()
     return hr;
 }
 bool	TBaseObject::Create(
+    ID3D11Device* pd3dDevice,// 디바이스 객체
+    ID3D11DeviceContext* pImmediateContext,
     std::wstring vsfilename,
     std::wstring psfilename)
 {
+    m_pd3dDevice = pd3dDevice;
+    m_pImmediateContext = pImmediateContext;
     if (FAILED(CreateVertexBuffer()))
     {
         return false;
