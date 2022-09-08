@@ -2,9 +2,11 @@
 #include "TDevice.h"
 #include "TInput.h"
 #include "TTimer.h"
+#include "TWriter.h"
 class TGameCore : public TDevice
 {
 public:
+	TWriter				m_Writer;
 	bool m_bGameRun = true;
 public:
 	virtual bool		Init() {return true;}; // √ ±‚»≠

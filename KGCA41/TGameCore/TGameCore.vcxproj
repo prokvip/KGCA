@@ -169,6 +169,7 @@ copy "TGameCore_R.lib" "..\\..\\lib\\"</Command>
     <ClInclude Include="TStd.h" />
     <ClInclude Include="TTimer.h" />
     <ClInclude Include="TWindow.h" />
+    <ClInclude Include="TWriter.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="TDevice.cpp" />
@@ -176,6 +177,7 @@ copy "TGameCore_R.lib" "..\\..\\lib\\"</Command>
     <ClCompile Include="TInput.cpp" />
     <ClCompile Include="TTimer.cpp" />
     <ClCompile Include="TWindow.cpp" />
+    <ClCompile Include="TWriter.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

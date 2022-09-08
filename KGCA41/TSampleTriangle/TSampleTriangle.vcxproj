@@ -21,8 +21,8 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{D1DF631D-9CBC-4C0F-A8D1-63A5EB8D3C42}</ProjectGuid>
-    <RootNamespace>TGameCoreSample1</RootNamespace>
+    <ProjectGuid>{77e4eeb1-c5ef-4dfb-8459-111e71b967e4}</ProjectGuid>
+    <RootNamespace>TSampleTriangle</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -150,11 +150,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Sample.h" />
-    <ClInclude Include="TWriter.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Sample.cpp" />
-    <ClCompile Include="TWriter.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TGameCore\TGameCore.vcxproj">
