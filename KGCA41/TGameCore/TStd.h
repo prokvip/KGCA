@@ -5,6 +5,8 @@
 #include <list>
 #include <set>
 #include <string>
+#include "TVector.h"
+
 #define TCORE
 extern HWND g_hWnd;
 extern RECT g_rtClient;

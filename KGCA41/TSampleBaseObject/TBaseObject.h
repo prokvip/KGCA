@@ -2,9 +2,9 @@
 #include "TDevice.h"
 struct SimpleVertex
 {
-	float  x; // À§Ä¡
-	float  y;
-	float  z;
+	TVector    p;	
+	TVector4D  c;
+	TVector2D  t;
 };
 
 class TBaseObject 
@@ -23,10 +23,13 @@ public:
 	std::vector<SimpleVertex>    m_VertexList;
 	std::vector<DWORD>			 m_IndexList;
 public:
+	virtual bool		Create(std::wstring vsfilename, std::wstring psfilename);
+	virtual void		CreateVertexData();
+	virtual void		CreateIndexData();
 	virtual HRESULT		CreateVertexBuffer();
 	virtual HRESULT		CreateIndexBuffer();
-	virtual HRESULT     CreateVertexShader();
-	virtual HRESULT     CreatePixelShader();
+	virtual HRESULT     CreateVertexShader(std::wstring filename);
+	virtual HRESULT     CreatePixelShader(std::wstring filename);
 	virtual HRESULT     CreateVertexLayout();
 public:
 	virtual bool		Init() ;

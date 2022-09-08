@@ -1,25 +1,25 @@
 #include "Sample.h"
 bool	Sample::Init()
 {
-    m_Object.m_pd3dDevice = m_pd3dDevice;
-    m_Object.m_pImmediateContext = m_pImmediateContext;
-
-    m_Object.Init();
+    m_Plane.m_pd3dDevice = m_pd3dDevice;
+    m_Plane.m_pImmediateContext = m_pImmediateContext;
+    m_Plane.Init();
+    m_Plane.Create(L"DefaultShape.txt", L"DefaultShape.txt");
     return true;
 }
 bool Sample::Frame()
 {	
-    m_Object.Frame();
+    m_Plane.Frame();
 	return true;
 }
 bool Sample::Render()
 {	
-    m_Object.Render();
+    m_Plane.Render();
 	return true;
 }
 bool Sample::Release()
 {	
-    m_Object.Release();
+    m_Plane.Release();
 	return true;
 }
 

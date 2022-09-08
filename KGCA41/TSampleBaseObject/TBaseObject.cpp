@@ -1,13 +1,37 @@
 #include "TBaseObject.h"
+void    TBaseObject::CreateVertexData()
+{
+    m_VertexList.resize(4);
+    m_VertexList[0].p = { -1.0f, 1.0f, 0.0f };
+    m_VertexList[1].p = { +1.0f, 1.0f,  0.0f };
+    m_VertexList[2].p = { -1.0f, -1.0f, 0.0f };
+    m_VertexList[3].p = { 1.0f, -1.0f, 0.0f };
+
+    m_VertexList[0].c = { 1.0f, 1.0f, 1.0f, 1.0f };
+    m_VertexList[1].c = { 1.0f, 1.0f, 1.0f, 1.0f };
+    m_VertexList[2].c = { 1.0f, 1.0f, 1.0f, 1.0f };
+    m_VertexList[3].c = { 1.0f, 1.0f, 1.0f, 1.0f };
+
+    m_VertexList[0].t = { 0.0f, 0.0f };
+    m_VertexList[1].t = { 1.0f, 0.0f };
+    m_VertexList[2].t = { 0.0f, 1.0f };
+    m_VertexList[3].t = { 1.0f, 1.0f };
+}
+void    TBaseObject::CreateIndexData()
+{
+    // 정점버퍼에 인덱스
+    m_IndexList.resize(6);
+    m_IndexList[0] = 0;
+    m_IndexList[1] = 1;
+    m_IndexList[2] = 2;
+    m_IndexList[3] = 2;
+    m_IndexList[4] = 1;
+    m_IndexList[5] = 3;
+}
 HRESULT TBaseObject::CreateVertexBuffer()
 {
     HRESULT hr;
-    m_VertexList.resize(4);
-    m_VertexList[0] = { -1.0f, 1.0f, 0.0f };
-    m_VertexList[1] = { +1.0f, 1.0f,  0.0f };
-    m_VertexList[2] = { -1.0f, -1.0f, 0.0f };
-    m_VertexList[3] = { 1.0f, -1.0f, 0.0f };
-
+    CreateVertexData();
     D3D11_BUFFER_DESC       bd;
     ZeroMemory(&bd, sizeof(bd));
     bd.ByteWidth = sizeof(SimpleVertex) * m_VertexList.size(); // 바이트 용량
@@ -27,14 +51,8 @@ HRESULT TBaseObject::CreateVertexBuffer()
 HRESULT TBaseObject::CreateIndexBuffer()
 {
     HRESULT hr;    
-    // 정점버퍼에 인덱스
-    m_IndexList.resize(6);
-    m_IndexList[0] = 0;
-    m_IndexList[1] = 1;
-    m_IndexList[2] = 2;
-    m_IndexList[3] = 2;
-    m_IndexList[4] = 1;
-    m_IndexList[5] = 3;
+    
+    CreateIndexData();
 
     D3D11_BUFFER_DESC       bd;
     ZeroMemory(&bd, sizeof(bd));
@@ -52,16 +70,16 @@ HRESULT TBaseObject::CreateIndexBuffer()
         &m_pIndexBuffer);
     return hr;
 }
-HRESULT TBaseObject::CreateVertexShader()
+HRESULT TBaseObject::CreateVertexShader(std::wstring filename)
 {
     HRESULT hr;
     // 정점쉐이더 컴파일 
     ID3DBlob* pErrorCode = nullptr;
     hr = D3DCompileFromFile(
-        L"VertexShader.txt",
+        filename.c_str(),
         NULL,
         NULL,
-        "main",
+        "VS",
         "vs_5_0",
         0,
         0,
@@ -83,16 +101,16 @@ HRESULT TBaseObject::CreateVertexShader()
         &m_pVS);  
     return hr;
 }
-HRESULT TBaseObject::CreatePixelShader()
+HRESULT TBaseObject::CreatePixelShader(std::wstring filename)
 {
     HRESULT hr; 
     ID3DBlob* pErrorCode = nullptr;
     // 픽쉘쉐이더 컴파일  
     hr = D3DCompileFromFile(
-        L"PixelShader.txt",
+        filename.c_str(),
         NULL,
         NULL,
-        "PSMain",
+        "PS",
         "ps_5_0",
         0,
         0,
@@ -131,6 +149,8 @@ HRESULT TBaseObject::CreateVertexLayout()
     D3D11_INPUT_ELEMENT_DESC ied[] =
     {
         { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0,0,D3D11_INPUT_PER_VERTEX_DATA, 0},
+        { "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0,12,D3D11_INPUT_PER_VERTEX_DATA, 0},
+        { "TEXTURE", 0, DXGI_FORMAT_R32G32_FLOAT, 0,28,D3D11_INPUT_PER_VERTEX_DATA, 0},
     };
     UINT NumElements = sizeof(ied) / sizeof(ied[0]);
     hr = m_pd3dDevice->CreateInputLayout(
@@ -142,7 +162,9 @@ HRESULT TBaseObject::CreateVertexLayout()
 
     return hr;
 }
-bool	TBaseObject::Init()
+bool	TBaseObject::Create(
+    std::wstring vsfilename,
+    std::wstring psfilename)
 {
     if (FAILED(CreateVertexBuffer()))
     {
@@ -152,11 +174,11 @@ bool	TBaseObject::Init()
     {
         return false;
     }
-    if (FAILED(CreateVertexShader()))
+    if (FAILED(CreateVertexShader(vsfilename)))
     {
         return false;
     }
-    if (FAILED(CreatePixelShader()))
+    if (FAILED(CreatePixelShader(psfilename)))
     {
         return false;
     }
@@ -165,6 +187,10 @@ bool	TBaseObject::Init()
         return false;
     }
 
+    return true;
+}
+bool	TBaseObject::Init()
+{   
     return true;
 }
 bool TBaseObject::Frame()

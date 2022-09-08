@@ -1,10 +1,10 @@
 #pragma once
 #include "TGameCore.h"
-#include "TBaseObject.h"
+#include "TObjectPlane.h"
 
 class Sample : public TGameCore
 {
-	TBaseObject			m_Object;
+	TObjectPlane		m_Plane;
 public:
 	virtual bool		Init() override;
 	virtual bool		Frame() override;

@@ -168,6 +168,7 @@ copy "TGameCore_R.lib" "..\\..\\lib\\"</Command>
     <ClInclude Include="TInput.h" />
     <ClInclude Include="TStd.h" />
     <ClInclude Include="TTimer.h" />
+    <ClInclude Include="TVector.h" />
     <ClInclude Include="TWindow.h" />
     <ClInclude Include="TWriter.h" />
   </ItemGroup>
@@ -176,6 +177,7 @@ copy "TGameCore_R.lib" "..\\..\\lib\\"</Command>
     <ClCompile Include="TGameCore.cpp" />
     <ClCompile Include="TInput.cpp" />
     <ClCompile Include="TTimer.cpp" />
+    <ClCompile Include="TVector.cpp" />
     <ClCompile Include="TWindow.cpp" />
     <ClCompile Include="TWriter.cpp" />
   </ItemGroup>

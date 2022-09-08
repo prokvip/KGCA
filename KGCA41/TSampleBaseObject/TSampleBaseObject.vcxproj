@@ -151,10 +151,12 @@
   <ItemGroup>
     <ClInclude Include="Sample.h" />
     <ClInclude Include="TBaseObject.h" />
+    <ClInclude Include="TObjectPlane.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Sample.cpp" />
     <ClCompile Include="TBaseObject.cpp" />
+    <ClCompile Include="TObjectPlane.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TGameCore\TGameCore.vcxproj">
@@ -162,6 +164,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Text Include="DefaultShape.txt" />
     <Text Include="PixelShader.txt" />
     <Text Include="VertexShader.txt" />
   </ItemGroup>
