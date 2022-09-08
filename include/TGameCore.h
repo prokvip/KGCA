@@ -3,6 +3,7 @@
 #include "TInput.h"
 #include "TTimer.h"
 #include "TWriter.h"
+#include "TTextureManager.h"
 class TGameCore : public TDevice
 {
 public:

@@ -165,8 +165,7 @@ HRESULT TBaseObject::CreateVertexLayout()
 bool	TBaseObject::Create(
     ID3D11Device* pd3dDevice,// 디바이스 객체
     ID3D11DeviceContext* pImmediateContext,
-    std::wstring vsfilename,
-    std::wstring psfilename)
+    std::wstring shadername, std::wstring texturename)
 {
     m_pd3dDevice = pd3dDevice;
     m_pImmediateContext = pImmediateContext;
@@ -178,11 +177,11 @@ bool	TBaseObject::Create(
     {
         return false;
     }
-    if (FAILED(CreateVertexShader(vsfilename)))
+    if (FAILED(CreateVertexShader(shadername)))
     {
         return false;
     }
-    if (FAILED(CreatePixelShader(psfilename)))
+    if (FAILED(CreatePixelShader(shadername)))
     {
         return false;
     }
@@ -191,6 +190,7 @@ bool	TBaseObject::Create(
         return false;
     }
 
+    m_pTexture = I_Tex.Load(texturename);
     return true;
 }
 bool	TBaseObject::Init()
@@ -210,6 +210,7 @@ void   TBaseObject::UpdateVertexBuffer()
 }
 bool TBaseObject::Render()
 {
+    m_pTexture->Apply(m_pImmediateContext, 0);
     m_pImmediateContext->IASetInputLayout(m_pVertexLayout);
     m_pImmediateContext->VSSetShader(m_pVS, NULL, 0);
     m_pImmediateContext->PSSetShader(m_pPS, NULL, 0);

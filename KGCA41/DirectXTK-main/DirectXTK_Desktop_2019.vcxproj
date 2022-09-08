@@ -305,7 +305,7 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <PostBuildEvent>
-      <Command>copy "..\\..\\output\\dktk\\Release\\*.lib" "..\\..\\lib\\DirectXTK_R.lib"</Command>
+      <Command>copy "..\\..\\output\\dktk\\Release\\DirectXTK.lib" "..\\..\\lib\\DirectXTK_R.lib"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
