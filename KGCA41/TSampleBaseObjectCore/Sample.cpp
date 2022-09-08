@@ -10,7 +10,7 @@ bool	Sample::Init()
 }
 bool Sample::Frame()
 {	
-    m_Plane.UpdateVertexBuffer();
+    //m_Plane.UpdateVertexBuffer();
     m_Plane.Frame();
 	return true;
 }

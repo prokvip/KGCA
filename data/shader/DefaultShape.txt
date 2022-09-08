@@ -1,11 +1,24 @@
-float4 VS(float3 p : POSITION, 
-          float4 c : COLOR,
-		  float2 t : TEXTURE ) : SV_POSITION
+struct VS_IN
 {
-	float3 vPos = p;
-	return float4(vPos.x,vPos.y, vPos.z, 1.0f); 
+	float3 p : POSITION; 
+    float4 c : COLOR;
+	float2 t : TEXTURE;
+};
+struct VS_OUT
+{
+	float4 p : SV_POSITION;
+	float4 c : COLOR0;
+	float2 t : TEXCOORD0;
+};
+VS_OUT VS(VS_IN input) 
+{
+	VS_OUT output = (VS_OUT)0;
+	output.p = float4(input.p,1.0f);
+	output.c = input.c;
+	output.t = input.t;
+	return output;
 }
-float4 PS(float4 p : SV_POSITION) : SV_Target
+float4 PS(VS_OUT input) : SV_Target
 {
-	return float4(0,0,1,1);
+	return input.c;
 }
