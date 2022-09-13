@@ -54,6 +54,12 @@
     <ClInclude Include="TShader.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="TObject2D.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="TCollision.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="TWindow.cpp">
@@ -90,6 +96,12 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="TShader.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="TObject2D.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="TCollision.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

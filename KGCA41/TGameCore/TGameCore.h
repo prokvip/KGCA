@@ -8,6 +8,7 @@ class TGameCore : public TDevice
 {
 public:
 	TWriter				m_Writer;
+	ID3D11SamplerState* m_pDefaultSS = nullptr;
 	bool m_bGameRun = true;
 public:
 	virtual bool		Init() {return true;}; // √ ±‚»≠

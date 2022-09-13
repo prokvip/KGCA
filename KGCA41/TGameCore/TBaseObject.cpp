@@ -207,6 +207,10 @@ bool	TBaseObject::Create(
     }
 
     m_pTexture = I_Tex.Load(texturename);
+    if (m_pTexture != nullptr)
+    {
+        m_pTextureSRV = m_pTexture->m_pTextureSRV;
+    }
     return true;
 }
 bool	TBaseObject::Init()
@@ -226,7 +230,13 @@ void   TBaseObject::UpdateVertexBuffer()
 }
 bool TBaseObject::Render()
 {
-    m_pTexture->Apply(m_pImmediateContext, 0);
+    PreRender();
+    PostRender();
+    return true;
+}
+bool TBaseObject::PreRender()
+{
+    m_pImmediateContext->PSSetShaderResources(0, 1, &m_pTextureSRV);
     m_pImmediateContext->IASetInputLayout(m_pVertexLayout);
     m_pImmediateContext->VSSetShader(m_pVS, NULL, 0);
     m_pImmediateContext->PSSetShader(m_pPS, NULL, 0);
@@ -236,10 +246,14 @@ bool TBaseObject::Render()
         &m_pVertexBuffer, &stride, &offset);
     m_pImmediateContext->IASetIndexBuffer(m_pIndexBuffer,
         DXGI_FORMAT_R32_UINT, 0);
-    if(m_pIndexBuffer == nullptr)
+    return true;
+}
+bool TBaseObject::PostRender()
+{
+    if (m_pIndexBuffer == nullptr)
         m_pImmediateContext->Draw(m_VertexList.size(), 0);
     else
-        m_pImmediateContext->DrawIndexed(m_IndexList.size(),0,0);
+        m_pImmediateContext->DrawIndexed(m_IndexList.size(), 0, 0);
     return true;
 }
 bool TBaseObject::Release()

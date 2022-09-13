@@ -19,6 +19,7 @@ public:
 	ID3D11InputLayout* m_pVertexLayout;
 	TShader* m_pShader;
 	TTexture* m_pTexture;
+	ID3D11ShaderResourceView*    m_pTextureSRV = nullptr;
 	std::vector<SimpleVertex>    m_VertexList;
 	std::vector<DWORD>			 m_IndexList;
 public:
@@ -43,7 +44,9 @@ public:
 public:
 	virtual bool		Init() ;
 	virtual bool		Frame() ;
-	virtual bool		Render() ;
+	virtual bool		PreRender();
+	virtual bool		Render();
+	virtual bool		PostRender();
 	virtual bool		Release() ;
 };
 
