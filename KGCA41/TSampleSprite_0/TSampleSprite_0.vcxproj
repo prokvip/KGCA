@@ -184,6 +184,7 @@
     <ClInclude Include="TWriter.h" />
   </ItemGroup>
   <ItemGroup>
+    <Text Include="..\..\data\shader\DefaultShape.txt" />
     <Text Include="DefaultShapeMask.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

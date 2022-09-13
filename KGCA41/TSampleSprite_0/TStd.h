@@ -9,7 +9,7 @@
 #include <d3dcompiler.h>
 #include "WICTextureLoader.h"
 #include "DDSTextureLoader.h"
-#pragma comment(lib, "DirectXTK.lib")
+#pragma comment(lib, "DirectXTK_d.lib")
 #pragma comment(lib, "d3d11.lib")
 #pragma comment(lib, "d3dcompiler.lib")
 #pragma comment(lib, "dxgi.lib")

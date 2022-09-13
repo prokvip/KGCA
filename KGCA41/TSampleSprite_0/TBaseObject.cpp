@@ -31,22 +31,22 @@ HRESULT TBaseObject::CreateVertexBuffer()
 
     m_VertexList.resize(6);
     m_VertexList[0].p = { -1.0f, 1.0f, 0.0f };
-    m_VertexList[0].c = { 1.0f, 0.0f, 0.0f, 0.0f };
+    m_VertexList[0].c = { 1.0f, 1.0f, 1.0f,1.0f };
     m_VertexList[0].t = { 0.0f, 0.0f };
     m_VertexList[1].p = { +1.0f, 1.0f,  0.0f };
-    m_VertexList[1].c = { 1.0f, 0.0f, 0.0f, 0.0f };
+    m_VertexList[1].c = { 1.0f, 1.0f, 1.0f,1.0f };
     m_VertexList[1].t = { 1.0f, 0.0f };
     m_VertexList[2].p = { -1.0f, -1.0f, 0.0f };
-    m_VertexList[2].c = { 1.0f, 0.0f, 0.0f, 0.0f };
+    m_VertexList[2].c = { 1.0f, 1.0f, 1.0f,1.0f };
     m_VertexList[2].t = { 0.0f, 1.0f };
     m_VertexList[3].p = { -1.0f, -1.0f, 0.0f };
-    m_VertexList[3].c = { 1.0f, 0.0f, 0.0f, 0.0f };
+    m_VertexList[3].c = { 1.0f, 1.0f, 1.0f,1.0f };
     m_VertexList[3].t = { 0.0f, 1.0f };
     m_VertexList[4].p = { +1.0f, 1.0f,  0.0f };
-    m_VertexList[4].c = { 1.0f, 0.0f, 0.0f, 0.0f };
+    m_VertexList[4].c = { 1.0f, 1.0f, 1.0f,1.0f };
     m_VertexList[4].t = { 1.0f, 0.0f };
     m_VertexList[5].p = { +1.0f, -1.0f, 0.0f };
-    m_VertexList[5].c = { 1.0f, 0.0f, 0.0f, 0.0f };   
+    m_VertexList[5].c = { 1.0f, 1.0f, 1.0f,1.0f };
     m_VertexList[5].t = { 1.0f, 1.0f };
 
     /*m_VertexList[0].t = { 0.0f, 0.0f };
@@ -144,7 +144,7 @@ bool	TBaseObject::Init()
 bool	TBaseObject::Frame()
 {
     m_VertexList[0].p = { -1.0f, 1.0f, 0.0f };
-    m_VertexList[0].c = { 1.0f, 0.0f, 0.0f, 0.0f };
+    m_VertexList[0].c = { 1.0f, 1.0f, 1.0f, 1.0f };
     // gpu update
     m_pImmediateContext->UpdateSubresource(
         m_pVertexBuffer, 0, NULL,
