@@ -70,6 +70,18 @@ HRESULT TBaseObject::CreateIndexBuffer()
         &m_pIndexBuffer);
     return hr;
 }
+bool TBaseObject::CreateShader(std::wstring filename)
+{
+    m_pShader = I_Shader.Load(filename);
+    if (m_pShader)
+    {
+        m_pVS = m_pShader->m_pVS;
+        m_pPS = m_pShader->m_pPS;
+        m_pVSCode = m_pShader->m_pVSCode;
+        return true;
+    }
+    return false;
+}
 HRESULT TBaseObject::CreateVertexShader(std::wstring filename)
 {
     HRESULT hr;
@@ -177,14 +189,18 @@ bool	TBaseObject::Create(
     {
         return false;
     }
-    if (FAILED(CreateVertexShader(shadername)))
+    if (FAILED(CreateShader(shadername)))
+    {
+        return false;
+    }
+    /*if (FAILED(CreateVertexShader(shadername)))
     {
         return false;
     }
     if (FAILED(CreatePixelShader(shadername)))
     {
         return false;
-    }
+    }*/
     if (FAILED(CreateVertexLayout()))
     {
         return false;
@@ -231,10 +247,6 @@ bool TBaseObject::Release()
     if (m_pVertexBuffer) m_pVertexBuffer->Release();
     if (m_pIndexBuffer) m_pIndexBuffer->Release();
     if (m_pVertexLayout) m_pVertexLayout->Release();
-    if (m_pVS) m_pVS->Release();
-    if (m_pPS) m_pPS->Release();
-    if (m_pVSCode) m_pVSCode->Release();
-    if (m_pPSCode) m_pPSCode->Release();
     return true;
 }
 

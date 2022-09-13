@@ -169,6 +169,8 @@ copy "TGameCore_R.lib" "..\\..\\lib\\"</Command>
     <ClInclude Include="TDevice.h" />
     <ClInclude Include="TGameCore.h" />
     <ClInclude Include="TInput.h" />
+    <ClInclude Include="TShader.h" />
+    <ClInclude Include="TShaderManager.h" />
     <ClInclude Include="TStd.h" />
     <ClInclude Include="TTexture.h" />
     <ClInclude Include="TTextureManager.h" />
@@ -182,6 +184,8 @@ copy "TGameCore_R.lib" "..\\..\\lib\\"</Command>
     <ClCompile Include="TDevice.cpp" />
     <ClCompile Include="TGameCore.cpp" />
     <ClCompile Include="TInput.cpp" />
+    <ClCompile Include="TShader.cpp" />
+    <ClCompile Include="TShaderManager.cpp" />
     <ClCompile Include="TTexture.cpp" />
     <ClCompile Include="TTextureManager.cpp" />
     <ClCompile Include="TTimer.cpp" />

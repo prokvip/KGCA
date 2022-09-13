@@ -76,8 +76,10 @@ HRESULT TBaseObject::CreateVertexBuffer()
 bool TBaseObject::CreateShader(std::wstring filename)
 {    
     m_pShader = I_Shader.Load(filename);  
-
-    if (m_pShader) return true;
+    if (m_pShader)
+    {      
+        return true;
+    }
     return false;
 }
 HRESULT TBaseObject::CreateVertexLayout()
