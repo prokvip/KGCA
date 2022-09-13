@@ -2,31 +2,17 @@
 #include "TInput.h"
 bool TMapObject::Frame()
 {
-    m_VertexList[0].t = { 0.0f, 0.0f };
-    m_VertexList[1].t = { 1.0f, 0.0f };
-    m_VertexList[2].t = { 0.0f, 1.0f };
-    m_VertexList[3].t = { 1.0f, 1.0f };
-    
-    // gpu update
-    m_pImmediateContext->UpdateSubresource(
-        m_pVertexBuffer, 0, NULL,
-        &m_VertexList.at(0), 0, 0);
-	return true;
-}
-bool TMapObject::Render()
-{
-    PreRender();
-    static float fStep = 0.0f;  
-   /* UINT iMapWidth = m_pTexture->m_Desc.Width;
-    if (I_Input.GetKey('W') > 0)
-    {
-        m_vUserPos.y += g_fSecondPerFrame * 10.0f;
-        if (iMapWidth > m_vUserPos.x)
-        {
-            fStep = m_vUserPos.y / iMapWidth;
-        }
-       
-    }*/
+    static float fStep = 0.0f;
+    /* UINT iMapWidth = m_pTexture->m_Desc.Width;
+     if (I_Input.GetKey('W') > 0)
+     {
+         m_vUserPos.y += g_fSecondPerFrame * 10.0f;
+         if (iMapWidth > m_vUserPos.x)
+         {
+             fStep = m_vUserPos.y / iMapWidth;
+         }
+
+     }*/
     if (fStep + 0.1f <= 1.0f)
     {
         fStep += g_fSecondPerFrame * 0.01f;
@@ -46,6 +32,11 @@ bool TMapObject::Render()
     m_pImmediateContext->UpdateSubresource(
         m_pVertexBuffer, 0, NULL,
         &m_VertexList.at(0), 0, 0);
+	return true;
+}
+bool TMapObject::Render()
+{
+    PreRender();    
     PostRender();    
     return true;
 }

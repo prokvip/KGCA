@@ -152,12 +152,16 @@
     <ClInclude Include="Sample.h" />
     <ClInclude Include="TMapObject.h" />
     <ClInclude Include="TNpc2D.h" />
+    <ClInclude Include="TScene.h" />
+    <ClInclude Include="TSceneTitle.h" />
     <ClInclude Include="TUser2D.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Sample.cpp" />
     <ClCompile Include="TMapObject.cpp" />
     <ClCompile Include="TNpc2D.cpp" />
+    <ClCompile Include="TScene.cpp" />
+    <ClCompile Include="TSceneTitle.cpp" />
     <ClCompile Include="TUser2D.cpp" />
   </ItemGroup>
   <ItemGroup>

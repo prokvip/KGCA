@@ -4,6 +4,7 @@
 #include "TTimer.h"
 #include "TWriter.h"
 #include "TTextureManager.h"
+#include "TShaderManager.h"
 class TGameCore : public TDevice
 {
 public:

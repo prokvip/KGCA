@@ -1,15 +1,12 @@
 #pragma once
 #include "TGameCore.h"
-#include "TMapObject.h"
-#include "TUser2D.h"
-#include "TNpc2D.h"
+#include "TSceneTitle.h"
 class Sample : public TGameCore
 {
 public:
-	TUser2D*			m_pUser;
-	TMapObject*			m_pMap;
-	std::vector<TBaseObject*>	m_pNpcList;
-	std::vector<TTexture*>		m_ObjectTextureList;
+	TSceneTitle*		m_pTitle = nullptr;
+	TScene*				m_pInGame = nullptr;
+	TScene* m_pCurrentScene = nullptr;
 public:
 	virtual bool		Init() override;
 	virtual bool		Frame() override;
