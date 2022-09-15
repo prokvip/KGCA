@@ -28,6 +28,11 @@ TSound* TSoundManager::Load(std::wstring name)
 bool TSoundManager::Frame()
 {
     m_pSystem->update();
+    for (auto data : m_List)
+    {
+        TSound* pData = data.second;
+        if (pData) pData->Frame();
+    }
     return true;
 }
 TSoundManager::TSoundManager()
@@ -41,6 +46,8 @@ bool TSoundManager::Release()
         if (pData) pData->Release();
         delete pData;
     }
+    m_pSystem->close();
+    m_pSystem->release();
     m_List.clear();
     return true;
 }

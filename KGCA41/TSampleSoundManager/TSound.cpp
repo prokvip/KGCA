@@ -88,7 +88,6 @@ void TSound::VolumeDown(float fVolume)
 }
 bool TSound::Frame()
 {
-	m_pSystem->update();
 	if (m_pChannel)
 	{
 		unsigned int ms = 0;
@@ -114,7 +113,6 @@ bool TSound::Render()
 bool TSound::Release()
 {
 	if (m_pSound) m_pSound->release();
-	m_pSystem->close();
-	m_pSystem->release();
+	
 	return true;
 }

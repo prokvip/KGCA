@@ -2,8 +2,9 @@
 bool Sample::Init()
 {	
 	I_Sound.Init();
-	m_pBGSound = I_Sound.Load(L"../../data/sound/abel_leaf.asf");
-	m_pEffectSound = I_Sound.Load(L"../../data/sound/Gunshot.mp3");
+	m_pBGSound = I_Sound.Load(L"../../data/sound/OnlyLove.mp3");
+	m_pShot = I_Sound.Load(L"../../data/sound/Gunshot.mp3");
+	m_pEffect = I_Sound.Load(L"../../data/sound/romance.mid");
 	m_pBGSound->Play(true);
 	return true;
 }
@@ -12,7 +13,11 @@ bool Sample::Frame()
 	I_Sound.Frame();
 	if (I_Input.GetKey(VK_HOME) == KEY_PUSH)
 	{
-		m_pEffectSound->PlayEffect();
+		m_pShot->PlayEffect();
+	}
+	if (I_Input.GetKey(VK_INSERT) == KEY_PUSH)
+	{
+		m_pEffect->PlayEffect();
 	}
 	if (I_Input.GetKey(VK_END) == KEY_PUSH)
 	{
