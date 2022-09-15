@@ -3,6 +3,7 @@
 #include "TInput.h"
 #include "TTimer.h"
 #include "TWriter.h"
+#include "TSoundManager.h"
 #include "TTextureManager.h"
 #include "TShaderManager.h"
 class TGameCore : public TDevice
