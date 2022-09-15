@@ -1,0 +1,46 @@
+#include "Sample.h"
+bool Sample::Init()
+{	
+	I_Sound.Init();
+	m_pBGSound = I_Sound.Load(L"../../data/sound/abel_leaf.asf");
+	m_pEffectSound = I_Sound.Load(L"../../data/sound/Gunshot.mp3");
+	m_pBGSound->Play(true);
+	return true;
+}
+bool Sample::Frame()
+{	
+	I_Sound.Frame();
+	if (I_Input.GetKey(VK_HOME) == KEY_PUSH)
+	{
+		m_pEffectSound->PlayEffect();
+	}
+	if (I_Input.GetKey(VK_END) == KEY_PUSH)
+	{
+		m_pBGSound->Stop();
+	}
+	if (I_Input.GetKey(VK_F1) == KEY_PUSH)
+	{
+		m_pBGSound->Paused();
+	}
+	if (I_Input.GetKey(VK_F2) == KEY_PUSH)
+	{
+		m_pBGSound->VolumeUp();
+	}
+	if (I_Input.GetKey(VK_F3) == KEY_PUSH)
+	{
+		m_pBGSound->VolumeDown();
+	}
+	
+	return true;
+}
+bool Sample::Render()
+{	
+	m_Writer.Draw(0, 100, m_pBGSound->m_szBuffer);
+	return true;
+}
+bool Sample::Release()
+{	
+	return true;
+}
+
+GAME_RUN(SampleSound, 800,600)
