@@ -32,6 +32,12 @@ extern float g_fSecondPerFrame;
 #define randstep(fMin,fMax) (fMin+((float)fMax-(float)fMin)*rand()/(float)RAND_MAX)
 #define clamp(x,MinX,MaxX) if (x>MaxX) x=MaxX; else if (x<MinX) x=MinX;
 
+typedef std::basic_string<TCHAR> T_STR;
+typedef std::basic_string<wchar_t> W_STR;
+typedef std::basic_string<char>  C_STR;
+typedef std::vector<std::basic_string<TCHAR>>		TCHAR_STRING_VECTOR;
+typedef std::vector<DWORD>					DWORD_VECTOR;
+
 template<class T> class TSingleton
 {
 public:

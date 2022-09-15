@@ -11,6 +11,8 @@
 class TSound
 {
 public:
+	std::wstring    m_szName;
+public:
 	FMOD::System*	m_pSystem = nullptr;
 	FMOD::Sound*	m_pSound = nullptr;// 사운드파일
 	FMOD::Channel*  m_pChannel = nullptr;

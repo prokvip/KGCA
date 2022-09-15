@@ -2,9 +2,13 @@
 bool Sample::Init()
 {	
 	I_Sound.Init();
-	m_pBGSound = I_Sound.Load(L"../../data/sound/OnlyLove.mp3");
+	I_Sound.LoadAll(L"../../data/sound/");
+	m_pBGSound = I_Sound.GetPtr(L"OnlyLove.MP3");
+	m_pShot = I_Sound.GetPtr(L"GunShot.mp3");
+	m_pEffect = I_Sound.GetPtr(L"romance.mid");
+	/*m_pBGSound = I_Sound.Load(L"../../data/sound/OnlyLove.mp3");
 	m_pShot = I_Sound.Load(L"../../data/sound/Gunshot.mp3");
-	m_pEffect = I_Sound.Load(L"../../data/sound/romance.mid");
+	m_pEffect = I_Sound.Load(L"../../data/sound/romance.mid");*/
 	m_pBGSound->Play(true);
 	return true;
 }
