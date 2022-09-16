@@ -1,4 +1,6 @@
 #include "TScene.h"
+TVector2D g_vCamera = { 0, 0 };
+
 bool		TScene::Create(
 	ID3D11Device* pd3dDevice,// 디바이스 객체
 	ID3D11DeviceContext* pImmediateContext,
@@ -18,7 +20,8 @@ bool TScene::Init()
 		m_pImmediateContext,
 		shaderfilename,
 		L"../../data/gameHeight.png");
-
+	m_pMap->SetRect({ 0, 0,	2000.0f,2000.0f });
+	m_pMap->SetPosition({ -1000.0f, -1000.0f });
 	// user character
    // { 90, 1, 40, 60 } , { 400,300 }
    // -1 ~ +1
@@ -29,10 +32,9 @@ bool TScene::Init()
 	m_pUser->SetMask(pMaskTex);
 	m_pUser->m_fSpeed = 300.0f;
 	m_pUser->SetRect({ 91, 2, 39, 59 });
-	m_pUser->SetPosition({ g_rtClient.right / 2.0f,
-						   g_rtClient.bottom - 100.0f });
+	m_pUser->SetPosition({ 400,300 });
 
-
+	
 	for (int iNpc = 0; iNpc < 10; iNpc++)
 	{
 		TNpc2D* npc = new TNpc2D;
@@ -49,7 +51,9 @@ bool TScene::Init()
 		}
 		npc->SetDirection({ randstep(-1.0f, 1.0f),
 			randstep(-1.0f, 1.0f) });
-		npc->SetPosition({ 100.0f + iNpc * 100.0f, 100.0f });
+
+		npc->SetCameraPos(g_vCamera);
+		npc->SetPosition({ randstep(-400,+400), 100.0f });
 		npc->SetMask(pMaskTex);
 		m_pNpcList.push_back(npc);
 	}
@@ -60,16 +64,22 @@ bool TScene::Init()
 }
 bool TScene::Frame()
 {
-	m_pMap->Frame();
+	m_pUser->SetCameraPos(g_vCamera);
 	m_pUser->Frame();
+	
+	m_pMap->SetCameraPos(g_vCamera);
+	m_pMap->Frame();	
+	
 	for (int iObj = 0; iObj < m_pNpcList.size(); iObj++)
 	{
+		m_pNpcList[iObj]->SetCameraPos(g_vCamera);
 		m_pNpcList[iObj]->Frame();
 	}
+	g_vCamera = m_pUser->m_vPos;
 	return true;
 }
 bool TScene::Render()
-{
+{	
 	m_pMap->Render();
 	for (int iObj = 0; iObj < m_pNpcList.size(); iObj++)
 	{

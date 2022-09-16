@@ -1,6 +1,6 @@
 #include "TMapObject.h"
 #include "TInput.h"
-bool TMapObject::Frame()
+bool TMapObject::FrameScroll()
 {
     static float fStep = 0.0f;
     /* UINT iMapWidth = m_pTexture->m_Desc.Width;
@@ -32,11 +32,19 @@ bool TMapObject::Frame()
     m_pImmediateContext->UpdateSubresource(
         m_pVertexBuffer, 0, NULL,
         &m_VertexList.at(0), 0, 0);
+    return true;
+}
+bool TMapObject::Frame()
+{
+    SetPosition(m_vPos, m_vCameraPos);    
 	return true;
 }
-bool TMapObject::Render()
+void  TMapObject::UpdateVertexBuffer()
 {
-    PreRender();    
-    PostRender();    
-    return true;
+    m_VertexList[0].p = { m_vDrawPos.x, m_vDrawPos.y, 0.0f };
+    m_VertexList[1].p = { m_vDrawPos.x + m_vDrawSize.x, m_vDrawPos.y,  0.0f };
+    m_VertexList[2].p = { m_vDrawPos.x, m_vDrawPos.y - m_vDrawSize.y, 0.0f };
+    m_VertexList[3].p = { m_vDrawPos.x + m_vDrawSize.x, m_vDrawPos.y - m_vDrawSize.y, 0.0f };
+    m_pImmediateContext->UpdateSubresource(
+        m_pVertexBuffer, NULL, NULL, &m_VertexList.at(0), 0, 0);
 }

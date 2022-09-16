@@ -1,10 +1,10 @@
 #pragma once
-#include "TBaseObject.h"
-class TMapObject : public TBaseObject
+#include "TObject2D.h"
+class TMapObject : public TObject2D
 {
-	TVector2D           m_vUserPos;
+	bool   FrameScroll();
 public:
 	bool   Frame() override;
-	bool   Render() override;
+	void  UpdateVertexBuffer() override;
 };
 

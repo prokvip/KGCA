@@ -11,19 +11,25 @@ public:
 	TVector2D	m_vPos;
 	TVector2D	m_vDir;
 	float		m_fSpeed = 100.0f;
-private:
 	TVector2D	m_vDrawPos;
 	TVector2D	m_vDrawSize;
 public:
+	TVector2D	m_vCameraPos;
+	void  SetCameraPos(TVector2D vCamera) { m_vCameraPos = vCamera; }
+	void  ScreenToNDC();
+	void  ScreenToCamera(TVector2D vCameraPos);
+public:
 	bool  Frame() override;
-	void  SetRect(TRect vPos);
-	void  SetPosition(TVector2D vPos);
-	void  SetDirection(TVector2D vDir) {
+	virtual void  SetRect(TRect vPos);
+	virtual void  SetPosition(TVector2D vPos);
+	virtual void  SetPosition(TVector2D vPos, TVector2D vCamera);
+	virtual void  SetDirection(TVector2D vDir) {
 		m_vDir = vDir;
 	};
-	void  UpdateVertexBuffer();
-	void  SetMask(TTexture* pMaskTex) {
+	virtual void  UpdateVertexBuffer() override;
+	virtual void  SetMask(TTexture* pMaskTex) {
 		m_pMaskTex = pMaskTex;
 	};
+	
 };
 

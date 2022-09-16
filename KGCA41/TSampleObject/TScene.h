@@ -8,9 +8,9 @@ public:
 	ID3D11Device* m_pd3dDevice = nullptr;// 디바이스 객체
 	ID3D11DeviceContext* m_pImmediateContext = nullptr;
 public:
-	TUser2D* m_pUser;
-	TMapObject* m_pMap;
-	std::vector<TBaseObject*>	m_pNpcList;
+	TUser2D*	m_pUser;
+	TMapObject*  m_pMap;
+	std::vector<TNpc2D*>		m_pNpcList;
 	std::vector<TTexture*>		m_ObjectTextureList;
 public:
 	virtual bool		Create(
