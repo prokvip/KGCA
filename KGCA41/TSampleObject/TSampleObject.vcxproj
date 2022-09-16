@@ -153,6 +153,7 @@
     <ClInclude Include="TMapObject.h" />
     <ClInclude Include="TNpc2D.h" />
     <ClInclude Include="TScene.h" />
+    <ClInclude Include="TSceneInGame.h" />
     <ClInclude Include="TSceneTitle.h" />
     <ClInclude Include="TUser2D.h" />
   </ItemGroup>
@@ -161,6 +162,7 @@
     <ClCompile Include="TMapObject.cpp" />
     <ClCompile Include="TNpc2D.cpp" />
     <ClCompile Include="TScene.cpp" />
+    <ClCompile Include="TSceneInGame.cpp" />
     <ClCompile Include="TSceneTitle.cpp" />
     <ClCompile Include="TUser2D.cpp" />
   </ItemGroup>

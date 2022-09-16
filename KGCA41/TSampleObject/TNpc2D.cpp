@@ -6,24 +6,24 @@ bool TNpc2D::Frame()
     TVector2D m_vVelocity = m_vDir * m_fSpeed * g_fSecondPerFrame;
     vPos = vPos + m_vVelocity;
 
-    if (vPos.x > g_rtClient.right+300)
+    if (vPos.x > 1000.0f)
     {
-        vPos.x = g_rtClient.right;
+        vPos.x = 1000.0f;
         m_vDir.x *= -1.0f;
     }
-    if (vPos.x < 0.0f - 300)
+    if (vPos.x < -1000.0f)
     {
-        vPos.x = 0.0f;
+        vPos.x = -1000.0f;
         m_vDir.x *= -1.0f;
     }
-    if (vPos.y > g_rtClient.bottom + 300)
+    if (vPos.y > 1000.0f)
     {
-        vPos.y = g_rtClient.bottom;
+        vPos.y = 1000.0f;
         m_vDir.y *= -1.0f;
     }
-    if (vPos.y < 0.0f - 300)
+    if (vPos.y < -1000.0f)
     {
-        vPos.y = 0.0f;
+        vPos.y = -1000.0f;
         m_vDir.y *= -1.0f;
     }
 

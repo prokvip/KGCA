@@ -64,8 +64,8 @@ void  TObject2D::ScreenToCamera(TVector2D vCameraPos)
     vPos.x = vPos.x - vCameraPos.x;
     vPos.y = vPos.y - vCameraPos.y;
     // 0  ~ 800   -> 0~1 ->  -1 ~ +1
-    m_vDrawPos.x = vPos.x * (2.0f / 2000.0f);
-    m_vDrawPos.y = vPos.y * (2.0f / 2000.0f) * -1.0f;
+    m_vDrawPos.x = vPos.x * (2.0f / g_rtClient.right);
+    m_vDrawPos.y = vPos.y * (2.0f / g_rtClient.bottom) * -1.0f;
 
     m_vDrawSize.x = (m_rtInit.w / g_rtClient.right) * 2;
     m_vDrawSize.y = (m_rtInit.h / g_rtClient.bottom) * 2;

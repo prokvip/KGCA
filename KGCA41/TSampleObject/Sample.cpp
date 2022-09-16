@@ -3,7 +3,7 @@
 bool Sample::Init()
 {
 	m_pTitle = new TSceneTitle;
-	m_pInGame = new TScene;
+	m_pInGame = new TSceneInGame;
 	m_pTitle->Create(m_pd3dDevice, m_pImmediateContext, L"");
 	m_pInGame->Create(m_pd3dDevice, m_pImmediateContext, L"");
 	m_pTitle->Init();
