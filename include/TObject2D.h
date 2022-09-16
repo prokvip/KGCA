@@ -15,9 +15,12 @@ public:
 	TVector2D	m_vDrawSize;
 public:
 	TVector2D	m_vCameraPos;
+	TVector2D	m_vViewSize;
 	void  SetCameraPos(TVector2D vCamera) { m_vCameraPos = vCamera; }
+	void  SetCameraSize(TVector2D vSize) { m_vViewSize = vSize; }
 	void  ScreenToNDC();
-	void  ScreenToCamera(TVector2D vCameraPos);
+	void  ScreenToCamera(TVector2D vCameraPos,
+		TVector2D vViewPort = { 2000.0f, 2000.0f });
 public:
 	bool  Frame() override;
 	virtual void  SetRect(TRect vPos);

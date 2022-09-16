@@ -58,21 +58,22 @@ void  TObject2D::SetPosition(TVector2D vPos)
     UpdateVertexBuffer();
 }
 // ¿ùµåÁÂÇ¥ -> ºä ÁÂÇ¥ -> NDC ÁÂÇ¥
-void  TObject2D::ScreenToCamera(TVector2D vCameraPos)
+void  TObject2D::ScreenToCamera(
+    TVector2D vCameraPos, TVector2D vViewPort)
 {
     TVector2D vPos = m_vPos;
     vPos.x = vPos.x - vCameraPos.x;
     vPos.y = vPos.y - vCameraPos.y;
     // 0  ~ 800   -> 0~1 ->  -1 ~ +1
-    m_vDrawPos.x = vPos.x * (2.0f / g_rtClient.right);
-    m_vDrawPos.y = vPos.y * (2.0f / g_rtClient.bottom) * -1.0f;
+    m_vDrawPos.x = vPos.x * (2.0f / vViewPort.x);
+    m_vDrawPos.y = vPos.y * (2.0f / vViewPort.y) * -1.0f;
 
-    m_vDrawSize.x = (m_rtInit.w / g_rtClient.right) * 2;
-    m_vDrawSize.y = (m_rtInit.h / g_rtClient.bottom) * 2;
+    m_vDrawSize.x = (m_rtInit.w / vViewPort.x) * 2;
+    m_vDrawSize.y = (m_rtInit.h / vViewPort.y) * 2;
 }
 void  TObject2D::SetPosition(TVector2D vPos, TVector2D vCamera)
 {
     m_vPos = vPos;
-    ScreenToCamera(vCamera);
+    ScreenToCamera(vCamera, m_vViewSize);
     UpdateVertexBuffer();
 }

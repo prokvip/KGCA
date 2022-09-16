@@ -1,4 +1,5 @@
 #include "TSceneInGame.h"
+#include "TInput.h"
 bool TSceneInGame::Init()
 {
 	std::wstring shaderfilename = L"../../data/shader/DefaultShape.txt";
@@ -50,14 +51,28 @@ bool TSceneInGame::Init()
 }
 bool TSceneInGame::Frame()
 {
+	static TVector2D vSize = { 800, 800 };
+	if (I_Input.GetKey(VK_LEFT) == KEY_HOLD)
+	{
+		vSize.x -= g_fSecondPerFrame * 100.0f;
+		vSize.y -= g_fSecondPerFrame * 100.0f;
+	}
+	if (I_Input.GetKey(VK_RIGHT) == KEY_HOLD)
+	{
+		vSize.x += g_fSecondPerFrame * 100.0f;
+		vSize.y += g_fSecondPerFrame * 100.0f;
+	}
+	m_pUser->SetCameraSize(vSize);
 	m_pUser->SetCameraPos(m_vCamera);
 	m_pUser->Frame();
 
 	m_pMap->SetCameraPos(m_vCamera);
+	m_pMap->SetCameraSize(vSize);
 	m_pMap->Frame();
 
 	for (int iObj = 0; iObj < m_pNpcList.size(); iObj++)
 	{
+		m_pNpcList[iObj]->SetCameraSize(vSize);
 		m_pNpcList[iObj]->SetCameraPos(m_vCamera);
 		m_pNpcList[iObj]->Frame();
 	}
