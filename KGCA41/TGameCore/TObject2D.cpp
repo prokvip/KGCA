@@ -32,10 +32,12 @@ void  TObject2D::SetRect(TRect rt)
     m_rtInit = rt;
     m_ptImageSize.x = m_pTexture->m_Desc.Width;
     m_ptImageSize.y = m_pTexture->m_Desc.Height;
+    float fPixelX = (1.0f / m_pTexture->m_Desc.Width)/2.0f;
+    float fPixelY = (1.0f / m_pTexture->m_Desc.Height)/2.0f;
     // 90  -> 0 ~ 1
-    m_rtUV.x1 = rt.x1 / m_ptImageSize.x; // u
+    m_rtUV.x1 = rt.x1 / m_ptImageSize.x +fPixelX; // u
     // 1
-    m_rtUV.y1 = rt.y1 / m_ptImageSize.y; // v
+    m_rtUV.y1 = rt.y1 / m_ptImageSize.y +fPixelY; // v
     // 40
     m_rtUV.w = rt.w / m_ptImageSize.x;
     // 60

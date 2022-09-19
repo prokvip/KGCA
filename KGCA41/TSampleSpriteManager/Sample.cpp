@@ -110,7 +110,8 @@ bool Sample::Frame()
 	static float fEffectTimer = 0.0f;
 	fEffectTimer += g_fSecondPerFrame;
 	float fStep = eFffectRunning / (float)m_rtSpriteList[iSpriteIndex].size();
-	if(fEffectTimer >= fStep)
+	//if(fEffectTimer >= fStep)
+	if (I_Input.GetKey('2') == KEY_PUSH)
 	{
 		fEffectTimer -= fStep;
 		index++;	
@@ -127,7 +128,8 @@ bool Sample::Frame()
 	tRt.w = rt.right;
 	tRt.h = rt.bottom;
 	m_pObject->SetRect(tRt);
-	m_pObject->SetPosition({ (float)I_Input.m_ptPos.x,(float)I_Input.m_ptPos.y });
+	//m_pObject->SetPosition({ (float)I_Input.m_ptPos.x,(float)I_Input.m_ptPos.y });
+	m_pObject->SetPosition({ 400,100 });
 	return true;
 }
 bool Sample::Render()
