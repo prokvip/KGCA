@@ -2,6 +2,8 @@
 bool		TGameCore::TCoreInit()
 {
 	TDevice::Init();
+	TDxState::SetState(m_pd3dDevice);
+
 	I_Tex.SetDevice(m_pd3dDevice, m_pImmediateContext);
 	I_Shader.SetDevice(m_pd3dDevice, m_pImmediateContext);
 	I_Sound.Init();
