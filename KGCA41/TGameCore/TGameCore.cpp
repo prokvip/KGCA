@@ -33,7 +33,8 @@ bool		TGameCore::TCorePreRender()
 	m_pImmediateContext->ClearRenderTargetView(m_pRTV, color);
 	m_pImmediateContext->PSSetSamplers(0, 1, &TDxState::g_pDefaultSSWrap);
 	m_pImmediateContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	//m_pImmediateContext->RSSetViewports(1, &m_vp);
+	m_pImmediateContext->RSSetViewports(1, &m_vp);
+	m_pImmediateContext->RSSetState(TDxState::g_pDefaultRSSolid);
     return true;
 }
 bool		TGameCore::TCoreRender()

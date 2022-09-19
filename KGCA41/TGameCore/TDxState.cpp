@@ -2,6 +2,9 @@
 ID3D11SamplerState* TDxState::g_pDefaultSSWrap = nullptr;
 ID3D11SamplerState* TDxState::g_pDefaultSSMirror = nullptr;
 ID3D11BlendState* TDxState::g_pDefaultBS = nullptr;
+
+ID3D11RasterizerState* TDxState::g_pDefaultRSWireFrame = nullptr;
+ID3D11RasterizerState* TDxState::g_pDefaultRSSolid = nullptr;
 bool TDxState::SetState(ID3D11Device* pd3dDevice)
 {
     HRESULT hr;
@@ -29,11 +32,26 @@ bool TDxState::SetState(ID3D11Device* pd3dDevice)
     sd.AddressV = D3D11_TEXTURE_ADDRESS_MIRROR;
     sd.AddressW = D3D11_TEXTURE_ADDRESS_MIRROR;
     hr = pd3dDevice->CreateSamplerState(&sd, &g_pDefaultSSMirror);
+
+    D3D11_RASTERIZER_DESC rd;
+    ZeroMemory(&rd, sizeof(rd));
+    rd.DepthClipEnable = TRUE;
+    rd.FillMode = D3D11_FILL_WIREFRAME;
+    rd.CullMode = D3D11_CULL_NONE;
+    pd3dDevice->CreateRasterizerState(&rd, 
+        &g_pDefaultRSWireFrame);
+
+    rd.FillMode = D3D11_FILL_SOLID;
+    pd3dDevice->CreateRasterizerState(&rd,
+        &g_pDefaultRSSolid);
+
 	return true;
 }
 bool TDxState::Release() 
 {
 	if (g_pDefaultSSWrap) g_pDefaultSSWrap->Release();
     if (g_pDefaultSSMirror) g_pDefaultSSMirror->Release();
+    if (g_pDefaultRSSolid)g_pDefaultRSSolid->Release();
+    if (g_pDefaultRSWireFrame)g_pDefaultRSWireFrame->Release();
 	return true;
 }

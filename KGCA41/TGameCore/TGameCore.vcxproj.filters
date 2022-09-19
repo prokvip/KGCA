@@ -125,5 +125,6 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\..\data\shader\DefaultShape.txt" />
+    <Text Include="..\..\data\shader\DefaultShapeMask.txt" />
   </ItemGroup>
 </Project>

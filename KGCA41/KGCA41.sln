@@ -133,6 +133,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TSampleSoundManager", "TSam
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TSampleSoundManagerCore", "TSampleSoundManagerCore\TSampleSoundManagerCore.vcxproj", "{E796188F-4A39-43D8-91DA-B2E81A8C824D}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TSampleSpriteManager", "TSampleSpriteManager\TSampleSpriteManager.vcxproj", "{46F4616D-66F0-4550-B0E1-A446322C5F78}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|ARM = Debug|ARM
@@ -829,6 +831,18 @@ Global
 		{E796188F-4A39-43D8-91DA-B2E81A8C824D}.Release|x64.Build.0 = Release|x64
 		{E796188F-4A39-43D8-91DA-B2E81A8C824D}.Release|x86.ActiveCfg = Release|Win32
 		{E796188F-4A39-43D8-91DA-B2E81A8C824D}.Release|x86.Build.0 = Release|Win32
+		{46F4616D-66F0-4550-B0E1-A446322C5F78}.Debug|ARM.ActiveCfg = Debug|Win32
+		{46F4616D-66F0-4550-B0E1-A446322C5F78}.Debug|ARM64.ActiveCfg = Debug|Win32
+		{46F4616D-66F0-4550-B0E1-A446322C5F78}.Debug|x64.ActiveCfg = Debug|x64
+		{46F4616D-66F0-4550-B0E1-A446322C5F78}.Debug|x64.Build.0 = Debug|x64
+		{46F4616D-66F0-4550-B0E1-A446322C5F78}.Debug|x86.ActiveCfg = Debug|Win32
+		{46F4616D-66F0-4550-B0E1-A446322C5F78}.Debug|x86.Build.0 = Debug|Win32
+		{46F4616D-66F0-4550-B0E1-A446322C5F78}.Release|ARM.ActiveCfg = Release|Win32
+		{46F4616D-66F0-4550-B0E1-A446322C5F78}.Release|ARM64.ActiveCfg = Release|Win32
+		{46F4616D-66F0-4550-B0E1-A446322C5F78}.Release|x64.ActiveCfg = Release|x64
+		{46F4616D-66F0-4550-B0E1-A446322C5F78}.Release|x64.Build.0 = Release|x64
+		{46F4616D-66F0-4550-B0E1-A446322C5F78}.Release|x86.ActiveCfg = Release|Win32
+		{46F4616D-66F0-4550-B0E1-A446322C5F78}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

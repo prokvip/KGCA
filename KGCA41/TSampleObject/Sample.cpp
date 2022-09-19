@@ -22,6 +22,7 @@ bool Sample::Frame()
 }
 bool Sample::Render()
 {	
+	m_pImmediateContext->RSSetState(TDxState::g_pDefaultRSWireFrame);
 	m_pCurrentScene->Render();
 	return true;
 }

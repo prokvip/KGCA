@@ -42,6 +42,7 @@ struct PS_input
 // 해당 픽쉘(SV_Target레지스터에)의 컬러를 반환한다.
 float4 PS(	PS_input input) : SV_Target
 {
+	return float4(1,0,0,1);
 	float4 vColor = g_txTexA.Sample(g_SampleWrap , input.t);	
 	float4 vMask  = g_txTexMaskA.Sample(g_SampleWrap , input.t);
 	float4 vFinalColor = vColor*input.c;

@@ -17,7 +17,7 @@ bool TSceneInGame::Init()
    // -1 ~ +1
 	m_pUser = new TUser2D;
 	m_pUser->Create(m_pd3dDevice, m_pImmediateContext,
-		L"../../data/shader/DefaultShapeMask.txt",
+		L"DefaultShapeMask.txt",
 		L"../../data/bitmap1.bmp");
 	m_pUser->SetMask(pMaskTex);
 	m_pUser->m_fSpeed = 300.0f;
@@ -29,7 +29,7 @@ bool TSceneInGame::Init()
 	{
 		TNpc2D* npc = new TNpc2D;
 		npc->Create(m_pd3dDevice, m_pImmediateContext,
-			L"../../data/shader/DefaultShapeMask.txt",
+			L"DefaultShapeMask.txt",
 			L"../../data/bitmap1.bmp");
 		if (iNpc % 2 == 0)
 		{
