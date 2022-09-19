@@ -35,7 +35,11 @@ bool Sample::GameDataLoad(const TCHAR* pszLoad)
 bool Sample::Init()
 {
 	GameDataLoad(L"SpriteInfo.txt");
-
+	for (int isp = 0; isp < m_rtSpriteList.size(); isp++)
+	{
+		TSprite* pEffect = new TSprite;
+		m_pSpriteList.push_back(pEffect);
+	}
 	std::wstring shaderfilename = L"../../data/shader/DefaultShapeMask.txt";
 	TTexture* pMaskTex = I_Tex.Load(L"../../data/bitmap2.bmp");
 

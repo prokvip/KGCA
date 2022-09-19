@@ -2,6 +2,7 @@
 #include "TDevice.h"
 #include "TTextureManager.h"
 #include "TShaderManager.h"
+#include "TCollision.h"
 struct SimpleVertex
 {
 	TVector    p;	
@@ -22,6 +23,7 @@ public:
 	ID3D11ShaderResourceView*    m_pTextureSRV = nullptr;
 	std::vector<SimpleVertex>    m_VertexList;
 	std::vector<DWORD>			 m_IndexList;
+	TRect						 m_rtCollision;
 public:
 	ID3D11VertexShader* m_pVS;
 	ID3D11PixelShader* m_pPS;

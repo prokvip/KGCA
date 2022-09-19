@@ -4,7 +4,7 @@
 typedef std::vector<RECT>  RECT_ARRAY;
 class TSprite : public TObject2D
 {
-
+	std::vector<TSprite*>  m_pChild;
 	TRect    m_rtCollision;
 public:
 	// È­¸é ÁÂÇ¥ -> NDC ÁÂÇ¥ 
@@ -33,6 +33,7 @@ class Sample : public TGameCore
 	TUser2D*		m_pUser;
 	TSprite*	   m_pObject;
 	std::vector<RECT_ARRAY> m_rtSpriteList;
+	std::vector<TSprite*> m_pSpriteList;
 public:
 	bool GameDataLoad(const TCHAR* pszLoad);
 	virtual bool		Init() override;
