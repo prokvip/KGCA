@@ -168,6 +168,7 @@ copy "TGameCore_R.lib" "..\\..\\lib\\"</Command>
     <ClInclude Include="TBaseObject.h" />
     <ClInclude Include="TCollision.h" />
     <ClInclude Include="TDevice.h" />
+    <ClInclude Include="TDxState.h" />
     <ClInclude Include="TGameCore.h" />
     <ClInclude Include="TInput.h" />
     <ClInclude Include="TObject2D.h" />
@@ -187,6 +188,7 @@ copy "TGameCore_R.lib" "..\\..\\lib\\"</Command>
     <ClCompile Include="TBaseObject.cpp" />
     <ClCompile Include="TCollision.cpp" />
     <ClCompile Include="TDevice.cpp" />
+    <ClCompile Include="TDxState.cpp" />
     <ClCompile Include="TGameCore.cpp" />
     <ClCompile Include="TInput.cpp" />
     <ClCompile Include="TObject2D.cpp" />

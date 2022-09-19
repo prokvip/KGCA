@@ -3,6 +3,7 @@
 #include "TInput.h"
 #include "TTimer.h"
 #include "TWriter.h"
+#include "TDxState.h"
 #include "TSoundManager.h"
 #include "TTextureManager.h"
 #include "TShaderManager.h"
@@ -10,7 +11,6 @@ class TGameCore : public TDevice
 {
 public:
 	TWriter				m_Writer;
-	ID3D11SamplerState* m_pDefaultSS = nullptr;
 	bool m_bGameRun = true;
 public:
 	virtual bool		Init() {return true;}; // √ ±‚»≠

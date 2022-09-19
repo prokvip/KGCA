@@ -14,14 +14,7 @@ bool		TGameCore::TCoreInit()
 	m_Writer.Set(pBackBuffer);
 	pBackBuffer->Release();
 
-	D3D11_SAMPLER_DESC sd;
-	ZeroMemory(&sd, sizeof(sd));
-	sd.Filter = D3D11_FILTER_MIN_MAG_MIP_POINT;// 최근점 필터링
-	sd.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
-	sd.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
-	sd.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
-	HRESULT hr = m_pd3dDevice->CreateSamplerState(&sd, &m_pDefaultSS);
-    return Init();
+	return Init();
 }
 bool		TGameCore::TCoreFrame()
 {
@@ -36,8 +29,9 @@ bool		TGameCore::TCorePreRender()
 	m_pImmediateContext->OMSetRenderTargets(1, &m_pRTV, NULL);
 	float color[4] = { 0.34324f,0.52342f,0.798320f,1.0f };
 	m_pImmediateContext->ClearRenderTargetView(m_pRTV, color);
-	m_pImmediateContext->PSSetSamplers(0, 1, &m_pDefaultSS);
+	m_pImmediateContext->PSSetSamplers(0, 1, &TDxState::g_pDefaultSSWrap);
 	m_pImmediateContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	//m_pImmediateContext->RSSetViewports(1, &m_vp);
     return true;
 }
 bool		TGameCore::TCoreRender()
@@ -59,11 +53,11 @@ bool		TGameCore::TCorePostRender()
 bool		TGameCore::TCoreRelease()
 {   
 	Release();
-	if (m_pDefaultSS)m_pDefaultSS->Release();
 	I_Input.Release();
 	I_Timer.Release();
 	m_Writer.Release();
 	I_Sound.Release();
+	TDxState::Release();
 	TDevice::Release();
     return true;
 }

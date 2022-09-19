@@ -253,7 +253,8 @@ bool TBaseObject::PostRender()
     if (m_pIndexBuffer == nullptr)
         m_pImmediateContext->Draw(m_VertexList.size(), 0);
     else
-        m_pImmediateContext->DrawIndexed(m_IndexList.size(), 0, 0);
+        m_pImmediateContext->DrawIndexed(m_IndexList.size(), 0, 0);  
+   
     return true;
 }
 bool TBaseObject::Release()

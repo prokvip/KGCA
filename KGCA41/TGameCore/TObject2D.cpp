@@ -57,7 +57,7 @@ void  TObject2D::SetPosition(TVector2D vPos)
     ScreenToNDC();
     UpdateVertexBuffer();
 }
-// ¿ùµåÁÂÇ¥ -> ºä ÁÂÇ¥ -> NDC ÁÂÇ¥
+// ¿ùµåÁÂÇ¥(È­¸éÁÂÇ¥°è) -> ºä ÁÂÇ¥ -> NDC ÁÂÇ¥
 void  TObject2D::ScreenToCamera(
     TVector2D vCameraPos, TVector2D vViewPort)
 {

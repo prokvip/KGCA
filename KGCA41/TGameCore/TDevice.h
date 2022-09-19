@@ -9,6 +9,7 @@ public:
 	IDXGIFactory*			m_pGIFactory = nullptr;
 	IDXGISwapChain*			m_pSwapChain = nullptr;
 	ID3D11RenderTargetView* m_pRTV = nullptr;
+	D3D11_VIEWPORT			m_vp;
 public:
 	// 1)디바이스 생성
 	HRESULT CreateDevice();

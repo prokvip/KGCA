@@ -91,7 +91,39 @@ bool TSceneInGame::Render()
 	m_pImmediateContext->PSSetShaderResources(1, 1,
 		&m_pUser->m_pMaskTex->m_pTextureSRV);
 	m_pUser->PostRender();
+
+	DrawMiniMap(0, 0);
 	return true;
+}
+void TSceneInGame::DrawMiniMap(UINT x, UINT y, UINT w, UINT h)
+{
+	D3D11_VIEWPORT saveViewPort[15];
+	UINT SaveNumView=1;
+	m_pImmediateContext->RSGetViewports(&SaveNumView, saveViewPort);
+
+	D3D11_VIEWPORT vp;
+	vp.Width = w;
+	vp.Height = h;
+	vp.TopLeftX = x;
+	vp.TopLeftY = y;
+	vp.MinDepth = 0.0f;
+	vp.MaxDepth = 1.0f;
+	m_pImmediateContext->RSSetViewports(1, &vp);
+	//TVector2D vCamera = { 0,0 };
+	TVector2D vSize = { 2000, 2000 };
+	m_pMap->SetCameraSize(vSize);
+	m_pMap->SetCameraPos(m_vCamera);
+	m_pMap->Frame();
+	m_pMap->Render();
+	for (int iObj = 0; iObj < m_pNpcList.size(); iObj++)
+	{
+		m_pNpcList[iObj]->SetCameraSize(vSize);
+		m_pNpcList[iObj]->SetCameraPos(m_vCamera);
+		m_pNpcList[iObj]->Frame();
+		m_pNpcList[iObj]->Render();
+	}
+
+	m_pImmediateContext->RSSetViewports(SaveNumView, saveViewPort);
 }
 bool TSceneInGame::Release()
 {

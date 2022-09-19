@@ -11,5 +11,6 @@ public:
 	virtual bool		Frame();
 	virtual bool		Render();
 	virtual bool		Release();
+	virtual void		DrawMiniMap(UINT x, UINT y, UINT w=100, UINT h=100);
 };
 

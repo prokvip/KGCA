@@ -16,6 +16,8 @@ public:
 		ID3D11Device* pd3dDevice,// 디바이스 객체
 		ID3D11DeviceContext* pImmediateContext,
 		std::wstring shadername);
+	virtual void		DrawMiniMap(UINT x, UINT y, UINT w = 100, UINT h = 100)
+	{}
 public:
 	virtual bool		Init() ;
 	virtual bool		Frame() ;
