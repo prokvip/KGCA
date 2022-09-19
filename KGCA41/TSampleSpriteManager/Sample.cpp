@@ -151,6 +151,11 @@ bool Sample::Render()
 }
 bool Sample::Release()
 {	
+	for (int isp = 0; isp < m_rtSpriteList.size(); isp++)
+	{
+		m_pSpriteList[isp]->Release();
+		delete m_pSpriteList[isp];
+	}
 	m_pMap->Release();
 	delete m_pMap;
 	m_pMap = nullptr;
