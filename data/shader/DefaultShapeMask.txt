@@ -47,7 +47,7 @@ float4 PS(	PS_input input) : SV_Target
 	float4 vFinalColor = vColor*input.c;
 	if( vMask.r > 0.5f)
 	{
-		discard;
+		//discard;
 	}	
-	return vFinalColor;
+	return vColor;
 }

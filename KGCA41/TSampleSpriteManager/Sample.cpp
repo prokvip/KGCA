@@ -76,24 +76,29 @@ bool Sample::Init()
 		L"../../data/bitmap1.bmp");
 	m_pUser->SetMask(pMaskTex);
 	m_pUser->m_fSpeed = 300.0f;
-	m_pUser->SetRect({ 91, 2, 39, 59 });
-	m_pUser->SetPosition({ 400,300 });
+	m_pUser->SetRect({ 90, 2, 40, 60 });
+	m_pUser->SetPosition({ 0.0f,0.0f });
 
 	m_vCamera = m_pUser->m_vPos;
-	m_vCamera.y -= 200.0f;
+	//m_vCamera.y -= 200.0f;
 	return true;
 }
 bool Sample::Frame()
 {	
-	m_pUser->SetCameraSize({ 800, 800 });
-	m_pUser->SetCameraPos(m_vCamera);
 	m_pUser->Frame();
 	m_vCamera = m_pUser->m_vPos;
 	m_vCamera.y -= 200.0f;
 
+	m_pUser->SetCameraSize({ 800, 800 });
+	m_pUser->SetCameraPos(m_vCamera);
+	m_pUser->SetPosition(m_pUser->m_vPos, m_vCamera);
+	
+	
+
 	m_pMap->SetCameraSize({ 800, 800 });
 	m_pMap->SetCameraPos(m_vCamera);
 	m_pMap->Frame();
+
 	static int iSpriteIndex = 1;
 	if (I_Input.GetKey('1') == KEY_PUSH)
 	{
