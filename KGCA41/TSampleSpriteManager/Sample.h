@@ -1,6 +1,7 @@
 #pragma once
 #include "TGameCore.h"
 #include "TUser2D.h"
+#include "TMapObject.h"
 typedef std::vector<RECT>  RECT_ARRAY;
 class TSprite : public TObject2D
 {
@@ -30,6 +31,7 @@ public:
 class Sample : public TGameCore
 {
 	TVector2D		m_vCamera;
+	TMapObject* m_pMap;
 	TUser2D*		m_pUser;
 	TSprite*	   m_pObject;
 	std::vector<RECT_ARRAY> m_rtSpriteList;

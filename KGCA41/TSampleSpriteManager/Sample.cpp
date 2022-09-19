@@ -41,7 +41,16 @@ bool Sample::Init()
 		m_pSpriteList.push_back(pEffect);
 	}
 	std::wstring shaderfilename = L"../../data/shader/DefaultShapeMask.txt";
+	std::wstring mapshader = L"../../data/shader/DefaultShape.txt";
 	TTexture* pMaskTex = I_Tex.Load(L"../../data/bitmap2.bmp");
+
+	m_pMap = new TMapObject;
+	m_pMap->Create(m_pd3dDevice,
+		m_pImmediateContext,
+		mapshader,
+		L"../../data/kgcabk.bmp");//"L"../../data/gameHeight.png");
+	m_pMap->SetRect({ 0, 0,	2000.0f,2000.0f });
+	m_pMap->SetPosition({ 0.0f, 0.0f });
 
 	m_pObject = new TSprite;
 	m_pObject->Create(m_pd3dDevice,
@@ -71,6 +80,7 @@ bool Sample::Init()
 	m_pUser->SetPosition({ 400,300 });
 
 	m_vCamera = m_pUser->m_vPos;
+	m_vCamera.y -= 200.0f;
 	return true;
 }
 bool Sample::Frame()
@@ -78,8 +88,12 @@ bool Sample::Frame()
 	m_pUser->SetCameraSize({ 800, 800 });
 	m_pUser->SetCameraPos(m_vCamera);
 	m_pUser->Frame();
-	//m_vCamera = m_pUser->m_vPos;
+	m_vCamera = m_pUser->m_vPos;
+	m_vCamera.y -= 200.0f;
 
+	m_pMap->SetCameraSize({ 800, 800 });
+	m_pMap->SetCameraPos(m_vCamera);
+	m_pMap->Frame();
 	static int iSpriteIndex = 1;
 	if (I_Input.GetKey('1') == KEY_PUSH)
 	{
@@ -117,6 +131,8 @@ bool Sample::Render()
 	{
 		m_pImmediateContext->RSSetState(TDxState::g_pDefaultRSWireFrame);
 	}
+	m_pMap->Render();
+
 	m_pUser->PreRender();
 	m_pImmediateContext->PSSetShaderResources(1, 1,
 		&m_pUser->m_pMaskTex->m_pTextureSRV);
@@ -130,6 +146,10 @@ bool Sample::Render()
 }
 bool Sample::Release()
 {	
+	m_pMap->Release();
+	delete m_pMap;
+	m_pMap = nullptr;
+
 	m_pUser->Release();
 	delete m_pUser;
 	m_pUser = nullptr;
