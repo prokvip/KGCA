@@ -150,27 +150,27 @@ bool Sample::Frame()
 			continue;
 		}
 		bool bFlag = false;
-		for (auto dest = m_pNpcList.begin();dest != m_pNpcList.end(); dest++)
+		for (auto dest = m_pNpcList.begin();dest != m_pNpcList.end(); )
 		{
 			TRect npcinst;
 			if (src == dest)
 			{
-				//dest++;
+				dest++;
 				continue;
 			}
 			if (TCollision::RectToRect((*src)->m_rtCollision, (*dest)->m_rtCollision,npcinst))
 			{
 				AddEffect(npcinst.cx, npcinst.cy);				
-				/*delete *dest;
+				delete *dest;
 				bFlag = true;
-				dest = m_pNpcList.erase(dest);*/
+				dest = m_pNpcList.erase(dest);
 			}
-			/*else
+			else
 			{
 				dest++;
-			}*/			
+			}			
 		}
-		/*if (bFlag)
+		if (bFlag)
 		{
 			delete* src;
 			src = m_pNpcList.erase(src);
@@ -178,8 +178,7 @@ bool Sample::Frame()
 		else
 		{
 			src++;
-		}*/
-		src++;
+		}		
 	}
 	
 
