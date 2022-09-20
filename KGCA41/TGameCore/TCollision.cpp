@@ -1,5 +1,5 @@
 #include "TCollision.h"
-TCollisionType TCollision::RectToRect(TRect& a, TRect& b, TRect** Intersect)
+TCollisionType TCollision::RectToRect(TRect& a, TRect& b, TRect& Intersect)
 {
     // 0 : 완전제외(0)
     // 1 : 완전포함(1) -> 걸쳐져 있는 상태(2)
@@ -17,23 +17,18 @@ TCollisionType TCollision::RectToRect(TRect& a, TRect& b, TRect** Intersect)
         //  세로 판정
         if ((a.h + b.h) >= (fMaxY - fMinY))
         {
-            // 교차한다. 교집합
-            static TRect InterRT;
-            if (Intersect != nullptr)
+            // 교차한다. 교집합  
+            float x, y, x2, y2;
+            x = a.x1 > b.x1 ? a.x1 : b.x1;
+            y = a.y1 > b.y1 ? a.y1 : b.y1;
+            x2 = a.x2 < b.x2 ? a.x2 : b.x2;
+            y2 = a.y2 < b.y2 ? a.y2 : b.y2;
+            Intersect.Set(x, y, x2 - x, y2 - y);
+            if (Intersect == a || Intersect == b)
             {
-                float x, y, x2, y2;
-                x = a.x1 > b.x1 ? a.x1 : b.y1;
-                y = a.y1 > b.y1 ? a.y1 : b.y1;
-                x2 = a.x2 < b.x2 ? a.x2 : b.x2;
-                y2 = a.y2 < b.y2 ? a.y2 : b.y2;
-                InterRT.Set(x, y, x2 - x, y2 - y);
-                //*Intersect = &InterRT;
-                *Intersect = &b;
-                if (InterRT == a || InterRT == b)
-                {
-                    return TCollisionType::RECT_IN;
-                }
+                return TCollisionType::RECT_IN;
             }
+            
             return TCollisionType::RECT_OVERLAP;
         }
     }

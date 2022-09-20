@@ -117,7 +117,7 @@ struct TBox : Box
 class TCollision
 {
 public:
-    static TCollisionType   RectToRect(TRect& a, TRect& b, TRect** Intersect=nullptr);
+    static TCollisionType   RectToRect(TRect& a, TRect& b, TRect& Intersect);
     static bool             RectToInRect(TRect& a, TRect& b);
     static bool             CircleToCircle(TCircle& a, TCircle& b);
 public:

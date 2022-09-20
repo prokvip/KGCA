@@ -94,7 +94,7 @@ bool Sample::Init()
 	m_vCamera = m_pUser->m_vPos;
 	m_vCamera.y -= 200.0f;
 
-	for (int iNpc = 0; iNpc < 1000; iNpc++)
+	for (int iNpc = 0; iNpc < 100; iNpc++)
 	{
 		TNpc2D* npc = new TNpc2D;
 		npc->Create(m_pd3dDevice, m_pImmediateContext,
@@ -108,8 +108,7 @@ bool Sample::Init()
 		{
 			npc->SetRect({ 115, 62, 37, 35 });
 		}
-		npc->SetDirection({ randstep(-1.0f, 1.0f),
-			randstep(-1.0f, 1.0f) });
+		npc->SetDirection({ randstep(-1.0f, 1.0f),	randstep(-1.0f, 1.0f) });
 
 		npc->SetCameraPos(m_vCamera);
 		npc->SetPosition({ randstep(-900,+900), randstep(-900,+900) });
@@ -140,42 +139,47 @@ bool Sample::Frame()
 		npc->SetCameraPos(m_vCamera);
 		npc->Frame();
 	}
-	for (auto src = m_pNpcList.begin();
-		src != m_pNpcList.end();)
+	for (auto src = m_pNpcList.begin();	src != m_pNpcList.end();)
 	{
-		TRect* inst =nullptr;
-		if (TCollision::RectToRect((*src)->m_rtCollision, m_pUser->m_rtCollision, &inst))
+		TRect inst;
+		if (TCollision::RectToRect((*src)->m_rtCollision, m_pUser->m_rtCollision, inst))
 		{
-			if (inst != nullptr) AddEffect(inst->cx, inst->cy);
+			AddEffect(inst.cx, inst.cy);
 			delete* src;			
 			src = m_pNpcList.erase(src);
 			continue;
 		}
 		bool bFlag = false;
-		for (auto dest = m_pNpcList.begin();
-			dest != m_pNpcList.end();)
+		for (auto dest = m_pNpcList.begin();dest != m_pNpcList.end(); dest++)
 		{
-			TRect* npcinst = nullptr;
+			TRect npcinst;
 			if (src == dest)
 			{
-				dest++;
+				//dest++;
 				continue;
 			}
-			if (TCollision::RectToRect((*src)->m_rtCollision, (*dest)->m_rtCollision, &npcinst))
+			if (TCollision::RectToRect((*src)->m_rtCollision, (*dest)->m_rtCollision,npcinst))
 			{
-				if (npcinst != nullptr) AddEffect(npcinst->cx, npcinst->cy);
-				delete *src;
-				delete *dest;
+				AddEffect(npcinst.cx, npcinst.cy);				
+				/*delete *dest;
 				bFlag = true;
-				dest = m_pNpcList.erase(dest);
+				dest = m_pNpcList.erase(dest);*/
 			}
-			else
+			/*else
 			{
 				dest++;
-			}
+			}*/			
 		}
-		if (bFlag)src = m_pNpcList.erase(src);
-		else src++;
+		/*if (bFlag)
+		{
+			delete* src;
+			src = m_pNpcList.erase(src);
+		}
+		else
+		{
+			src++;
+		}*/
+		src++;
 	}
 	
 
