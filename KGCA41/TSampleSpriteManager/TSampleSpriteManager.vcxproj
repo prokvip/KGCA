@@ -151,11 +151,15 @@
   <ItemGroup>
     <ClInclude Include="Sample.h" />
     <ClInclude Include="TMapObject.h" />
+    <ClInclude Include="TSprite.h" />
+    <ClInclude Include="TSpriteManager.h" />
     <ClInclude Include="TUser2D.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Sample.cpp" />
     <ClCompile Include="TMapObject.cpp" />
+    <ClCompile Include="TSprite.cpp" />
+    <ClCompile Include="TSpriteManager.cpp" />
     <ClCompile Include="TUser2D.cpp" />
   </ItemGroup>
   <ItemGroup>

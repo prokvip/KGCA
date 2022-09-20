@@ -2,42 +2,61 @@
 #include "TGameCore.h"
 #include "TUser2D.h"
 #include "TMapObject.h"
-typedef std::vector<RECT>  RECT_ARRAY;
-class TSprite : public TObject2D
+#include "TSpriteManager.h"
+struct TEffect
 {
-	std::vector<TSprite*>  m_pChild;
-	TRect    m_rtCollision;
-public:
-	// È­¸é ÁÂÇ¥ -> NDC ÁÂÇ¥ 
-	void  SetPosition(TVector2D vPos)
+	TVector2D   m_vPos;
+	TVector2D   m_vDir = { 0,1 };
+	float		m_fLifeTime = 1.33f;
+	float		m_fSpeed = 300.0f;
+	UINT		m_iIndex = 0;
+	UINT		m_iMaxIndex=1;
+	float		m_fEffectTimer = 0.0f;
+	TRect		m_tRect = { 0,0,0,0 };
+	float		m_fStep = 1.0f;
+	TRect		m_rtCollision;
+	TSprite*	m_pSprite=nullptr;//¸®¼Ò½º
+
+	TRect convert(RECT rt)
 	{
-		m_vPos = vPos;
-		TVector2D	vDrawSize;
-		vDrawSize.x = m_rtInit.w / 2.0f;
-		vDrawSize.y = m_rtInit.h / 2.0f;	
-		m_rtCollision.Set(
-			vPos.x - vDrawSize.x,
-			vPos.y - vDrawSize.y,
-			m_rtInit.w,
-			m_rtInit.h);
-		// 0  ~ 800   -> 0~1 ->  -1 ~ +1
-		m_vDrawPos.x = (m_rtCollision.x1 / g_rtClient.right) * 2.0f - 1.0f;
-		m_vDrawPos.y = -((m_rtCollision.y1 / g_rtClient.bottom) * 2.0f - 1.0f);
-		m_vDrawSize.x = (m_rtInit.w / g_rtClient.right) * 2;
-		m_vDrawSize.y = (m_rtInit.h / g_rtClient.bottom) * 2;
-		UpdateVertexBuffer();
+		TRect tRt;
+		tRt.x1 = rt.left;
+		tRt.y1 = rt.top;
+		tRt.w = rt.right;
+		tRt.h = rt.bottom;
+		return tRt;
+	}
+	bool Update()
+	{
+		m_fEffectTimer += g_fSecondPerFrame;
+		if (m_fStep <= m_fEffectTimer)
+		{
+			m_fEffectTimer -= m_fStep;
+			m_iIndex++;
+		}
+		if (m_iIndex >= m_iMaxIndex)
+		{
+			return false;
+		}
+		RECT rt = m_pSprite->m_uvArray[m_iIndex];
+		m_tRect = convert(rt);
+		TVector2D vAdd = m_vDir * m_fSpeed * g_fSecondPerFrame;
+		m_vPos = m_vPos + vAdd;
+		m_rtCollision.x1 = m_vPos.x;
+		m_rtCollision.y1 = m_vPos.y;
+		return true;
 	}
 };
 class Sample : public TGameCore
 {
 	TVector2D		m_vCamera;
-	TMapObject* m_pMap;
+	TMapObject*		m_pMap;
 	TUser2D*		m_pUser;
-	TSprite*	   m_pObject;
-	std::vector<RECT_ARRAY> m_rtSpriteList;
-	std::vector<TSprite*> m_pSpriteList;
+	// 0 : 50, 1: 30, 2: 20
+	std::list<TEffect*>		m_pEffectList;
 public:
-	bool GameDataLoad(const TCHAR* pszLoad);
+	void AddEffect();
+	//bool GameDataLoad(const TCHAR* pszLoad);
 	virtual bool		Init() override;
 	virtual bool		Frame() override;
 	virtual bool		Render() override;
