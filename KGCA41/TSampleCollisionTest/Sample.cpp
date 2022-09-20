@@ -190,7 +190,8 @@ bool Sample::Frame()
 			if (TCollision::RectToRect((*iter)->m_rtCollision, (*src)->m_rtCollision, inst))
 			{
 				AddEffect(inst.cx, inst.cy);
-				delete* src;
+				(*src)->Release();
+				delete* src;				
 				src = m_pNpcList.erase(src);				
 			}
 			else
@@ -206,6 +207,7 @@ bool Sample::Frame()
 		if (TCollision::RectToRect((*src)->m_rtCollision, m_pUser->m_rtCollision, inst))
 		{
 			AddEffect(inst.cx, inst.cy);
+			(*src)->Release();
 			delete* src;			
 			src = m_pNpcList.erase(src);
 			continue;
@@ -221,7 +223,8 @@ bool Sample::Frame()
 			}
 			if (TCollision::RectToRect((*src)->m_rtCollision, (*dest)->m_rtCollision,npcinst))
 			{
-				AddEffect(npcinst.cx, npcinst.cy);				
+				AddEffect(npcinst.cx, npcinst.cy);	
+				(*dest)->Release();
 				delete *dest;
 				bFlag = true;
 				dest = m_pNpcList.erase(dest);
@@ -233,6 +236,7 @@ bool Sample::Frame()
 		}
 		if (bFlag)
 		{
+			(*src)->Release();
 			delete* src;
 			src = m_pNpcList.erase(src);
 		}
@@ -240,10 +244,7 @@ bool Sample::Frame()
 		{
 			src++;
 		}		
-	}
-	
-
-	
+	}	
 
 	for (auto iter = m_pEffectList.begin();
 		iter != m_pEffectList.end();	)
@@ -306,8 +307,22 @@ bool Sample::Render()
 }
 bool Sample::Release()
 {	
-	for (auto data : m_pEffectList)
+	m_pMap->Release();
+	delete m_pMap;
+	m_pMap = nullptr;
+
+	m_pUser->Release();
+	delete m_pUser;
+	m_pUser = nullptr;
+
+	for (auto data : m_pNpcList)
 	{
+		data->Release();
+		delete data;
+	}
+
+	for (auto data : m_pEffectList)
+	{		
 		delete data;
 	}
 	m_pEffectList.clear();
@@ -318,19 +333,11 @@ bool Sample::Release()
 	}
 	m_Projectile.clear();
 
-	m_pMap->Release();
-	delete m_pMap;
-	m_pMap = nullptr;
+	
 
-	m_pUser->Release();
-	delete m_pUser;
-	m_pUser = nullptr;
+	
 
-	for (auto data :  m_pNpcList)
-	{
-		data->Release();
-		delete data;
-	}
+	
 	return true;
 }
 
