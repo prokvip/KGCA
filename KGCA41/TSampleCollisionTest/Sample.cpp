@@ -172,13 +172,14 @@ bool Sample::Frame()
 
 	for (auto iter = m_Projectile.begin(); iter != m_Projectile.end(); )
 	{
-		TProjectile* pEffect = *iter;
+		TProjectile* pEffect = *iter;	
+		pEffect->m_vPos.x = m_pUser->m_vPos.x;
 		if (pEffect->Update() == false)
 		{
 			delete pEffect;
 			iter = m_Projectile.erase(iter);
 			continue;
-		}
+		}				
 		iter++;
 	}
 	for (auto iter = m_Projectile.begin(); iter != m_Projectile.end(); iter++)
