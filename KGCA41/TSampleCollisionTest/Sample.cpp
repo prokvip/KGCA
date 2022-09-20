@@ -1,5 +1,5 @@
 #include "Sample.h"
-static TVector2D vSize = { 800, 800 };
+static TVector2D vSize = { 800, 600 };
 
 void Sample::AddEffect()
 {
@@ -65,6 +65,32 @@ void Sample::AddEffect(float x, float y)
 	pEffect->m_rtCollision.y1 = pEffect->m_vPos.y;
 	m_pEffectList.push_back(pEffect);
 }
+void Sample::AddProjectile(TVector2D pos)
+{
+	TProjectile* pEffect = new TProjectile;
+	pEffect->m_pSprite = I_Sprite.GetPtr(L"rtProjectile");
+	pEffect->m_fEffectTimer = 0.0f;
+	RECT rt = pEffect->m_pSprite->m_uvArray[0];
+	pEffect->m_tRect.x1 = rt.left;
+	pEffect->m_tRect.y1 = rt.top;
+	pEffect->m_tRect.w = rt.right;
+	pEffect->m_tRect.h = rt.bottom;
+
+	pEffect->m_iIndex = 0;
+	pEffect->m_fLifeTime = 10.0f;
+	pEffect->m_vPos = pos;
+	pEffect->m_fStep = pEffect->m_fLifeTime /
+		pEffect->m_pSprite->m_uvArray.size();
+	pEffect->m_iMaxIndex = pEffect->m_pSprite->m_uvArray.size();
+
+	pEffect->m_pSprite->SetRect(pEffect->m_tRect);
+	pEffect->m_pSprite->SetPosition(pEffect->m_vPos);
+
+	pEffect->m_rtCollision = pEffect->m_pSprite->m_rtCollision;
+	pEffect->m_rtCollision.x1 = pEffect->m_vPos.x;
+	pEffect->m_rtCollision.y1 = pEffect->m_vPos.y;
+	m_Projectile.push_back(pEffect);
+}
 bool Sample::Init()
 {
 	I_Sprite.SetDevice(m_pd3dDevice, m_pImmediateContext);
@@ -118,8 +144,7 @@ bool Sample::Init()
 	return true;
 }
 bool Sample::Frame()
-{	
-	
+{		
 	m_pUser->Frame();
 	m_vCamera = m_pUser->m_vPos;
 	m_vCamera.y -= 200.0f;
@@ -139,6 +164,41 @@ bool Sample::Frame()
 		npc->SetCameraPos(m_vCamera);
 		npc->Frame();
 	}
+
+	if (I_Input.GetKey(VK_LBUTTON) == KEY_PUSH)
+	{
+		AddProjectile(m_pUser->m_vPos);
+	}
+
+	for (auto iter = m_Projectile.begin(); iter != m_Projectile.end(); )
+	{
+		TProjectile* pEffect = *iter;
+		if (pEffect->Update() == false)
+		{
+			delete pEffect;
+			iter = m_Projectile.erase(iter);
+			continue;
+		}
+		iter++;
+	}
+	for (auto iter = m_Projectile.begin(); iter != m_Projectile.end(); iter++)
+	{
+		for (auto src = m_pNpcList.begin(); src != m_pNpcList.end();)
+		{
+			TRect inst;
+			if (TCollision::RectToRect((*iter)->m_rtCollision, (*src)->m_rtCollision, inst))
+			{
+				AddEffect(inst.cx, inst.cy);
+				delete* src;
+				src = m_pNpcList.erase(src);				
+			}
+			else
+			{
+				src++;
+			}
+		}
+	}
+
 	for (auto src = m_pNpcList.begin();	src != m_pNpcList.end();)
 	{
 		TRect inst;
@@ -182,10 +242,7 @@ bool Sample::Frame()
 	}
 	
 
-	if (I_Input.GetKey(VK_LBUTTON) == KEY_HOLD)
-	{		
-		AddEffect();		
-	}
+	
 
 	for (auto iter = m_pEffectList.begin();
 		iter != m_pEffectList.end();	)
@@ -199,6 +256,7 @@ bool Sample::Frame()
 		}		
 		iter++;
 	}
+
 	return true;
 }
 bool Sample::Render()
@@ -231,6 +289,18 @@ bool Sample::Render()
 				&pEffect->m_pSprite->m_pMaskTex->m_pTextureSRV);
 		pEffect->m_pSprite->PostRender();
 	}
+
+	for (auto projectile : m_Projectile)
+	{
+		projectile->m_pSprite->SetCameraSize(vSize);
+		projectile->m_pSprite->SetCameraPos(m_vCamera);
+		projectile->m_pSprite->SetRect(projectile->m_tRect);
+		projectile->m_pSprite->SetPosition(projectile->m_vPos, m_vCamera);
+		projectile->m_pSprite->PreRender();
+		m_pImmediateContext->PSSetShaderResources(1, 1,
+			&projectile->m_pSprite->m_pMaskTex->m_pTextureSRV);
+		projectile->m_pSprite->PostRender();
+	}
 	return true;
 }
 bool Sample::Release()
@@ -240,6 +310,12 @@ bool Sample::Release()
 		delete data;
 	}
 	m_pEffectList.clear();
+
+	for (auto data : m_Projectile)
+	{
+		delete data;
+	}
+	m_Projectile.clear();
 
 	m_pMap->Release();
 	delete m_pMap;

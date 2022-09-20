@@ -9,7 +9,6 @@ public:
 public:
 	RECT_ARRAY		m_uvArray;
 	std::vector<TSprite*>  m_pChild;
-	TRect    m_rtCollision;
 public:
 	HRESULT Load(ID3D11Device* pd3dDevice,// 디바이스 객체
 		ID3D11DeviceContext* pImmediateContext, std::wstring name);
