@@ -63,10 +63,10 @@ struct TRect : Rect
         this->y1 = y;
         this->w = z;
         this->h = w;
-        x2 = x + w;
-        y2 = y + h;
-        cx = (x + x2) / 2.0f;
-        cy = (y + y2) / 2.0f;
+        x2 = this->x1 + this->w;
+        y2 = this->y1 + this->h;
+        cx = (this->x1 + x2) / 2.0f;
+        cy = (this->y1 + y2) / 2.0f;
     }
 };
 
@@ -117,7 +117,7 @@ struct TBox : Box
 class TCollision
 {
 public:
-    static TCollisionType   RectToRect(TRect& a, TRect& b);
+    static TCollisionType   RectToRect(TRect& a, TRect& b, TRect** Intersect=nullptr);
     static bool             RectToInRect(TRect& a, TRect& b);
     static bool             CircleToCircle(TCircle& a, TCircle& b);
 public:

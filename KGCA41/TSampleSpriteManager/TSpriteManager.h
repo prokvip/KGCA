@@ -6,7 +6,6 @@ class TSpriteManager : public TSingleton<TSpriteManager>
 public:
 	std::vector<W_STR> m_rtNameList;
 	std::vector<RECT_ARRAY> m_rtSpriteList;
-	std::vector<TSprite*> m_pSpriteList;
 public:
 	ID3D11Device* m_pd3dDevice = nullptr;// 디바이스 객체
 	ID3D11DeviceContext* m_pImmediateContext = nullptr;

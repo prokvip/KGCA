@@ -158,6 +158,7 @@ TVector2D::TVector2D(float x, float y)
 	v[1] = y;
 }
 TVector2D::TVector2D(const TVector2D& v)
+
 {
 	x = v.x;
 	y = v.y;
