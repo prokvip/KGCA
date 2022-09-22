@@ -146,7 +146,6 @@ bool TSceneInGame::Init()
 }
 bool TSceneInGame::Frame()
 {
-	static TVector2D vSize = { 800, 800 };
 	if (I_Input.GetKey(VK_LEFT) == KEY_HOLD)
 	{
 		vSize.x -= g_fSecondPerFrame * 100.0f;
@@ -311,7 +310,7 @@ bool TSceneInGame::Render()
 		projectile->m_pSprite->PostRender();
 	}
 
-	DrawMiniMap(0, 0);
+	//DrawMiniMap(0, 0);
 	return true;
 }
 void TSceneInGame::DrawMiniMap(UINT x, UINT y, UINT w, UINT h)
