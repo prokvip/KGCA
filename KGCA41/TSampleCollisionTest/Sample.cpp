@@ -8,7 +8,7 @@ bool Sample::Init()
 	m_pInGame->Create(m_pd3dDevice, m_pImmediateContext, L"");
 	m_pTitle->Init();
 	m_pInGame->Init();
-	m_pCurrentScene = m_pInGame;
+	m_pCurrentScene = m_pTitle;
 	return true;
 }
 bool Sample::Frame()

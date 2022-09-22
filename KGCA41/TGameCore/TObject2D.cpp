@@ -15,17 +15,11 @@ void  TObject2D::UpdateVertexBuffer()
     m_VertexList[2].p = { m_vNDCPos.x, m_vNDCPos.y - m_vDrawSize.y, 0.0f };
     m_VertexList[2].t = { m_rtUV.x1, m_rtUV.y1 + m_rtUV.h };
 
- /*   m_VertexList[3].p = m_VertexList[2].p;
-    m_VertexList[3].t = m_VertexList[2].t;
-
-    m_VertexList[4].p = m_VertexList[1].p;
-    m_VertexList[4].t = m_VertexList[1].t;*/
-
     m_VertexList[3].p = { m_vNDCPos.x + m_vDrawSize.x, m_vNDCPos.y - m_vDrawSize.y, 0.0f };
     m_VertexList[3].t = { m_rtUV.x1 + m_rtUV.w , m_rtUV.y1 + m_rtUV.h };
 
     m_pImmediateContext->UpdateSubresource(
-        m_pVertexBuffer, NULL, NULL, &m_VertexList.at(0), 0, 0);
+        m_pVertexBuffer, NULL, NULL, &m_VertexList.at(0), 0, 0);    
 }
 void  TObject2D::SetRect(TRect rt)
 {

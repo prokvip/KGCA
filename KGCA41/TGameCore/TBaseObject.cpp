@@ -16,6 +16,8 @@ void    TBaseObject::CreateVertexData()
     m_VertexList[1].t = { 1.0f, 0.0f };
     m_VertexList[2].t = { 0.0f, 1.0f };
     m_VertexList[3].t = { 1.0f, 1.0f };
+
+    m_InitVertexList = m_VertexList;
 }
 void    TBaseObject::CreateIndexData()
 {
@@ -227,6 +229,18 @@ void   TBaseObject::UpdateVertexBuffer()
     m_pImmediateContext->UpdateSubresource(
         m_pVertexBuffer, 0, nullptr,
         &m_VertexList.at(0), 0, 0);
+}
+void  TBaseObject::Rotation()
+{
+    float fDegree = 45.0f;
+    float fRadian = DegreeToRadian(fDegree);
+    for (int iV = 0; iV < 4; iV++)
+    {
+        m_InitVertexList[iV].p.x = m_VertexList[iV].p.x * cos(fRadian) - m_VertexList[iV].p.y * sin(fRadian);
+        m_InitVertexList[iV].p.y = m_VertexList[iV].p.x * sin(fRadian) + m_VertexList[iV].p.y * cos(fRadian);
+    }
+    m_pImmediateContext->UpdateSubresource(
+        m_pVertexBuffer, NULL, NULL, &m_InitVertexList.at(0), 0, 0);
 }
 bool TBaseObject::Render()
 {

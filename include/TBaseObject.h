@@ -22,6 +22,7 @@ public:
 	TTexture* m_pTexture;
 	ID3D11ShaderResourceView*    m_pTextureSRV = nullptr;
 	std::vector<SimpleVertex>    m_VertexList;
+	std::vector<SimpleVertex>    m_InitVertexList;
 	std::vector<DWORD>			 m_IndexList;
 	TRect						 m_rtCollision;
 public:
@@ -50,5 +51,8 @@ public:
 	virtual bool		Render();
 	virtual bool		PostRender();
 	virtual bool		Release() ;
+
+
+	virtual void		Rotation();
 };
 

@@ -11,6 +11,7 @@ bool TSceneTitle::Init()
 }
 bool TSceneTitle::Frame()
 {	
+	m_pMapTitle->Rotation();
 	return true;
 }
 bool TSceneTitle::Render()
