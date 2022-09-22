@@ -19,32 +19,30 @@ void  TUser2D::UpdateVertexBuffer()
     m_pImmediateContext->UpdateSubresource(m_pVertexBuffer, NULL, NULL, &m_VertexList.at(0), 0, 0);
 }
 void TUser2D::Rotation()
-{
-    m_InitVertexList = m_VertexList;
-    TRect center;
-    center.Set(m_VertexList[0].p.x, m_VertexList[0].p.y,
-        m_VertexList[1].p.x - m_VertexList[0].p.x,
-        m_VertexList[2].p.y - m_VertexList[0].p.y);
-
+{      
+    TVector vCenter;
+    vCenter.x = (m_VertexList[1].p.x + m_VertexList[0].p.x) / 2.0f;
+    vCenter.y = (m_VertexList[2].p.x + m_VertexList[0].p.y) / 2.0f;
+    
     TVector v[4];
-    v[0].x = m_VertexList[0].p.x - center.cx; v[0].y = m_VertexList[0].p.y - center.cy;
-    v[1].x = m_VertexList[1].p.x - center.cx; v[1].y = m_VertexList[1].p.y - center.cy;
-    v[2].x = m_VertexList[2].p.x - center.cx; v[2].y = m_VertexList[2].p.y - center.cy;
-    v[3].x = m_VertexList[3].p.x - center.cx; v[3].y = m_VertexList[3].p.y - center.cy;
-
+    v[0] = m_VertexList[0].p - vCenter;
+    v[1] = m_VertexList[1].p - vCenter;
+    v[2] = m_VertexList[2].p - vCenter;
+    v[3] = m_VertexList[3].p - vCenter;
+    
     float fDegree = 45.0f;
     float fRadian = DegreeToRadian(fDegree);
 
-    TVector vRet[4];
-    for (int iV = 0; iV < 4; iV++)
+    TVector vRotaton[4];
+    for (int vertex = 0; vertex < 4; vertex++)
     {
-        vRet[iV].x = v[iV].x * cos(g_fGameTimer) - v[iV].y * sin(g_fGameTimer);
-        vRet[iV].y = v[iV].x * sin(g_fGameTimer) + v[iV].y * cos(g_fGameTimer);
+        vRotaton[vertex].x = v[vertex].x * cos(g_fGameTimer) - v[vertex].y * sin(g_fGameTimer);
+        vRotaton[vertex].y = v[vertex].x * sin(g_fGameTimer) + v[vertex].y * cos(g_fGameTimer);
     }
-    m_VertexList[0].p.x = vRet[0].x + center.cx; m_VertexList[0].p.y = vRet[0].y + center.cy;
-    m_VertexList[1].p.x = vRet[1].x + center.cx; m_VertexList[1].p.y = vRet[1].y + center.cy;
-    m_VertexList[2].p.x = vRet[2].x + center.cx; m_VertexList[2].p.y = vRet[2].y + center.cy;
-    m_VertexList[3].p.x = vRet[3].x + center.cx; m_VertexList[3].p.y = vRet[3].y + center.cy;
+    m_VertexList[0].p = vRotaton[0] + vCenter;
+    m_VertexList[1].p = vRotaton[1] + vCenter;
+    m_VertexList[2].p = vRotaton[2] + vCenter;
+    m_VertexList[3].p = vRotaton[3] + vCenter;
 }
 bool TUser2D::Frame()
 {
