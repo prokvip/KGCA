@@ -11,7 +11,7 @@ public:
 	TVector2D	m_vDir;
 	float		m_fSpeed = 100.0f;
 private:
-	TVector2D	m_vDrawPos;
+	TVector2D	m_vNDCPos;
 	TVector2D	m_vDrawSize;
 public:
 	bool  Frame() override;

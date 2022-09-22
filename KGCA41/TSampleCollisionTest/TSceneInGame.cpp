@@ -119,7 +119,7 @@ bool TSceneInGame::Init()
 	m_pUser->SetPosition({ 0.0f,0.0f });
 
 	m_vCamera = m_pUser->m_vPos;
-	m_vCamera.y -= 200.0f;
+	//m_vCamera.y -= 200.0f;
 
 	for (int iNpc = 0; iNpc < 100; iNpc++)
 	{
@@ -146,19 +146,21 @@ bool TSceneInGame::Init()
 }
 bool TSceneInGame::Frame()
 {
+	float fAspectRatio = vSize.y / vSize.x;
 	if (I_Input.GetKey(VK_LEFT) == KEY_HOLD)
-	{
+	{		
 		vSize.x -= g_fSecondPerFrame * 100.0f;
-		vSize.y -= g_fSecondPerFrame * 100.0f;
+		vSize.y -= g_fSecondPerFrame * 100.0f * fAspectRatio;
 	}
 	if (I_Input.GetKey(VK_RIGHT) == KEY_HOLD)
 	{
+		float fAspectRatio = g_fSecondPerFrame * 100.0f;
 		vSize.x += g_fSecondPerFrame * 100.0f;
-		vSize.y += g_fSecondPerFrame * 100.0f;
+		vSize.y += g_fSecondPerFrame * 100.0f * fAspectRatio;
 	}
 	m_pUser->Frame();
 	m_vCamera = m_pUser->m_vPos;
-	m_vCamera.y -= 200.0f;
+	//m_vCamera.y -= 200.0f;
 	m_pUser->SetCameraSize(vSize);
 	m_pUser->SetCameraPos(m_vCamera);
 	m_pUser->SetPosition(m_pUser->m_vPos, m_vCamera);

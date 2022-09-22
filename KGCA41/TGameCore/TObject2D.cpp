@@ -6,13 +6,13 @@ bool TObject2D::Frame()
 }
 void  TObject2D::UpdateVertexBuffer()
 {
-    m_VertexList[0].p = { m_vDrawPos.x, m_vDrawPos.y, 0.0f };
+    m_VertexList[0].p = { m_vNDCPos.x, m_vNDCPos.y, 0.0f };
     m_VertexList[0].t = { m_rtUV.x1, m_rtUV.y1 };
 
-    m_VertexList[1].p = { m_vDrawPos.x + m_vDrawSize.x, m_vDrawPos.y,  0.0f };
+    m_VertexList[1].p = { m_vNDCPos.x + m_vDrawSize.x, m_vNDCPos.y,  0.0f };
     m_VertexList[1].t = { m_rtUV.x1 + m_rtUV.w, m_rtUV.y1 };
 
-    m_VertexList[2].p = { m_vDrawPos.x, m_vDrawPos.y - m_vDrawSize.y, 0.0f };
+    m_VertexList[2].p = { m_vNDCPos.x, m_vNDCPos.y - m_vDrawSize.y, 0.0f };
     m_VertexList[2].t = { m_rtUV.x1, m_rtUV.y1 + m_rtUV.h };
 
  /*   m_VertexList[3].p = m_VertexList[2].p;
@@ -21,7 +21,7 @@ void  TObject2D::UpdateVertexBuffer()
     m_VertexList[4].p = m_VertexList[1].p;
     m_VertexList[4].t = m_VertexList[1].t;*/
 
-    m_VertexList[3].p = { m_vDrawPos.x + m_vDrawSize.x, m_vDrawPos.y - m_vDrawSize.y, 0.0f };
+    m_VertexList[3].p = { m_vNDCPos.x + m_vDrawSize.x, m_vNDCPos.y - m_vDrawSize.y, 0.0f };
     m_VertexList[3].t = { m_rtUV.x1 + m_rtUV.w , m_rtUV.y1 + m_rtUV.h };
 
     m_pImmediateContext->UpdateSubresource(
@@ -57,8 +57,8 @@ void  TObject2D::ScreenToNDC()
         m_rtInit.h);
 
     // 0  ~ 800   -> 0~1 ->  -1 ~ +1
-    m_vDrawPos.x = (m_rtCollision.x1 / g_rtClient.right) * 2.0f - 1.0f;
-    m_vDrawPos.y = -((m_rtCollision.y1 / g_rtClient.bottom) * 2.0f - 1.0f);
+    m_vNDCPos.x = (m_rtCollision.x1 / g_rtClient.right) * 2.0f - 1.0f;
+    m_vNDCPos.y = -((m_rtCollision.y1 / g_rtClient.bottom) * 2.0f - 1.0f);
     m_vDrawSize.x = (m_rtInit.w / (float)g_rtClient.right) * 2.0f;
     m_vDrawSize.y = (m_rtInit.h / (float)g_rtClient.bottom) * 2.0f;
 }
@@ -72,7 +72,7 @@ void  TObject2D::SetPosition(TVector2D vPos)
 void  TObject2D::ScreenToCamera(
     TVector2D vCameraPos, TVector2D vViewPort)
 {
-    TVector2D vPos = m_vPos;
+    TVector2D   vViewPos = m_vPos;
     TVector2D	vDrawSize;
     vDrawSize.x = m_rtInit.w / 2.0f;
     vDrawSize.y = m_rtInit.h / 2.0f;
@@ -82,11 +82,11 @@ void  TObject2D::ScreenToCamera(
         m_rtInit.w,
         m_rtInit.h);
 
-    vPos.x = m_rtCollision.x1 - vCameraPos.x;
-    vPos.y = m_rtCollision.y1 - vCameraPos.y;
+    vViewPos.x = m_rtCollision.x1 - vCameraPos.x;
+    vViewPos.y = m_rtCollision.y1 - vCameraPos.y;
     // 0  ~ 800   -> 0~1 ->  -1 ~ +1
-    m_vDrawPos.x = vPos.x * (2.0f / vViewPort.x);
-    m_vDrawPos.y = vPos.y * (2.0f / vViewPort.y) * -1.0f;
+    m_vNDCPos.x = vViewPos.x * (2.0f / vViewPort.x);
+    m_vNDCPos.y = vViewPos.y * (2.0f / vViewPort.y) * -1.0f;
 
     m_vDrawSize.x = (m_rtInit.w / vViewPort.x) * 2.0f;
     m_vDrawSize.y = (m_rtInit.h / vViewPort.y) * 2.0f;
