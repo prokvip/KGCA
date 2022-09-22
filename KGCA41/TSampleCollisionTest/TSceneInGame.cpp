@@ -154,7 +154,6 @@ bool TSceneInGame::Frame()
 	}
 	if (I_Input.GetKey(VK_RIGHT) == KEY_HOLD)
 	{
-		float fAspectRatio = g_fSecondPerFrame * 100.0f;
 		vSize.x += g_fSecondPerFrame * 100.0f;
 		vSize.y += g_fSecondPerFrame * 100.0f * fAspectRatio;
 	}
