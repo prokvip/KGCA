@@ -1,6 +1,6 @@
 #include "TSceneInGame.h"
 #include "TInput.h"
-static TVector2D vSize = { 800, 600 };
+static TVector2D vSize = { 800, 800 };
 
 void TSceneInGame::AddEffect()
 {
