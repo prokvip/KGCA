@@ -23,31 +23,31 @@ void TUser2D::Rotation()
     TVector vCenter;
     vCenter.x = (m_VertexList[1].p.x + m_VertexList[0].p.x) / 2.0f;
     vCenter.y = (m_VertexList[2].p.x + m_VertexList[0].p.y) / 2.0f;
-    
-    TVector v[4];
-    v[0] = m_VertexList[0].p - vCenter;
-    v[1] = m_VertexList[1].p - vCenter;
-    v[2] = m_VertexList[2].p - vCenter;
-    v[3] = m_VertexList[3].p - vCenter;
-    
-    float fDegree = 45.0f;
-    float fRadian = DegreeToRadian(fDegree);
 
-    TVector vRotaton[4];
+    float fDegree = m_fAngleDegree;
+    float fRadian = DegreeToRadian(fDegree);
+    TVector vRot;
     for (int vertex = 0; vertex < 4; vertex++)
     {
-        vRotaton[vertex].x = v[vertex].x * cos(g_fGameTimer) - v[vertex].y * sin(g_fGameTimer);
-        vRotaton[vertex].y = v[vertex].x * sin(g_fGameTimer) + v[vertex].y * cos(g_fGameTimer);
+        TVector vCenterMove = m_VertexList[vertex].p - vCenter;        
+        vRot.x = vCenterMove.x * cos(fRadian) - vCenterMove.y * sin(fRadian);
+        vRot.y = vCenterMove.x * sin(fRadian) + vCenterMove.y * cos(fRadian);
+        m_VertexList[vertex].p = vRot + vCenter;
     }
-    m_VertexList[0].p = vRotaton[0] + vCenter;
-    m_VertexList[1].p = vRotaton[1] + vCenter;
-    m_VertexList[2].p = vRotaton[2] + vCenter;
-    m_VertexList[3].p = vRotaton[3] + vCenter;
 }
 bool TUser2D::Frame()
 {
     TVector2D vPos = m_vPos;
-    
+
+    if (I_Input.GetKey('P'))
+    {
+        m_fAngleDegree += 180.0f * g_fSecondPerFrame;
+    }    
+    if (I_Input.GetKey('O'))
+    {
+        m_fAngleDegree -= 180.0f * g_fSecondPerFrame;
+    } 
+
     m_vDir = { 0,0 };
     if (I_Input.GetKey('W'))
     {

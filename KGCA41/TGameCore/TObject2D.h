@@ -4,13 +4,14 @@
 class TObject2D : public TBaseObject
 {
 public:
-	TTexture* m_pMaskTex = nullptr;
+	TTexture*	m_pMaskTex = nullptr;
 	POINT	    m_ptImageSize;
 	TRect		m_rtInit;
 	TRect		m_rtUV;
 	TVector2D	m_vPos;
 	TVector2D	m_vDir;
 	float		m_fSpeed = 100.0f;
+	float       m_fAngleDegree = 0.0f;
 	TVector2D	m_vNDCPos;
 	TVector2D	m_vDrawSize;
 public:
