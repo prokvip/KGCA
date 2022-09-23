@@ -17,10 +17,10 @@ public:
 public:
 	TVector2D	m_vCameraPos;
 	TVector2D	m_vViewSize;
-	void  SetCameraPos(TVector2D vCamera) { m_vCameraPos = vCamera; }
-	void  SetCameraSize(TVector2D vSize) { m_vViewSize = vSize; }
-	void  ScreenToNDC();
-	void  ScreenToCamera(TVector2D vCameraPos,
+	virtual void  SetCameraPos(TVector2D vCamera) { m_vCameraPos = vCamera; }
+	virtual void  SetCameraSize(TVector2D vSize) { m_vViewSize = vSize; }
+	virtual void  ScreenToNDC();
+	virtual void  ScreenToCamera(TVector2D vCameraPos,
 		TVector2D vViewPort = { 2000.0f, 2000.0f });
 public:
 	bool  Frame() override;
@@ -34,6 +34,6 @@ public:
 	virtual void  SetMask(TTexture* pMaskTex) {
 		m_pMaskTex = pMaskTex;
 	};
-	
+	virtual void		Rotation();
 };
 

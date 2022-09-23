@@ -119,6 +119,7 @@ class TCollision
 public:
     static TCollisionType   RectToRect(TRect& a, TRect& b, TRect& Intersect);
     static bool             RectToInRect(TRect& a, TRect& b);
+    static bool             RectToPoint(TRect& a, POINT& p);
     static bool             CircleToCircle(TCircle& a, TCircle& b);
 public:
     static TCollisionType   BoxToBox(TBox& a, TBox& b);

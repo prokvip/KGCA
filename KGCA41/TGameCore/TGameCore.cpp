@@ -35,6 +35,7 @@ bool		TGameCore::TCorePreRender()
 	m_pImmediateContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	m_pImmediateContext->RSSetViewports(1, &m_vp);
 	m_pImmediateContext->RSSetState(TDxState::g_pDefaultRSSolid);
+	m_pImmediateContext->OMSetBlendState(TDxState::g_pAlphaBlend, 0, -1);
     return true;
 }
 bool		TGameCore::TCoreRender()

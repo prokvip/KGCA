@@ -18,23 +18,7 @@ void  TUser2D::UpdateVertexBuffer()
 
     m_pImmediateContext->UpdateSubresource(m_pVertexBuffer, NULL, NULL, &m_VertexList.at(0), 0, 0);
 }
-void TUser2D::Rotation()
-{      
-    TVector vCenter;
-    vCenter.x = (m_VertexList[1].p.x + m_VertexList[0].p.x) / 2.0f;
-    vCenter.y = (m_VertexList[2].p.x + m_VertexList[0].p.y) / 2.0f;
 
-    float fDegree = m_fAngleDegree;
-    float fRadian = DegreeToRadian(fDegree);
-    TVector vRot;
-    for (int vertex = 0; vertex < 4; vertex++)
-    {
-        TVector vCenterMove = m_VertexList[vertex].p - vCenter;        
-        vRot.x = vCenterMove.x * cos(fRadian) - vCenterMove.y * sin(fRadian);
-        vRot.y = vCenterMove.x * sin(fRadian) + vCenterMove.y * cos(fRadian);
-        m_VertexList[vertex].p = vRot + vCenter;
-    }
-}
 bool TUser2D::Frame()
 {
     TVector2D vPos = m_vPos;

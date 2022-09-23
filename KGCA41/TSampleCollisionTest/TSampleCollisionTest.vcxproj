@@ -150,6 +150,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Sample.h" />
+    <ClInclude Include="TInterface.h" />
     <ClInclude Include="TMapObject.h" />
     <ClInclude Include="TNpc2D.h" />
     <ClInclude Include="TScene.h" />
@@ -161,6 +162,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Sample.cpp" />
+    <ClCompile Include="TInterface.cpp" />
     <ClCompile Include="TMapObject.cpp" />
     <ClCompile Include="TNpc2D.cpp" />
     <ClCompile Include="TScene.cpp" />

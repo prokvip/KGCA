@@ -1,4 +1,15 @@
 #include "TCollision.h"
+bool  TCollision::RectToPoint(TRect& a, POINT& p)
+{
+    if (a.x1 <= p.x && a.x2 >= p.x )
+    {
+        if (a.y1 <= p.y && a.y2 >= p.y)
+        {   
+            return true;         
+        }
+    }
+    return false;
+}
 TCollisionType TCollision::RectToRect(TRect& a, TRect& b, TRect& Intersect)
 {
     // 0 : 완전제외(0)

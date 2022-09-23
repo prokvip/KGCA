@@ -50,9 +50,6 @@ public:
 	virtual bool		PreRender();
 	virtual bool		Render();
 	virtual bool		PostRender();
-	virtual bool		Release() ;
-
-
-	virtual void		Rotation();
+	virtual bool		Release() ;	
 };
 

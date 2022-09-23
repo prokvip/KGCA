@@ -13,7 +13,7 @@ bool Sample::Init()
 }
 bool Sample::Frame()
 {		
-	if (I_Input.GetKey(VK_F1) == KEY_PUSH)
+	if (m_pCurrentScene->IsNextScene())
 	{
 		m_pCurrentScene = m_pInGame;
 	}
