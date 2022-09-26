@@ -16,24 +16,41 @@ bool TSceneTitle::Init()
 		shaderfilename,
 		L"../../data/kgcabk.bmp");
 
-	m_btnStart = new TButton;
-	m_btnStart->Create(m_pd3dDevice,
-		m_pImmediateContext,
+	m_Dlg = new TDialog;
+	m_Dlg->Create(m_pd3dDevice, m_pImmediateContext,
 		shaderfilename,
-		L"../../data/ui/main_start_nor.png");
-	m_btnStart->Init();
+		L"../../data/ui/popup_normal.png");
+	std::vector<W_STR> zeroState;
+	m_Dlg->SetAttribute({ 300, 200 },
+		{ 0, 0,	400.0f, 300.0f }, zeroState);
+	/////////////// position ///////
+	//       left          right
+	// u -> 0~0.1f  ~     0.9f~1.0f
+	//        top          bottom
+	// v -> 0~0.1f  ~     0.9f~1.0f
+	/////////////// uv ///////
+	//       left          right
+	// u -> 0~0.2f  ~     0.8f~1.0f
+	//        top          bottom
+	// v -> 0~0.33f  ~     0.67f~1.0f	
+	m_Dlg->SetDrawList( 
+		0.1f, 0.1f,
+		0.1f, 0.1f,
+		0.2f, 0.2f,
+		0.33f, 0.33f);
 
-	TTexture* pTexture = I_Tex.Load(L"../../data/ui/main_start_nor.png");
-	m_btnStart->m_pCurrentTex = pTexture;
-	m_btnStart->m_pStateList.push_back(pTexture);
-	pTexture = I_Tex.Load(L"../../data/ui/main_start_sel.png");
-	m_btnStart->m_pStateList.push_back(pTexture);
-	pTexture = I_Tex.Load(L"../../data/ui/main_start_pus.png");
-	m_btnStart->m_pStateList.push_back(pTexture);
-	pTexture = I_Tex.Load(L"../../data/ui/main_start_dis.png");
-	m_btnStart->m_pStateList.push_back(pTexture);
-	m_btnStart->SetRect({ 0, 0,	332.0f, 82.0f });
-	m_btnStart->SetPosition({ 400.0f, 300.0f });
+	m_btnStart = new TButton;
+	m_btnStart->Create(m_pd3dDevice,m_pImmediateContext,
+		shaderfilename,	L"../../data/ui/main_start_nor.png");
+	std::vector<W_STR> stateList;
+	stateList.push_back(L"../../data/ui/main_start_nor.png");
+	stateList.push_back(L"../../data/ui/main_start_sel.png");
+	stateList.push_back(L"../../data/ui/main_start_pus.png");
+	stateList.push_back(L"../../data/ui/main_start_dis.png");
+	m_btnStart->SetAttribute(		
+		{ 400.0f, 300.0f } ,
+		{ 0, 0,	332.0f, 82.0f }, stateList);
+	m_Dlg->AddChild(m_btnStart);
 	
 
 	m_listControl = new TListControl;
@@ -41,52 +58,46 @@ bool TSceneTitle::Init()
 		m_pImmediateContext,
 		shaderfilename,
 		L"../../data/ui/RAINBOW.png");
-	m_listControl->m_pCurrentTex = m_listControl->m_pTexture;
-	m_listControl->Init();
-	m_listControl->SetRect({ 0, 0,	100.0f, 500.0f });
-	m_listControl->SetPosition({ 60, 300 });
+	m_listControl->SetAttribute({ 60, 300 },
+		{ 0, 0,	100.0f, 500.0f }, zeroState);
+	
 	UINT iNumBtn = 10;
 	for (int iBtn = 0; iBtn < iNumBtn; iBtn++)
 	{
-		TButton* btn = new TButton;
+		TInterface* btn = new TButton;
 		btn->Create(m_pd3dDevice,
 			m_pImmediateContext,
 			shaderfilename,
 			L"../../data/ui/main_plus_dis.png");
-		btn->Init();
-
-		TTexture* pTexture = I_Tex.Load(L"../../data/ui/main_shop_nor.png");
-		btn->m_pCurrentTex = pTexture;
-		btn->m_pStateList.push_back(pTexture);
-		pTexture = I_Tex.Load(L"../../data/ui/main_shop_sel.png");
-		btn->m_pStateList.push_back(pTexture);
-		pTexture = I_Tex.Load(L"../../data/ui/main_shop_pus.png");
-		btn->m_pStateList.push_back(pTexture);
-		pTexture = I_Tex.Load(L"../../data/ui/main_shop_dis.png");
-		btn->m_pStateList.push_back(pTexture);
-		btn->SetRect({ 0, 0,	
-			m_listControl->m_rtInit.w*0.8f,
-			m_listControl->m_rtInit.h/ iNumBtn, });
-		btn->SetPosition({  m_listControl->m_vPos.x, 
-							m_listControl->m_rtCollision.y1
-							+ iBtn*(m_listControl->m_rtCollision.h/ iNumBtn)
-							+ (m_listControl->m_rtCollision.h / iNumBtn)/2.0f});
-
-		m_listControl->m_btnList.push_back(btn);
+		btn->SetAttribute(
+			{ m_listControl->m_vPos.x,
+			  m_listControl->m_rtCollision.y1
+			  + iBtn * (m_listControl->m_rtCollision.h / iNumBtn)
+			  + (m_listControl->m_rtCollision.h / iNumBtn) / 2.0f },
+			{ 0, 0,	m_listControl->m_rtInit.w * 0.8f,
+					m_listControl->m_rtInit.h / iNumBtn }, 
+			stateList);		
+		m_listControl->AddChild(btn);
 	}
+	m_Dlg->AddChild(m_listControl);
 	return true;
 }
 bool TSceneTitle::Frame()
 {	
-	m_btnStart->Frame();
-	m_listControl->Frame();
+	//m_btnStart->Frame();
+	//m_listControl->Frame();
+	TVector2D pos = m_Dlg->m_vPos;
+	pos.x = pos.x + g_fSecondPerFrame*10.0f;
+	m_Dlg->SetPosition(pos);
+	m_Dlg->Frame();
 	return true;
 }
 bool TSceneTitle::Render()
 {
 	m_pMapTitle->Render();
-	m_btnStart->Render();
-	m_listControl->Render();
+	//m_btnStart->Render();
+	//m_listControl->Render();
+	m_Dlg->Render();
 	return true;
 }
 bool TSceneTitle::Release()
@@ -94,5 +105,6 @@ bool TSceneTitle::Release()
 	m_btnStart->Release();
 	m_pMapTitle->Release();
 	m_listControl->Release();
+	m_Dlg->Release();
 	return true;
 }

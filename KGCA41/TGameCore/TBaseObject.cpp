@@ -183,6 +183,8 @@ bool	TBaseObject::Create(
 {
     m_pd3dDevice = pd3dDevice;
     m_pImmediateContext = pImmediateContext;
+    m_szShaderName = shadername;
+    m_szTextureName= texturename;
     if (FAILED(CreateVertexBuffer()))
     {
         return false;

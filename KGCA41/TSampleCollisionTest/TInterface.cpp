@@ -1,5 +1,235 @@
 #include "TInterface.h"
 #include "TInput.h"
+bool  TDialog::SetDrawList(
+    float fScaleX0, float fScaleX1,
+    float fScaleY0, float fScaleY1,
+    float fScaleU0, float fScaleU1,
+    float fScaleV0, float fScaleV1 )
+{
+    m_rtDrawList.resize(9);
+    for (int iSub = 0; iSub < m_rtDrawList.size(); iSub++)
+    {
+        m_rtDrawList[iSub] = new TInterface;
+        m_rtDrawList[iSub]->Create(m_pd3dDevice, m_pImmediateContext,
+            m_szShaderName,
+            m_szTextureName);
+    }
+
+    std::vector<W_STR> zeroState;
+    TRect rt = m_rtCollision;
+    TVector2D  vCenter = m_vPos;
+    float fX[4];
+    fX[0] = m_rtCollision.x1;
+    fX[1] = fX[0]+m_rtCollision.w* fScaleX0;
+    fX[2] = m_rtCollision.x2 -(m_rtCollision.w * fScaleX1);
+    fX[3] = m_rtCollision.x2;
+    float fY[4];
+    fY[0] = m_rtCollision.y1;
+    fY[1] = fY[0]+m_rtCollision.h * fScaleY0;
+    fY[2] = m_rtCollision.y2 - (m_rtCollision.h * fScaleY1);
+    fY[3] = m_rtCollision.y2;
+    float fU[4];
+    fU[0] = 0.0f;
+    fU[1] = fU[0]+fScaleU0;
+    fU[2] = 1.0f - fU[1];
+    fU[3] = 1.0f;
+    float fV[4];
+    fV[0] = 0.0f;
+    fV[1] = fV[0]+fScaleV0;
+    fV[2] = 1.0f - fV[1];
+    fV[3] = 1.0f;
+
+    vCenter.x = (fX[0] + fX[1]) * 0.5f;
+    vCenter.y = (fY[0] + fY[1]) * 0.5f;
+    m_rtDrawList[0]->m_rtInit.Set(0, 0, fX[1] - fX[0], fY[1] - fY[0]);    
+    m_rtDrawList[0]->m_rtUV.x1 = fU[0];
+    m_rtDrawList[0]->m_rtUV.y1 = fV[0];
+    m_rtDrawList[0]->m_rtUV.w = fU[1] - fU[0];
+    m_rtDrawList[0]->m_rtUV.h = fV[1] - fV[0];
+    m_rtDrawList[0]->SetPosition(vCenter);
+
+    vCenter.x = (fX[2] + fX[1]) * 0.5f;    
+    m_rtDrawList[1]->m_rtInit.Set(fX[1], fY[0], fX[2] - fX[1], fY[1] - fY[0]);
+    m_rtDrawList[1]->m_rtUV.x1 = fU[1];
+    m_rtDrawList[1]->m_rtUV.y1 = fV[0];
+    m_rtDrawList[1]->m_rtUV.w = fU[2] - fU[1];
+    m_rtDrawList[1]->m_rtUV.h = fV[1] - fV[0];
+    m_rtDrawList[1]->SetPosition(vCenter);
+
+    vCenter.x = (fX[3] + fX[2]) * 0.5f;
+    m_rtDrawList[2]->m_rtInit.Set(fX[2], fY[0], fX[3] - fX[2], fY[1] - fY[0]);
+    m_rtDrawList[2]->m_rtUV.x1 = fU[2];
+    m_rtDrawList[2]->m_rtUV.y1 = fV[0];
+    m_rtDrawList[2]->m_rtUV.w = fU[3] - fU[2];
+    m_rtDrawList[2]->m_rtUV.h = fV[1] - fV[0];
+    m_rtDrawList[2]->SetPosition(vCenter);
+   
+    // 2
+    vCenter.x = (fX[0] + fX[1]) * 0.5f;
+    vCenter.y = (fY[2] + fY[1]) * 0.5f;
+    m_rtDrawList[3]->m_rtInit.Set(0, 0, fX[1] - fX[0], fY[2] - fY[1]);
+    m_rtDrawList[3]->m_rtUV.x1 = fU[0];
+    m_rtDrawList[3]->m_rtUV.y1 = fV[1];
+    m_rtDrawList[3]->m_rtUV.w = fU[1] - fU[0];
+    m_rtDrawList[3]->m_rtUV.h = fV[2] - fV[1];
+    m_rtDrawList[3]->SetPosition(vCenter);
+
+    vCenter.x = (fX[2] + fX[1]) * 0.5f;
+    m_rtDrawList[4]->m_rtInit.Set(fX[1], fY[1], fX[2] - fX[1], fY[2] - fY[1]);
+    m_rtDrawList[4]->m_rtUV.x1 = fU[1];
+    m_rtDrawList[4]->m_rtUV.y1 = fV[1];
+    m_rtDrawList[4]->m_rtUV.w = fU[2] - fU[1];
+    m_rtDrawList[4]->m_rtUV.h = fV[2] - fV[1];
+    m_rtDrawList[4]->SetPosition(vCenter);
+
+    vCenter.x = (fX[3] + fX[2]) * 0.5f;
+    m_rtDrawList[5]->m_rtInit.Set(fX[2], fY[1], fX[3] - fX[2], fY[2] - fY[1]);
+    m_rtDrawList[5]->m_rtUV.x1 = fU[2];
+    m_rtDrawList[5]->m_rtUV.y1 = fV[1];
+    m_rtDrawList[5]->m_rtUV.w = fU[3] - fU[2];
+    m_rtDrawList[5]->m_rtUV.h = fV[2] - fV[1];
+    m_rtDrawList[5]->SetPosition(vCenter);
+
+    // 3
+    vCenter.x = (fX[0] + fX[1]) * 0.5f;
+    vCenter.y = (fY[3] + fY[2]) * 0.5f;
+    m_rtDrawList[6]->m_rtInit.Set(0, 0, fX[1] - fX[0], fY[3] - fY[2]);
+    m_rtDrawList[6]->m_rtUV.x1 = fU[0];
+    m_rtDrawList[6]->m_rtUV.y1 = fV[2];
+    m_rtDrawList[6]->m_rtUV.w = fU[1] - fU[0];
+    m_rtDrawList[6]->m_rtUV.h = fV[3] - fV[2];
+    m_rtDrawList[6]->SetPosition(vCenter);
+
+    vCenter.x = (fX[2] + fX[1]) * 0.5f;
+    m_rtDrawList[7]->m_rtInit.Set(fX[1], fY[2], fX[2] - fX[1], fY[3] - fY[2]);
+    m_rtDrawList[7]->m_rtUV.x1 = fU[1];
+    m_rtDrawList[7]->m_rtUV.y1 = fV[2];
+    m_rtDrawList[7]->m_rtUV.w = fU[2] - fU[1];
+    m_rtDrawList[7]->m_rtUV.h = fV[3] - fV[2];
+    m_rtDrawList[7]->SetPosition(vCenter);
+
+    vCenter.x = (fX[3] + fX[2]) * 0.5f;
+    m_rtDrawList[8]->m_rtInit.Set(fX[2], fY[2], fX[3] - fX[2], fY[3] - fY[2]);
+    m_rtDrawList[8]->m_rtUV.x1 = fU[2];
+    m_rtDrawList[8]->m_rtUV.y1 = fV[2];
+    m_rtDrawList[8]->m_rtUV.w = fU[3] - fU[2];
+    m_rtDrawList[8]->m_rtUV.h = fV[3] - fV[2];
+    m_rtDrawList[8]->SetPosition(vCenter);
+    return true;
+}
+void  TInterface::Rotation()
+{
+    float fRadian = DegreeToRadian(m_fAngleDegree);
+    for (int iV = 0; iV < 4; iV++)
+    {
+        m_InitVertexList[iV].p.x = m_VertexList[iV].p.x * cos(fRadian) - m_VertexList[iV].p.y * sin(fRadian);
+        m_InitVertexList[iV].p.y = m_VertexList[iV].p.x * sin(fRadian) + m_VertexList[iV].p.y * cos(fRadian);
+    }
+    m_pImmediateContext->UpdateSubresource(
+        m_pVertexBuffer, NULL, NULL, &m_InitVertexList.at(0), 0, 0);
+}
+bool  TInterface::SetAttribute(TVector2D vPos, TRect rt, 
+    std::vector<W_STR>& texStateList)
+{
+    Init();
+    SetRect(rt);
+    SetPosition(vPos);
+
+    if (texStateList.size() <= 0)
+    {
+        m_pCurrentTex = m_pTexture;
+        m_pStateList.push_back(m_pTexture);
+        m_pStateList.push_back(m_pTexture);
+        m_pStateList.push_back(m_pTexture);
+        m_pStateList.push_back(m_pTexture);
+        return true;
+    }
+
+    TTexture* pTexture = nullptr;
+    if (!texStateList[0].empty() )
+    {
+        pTexture = I_Tex.Load(texStateList[0]);
+        m_pCurrentTex = pTexture;
+        m_pStateList.push_back(pTexture);
+    }
+    if (!texStateList[1].empty())
+    {
+        pTexture = I_Tex.Load(texStateList[1]);
+        m_pStateList.push_back(pTexture);
+    }
+    if (!texStateList[2].empty())
+    {
+        pTexture = I_Tex.Load(texStateList[2]);
+        m_pStateList.push_back(pTexture);
+    }
+    if (!texStateList[3].empty())
+    {
+        pTexture = I_Tex.Load(texStateList[3]);
+        m_pStateList.push_back(pTexture);
+    }
+    return true;
+}
+void  TDialog::SetRect(TRect rt)
+{
+    m_rtInit = rt;
+    m_ptImageSize.x = m_pTexture->m_Desc.Width;
+    m_ptImageSize.y = m_pTexture->m_Desc.Height;
+    m_rtUV.x1 = rt.x1 / m_ptImageSize.x;
+    m_rtUV.y1 = rt.y1 / m_ptImageSize.y;
+    m_rtUV.w = rt.w / m_ptImageSize.x;
+    m_rtUV.h = rt.h / m_ptImageSize.y;
+}
+bool  TDialog::Render()
+{
+    for (int iSub = 0; iSub < 9; iSub++)
+    {
+        m_rtDrawList[iSub]->Render();
+    }
+    for (int iChild = 0; iChild < m_pChildList.size(); iChild++)
+    {
+        m_pChildList[iChild]->Render();
+    }
+    return true;
+}
+bool  TDialog::Frame()
+{
+    POINT ptMouse = I_Input.m_ptPos;
+    if (TCollision::RectToPoint(m_rtCollision, ptMouse))
+    {
+        m_CurrentState = UI_HOVER;
+        m_pCurrentTex = m_pStateList[UI_HOVER];
+        if (I_Input.GetKey(VK_LBUTTON) == KEY_PUSH ||
+            I_Input.GetKey(VK_LBUTTON) == KEY_HOLD)
+        {
+            m_CurrentState = UI_PUSH;
+            m_pCurrentTex = m_pStateList[UI_PUSH];
+        }
+        if (I_Input.GetKey(VK_LBUTTON) == KEY_UP)
+        {
+            m_CurrentState = UI_SELECT;
+        }
+    }
+    else
+    {        
+        m_pCurrentTex = m_pStateList[UI_NORMAL];
+    }
+    for (int iSub = 0; iSub < 9; iSub++)
+    {
+        TVector2D pos = m_rtDrawList[iSub]->m_vPos + m_vOffsetPos;        
+        m_rtDrawList[iSub]->SetPosition(pos);
+    }
+    for (int iChild = 0; iChild < m_pChildList.size(); iChild++)
+    {
+        TVector2D pos = m_pChildList[iChild]->m_vPos + m_vOffsetPos;
+        m_pChildList[iChild]->SetPosition(pos);
+        m_pChildList[iChild]->Frame();
+    }
+    return true;
+}
+bool  TListControl::Init()
+{
+    return true;
+}
 
 bool  TButton::Init()
 {
@@ -50,27 +280,14 @@ bool TButton::Release()
 {
     return true;
 }
-void  TInterface::Rotation()
-{
-    float fRadian = DegreeToRadian(m_fAngleDegree);
-    for (int iV = 0; iV < 4; iV++)
-    {
-        m_InitVertexList[iV].p.x = m_VertexList[iV].p.x * cos(fRadian) - m_VertexList[iV].p.y * sin(fRadian);
-        m_InitVertexList[iV].p.y = m_VertexList[iV].p.x * sin(fRadian) + m_VertexList[iV].p.y * cos(fRadian);
-    }
-    m_pImmediateContext->UpdateSubresource(
-        m_pVertexBuffer, NULL, NULL, &m_InitVertexList.at(0), 0, 0);
-}
 
-bool  TListControl::Init()
-{
-    return true;
-}
 bool  TListControl::Frame()
 {
-    for (auto data : m_btnList)
+    for (auto data : m_pChildList)
     {
-        data->Frame();
+       TVector2D pos = data->m_vPos + m_vOffsetPos;
+       data->SetPosition(pos);
+       data->Frame();
     }
     return true;
 }
@@ -80,7 +297,7 @@ bool TListControl::Render()
     m_pImmediateContext->PSSetShaderResources(0, 1, &m_pCurrentTex->m_pTextureSRV);
     TBaseObject::PostRender();
 
-    for (auto data : m_btnList)
+    for (auto data : m_pChildList)
     {
         data->Render();
     }
@@ -95,50 +312,8 @@ void  TListControl::SetRect(TRect rt)
     m_rtInit = rt;
     m_ptImageSize.x = m_pTexture->m_Desc.Width;
     m_ptImageSize.y = m_pTexture->m_Desc.Height;
-    float fPixelX = (1.0f / m_pTexture->m_Desc.Width) / 2.0f;
-    float fPixelY = (1.0f / m_pTexture->m_Desc.Height) / 2.0f;
-    // 90  -> 0 ~ 1
-    m_rtUV.x1 = 0.0f; // u
-    // 1
-    m_rtUV.y1 = 0.0f; // v
-    // 40
+    m_rtUV.x1 = 0.0f;
+    m_rtUV.y1 = 0.0f;
     m_rtUV.w = 1.0f;
-    // 60
     m_rtUV.h = 1.0f;
-}
-
-// È­¸é ÁÂÇ¥ -> NDC ÁÂÇ¥ 
-void  TListControl::ScreenToNDC()
-{
-    TVector2D	vDrawSize;
-    vDrawSize.x = m_rtInit.w / 2.0f;
-    vDrawSize.y = m_rtInit.h / 2.0f;
-    m_rtCollision.Set(
-        m_vPos.x - vDrawSize.x,
-        m_vPos.y - vDrawSize.y,
-        m_rtInit.w,
-        m_rtInit.h);
-
-    // 0  ~ 800   -> 0~1 ->  -1 ~ +1
-    m_vNDCPos.x = (m_rtCollision.x1 / g_rtClient.right) * 2.0f - 1.0f;
-    m_vNDCPos.y = -((m_rtCollision.y1 / g_rtClient.bottom) * 2.0f - 1.0f);
-    m_vDrawSize.x = (m_rtInit.w / (float)g_rtClient.right) * 2.0f;
-    m_vDrawSize.y = (m_rtInit.h / (float)g_rtClient.bottom) * 2.0f;
-}
-void  TListControl::UpdateVertexBuffer()
-{
-    m_VertexList[0].p = { m_vNDCPos.x, m_vNDCPos.y, 0.0f };
-    m_VertexList[0].t = { m_rtUV.x1, m_rtUV.y1 };
-
-    m_VertexList[1].p = { m_vNDCPos.x + m_vDrawSize.x, m_vNDCPos.y,  0.0f };
-    m_VertexList[1].t = { m_rtUV.x1 + m_rtUV.w, m_rtUV.y1 };
-
-    m_VertexList[2].p = { m_vNDCPos.x, m_vNDCPos.y - m_vDrawSize.y, 0.0f };
-    m_VertexList[2].t = { m_rtUV.x1, m_rtUV.y1 + m_rtUV.h };
-
-    m_VertexList[3].p = { m_vNDCPos.x + m_vDrawSize.x, m_vNDCPos.y - m_vDrawSize.y, 0.0f };
-    m_VertexList[3].t = { m_rtUV.x1 + m_rtUV.w , m_rtUV.y1 + m_rtUV.h };
-
-    m_pImmediateContext->UpdateSubresource(
-        m_pVertexBuffer, NULL, NULL, &m_VertexList.at(0), 0, 0);
 }

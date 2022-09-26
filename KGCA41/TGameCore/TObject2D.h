@@ -14,6 +14,8 @@ public:
 	float       m_fAngleDegree = 0.0f;
 	TVector2D	m_vNDCPos;
 	TVector2D	m_vDrawSize;
+	TVector2D	m_vBeforePos;
+	TVector2D	m_vOffsetPos;
 public:
 	TVector2D	m_vCameraPos;
 	TVector2D	m_vViewSize;

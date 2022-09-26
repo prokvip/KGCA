@@ -37,7 +37,6 @@ void  TObject2D::SetRect(TRect rt)
     // 60
     m_rtUV.h = rt.h / m_ptImageSize.y;
 }
-
 // È­¸é ÁÂÇ¥ -> NDC ÁÂÇ¥ 
 void  TObject2D::ScreenToNDC()
 {
@@ -58,9 +57,11 @@ void  TObject2D::ScreenToNDC()
 }
 void  TObject2D::SetPosition(TVector2D vPos)
 {
+    m_vBeforePos = m_vPos;
     m_vPos = vPos;
     ScreenToNDC();
     UpdateVertexBuffer();
+    m_vOffsetPos = m_vPos - m_vBeforePos;
 }
 // ¿ùµåÁÂÇ¥(È­¸éÁÂÇ¥°è) -> ºä ÁÂÇ¥ -> NDC ÁÂÇ¥
 void  TObject2D::ScreenToCamera(

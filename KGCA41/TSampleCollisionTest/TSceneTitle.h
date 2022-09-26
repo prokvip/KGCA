@@ -7,7 +7,8 @@ public:
 	TUser2D*		m_pUser;
 	TBaseObject*	m_pMapTitle;
 	TInterface*		m_btnStart;
-	TListControl*		m_listControl;
+	TInterface*		m_listControl;
+	TInterface*		m_Dlg;
 public:
 	virtual bool		Init();
 	virtual bool		Frame();

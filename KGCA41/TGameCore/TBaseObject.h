@@ -20,6 +20,8 @@ public:
 	ID3D11InputLayout* m_pVertexLayout;
 	TShader* m_pShader;
 	TTexture* m_pTexture;
+	std::wstring m_szShaderName;
+	std::wstring m_szTextureName;
 	ID3D11ShaderResourceView*    m_pTextureSRV = nullptr;
 	std::vector<SimpleVertex>    m_VertexList;
 	std::vector<SimpleVertex>    m_InitVertexList;
