@@ -226,6 +226,21 @@ bool  TDialog::Frame()
     }
     return true;
 }
+bool  TDialog::Release()
+{
+    for (auto data : m_rtDrawList)
+    {
+        data->Release();
+        delete data;
+    }
+    for (auto data : m_pChildList)
+    {
+        data->Release();
+        delete data;
+    }
+    TObject2D::Release();
+    return true;
+}
 bool  TListControl::Init()
 {
     return true;
@@ -278,6 +293,7 @@ bool TButton::Render()
 }
 bool TButton::Release()
 {
+    TObject2D::Release();
     return true;
 }
 
@@ -305,6 +321,12 @@ bool TListControl::Render()
 }
 bool TListControl::Release()
 {
+    for (auto data : m_pChildList)
+    {
+        data->Release();
+        delete data;
+    }
+    TObject2D::Release();
     return true;
 }
 void  TListControl::SetRect(TRect rt)

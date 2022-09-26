@@ -102,9 +102,9 @@ bool TSceneTitle::Render()
 }
 bool TSceneTitle::Release()
 {
-	m_btnStart->Release();
 	m_pMapTitle->Release();
-	m_listControl->Release();
+	//m_btnStart->Release();	
+	//m_listControl->Release();
 	m_Dlg->Release();
 	return true;
 }

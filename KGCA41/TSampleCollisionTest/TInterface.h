@@ -66,6 +66,7 @@ public:
 public:
 	virtual bool  Frame() override;
 	virtual bool  Render() override;
+	virtual bool  Release() override;
 	virtual void  SetRect(TRect rt)override;
 	virtual bool  SetDrawList(
 		float fScaleX0, float fScaleX1,
