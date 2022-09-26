@@ -7,6 +7,7 @@ enum TUIState
 	UI_PUSH,
 	UI_DIS,
 	UI_SELECT,
+	UI_MAXSTATE,
 };
 class TInterface :public TObject2D
 {
@@ -16,9 +17,9 @@ public:
 	TTexture* m_pCurrentTex = nullptr;	
 public:
 	virtual void AddChild(TInterface* pUI) { };
-	virtual bool  SetAttribute(	TVector2D vPos, TRect rt,
-								std::vector<W_STR>& texStateList);
-	virtual void  Rotation();	
+	virtual bool SetTextueState(const std::vector<W_STR>& texStateList);
+	virtual bool SetAttribute(TVector2D vPos, TRect rt, const std::vector<W_STR>& texStateList = {});
+	virtual bool SetAttribute(TVector2D vPos, const std::vector<W_STR>& texStateList = std::vector<W_STR>());
 	virtual bool  SetDrawList(
 		float fScaleX0, float fScaleX1,
 		float fScaleY0, float fScaleY1,
@@ -30,6 +31,7 @@ public:
 	TInterface()
 	{
 		m_CurrentState = UI_NORMAL;
+		m_pStateList.resize(UI_MAXSTATE);
 	}
 };
 class TButton :public TInterface
