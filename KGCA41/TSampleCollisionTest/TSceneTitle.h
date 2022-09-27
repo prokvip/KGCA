@@ -6,6 +6,7 @@ class TSceneTitle :   public TScene
 public:
 	TUser2D*		m_pUser;
 	TBaseObject*	m_pMapTitle;
+	TInterface*		m_FadeObject;
 	TInterface*		m_btnStart;
 	TInterface*		m_listControl;
 	TInterface*		m_Dlg;

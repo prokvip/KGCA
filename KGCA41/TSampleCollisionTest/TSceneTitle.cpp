@@ -11,7 +11,7 @@ bool TSceneTitle::Init()
 {
 	std::wstring shaderfilename = L"../../data/shader/DefaultShape.txt";
 	m_pMapTitle = new TBaseObject;
-	m_pMapTitle->Create(m_pd3dDevice,m_pImmediateContext,shaderfilename,L"../../data/kgcabk.bmp");
+	m_pMapTitle->Create(m_pd3dDevice,m_pImmediateContext,shaderfilename,L"../../data/gameHeight.png");
 
 	m_Dlg = new TDialog;
 	m_Dlg->Create(m_pd3dDevice, m_pImmediateContext,shaderfilename,	L"../../data/ui/popup_normal.png");
@@ -54,6 +54,10 @@ bool TSceneTitle::Init()
 
 	m_Dlg->AddChild(m_btnStart);
 	m_Dlg->AddChild(m_listControl);
+
+
+	m_FadeObject = new TInterface;
+	m_FadeObject->Create(m_pd3dDevice, m_pImmediateContext, shaderfilename, L"../../data/black.png");
 	return true;
 }
 bool TSceneTitle::Frame()
@@ -64,6 +68,14 @@ bool TSceneTitle::Frame()
 	pos.x = pos.x + g_fSecondPerFrame*10.0f;
 	m_Dlg->SetPosition(pos);
 	m_Dlg->Frame();
+
+	static float fAlpha = 0.0f;
+	//if (fAlpha < 1.0f)
+	{
+		//fAlpha += g_fSecondPerFrame*0.1f;
+		m_FadeObject->FadeInOut(cosf(g_fGameTimer)*0.5f+0.5f);
+	}
+	m_FadeObject->Frame();
 	return true;
 }
 bool TSceneTitle::Render()
@@ -72,6 +84,8 @@ bool TSceneTitle::Render()
 	//m_btnStart->Render();
 	//m_listControl->Render();
 	m_Dlg->Render();
+
+	m_FadeObject->Render();
 	return true;
 }
 bool TSceneTitle::Release()
@@ -80,5 +94,7 @@ bool TSceneTitle::Release()
 	//m_btnStart->Release();	
 	//m_listControl->Release();
 	m_Dlg->Release();
+
+	m_FadeObject->Release();
 	return true;
 }
