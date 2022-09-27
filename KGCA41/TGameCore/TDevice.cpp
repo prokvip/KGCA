@@ -31,11 +31,6 @@ bool		TDevice::Render()
 }
 bool		TDevice::Release()
 {
-    if (m_pd3dDevice) m_pd3dDevice->Release();// 디바이스 객체        
-    if (m_pImmediateContext)m_pImmediateContext->Release();
-    if (m_pGIFactory)m_pGIFactory->Release();
-    if (m_pSwapChain)m_pSwapChain->Release();
-    if (m_pRTV) m_pRTV->Release();
     return true;
 }
 
@@ -71,7 +66,10 @@ HRESULT TDevice::CreateDevice()
 HRESULT TDevice::CreateDXGIDevice()
 {
     // 2)팩토리 생성
-    HRESULT hr = CreateDXGIFactory(__uuidof(IDXGIFactory), (void**)&m_pGIFactory);
+    /*HRESULT hr = CreateDXGIFactory(__uuidof(IDXGIFactory), 
+        (void**)&m_pGIFactory);*/
+    HRESULT hr = CreateDXGIFactory(__uuidof(IDXGIFactory),
+        (void**)m_pGIFactory.GetAddressOf()); 
     return hr;
 }
 
@@ -96,7 +94,8 @@ HRESULT TDevice::CreateSwapChain( )
     sd.SampleDesc.Quality = 0;
 
     sd.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
-    return m_pGIFactory->CreateSwapChain(m_pd3dDevice, &sd, &m_pSwapChain);
+    return m_pGIFactory->CreateSwapChain(m_pd3dDevice.Get(), 
+        &sd, m_pSwapChain.GetAddressOf());
 }
 
 HRESULT TDevice::CreateRenderTargetView()
@@ -105,7 +104,8 @@ HRESULT TDevice::CreateRenderTargetView()
     // 4)랜더타켓뷰 생성
     ID3D11Texture2D* pBackBuffer = nullptr;
     m_pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&pBackBuffer);
-    hr = m_pd3dDevice->CreateRenderTargetView(pBackBuffer, NULL, &m_pRTV);
+    hr = m_pd3dDevice->CreateRenderTargetView(pBackBuffer,
+        NULL, m_pRTV.GetAddressOf());
     pBackBuffer->Release();
     return hr;
 }

@@ -13,6 +13,8 @@ struct SimpleVertex
 class TBaseObject 
 {
 public:
+	bool		m_IsNullable=true;
+public:
 	ID3D11Device* m_pd3dDevice = nullptr;// 디바이스 객체
 	ID3D11DeviceContext* m_pImmediateContext = nullptr;
 	ID3D11Buffer* m_pVertexBuffer;
@@ -53,5 +55,10 @@ public:
 	virtual bool		Render();
 	virtual bool		PostRender();
 	virtual bool		Release() ;	
+public:
+	TBaseObject()
+	{
+		m_IsNullable = false;
+	}
 };
 

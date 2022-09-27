@@ -3,13 +3,12 @@
 class TDevice : public TWindow
 {
 public:
-	// 인터페이스-> 하드웨어 직접 제어 -> 획득
-	ID3D11Device*			m_pd3dDevice = nullptr;// 디바이스 객체
-	ID3D11DeviceContext*	m_pImmediateContext = nullptr;
-	IDXGIFactory*			m_pGIFactory = nullptr;
-	IDXGISwapChain*			m_pSwapChain = nullptr;
-	ID3D11RenderTargetView* m_pRTV = nullptr;
-	D3D11_VIEWPORT			m_vp;
+	ComPtr<IDXGIFactory>			m_pGIFactory = nullptr;
+	ComPtr<ID3D11Device>			m_pd3dDevice = nullptr;// 디바이스 객체
+	ComPtr<ID3D11DeviceContext>		m_pImmediateContext = nullptr;	
+	ComPtr<IDXGISwapChain>			m_pSwapChain = nullptr;
+	ComPtr<ID3D11RenderTargetView>	m_pRTV = nullptr;
+	D3D11_VIEWPORT					m_vp;
 public:
 	// 1)디바이스 생성
 	HRESULT CreateDevice();

@@ -2,10 +2,10 @@
 bool		TGameCore::TCoreInit()
 {
 	TDevice::Init();
-	TDxState::SetState(m_pd3dDevice);
+	TDxState::SetState(m_pd3dDevice.Get());
 
-	I_Tex.SetDevice(m_pd3dDevice, m_pImmediateContext);
-	I_Shader.SetDevice(m_pd3dDevice, m_pImmediateContext);
+	I_Tex.SetDevice(m_pd3dDevice.Get(), m_pImmediateContext.Get());
+	I_Shader.SetDevice(m_pd3dDevice.Get(), m_pImmediateContext.Get());
 	I_Sound.Init();
 	I_Input.Init();
 	I_Timer.Init();
@@ -28,9 +28,9 @@ bool		TGameCore::TCoreFrame()
 }
 bool		TGameCore::TCorePreRender()
 {
-	m_pImmediateContext->OMSetRenderTargets(1, &m_pRTV, NULL);
+	m_pImmediateContext->OMSetRenderTargets(1, m_pRTV.GetAddressOf(), NULL);
 	float color[4] = { 0.34324f,0.52342f,0.798320f,1.0f };
-	m_pImmediateContext->ClearRenderTargetView(m_pRTV, color);
+	m_pImmediateContext->ClearRenderTargetView(m_pRTV.Get(), color);
 	m_pImmediateContext->PSSetSamplers(0, 1, &TDxState::g_pDefaultSSWrap);
 	m_pImmediateContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	m_pImmediateContext->RSSetViewports(1, &m_vp);

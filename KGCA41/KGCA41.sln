@@ -137,6 +137,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TSampleSpriteManager", "TSa
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TSampleCollisionTest", "TSampleCollisionTest\TSampleCollisionTest.vcxproj", "{5F77A2D5-023B-46B0-B087-E7759D5CF719}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TSampleGame", "TSampleGame\TSampleGame.vcxproj", "{265DBE84-CE78-4FB1-A2BD-63A0BD0AA1D8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|ARM = Debug|ARM
@@ -857,6 +859,18 @@ Global
 		{5F77A2D5-023B-46B0-B087-E7759D5CF719}.Release|x64.Build.0 = Release|x64
 		{5F77A2D5-023B-46B0-B087-E7759D5CF719}.Release|x86.ActiveCfg = Release|Win32
 		{5F77A2D5-023B-46B0-B087-E7759D5CF719}.Release|x86.Build.0 = Release|Win32
+		{265DBE84-CE78-4FB1-A2BD-63A0BD0AA1D8}.Debug|ARM.ActiveCfg = Debug|Win32
+		{265DBE84-CE78-4FB1-A2BD-63A0BD0AA1D8}.Debug|ARM64.ActiveCfg = Debug|Win32
+		{265DBE84-CE78-4FB1-A2BD-63A0BD0AA1D8}.Debug|x64.ActiveCfg = Debug|x64
+		{265DBE84-CE78-4FB1-A2BD-63A0BD0AA1D8}.Debug|x64.Build.0 = Debug|x64
+		{265DBE84-CE78-4FB1-A2BD-63A0BD0AA1D8}.Debug|x86.ActiveCfg = Debug|Win32
+		{265DBE84-CE78-4FB1-A2BD-63A0BD0AA1D8}.Debug|x86.Build.0 = Debug|Win32
+		{265DBE84-CE78-4FB1-A2BD-63A0BD0AA1D8}.Release|ARM.ActiveCfg = Release|Win32
+		{265DBE84-CE78-4FB1-A2BD-63A0BD0AA1D8}.Release|ARM64.ActiveCfg = Release|Win32
+		{265DBE84-CE78-4FB1-A2BD-63A0BD0AA1D8}.Release|x64.ActiveCfg = Release|x64
+		{265DBE84-CE78-4FB1-A2BD-63A0BD0AA1D8}.Release|x64.Build.0 = Release|x64
+		{265DBE84-CE78-4FB1-A2BD-63A0BD0AA1D8}.Release|x86.ActiveCfg = Release|Win32
+		{265DBE84-CE78-4FB1-A2BD-63A0BD0AA1D8}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
