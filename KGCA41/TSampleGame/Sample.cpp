@@ -3,6 +3,7 @@
 class TTest
 {
 public:
+	using xText = std::shared_ptr<TTest>;
 	int k;
 public:
 	TTest()
@@ -14,8 +15,9 @@ public:
 		k = 0;
 	}
 };
+
 //std::shared_ptr<TTest>   pTitle = nullptr;
-void Function(std::shared_ptr<TTest> data)
+void Function(TTest::xText data)
 {
 	data.get()->k = 20;
 }
@@ -32,9 +34,10 @@ bool Sample::Init()
 
 	// 참조카운팅 가능
 	{
-		std::shared_ptr<TTest>  pTitleShared = std::make_shared<TTest>();
+		TTest::xText  nullTest = nullptr;
+		TTest::xText  pTitleShared = std::make_shared<TTest>();
 		{
-			TTest* pData = pTitleShared.get();		
+			TTest* pData = pTitleShared.get();			
 			Function(pTitleShared);
 		}
 	}
