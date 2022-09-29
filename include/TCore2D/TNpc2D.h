@@ -1,5 +1,5 @@
 #pragma once
-#include "TObject2D.h"
+#include "TSprite.h"
 class TNpc2D : public TObject2D
 {
 public:

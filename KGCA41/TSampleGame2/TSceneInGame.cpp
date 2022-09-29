@@ -4,7 +4,7 @@ static TVector2D vSize = { 800, 800 };
 
 void TSceneInGame::AddEffect()
 {
-	TEffect* pEffect = new TEffect;
+	TEffect2D* pEffect = new TEffect2D;
 	UINT iEffect = rand() % 3;
 	if (iEffect == 0)
 		pEffect->m_pSprite = I_Sprite.GetPtr(L"rtExplosion");
@@ -36,7 +36,7 @@ void TSceneInGame::AddEffect()
 }
 void TSceneInGame::AddEffect(float x, float y)
 {
-	TEffect* pEffect = new TEffect;
+	TEffect2D* pEffect = new TEffect2D;
 	UINT iEffect = rand() % 3;
 	if (iEffect == 0)
 		pEffect->m_pSprite = I_Sprite.GetPtr(L"rtExplosion");
@@ -68,7 +68,7 @@ void TSceneInGame::AddEffect(float x, float y)
 }
 void TSceneInGame::AddProjectile(TVector2D pos)
 {
-	TProjectile* pEffect = new TProjectile;
+	TProjectile2D* pEffect = new TProjectile2D;
 	pEffect->m_pSprite = I_Sprite.GetPtr(L"rtProjectile");
 	pEffect->m_fEffectTimer = 0.0f;
 	RECT rt = pEffect->m_pSprite->m_uvArray[0];
@@ -183,7 +183,7 @@ bool TSceneInGame::Frame()
 
 	for (auto iter = m_Projectile.begin(); iter != m_Projectile.end(); )
 	{
-		TProjectile* pEffect = *iter;
+		TProjectile2D* pEffect = *iter;
 		pEffect->m_vPos.x = m_pUser->m_vPos.x;
 		if (pEffect->Update() == false)
 		{
@@ -260,7 +260,7 @@ bool TSceneInGame::Frame()
 	for (auto iter = m_pEffectList.begin();
 		iter != m_pEffectList.end(); )
 	{
-		TEffect* pEffect = *iter;
+		TEffect2D* pEffect = *iter;
 		if (pEffect->Update() == false)
 		{
 			delete pEffect;

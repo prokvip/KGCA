@@ -1,4 +1,4 @@
 #SPRITE 1
-DefaultButton 2
+DefaultButton 2 ../../data/ui/defaultUI.dds nullptr ../../data/shader/DefaultShapeMask.txt
 0 219 62 18 19
 1 219 62 18 19

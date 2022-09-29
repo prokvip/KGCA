@@ -4,6 +4,9 @@ bool TSpriteManager::GameDataLoad(const TCHAR* pszLoad)
 {
     TCHAR pBuffer[256] = { 0 };
     TCHAR pTemp[256] = { 0 };
+    TCHAR pTexturePath[256] = { 0 };
+    TCHAR pMaskTexturePath[256] = { 0 };
+    TCHAR pShaderPath[256] = { 0 };
 
     int iNumSprite = 0;
     FILE* fp_src;
@@ -11,7 +14,7 @@ bool TSpriteManager::GameDataLoad(const TCHAR* pszLoad)
     if (fp_src == NULL) return false;
 
     _fgetts(pBuffer, _countof(pBuffer), fp_src);
-    _stscanf_s(pBuffer, _T("%s%d%s"), pTemp, (unsigned int)_countof(pTemp), &iNumSprite);
+    _stscanf_s(pBuffer, _T("%s%d"), pTemp, (unsigned int)_countof(pTemp), &iNumSprite);
     m_rtSpriteList.resize(iNumSprite);
    
 
@@ -19,9 +22,16 @@ bool TSpriteManager::GameDataLoad(const TCHAR* pszLoad)
     {
         int iNumFrame = 0;
         _fgetts(pBuffer, _countof(pBuffer), fp_src);
-        _stscanf_s(pBuffer, _T("%s %d"), pTemp, (unsigned int)_countof(pTemp), &iNumFrame);
-        //m_rtSpriteList[iCnt].resize(iNumFrame);
+        _stscanf_s(pBuffer, _T("%s %d %s%s%s"), 
+            pTemp, (unsigned int)_countof(pTemp), &iNumFrame,
+            pTexturePath, (unsigned int)_countof(pTexturePath),
+            pMaskTexturePath, (unsigned int)_countof(pMaskTexturePath),
+            pShaderPath, (unsigned int)_countof(pShaderPath));
+
         m_rtNameList.push_back(pTemp);
+        m_TextureNameList.push_back(pTexturePath);
+        m_MaskTextureNameList.push_back(pMaskTexturePath);
+        m_ShaderNameList.push_back(pShaderPath);
 
         RECT rt;
         for (int iFrame = 0; iFrame < iNumFrame; iFrame++)
@@ -48,6 +58,9 @@ bool TSpriteManager::Load(std::wstring filename)
 {
     m_rtSpriteList.clear();
     m_rtNameList.clear();
+    m_TextureNameList.clear();
+    m_MaskTextureNameList.clear();
+    m_ShaderNameList.clear();
 
     if (GameDataLoad(filename.c_str()) == false)
     {
@@ -72,15 +85,22 @@ bool TSpriteManager::Load(std::wstring filename)
 
         std::unique_ptr<TSprite> pNewData = std::make_unique<TSprite>();
         pNewData->m_szName = m_rtNameList[iSp];
+        pNewData->m_szTexturePath = m_TextureNameList[iSp];
+        pNewData->m_szMaskTexturePath = m_MaskTextureNameList[iSp];
+        pNewData->m_szShaderPath = m_ShaderNameList[iSp];
         pNewData->m_uvArray = m_rtSpriteList[iSp];
 
         if (pNewData)
         {
-            hr = pNewData->Load(m_pd3dDevice, m_pImmediateContext, 
-                                    filename);
-            if (SUCCEEDED(hr))
+            bool bRet = pNewData->Load(m_pd3dDevice, m_pImmediateContext,filename);
+            if (bRet)
             {
                 m_List.insert(std::make_pair(pNewData->m_szName, std::move(pNewData)));
+            }
+            else
+            {
+                pNewData->Release();
+                pNewData.reset();
             }
         }
     }    

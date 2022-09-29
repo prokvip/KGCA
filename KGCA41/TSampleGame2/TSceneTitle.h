@@ -1,6 +1,7 @@
 #pragma once
 #include "TScene.h"
 #include "TInterface.h"
+#include "TProjectile2D.h"
 class TSceneTitle :   public TScene
 {
 public:

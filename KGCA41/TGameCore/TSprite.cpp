@@ -1,16 +1,16 @@
 #include "TSprite.h"
-HRESULT TSprite::Load(ID3D11Device* pd3dDevice,// 디바이스 객체
+bool TSprite::Load(ID3D11Device* pd3dDevice,// 디바이스 객체
 	ID3D11DeviceContext* pImmediateContext, std::wstring name)
 {
-	std::wstring shaderfilename = L"../../data/shader/DefaultShapeMask.txt";
-	std::wstring mapshader = L"../../data/shader/DefaultShape.txt";
-	TTexture* pMaskTex = I_Tex.Load(L"../../data/bitmap2.bmp");
+	TTexture* pMaskTex = I_Tex.Load(m_szMaskTexturePath);
 
-	Create(pd3dDevice,
-		pImmediateContext,
-		shaderfilename,
-		L"../../data/bitmap1.bmp");
+	if (!Create(pd3dDevice,	pImmediateContext,	
+				m_szShaderPath,
+		        m_szTexturePath))
+	{
+		return false;
+	}
 	SetMask(pMaskTex);
 	m_fSpeed = 300.0f;
-	return S_OK;
+	return true;
 }

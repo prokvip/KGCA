@@ -17,8 +17,10 @@ HRESULT TTexture::Load(ID3D11Device* pd3dDevice,// 디바이스 객체
 			(ID3D11Resource**)&m_pTexture,
 			&m_pTextureSRV);
 	}
-
-	m_pTexture->GetDesc(&m_Desc);
+	if (m_pTexture)
+	{
+		m_pTexture->GetDesc(&m_Desc);
+	}
 	return hr;
 }
 void TTexture::Apply(ID3D11DeviceContext* pImmediateContext,

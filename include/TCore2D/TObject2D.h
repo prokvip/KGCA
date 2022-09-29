@@ -5,6 +5,12 @@
 class TObject2D : public TBaseObject
 {
 public:
+	W_STR			m_szName;
+	UINT			m_IIndex;
+	W_STR			m_szTexturePath;
+	W_STR			m_szMaskTexturePath;
+	W_STR			m_szShaderPath;
+public:
 	TTexture*	m_pMaskTex = nullptr;
 	POINT	    m_ptImageSize;
 	TRect		m_rtInit;
