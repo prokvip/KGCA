@@ -1,4 +1,7 @@
-#SPRITE 1
-DefaultButton 2 ../../data/ui/defaultUI.dds nullptr ../../data/shader/DefaultShapeMask.txt
-0 219 62 18 19
-1 219 62 18 19
+#SPRITE 2
+DXCheckButton 2 ../../data/ui/dxutcontrols.dds nullptr DefaultShapeMask.txt
+0	0 54 27 27 
+1	27 54 27 27 
+DXNormalButton 2 ../../data/ui/dxutcontrols.dds nullptr DefaultShapeMask.txt
+0	0 0 136 54 
+1	136 0 116 54 
