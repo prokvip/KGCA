@@ -122,7 +122,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>../../include/dxtk;../../include/fmod;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../dxtk/inc;../../fmod/inc;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -133,9 +133,13 @@
       <OutputFile>TGameCore_d.lib</OutputFile>
     </Lib>
     <PostBuildEvent>
-      <Command>copy "*.h" "..\\..\\include"
+      <Command>copy "*.h" "..\\..\\include\\TCore2D"
 copy "TGameCore_d.lib" "..\\..\\lib\\"</Command>
     </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>RmDir /S /Q "../../include/TCore2D"
+MkDir "../../include/TCore2D"</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -145,7 +149,7 @@ copy "TGameCore_d.lib" "..\\..\\lib\\"</Command>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>../../include/dxtk;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../dxtk/inc;../../fmod/inc;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -171,15 +175,22 @@ copy "TGameCore_R.lib" "..\\..\\lib\\"</Command>
     <ClInclude Include="TDxState.h" />
     <ClInclude Include="TGameCore.h" />
     <ClInclude Include="TInput.h" />
+    <ClInclude Include="TInterface.h" />
+    <ClInclude Include="TMapObject.h" />
+    <ClInclude Include="TNpc2D.h" />
     <ClInclude Include="TObject2D.h" />
+    <ClInclude Include="TScene.h" />
     <ClInclude Include="TShader.h" />
     <ClInclude Include="TShaderManager.h" />
     <ClInclude Include="TSound.h" />
     <ClInclude Include="TSoundManager.h" />
+    <ClInclude Include="TSprite.h" />
+    <ClInclude Include="TSpriteManager.h" />
     <ClInclude Include="TStd.h" />
     <ClInclude Include="TTexture.h" />
     <ClInclude Include="TTextureManager.h" />
     <ClInclude Include="TTimer.h" />
+    <ClInclude Include="TUser2D.h" />
     <ClInclude Include="TVector.h" />
     <ClInclude Include="TWindow.h" />
     <ClInclude Include="TWriter.h" />
@@ -191,14 +202,21 @@ copy "TGameCore_R.lib" "..\\..\\lib\\"</Command>
     <ClCompile Include="TDxState.cpp" />
     <ClCompile Include="TGameCore.cpp" />
     <ClCompile Include="TInput.cpp" />
+    <ClCompile Include="TInterface.cpp" />
+    <ClCompile Include="TMapObject.cpp" />
+    <ClCompile Include="TNpc2D.cpp" />
     <ClCompile Include="TObject2D.cpp" />
+    <ClCompile Include="TScene.cpp" />
     <ClCompile Include="TShader.cpp" />
     <ClCompile Include="TShaderManager.cpp" />
     <ClCompile Include="TSound.cpp" />
     <ClCompile Include="TSoundManager.cpp" />
+    <ClCompile Include="TSprite.cpp" />
+    <ClCompile Include="TSpriteManager.cpp" />
     <ClCompile Include="TTexture.cpp" />
     <ClCompile Include="TTextureManager.cpp" />
     <ClCompile Include="TTimer.cpp" />
+    <ClCompile Include="TUser2D.cpp" />
     <ClCompile Include="TVector.cpp" />
     <ClCompile Include="TWindow.cpp" />
     <ClCompile Include="TWriter.cpp" />
@@ -206,6 +224,7 @@ copy "TGameCore_R.lib" "..\\..\\lib\\"</Command>
   <ItemGroup>
     <Text Include="..\..\data\shader\DefaultShape.txt" />
     <Text Include="..\..\data\shader\DefaultShapeMask.txt" />
+    <Text Include="SpriteInfo.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

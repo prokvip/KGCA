@@ -1,0 +1,4 @@
+#SPRITE 1
+DefaultButton 2
+0 219 62 18 19
+1 219 62 18 19

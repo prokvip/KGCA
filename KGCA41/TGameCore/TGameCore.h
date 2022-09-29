@@ -7,6 +7,7 @@
 #include "TSoundManager.h"
 #include "TTextureManager.h"
 #include "TShaderManager.h"
+#include "TSpriteManager.h"
 class TGameCore : public TDevice
 {
 public:

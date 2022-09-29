@@ -3,7 +3,7 @@ bool		TGameCore::TCoreInit()
 {
 	TDevice::Init();
 	TDxState::SetState(m_pd3dDevice.Get());
-
+	I_Sprite.SetDevice(m_pd3dDevice.Get(), m_pImmediateContext.Get());
 	I_Tex.SetDevice(m_pd3dDevice.Get(), m_pImmediateContext.Get());
 	I_Shader.SetDevice(m_pd3dDevice.Get(), m_pImmediateContext.Get());
 	I_Sound.Init();

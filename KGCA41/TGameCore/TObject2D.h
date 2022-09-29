@@ -1,6 +1,7 @@
 #pragma once
 #include "TBaseObject.h"
 #include "TCollision.h"
+
 class TObject2D : public TBaseObject
 {
 public:
