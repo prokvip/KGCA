@@ -1,4 +1,4 @@
-#SPRITE 7
+#SPRITE 
 rtExplosion 12 ../../data/bitmap1.bmp ../../data/bitmap2.bmp ../../data/shader/DefaultShapeMask.txt
 0	1	142 41 40 
 1	43 142 38 42 
@@ -47,3 +47,4 @@ rtUserRight 3 ../../data/bitmap1.bmp ../../data/bitmap2.bmp ../../data/shader/De
 rtUserFrontBack 2 ../../data/bitmap1.bmp ../../data/bitmap2.bmp ../../data/shader/DefaultShapeMask.txt
 0 219 62 18 19
 1 219 62 18 19
+#END

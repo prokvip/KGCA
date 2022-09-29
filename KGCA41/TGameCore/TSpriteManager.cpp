@@ -14,11 +14,11 @@ bool TSpriteManager::GameDataLoad(const TCHAR* pszLoad)
     if (fp_src == NULL) return false;
 
     _fgetts(pBuffer, _countof(pBuffer), fp_src);
-    _stscanf_s(pBuffer, _T("%s%d"), pTemp, (unsigned int)_countof(pTemp), &iNumSprite);
-    m_rtSpriteList.resize(iNumSprite);
+    _stscanf_s(pBuffer, _T("%s"), pTemp, (unsigned int)_countof(pTemp));
+    //m_rtSpriteList.resize(iNumSprite);
    
 
-    for (int iCnt = 0; iCnt < iNumSprite; iCnt++)
+    for (;;)
     {
         int iNumFrame = 0;
         _fgetts(pBuffer, _countof(pBuffer), fp_src);
@@ -27,20 +27,28 @@ bool TSpriteManager::GameDataLoad(const TCHAR* pszLoad)
             pTexturePath, (unsigned int)_countof(pTexturePath),
             pMaskTexturePath, (unsigned int)_countof(pMaskTexturePath),
             pShaderPath, (unsigned int)_countof(pShaderPath));
+        
+        W_STR name = pTemp;
+        if (name == L"#END")
+        {
+            break;
+        }
 
         m_rtNameList.push_back(pTemp);
         m_TextureNameList.push_back(pTexturePath);
         m_MaskTextureNameList.push_back(pMaskTexturePath);
         m_ShaderNameList.push_back(pShaderPath);
 
+        RECT_ARRAY rtList;
         RECT rt;
         for (int iFrame = 0; iFrame < iNumFrame; iFrame++)
         {
             _fgetts(pBuffer, _countof(pBuffer), fp_src);
             _stscanf_s(pBuffer, _T("%s %d %d %d %d"), pTemp, (unsigned int)_countof(pTemp),
                 &rt.left, &rt.top, &rt.right, &rt.bottom);
-            m_rtSpriteList[iCnt].push_back(rt);
+            rtList.push_back(rt);
         }
+        m_rtSpriteList.push_back(rtList);
     }
     fclose(fp_src);
 
