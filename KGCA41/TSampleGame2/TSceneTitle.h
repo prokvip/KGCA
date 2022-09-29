@@ -9,6 +9,7 @@ public:
 	TBaseObject*	m_pMapTitle;
 	TInterface*		m_FadeObject;
 	TInterface*		m_btnStart;
+	TInterface*		m_btnStart2;
 	TInterface*		m_listControl;
 	TInterface*		m_Dlg;
 public:

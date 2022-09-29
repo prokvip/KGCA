@@ -17,13 +17,14 @@ bool TSpriteManager::GameDataLoad(const TCHAR* pszLoad)
     _stscanf_s(pBuffer, _T("%s"), pTemp, (unsigned int)_countof(pTemp));
     //m_rtSpriteList.resize(iNumSprite);
    
-
+    int iIsTexAnimation = 0;
     for (;;)
     {
         int iNumFrame = 0;
         _fgetts(pBuffer, _countof(pBuffer), fp_src);
-        _stscanf_s(pBuffer, _T("%s %d %s%s%s"), 
+        _stscanf_s(pBuffer, _T("%s %d%d %s%s%s"), 
             pTemp, (unsigned int)_countof(pTemp), &iNumFrame,
+            &iIsTexAnimation,
             pTexturePath, (unsigned int)_countof(pTexturePath),
             pMaskTexturePath, (unsigned int)_countof(pMaskTexturePath),
             pShaderPath, (unsigned int)_countof(pShaderPath));
@@ -33,22 +34,40 @@ bool TSpriteManager::GameDataLoad(const TCHAR* pszLoad)
         {
             break;
         }
-
+        m_iSpriteTypeList.push_back(iIsTexAnimation);
         m_rtNameList.push_back(pTemp);
         m_TextureNameList.push_back(pTexturePath);
         m_MaskTextureNameList.push_back(pMaskTexturePath);
         m_ShaderNameList.push_back(pShaderPath);
 
-        RECT_ARRAY rtList;
-        RECT rt;
-        for (int iFrame = 0; iFrame < iNumFrame; iFrame++)
+        int iReadFrame = 0;
+        if (iIsTexAnimation == 0)
         {
-            _fgetts(pBuffer, _countof(pBuffer), fp_src);
-            _stscanf_s(pBuffer, _T("%s %d %d %d %d"), pTemp, (unsigned int)_countof(pTemp),
-                &rt.left, &rt.top, &rt.right, &rt.bottom);
-            rtList.push_back(rt);
+            RECT_ARRAY rtList;
+            RECT rt;
+            for (int iFrame = 0; iFrame < iNumFrame; iFrame++)
+            {
+                _fgetts(pBuffer, _countof(pBuffer), fp_src);
+                _stscanf_s(pBuffer, _T("%d %d %d %d %d"), 
+                    &iReadFrame,
+                    &rt.left, &rt.top, &rt.right, &rt.bottom);
+                rtList.push_back(rt);
+            }
+            m_rtSpriteList.push_back(rtList);
         }
-        m_rtSpriteList.push_back(rtList);
+        else
+        {
+            TCHAR_STRING_VECTOR list;
+            for (int iFrame = 0; iFrame < iNumFrame; iFrame++)
+            {
+                _fgetts(pBuffer, _countof(pBuffer), fp_src);
+                _stscanf_s(pBuffer, _T("%d %s"), 
+                    &iReadFrame,
+                    pTemp, (unsigned int)_countof(pTemp));  
+                list.push_back(pTemp);
+            }
+            m_szSpriteList.push_back(list);
+        }
     }
     fclose(fp_src);
 
@@ -65,10 +84,12 @@ void TSpriteManager::SetDevice(
 bool TSpriteManager::Load(std::wstring filename)
 {
     m_rtSpriteList.clear();
+    m_szSpriteList.clear();
+    m_iSpriteTypeList.clear();
     m_rtNameList.clear();
     m_TextureNameList.clear();
     m_MaskTextureNameList.clear();
-    m_ShaderNameList.clear();
+    m_ShaderNameList.clear();   
 
     if (GameDataLoad(filename.c_str()) == false)
     {
@@ -85,19 +106,33 @@ bool TSpriteManager::Load(std::wstring filename)
     filelist.push_back(filename);
 
     HRESULT hr;
-    for (int iSp = 0; iSp < m_rtSpriteList.size(); iSp++)
+    UINT iCurrentTexIndex = 0;
+    UINT iCurrentUVIndex = 0;
+    for (int iSp = 0; iSp < m_rtNameList.size(); iSp++)
     {
         // 중복제거
         auto data = Find(m_rtNameList[iSp]);
         if (data != nullptr) continue;
 
-        std::unique_ptr<TSprite> pNewData = std::make_unique<TSprite>();
+        std::unique_ptr<TSprite> pNewData = nullptr;
+        if(m_iSpriteTypeList[iSp] == 0)
+            pNewData = std::make_unique<TSprite>();
+        else
+            pNewData = std::make_unique<TSpriteTexture>();
+
         pNewData->m_szName = m_rtNameList[iSp];
         pNewData->m_szTexturePath = m_TextureNameList[iSp];
         pNewData->m_szMaskTexturePath = m_MaskTextureNameList[iSp];
         pNewData->m_szShaderPath = m_ShaderNameList[iSp];
-        pNewData->m_uvArray = m_rtSpriteList[iSp];
 
+        if (m_iSpriteTypeList[iSp] == 1)
+        {
+            pNewData->m_texArray = m_szSpriteList[iCurrentTexIndex++];
+        }
+        else
+        {
+            pNewData->m_uvArray = m_rtSpriteList[iCurrentUVIndex++];
+        }
         if (pNewData)
         {
             bool bRet = pNewData->Load(m_pd3dDevice, m_pImmediateContext,filename);

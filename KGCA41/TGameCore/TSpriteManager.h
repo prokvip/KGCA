@@ -5,11 +5,13 @@ class TSpriteManager : public TSingleton<TSpriteManager>
 {
 	static TSprite  m_NullSprite;
 public:
+	std::vector<UINT>  m_iSpriteTypeList;
 	std::vector<W_STR> m_rtNameList;
 	std::vector<W_STR> m_TextureNameList;
 	std::vector<W_STR> m_MaskTextureNameList;
 	std::vector<W_STR> m_ShaderNameList;
 	std::vector<RECT_ARRAY> m_rtSpriteList;
+	std::vector<TCHAR_STRING_VECTOR>	m_szSpriteList;
 public:
 	ID3D11Device* m_pd3dDevice = nullptr;// 디바이스 객체
 	ID3D11DeviceContext* m_pImmediateContext = nullptr;

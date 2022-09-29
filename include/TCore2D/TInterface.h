@@ -1,5 +1,4 @@
 #pragma once
-#include "TObject2D.h"
 #include "TSpriteManager.h"
 #include "TSoundManager.h"
 //https://www.vectorstock.com/
@@ -31,6 +30,7 @@ public:
 	TUIState				m_CurrentState;
 	TUIEvent				m_EventState;
 	TTexture*				m_pCurrentTex = nullptr;	
+	TSprite*				m_pSprite = nullptr;
 public:
 	std::vector<TInterface*> m_rtDrawList;
 	std::vector<TInterface*> m_pChildList;
@@ -44,6 +44,7 @@ public:
 	};
 	virtual void AddChild(TInterface* pUI);
 	virtual bool SetTextueState(const std::vector<W_STR>& texStateList);
+	virtual bool SetAttribute(TVector2D vPos, TRect rt, TSprite* pSprite);
 	virtual bool SetAttribute(TVector2D vPos, TRect rt, const std::vector<W_STR>& texStateList = {});
 	virtual bool SetAttribute(TVector2D vPos, const std::vector<W_STR>& texStateList = std::vector<W_STR>());
 	virtual bool  SetDrawList(

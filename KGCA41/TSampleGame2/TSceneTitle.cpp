@@ -10,6 +10,7 @@ bool     TSceneTitle::IsNextScene()
 bool TSceneTitle::Init()
 {
 	I_Sprite.Load(L"SpriteInfo.txt");
+	I_Sprite.Load(L"ui.txt");
 	std::wstring shaderfilename = L"../../data/shader/DefaultShape.txt";
 	m_pMapTitle = new TBaseObject;
 	m_pMapTitle->Create(m_pd3dDevice,m_pImmediateContext,shaderfilename,L"../../data/gameHeight.png");
@@ -38,6 +39,12 @@ bool TSceneTitle::Init()
 	stateList.push_back(L"../../data/ui/main_start_dis.png");
 	m_btnStart->SetAttribute({ 400.0f, 300.0f }, {0,0, 100, 60}, stateList);
 
+	m_btnStart2 = new TButton;
+	m_btnStart2->Create(m_pd3dDevice, m_pImmediateContext, shaderfilename, L"../../data/ui/main_start_nor.png");
+	m_btnStart2->SetAttribute({ 400.0f, 500.0f }, { 0,0, 100, 60 }, 
+						I_Sprite.GetPtr(L"NormalButton3"));
+
+
 	m_listControl = new TListControl;
 	m_listControl->Create(m_pd3dDevice,	m_pImmediateContext,shaderfilename,	L"../../data/ui/RAINBOW.png");
 	m_listControl->SetAttribute({ 300-100, 300-100 },{ 0, 0,	100.0f, 250.0f });
@@ -63,8 +70,8 @@ bool TSceneTitle::Init()
 }
 bool TSceneTitle::Frame()
 {	
-	//m_btnStart->Frame();
-	//m_listControl->Frame();
+	m_btnStart2->Frame();
+
 	TVector2D pos = m_Dlg->m_vPos;
 	pos.x = pos.x + g_fSecondPerFrame*10.0f;
 	m_Dlg->SetPosition(pos);
@@ -82,20 +89,17 @@ bool TSceneTitle::Frame()
 bool TSceneTitle::Render()
 {
 	m_pMapTitle->Render();
-	//m_btnStart->Render();
-	//m_listControl->Render();
+	m_btnStart2->Render();
+	
 	m_Dlg->Render();
-
-	m_FadeObject->Render();
+	//m_FadeObject->Render();
 	return true;
 }
 bool TSceneTitle::Release()
 {
 	m_pMapTitle->Release();
-	//m_btnStart->Release();	
-	//m_listControl->Release();
+	m_btnStart2->Release();	
 	m_Dlg->Release();
-
 	m_FadeObject->Release();
 	return true;
 }

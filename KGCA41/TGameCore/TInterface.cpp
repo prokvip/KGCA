@@ -81,6 +81,20 @@ bool  TInterface::SetAttribute( TVector2D vPos, TRect rt,
     SetTextueState(texStateList);    
     return true;
 }
+bool  TInterface::SetAttribute(TVector2D vPos, TRect rt, TSprite* pSprite)
+{
+    Init();
+    SetRect(rt);
+    SetPosition(vPos);
+    m_pSprite = pSprite;
+    if (pSprite->m_texArray.size() > 0)
+    {
+        m_pCurrentTex = m_pTexture;
+        m_EventState.m_pStateList = pSprite->m_pTexArray;
+        return true;
+    }    
+    return true;
+}
 bool  TInterface::SetAttribute(TVector2D vPos, const std::vector<W_STR>& texStateList)
 {
     Init();
