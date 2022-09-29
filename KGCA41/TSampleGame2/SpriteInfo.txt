@@ -12,7 +12,7 @@ rtExplosion 12 0 ../../data/bitmap1.bmp ../../data/bitmap2.bmp ../../data/shader
 9	321 142 27 25
 10	349 142 24 23
 11	374 142 22 18	
-DefalultNumber 10 1 nullptr nullptr ../../data/shader/DefaultShape.txt
+DefalultNumber 10 1 ../../data/ui/0.png nullptr ../../data/shader/DefaultShape.txt
 0 ../../data/ui/0.png
 1 ../../data/ui/1.png
 2 ../../data/ui/2.png
