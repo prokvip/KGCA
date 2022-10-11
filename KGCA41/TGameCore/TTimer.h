@@ -4,6 +4,10 @@
 class TTimer : public TSingleton<TTimer>
 {
 public:
+	LARGE_INTEGER  m_Frequency;
+	LARGE_INTEGER  m_Current;
+	LARGE_INTEGER  m_Frame;
+public:
 	float m_fGameTimer = 0.0f;
 	float m_fElapseTimer = 10.0f;
 	UINT  m_iFPS = 0;

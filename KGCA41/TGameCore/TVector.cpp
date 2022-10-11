@@ -398,3 +398,14 @@ float     TVector::Angle(TVector& v)
 	return fDegree;
 }
 
+// Dot Product
+float TVector::operator | (TVector const& v0)
+{
+	return x * v0.x + y * v0.y + z * v0.z;
+}
+
+// Cross Product
+TVector TVector::operator ^ (TVector const& v0)
+{
+	return TVector((y * v0.z - z * v0.y), (z * v0.x - x * v0.z), (x * v0.y - y * v0.x));
+}

@@ -107,6 +107,10 @@ public:
 	bool      operator == (TVector& v);
 	bool      operator <= (TVector& v);
 	bool      operator >= (TVector& v);
+	// Dot Product
+	float operator | (TVector const& v0);
+	// Cross Product
+	TVector operator ^ (TVector const& v0);
 public:
 	float     LengthSquared();
 	float     Length();
