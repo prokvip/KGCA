@@ -1,4 +1,39 @@
-#include "TDevice.h"
+Ôªø#include "TDevice.h"
+HRESULT TDevice::CreateDXResource()
+{
+    return true;
+}
+HRESULT TDevice::DeleteDXResource()
+{
+    return true;
+}
+HRESULT		TDevice::ResizeDevice(UINT width, UINT height)
+{
+    HRESULT hr;
+    //ÔÅ¨	ÏúàÎèÑÏö∞ ÌÅ¨Í∏∞ Î≥ÄÍ≤Ω Î©îÏãúÏßÄ Í≤ÄÏ∂ú(WM_SIZE)
+    if(m_pd3dDevice == nullptr) return S_OK;        
+    //ÔÅ¨	ÌòÑÏû¨ ÏÑ§Ï†ïÎêú ÎûúÎçîÌÉÄÏºì Ìï¥Ï†ú Î∞è ÏÜåÎ©∏
+    DeleteDXResource();
+    m_pImmediateContext->OMSetRenderTargets(0, nullptr, NULL);
+    m_pRTV.ReleaseAndGetAddressOf();
+    //ÔÅ¨	Î≥ÄÍ≤ΩÎêú ÏúàÎèÑÏö∞Ïùò ÌÅ¨Í∏∞Î•º ÏñªÍ≥† Î∞± Î≤ÑÌçºÏùò ÌÅ¨Í∏∞Î•º Ïû¨ Ï°∞Ï†ï.
+    // Î∞±Î≤ÑÌçºÏùò ÌÅ¨Í∏∞Î•º Ï°∞Ï†ïÌïúÎã§.
+    DXGI_SWAP_CHAIN_DESC CurrentSD, AfterSD;
+    m_pSwapChain->GetDesc(&CurrentSD);
+    hr= m_pSwapChain->ResizeBuffers(CurrentSD.BufferCount, width, height,
+        CurrentSD.BufferDesc.Format, 0);
+
+   //ÔÅ¨	Î≥ÄÍ≤ΩÎêú Î∞± Î≤ÑÌçºÏùò ÌÅ¨Í∏∞Î•º ÏñªÍ≥† Î†åÎçîÌÉÄÏºì Î∑∞Î•º Îã§Ïãú ÏÉùÏÑ± Î∞è Ï†ÅÏö©.
+        //ÔÅ¨	Î∑∞Ìè¨Ìä∏ Ïû¨ ÏßÄÏ†ï.
+    if (FAILED(hr = CreateRenderTargetView()))
+    {
+        return false;
+    }
+    CreateViewport();
+
+    CreateDXResource();
+    return S_OK;
+}
 bool		TDevice::Init()
 { 
     HRESULT hr;
@@ -36,7 +71,7 @@ bool		TDevice::Release()
 
 HRESULT TDevice::CreateDevice()
 {
-    // 1)µπŸ¿ÃΩ∫ ª˝º∫
+    // 1)ÎîîÎ∞îÏù¥Ïä§ ÏÉùÏÑ±
     HRESULT hr;
     UINT createDeviceFlags = D3D11_CREATE_DEVICE_BGRA_SUPPORT;
 #ifdef _DEBUG
@@ -53,19 +88,19 @@ HRESULT TDevice::CreateDevice()
     hr = D3D11CreateDevice(
         nullptr, D3D_DRIVER_TYPE_HARDWARE, NULL, 
         createDeviceFlags, pFeatureLevels, 1, D3D11_SDK_VERSION,
-        &m_pd3dDevice,// µπŸ¿ÃΩ∫ ∞¥√º
+        &m_pd3dDevice,// ÎîîÎ∞îÏù¥Ïä§ Í∞ùÏ≤¥
         &pFeatureLevel,
         &m_pImmediateContext
     );
 
-    //m_pd3dDevice  ¥Ÿ∏• ¿Œ≈Õ∆‰¿ÃΩ∫ ª˝º∫Ω√ ªÁøÎ«—¥Ÿ.
-    //m_pImmediateContext ª˝º∫µ» ¿Œ≈Õ∆‰¿ÃΩ∫∏¶ ªÁøÎ(∞¸∏Æ,¡¶æÓ)«“ ∂ß.
+    //m_pd3dDevice  Îã§Î•∏ Ïù∏ÌÑ∞ÌéòÏù¥Ïä§ ÏÉùÏÑ±Ïãú ÏÇ¨Ïö©ÌïúÎã§.
+    //m_pImmediateContext ÏÉùÏÑ±Îêú Ïù∏ÌÑ∞ÌéòÏù¥Ïä§Î•º ÏÇ¨Ïö©(Í¥ÄÎ¶¨,Ï†úÏñ¥)Ìï† Îïå.
     return hr;
 }
 
 HRESULT TDevice::CreateDXGIDevice()
 {
-    // 2)∆—≈‰∏Æ ª˝º∫
+    // 2)Ìå©ÌÜ†Î¶¨ ÏÉùÏÑ±
     /*HRESULT hr = CreateDXGIFactory(__uuidof(IDXGIFactory), 
         (void**)&m_pGIFactory);*/
     HRESULT hr = CreateDXGIFactory(__uuidof(IDXGIFactory),
@@ -75,8 +110,8 @@ HRESULT TDevice::CreateDXGIDevice()
 
 HRESULT TDevice::CreateSwapChain( )
 {
-    // 3)Ω∫ø“√º¿Œ ª˝º∫
-    // »ƒ∏È(πÈ)πˆ∆€ ª˝º∫  -> ¿¸∏Èπˆ∆€
+    // 3)Ïä§ÏôëÏ≤¥Ïù∏ ÏÉùÏÑ±
+    // ÌõÑÎ©¥(Î∞±)Î≤ÑÌçº ÏÉùÏÑ±  -> Ï†ÑÎ©¥Î≤ÑÌçº
     DXGI_SWAP_CHAIN_DESC sd;
     ZeroMemory(&sd, sizeof(sd));
     sd.BufferCount = 1;
@@ -101,7 +136,7 @@ HRESULT TDevice::CreateSwapChain( )
 HRESULT TDevice::CreateRenderTargetView()
 {
     HRESULT hr;
-    // 4)∑£¥ı≈∏ƒœ∫‰ ª˝º∫
+    // 4)ÎûúÎçîÌÉÄÏºìÎ∑∞ ÏÉùÏÑ±
     ID3D11Texture2D* pBackBuffer = nullptr;
     m_pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&pBackBuffer);
     hr = m_pd3dDevice->CreateRenderTargetView(pBackBuffer,
@@ -112,7 +147,7 @@ HRESULT TDevice::CreateRenderTargetView()
 
 void TDevice::CreateViewport()
 {
-    // 5)∫‰∆˜∆Æ º≥¡§
+    // 5)Î∑∞Ìè¨Ìä∏ ÏÑ§Ï†ï
     m_vp.Width  = g_rtClient.right;
     m_vp.Height = g_rtClient.bottom;
     m_vp.TopLeftX = 0;

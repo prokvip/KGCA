@@ -1,4 +1,18 @@
 #include "TWriter.h"
+// 종속적 객체 생성
+HRESULT TWriter::CreateDXResource()
+{
+	HRESULT hr = m_d2dRT->CreateSolidColorBrush({ 0,0,0,1 }, 
+				&m_pTextColor);
+	return true;
+}
+// 종속적 객체 소멸
+HRESULT TWriter::DeleteDXResource()
+{
+	if (m_pTextColor) m_pTextColor->Release();
+	if (m_d2dRT) m_d2dRT->Release();
+	return true;
+}
 bool		TWriter::Set(IDXGISurface1* dxgiSurface)
 {
 	// 중요 : 디바이스 생성 플래그 지정해야 한다. 
@@ -18,7 +32,7 @@ bool		TWriter::Set(IDXGISurface1* dxgiSurface)
 		&props,
 		&m_d2dRT);
 
-	hr = m_d2dRT->CreateSolidColorBrush({ 0,0,0,1 }, &m_pTextColor);
+	CreateDXResource();
 	return true;
 }
 bool		TWriter::Init()
@@ -65,9 +79,9 @@ bool		TWriter::Draw(float x, float y, std::wstring text, D2D1_COLOR_F color)
 }
 bool		TWriter::Release()
 {
-	if (m_pTextColor) m_pTextColor->Release();
-	if (m_pDWriteFactory) m_pDWriteFactory->Release();
+	if (m_pTextColor) m_pTextColor->Release();	
 	if (m_d2dRT) m_d2dRT->Release();
+	if (m_pDWriteFactory) m_pDWriteFactory->Release();
 	if (m_d2dFactory) m_d2dFactory->Release();
 	return true;
 }

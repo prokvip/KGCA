@@ -6,6 +6,7 @@ public:
 	ComPtr<IDXGIFactory>			m_pGIFactory = nullptr;
 	ComPtr<ID3D11Device>			m_pd3dDevice = nullptr;// 디바이스 객체
 	ComPtr<ID3D11DeviceContext>		m_pImmediateContext = nullptr;	
+
 	ComPtr<IDXGISwapChain>			m_pSwapChain = nullptr;
 	ComPtr<ID3D11RenderTargetView>	m_pRTV = nullptr;
 	D3D11_VIEWPORT					m_vp;
@@ -20,10 +21,13 @@ public:
 	HRESULT CreateRenderTargetView();
 	// 5)뷰포트 설정
 	void  CreateViewport();
+	virtual HRESULT		ResizeDevice(UINT width, UINT height);
 public:
 	virtual bool		Init(); // 초기화
 	virtual bool		Frame();// 실시간 계산
 	virtual bool		Render();// 실시간 랜더링
 	virtual bool		Release();// 소멸 및 삭제
+	virtual HRESULT CreateDXResource();
+	virtual HRESULT DeleteDXResource();
 };
 

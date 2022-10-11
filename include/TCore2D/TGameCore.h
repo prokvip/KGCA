@@ -27,5 +27,7 @@ private:
 	bool		TCoreRelease();// 소멸 및 삭제	
 public:
 	bool		Run() override;
+	virtual HRESULT CreateDXResource();
+	virtual HRESULT DeleteDXResource();
 };
 

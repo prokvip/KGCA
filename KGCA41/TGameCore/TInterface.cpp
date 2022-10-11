@@ -30,6 +30,8 @@ bool TInterface::Frame()
     {
         m_pCurrentTex = m_EventState.m_pStateList[UI_NORMAL];
     }
+    ScreenToNDC();
+    UpdateVertexBuffer();
     return true;
 }
 void TInterface::AddChild(TInterface* pUI)

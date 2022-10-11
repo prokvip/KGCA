@@ -1,4 +1,19 @@
 #include "TGameCore.h"
+HRESULT TGameCore::CreateDXResource()
+{
+	m_Writer.Init();
+	IDXGISurface1* pBackBuffer;
+	m_pSwapChain->GetBuffer(0, __uuidof(IDXGISurface1),
+		(void**)&pBackBuffer);
+	m_Writer.Set(pBackBuffer);
+	pBackBuffer->Release();
+	return S_OK;
+}
+HRESULT TGameCore::DeleteDXResource()
+{
+	m_Writer.DeleteDXResource();
+	return S_OK;
+}
 bool		TGameCore::TCoreInit()
 {
 	TDevice::Init();
