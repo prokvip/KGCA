@@ -6,6 +6,9 @@
 #define DegreeToRadian(x)  (x *(T_PI / 180.0f))
 #define RadianToDegree(x) (x *(180.0f / T_PI))
 #define T_Epsilon 0.001f
+
+class TMatrix;
+
 struct TFloat2
 {
 	union
@@ -107,11 +110,16 @@ public:
 	bool      operator == (TVector& v);
 	bool      operator <= (TVector& v);
 	bool      operator >= (TVector& v);
+	// Dot Product
+	float operator | (TVector const& v0);
+	// Cross Product
+	TVector operator ^ (TVector const& v0);
 public:
 	float     LengthSquared();
 	float     Length();
 	void      Normalized();
 	TVector Identity();
 	float     Angle(TVector& v);
+	TVector  operator* (TMatrix& m);
 };
 

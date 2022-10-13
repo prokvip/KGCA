@@ -177,6 +177,7 @@ copy "TGameCore_R.lib" "..\\..\\lib\\"</Command>
     <ClInclude Include="TInput.h" />
     <ClInclude Include="TInterface.h" />
     <ClInclude Include="TMapObject.h" />
+    <ClInclude Include="TMatrix.h" />
     <ClInclude Include="TNpc2D.h" />
     <ClInclude Include="TObject2D.h" />
     <ClInclude Include="TScene.h" />
@@ -204,6 +205,7 @@ copy "TGameCore_R.lib" "..\\..\\lib\\"</Command>
     <ClCompile Include="TInput.cpp" />
     <ClCompile Include="TInterface.cpp" />
     <ClCompile Include="TMapObject.cpp" />
+    <ClCompile Include="TMatrix.cpp" />
     <ClCompile Include="TNpc2D.cpp" />
     <ClCompile Include="TObject2D.cpp" />
     <ClCompile Include="TScene.cpp" />

@@ -1,4 +1,5 @@
 #include "TVector.h"
+#include "TMatrix.h"
 TVector4D::TVector4D()
 {
 	x = y = z= w = 0.0f;
@@ -408,4 +409,13 @@ float TVector::operator | (TVector const& v0)
 TVector TVector::operator ^ (TVector const& v0)
 {
 	return TVector((y * v0.z - z * v0.y), (z * v0.x - x * v0.z), (x * v0.y - y * v0.x));
+}
+// TVector a =   a * m; [1x4] * [4x4]
+TVector  TVector::operator* (TMatrix& m)
+{
+	TVector v;
+	v.x = x * m._11 + y * m._21  + z * m._31 + 1.0f*m._41;
+	v.y = x * m._12 + y * m._22 + z * m._32 + 1.0f * m._42;
+	v.z = x * m._13 + y * m._23 + z * m._33 + 1.0f * m._43;
+	return v;
 }

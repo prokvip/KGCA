@@ -93,6 +93,9 @@
     <ClInclude Include="TScene.h">
       <Filter>Scene</Filter>
     </ClInclude>
+    <ClInclude Include="TMatrix.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="TWindow.cpp">
@@ -166,6 +169,9 @@
     </ClCompile>
     <ClCompile Include="TScene.cpp">
       <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="TMatrix.cpp">
+      <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

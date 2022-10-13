@@ -27,7 +27,7 @@ bool TDxState::SetState(ID3D11Device* pd3dDevice)
     FLOAT MaxLOD;*/
 	hr = pd3dDevice->CreateSamplerState(&sd, &g_pDefaultSSWrap);
 
-    sd.Filter = D3D11_FILTER_MIN_MAG_POINT_MIP_LINEAR;// 최근점 필터링
+    sd.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;// 최근점 필터링
     sd.AddressU = D3D11_TEXTURE_ADDRESS_MIRROR;
     sd.AddressV = D3D11_TEXTURE_ADDRESS_MIRROR;
     sd.AddressW = D3D11_TEXTURE_ADDRESS_MIRROR;
@@ -37,7 +37,7 @@ bool TDxState::SetState(ID3D11Device* pd3dDevice)
     ZeroMemory(&rd, sizeof(rd));
     rd.DepthClipEnable = TRUE;
     rd.FillMode = D3D11_FILL_WIREFRAME;
-    rd.CullMode = D3D11_CULL_NONE;
+    rd.CullMode = D3D11_CULL_BACK;
     pd3dDevice->CreateRasterizerState(&rd, 
         &g_pDefaultRSWireFrame);
 
