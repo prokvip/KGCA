@@ -147,7 +147,15 @@ float     TVector4D::Angle(TVector4D& v)
 	float fDegree = RadianToDegree(fRadian);
 	return fDegree;
 }
-
+TVector4D  TVector4D::operator* (TMatrix& m)
+{
+	TVector4D v;
+	v.x = x * m._11 + y * m._21 + z * m._31 + 1.0f * m._41;
+	v.y = x * m._12 + y * m._22 + z * m._32 + 1.0f * m._42;
+	v.z = x * m._13 + y * m._23 + z * m._33 + 1.0f * m._43;
+	v.w = x * m._14 + y * m._24 + z * m._34 + 1.0f * m._44;
+	return v;
+}
 
 TVector2D::TVector2D()
 {

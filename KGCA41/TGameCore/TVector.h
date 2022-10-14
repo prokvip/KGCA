@@ -86,6 +86,7 @@ public:
 	bool      operator == (TVector4D& v);
 	bool      operator <= (TVector4D& v);
 	bool      operator >= (TVector4D& v);
+	TVector4D operator* (TMatrix& m);
 public:
 	float     LengthSquared();
 	float     Length();

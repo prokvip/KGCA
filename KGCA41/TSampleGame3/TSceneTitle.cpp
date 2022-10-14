@@ -26,25 +26,31 @@ bool TSceneTitle::Frame()
 	if (I_Input.GetKey('W') == KEY_HOLD)
 	{
 		vPos.z += 10.0f * g_fSecondPerFrame;
+		vTarget.z += 10.0f * g_fSecondPerFrame;
 	}
 	if (I_Input.GetKey('S') == KEY_HOLD)
 	{
 		vPos.z -= 10.0f * g_fSecondPerFrame;
+		vTarget.z -= 10.0f * g_fSecondPerFrame;
 	}
 	if (I_Input.GetKey('A') == KEY_HOLD)
 	{
-		vTarget.x += 10.0f * g_fSecondPerFrame;
+		vPos.x -= 10.0f * g_fSecondPerFrame;
+		vTarget.x -= 10.0f * g_fSecondPerFrame;
 	}
 	if (I_Input.GetKey('D') == KEY_HOLD)
 	{
-		vTarget.x -= 10.0f * g_fSecondPerFrame;
+		vPos.x += 10.0f * g_fSecondPerFrame;
+		vTarget.x += 10.0f * g_fSecondPerFrame;
 	}
 	if (I_Input.GetKey('Q') == KEY_HOLD)
 	{
+		vPos.y += 10.0f * g_fSecondPerFrame;
 		vTarget.y += 10.0f * g_fSecondPerFrame;
 	}
 	if (I_Input.GetKey('E') == KEY_HOLD)
 	{
+		vPos.y-= 10.0f * g_fSecondPerFrame;
 		vTarget.y -= 10.0f * g_fSecondPerFrame;
 	}
 	
@@ -73,9 +79,10 @@ bool TSceneTitle::Frame()
 		TVector vWorld = v * c;
 		TVector vView  = vWorld * matView;
 		TVector vProj  = vView * matProj;
-		vProj.x /= vProj.z;
-		vProj.y /= vProj.z;
-		vProj.z /= vProj.z;
+		float w = vProj.x * matProj._14 + vProj.y * matProj._24 + vProj.z * matProj._34 + 1.0f * matProj._44;
+		vProj.x /= w;
+		vProj.y /= w;
+		vProj.z /= w;
 		m_pBG->m_VertexList[i].p = vProj;
 	}
 	m_pBG->UpdateVertexBuffer();
