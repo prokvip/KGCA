@@ -50,6 +50,7 @@ public:
 	TMatrix Scale(float x, float y, float z);
 	TMatrix Translation(float x, float y, float z);
 
+	void ObjectLookAt(TVector& vPosition,TVector& vTarget,TVector& vUp);
 	TMatrix ViewLookAt(TVector& vPosition,TVector& vTarget,
 						TVector& vUp);
 	TMatrix PerspectiveFovLH(	float fNearPlane,

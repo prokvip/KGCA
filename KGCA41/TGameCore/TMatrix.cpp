@@ -140,7 +140,26 @@ TMatrix  TMatrix::operator* (TMatrix& matrix)
 	}
 	return mat;
 }
+void TMatrix::ObjectLookAt(TVector& vPosition,
+	TVector& vTarget,
+	TVector& vUp)
+{
+	TVector vDirection = vTarget - vPosition;
+	vDirection = vDirection.Normal();
+	float fDot = vUp | vDirection;
+	TVector vC = vDirection * fDot;
+	TVector vD = (vDirection * fDot);
+	TVector vUpVector = vUp - vD;
+	vUpVector = vUpVector.Normal();
+	TVector vRightVector = vUpVector ^ vDirection;
 
+	_11 = vRightVector.x;	_12 = vRightVector.y;	_13 = vRightVector.z;
+	_21 = vUpVector.x;		_22 = vUpVector.y;		_23 = vUpVector.z;
+	_31 = vDirection.x;		_32 = vDirection.y;		_33 = vDirection.z;
+	_41 = vPosition.x;
+	_42 = vPosition.y;
+	_43 = vPosition.z;
+}
 TMatrix TMatrix::ViewLookAt(TVector& vPosition,
 	TVector& vTarget,
 	TVector& vUp)

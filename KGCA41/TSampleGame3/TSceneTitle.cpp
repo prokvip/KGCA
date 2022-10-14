@@ -57,7 +57,10 @@ bool TSceneTitle::Frame()
 	TMatrix m,s,t,c;
 	float fScale = cos(g_fGameTimer) * 0.5f + 0.5f;
 	s = s.Scale(10, 10, 10);
-	//m = m.RotationZ(g_fGameTimer);
+	m = m.RotationZ(g_fGameTimer);
+	//TVector vObjPos = { 0,0,0 };
+	//TVector vObjTarget = { 0,5,5 };
+	//m.ObjectLookAt(vObjPos, vObjTarget, vUp);
 	t = t.Translation(0.0f, 0, 0);
 	c = s * m * t;
 	for (int i = 0; i < m_pBG->m_InitVertexList.size(); i++)
