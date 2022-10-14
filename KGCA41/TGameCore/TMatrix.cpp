@@ -140,3 +140,48 @@ TMatrix  TMatrix::operator* (TMatrix& matrix)
 	}
 	return mat;
 }
+
+TMatrix TMatrix::ViewLookAt(TVector& vPosition,
+	TVector& vTarget,
+	TVector& vUp)
+{
+	TMatrix matrix;
+	TVector vDirection = (vTarget - vPosition).Normal();
+	TVector vRightVector = (vUp ^ vDirection).Normal();
+	TVector vUpVector = (vDirection ^ vRightVector).Normal();
+
+	_11 = vRightVector.x;	_12 = vUpVector.x;	_13 = vDirection.x;
+	_21 = vRightVector.y;	_22 = vUpVector.y;	_23 = vDirection.y;
+	_31 = vRightVector.z;	_32 = vUpVector.z;	_33 = vDirection.z;
+
+	_41 = -(vPosition.x * _11 + vPosition.y * _21 + vPosition.z * _31);
+	_42 = -(vPosition.x * _12 + vPosition.y * _22 + vPosition.z * _32);
+	_43 = -(vPosition.x * _13 + vPosition.y * _23 + vPosition.z * _33);
+	memcpy(&matrix, this, 16 * sizeof(float));
+	return matrix;
+}
+
+TMatrix TMatrix::PerspectiveFovLH(float fNearPlane,
+	float fFarPlane,
+	float fovy,
+	float Aspect) // width / heght
+{
+	float    h, w, Q;
+
+	h = 1 / tan(fovy * 0.5f);  // 1/tans(x) = cot(x)
+	w = h / Aspect;
+
+	Q = fFarPlane / (fFarPlane - fNearPlane);
+
+	TMatrix ret;
+	ZeroMemory(this, sizeof(TMatrix));
+
+	_11 = w;
+	_22 = h;
+	_33 = Q;
+	_43 = -Q * fNearPlane;
+	_34 = 1;
+
+	memcpy((void*)&ret, this, 16 * sizeof(float));
+	return ret;
+}

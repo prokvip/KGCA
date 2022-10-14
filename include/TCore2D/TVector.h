@@ -118,7 +118,7 @@ public:
 	float     LengthSquared();
 	float     Length();
 	void      Normalized();
-	TVector Identity();
+	TVector	  Normal();
 	float     Angle(TVector& v);
 	TVector  operator* (TMatrix& m);
 };

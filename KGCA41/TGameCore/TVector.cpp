@@ -381,7 +381,7 @@ void TVector::Normalized()
 	z = z * fInvertLength;
 }
 // 단위벡터 반환
-TVector TVector::Identity()
+TVector TVector::Normal()
 {
 	TVector ret = *this;
 	float fInvertLength = 1.0f / Length();

@@ -49,6 +49,13 @@ public:
 	TMatrix RotationZ(float fRadian);
 	TMatrix Scale(float x, float y, float z);
 	TMatrix Translation(float x, float y, float z);
+
+	TMatrix ViewLookAt(TVector& vPosition,TVector& vTarget,
+						TVector& vUp);
+	TMatrix PerspectiveFovLH(	float fNearPlane,
+								float fFarPlane,
+								float fovy,
+								float Aspect);
 public:
 	TMatrix operator* (TMatrix& m);
 };
