@@ -311,8 +311,7 @@ bool TBaseObject::PreRender()
     UINT offset = 0; // 정점버퍼에서 출발지점(바이트)
     m_pImmediateContext->IASetVertexBuffers(0, 1,
         &m_pVertexBuffer, &stride, &offset);
-    m_pImmediateContext->IASetIndexBuffer(m_pIndexBuffer,
-        DXGI_FORMAT_R32_UINT, 0);
+    m_pImmediateContext->IASetIndexBuffer(m_pIndexBuffer,DXGI_FORMAT_R32_UINT, 0);
     m_pImmediateContext->VSSetConstantBuffers(0, 1, &m_pConstantBuffer);
     return true;
 }
