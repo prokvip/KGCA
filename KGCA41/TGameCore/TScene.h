@@ -9,7 +9,7 @@ public:
 	ID3D11Device* m_pd3dDevice = nullptr;// 디바이스 객체
 	ID3D11DeviceContext* m_pImmediateContext = nullptr;
 public:
-	TVector2D   m_vCamera = { 0, 0 };
+	TVector2   m_vCamera = { 0, 0 };
 	TUser2D*	m_pUser;
 	TRect       m_rtMap = { -1000.0f, -1000.0f, 2000.0f, 2000.0f };
 public:

@@ -2,16 +2,14 @@
 #include "TScene.h"
 #include "TInterface.h"
 #include "TProjectile2D.h"
+#include "TShape.h"
 class TSceneTitle :   public TScene
 {
 public:
 	TUser2D*		m_pUser;
 	TBaseObject*	m_pBG;
-	TInterface*		m_FadeObject;
-	TInterface*		m_btnStart;
-	TInterface*		m_btnStart2;
-	TInterface*		m_listControl;
-	TInterface*		m_Dlg;
+	TShapeBox* m_pBoxObj=nullptr;
+
 public:
 	virtual bool		Init();
 	virtual bool		Frame();

@@ -1,4 +1,34 @@
 #include "TBaseObject.h"
+void		TBaseObject::CreateConstantData()
+{
+    m_cbData.matWorld.Identity();
+    m_cbData.matView.Identity();
+    m_cbData.matProj.Identity();
+    m_cbData.fTimer = 0.0f;
+    m_cbData.matWorld.Transpose();
+    m_cbData.matView.Transpose();
+    m_cbData.matProj.Transpose();
+}
+HRESULT		TBaseObject::CreateConstantBuffer()
+{
+    HRESULT hr;
+    CreateConstantData();
+    D3D11_BUFFER_DESC       bd;
+    ZeroMemory(&bd, sizeof(bd));
+    bd.ByteWidth = sizeof(VS_CONSTANT_BUFFER) * 1; // 바이트 용량
+    // GPU 메모리에 할당
+    bd.Usage = D3D11_USAGE_DEFAULT; // 버퍼의 할당 장소 내지는 버퍼용도
+    bd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+
+    D3D11_SUBRESOURCE_DATA  sd;
+    ZeroMemory(&sd, sizeof(sd));
+    sd.pSysMem = &m_cbData;
+    hr = m_pd3dDevice->CreateBuffer(
+        &bd, // 버퍼 할당
+        &sd, // 초기 할당된 버퍼를 체우는 CPU메모리 주소
+        &m_pConstantBuffer);
+    return hr;
+}
 void    TBaseObject::CreateVertexData()
 {
     m_VertexList.resize(4);
@@ -189,6 +219,10 @@ bool	TBaseObject::Create(
     m_pImmediateContext = pImmediateContext;
     m_szShaderName = shadername;
     m_szTextureName= texturename;
+    if (FAILED(CreateConstantBuffer()))
+    {
+        return false;
+    }
     if (FAILED(CreateVertexBuffer()))
     {
         return false;
@@ -236,7 +270,15 @@ void   TBaseObject::UpdateVertexBuffer()
         m_pVertexBuffer, 0, nullptr,
         &m_VertexList.at(0), 0, 0);
 }
-
+void   TBaseObject::UpdateConstantBuffer()
+{
+    m_cbData.matWorld.Transpose();
+    m_cbData.matView.Transpose();
+    m_cbData.matProj.Transpose();
+    m_pImmediateContext->UpdateSubresource(
+        m_pConstantBuffer, 0, nullptr,
+        &m_cbData, 0, 0);
+}
 bool TBaseObject::Render()
 {
     PreRender();
@@ -255,6 +297,7 @@ bool TBaseObject::PreRender()
         &m_pVertexBuffer, &stride, &offset);
     m_pImmediateContext->IASetIndexBuffer(m_pIndexBuffer,
         DXGI_FORMAT_R32_UINT, 0);
+    m_pImmediateContext->VSSetConstantBuffers(0, 1, &m_pConstantBuffer);
     return true;
 }
 bool TBaseObject::PostRender()

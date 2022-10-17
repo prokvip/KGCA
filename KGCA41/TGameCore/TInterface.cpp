@@ -74,7 +74,7 @@ bool  TInterface::SetTextueState(const std::vector<W_STR>& texStateList)
     }
     return true;
 }
-bool  TInterface::SetAttribute( TVector2D vPos, TRect rt, 
+bool  TInterface::SetAttribute( TVector2 vPos, TRect rt, 
                                 const std::vector<W_STR>& texStateList)
 {
     Init();
@@ -83,7 +83,7 @@ bool  TInterface::SetAttribute( TVector2D vPos, TRect rt,
     SetTextueState(texStateList);    
     return true;
 }
-bool  TInterface::SetAttribute(TVector2D vPos, TRect rt, TSprite* pSprite)
+bool  TInterface::SetAttribute(TVector2 vPos, TRect rt, TSprite* pSprite)
 {
     Init();
     SetRect(rt);
@@ -97,7 +97,7 @@ bool  TInterface::SetAttribute(TVector2D vPos, TRect rt, TSprite* pSprite)
     }    
     return true;
 }
-bool  TInterface::SetAttribute(TVector2D vPos, const std::vector<W_STR>& texStateList)
+bool  TInterface::SetAttribute(TVector2 vPos, const std::vector<W_STR>& texStateList)
 {
     Init();
     m_ptImageSize.x = m_pTexture->m_Desc.Width;
@@ -124,7 +124,7 @@ bool  TInterface::SetDrawList(
     }
 
     TRect rt = m_rtCollision;
-    TVector2D  vCenter = m_vPos;
+    TVector2  vCenter = m_vPos;
     float fX[4];
     fX[0] = m_rtCollision.x1;
     fX[1] = fX[0] + m_rtCollision.w * fScaleX0;
@@ -273,7 +273,7 @@ bool  TListControl::Frame()
 {
     for (auto data : m_pChildList)
     {
-       TVector2D pos = data->m_vPos + m_vOffsetPos;
+       TVector2 pos = data->m_vPos + m_vOffsetPos;
        data->SetPosition(pos);
        data->Frame();
     }
@@ -334,12 +334,12 @@ bool  TDialog::Frame()
 
     for (int iSub = 0; iSub < m_rtDrawList.size(); iSub++)
     {
-        TVector2D pos = m_rtDrawList[iSub]->m_vPos + m_vOffsetPos;
+        TVector2 pos = m_rtDrawList[iSub]->m_vPos + m_vOffsetPos;
         m_rtDrawList[iSub]->SetPosition(pos);
     }
     for (int iChild = 0; iChild < m_pChildList.size(); iChild++)
     {
-        TVector2D pos = m_pChildList[iChild]->m_vPos + m_vOffsetPos;
+        TVector2 pos = m_pChildList[iChild]->m_vPos + m_vOffsetPos;
         m_pChildList[iChild]->SetPosition(pos);
         m_pChildList[iChild]->Frame();
     }

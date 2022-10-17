@@ -6,10 +6,26 @@
 struct SimpleVertex
 {
 	TVector    p;	
-	TVector4D  c;
-	TVector2D  t;
+	TVector4  c;
+	TVector2  t;
+	SimpleVertex() {}
+	SimpleVertex(TVector vp, TVector4 vc, TVector2 vt)
+	{
+		p = vp;
+		c = vc;
+		t = vt;
+	}
 };
-
+struct VS_CONSTANT_BUFFER
+{
+	TMatrix  matWorld;
+	TMatrix  matView;
+	TMatrix  matProj;	
+	float    x;
+	float    y;
+	float    fTimer;
+	float    d;
+};
 class TBaseObject 
 {
 public:
@@ -19,6 +35,8 @@ public:
 	ID3D11DeviceContext* m_pImmediateContext = nullptr;
 	ID3D11Buffer* m_pVertexBuffer;
 	ID3D11Buffer* m_pIndexBuffer;
+	VS_CONSTANT_BUFFER  m_cbData;
+	ID3D11Buffer* m_pConstantBuffer;
 	ID3D11InputLayout* m_pVertexLayout;
 	TShader* m_pShader;
 	TTexture* m_pTexture;
@@ -41,13 +59,16 @@ public:
 		std::wstring shadername, std::wstring texturename);
 	virtual void		CreateVertexData();
 	virtual void		CreateIndexData();
+	virtual void		CreateConstantData();
 	virtual HRESULT		CreateVertexBuffer();
 	virtual HRESULT		CreateIndexBuffer();
+	virtual HRESULT		CreateConstantBuffer();
 	virtual bool		CreateShader(std::wstring filename);
 	virtual HRESULT     CreateVertexShader(std::wstring filename);
 	virtual HRESULT     CreatePixelShader(std::wstring filename);
 	virtual HRESULT     CreateVertexLayout();
 	virtual void		UpdateVertexBuffer();
+	virtual void		UpdateConstantBuffer();
 public:
 	virtual bool		Init() ;
 	virtual bool		Frame() ;

@@ -44,9 +44,9 @@ public:
 	};
 	virtual void AddChild(TInterface* pUI);
 	virtual bool SetTextueState(const std::vector<W_STR>& texStateList);
-	virtual bool SetAttribute(TVector2D vPos, TRect rt, TSprite* pSprite);
-	virtual bool SetAttribute(TVector2D vPos, TRect rt, const std::vector<W_STR>& texStateList = {});
-	virtual bool SetAttribute(TVector2D vPos, const std::vector<W_STR>& texStateList = std::vector<W_STR>());
+	virtual bool SetAttribute(TVector2 vPos, TRect rt, TSprite* pSprite);
+	virtual bool SetAttribute(TVector2 vPos, TRect rt, const std::vector<W_STR>& texStateList = {});
+	virtual bool SetAttribute(TVector2 vPos, const std::vector<W_STR>& texStateList = std::vector<W_STR>());
 	virtual bool  SetDrawList(
 		float fScaleX0, float fScaleX1,
 		float fScaleY0, float fScaleY1,

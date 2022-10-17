@@ -1,9 +1,9 @@
 #include "TNpc2D.h"
 bool TNpc2D::Frame()
 {
-    TVector2D vPos = m_vPos;
+    TVector2 vPos = m_vPos;
     ////벡터의 직선의 방정식 &  시간의 동기화
-    TVector2D m_vVelocity = m_vDir * 100 * g_fSecondPerFrame;
+    TVector2 m_vVelocity = m_vDir * 100 * g_fSecondPerFrame;
     vPos = vPos + m_vVelocity;
 
     if (vPos.x > 1000.0f)

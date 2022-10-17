@@ -73,15 +73,23 @@ void TMatrix::Identity()
 	_11 = _22 = _33 = _44 = 1.0f;
 }
 
-void TMatrix::Transpose()
+//void TMatrix::Transpose()
+//{	
+//	TMatrix matrix= *this;
+//	_11 = matrix._11; _12 = matrix._21; _13 = matrix._31; _14 = matrix._41;
+//	_21 = matrix._12; _22 = matrix._22; _23 = matrix._32; _24 = matrix._42;
+//	_31 = matrix._13; _32 = matrix._23; _33 = matrix._33; _34 = matrix._43;
+//	_41 = matrix._14; _42 = matrix._24; _43 = matrix._34; _44 = matrix._44;
+//}
+TMatrix TMatrix::Transpose()
 {
-	Identity();
-	_11 = _11; _12 = _21; _13 = _31; _14 = _41;
-	_21 = _12; _22 = _22; _23 = _32; _24 = _42;
-	_31 = _13; _32 = _23; _33 = _33; _34 = _43;
-	_41 = _14; _42 = _24; _43 = _34; _44 = _44;
+	TMatrix matrix;
+	matrix._11 = _11; matrix._12 = _21; matrix._13 = _31; matrix._14 = _41;
+	matrix._21 = _12; matrix._22 = _22; matrix._23 = _32; matrix._24 = _42;
+	matrix._31 = _13; matrix._32 = _23; matrix._33 = _33; matrix._34 = _43;
+	matrix._41 = _14; matrix._42 = _24; matrix._43 = _34; matrix._44 = _44;
+	return matrix;
 }
-
 void TMatrix::RotationX(float fRadian)
 {
 	Identity();
@@ -203,18 +211,18 @@ TMatrix TMatrix::PerspectiveFovLH(float fNearPlane,
 	return ret;
 }
 
-TMatrix OrthoLH(float w, float h, float n, float f)
+TMatrix OrthoLH(TMatrix& mat,float w, float h, float n, float f)
 {
-	TMatrix mat;
+	mat.Identity();
 	mat._11 = 2.0f / w;
 	mat._22 = 2.0f / h;
 	mat._33 = 1.0f / (f - n);
 	mat._43 = -n / (f - n);
 	return mat;
 }
-TMatrix OrthoOffCenterLH(float l, float r, float b, float t, float n, float f)
+TMatrix OrthoOffCenterLH(TMatrix& mat, float l, float r, float b, float t, float n, float f)
 {
-	TMatrix mat;
+	mat.Identity();
 	mat._11 = 2.0f / (r - l);
 	mat._22 = 2.0f / (t - b);
 	mat._33 = 1.0f / (f - n);

@@ -17,10 +17,10 @@ bool TProjectile2D::Update()
 	}
 	RECT rt = m_pSprite->m_uvArray[m_iIndex];
 	m_tRect = convert(rt);
-	TVector2D vAdd = m_vDir * m_fSpeed * g_fSecondPerFrame;
+	TVector2 vAdd = m_vDir * m_fSpeed * g_fSecondPerFrame;
 	m_vPos = m_vPos + vAdd;
 
-	TVector2D	vDrawSize;
+	TVector2	vDrawSize;
 	vDrawSize.x = m_pSprite->m_rtInit.w / 2.0f;
 	vDrawSize.y = m_pSprite->m_rtInit.h / 2.0f;
 	m_rtCollision.Set(

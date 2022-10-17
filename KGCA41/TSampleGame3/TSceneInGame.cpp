@@ -1,6 +1,6 @@
 #include "TSceneInGame.h"
 #include "TInput.h"
-static TVector2D vSize = { 800, 800 };
+static TVector2 vSize = { 800, 800 };
 
 void TSceneInGame::AddEffect()
 {
@@ -66,7 +66,7 @@ void TSceneInGame::AddEffect(float x, float y)
 	pEffect->m_rtCollision.y1 = pEffect->m_vPos.y;
 	m_pEffectList.push_back(pEffect);
 }
-void TSceneInGame::AddProjectile(TVector2D pos)
+void TSceneInGame::AddProjectile(TVector2 pos)
 {
 	TProjectile2D* pEffect = new TProjectile2D;
 	pEffect->m_pSprite = I_Sprite.GetPtr(L"rtProjectile");
@@ -327,8 +327,8 @@ void TSceneInGame::DrawMiniMap(UINT x, UINT y, UINT w, UINT h)
 	vp.MinDepth = 0.0f;
 	vp.MaxDepth = 1.0f;
 	m_pImmediateContext->RSSetViewports(1, &vp);
-	//TVector2D vCamera = { 0,0 };
-	TVector2D vSize = { 2000, 2000 };
+	//TVector2 vCamera = { 0,0 };
+	TVector2 vSize = { 2000, 2000 };
 	m_pMap->SetCameraSize(vSize);
 	m_pMap->SetCameraPos(m_vCamera);
 	m_pMap->Frame();

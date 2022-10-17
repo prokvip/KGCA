@@ -42,13 +42,13 @@ class TMatrix : public float4x4
 {
 public:
 	TMatrix();
-	void Identity();
-	void Transpose();
+	void Identity();	
 	void RotationX(float fRadian);
 	void RotationY(float fRadian);
 	void RotationZ(float fRadian);
 	void Scale(float x, float y, float z);
 	void Translation(float x, float y, float z);	
+	TMatrix Transpose();
 
 	void ObjectLookAt(TVector& vPosition,TVector& vTarget,TVector& vUp);
 	TMatrix ViewLookAt(TVector& vPosition,TVector& vTarget,
@@ -59,8 +59,8 @@ public:
 								float Aspect);
 	TMatrix OrthoLH(float w, float h, float n, float f);
 	TMatrix OrthoOffCenterLH(float l, float r, float b, float t, float n, float f);
-	friend TMatrix OrthoLH(float w, float h, float n, float f);
-	friend TMatrix OrthoOffCenterLH(float l, float r, float b, float t, float n, float f);
+	friend TMatrix OrthoLH(TMatrix& mat, float w, float h, float n, float f);
+	friend TMatrix OrthoOffCenterLH(TMatrix& mat, float l, float r, float b, float t, float n, float f);
 public:
 	TMatrix operator* (TMatrix& m);
 };

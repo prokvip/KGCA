@@ -23,7 +23,7 @@ bool TEffect2D::Update()
 	RECT rt = m_pSprite->m_uvArray[m_iIndex];
 	m_tRect = convert(rt);
 
-	TVector2D	vDrawSize;
+	TVector2	vDrawSize;
 	vDrawSize.x = m_pSprite->m_rtInit.w / 2.0f;
 	vDrawSize.y = m_pSprite->m_rtInit.h / 2.0f;
 	m_rtCollision.Set(

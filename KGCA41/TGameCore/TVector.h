@@ -45,54 +45,54 @@ struct TFloat4
 		float v[4];
 	};
 };
-class TVector2D : public TFloat2
+class TVector2 : public TFloat2
 {
 public:
-	TVector2D();
-	TVector2D(float x, float y);
-	TVector2D(const TVector2D& v);
+	TVector2();
+	TVector2(float x, float y);
+	TVector2(const TVector2& v);
 public:
-	TVector2D operator + (TVector2D& v);
-	TVector2D operator - (TVector2D& v);
-	TVector2D operator * (float scala);
-	TVector2D operator / (float scala);
-	TVector2D operator *= (float scala);
-	TVector2D operator += (TVector2D& v);
-	TVector2D operator -= (TVector2D& v);
-	bool      operator == (TVector2D& v);
-	bool      operator <= (TVector2D& v);
-	bool      operator >= (TVector2D& v);
+	TVector2 operator + (TVector2& v);
+	TVector2 operator - (TVector2& v);
+	TVector2 operator * (float scala);
+	TVector2 operator / (float scala);
+	TVector2 operator *= (float scala);
+	TVector2 operator += (TVector2& v);
+	TVector2 operator -= (TVector2& v);
+	bool      operator == (TVector2& v);
+	bool      operator <= (TVector2& v);
+	bool      operator >= (TVector2& v);
 public:
 	float     LengthSquared();
 	float     Length();
 	void      Normalized();
-	TVector2D Identity();
-	float     Angle(TVector2D& v);
+	TVector2 Identity();
+	float     Angle(TVector2& v);
 };
-class TVector4D : public TFloat4
+class TVector4 : public TFloat4
 {
 public:
-	TVector4D();
-	TVector4D(float x, float y, float z, float w);
-	TVector4D(const TVector4D& v);
+	TVector4();
+	TVector4(float x, float y, float z, float w);
+	TVector4(const TVector4& v);
 public:
-	TVector4D operator + (TVector4D& v);
-	TVector4D operator - (TVector4D& v);
-	TVector4D operator * (float scala);
-	TVector4D operator / (float scala);
-	TVector4D operator *= (float scala);
-	TVector4D operator += (TVector4D& v);
-	TVector4D operator -= (TVector4D& v);
-	bool      operator == (TVector4D& v);
-	bool      operator <= (TVector4D& v);
-	bool      operator >= (TVector4D& v);
-	TVector4D operator* (TMatrix& m);
+	TVector4 operator + (TVector4& v);
+	TVector4 operator - (TVector4& v);
+	TVector4 operator * (float scala);
+	TVector4 operator / (float scala);
+	TVector4 operator *= (float scala);
+	TVector4 operator += (TVector4& v);
+	TVector4 operator -= (TVector4& v);
+	bool      operator == (TVector4& v);
+	bool      operator <= (TVector4& v);
+	bool      operator >= (TVector4& v);
+	TVector4 operator* (TMatrix& m);
 public:
 	float     LengthSquared();
 	float     Length();
 	void      Normalized();
-	TVector4D Identity();
-	float     Angle(TVector4D& v);
+	TVector4 Identity();
+	float     Angle(TVector4& v);
 };
 class TVector : public TFloat3
 {

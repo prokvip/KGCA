@@ -154,6 +154,7 @@
     <ClInclude Include="TProjectile2D.h" />
     <ClInclude Include="TSceneInGame.h" />
     <ClInclude Include="TSceneTitle.h" />
+    <ClInclude Include="TShape.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Sample.cpp" />
@@ -161,8 +162,10 @@
     <ClCompile Include="TProjectile2D.cpp" />
     <ClCompile Include="TSceneInGame.cpp" />
     <ClCompile Include="TSceneTitle.cpp" />
+    <ClCompile Include="TShape.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <Text Include="DefaultObject.txt" />
     <Text Include="SpriteInfo.txt" />
     <Text Include="ui.txt" />
   </ItemGroup>

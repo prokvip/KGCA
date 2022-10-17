@@ -21,7 +21,7 @@ void  TUser2D::UpdateVertexBuffer()
 
 bool TUser2D::Frame()
 {
-    TVector2D vPos = m_vPos;
+    TVector2 vPos = m_vPos;
 
     if (I_Input.GetKey('P'))
     {

@@ -41,7 +41,7 @@ void  TObject2D::SetRect(TRect rt)
 // È­¸é ÁÂÇ¥ -> NDC ÁÂÇ¥ 
 void  TObject2D::ScreenToNDC()
 {
-    TVector2D	vDrawSize;
+    TVector2	vDrawSize;
     vDrawSize.x = m_rtInit.w / 2.0f;
     vDrawSize.y = m_rtInit.h / 2.0f;
     m_rtCollision.Set(
@@ -56,7 +56,7 @@ void  TObject2D::ScreenToNDC()
     m_vDrawSize.x = (m_rtInit.w / (float)g_rtClient.right) * 2.0f;
     m_vDrawSize.y = (m_rtInit.h / (float)g_rtClient.bottom) * 2.0f;
 }
-void  TObject2D::SetPosition(TVector2D vPos)
+void  TObject2D::SetPosition(TVector2 vPos)
 {
     m_vBeforePos = m_vPos;
     m_vPos = vPos;
@@ -66,10 +66,10 @@ void  TObject2D::SetPosition(TVector2D vPos)
 }
 // ¿ùµåÁÂÇ¥(È­¸éÁÂÇ¥°è) -> ºä ÁÂÇ¥ -> NDC ÁÂÇ¥
 void  TObject2D::ScreenToCamera(
-    TVector2D vCameraPos, TVector2D vViewPort)
+    TVector2 vCameraPos, TVector2 vViewPort)
 {
-    TVector2D   vViewPos = m_vPos;
-    TVector2D	vDrawSize;
+    TVector2   vViewPos = m_vPos;
+    TVector2	vDrawSize;
     vDrawSize.x = m_rtInit.w / 2.0f;
     vDrawSize.y = m_rtInit.h / 2.0f;
     m_rtCollision.Set(
@@ -87,7 +87,7 @@ void  TObject2D::ScreenToCamera(
     m_vDrawSize.x = (m_rtInit.w / vViewPort.x) * 2.0f;
     m_vDrawSize.y = (m_rtInit.h / vViewPort.y) * 2.0f;
 }
-void  TObject2D::SetPosition(TVector2D vPos, TVector2D vCamera)
+void  TObject2D::SetPosition(TVector2 vPos, TVector2 vCamera)
 {
     m_vPos = vPos;
     ScreenToCamera(vCamera, m_vViewSize);

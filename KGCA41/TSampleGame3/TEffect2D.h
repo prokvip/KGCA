@@ -3,8 +3,8 @@
 class TEffect2D
 {
 public:
-	TVector2D   m_vPos;
-	TVector2D   m_vDir = { 0,-1 };
+	TVector2   m_vPos;
+	TVector2   m_vDir = { 0,-1 };
 	float		m_fLifeTime = 1.33f;
 	float		m_fSpeed = 300.0f;
 	UINT		m_iIndex = 0;
