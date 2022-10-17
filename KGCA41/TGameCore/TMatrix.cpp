@@ -197,6 +197,7 @@ TMatrix TMatrix::PerspectiveFovLH(float fNearPlane,
 	_33 = Q;
 	_43 = -Q * fNearPlane;
 	_34 = 1;
+	_44 = 0.0f;
 
 	memcpy((void*)&ret, this, 16 * sizeof(float));
 	return ret;
@@ -205,11 +206,21 @@ TMatrix TMatrix::PerspectiveFovLH(float fNearPlane,
 TMatrix OrthoLH(float w, float h, float n, float f)
 {
 	TMatrix mat;
+	mat._11 = 2.0f / w;
+	mat._22 = 2.0f / h;
+	mat._33 = 1.0f / (f - n);
+	mat._43 = -n / (f - n);
 	return mat;
 }
 TMatrix OrthoOffCenterLH(float l, float r, float b, float t, float n, float f)
 {
 	TMatrix mat;
+	mat._11 = 2.0f / (r - l);
+	mat._22 = 2.0f / (t - b);
+	mat._33 = 1.0f / (f - n);
+	mat._43 = -n / (f - n);
+	mat._41 = (l + r) / (l - r);
+	mat._42 = (t + b) / (b - t);
 	return mat;
 }
 TMatrix TMatrix::OrthoLH(float w, float h, float n, float f)
@@ -223,6 +234,13 @@ TMatrix TMatrix::OrthoLH(float w, float h, float n, float f)
 }
 TMatrix TMatrix::OrthoOffCenterLH(float l, float r, float b, float t, float n, float f)
 {
-	return* this;
+	Identity();
+	_11 = 2.0f / (r - l);
+	_22 = 2.0f / (t - b);
+	_33 = 1.0f / (f - n);
+	_43 = -n / (f - n);
+	_41 = (l + r) / (l - r);
+	_42 = (t + b) / (b - t);
+	return *this;
 }
 

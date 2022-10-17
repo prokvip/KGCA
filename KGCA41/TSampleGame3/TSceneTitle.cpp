@@ -58,11 +58,12 @@ bool TSceneTitle::Frame()
 	matView.ViewLookAt(vPos, vTarget, vUp);
 
 	TMatrix matProj;
-	//matProj.PerspectiveFovLH(1.0f, 100.0f, 3.141592f*0.5f, 800.0f/600.0f);
-	matProj.OrthoLH(800, 600, 0.0f, 100.0f);
+	matProj.PerspectiveFovLH(1.0f, 100.0f, 3.141592f*0.5f, 800.0f/600.0f);
+	//matProj.OrthoLH(800, 600, 0.0f, 100.0f);
+	//matProj = matProj.OrthoOffCenterLH(-400, 400, -300, 300, 0.0f, 100.0f);
 	TMatrix m,s,t,c;
 	float fScale = cos(g_fGameTimer) * 0.5f + 0.5f;
-	s = TMath::Scale(400, 300, 10);
+	//s = TMath::Scale(400, 300, 10);
 	//m = TMath::RotationZ(g_fGameTimer);
 	//t = TMath::Translation(0.0f, 0, 0);
 	c = s * m * t;
