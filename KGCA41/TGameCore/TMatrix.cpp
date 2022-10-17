@@ -72,58 +72,55 @@ void TMatrix::Identity()
 	_41 = _42 = _43 = 0.0f;
 	_11 = _22 = _33 = _44 = 1.0f;
 }
-TMatrix TMatrix::Transpose()
+
+void TMatrix::Transpose()
 {
-	TMatrix m;
-	m._11 = _11; m._12 = _21; m._13 = _31; m._14 = _41;
-	m._21 = _12; m._22 = _22; m._23 = _32; m._24 = _42;
-	m._31 = _13; m._32 = _23; m._33 = _33; m._34 = _43;
-	m._41 = _14; m._42 = _24; m._43 = _34; m._44 = _44;
-	return m;
+	Identity();
+	_11 = _11; _12 = _21; _13 = _31; _14 = _41;
+	_21 = _12; _22 = _22; _23 = _32; _24 = _42;
+	_31 = _13; _32 = _23; _33 = _33; _34 = _43;
+	_41 = _14; _42 = _24; _43 = _34; _44 = _44;
 }
-TMatrix TMatrix::RotationX(float fRadian)
+
+void TMatrix::RotationX(float fRadian)
 {
+	Identity();
 	float fCosTheta = cos(fRadian);
 	float fSinTheta = sin(fRadian);
-	TMatrix m;
-	m._22 = fCosTheta; m._23 = fSinTheta;
-	m._32 = -fSinTheta; m._33 = fCosTheta;
-	return m;
+	_22 = fCosTheta; _23 = fSinTheta;
+	_32 = -fSinTheta; _33 = fCosTheta;
 }
-TMatrix TMatrix::RotationY(float fRadian)
+void TMatrix::RotationY(float fRadian)
 {
+	Identity();
 	float fCosTheta = cos(fRadian);
 	float fSinTheta = sin(fRadian);
-	TMatrix m;
-	m._11 = fCosTheta; m._13 = -fSinTheta;
-	m._31 = fSinTheta; m._33 = fCosTheta;
-	return m;
+	_11 = fCosTheta; _13 = -fSinTheta;
+	_31 = fSinTheta; _33 = fCosTheta;
 }
-TMatrix TMatrix::RotationZ(float fRadian)
+void TMatrix::RotationZ(float fRadian)
 {
+	Identity();
 	float fCosTheta = cos(fRadian);
 	float fSinTheta = sin(fRadian);
-	TMatrix m;
-	m._11 = fCosTheta; m._12 = fSinTheta;
-	m._21 = -fSinTheta; m._22 = fCosTheta;
-	return m;
+	_11 = fCosTheta; _12 = fSinTheta;
+	_21 = -fSinTheta; _22 = fCosTheta;	
 }
-TMatrix TMatrix::Scale(float x, float y, float z)
+void TMatrix::Scale(float x, float y, float z)
 {
-	TMatrix m;
-	m._11 = x;
-	m._22 = y;
-	m._33 = z;
-	return m;
+	Identity();
+	_11 = x;
+	_22 = y;
+	_33 = z;
 }
-TMatrix TMatrix::Translation(float x, float y, float z)
+void TMatrix::Translation(float x, float y, float z)
 {
-	TMatrix m;
-	m._41 = x;
-	m._42 = y;
-	m._43 = z;
-	return m;
+	Identity();
+	_41 = x;
+	_42 = y;
+	_43 = z;
 }
+
 TMatrix  TMatrix::operator* (TMatrix& matrix)
 {
 	TMatrix mat;
@@ -204,3 +201,28 @@ TMatrix TMatrix::PerspectiveFovLH(float fNearPlane,
 	memcpy((void*)&ret, this, 16 * sizeof(float));
 	return ret;
 }
+
+TMatrix OrthoLH(float w, float h, float n, float f)
+{
+	TMatrix mat;
+	return mat;
+}
+TMatrix OrthoOffCenterLH(float l, float r, float b, float t, float n, float f)
+{
+	TMatrix mat;
+	return mat;
+}
+TMatrix TMatrix::OrthoLH(float w, float h, float n, float f)
+{	
+	Identity();
+	_11 = 2.0f / w;
+	_22 = 2.0f / h;
+	_33 = 1.0f / (f - n);
+	_43 = -n / (f - n);
+	return *this;
+}
+TMatrix TMatrix::OrthoOffCenterLH(float l, float r, float b, float t, float n, float f)
+{
+	return* this;
+}
+

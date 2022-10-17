@@ -43,12 +43,12 @@ class TMatrix : public float4x4
 public:
 	TMatrix();
 	void Identity();
-	TMatrix Transpose();
-	TMatrix RotationX(float fRadian);
-	TMatrix RotationY(float fRadian);
-	TMatrix RotationZ(float fRadian);
-	TMatrix Scale(float x, float y, float z);
-	TMatrix Translation(float x, float y, float z);
+	void Transpose();
+	void RotationX(float fRadian);
+	void RotationY(float fRadian);
+	void RotationZ(float fRadian);
+	void Scale(float x, float y, float z);
+	void Translation(float x, float y, float z);	
 
 	void ObjectLookAt(TVector& vPosition,TVector& vTarget,TVector& vUp);
 	TMatrix ViewLookAt(TVector& vPosition,TVector& vTarget,
@@ -57,7 +57,58 @@ public:
 								float fFarPlane,
 								float fovy,
 								float Aspect);
+	TMatrix OrthoLH(float w, float h, float n, float f);
+	TMatrix OrthoOffCenterLH(float l, float r, float b, float t, float n, float f);
+	friend TMatrix OrthoLH(float w, float h, float n, float f);
+	friend TMatrix OrthoOffCenterLH(float l, float r, float b, float t, float n, float f);
 public:
 	TMatrix operator* (TMatrix& m);
 };
 
+
+namespace TMath
+{
+	static TMatrix RotationX(float fRadian)
+	{
+		float fCosTheta = cos(fRadian);
+		float fSinTheta = sin(fRadian);
+		TMatrix m;
+		m._22 = fCosTheta; m._23 = fSinTheta;
+		m._32 = -fSinTheta; m._33 = fCosTheta;
+		return m;
+	}
+	static TMatrix RotationY(float fRadian)
+	{
+		float fCosTheta = cos(fRadian);
+		float fSinTheta = sin(fRadian);
+		TMatrix m;
+		m._11 = fCosTheta; m._13 = -fSinTheta;
+		m._31 = fSinTheta; m._33 = fCosTheta;
+		return m;
+	}
+	static TMatrix RotationZ(float fRadian)
+	{
+		float fCosTheta = cos(fRadian);
+		float fSinTheta = sin(fRadian);
+		TMatrix m;
+		m._11 = fCosTheta; m._12 = fSinTheta;
+		m._21 = -fSinTheta; m._22 = fCosTheta;
+		return m;
+	}
+	static TMatrix Scale(float x, float y, float z)
+	{
+		TMatrix m;
+		m._11 = x;
+		m._22 = y;
+		m._33 = z;
+		return m;
+	}
+	static TMatrix Translation(float x, float y, float z)
+	{
+		TMatrix m;
+		m._41 = x;
+		m._42 = y;
+		m._43 = z;
+		return m;
+	}
+};

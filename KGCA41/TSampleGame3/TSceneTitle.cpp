@@ -33,7 +33,7 @@ bool TSceneTitle::Frame()
 		vPos.z -= 10.0f * g_fSecondPerFrame;
 		vTarget.z -= 10.0f * g_fSecondPerFrame;
 	}
-	if (I_Input.GetKey('A') == KEY_HOLD)
+	if (I_Input.GetKey('A') == KEY_HOLD) 
 	{
 		vPos.x -= 10.0f * g_fSecondPerFrame;
 		vTarget.x -= 10.0f * g_fSecondPerFrame;
@@ -58,16 +58,13 @@ bool TSceneTitle::Frame()
 	matView.ViewLookAt(vPos, vTarget, vUp);
 
 	TMatrix matProj;
-	matProj.PerspectiveFovLH(1.0f, 100.0f, 3.141592f*0.5f, 800.0f/600.0f);
-
+	//matProj.PerspectiveFovLH(1.0f, 100.0f, 3.141592f*0.5f, 800.0f/600.0f);
+	matProj.OrthoLH(800, 600, 0.0f, 100.0f);
 	TMatrix m,s,t,c;
 	float fScale = cos(g_fGameTimer) * 0.5f + 0.5f;
-	s = s.Scale(10, 10, 10);
-	m = m.RotationZ(g_fGameTimer);
-	//TVector vObjPos = { 0,0,0 };
-	//TVector vObjTarget = { 0,5,5 };
-	//m.ObjectLookAt(vObjPos, vObjTarget, vUp);
-	t = t.Translation(0.0f, 0, 0);
+	s = TMath::Scale(400, 300, 10);
+	//m = TMath::RotationZ(g_fGameTimer);
+	//t = TMath::Translation(0.0f, 0, 0);
 	c = s * m * t;
 	for (int i = 0; i < m_pBG->m_InitVertexList.size(); i++)
 	{
@@ -79,6 +76,9 @@ bool TSceneTitle::Frame()
 		TVector vWorld = v * c;
 		TVector vView  = vWorld * matView;
 		TVector vProj  = vView * matProj;
+		// float4 v = float(v, w) * m4x4;
+		// v.x / w, v.y / w, v.z / z, w/w;
+
 		float w = vProj.x * matProj._14 + vProj.y * matProj._24 + vProj.z * matProj._34 + 1.0f * matProj._44;
 		vProj.x /= w;
 		vProj.y /= w;
