@@ -30,6 +30,9 @@ class TBaseObject
 {
 public:
 	bool		m_IsNullable=true;
+	TMatrix		m_matWorld;
+	TMatrix		m_matView;
+	TMatrix		m_matProj;
 public:
 	ID3D11Device* m_pd3dDevice = nullptr;// 디바이스 객체
 	ID3D11DeviceContext* m_pImmediateContext = nullptr;
@@ -76,6 +79,7 @@ public:
 	virtual bool		Render();
 	virtual bool		PostRender();
 	virtual bool		Release() ;	
+	virtual void		SetMatrix(TMatrix* matWorld, TMatrix* matView, TMatrix* matProj);
 public:
 	TBaseObject()
 	{

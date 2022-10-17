@@ -231,6 +231,27 @@ TMatrix OrthoOffCenterLH(TMatrix& mat, float l, float r, float b, float t, float
 	mat._42 = (t + b) / (b - t);
 	return mat;
 }
+TMatrix PerspectiveFovLH(TMatrix& mat, float fNearPlane,
+	float fFarPlane,
+	float fovy,
+	float Aspect) // width / heght
+{
+
+	float    h, w, Q;
+
+	h = 1 / tan(fovy * 0.5f);  // 1/tans(x) = cot(x)
+	w = h / Aspect;
+
+	Q = fFarPlane / (fFarPlane - fNearPlane);
+
+	mat._11 = w;
+	mat._22 = h;
+	mat._33 = Q;
+	mat._43 = -Q * fNearPlane;
+	mat._34 = 1;
+	mat._44 = 0.0f;	
+	return mat;
+}
 TMatrix TMatrix::OrthoLH(float w, float h, float n, float f)
 {	
 	Identity();

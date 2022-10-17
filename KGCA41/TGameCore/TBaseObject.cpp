@@ -272,12 +272,28 @@ void   TBaseObject::UpdateVertexBuffer()
 }
 void   TBaseObject::UpdateConstantBuffer()
 {
-    m_cbData.matWorld.Transpose();
-    m_cbData.matView.Transpose();
-    m_cbData.matProj.Transpose();
+    m_cbData.matWorld = m_matWorld.Transpose();
+    m_cbData.matView = m_matView.Transpose();
+    m_cbData.matProj = m_matProj.Transpose();
     m_pImmediateContext->UpdateSubresource(
         m_pConstantBuffer, 0, nullptr,
         &m_cbData, 0, 0);
+}
+void	TBaseObject::SetMatrix(TMatrix* matWorld, TMatrix* matView,   TMatrix* matProj)
+{
+    if (matWorld != nullptr)
+    {
+        m_matWorld = *matWorld;
+    }
+    if (matView != nullptr)
+    {
+        m_matView = *matView;
+    }
+    if (matProj != nullptr)
+    {
+        m_matProj = *matProj;
+    }
+    UpdateConstantBuffer();
 }
 bool TBaseObject::Render()
 {
@@ -313,6 +329,7 @@ bool TBaseObject::Release()
 {
     if (m_pVertexBuffer) m_pVertexBuffer->Release();
     if (m_pIndexBuffer) m_pIndexBuffer->Release();
+    if (m_pConstantBuffer) m_pConstantBuffer->Release();
     if (m_pVertexLayout) m_pVertexLayout->Release();
     return true;
 }

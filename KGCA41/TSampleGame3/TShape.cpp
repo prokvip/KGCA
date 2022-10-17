@@ -10,10 +10,10 @@ void    TShapeBox::CreateVertexData()
 	  // 0    3  
 	  // ¾Õ¸é
 	m_VertexList.resize(24);
-	m_VertexList[0] = SimpleVertex(TVector(-1.0f, 1.0f, .0f),  TVector4(1.0f, 0.0f, 0.0f, 1.0f), TVector2(0.0f, 0.0f));
-	m_VertexList[1] = SimpleVertex(TVector(1.0f, 1.0f, .0f), TVector4(1.0f, 0.0f, 0.0f, 1.0f), TVector2(1.0f, 0.0f));
-	m_VertexList[2] = SimpleVertex(TVector(1.0f, -1.0f, .0f),  TVector4(1.0f, 0.0f, 0.0f, 1.0f), TVector2(1.0f, 1.0f));
-	m_VertexList[3] = SimpleVertex(TVector(-1.0f, -1.0f, .0f),  TVector4(1.0f, 0.0f, 0.0f, 1.0f), TVector2(0.0f, 1.0f));
+	m_VertexList[0] = SimpleVertex(TVector(-1.0f, 1.0f, -1.0f),  TVector4(1.0f, 0.0f, 0.0f, 1.0f), TVector2(0.0f, 0.0f));
+	m_VertexList[1] = SimpleVertex(TVector(1.0f, 1.0f, -1.0f), TVector4(1.0f, 0.0f, 0.0f, 1.0f), TVector2(1.0f, 0.0f));
+	m_VertexList[2] = SimpleVertex(TVector(1.0f, -1.0f, -1.0f),  TVector4(1.0f, 0.0f, 0.0f, 1.0f), TVector2(1.0f, 1.0f));
+	m_VertexList[3] = SimpleVertex(TVector(-1.0f, -1.0f, -1.0f),  TVector4(1.0f, 0.0f, 0.0f, 1.0f), TVector2(0.0f, 1.0f));
 	// µÞ¸é
 	m_VertexList[4] = SimpleVertex(TVector(1.0f, 1.0f, 1.0f),  TVector4(0.0f, 0.0f, 0.0f, 1.0f), TVector2(0.0f, 0.0f));
 	m_VertexList[5] = SimpleVertex(TVector(-1.0f, 1.0f, 1.0f),  TVector4(0.0f, 1.0f, 0.0f, 1.0f), TVector2(1.0f, 0.0f));
@@ -67,63 +67,13 @@ bool TShapeBox::Render()
     return true;
 }
 bool TShapeBox::Frame()
-{
-	//camera
-	TMatrix matView;
-	TVector vPos = { 0,5,-5 };
-	static TVector vPosMovement = { 0,0,0 };
-	TVector vTarget = { 0,0,0 };
-	if (I_Input.GetKey('W') == KEY_HOLD)
-	{
-		vPosMovement.z += 10.0f * g_fSecondPerFrame;
-		//vTarget.z += 10.0f * g_fSecondPerFrame;
-	}
-	if (I_Input.GetKey('S') == KEY_HOLD)
-	{
-		vPosMovement.z -= 10.0f * g_fSecondPerFrame;
-		//vTarget.z -= 10.0f * g_fSecondPerFrame;
-	}
-	if (I_Input.GetKey('A') == KEY_HOLD)
-	{
-		vPosMovement.x -= 10.0f * g_fSecondPerFrame;
-		//vTarget.x -= 10.0f * g_fSecondPerFrame;
-	}
-	if (I_Input.GetKey('D') == KEY_HOLD)
-	{
-		vPosMovement.x += 10.0f * g_fSecondPerFrame;
-		//vTarget.x += 10.0f * g_fSecondPerFrame;
-	}
-	if (I_Input.GetKey('Q') == KEY_HOLD)
-	{
-		vPosMovement.y += 10.0f * g_fSecondPerFrame;
-		//vTarget.y += 10.0f * g_fSecondPerFrame;
-	}
-	if (I_Input.GetKey('E') == KEY_HOLD)
-	{
-		vPosMovement.y -= 10.0f * g_fSecondPerFrame;
-		//vTarget.y -= 10.0f * g_fSecondPerFrame;
-	}
-
-	TVector vUp = { 0,1,0 };
-	TMatrix mCamera = TMath::RotationY(g_fGameTimer);
-	vPos = (vPos+ vPosMovement) * mCamera;
-	matView.ViewLookAt(vPos, vTarget, vUp);
-
-	TMatrix matProj;
-	matProj.PerspectiveFovLH(1.0f, 100.0f, 3.141592f * 0.5f, 800.0f / 600.0f);
-	//matProj.OrthoLH(800, 600, 0.0f, 100.0f);
-	OrthoOffCenterLH(matProj ,-400, 400, -300, 300, 0.0f, 100.0f);
+{	
 	TMatrix m, s, t, c;
 	float fScale = cos(g_fGameTimer) * 0.5f + 0.5f;
 	//s = TMath::Scale(400, 300, 10);
 	//m = TMath::RotationZ(g_fGameTimer);
 	//t = TMath::Translation(0.0f, 0, 0);
-	c = s * m * t;
-
-	m_cbData.matWorld = c;
-	m_cbData.matView = matView;
-	m_cbData.matProj = matProj;
+	m_matWorld = s * m * t;
 	m_cbData.fTimer = g_fGameTimer;
-	UpdateConstantBuffer();
 	return true;
 }

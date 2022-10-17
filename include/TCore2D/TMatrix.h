@@ -59,8 +59,10 @@ public:
 								float Aspect);
 	TMatrix OrthoLH(float w, float h, float n, float f);
 	TMatrix OrthoOffCenterLH(float l, float r, float b, float t, float n, float f);
+public:
 	friend TMatrix OrthoLH(TMatrix& mat, float w, float h, float n, float f);
 	friend TMatrix OrthoOffCenterLH(TMatrix& mat, float l, float r, float b, float t, float n, float f);
+	friend TMatrix PerspectiveFovLH(TMatrix& mat, float fNearPlane,float fFarPlane,float fovy,float Aspect);
 public:
 	TMatrix operator* (TMatrix& m);
 };

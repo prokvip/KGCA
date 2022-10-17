@@ -19,84 +19,23 @@ bool TSceneTitle::Init()
 	m_pBoxObj = new TShapeBox;
 	m_pBoxObj->Create(m_pd3dDevice, m_pImmediateContext, L"DefaultObject.txt", L"../../data/gameHeight.png");
 
+	m_pMainCamera = new TCamera;
+	m_pMainCamera->CreateViewMatrix(TVector(0,0,-10), TVector(0, 0, 0), TVector(0,1, 0) );
+	m_pMainCamera->CreateProjMatrix(1.0f, 100.0f, T_PI * 0.5f,
+									(float)g_rtClient.right/ (float)g_rtClient.bottom);
 	return true;
 }
 bool TSceneTitle::Frame()
 {	
-	////camera
-	//TMatrix matView;
-	//static TVector vPos = { 0,0,-10 };
-	//static TVector vTarget = { 0,0,10 };
-	//if (I_Input.GetKey('W') == KEY_HOLD)
-	//{
-	//	vPos.z += 10.0f * g_fSecondPerFrame;
-	//	vTarget.z += 10.0f * g_fSecondPerFrame;
-	//}
-	//if (I_Input.GetKey('S') == KEY_HOLD)
-	//{
-	//	vPos.z -= 10.0f * g_fSecondPerFrame;
-	//	vTarget.z -= 10.0f * g_fSecondPerFrame;
-	//}
-	//if (I_Input.GetKey('A') == KEY_HOLD) 
-	//{
-	//	vPos.x -= 10.0f * g_fSecondPerFrame;
-	//	vTarget.x -= 10.0f * g_fSecondPerFrame;
-	//}
-	//if (I_Input.GetKey('D') == KEY_HOLD)
-	//{
-	//	vPos.x += 10.0f * g_fSecondPerFrame;
-	//	vTarget.x += 10.0f * g_fSecondPerFrame;
-	//}
-	//if (I_Input.GetKey('Q') == KEY_HOLD)
-	//{
-	//	vPos.y += 10.0f * g_fSecondPerFrame;
-	//	vTarget.y += 10.0f * g_fSecondPerFrame;
-	//}
-	//if (I_Input.GetKey('E') == KEY_HOLD)
-	//{
-	//	vPos.y-= 10.0f * g_fSecondPerFrame;
-	//	vTarget.y -= 10.0f * g_fSecondPerFrame;
-	//}
-	//
-	//TVector vUp = { 0,1,0 };
-	//matView.ViewLookAt(vPos, vTarget, vUp);
-
-	//TMatrix matProj;
-	//matProj.PerspectiveFovLH(1.0f, 100.0f, 3.141592f*0.5f, 800.0f/600.0f);
-	////matProj.OrthoLH(800, 600, 0.0f, 100.0f);
-	////matProj = matProj.OrthoOffCenterLH(-400, 400, -300, 300, 0.0f, 100.0f);
-	//TMatrix m,s,t,c;
-	//float fScale = cos(g_fGameTimer) * 0.5f + 0.5f;
-	////s = TMath::Scale(400, 300, 10);
-	////m = TMath::RotationZ(g_fGameTimer);
-	////t = TMath::Translation(0.0f, 0, 0);
-	//c = s * m * t;
-	//for (int i = 0; i < m_pBG->m_InitVertexList.size(); i++)
-	//{
-	//	TVector v = m_pBG->m_InitVertexList[i].p;
-	//	//v = v * s; // s * r * t 		
-	//	//v = v * m; 
-	//	//v = v * t;
-	//	// workd transform
-	//	TVector vWorld = v * c;
-	//	TVector vView  = vWorld * matView;
-	//	TVector vProj  = vView * matProj;
-	//	// float4 v = float(v, w) * m4x4;
-	//	// v.x / w, v.y / w, v.z / z, w/w;
-
-	//	float w = vProj.x * matProj._14 + vProj.y * matProj._24 + vProj.z * matProj._34 + 1.0f * matProj._44;
-	//	vProj.x /= w;
-	//	vProj.y /= w;
-	//	vProj.z /= w;
-	//	m_pBG->m_VertexList[i].p = vProj;
-	//}
-	//m_pBG->UpdateVertexBuffer();
+	m_pMainCamera->Frame();
 	m_pBoxObj->Frame();
 	return true;
 }
 bool TSceneTitle::Render()
 {
+	//m_pBG->SetMatrix(nullptr, &m_pMainCamera->m_matView, &m_pMainCamera->m_matProj);
 	//m_pBG->Render();	
+	m_pBoxObj->SetMatrix(nullptr, &m_pMainCamera->m_matView, &m_pMainCamera->m_matProj);
 	m_pBoxObj->Render();
 	return true;
 }

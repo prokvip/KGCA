@@ -150,6 +150,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Sample.h" />
+    <ClInclude Include="TCamera.h" />
     <ClInclude Include="TEffect2D.h" />
     <ClInclude Include="TProjectile2D.h" />
     <ClInclude Include="TSceneInGame.h" />
@@ -158,6 +159,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Sample.cpp" />
+    <ClCompile Include="TCamera.cpp" />
     <ClCompile Include="TEffect2D.cpp" />
     <ClCompile Include="TProjectile2D.cpp" />
     <ClCompile Include="TSceneInGame.cpp" />
