@@ -32,11 +32,12 @@ bool TSceneTitle::Frame()
 	return true;
 }
 bool TSceneTitle::Render()
-{
-	//m_pBG->SetMatrix(nullptr, &m_pMainCamera->m_matView, &m_pMainCamera->m_matProj);
-	//m_pBG->Render();	
+{	
 	m_pBoxObj->SetMatrix(nullptr, &m_pMainCamera->m_matView, &m_pMainCamera->m_matProj);
 	m_pBoxObj->Render();
+
+	//m_pBG->SetMatrix(nullptr, &m_pMainCamera->m_matView, &m_pMainCamera->m_matProj);
+	//m_pBG->Render();
 	return true;
 }
 bool TSceneTitle::Release()
