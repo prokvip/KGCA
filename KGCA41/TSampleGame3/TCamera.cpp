@@ -13,7 +13,7 @@ void TCamera::CreateProjMatrix(float fNear, float fFar, float fFovY, float fAspe
 	m_fFar = fFar;
 	m_fFovY = fFovY;
 	m_fAspectRatio = fAspectRatio;
-	PerspectiveFovLH(m_matProj, 1.0f, 100.0f, 3.141592f * 0.5f, 800.0f / 600.0f);
+	PerspectiveFovLH(m_matProj, m_fNear, m_fFar, m_fFovY, m_fAspectRatio);
 	//matProj.OrthoLH(800, 600, 0.0f, 100.0f);
 	//OrthoOffCenterLH(matProj ,-400, 400, -300, 300, 0.0f, 100.0f);
 }
