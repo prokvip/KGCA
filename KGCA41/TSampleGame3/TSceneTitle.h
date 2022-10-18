@@ -9,7 +9,8 @@ class TSceneTitle :   public TScene
 public:
 	TUser2D*		m_pUser;
 	TBaseObject*	m_pBG;
-	TShapeBox* m_pBoxObj=nullptr;
+	TShapeBox* m_pBoxObjA=nullptr;
+	TShapeBox* m_pBoxObjB = nullptr;
 	TCamera* m_pMainCamera = nullptr;
 public:
 	virtual bool		Init();

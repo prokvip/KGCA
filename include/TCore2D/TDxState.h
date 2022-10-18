@@ -8,6 +8,8 @@ public:
 	static ID3D11RasterizerState* g_pDefaultRSWireFrame;
 	static ID3D11RasterizerState* g_pDefaultRSSolid;
 	static ID3D11BlendState* g_pAlphaBlend;
+	static ID3D11DepthStencilState* g_pDefaultDepthStencil;
+	static ID3D11DepthStencilState* g_pGreaterDepthStencil;
 
 	static bool SetState(ID3D11Device* pd3dDevice);
 	static bool Release();

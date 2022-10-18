@@ -68,12 +68,12 @@ bool TShapeBox::Render()
 }
 bool TShapeBox::Frame()
 {	
-	TMatrix m, s, t, c;
-	float fScale = cos(g_fGameTimer) * 0.5f + 0.5f;
+	//TMatrix m, s, t, c;
+	//float fScale = cos(g_fGameTimer) * 0.5f + 0.5f;
 	//s = TMath::Scale(400, 300, 10);
 	//m = TMath::RotationZ(g_fGameTimer);
 	//t = TMath::Translation(0.0f, 0, 0);
-	m_matWorld = s * m * t;
+	//m_matWorld = s * m * t;
 	m_cbData.fTimer = g_fGameTimer;
 	return true;
 }

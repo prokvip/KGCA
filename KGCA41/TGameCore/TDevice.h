@@ -9,6 +9,7 @@ public:
 
 	ComPtr<IDXGISwapChain>			m_pSwapChain = nullptr;
 	ComPtr<ID3D11RenderTargetView>	m_pRTV = nullptr;
+	ComPtr<ID3D11DepthStencilView>	m_pDepthStencilView = nullptr;
 	D3D11_VIEWPORT					m_vp;
 public:
 	// 1)디바이스 생성
@@ -20,6 +21,8 @@ public:
 	// 4)랜더타켓뷰 생성
 	HRESULT CreateRenderTargetView();
 	// 5)뷰포트 설정
+	HRESULT CreateDepthStencilView();
+	// 6)뷰포트 설정
 	void  CreateViewport();
 	virtual HRESULT		ResizeDevice(UINT width, UINT height);
 public:

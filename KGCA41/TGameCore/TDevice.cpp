@@ -16,6 +16,7 @@ HRESULT		TDevice::ResizeDevice(UINT width, UINT height)
     DeleteDXResource();
     m_pImmediateContext->OMSetRenderTargets(0, nullptr, NULL);
     m_pRTV.ReleaseAndGetAddressOf();
+    m_pDepthStencilView.ReleaseAndGetAddressOf();
     //	변경된 윈도우의 크기를 얻고 백 버퍼의 크기를 재 조정.
     // 백버퍼의 크기를 조정한다.
     DXGI_SWAP_CHAIN_DESC CurrentSD, AfterSD;
@@ -26,6 +27,10 @@ HRESULT		TDevice::ResizeDevice(UINT width, UINT height)
    //	변경된 백 버퍼의 크기를 얻고 렌더타켓 뷰를 다시 생성 및 적용.
         //	뷰포트 재 지정.
     if (FAILED(hr = CreateRenderTargetView()))
+    {
+        return false;
+    }
+    if (FAILED(hr = CreateDepthStencilView()))
     {
         return false;
     }
@@ -50,6 +55,10 @@ bool		TDevice::Init()
         return false;
     }
     if (FAILED(hr = CreateRenderTargetView()))
+    {
+        return false;
+    }
+    if (FAILED(hr = CreateDepthStencilView()))
     {
         return false;
     }
@@ -144,7 +153,42 @@ HRESULT TDevice::CreateRenderTargetView()
     pBackBuffer->Release();
     return hr;
 }
+HRESULT TDevice::CreateDepthStencilView()
+{
+    HRESULT hr;
+    D3D11_RENDER_TARGET_VIEW_DESC rtvd;
+    m_pRTV->GetDesc(&rtvd);
+    DXGI_SWAP_CHAIN_DESC scd;
+    m_pSwapChain->GetDesc(&scd);
 
+    // 1번 텍스처를 생성한다.
+    ComPtr<ID3D11Texture2D>  pDSTexture;
+    D3D11_TEXTURE2D_DESC td;
+    ZeroMemory(&td, sizeof(td));
+    td.Width= scd.BufferDesc.Width;
+    td.Height= scd.BufferDesc.Height;
+    td.MipLevels=1;
+    td.ArraySize=1;
+    td.Format = DXGI_FORMAT_R24G8_TYPELESS;
+    td.SampleDesc.Count=1;
+    td.Usage = D3D11_USAGE_DEFAULT;    
+    td.CPUAccessFlags=0;
+    td.MiscFlags=0;
+    td.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+
+    hr = m_pd3dDevice->CreateTexture2D(&td, NULL, pDSTexture.GetAddressOf());
+    // 2번 깊이스텐실 뷰로 생성한다.
+    D3D11_DEPTH_STENCIL_VIEW_DESC dtvd;
+    ZeroMemory(&dtvd, sizeof(dtvd));
+    dtvd.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+    dtvd.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+    hr=m_pd3dDevice->CreateDepthStencilView(pDSTexture.Get(), &dtvd, m_pDepthStencilView.GetAddressOf());
+    // 3번 뷰 적용
+    //m_pImmediateContext->OMSetRenderTargets(1, m_pRTV.GetAddressOf(),
+       //m_pDepthStencilView.Get());
+    // 4번 깊이스텐실 뷰 상태 객체 생성해서 적용
+    return hr;
+}
 void TDevice::CreateViewport()
 {
     // 5)뷰포트 설정

@@ -1,6 +1,7 @@
 #include "TSceneTitle.h"
 #include "TInput.h"
-bool     TSceneTitle::IsNextScene()
+#include "TDxState.h"
+bool TSceneTitle::IsNextScene()
 {
 	//if (m_btnStart->m_CurrentState == UI_SELECT)
 	//{
@@ -16,11 +17,16 @@ bool TSceneTitle::Init()
 	m_pBG = new TBaseObject;
 	m_pBG->Create(m_pd3dDevice,m_pImmediateContext,shaderfilename,L"../../data/gameHeight.png");
 	
-	m_pBoxObj = new TShapeBox;
-	m_pBoxObj->Create(m_pd3dDevice, m_pImmediateContext, L"DefaultObject.txt", L"../../data/gameHeight.png");
+	m_pBoxObjA = new TShapeBox;
+	m_pBoxObjA->Create(m_pd3dDevice, m_pImmediateContext, L"DefaultObject.txt", L"../../data/gameHeight.png");
+	m_pBoxObjA->m_matWorld.Translation(0, 0, 2);
+
+	m_pBoxObjB = new TShapeBox;
+	m_pBoxObjB->Create(m_pd3dDevice, m_pImmediateContext, L"DefaultObject.txt", L"../../data/gameHeight.png");
+	m_pBoxObjB->m_matWorld.Translation(1, 0, 4);
 
 	m_pMainCamera = new TCamera;
-	m_pMainCamera->CreateViewMatrix(TVector(0,0,-10), TVector(0, 0, 0), TVector(0,1, 0) );
+	m_pMainCamera->CreateViewMatrix(TVector(0,0,-2), TVector(0, 0, 0), TVector(0,1, 0) );
 	m_pMainCamera->CreateProjMatrix(1.0f, 100.0f, T_PI * 0.5f,
 									(float)g_rtClient.right/ (float)g_rtClient.bottom);
 	return true;
@@ -28,14 +34,20 @@ bool TSceneTitle::Init()
 bool TSceneTitle::Frame()
 {	
 	m_pMainCamera->Frame();
-	m_pBoxObj->Frame();
+	m_pBoxObjA->Frame();
+	m_pBoxObjB->Frame();
 	return true;
 }
 bool TSceneTitle::Render()
 {	
-	m_pBoxObj->SetMatrix(nullptr, &m_pMainCamera->m_matView, &m_pMainCamera->m_matProj);
-	m_pBoxObj->Render();
-
+	m_pImmediateContext->OMSetDepthStencilState(TDxState::g_pDefaultDepthStencil,
+		0xff);
+	m_pBoxObjA->SetMatrix(nullptr, &m_pMainCamera->m_matView, &m_pMainCamera->m_matProj);
+	m_pBoxObjA->Render();
+	/*m_pImmediateContext->OMSetDepthStencilState(TDxState::g_pGreaterDepthStencil,
+		0xff);*/
+	m_pBoxObjB->SetMatrix(nullptr, &m_pMainCamera->m_matView, &m_pMainCamera->m_matProj);
+	m_pBoxObjB->Render();
 	//m_pBG->SetMatrix(nullptr, &m_pMainCamera->m_matView, &m_pMainCamera->m_matProj);
 	//m_pBG->Render();
 	return true;
@@ -43,7 +55,10 @@ bool TSceneTitle::Render()
 bool TSceneTitle::Release()
 {
 	m_pBG->Release();	
-	m_pBoxObj->Release();
-	delete m_pBoxObj;
+	m_pBoxObjA->Release();
+	delete m_pBoxObjA;
+
+	m_pBoxObjB->Release();
+	delete m_pBoxObjB;
 	return true;
 }

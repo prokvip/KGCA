@@ -5,6 +5,10 @@ ID3D11BlendState* TDxState::g_pAlphaBlend = nullptr;
 
 ID3D11RasterizerState* TDxState::g_pDefaultRSWireFrame = nullptr;
 ID3D11RasterizerState* TDxState::g_pDefaultRSSolid = nullptr;
+
+
+ID3D11DepthStencilState* TDxState::g_pDefaultDepthStencil = nullptr;
+ID3D11DepthStencilState* TDxState::g_pGreaterDepthStencil = nullptr;
 bool TDxState::SetState(ID3D11Device* pd3dDevice)
 {
     HRESULT hr;
@@ -73,6 +77,21 @@ bool TDxState::SetState(ID3D11Device* pd3dDevice)
         D3D11_COLOR_WRITE_ENABLE_ALL;
     pd3dDevice->CreateBlendState(&bd, &g_pAlphaBlend);
 
+    D3D11_DEPTH_STENCIL_DESC dsd;
+    ZeroMemory(&dsd, sizeof(dsd));
+    dsd.DepthEnable = TRUE;
+    // 0.5f * mask(1) --> output(0.5)
+    dsd.DepthWriteMask= D3D11_DEPTH_WRITE_MASK_ALL;
+    dsd.DepthFunc= D3D11_COMPARISON_LESS_EQUAL;
+   /* BOOL StencilEnable;
+    UINT8 StencilReadMask;
+    UINT8 StencilWriteMask;
+    D3D11_DEPTH_STENCILOP_DESC FrontFace;
+    D3D11_DEPTH_STENCILOP_DESC BackFace;*/
+    hr=pd3dDevice->CreateDepthStencilState(&dsd, &g_pDefaultDepthStencil);
+    dsd.DepthFunc = D3D11_COMPARISON_GREATER;
+    hr = pd3dDevice->CreateDepthStencilState(&dsd, &g_pGreaterDepthStencil);
+    
 	return true;
 }
 bool TDxState::Release() 
@@ -82,5 +101,7 @@ bool TDxState::Release()
     if (g_pDefaultSSMirror) g_pDefaultSSMirror->Release();
     if (g_pDefaultRSSolid)g_pDefaultRSSolid->Release();
     if (g_pDefaultRSWireFrame)g_pDefaultRSWireFrame->Release();
+    if (g_pDefaultDepthStencil)g_pDefaultDepthStencil->Release();
+    if (g_pGreaterDepthStencil)g_pGreaterDepthStencil->Release();
 	return true;
 }
