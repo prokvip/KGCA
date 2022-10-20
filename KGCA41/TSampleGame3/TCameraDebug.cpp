@@ -20,36 +20,48 @@ void TCameraDebug::CreateProjMatrix(float fNear, float fFar, float fFovY, float 
 }
 bool TCameraDebug::Frame()
 {
+	if (I_Input.GetKey(VK_SPACE) == KEY_HOLD)
+	{
+		m_fSpeed += g_fSecondPerFrame * 100.0f;
+	}
+	else
+	{
+		m_fSpeed -= g_fSecondPerFrame * 100.0f;
+	}
+	m_fSpeed = max(10.0f, m_fSpeed);
+	m_fSpeed = min(100.0f, m_fSpeed);
+
 	if (I_Input.GetKey('W') == KEY_HOLD)
 	{
-		TVector v = m_vLook * 10.0f * g_fSecondPerFrame;
+		TVector v = m_vLook * m_fSpeed * g_fSecondPerFrame;
 		m_vPos += v;
 	}
 	if (I_Input.GetKey('S') == KEY_HOLD)
 	{
-		TVector v = m_vLook * -10.0f * g_fSecondPerFrame;
+		TVector v = m_vLook * -m_fSpeed * g_fSecondPerFrame;
 		m_vPos += v;
 	}
 	if (I_Input.GetKey('A') == KEY_HOLD)
 	{
-		TVector v = m_vRight * 10.0f * g_fSecondPerFrame;
+		TVector v = m_vRight * m_fSpeed * g_fSecondPerFrame;
 		m_vPos += v;
 	}
 	if (I_Input.GetKey('D') == KEY_HOLD)
 	{
-		TVector v = m_vRight * -10.0f * g_fSecondPerFrame;
+		TVector v = m_vRight * -m_fSpeed * g_fSecondPerFrame;
 		m_vPos += v;
 	}
 	if (I_Input.GetKey('Q') == KEY_HOLD)
 	{
-		TVector v = m_vUp * 10.0f * g_fSecondPerFrame;
+		TVector v = m_vUp * m_fSpeed * g_fSecondPerFrame;
 		m_vPos += v;
 	}
 	if (I_Input.GetKey('E') == KEY_HOLD)
 	{
-		TVector v = m_vUp * -10.0f * g_fSecondPerFrame;
+		TVector v = m_vUp * -m_fSpeed * g_fSecondPerFrame;
 		m_vPos += v;
 	}
+	
 
 	TBASIS_EX::TVector3 vPos;
 	vPos.x = m_vPos.x;

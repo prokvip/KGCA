@@ -11,6 +11,7 @@ public:
 	float     m_fPitch = 0.0f;
 	float     m_fRoll = 0.0f;
 	float     m_fDistance = 0.0f;
+	float     m_fSpeed =10.0f;
 public:
 	TVector			m_vTarget = { 0,0,0 };
 	float			m_fNear;
