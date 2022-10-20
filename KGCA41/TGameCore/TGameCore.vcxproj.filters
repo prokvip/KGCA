@@ -16,6 +16,9 @@
     <Filter Include="Scene">
       <UniqueIdentifier>{49c5718a-1c66-4849-81d6-f7f91b8986d5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Math">
+      <UniqueIdentifier>{7ace5988-8735-480b-85e0-e5abc8147489}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TStd.h">
@@ -99,6 +102,9 @@
     <ClInclude Include="TCamera.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="TMath.h">
+      <Filter>Math</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="TWindow.cpp">
@@ -178,6 +184,9 @@
     </ClCompile>
     <ClCompile Include="TCamera.cpp">
       <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="TMath.cpp">
+      <Filter>Math</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

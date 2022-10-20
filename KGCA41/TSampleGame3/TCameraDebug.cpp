@@ -1,5 +1,6 @@
 #include "TCameraDebug.h"
 #include "TInput.h"
+#include "TMath.h"
 void TCameraDebug::CreateViewMatrix(TVector vEye, TVector vAt, TVector vUp)
 {
 	m_vPos = vEye;
@@ -50,10 +51,35 @@ bool TCameraDebug::Frame()
 		m_vPos += v;
 	}
 
-	//TVector vUp = { 0,1,0 };
-	////TMatrix mCamera = TMath::RotationY(g_fGameTimer);
-	////vPos = (vPos + vPosMovement) * mCamera;
-	//m_matView.ViewLookAt(m_vPos, m_vTarget, m_vUp);
+	TBASIS_EX::TVector3 vPos;
+	vPos.x = m_vPos.x;
+	vPos.y = m_vPos.y;
+	vPos.z = m_vPos.z;
+
+	//////////////////////////// DebugCamera ////////////////////////////
+	TBASIS_EX::TMatrix matWorld;
+	TBASIS_EX::TMatrix matView;
+	TBASIS_EX::TMatrix matRotation;
+	TBASIS_EX::TQuaternion m_qRotation;
+	TBASIS_EX::D3DXQuaternionRotationYawPitchRoll(&m_qRotation, m_fYaw, m_fPitch, m_fRoll);
+	TBASIS_EX::D3DXMatrixAffineTransformation(&matWorld,1.0f, NULL, &m_qRotation, &vPos);
+	TBASIS_EX::D3DXMatrixInverse(&matView, NULL, &matWorld);
+	m_matView = *((TMatrix*)&matView);
+	
+	//////////////////////////// Model View////////////////////////////
+	/*TVector vLocalUp = { 0.0f, 1.0f, 0.0f };
+	TVector vLocalLook = { 0.0f, 0.0f, 1.0f };
+
+	TBASIS_EX::TMatrix matRotation;
+	TBASIS_EX::D3DXMatrixRotationYawPitchRoll(
+		&matRotation, m_fYaw, 0, m_fRoll);
+	TMatrix* matR = (TMatrix*)&matRotation;
+	
+	TVector vWorldLook = vLocalLook * (*matR);
+	TVector vWorldUp = vLocalUp * (*matR);
+	TVector vWorld = vWorldLook * 10.0f;
+	m_vPos = m_vTarget - vWorld;
+	m_matView.ViewLookAt(m_vPos, m_vTarget, m_vUp);*/
 
 	Update();
 	return true;

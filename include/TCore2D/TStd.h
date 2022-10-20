@@ -11,6 +11,7 @@
 #include <d3d11.h>
 #include <d3dcompiler.h>
 #include "TVector.h"
+#include "TMath.h"
 #include <wrl.h> // windows runtime c++ templace library(wrl)
 #pragma comment(lib, "d3d11.lib")
 #pragma comment(lib, "d3dcompiler.lib")
