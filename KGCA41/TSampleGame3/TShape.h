@@ -1,18 +1,13 @@
 #pragma once
 #include "TBaseObject.h"
-class TObject3D : public TBaseObject
-{
-public:
-	TObject3D() {};
-	virtual ~TObject3D() {};
-};
-class TShape : public TObject3D
+
+class TShape : public TBaseObject
 {
 public:
 	TShape() {};
 	virtual ~TShape() {};
 };
-class TShapeBox : public TObject3D
+class TShapeBox : public TShape
 {
 public:
 	virtual void		CreateVertexData() override;
@@ -24,3 +19,25 @@ public:
 	virtual ~TShapeBox() {};
 };
 
+class TShapeLine : public TShape
+{
+public:
+	virtual void		CreateVertexData() override;
+	virtual void		CreateIndexData() override;
+	virtual bool		Frame() override;
+	virtual bool		Render() override;
+public:
+	TShapeLine() {};
+	virtual ~TShapeLine() {};
+};
+
+
+class TShapeDirectionLine : public TShapeLine
+{
+public:
+	virtual void		CreateVertexData() override;
+	virtual void		CreateIndexData() override;
+public:
+	TShapeDirectionLine() {};
+	virtual ~TShapeDirectionLine() {};
+};

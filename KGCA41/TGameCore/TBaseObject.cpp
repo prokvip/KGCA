@@ -259,6 +259,11 @@ bool	TBaseObject::Create(
     {
         m_pTextureSRV = m_pTexture->m_pTextureSRV;
     }
+
+    if (!Init())
+    {
+        return false;
+    }
     return true;
 }
 bool	TBaseObject::Init()
@@ -299,6 +304,7 @@ void	TBaseObject::SetMatrix(TMatrix* matWorld, TMatrix* matView,   TMatrix* matP
     {
         m_matProj = *matProj;
     }
+   
     UpdateConstantBuffer();
 }
 bool TBaseObject::Render()

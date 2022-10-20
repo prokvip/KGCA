@@ -23,16 +23,16 @@ bool TSceneTitle::Init()
 	m_pMap->Create(m_pd3dDevice, m_pImmediateContext, L"DefaultObject.txt", L"../../data/map/Tile50.jpg");
 	
 
-	m_pBoxObjA = new TShapeBox;
+	m_pBoxObjA = new TObjectBox;
 	m_pBoxObjA->Create(m_pd3dDevice, m_pImmediateContext, L"DefaultObject.txt", L"../../data/object/20200428_185613.jpg");
 	m_pBoxObjA->m_matWorld.Translation(0, 0, 2);
 
-	m_pBoxObjB = new TShapeBox;
+	m_pBoxObjB = new TObjectBox;
 	m_pBoxObjB->Create(m_pd3dDevice, m_pImmediateContext, L"DefaultObject.txt", L"../../data/_RAINBOW.bmp");
 	m_pBoxObjB->m_matWorld.Translation(1, 0, 4);
 
-	m_pMainCamera = new TCamera;
-	m_pMainCamera->CreateViewMatrix(TVector(0,100,-50), TVector(0, 0, 0), TVector(0,1, 0) );
+	m_pMainCamera = new TCameraDebug;
+	m_pMainCamera->CreateViewMatrix(TVector(0,10,-10), TVector(0, 0, 0), TVector(0,1, 0) );
 	m_pMainCamera->CreateProjMatrix(1.0f, 10000.0f, T_PI * 0.25f,
 									(float)g_rtClient.right/ (float)g_rtClient.bottom);
 	return true;
@@ -41,6 +41,10 @@ bool TSceneTitle::Frame()
 {	
 	m_pMainCamera->Frame();
 	m_pBoxObjA->Frame();
+	m_pBoxObjA->m_matWorld.RotationY(g_fGameTimer);
+	m_pBoxObjA->m_matWorld._41 = m_pBoxObjA->m_vPos.x;
+	m_pBoxObjA->m_matWorld._42 = m_pBoxObjA->m_vPos.y;
+	m_pBoxObjA->m_matWorld._43 = m_pBoxObjA->m_vPos.z;
 	m_pBoxObjB->Frame();
 	return true;
 }
@@ -53,12 +57,10 @@ bool TSceneTitle::Render()
 
 	m_pBoxObjA->SetMatrix(nullptr, &m_pMainCamera->m_matView, &m_pMainCamera->m_matProj);
 	m_pBoxObjA->Render();
-	/*m_pImmediateContext->OMSetDepthStencilState(TDxState::g_pGreaterDepthStencil,
-		0xff);*/
+	///*m_pImmediateContext->OMSetDepthStencilState(TDxState::g_pGreaterDepthStencil,
+	//	0xff);*/
 	m_pBoxObjB->SetMatrix(nullptr, &m_pMainCamera->m_matView, &m_pMainCamera->m_matProj);
 	m_pBoxObjB->Render();
-	//m_pBG->SetMatrix(nullptr, &m_pMainCamera->m_matView, &m_pMainCamera->m_matProj);
-	//m_pBG->Render();
 	return true;
 }
 bool TSceneTitle::Release()

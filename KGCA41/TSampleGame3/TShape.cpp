@@ -77,3 +77,65 @@ bool TShapeBox::Frame()
 	m_cbData.fTimer = g_fGameTimer;
 	return true;
 }
+
+void    TShapeLine::CreateVertexData()
+{
+	// 상단
+	  // 5    6
+	  // 1    2
+	  // 하단
+	  // 4    7
+	  // 0    3  
+	  // 앞면
+	m_VertexList.resize(2);
+	m_VertexList[0] = SimpleVertex(TVector(0.0f, 0.0f, 0.0f), TVector4(1.0f, 0.0f, 0.0f, 1.0f), TVector2(0.0f, 0.0f));
+	m_VertexList[1] = SimpleVertex(TVector(0.0f, 0.0f, 1000.0f), TVector4(1.0f, 0.0f, 0.0f, 1.0f), TVector2(1.0f, 0.0f));
+	m_InitVertexList = m_VertexList;
+}
+void    TShapeLine::CreateIndexData()
+{
+	m_IndexList.resize(2);
+	int iIndex = 0;
+	m_IndexList[iIndex++] = 0; 	m_IndexList[iIndex++] = 1; 
+}
+
+bool TShapeLine::Render()
+{
+	m_pImmediateContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_LINELIST);
+	PreRender();
+	PostRender();
+	m_pImmediateContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	return true;
+}
+bool TShapeLine::Frame()
+{	
+	m_cbData.fTimer = g_fGameTimer;
+	return true;
+}
+
+void    TShapeDirectionLine::CreateVertexData()
+{
+	// 상단
+	  // 5    6
+	  // 1    2
+	  // 하단
+	  // 4    7
+	  // 0    3  
+	  // 앞면
+	m_VertexList.resize(6);
+	m_VertexList[0] = SimpleVertex(TVector(0.0f, 0.0f, 0.0f), TVector4(1.0f, 0.0f, 0.0f, 1.0f), TVector2(0.0f, 0.0f));
+	m_VertexList[1] = SimpleVertex(TVector(1.0f, 0.0f, 0.0f), TVector4(1.0f, 0.0f, 0.0f, 1.0f), TVector2(1.0f, 0.0f));
+	m_VertexList[2] = SimpleVertex(TVector(0.0f, 0.0f, 0.0f), TVector4(0.0f, 1.0f, 0.0f, 1.0f), TVector2(0.0f, 0.0f));
+	m_VertexList[3] = SimpleVertex(TVector(0.0f, 1.0f, 0.0f), TVector4(0.0f, 1.0f, 0.0f, 1.0f), TVector2(1.0f, 0.0f));
+	m_VertexList[4] = SimpleVertex(TVector(0.0f, 0.0f, 0.0f), TVector4(0.0f, 0.0f, 1.0f, 1.0f), TVector2(0.0f, 0.0f));
+	m_VertexList[5] = SimpleVertex(TVector(0.0f, 0.0f, 1.0f), TVector4(0.0f, 0.0f, 1.0f, 1.0f), TVector2(1.0f, 0.0f));
+	m_InitVertexList = m_VertexList;
+}
+void    TShapeDirectionLine::CreateIndexData()
+{
+	m_IndexList.resize(6);
+	int iIndex = 0;
+	m_IndexList[iIndex++] = 0; 	m_IndexList[iIndex++] = 1;
+	m_IndexList[iIndex++] = 2; 	m_IndexList[iIndex++] = 3;
+	m_IndexList[iIndex++] = 4; 	m_IndexList[iIndex++] = 5;
+}

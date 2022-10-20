@@ -3,11 +3,13 @@
 #include "TUser2D.h"
 #include "TNpc2D.h"
 #include "TSpriteManager.h"
+#include "TCamera.h"
 class TScene 
 {
 public:
 	ID3D11Device* m_pd3dDevice = nullptr;// 디바이스 객체
 	ID3D11DeviceContext* m_pImmediateContext = nullptr;
+	TCamera* m_pMainCamera = nullptr;
 public:
 	TVector2   m_vCamera = { 0, 0 };
 	TUser2D*	m_pUser;

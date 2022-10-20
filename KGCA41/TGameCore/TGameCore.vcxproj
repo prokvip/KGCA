@@ -170,6 +170,7 @@ copy "TGameCore_R.lib" "..\\..\\lib\\"</Command>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="TBaseObject.h" />
+    <ClInclude Include="TCamera.h" />
     <ClInclude Include="TCollision.h" />
     <ClInclude Include="TDevice.h" />
     <ClInclude Include="TDxState.h" />
@@ -198,6 +199,7 @@ copy "TGameCore_R.lib" "..\\..\\lib\\"</Command>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="TBaseObject.cpp" />
+    <ClCompile Include="TCamera.cpp" />
     <ClCompile Include="TCollision.cpp" />
     <ClCompile Include="TDevice.cpp" />
     <ClCompile Include="TDxState.cpp" />
