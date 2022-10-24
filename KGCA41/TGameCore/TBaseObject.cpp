@@ -65,6 +65,8 @@ void    TBaseObject::CreateIndexData()
     m_IndexList[3] = 2;
     m_IndexList[4] = 1;
     m_IndexList[5] = 3;
+
+    m_dwFace = m_IndexList.size() / 3;
 }
 HRESULT TBaseObject::CreateVertexBuffer()
 {
@@ -332,7 +334,7 @@ bool TBaseObject::PostRender()
     if (m_pIndexBuffer == nullptr)
         m_pImmediateContext->Draw(m_VertexList.size(), 0);
     else
-        m_pImmediateContext->DrawIndexed(m_IndexList.size(), 0, 0);  
+        m_pImmediateContext->DrawIndexed(m_dwFace*3, 0, 0);
    
     return true;
 }

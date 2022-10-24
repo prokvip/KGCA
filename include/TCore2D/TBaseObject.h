@@ -33,6 +33,7 @@ public:
 	TMatrix		m_matWorld;
 	TMatrix		m_matView;
 	TMatrix		m_matProj;
+	DWORD		m_dwFace;
 public:
 	ID3D11Device* m_pd3dDevice = nullptr;// 디바이스 객체
 	ID3D11DeviceContext* m_pImmediateContext = nullptr;

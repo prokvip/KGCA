@@ -37,5 +37,9 @@ public:
 public:
 	void	 CreateFrustum(TMatrix*, TMatrix*);
 	bool	 ClassifyPoint(TVector v);
+	bool	 ClassifySphere(TSphere v);
+	bool	 ClassifyAABB(T_AABB v);
+	bool	 ClassifyOBB(T_OBB v);
+	bool	 ClassifyTBox(T_BOX v);
 };
 

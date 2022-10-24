@@ -62,6 +62,7 @@ bool TSceneTitle::Render()
 	m_pImmediateContext->OMSetDepthStencilState(TDxState::g_pDefaultDepthStencil,
 		0xff);
 	m_pMap->SetMatrix(nullptr, &m_pMainCamera->m_matView, &m_pMainCamera->m_matProj);
+	m_pMap->UpdateBuffer((TCameraDebug*)m_pMainCamera);
 	m_pMap->Render();
 
 	TCameraDebug* pDCam = (TCameraDebug*)m_pMainCamera;

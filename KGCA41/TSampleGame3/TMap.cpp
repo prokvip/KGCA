@@ -43,5 +43,38 @@ bool  TMap::Build(UINT iWidth, UINT iHeight)
 			iIndex += 6;
 		}
 	}
+	indexlist.resize(m_IndexList.size());
+	m_dwFace = m_IndexList.size() / 3;
+	return true;
+}
+bool TMap::UpdateBuffer(TCameraDebug* pMainCamera)
+{	
+	m_dwFace = 0;
+	DWORD index = 0;
+	TVector v[3];
+	for (int iFace = 0; iFace < m_IndexList.size() / 3; iFace++)
+	{
+		UINT i0 = m_IndexList[iFace * 3 + 0];
+		UINT i1 = m_IndexList[iFace * 3 + 1];
+		UINT i2 = m_IndexList[iFace * 3 + 2];
+		v[0] = m_VertexList[i0].p;
+		v[1] = m_VertexList[i1].p;
+		v[2] = m_VertexList[i2].p;
+		for (int i = 0; i < 3; i++)
+		{
+			bool bRender = pMainCamera->m_vFrustum.ClassifyPoint(v[i]);
+			if (bRender)
+			{
+				indexlist[index++] = i0;
+				indexlist[index++] = i1;
+				indexlist[index++]= i2;
+				m_dwFace++;
+				break;
+			}
+		}
+	}
+	m_pImmediateContext->UpdateSubresource(
+		m_pIndexBuffer, 0, nullptr,
+		&indexlist.at(0), 0, 0);
 	return true;
 }

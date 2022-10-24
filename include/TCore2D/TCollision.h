@@ -115,6 +115,28 @@ struct TBox : Box
     }
 };
 
+struct T_AABB
+{
+    TVector vMin;
+    TVector vMax;
+};
+struct T_OBB
+{
+    TVector vCenter;
+    TVector vAxis[3];
+    float   fDistance[3];
+};
+struct T_BOX
+{
+    TVector vPos[8];
+    // aabb
+    TVector vMin;
+    TVector vMax;
+    // obb    
+    TVector vCenter;
+    TVector vAxis[3];
+    float   fExtent[3];
+};
 class TCollision
 {
 public:

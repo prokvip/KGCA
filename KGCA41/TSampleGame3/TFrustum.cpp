@@ -63,3 +63,19 @@ bool	 TFrustum::ClassifyPoint(TVector v)
 	}
 	return true;
 }
+bool	 TFrustum::ClassifySphere(TSphere v)
+{	
+	return true;
+}
+bool	 TFrustum::ClassifyAABB(T_AABB v)
+{
+	return true;
+}
+bool	 TFrustum::ClassifyOBB(T_OBB v)
+{
+	return true;
+}
+bool	 TFrustum::ClassifyTBox(T_BOX v)
+{
+	return true;
+}

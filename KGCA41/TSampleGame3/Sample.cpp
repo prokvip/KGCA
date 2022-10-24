@@ -38,6 +38,9 @@ bool Sample::Render()
 	m_DirLine.SetMatrix(nullptr, &m_pCurrentScene->m_pMainCamera->m_matView,
 								&m_pCurrentScene->m_pMainCamera->m_matProj);
 	m_DirLine.Render();
+
+	//TSceneTitle* pScene =(TSceneTitle*)m_pCurrentScene.get();
+	//m_Writer.m_szDefaultText = std::to_wstring(pScene->m_pMap->m_dwFace);
 	return true;
 }
 bool Sample::Release()
