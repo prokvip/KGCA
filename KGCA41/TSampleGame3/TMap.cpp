@@ -14,13 +14,12 @@ bool  TMap::Build(UINT iWidth, UINT iHeight)
 		{
 			m_VertexList[iRow * iWidth + iCol].p =
 				//{(float)iCol, 0.0f, (float)iHeight-iRow};
-			{ (float)(iCol- iHalfWidth)* fCellDistance, cosf(DegreeToRadian(iCol))*20.0f+ sinf(DegreeToRadian(iRow)) * 20.0f,
+			{	(float)(iCol- iHalfWidth)* fCellDistance, 
+				cosf(DegreeToRadian(iCol))*20.0f+ sinf(DegreeToRadian(iRow)) * 20.0f,
 				(float)(iHalfHeight- iRow)* fCellDistance };
-			m_VertexList[iRow * iWidth + iCol].c =
-			{ 1,1,1,1 };
-			m_VertexList[iRow * iWidth + iCol].t =
-			{ ((float)iCol / (float)(iWidth-1))*10.0f,
-			  ((float)iRow / (float)(iHeight - 1))* 10.0f };
+			m_VertexList[iRow * iWidth + iCol].c =	{ 1,1,1,1 };
+			m_VertexList[iRow * iWidth + iCol].t =	{ ((float)iCol / (float)(iWidth-1))*10.0f,
+													 ((float)iRow / (float)(iHeight - 1))* 10.0f };
 		}
 	}
 

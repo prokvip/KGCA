@@ -24,16 +24,16 @@ void	 TFrustum::CreateFrustum(
 	{
 		// m_vFrustum[iVer] = m_vFrustum[iVer] * matInvViewProj;
 		TBASIS_EX::D3DXVec3TransformCoord(
-			&m_vFrustum[iVer], &m_vFrustum[iVer], &matInvViewProj);
+			&m_vFrustum[iVer], &m_vFrustum[iVer], &matInvViewProj);		
 	}
 	// 5    6  
 	// 4    7
 	// ->   <-
 	// 1    2
 	// 0    3 
-	m_Plane[0].Create(  *((TVector*)&m_vFrustum[5]),
-						*((TVector*)&m_vFrustum[0]),
-						*((TVector*)&m_vFrustum[1])); // left
+	m_Plane[0].Create(  *((TVector*)&m_vFrustum[1]),
+						*((TVector*)&m_vFrustum[5]),
+						*((TVector*)&m_vFrustum[0])); // left
 	m_Plane[1].Create(*((TVector*)&m_vFrustum[3]), // right
 		*((TVector*)&m_vFrustum[6]),
 		*((TVector*)&m_vFrustum[2])); 

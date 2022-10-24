@@ -51,16 +51,12 @@ bool TSceneTitle::Frame()
 	m_pBoxObjA->m_matWorld._41 = m_pBoxObjA->m_vPos.x;
 	m_pBoxObjA->m_matWorld._42 = m_pBoxObjA->m_vPos.y;
 	m_pBoxObjA->m_matWorld._43 = m_pBoxObjA->m_vPos.z;
-	m_pBoxObjB->Frame();
-
-
-	
+	m_pBoxObjB->Frame();	
 	return true;
 }
 bool TSceneTitle::Render()
 {	
-	m_pImmediateContext->OMSetDepthStencilState(TDxState::g_pDefaultDepthStencil,
-		0xff);
+	m_pImmediateContext->OMSetDepthStencilState(TDxState::g_pDefaultDepthStencil,0xff);
 	m_pMap->SetMatrix(nullptr, &m_pMainCamera->m_matView, &m_pMainCamera->m_matProj);
 	m_pMap->UpdateBuffer((TCameraDebug*)m_pMainCamera);
 	m_pMap->Render();
