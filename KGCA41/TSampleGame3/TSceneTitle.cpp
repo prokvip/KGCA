@@ -52,6 +52,9 @@ bool TSceneTitle::Frame()
 	m_pBoxObjA->m_matWorld._42 = m_pBoxObjA->m_vPos.y;
 	m_pBoxObjA->m_matWorld._43 = m_pBoxObjA->m_vPos.z;
 	m_pBoxObjB->Frame();
+
+
+	
 	return true;
 }
 bool TSceneTitle::Render()
@@ -61,12 +64,21 @@ bool TSceneTitle::Render()
 	m_pMap->SetMatrix(nullptr, &m_pMainCamera->m_matView, &m_pMainCamera->m_matProj);
 	m_pMap->Render();
 
-	m_pBoxObjA->SetMatrix(nullptr, &m_pMainCamera->m_matView, &m_pMainCamera->m_matProj);
-	m_pBoxObjA->Render();
+	TCameraDebug* pDCam = (TCameraDebug*)m_pMainCamera;
+	bool bRender = pDCam->m_vFrustum.ClassifyPoint(m_pBoxObjA->m_vPos);
+	if (bRender)
+	{
+		m_pBoxObjA->SetMatrix(nullptr, &m_pMainCamera->m_matView, &m_pMainCamera->m_matProj);
+		m_pBoxObjA->Render();
+	}
 	///*m_pImmediateContext->OMSetDepthStencilState(TDxState::g_pGreaterDepthStencil,
 	//	0xff);*/
-	m_pBoxObjB->SetMatrix(nullptr, &m_pMainCamera->m_matView, &m_pMainCamera->m_matProj);
-	m_pBoxObjB->Render();
+	bRender = pDCam->m_vFrustum.ClassifyPoint(m_pBoxObjB->m_vPos);
+	if (bRender)
+	{
+		m_pBoxObjB->SetMatrix(nullptr, &m_pMainCamera->m_matView, &m_pMainCamera->m_matProj);
+		m_pBoxObjB->Render();
+	}
 	return true;
 }
 bool TSceneTitle::Release()

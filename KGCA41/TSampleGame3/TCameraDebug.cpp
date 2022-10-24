@@ -96,3 +96,24 @@ bool TCameraDebug::Frame()
 	Update();
 	return true;
 }
+
+void TCameraDebug::Update()
+{
+	m_vRight.x = m_matView._11;
+	m_vRight.y = m_matView._21;
+	m_vRight.z = m_matView._31;
+
+	m_vUp.x = m_matView._12;
+	m_vUp.y = m_matView._22;
+	m_vUp.z = m_matView._32;
+
+	m_vLook.x = m_matView._13;
+	m_vLook.y = m_matView._23;
+	m_vLook.z = m_matView._33;
+
+	m_vRight.Normalized();
+	m_vUp.Normalized();
+	m_vLook.Normalized();
+
+	m_vFrustum.CreateFrustum(&m_matView, &m_matProj);
+}
