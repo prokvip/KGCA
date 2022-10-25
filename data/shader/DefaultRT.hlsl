@@ -24,12 +24,6 @@ SamplerState g_SampleWrap		: register(s0);
 
 float4 PS(VS_OUT input) : SV_Target
 {
-	float uv = 1.0f / 1024.0f;
 	float4 vColor = g_txTex.Sample(g_SampleWrap , input.t);
-	float4 vColorA = g_txTex.Sample(g_SampleWrap, 
-						float2( input.t.x+ uv*2,
-								input.t.y+ uv*2));
-	vColor = (vColorA + vColor) / 2.0f;
-	vColor.a = 1;
 	return vColor;
 }

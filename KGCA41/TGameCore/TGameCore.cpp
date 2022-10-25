@@ -36,7 +36,7 @@ bool		TGameCore::TCoreInit()
 	m_BG.Create(m_pd3dDevice.Get(), 
 				m_pImmediateContext.Get(), shaderfilename, 
 				L"../../data/_RAINBOW.bmp");
-
+	m_RT.Create(m_pd3dDevice.Get(), m_pImmediateContext.Get(), 2048, 2048);
 	return Init();
 }
 bool		TGameCore::TCoreFrame()
@@ -68,7 +68,21 @@ bool		TGameCore::TCorePreRender()
 bool		TGameCore::TCoreRender()
 {  	
 	TCorePreRender();
+	// 랜더타켓 지정
+	m_RT.m_pOldRTV = m_pRTV.Get();
+	m_RT.m_pOldDSV = m_pDepthStencilView.Get();
+	m_RT.m_vpOld[0] = m_vp;
+
+	if (m_RT.Begin(m_pImmediateContext.Get()))
+	{
 		Render();
+		m_RT.End(m_pImmediateContext.Get());
+	}
+
+	if (m_RT.m_pSRV)
+	{
+		m_BG.m_pTextureSRV = m_RT.m_pSRV.Get();
+	}	
 		
 	TCorePostRender();
     return true;
@@ -88,6 +102,7 @@ bool		TGameCore::TCorePostRender()
 }
 bool		TGameCore::TCoreRelease()
 {   
+	m_RT.Release();
 	m_BG.Release();
 	Release();
 	I_Input.Release();

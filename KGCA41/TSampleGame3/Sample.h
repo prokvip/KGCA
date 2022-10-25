@@ -10,7 +10,6 @@ public:
 	std::shared_ptr<TSceneInGame>	m_pInGame = nullptr;
 	std::shared_ptr<TScene>			m_pCurrentScene = nullptr;
 	TShapeDirectionLine						m_DirLine;
-	TRenderTarget					m_RT;
 public:
 	virtual bool		Init() override;
 	virtual bool		Frame() override;

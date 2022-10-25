@@ -150,29 +150,15 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Sample.h" />
-    <ClInclude Include="TCameraDebug.h" />
-    <ClInclude Include="TEffect2D.h" />
-    <ClInclude Include="TFrustum.h" />
     <ClInclude Include="TMap.h" />
-    <ClInclude Include="TObject3D.h" />
-    <ClInclude Include="TProjectile2D.h" />
-    <ClInclude Include="TRenderTarget.h" />
     <ClInclude Include="TSceneInGame.h" />
     <ClInclude Include="TSceneTitle.h" />
-    <ClInclude Include="TShape.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Sample.cpp" />
-    <ClCompile Include="TCameraDebug.cpp" />
-    <ClCompile Include="TEffect2D.cpp" />
-    <ClCompile Include="TFrustum.cpp" />
     <ClCompile Include="TMap.cpp" />
-    <ClCompile Include="TObject3D.cpp" />
-    <ClCompile Include="TProjectile2D.cpp" />
-    <ClCompile Include="TRenderTarget.cpp" />
     <ClCompile Include="TSceneInGame.cpp" />
     <ClCompile Include="TSceneTitle.cpp" />
-    <ClCompile Include="TShape.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="DefaultObject.txt" />

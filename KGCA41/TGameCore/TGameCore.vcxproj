@@ -171,9 +171,12 @@ copy "TGameCore_R.lib" "..\\..\\lib\\"</Command>
   <ItemGroup>
     <ClInclude Include="TBaseObject.h" />
     <ClInclude Include="TCamera.h" />
+    <ClInclude Include="TCameraDebug.h" />
     <ClInclude Include="TCollision.h" />
     <ClInclude Include="TDevice.h" />
     <ClInclude Include="TDxState.h" />
+    <ClInclude Include="TEffect2D.h" />
+    <ClInclude Include="TFrustum.h" />
     <ClInclude Include="TGameCore.h" />
     <ClInclude Include="TInput.h" />
     <ClInclude Include="TInterface.h" />
@@ -182,9 +185,13 @@ copy "TGameCore_R.lib" "..\\..\\lib\\"</Command>
     <ClInclude Include="TMatrix.h" />
     <ClInclude Include="TNpc2D.h" />
     <ClInclude Include="TObject2D.h" />
+    <ClInclude Include="TObject3D.h" />
+    <ClInclude Include="TProjectile2D.h" />
+    <ClInclude Include="TRenderTarget.h" />
     <ClInclude Include="TScene.h" />
     <ClInclude Include="TShader.h" />
     <ClInclude Include="TShaderManager.h" />
+    <ClInclude Include="TShape.h" />
     <ClInclude Include="TSound.h" />
     <ClInclude Include="TSoundManager.h" />
     <ClInclude Include="TSprite.h" />
@@ -201,9 +208,12 @@ copy "TGameCore_R.lib" "..\\..\\lib\\"</Command>
   <ItemGroup>
     <ClCompile Include="TBaseObject.cpp" />
     <ClCompile Include="TCamera.cpp" />
+    <ClCompile Include="TCameraDebug.cpp" />
     <ClCompile Include="TCollision.cpp" />
     <ClCompile Include="TDevice.cpp" />
     <ClCompile Include="TDxState.cpp" />
+    <ClCompile Include="TEffect2D.cpp" />
+    <ClCompile Include="TFrustum.cpp" />
     <ClCompile Include="TGameCore.cpp" />
     <ClCompile Include="TInput.cpp" />
     <ClCompile Include="TInterface.cpp" />
@@ -212,9 +222,13 @@ copy "TGameCore_R.lib" "..\\..\\lib\\"</Command>
     <ClCompile Include="TMatrix.cpp" />
     <ClCompile Include="TNpc2D.cpp" />
     <ClCompile Include="TObject2D.cpp" />
+    <ClCompile Include="TObject3D.cpp" />
+    <ClCompile Include="TProjectile2D.cpp" />
+    <ClCompile Include="TRenderTarget.cpp" />
     <ClCompile Include="TScene.cpp" />
     <ClCompile Include="TShader.cpp" />
     <ClCompile Include="TShaderManager.cpp" />
+    <ClCompile Include="TShape.cpp" />
     <ClCompile Include="TSound.cpp" />
     <ClCompile Include="TSoundManager.cpp" />
     <ClCompile Include="TSprite.cpp" />

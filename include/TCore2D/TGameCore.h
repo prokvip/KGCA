@@ -8,11 +8,13 @@
 #include "TTextureManager.h"
 #include "TShaderManager.h"
 #include "TSpriteManager.h"
+#include "TRenderTarget.h"
 class TGameCore : public TDevice
 {
 public:
 	TWriter				m_Writer;
 	TBaseObject			m_BG;
+	TRenderTarget		m_RT;
 	bool m_bGameRun = true;
 public:
 	virtual bool		Init() {return true;}; // √ ±‚»≠
