@@ -64,7 +64,7 @@ void TQuadtree::BuildTree(TNode* pNode)
 
 bool TQuadtree::IsSubDivide(TNode* pNode)
 {
-    if ((pNode->m_Corner[1] - pNode->m_Corner[0] )==1) return true;
+    if ((pNode->m_Corner[1] - pNode->m_Corner[0] )==1) return false;
     if (pNode->m_iDepth < m_iMaxDepth) return true;
     return false;
 }
