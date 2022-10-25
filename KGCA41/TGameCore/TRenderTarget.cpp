@@ -90,7 +90,7 @@ bool TRenderTarget::Begin(ID3D11DeviceContext* pContext)
 	pContext->OMSetRenderTargets(1, m_pRenderTargetView.GetAddressOf(), m_pDepthStencilView.Get());
 	const FLOAT color[] = { 1, 1, 1, 1 };
 	pContext->ClearRenderTargetView(m_pRenderTargetView.Get(), color);
-	pContext->ClearDepthStencilView(m_pDepthStencilView.Get(), D3D11_CLEAR_DEPTH, 1.0, 0);
+	pContext->ClearDepthStencilView(m_pDepthStencilView.Get(), D3D11_CLEAR_DEPTH| D3D11_CLEAR_STENCIL, 1.0, 0);
 	pContext->RSSetViewports(1, &m_Viewport);
 	return true;
 }

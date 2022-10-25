@@ -19,20 +19,20 @@ bool TSceneTitle::Init()
 	
 	m_pMap = new TMap;
 	// 2*n½Â+1
-	m_pMap->Build(4+1, 4 + 1);
+	m_pMap->Build(256+1, 256 + 1);
 	m_pMap->Create(m_pd3dDevice, m_pImmediateContext, L"DefaultObject.txt", L"../../data/map/Tile50.jpg");
 	
 
 	m_pBoxObjA = new TObjectBox;
 	m_pBoxObjA->Create(m_pd3dDevice, m_pImmediateContext, L"DefaultObject.txt", L"../../data/object/20200428_185613.jpg");
-	m_pBoxObjA->m_matWorld.Translation(0, 0, 0);
+	m_pBoxObjA->m_matWorld.Translation(0, 5, 0);
 
 	m_pBoxObjB = new TObjectBox;
 	m_pBoxObjB->Create(m_pd3dDevice, m_pImmediateContext, L"DefaultObject.txt", L"../../data/_RAINBOW.bmp");
-	m_pBoxObjB->m_matWorld.Translation(1, 0, 4);
+	m_pBoxObjB->m_matWorld.Translation(1, 5, 4);
 
 	m_pMainCamera = new TCameraDebug;
-	m_pMainCamera->CreateViewMatrix(TVector(0,0,-10), TVector(0, 0, 0), TVector(0,1, 0) );
+	m_pMainCamera->CreateViewMatrix(TVector(0,20,-20), TVector(0, 0, 0), TVector(0,1, 0) );
 	m_pMainCamera->CreateProjMatrix(1.0f, 10000.0f, T_PI * 0.25f,
 									(float)g_rtClient.right/ (float)g_rtClient.bottom);
 	return true;
@@ -47,10 +47,6 @@ bool TSceneTitle::Frame()
 	}
 	m_pMainCamera->Frame();
 	m_pBoxObjA->Frame();
-	m_pBoxObjA->m_matWorld.RotationY(g_fGameTimer);
-	m_pBoxObjA->m_matWorld._41 = m_pBoxObjA->m_vPos.x;
-	m_pBoxObjA->m_matWorld._42 = m_pBoxObjA->m_vPos.y;
-	m_pBoxObjA->m_matWorld._43 = m_pBoxObjA->m_vPos.z;
 	m_pBoxObjB->Frame();	
 	return true;
 }

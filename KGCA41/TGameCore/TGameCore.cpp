@@ -81,7 +81,8 @@ bool		TGameCore::TCoreRender()
 
 	if (m_RT.m_pSRV)
 	{
-		m_BG.m_pTextureSRV = m_RT.m_pDsvSRV.Get();
+		//m_BG.m_pTextureSRV = m_RT.m_pDsvSRV.Get();
+		m_BG.m_pTextureSRV = m_RT.m_pSRV.Get();
 	}	
 		
 	TCorePostRender();
