@@ -36,6 +36,7 @@ void TCamera::CreateProjMatrix(float fNear, float fFar, float fFovY, float fAspe
 	//matProj.OrthoLH(800, 600, 0.0f, 100.0f);
 	//OrthoOffCenterLH(matProj ,-400, 400, -300, 300, 0.0f, 100.0f);
 }
+
 bool TCamera::Frame()
 {
 	if (I_Input.GetKey('W') == KEY_HOLD)
