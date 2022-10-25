@@ -43,9 +43,9 @@ void	 TFrustum::CreateFrustum(
 	m_Plane[3].Create(*((TVector*)&m_vFrustum[0]), // bottom
 		*((TVector*)&m_vFrustum[7]),
 		*((TVector*)&m_vFrustum[3])); 
-	m_Plane[4].Create(*((TVector*)&m_vFrustum[0]), // near
-		*((TVector*)&m_vFrustum[2]),
-		*((TVector*)&m_vFrustum[1])); 
+	m_Plane[4].Create(*((TVector*)&m_vFrustum[2]), // near
+		*((TVector*)&m_vFrustum[1]),
+		*((TVector*)&m_vFrustum[0])); 
 	m_Plane[5].Create(*((TVector*)&m_vFrustum[5]), // far
 		*((TVector*)&m_vFrustum[6]),
 		*((TVector*)&m_vFrustum[4])); 

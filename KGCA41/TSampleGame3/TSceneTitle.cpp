@@ -32,8 +32,8 @@ bool TSceneTitle::Init()
 	m_pBoxObjB->m_matWorld.Translation(1, 5, 4);
 
 	m_pMainCamera = new TCameraDebug;
-	m_pMainCamera->CreateViewMatrix(TVector(0,0,-10), TVector(0, 0, 0), TVector(0,1, 0) );
-	m_pMainCamera->CreateProjMatrix(1.0f, 100.0f, T_PI * 0.25f,
+	m_pMainCamera->CreateViewMatrix(TVector(0,30,-30), TVector(0, 0, 0), TVector(0,1, 0) );
+	m_pMainCamera->CreateProjMatrix(1.0f, 1000.0f, T_PI * 0.25f,
 									(float)g_rtClient.right/ (float)g_rtClient.bottom);
 	return true;
 }
