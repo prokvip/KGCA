@@ -10,6 +10,8 @@ bool Sample::Init()
 	m_pInGame->Init();
 	m_pCurrentScene = m_pTitle;
 
+	m_Quadtree.Create(((TSceneTitle*)m_pCurrentScene.get())->m_pMap);
+
 	std::wstring shaderfilename = L"DefaultShape.txt";	
 	m_DirLine.Create(m_pd3dDevice.Get(), m_pImmediateContext.Get(), shaderfilename,
 										L"../../data/gameHeight.png");
