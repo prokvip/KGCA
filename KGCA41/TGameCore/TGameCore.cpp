@@ -31,6 +31,12 @@ bool		TGameCore::TCoreInit()
 	m_Writer.Set(pBackBuffer);
 	pBackBuffer->Release();
 
+
+	std::wstring shaderfilename = L"../../data/shader/DefaultRT.hlsl";
+	m_BG.Create(m_pd3dDevice.Get(), 
+				m_pImmediateContext.Get(), shaderfilename, 
+				L"../../data/_RAINBOW.bmp");
+
 	return Init();
 }
 bool		TGameCore::TCoreFrame()
@@ -63,20 +69,26 @@ bool		TGameCore::TCoreRender()
 {  	
 	TCorePreRender();
 		Render();
-		I_Input.Render();
-		I_Timer.Render();
-		m_Writer.m_szDefaultText = I_Timer.m_szTimer;
-		m_Writer.Render();
+		
 	TCorePostRender();
     return true;
 }
 bool		TGameCore::TCorePostRender()
 {
+	m_BG.SetMatrix(nullptr, nullptr, nullptr);
+	m_BG.Render();
+
+	I_Input.Render();
+	I_Timer.Render();
+	m_Writer.m_szDefaultText = I_Timer.m_szTimer;
+	m_Writer.Render();
+
 	m_pSwapChain->Present(0, 0);
     return true;
 }
 bool		TGameCore::TCoreRelease()
 {   
+	m_BG.Release();
 	Release();
 	I_Input.Release();
 	I_Timer.Release();

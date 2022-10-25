@@ -2,7 +2,7 @@
 #include "TGameCore.h"
 #include "TSceneTitle.h"
 #include "TSceneInGame.h"
-
+#include "TRenderTarget.h"
 class Sample : public TGameCore
 {
 public:
@@ -10,6 +10,7 @@ public:
 	std::shared_ptr<TSceneInGame>	m_pInGame = nullptr;
 	std::shared_ptr<TScene>			m_pCurrentScene = nullptr;
 	TShapeDirectionLine						m_DirLine;
+	TRenderTarget					m_RT;
 public:
 	virtual bool		Init() override;
 	virtual bool		Frame() override;

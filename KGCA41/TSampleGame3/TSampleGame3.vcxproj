@@ -156,6 +156,7 @@
     <ClInclude Include="TMap.h" />
     <ClInclude Include="TObject3D.h" />
     <ClInclude Include="TProjectile2D.h" />
+    <ClInclude Include="TRenderTarget.h" />
     <ClInclude Include="TSceneInGame.h" />
     <ClInclude Include="TSceneTitle.h" />
     <ClInclude Include="TShape.h" />
@@ -168,6 +169,7 @@
     <ClCompile Include="TMap.cpp" />
     <ClCompile Include="TObject3D.cpp" />
     <ClCompile Include="TProjectile2D.cpp" />
+    <ClCompile Include="TRenderTarget.cpp" />
     <ClCompile Include="TSceneInGame.cpp" />
     <ClCompile Include="TSceneTitle.cpp" />
     <ClCompile Include="TShape.cpp" />
@@ -177,6 +179,14 @@
     <Text Include="DefaultShape.txt" />
     <Text Include="SpriteInfo.txt" />
     <Text Include="ui.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="..\..\data\shader\DefaultRT.hlsl">
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">VS</EntryPointName>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </FxCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

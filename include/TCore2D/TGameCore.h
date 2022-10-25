@@ -12,6 +12,7 @@ class TGameCore : public TDevice
 {
 public:
 	TWriter				m_Writer;
+	TBaseObject			m_BG;
 	bool m_bGameRun = true;
 public:
 	virtual bool		Init() {return true;}; // √ ±‚»≠
