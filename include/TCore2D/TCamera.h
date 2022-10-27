@@ -1,5 +1,6 @@
 #pragma once
 #include "TBaseObject.h"
+#include "TFrustum.h"
 class TCamera : public TBaseObject
 {
 public:
@@ -12,6 +13,8 @@ public:
 	float     m_fRoll = 0.0f;
 	float     m_fDistance = 0.0f;
 	float     m_fSpeed =10.0f;
+public:
+	TFrustum   m_vFrustum;
 public:
 	TVector			m_vTarget = { 0,0,0 };
 	float			m_fNear;

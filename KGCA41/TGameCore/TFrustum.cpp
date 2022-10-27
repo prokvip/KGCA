@@ -50,7 +50,7 @@ void	 TFrustum::CreateFrustum(
 		*((TVector*)&m_vFrustum[6]),
 		*((TVector*)&m_vFrustum[4])); 
 }
-bool	 TFrustum::ClassifyPoint(TVector v)
+T_POSITION	 TFrustum::ClassifyPoint(TVector v)
 {
 	for (int iPlane = 0; iPlane < 6; iPlane++)
 	{
@@ -59,23 +59,61 @@ bool	 TFrustum::ClassifyPoint(TVector v)
 			m_Plane[iPlane].b * v.y +
 			m_Plane[iPlane].c * v.z +
 			m_Plane[iPlane].d;
-		if (fDistance < 0) return false;
+		if (fDistance == 0) return P_ONPLANE;
+		if (fDistance < 0) return P_FRONT;
 	}
-	return true;
+	return P_BACK;
 }
-bool	 TFrustum::ClassifySphere(TSphere v)
+T_POSITION	 TFrustum::ClassifySphere(TSphere v)
 {	
-	return true;
+	return P_SPANNING;
 }
-bool	 TFrustum::ClassifyAABB(T_AABB v)
+T_POSITION	 TFrustum::ClassifyAABB(T_AABB v)
 {
-	return true;
+	return P_SPANNING;
 }
-bool	 TFrustum::ClassifyOBB(T_OBB v)
+T_POSITION	 TFrustum::ClassifyOBB(T_OBB v)
 {
-	return true;
+	return P_SPANNING;
 }
-bool	 TFrustum::ClassifyTBox(T_BOX v)
+T_POSITION	 TFrustum::ClassifyTBox(T_BOX box)
 {
-	return true;
+	float		fPlaneToCenter = 0.0;
+	float		fDistance = 0.0f;
+	TVector vDir;
+	T_POSITION  t_Position;
+
+	t_Position = P_FRONT;
+	for (int iPlane = 0; iPlane < 6; iPlane++)
+	{
+		vDir = box.vAxis[0] * box.fExtent[0];
+		fDistance = fabs(m_Plane[iPlane].a * vDir.x + m_Plane[iPlane].b * vDir.y + m_Plane[iPlane].c * vDir.z);
+		vDir = box.vAxis[1] * box.fExtent[1];
+		fDistance += fabs(m_Plane[iPlane].a * vDir.x + m_Plane[iPlane].b * vDir.y + m_Plane[iPlane].c * vDir.z);
+		vDir = box.vAxis[2] * box.fExtent[2];
+		fDistance += fabs(m_Plane[iPlane].a * vDir.x + m_Plane[iPlane].b * vDir.y + m_Plane[iPlane].c * vDir.z);
+
+		fPlaneToCenter = m_Plane[iPlane].a * box.vCenter.x + m_Plane[iPlane].b * box.vCenter.y +
+			m_Plane[iPlane].c * box.vCenter.z + m_Plane[iPlane].d;
+
+		if (fPlaneToCenter > 0)
+		{
+			if (fPlaneToCenter < fDistance)
+			{
+				t_Position = P_SPANNING;
+				break;
+			}
+		}
+		else
+		if(fPlaneToCenter < 0)
+		{
+			t_Position = P_BACK;
+			if (fPlaneToCenter > -fDistance)
+			{
+				t_Position = P_SPANNING;					
+			}
+			break;
+		}
+	}
+	return t_Position;
 }

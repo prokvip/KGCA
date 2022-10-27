@@ -1,5 +1,12 @@
 #pragma once
 #include "TShape.h"
+enum T_POSITION
+{
+	P_BACK = 0,
+	P_FRONT,
+	P_ONPLANE,
+	P_SPANNING,
+};
 struct TPlane
 {
 	float a, b, c, d;
@@ -36,10 +43,10 @@ public:
 	TPlane   m_Plane[6];
 public:
 	void	 CreateFrustum(TMatrix*, TMatrix*);
-	bool	 ClassifyPoint(TVector v);
-	bool	 ClassifySphere(TSphere v);
-	bool	 ClassifyAABB(T_AABB v);
-	bool	 ClassifyOBB(T_OBB v);
-	bool	 ClassifyTBox(T_BOX v);
+	T_POSITION	 ClassifyPoint(TVector v);
+	T_POSITION	 ClassifySphere(TSphere v);
+	T_POSITION	 ClassifyAABB(T_AABB v);
+	T_POSITION	 ClassifyOBB(T_OBB v);
+	T_POSITION	 ClassifyTBox(T_BOX v);
 };
 

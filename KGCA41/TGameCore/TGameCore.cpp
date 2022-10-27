@@ -72,7 +72,7 @@ bool		TGameCore::TCoreRender()
 	m_RT.m_pOldRTV = m_pRTV.Get();
 	m_RT.m_pOldDSV = m_pDepthStencilView.Get();
 	m_RT.m_vpOld[0] = m_vp;
-
+	//ID3D11DeviceContext::OMSetRenderTargets: Resource being set to OM RenderTarget slot 0 is still bound on input
 	if (m_RT.Begin(m_pImmediateContext.Get()))
 	{
 		Render();

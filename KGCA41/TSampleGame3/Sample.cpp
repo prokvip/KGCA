@@ -10,7 +10,9 @@ bool Sample::Init()
 	m_pInGame->Init();
 	m_pCurrentScene = m_pTitle;
 
-	m_Quadtree.Create(((TSceneTitle*)m_pCurrentScene.get())->m_pMap);
+	m_Quadtree.Create(
+		((TSceneTitle*)m_pCurrentScene.get())->m_pMainCamera,
+		((TSceneTitle*)m_pCurrentScene.get())->m_pMap);
 
 	std::wstring shaderfilename = L"DefaultShape.txt";	
 	m_DirLine.Create(m_pd3dDevice.Get(), m_pImmediateContext.Get(), shaderfilename,
@@ -35,6 +37,14 @@ bool Sample::Render()
 	{
 		m_pImmediateContext->RSSetState(TDxState::g_pDefaultRSWireFrame);
 	}
+	m_pImmediateContext->OMSetDepthStencilState(TDxState::g_pDefaultDepthStencil, 0xff);
+	TSceneTitle* pScene = (TSceneTitle*)m_pCurrentScene.get();
+	pScene->m_pMap->SetMatrix(nullptr,
+		&pScene->m_pMainCamera->m_matView,
+		&pScene->m_pMainCamera->m_matProj);
+	m_Quadtree.Frame();
+	m_Quadtree.Render();
+	
 	m_pCurrentScene->Render();
 	m_DirLine.SetMatrix(nullptr, &m_pCurrentScene->m_pMainCamera->m_matView,
 		&m_pCurrentScene->m_pMainCamera->m_matProj);
