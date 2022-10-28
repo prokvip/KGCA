@@ -30,6 +30,11 @@ HRESULT TShader::Load(
     HRESULT hr;
     m_pd3dDevice = pd3dDevice;
     m_pImmediateContext = pImmediateContext;
+
+    DWORD dwShaderFlags = D3DCOMPILE_SKIP_OPTIMIZATION;
+#if defined( _DEBUG ) 
+    dwShaderFlags |= D3DCOMPILE_DEBUG;
+#endif
     // 정점쉐이더 컴파일 
     ID3DBlob* pErrorCode = nullptr;
     hr = D3DCompileFromFile(
@@ -38,7 +43,7 @@ HRESULT TShader::Load(
         NULL,
         "VS",
         "vs_5_0",
-        0,
+        dwShaderFlags,
         0,
         &m_pVSCode,
         &pErrorCode);
@@ -64,7 +69,7 @@ HRESULT TShader::Load(
         NULL,
         "PS",
         "ps_5_0",
-        0,
+        dwShaderFlags,
         0,
         &m_pPSCode,
         &pErrorCode);
