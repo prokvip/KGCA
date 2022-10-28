@@ -56,7 +56,7 @@ void TFbxLoader::ParseMesh(FbxMesh* pFbxMesh)
 				tVertex.p.x = v.mData[0];
 				tVertex.p.y = v.mData[2];
 				tVertex.p.z = v.mData[1];
-				tVertex.c = { 1,1,1,1 };
+				tVertex.c = TVector4(1,1,1,1);
 				FbxVector2 t = ReadTextureCoord(pFbxMesh, VertexUVSet);
 				tVertex.t.x = t.mData[0];
 				tVertex.t.y = 1.0f-t.mData[1];

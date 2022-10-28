@@ -6,7 +6,6 @@ class Sample : public TGameCore
 {
 	TFbxLoader	m_FBXLoader;
 	TCameraDebug* m_pMainCamera;
-	TBaseObject			m_BG2;
 public:
 	bool	Init() override;
 	bool	Frame()override;

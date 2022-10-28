@@ -4,7 +4,7 @@ bool	Sample::Init()
 {
 	if (m_FBXLoader.Init())
 	{
-		m_FBXLoader.Load("../../fbx/box.fbx");
+		m_FBXLoader.Load("../../data/fbx/box.fbx");
 	}
 
 	std::wstring shaderfilename = L"../../data/shader/DefaultObject.txt";
