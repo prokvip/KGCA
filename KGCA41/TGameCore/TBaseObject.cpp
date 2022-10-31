@@ -256,8 +256,8 @@ bool	TBaseObject::Create(
         return false;
     }
 
-    m_pTexture = I_Tex.Load(texturename);
-    if (m_pTexture != nullptr)
+   
+    if (LoadTexture(texturename))
     {
         m_pTextureSRV = m_pTexture->m_pTextureSRV;
     }
@@ -267,6 +267,16 @@ bool	TBaseObject::Create(
         return false;
     }
     return true;
+}
+bool    TBaseObject::LoadTexture(W_STR texturename)
+{
+    m_pTexture = I_Tex.Load(texturename);
+    if (m_pTexture != nullptr)
+    {
+        m_pTextureSRV = m_pTexture->m_pTextureSRV;
+        return true;
+    }
+    return false;
 }
 bool	TBaseObject::Init()
 {   

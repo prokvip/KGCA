@@ -1,6 +1,6 @@
 #pragma once
 #include "TStd.h"
-#include "fbxsdk.h"
+#include <fbxsdk.h>
 #include "TObject3D.h"
 #pragma comment(lib, "libfbxsdk-md.lib")
 #pragma comment(lib, "libxml2-md.lib")
@@ -35,6 +35,9 @@ public:
 	bool Load(C_STR filename);
 	void PreProcess(FbxNode* pFbxNode);
 	void ParseMesh(FbxMesh* pFbxMesh);
-	FbxVector2 ReadTextureCoord(FbxMesh* pFbxMesh, FbxLayerElementUV* VertexUVSet);
+	FbxVector2 ReadTextureCoord(FbxMesh* pFbxMesh, 
+								FbxLayerElementUV* VertexUVSet,
+								int posIndex,
+								int uvIndex);
 };
 

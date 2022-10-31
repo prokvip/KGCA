@@ -2,17 +2,32 @@
 
 bool	Sample::Init()
 {
-	if (m_FBXLoader.Init())
+	TFbxLoader* pFbxLoaderA = new TFbxLoader;
+	if (pFbxLoaderA->Init())
 	{
-		m_FBXLoader.Load("../../data/fbx/box.fbx");
+		pFbxLoaderA->Load("../../data/fbx/box.fbx");
 	}
+	m_fbxList.push_back(pFbxLoaderA);
 
-	std::wstring shaderfilename = L"../../data/shader/DefaultObject.txt";
-	for (int iObj = 0; iObj < m_FBXLoader.m_pDrawObjList.size(); iObj++)
+	TFbxLoader* pFbxLoaderB = new TFbxLoader;
+	if (pFbxLoaderB->Init())
 	{
-		TBaseObject* pObj = m_FBXLoader.m_pDrawObjList[iObj];		
-		pObj->Create(m_pd3dDevice.Get(), m_pImmediateContext.Get(), 
-			shaderfilename, L"../../data/_RAINBOW.bmp");		
+		pFbxLoaderB->Load("../../data/fbx/sm_rock.fbx");
+	}
+	m_fbxList.push_back(pFbxLoaderB);
+
+	W_STR szDefaultDir = L"../../data/fbx/";
+	std::wstring shaderfilename = L"../../data/shader/DefaultObject.txt";
+
+	for (auto fbx : m_fbxList)
+	{
+		for (int iObj = 0; iObj < fbx->m_pDrawObjList.size(); iObj++)
+		{
+			TBaseObject* pObj = fbx->m_pDrawObjList[iObj];
+			std::wstring  szLoad = szDefaultDir + pObj->m_szTextureName;
+			pObj->Create(m_pd3dDevice.Get(), m_pImmediateContext.Get(),
+				shaderfilename, szLoad);
+		}
 	}
 
 	m_pMainCamera = new TCameraDebug;
@@ -24,7 +39,11 @@ bool	Sample::Init()
 }
 bool	Sample::Frame() 
 {
-	m_FBXLoader.Frame();
+	m_pMainCamera->Frame();
+	for (auto fbx : m_fbxList)
+	{
+		fbx->Frame();
+	}
 	return true;
 }
 bool	Sample::Render() 
@@ -33,19 +52,29 @@ bool	Sample::Render()
 	{
 		m_pImmediateContext->RSSetState(TDxState::g_pDefaultRSWireFrame);
 	}
-	for (int iObj = 0; iObj < m_FBXLoader.m_pDrawObjList.size(); iObj++)
+	 
+	for (int iModel=0; iModel < m_fbxList.size(); iModel++)
 	{
-		m_FBXLoader.m_pDrawObjList[iObj]->SetMatrix(nullptr, 
-			&m_pMainCamera->m_matView,
-			&m_pMainCamera->m_matProj);
-		m_FBXLoader.m_pDrawObjList[iObj]->Render();	
+		for (int iObj = 0; iObj < m_fbxList[iModel]->m_pDrawObjList.size(); iObj++)
+		{
+			TMatrix matWorld;
+			matWorld._41 = 100* iModel;
+			m_fbxList[iModel]->m_pDrawObjList[iObj]->SetMatrix(&matWorld,
+				&m_pMainCamera->m_matView,
+				&m_pMainCamera->m_matProj);
+			m_fbxList[iModel]->m_pDrawObjList[iObj]->Render();
+		}
 	}
+
 	m_pImmediateContext->RSSetState(TDxState::g_pDefaultRSSolid);
 	return true;
 }
 bool	Sample::Release() 
 {
-	m_FBXLoader.Release();
+	for (auto fbx : m_fbxList)
+	{
+		fbx->Release();
+	}
 	return true;
 }
 GAME_RUN(TFBXLoader, 800, 600)

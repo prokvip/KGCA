@@ -10,9 +10,11 @@ private:
 	friend class TSingleton<TTextureManager>;
 	std::map<std::wstring, TTexture*> m_List;
 public:
-	TTexture* Load(std::wstring name);
-	TTexture* Find(std::wstring name);
-	bool	  Release();
+	TTexture*	Load(std::wstring name);
+	TTexture*	Find(std::wstring name);
+	bool		Release();
+	W_STR		GetSplitName(std::wstring fullpath);
+	W_STR		GetSplitName(std::string fullpath);
 private:
 	TTextureManager();
 public:

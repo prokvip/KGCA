@@ -1,4 +1,30 @@
 #include "TTextureManager.h"
+W_STR TTextureManager::GetSplitName(std::wstring fullpath)
+{
+    W_STR name;
+    TCHAR dirve[MAX_PATH] = { 0, };
+    TCHAR dir[MAX_PATH] = { 0, };
+    TCHAR filename[MAX_PATH] = { 0, };
+    TCHAR ext[MAX_PATH] = { 0, };
+    _tsplitpath_s(fullpath.c_str(),
+        dirve, dir, filename, ext);
+    name = filename;
+    name += ext;
+    return name;
+}
+W_STR TTextureManager::GetSplitName(std::string fullpath)
+{
+    W_STR szUnicode = to_mw(fullpath);
+    W_STR name;
+    TCHAR dirve[MAX_PATH] = { 0, };
+    TCHAR dir[MAX_PATH] = { 0, };
+    TCHAR filename[MAX_PATH] = { 0, };
+    TCHAR ext[MAX_PATH] = { 0, };
+    _tsplitpath_s(szUnicode.c_str(), dirve, dir, filename, ext);
+    name = filename;
+    name += ext;
+    return name;
+}
 void TTextureManager::SetDevice(
     ID3D11Device* pd3dDevice,
     ID3D11DeviceContext* pContext)
@@ -20,9 +46,11 @@ TTexture* TTextureManager::Load(std::wstring name)
         if (SUCCEEDED(hr))
         {
             m_List.insert(std::make_pair(name, pNewData));
+            return pNewData;
         }
     }
-	return pNewData;
+    delete pNewData;
+	return nullptr;
 }
 TTexture* TTextureManager::Find(std::wstring name)
 {

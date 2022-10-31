@@ -20,6 +20,13 @@ void TCameraDebug::CreateProjMatrix(float fNear, float fFar, float fFovY, float 
 }
 bool TCameraDebug::Frame()
 {
+	//m_fYaw, m_fPitch, m_fRoll;
+	if (I_Input.GetKey(VK_LBUTTON) == KEY_HOLD)
+	{
+		m_fYaw += I_Input.m_ptOffset.x * 0.002f;
+		m_fPitch += I_Input.m_ptOffset.y * 0.002f;
+	}
+
 	if (I_Input.GetKey(VK_SPACE) == KEY_HOLD)
 	{
 		m_fSpeed += g_fSecondPerFrame * 100.0f;

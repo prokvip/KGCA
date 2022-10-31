@@ -73,6 +73,7 @@ public:
 	virtual HRESULT     CreateVertexLayout();
 	virtual void		UpdateVertexBuffer();
 	virtual void		UpdateConstantBuffer();
+	virtual bool		LoadTexture(W_STR texturename);
 public:
 	virtual bool		Init() ;
 	virtual bool		Frame() ;
