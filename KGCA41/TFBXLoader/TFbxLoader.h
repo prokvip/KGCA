@@ -9,6 +9,10 @@
 class TFbxObject : public TBaseObject
 {
 public:
+	std::vector<TFbxObject*> m_pDrawChild;
+	std::vector< std::vector<SimpleVertex>>   vbDataList;
+	std::vector< W_STR >   vbTexList;
+public:
 	void  CreateVertexData()
 	{		
 	}
@@ -39,5 +43,10 @@ public:
 								FbxLayerElementUV* VertexUVSet,
 								int posIndex,
 								int uvIndex);
+	FbxColor ReadColor(FbxMesh* pFbxMesh,
+		FbxLayerElementVertexColor* VertexColorSet,
+		int posIndex,
+		int colorIndex);
+	int GetSubMaterialIndex(int iPoly, FbxLayerElementMaterial* MaterialSet);
 };
 

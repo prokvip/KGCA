@@ -15,6 +15,8 @@ TVector4::TVector4(const TVector4& v)
 {
 	x = v.x;
 	y = v.y;
+	z = v.z;
+	w = v.w;
 }
 TVector4 TVector4::operator + (TVector4& v)
 {

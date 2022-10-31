@@ -2,7 +2,14 @@
 
 bool	Sample::Init()
 {
-	TFbxLoader* pFbxLoaderA = new TFbxLoader;
+	TFbxLoader* pFbxLoaderC = new TFbxLoader;
+	if (pFbxLoaderC->Init())
+	{
+		pFbxLoaderC->Load("../../data/fbx/MultiCameras.fbx");
+	}
+	m_fbxList.push_back(pFbxLoaderC);
+
+	/*TFbxLoader* pFbxLoaderA = new TFbxLoader;
 	if (pFbxLoaderA->Init())
 	{
 		pFbxLoaderA->Load("../../data/fbx/box.fbx");
@@ -14,7 +21,7 @@ bool	Sample::Init()
 	{
 		pFbxLoaderB->Load("../../data/fbx/sm_rock.fbx");
 	}
-	m_fbxList.push_back(pFbxLoaderB);
+	m_fbxList.push_back(pFbxLoaderB);*/
 
 	W_STR szDefaultDir = L"../../data/fbx/";
 	std::wstring shaderfilename = L"../../data/shader/DefaultObject.txt";
@@ -23,10 +30,29 @@ bool	Sample::Init()
 	{
 		for (int iObj = 0; iObj < fbx->m_pDrawObjList.size(); iObj++)
 		{
-			TBaseObject* pObj = fbx->m_pDrawObjList[iObj];
+			TFbxObject* pObj = fbx->m_pDrawObjList[iObj];
 			std::wstring  szLoad = szDefaultDir + pObj->m_szTextureName;
-			pObj->Create(m_pd3dDevice.Get(), m_pImmediateContext.Get(),
-				shaderfilename, szLoad);
+			if (pObj->vbDataList.size() == 0)
+			{
+				pObj->Create(m_pd3dDevice.Get(), m_pImmediateContext.Get(),
+					shaderfilename, szLoad);
+			}
+			else
+			{
+				for (int iSubObj = 0; iSubObj < pObj->vbDataList.size(); iSubObj++)
+				{
+					TFbxObject* pSubObj = new TFbxObject;
+					std::wstring  szSubLoad = szDefaultDir + 
+						pObj->vbTexList[iSubObj];
+					if (pObj->vbDataList[iSubObj].size() != 0)
+					{
+						pSubObj->m_VertexList = pObj->vbDataList[iSubObj];
+						pSubObj->Create(m_pd3dDevice.Get(), m_pImmediateContext.Get(),
+							shaderfilename, szSubLoad);
+						pObj->m_pDrawChild.push_back(pSubObj);
+					}
+				}
+			}
 		}
 	}
 
@@ -57,12 +83,31 @@ bool	Sample::Render()
 	{
 		for (int iObj = 0; iObj < m_fbxList[iModel]->m_pDrawObjList.size(); iObj++)
 		{
-			TMatrix matWorld;
-			matWorld._41 = 100* iModel;
-			m_fbxList[iModel]->m_pDrawObjList[iObj]->SetMatrix(&matWorld,
-				&m_pMainCamera->m_matView,
-				&m_pMainCamera->m_matProj);
-			m_fbxList[iModel]->m_pDrawObjList[iObj]->Render();
+			TFbxObject* pObj = m_fbxList[iModel]->m_pDrawObjList[iObj];
+			if (pObj->m_pDrawChild.size() == 0)
+			{
+				TMatrix matWorld;
+				matWorld._41 = 100 * iModel;
+				pObj->SetMatrix(&matWorld,
+					&m_pMainCamera->m_matView,
+					&m_pMainCamera->m_matProj);
+				pObj->Render();
+			}
+			else
+			{
+				for (int iSubObj = 0; iSubObj < 
+					pObj->m_pDrawChild.size(); iSubObj++)
+				{
+					TFbxObject* pSubObj = pObj->m_pDrawChild[iSubObj];
+					TMatrix matWorld;
+					matWorld._41 = 100 * iModel;
+					pSubObj->SetMatrix(&matWorld,
+						&m_pMainCamera->m_matView,
+						&m_pMainCamera->m_matProj);
+					pSubObj->Render();
+				}
+			}
+
 		}
 	}
 

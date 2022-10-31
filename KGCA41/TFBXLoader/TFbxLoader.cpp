@@ -26,43 +26,78 @@ void TFbxLoader::ParseMesh(FbxMesh* pFbxMesh)
 	
 	// Layer 개념
 	FbxLayerElementUV* VertexUVSet=nullptr;
+	FbxLayerElementVertexColor* VertexColorSet = nullptr;
+	FbxLayerElementMaterial* MaterialSet = nullptr;
 	FbxLayer* pFbxLayer  = pFbxMesh->GetLayer(0);
 	if (pFbxLayer->GetUVs() != nullptr)
 	{
 		VertexUVSet=pFbxLayer->GetUVs();
 	}
+	if (pFbxLayer->GetUVs() != nullptr)
+	{
+		VertexColorSet = pFbxLayer->GetVertexColors();
+	}
+	if (pFbxLayer->GetMaterials() != nullptr)
+	{
+		MaterialSet = pFbxLayer->GetMaterials();
+	}
 
 	std::string szFileName;
-	//int iNumMtrl = pNode->GetMaterialCount();
-	//for (int iMtrl = 0; iMtrl < iNumMtrl; iMtrl++)
+	int iNumMtrl = pNode->GetMaterialCount();
+	std::vector< C_STR>   texList;
+	texList.resize(iNumMtrl);
+	
+	for (int iMtrl = 0; iMtrl < iNumMtrl; iMtrl++)
 	{
 		// 24 이상의 정보가 있다.
-		FbxSurfaceMaterial* pSurface = pNode->GetMaterial(0);
+		FbxSurfaceMaterial* pSurface = pNode->GetMaterial(iMtrl);
 		if (pSurface)
 		{
 			auto property = pSurface->FindProperty(FbxSurfaceMaterial::sDiffuse);
 			if (property.IsValid())
 			{
 				const FbxFileTexture* tex = property.GetSrcObject<FbxFileTexture>(0);
-				szFileName = tex->GetFileName();
+				szFileName = tex->GetFileName();	
+				texList[iMtrl] = szFileName;
 			}
 		}
 	}
-	pObject->m_szTextureName = I_Tex.GetSplitName(szFileName);
-	
+
+	if (iNumMtrl == 1)
+	{
+		pObject->m_szTextureName = I_Tex.GetSplitName(szFileName);
+	}
+	if (iNumMtrl > 1)
+	{
+		pObject->vbDataList.resize(iNumMtrl);
+		pObject->vbTexList.resize(iNumMtrl);
+		for (int iTex = 0; iTex < iNumMtrl; iTex++)
+		{
+			pObject->vbTexList[iTex] = I_Tex.GetSplitName(
+				texList[iTex]);
+		}
+	}
+
 	int iNumPolyCount = pFbxMesh->GetPolygonCount();
 	// 3 정점 -> 1폴리곤( 삼각형)
 	// 4 정점 -> 1폴리곤( 쿼드 )
 	int iNumFace = 0;
-
+	int iBasePolyIndex = 0;
+	int iSubMtrl = 0;
 	// 제어점
 	FbxVector4* pVertexPositions = pFbxMesh->GetControlPoints();
 	for (int iPoly = 0; iPoly < iNumPolyCount; iPoly++)
 	{
 		int iPolySize = pFbxMesh->GetPolygonSize(iPoly);
 		iNumFace = iPolySize - 2;
+		if (MaterialSet)
+		{
+			iSubMtrl = GetSubMaterialIndex(iPoly, MaterialSet);
+		}
 		for (int iFace = 0; iFace < iNumFace; iFace++)
 		{
+			// 정점컬러인덱스
+			int VertexColor[3] = { 0, iFace + 2, iFace + 1 };
 			// 정점인덱스
 			int iCornerIndex[3];
 			iCornerIndex[0] = pFbxMesh->GetPolygonVertex(iPoly, 0);
@@ -83,20 +118,84 @@ void TFbxLoader::ParseMesh(FbxMesh* pFbxMesh)
 				tVertex.p.y = v.mData[2];
 				tVertex.p.z = v.mData[1];
 				tVertex.c = TVector4(1,1,1,1);
-				FbxVector2 t = ReadTextureCoord(
-							pFbxMesh, 
-							VertexUVSet, 
-							iCornerIndex[iIndex],
-							iUVIndex[iIndex]);
-				tVertex.t.x = t.mData[0];
-				tVertex.t.y = 1.0f-t.mData[1];
-
-				pObject->m_VertexList.push_back(tVertex);
+				if (VertexColorSet)
+				{
+					FbxColor c = ReadColor(
+						pFbxMesh,
+						VertexColorSet,
+						iCornerIndex[iIndex],
+						iBasePolyIndex+ VertexColor[iIndex]);
+					tVertex.c.x = c.mRed;
+					tVertex.c.y = c.mGreen;
+					tVertex.c.z = c.mBlue;
+					tVertex.c.w = 1.0f;					
+				}
+				if (VertexUVSet)
+				{
+					FbxVector2 t = ReadTextureCoord(
+						pFbxMesh,
+						VertexUVSet,
+						iCornerIndex[iIndex],
+						iUVIndex[iIndex]);
+					tVertex.t.x = t.mData[0];
+					tVertex.t.y = 1.0f - t.mData[1];
+				}
+				if (iNumMtrl <= 1)
+				{
+					pObject->m_VertexList.push_back(tVertex);
+				}
+				else
+				{
+					pObject->vbDataList[iSubMtrl].push_back(tVertex);
+				}
 			}
 		}
+		iBasePolyIndex += iPolySize;
 	}
 
 	m_pDrawObjList.push_back(pObject);
+}
+FbxColor TFbxLoader::ReadColor(FbxMesh* pFbxMesh,
+	FbxLayerElementVertexColor* VertexColorSet,
+	int posIndex,
+	int colorIndex)
+{
+	FbxColor color(1, 1, 1, 1);
+	FbxLayerElement::EMappingMode mode = VertexColorSet->GetMappingMode();
+	switch (mode)
+	{
+	case FbxLayerElementUV::eByControlPoint:
+	{
+		switch (VertexColorSet->GetReferenceMode())
+		{
+		case FbxLayerElementUV::eDirect:
+		{
+			color = VertexColorSet->GetDirectArray().GetAt(posIndex);
+		}break;
+		case FbxLayerElementUV::eIndexToDirect:
+		{
+			int index = VertexColorSet->GetIndexArray().GetAt(posIndex);
+			color = VertexColorSet->GetDirectArray().GetAt(index);
+		}break;
+		}break;
+	} break;
+	case FbxLayerElementUV::eByPolygonVertex:
+	{
+		switch (VertexColorSet->GetReferenceMode())
+		{
+		case FbxLayerElementUV::eDirect:
+		{
+			color = VertexColorSet->GetDirectArray().GetAt(colorIndex);
+		}break;
+		case FbxLayerElementUV::eIndexToDirect:
+		{
+			int index = VertexColorSet->GetIndexArray().GetAt(colorIndex);
+			color = VertexColorSet->GetDirectArray().GetAt(index);
+		}break;
+		}break;
+	}break;
+	}
+	return color;
 }
 FbxVector2 TFbxLoader::ReadTextureCoord(FbxMesh* pFbxMesh, 
 	FbxLayerElementUV* pUVSet,
@@ -151,6 +250,42 @@ FbxVector2 TFbxLoader::ReadTextureCoord(FbxMesh* pFbxMesh,
 		}break;
 	}
 	return t;
+}
+int TFbxLoader::GetSubMaterialIndex(int iPoly, FbxLayerElementMaterial* pMaterialSetList)
+{
+	// 매핑방식
+	//eNone,
+	//eByControlPoint,  // 제어점
+	//eByPolygonVertex, //  
+	//eByPolygon, // 폴리곤마다 다를수 있다.
+	//eAllSame - 전체표면에 1개의 매핑좌표가 있다.
+	int iSubMtrl = 0;
+	if (pMaterialSetList != nullptr)
+	{
+		switch (pMaterialSetList->GetMappingMode())
+		{
+		case FbxLayerElement::eByPolygon:
+		{
+			// 매핑 정보가 배열에 저장되는 방식
+			switch (pMaterialSetList->GetReferenceMode())
+			{
+			case FbxLayerElement::eIndex:
+			{
+				iSubMtrl = iPoly;
+			}break;
+			case FbxLayerElement::eIndexToDirect:
+			{
+				iSubMtrl = pMaterialSetList->GetIndexArray().GetAt(iPoly);
+			}break;
+			}
+		}
+		default:
+		{
+			break;
+		}
+		}
+	}
+	return iSubMtrl;
 }
 void TFbxLoader::PreProcess(FbxNode* pFbxNode)
 {
