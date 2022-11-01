@@ -12,6 +12,8 @@ struct VS_OUT
 	float4 c : COLOR0;
 	float2 t : TEXCOORD0;
 	float4 lightcolor : TEXCOORD1;
+	float4 vWorld : TEXCOORD2;
+	float3 vLight : TEXCOORD3;
 };
 // 상수버퍼는 레지스터 단위로만 저장된다.
 // 레지스터 단위란 :  float4(x,y,z,w)
@@ -37,8 +39,10 @@ VS_OUT VS(VS_IN input)
 	float4 vProj = mul(vView, g_matProj);	
 	output.p = vProj;
 	output.n = input.n;
+	output.vWorld = vWorld;
 	//light
 	float3 vLight = vTimer.xyz;//float3(0,-1,0);
+	output.vLight = vLight;
 	float fDot = max(0.3f, dot(input.n, -vLight));
 	output.lightcolor = float4(fDot,fDot,fDot,1);
 	output.c =input.c;
@@ -53,7 +57,8 @@ float4 PS(VS_OUT input) : SV_Target
 {
 	float4 vColor = g_txTex.Sample(g_SampleWrap , input.t);
 	input.c.a = 1.0f;
-	return vColor*input.lightcolor*input.c;	
+	float fDot = max(0.3f, dot(input.n, -input.vLight));
+	return vColor*float4(fDot,fDot,fDot,1)*input.c;	
 }
 
 float4 PSColor(VS_OUT input) : SV_Target
