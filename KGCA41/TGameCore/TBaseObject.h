@@ -38,8 +38,8 @@ struct VS_CONSTANT_BUFFER
 	TMatrix  matProj;	
 	float    x;
 	float    y;
+	float    z;
 	float    fTimer;
-	float    d;
 };
 namespace TDX
 {

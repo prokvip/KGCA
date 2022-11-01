@@ -4,12 +4,20 @@ bool TFbxLoader::Init()
 	m_pFbxManager = FbxManager::Create();
 	m_pFbxImporter = FbxImporter::Create(m_pFbxManager, "");	
 	m_pFbxScene = FbxScene::Create(m_pFbxManager, "");
+
+	// 단위
+	FbxSystemUnit::cm.ConvertScene(m_pFbxScene);
+	// 기저(행렬)
+	FbxAxisSystem::MayaZUp.ConvertScene(m_pFbxScene);
 	return true;
 }
 bool TFbxLoader::Load( C_STR filename)
 {	
 	m_pFbxImporter->Initialize(filename.c_str());
 	m_pFbxImporter->Import(m_pFbxScene);
+	//FbxGeometryConverter converter(m_pFbxManager);
+	//converter.Triangulate(m_pFbxScene, true);
+
 	m_pRootNode = m_pFbxScene->GetRootNode();
 	PreProcess(m_pRootNode);
 
@@ -24,6 +32,36 @@ void TFbxLoader::ParseMesh(FbxMesh* pFbxMesh)
 	FbxNode* pNode = pFbxMesh->GetNode();
 	TFbxObject* pObject = new TFbxObject;
 	
+	FbxAMatrix geom; // 기하(로칼)행렬(초기 정점 위치를 변환할 때 사용한다.)
+	FbxVector4 trans = pNode->GetGeometricTranslation(FbxNode::eSourcePivot);
+	FbxVector4 rot = pNode->GetGeometricRotation(FbxNode::eSourcePivot);
+	FbxVector4 scale = pNode->GetGeometricScaling(FbxNode::eSourcePivot);
+	geom.SetT(trans);
+	geom.SetR(rot);
+	geom.SetS(scale);
+
+	FbxAMatrix normalLocalMatrix = geom;
+	normalLocalMatrix = normalLocalMatrix.Inverse();
+	normalLocalMatrix = normalLocalMatrix.Transpose();
+
+	// 월드행렬
+	FbxVector4 Translation;
+	if (pNode->LclTranslation.IsValid())
+		Translation = pNode->LclTranslation.Get();
+
+	FbxVector4 Rotation;
+	if (pNode->LclRotation.IsValid())
+		Rotation = pNode->LclRotation.Get();
+
+	FbxVector4 Scale;
+	if (pNode->LclScaling.IsValid())
+		Scale = pNode->LclScaling.Get();
+
+	FbxAMatrix matWorldTransform(Translation, Rotation, Scale);
+	FbxAMatrix normalWorldMatrix = matWorldTransform;
+	normalWorldMatrix = normalWorldMatrix.Inverse();
+	normalWorldMatrix = normalWorldMatrix.Transpose();
+
 	// Layer 개념
 	FbxLayerElementUV* VertexUVSet=nullptr;
 	FbxLayerElementVertexColor* VertexColorSet = nullptr;
@@ -117,8 +155,10 @@ void TFbxLoader::ParseMesh(FbxMesh* pFbxMesh)
 			for (int iIndex = 0; iIndex < 3; iIndex++)
 			{
 				int vertexID = iCornerIndex[iIndex];
-				FbxVector4 v = pVertexPositions[vertexID];
-				PNCT_VERTEX tVertex;
+				FbxVector4 v2 = pVertexPositions[vertexID];
+				PNCT_VERTEX tVertex; 
+				FbxVector4 v = geom.MultT(v2);
+				v = matWorldTransform.MultT(v);
 				tVertex.p.x = v.mData[0];
 				tVertex.p.y = v.mData[2];
 				tVertex.p.z = v.mData[1];
@@ -152,6 +192,8 @@ void TFbxLoader::ParseMesh(FbxMesh* pFbxMesh)
 						VertexNormalSet,
 						iCornerIndex[iIndex],
 						iBasePolyIndex + VertexColor[iIndex]);
+					n = normalLocalMatrix.MultT(n);
+					n = normalWorldMatrix.MultT(n);
 					tVertex.n.x = n.mData[0];
 					tVertex.n.y = n.mData[2];
 					tVertex.n.z = n.mData[1];

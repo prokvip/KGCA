@@ -9,7 +9,7 @@ bool	Sample::Init()
 	}
 	m_fbxList.push_back(pFbxLoaderC);
 
-	/*TFbxLoader* pFbxLoaderA = new TFbxLoader;
+	TFbxLoader* pFbxLoaderA = new TFbxLoader;
 	if (pFbxLoaderA->Init())
 	{
 		pFbxLoaderA->Load("../../data/fbx/box.fbx");
@@ -21,7 +21,7 @@ bool	Sample::Init()
 	{
 		pFbxLoaderB->Load("../../data/fbx/sm_rock.fbx");
 	}
-	m_fbxList.push_back(pFbxLoaderB);*/
+	m_fbxList.push_back(pFbxLoaderB);
 
 	W_STR szDefaultDir = L"../../data/fbx/";
 	std::wstring shaderfilename = L"../../data/shader/DefaultObject.txt";
@@ -59,6 +59,12 @@ bool	Sample::Render()
 		m_pImmediateContext->RSSetState(TDxState::g_pDefaultRSWireFrame);
 	}
 	 
+	TVector vLight(0, 0, 1);
+	TMatrix matRotation;
+	matRotation.RotationY(g_fGameTimer);
+	vLight = vLight * matRotation;
+	vLight.Normalized();
+
 	for (int iModel=0; iModel < m_fbxList.size(); iModel++)
 	{
 		for (int iObj = 0; iObj < m_fbxList[iModel]->m_pDrawObjList.size(); iObj++)
@@ -66,6 +72,10 @@ bool	Sample::Render()
 			TFbxObject* pObj = m_fbxList[iModel]->m_pDrawObjList[iObj];
 			TMatrix matWorld;
 			matWorld._41 = 100 * iModel;
+
+			pObj->m_cbData.x = vLight.x;
+			pObj->m_cbData.y = vLight.y;
+			pObj->m_cbData.z = vLight.z;
 			pObj->SetMatrix(&matWorld,&m_pMainCamera->m_matView,&m_pMainCamera->m_matProj);
 			pObj->Render();			
 		}
