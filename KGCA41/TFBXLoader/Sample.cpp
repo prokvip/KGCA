@@ -32,27 +32,7 @@ bool	Sample::Init()
 		{
 			TFbxObject* pObj = fbx->m_pDrawObjList[iObj];
 			std::wstring  szLoad = szDefaultDir + pObj->m_szTextureName;
-			if (pObj->vbDataList.size() == 0)
-			{
-				pObj->Create(m_pd3dDevice.Get(), m_pImmediateContext.Get(),
-					shaderfilename, szLoad);
-			}
-			else
-			{
-				for (int iSubObj = 0; iSubObj < pObj->vbDataList.size(); iSubObj++)
-				{
-					TFbxObject* pSubObj = new TFbxObject;
-					std::wstring  szSubLoad = szDefaultDir + 
-						pObj->vbTexList[iSubObj];
-					if (pObj->vbDataList[iSubObj].size() != 0)
-					{
-						pSubObj->m_VertexList = pObj->vbDataList[iSubObj];
-						pSubObj->Create(m_pd3dDevice.Get(), m_pImmediateContext.Get(),
-							shaderfilename, szSubLoad);
-						pObj->m_pDrawChild.push_back(pSubObj);
-					}
-				}
-			}
+			pObj->Create(m_pd3dDevice.Get(), m_pImmediateContext.Get(),	shaderfilename, szLoad);			
 		}
 	}
 
@@ -84,33 +64,12 @@ bool	Sample::Render()
 		for (int iObj = 0; iObj < m_fbxList[iModel]->m_pDrawObjList.size(); iObj++)
 		{
 			TFbxObject* pObj = m_fbxList[iModel]->m_pDrawObjList[iObj];
-			if (pObj->m_pDrawChild.size() == 0)
-			{
-				TMatrix matWorld;
-				matWorld._41 = 100 * iModel;
-				pObj->SetMatrix(&matWorld,
-					&m_pMainCamera->m_matView,
-					&m_pMainCamera->m_matProj);
-				pObj->Render();
-			}
-			else
-			{
-				for (int iSubObj = 0; iSubObj < 
-					pObj->m_pDrawChild.size(); iSubObj++)
-				{
-					TFbxObject* pSubObj = pObj->m_pDrawChild[iSubObj];
-					TMatrix matWorld;
-					matWorld._41 = 100 * iModel;
-					pSubObj->SetMatrix(&matWorld,
-						&m_pMainCamera->m_matView,
-						&m_pMainCamera->m_matProj);
-					pSubObj->Render();
-				}
-			}
-
+			TMatrix matWorld;
+			matWorld._41 = 100 * iModel;
+			pObj->SetMatrix(&matWorld,&m_pMainCamera->m_matView,&m_pMainCamera->m_matProj);
+			pObj->Render();			
 		}
 	}
-
 	m_pImmediateContext->RSSetState(TDxState::g_pDefaultRSSolid);
 	return true;
 }

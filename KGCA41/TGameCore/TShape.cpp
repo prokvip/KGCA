@@ -10,39 +10,39 @@ void    TShapeBox::CreateVertexData()
 	  // 0    3  
 	  // ¾Õ¸é
 	m_VertexList.resize(24);
-	m_VertexList[0] = SimpleVertex(TVector(-1.0f, 1.0f, -1.0f),  TVector4(1.0f, 0.0f, 0.0f, 1.0f), TVector2(0.0f, 0.0f));
-	m_VertexList[1] = SimpleVertex(TVector(1.0f, 1.0f, -1.0f), TVector4(1.0f, 0.0f, 0.0f, 1.0f), TVector2(1.0f, 0.0f));
-	m_VertexList[2] = SimpleVertex(TVector(1.0f, -1.0f, -1.0f),  TVector4(1.0f, 0.0f, 0.0f, 1.0f), TVector2(1.0f, 1.0f));
-	m_VertexList[3] = SimpleVertex(TVector(-1.0f, -1.0f, -1.0f),  TVector4(1.0f, 0.0f, 0.0f, 1.0f), TVector2(0.0f, 1.0f));
+	m_VertexList[0] = PNCT_VERTEX(TVector(-1.0f, 1.0f, -1.0f), TVector(0.0f, 0.0f, -1.0f), TVector4(1.0f, 0.0f, 0.0f, 1.0f), TVector2(0.0f, 0.0f));
+	m_VertexList[1] = PNCT_VERTEX(TVector(1.0f, 1.0f, -1.0f), TVector(0.0f, 0.0f, -1.0f), TVector4(1.0f, 0.0f, 0.0f, 1.0f), TVector2(1.0f, 0.0f));
+	m_VertexList[2] = PNCT_VERTEX(TVector(1.0f, -1.0f, -1.0f), TVector(0.0f, 0.0f, -1.0f), TVector4(1.0f, 0.0f, 0.0f, 1.0f), TVector2(1.0f, 1.0f));
+	m_VertexList[3] = PNCT_VERTEX(TVector(-1.0f, -1.0f, -1.0f), TVector(0.0f, 0.0f, -1.0f), TVector4(1.0f, 0.0f, 0.0f, 1.0f), TVector2(0.0f, 1.0f));
 	// µÞ¸é
-	m_VertexList[4] = SimpleVertex(TVector(1.0f, 1.0f, 1.0f),  TVector4(0.0f, 0.0f, 0.0f, 1.0f), TVector2(0.0f, 0.0f));
-	m_VertexList[5] = SimpleVertex(TVector(-1.0f, 1.0f, 1.0f),  TVector4(0.0f, 1.0f, 0.0f, 1.0f), TVector2(1.0f, 0.0f));
-	m_VertexList[6] = SimpleVertex(TVector(-1.0f, -1.0f, 1.0f),  TVector4(0.0f, 1.0f, 0.0f, 1.0f), TVector2(1.0f, 1.0f));
-	m_VertexList[7] = SimpleVertex(TVector(1.0f, -1.0f, 1.0f),  TVector4(0.0f, 1.0f, 0.0f, 1.0f), TVector2(0.0f, 1.0f));
+	m_VertexList[4] = PNCT_VERTEX(TVector(1.0f, 1.0f, 1.0f), TVector(0.0f, 0.0f, 1.0f), TVector4(0.0f, 0.0f, 0.0f, 1.0f), TVector2(0.0f, 0.0f));
+	m_VertexList[5] = PNCT_VERTEX(TVector(-1.0f, 1.0f, 1.0f), TVector(0.0f, 0.0f, 1.0f), TVector4(0.0f, 1.0f, 0.0f, 1.0f), TVector2(1.0f, 0.0f));
+	m_VertexList[6] = PNCT_VERTEX(TVector(-1.0f, -1.0f, 1.0f), TVector(0.0f, 0.0f, 1.0f), TVector4(0.0f, 1.0f, 0.0f, 1.0f), TVector2(1.0f, 1.0f));
+	m_VertexList[7] = PNCT_VERTEX(TVector(1.0f, -1.0f, 1.0f), TVector(0.0f, 0.0f, 1.0f), TVector4(0.0f, 1.0f, 0.0f, 1.0f), TVector2(0.0f, 1.0f));
 
 	// ¿À¸¥ÂÊ
-	m_VertexList[8] = SimpleVertex(TVector(1.0f, 1.0f, -1.0f), TVector4(0.0f, 0.0f, 1.0f, 1.0f), TVector2(0.0f, 0.0f));
-	m_VertexList[9] = SimpleVertex(TVector(1.0f, 1.0f, 1.0f),  TVector4(0.0f, 0.0f, 1.0f, 1.0f), TVector2(1.0f, 0.0f));
-	m_VertexList[10] = SimpleVertex(TVector(1.0f, -1.0f, 1.0f),  TVector4(0.0f, 0.0f, 1.0f, 1.0f), TVector2(1.0f, 1.0f));
-	m_VertexList[11] = SimpleVertex(TVector(1.0f, -1.0f, -1.0f),  TVector4(0.0f, 0.0f, 1.0f, 1.0f), TVector2(0.0f, 1.0f));
+	m_VertexList[8] = PNCT_VERTEX(TVector(1.0f, 1.0f, -1.0f), TVector(1.0f, 0.0f, 0.0f), TVector4(0.0f, 0.0f, 1.0f, 1.0f), TVector2(0.0f, 0.0f));
+	m_VertexList[9] = PNCT_VERTEX(TVector(1.0f, 1.0f, 1.0f), TVector(1.0f, 0.0f, 0.0f), TVector4(0.0f, 0.0f, 1.0f, 1.0f), TVector2(1.0f, 0.0f));
+	m_VertexList[10] = PNCT_VERTEX(TVector(1.0f, -1.0f, 1.0f), TVector(1.0f, 0.0f, 0.0f), TVector4(0.0f, 0.0f, 1.0f, 1.0f), TVector2(1.0f, 1.0f));
+	m_VertexList[11] = PNCT_VERTEX(TVector(1.0f, -1.0f, -1.0f), TVector(1.0f, 0.0f, 0.0f), TVector4(0.0f, 0.0f, 1.0f, 1.0f), TVector2(0.0f, 1.0f));
 
 	// ¿ÞÂÊ
-	m_VertexList[12] = SimpleVertex(TVector(-1.0f, 1.0f, 1.0f),  TVector4(1.0f, 1.0f, 0.0f, 1.0f), TVector2(0.0f, 0.0f));
-	m_VertexList[13] = SimpleVertex(TVector(-1.0f, 1.0f, -1.0f), TVector4(1.0f, 1.0f, 0.0f, 1.0f), TVector2(1.0f, 0.0f));
-	m_VertexList[14] = SimpleVertex(TVector(-1.0f, -1.0f, -1.0f), TVector4(1.0f, 1.0f, 0.0f, 1.0f), TVector2(1.0f, 1.0f));
-	m_VertexList[15] = SimpleVertex(TVector(-1.0f, -1.0f, 1.0f), TVector4(1.0f, 1.0f, 0.0f, 1.0f), TVector2(0.0f, 1.0f));
+	m_VertexList[12] = PNCT_VERTEX(TVector(-1.0f, 1.0f, 1.0f), TVector(-1.0f, 0.0f, 0.0f), TVector4(1.0f, 1.0f, 0.0f, 1.0f), TVector2(0.0f, 0.0f));
+	m_VertexList[13] = PNCT_VERTEX(TVector(-1.0f, 1.0f, -1.0f), TVector(-1.0f, 0.0f, 0.0f), TVector4(1.0f, 1.0f, 0.0f, 1.0f), TVector2(1.0f, 0.0f));
+	m_VertexList[14] = PNCT_VERTEX(TVector(-1.0f, -1.0f, -1.0f), TVector(-1.0f, 0.0f, 0.0f), TVector4(1.0f, 1.0f, 0.0f, 1.0f), TVector2(1.0f, 1.0f));
+	m_VertexList[15] = PNCT_VERTEX(TVector(-1.0f, -1.0f, 1.0f), TVector(-1.0f, 0.0f, 0.0f), TVector4(1.0f, 1.0f, 0.0f, 1.0f), TVector2(0.0f, 1.0f));
 
 	// À­¸é
-	m_VertexList[16] = SimpleVertex(TVector(-1.0f, 1.0f, 1.0f), TVector4(1.0f, 0.5f, 1.0f, 1.0f), TVector2(0.0f, 0.0f));
-	m_VertexList[17] = SimpleVertex(TVector(1.0f, 1.0f, 1.0f), TVector4(1.0f, 0.5f, 1.0f, 1.0f), TVector2(1.0f, 0.0f));
-	m_VertexList[18] = SimpleVertex(TVector(1.0f, 1.0f, -1.0f), TVector4(1.0f, 0.5f, 1.0f, 1.0f), TVector2(1.0f, 1.0f));
-	m_VertexList[19] = SimpleVertex(TVector(-1.0f, 1.0f, -1.0f), TVector4(1.0f, 0.5f, 1.0f, 1.0f), TVector2(0.0f, 1.0f));
+	m_VertexList[16] = PNCT_VERTEX(TVector(-1.0f, 1.0f, 1.0f), TVector(0.0f, 1.0f, 0.0f), TVector4(1.0f, 0.5f, 1.0f, 1.0f), TVector2(0.0f, 0.0f));
+	m_VertexList[17] = PNCT_VERTEX(TVector(1.0f, 1.0f, 1.0f), TVector(0.0f, 1.0f, 0.0f), TVector4(1.0f, 0.5f, 1.0f, 1.0f), TVector2(1.0f, 0.0f));
+	m_VertexList[18] = PNCT_VERTEX(TVector(1.0f, 1.0f, -1.0f), TVector(0.0f, 1.0f, 0.0f), TVector4(1.0f, 0.5f, 1.0f, 1.0f), TVector2(1.0f, 1.0f));
+	m_VertexList[19] = PNCT_VERTEX(TVector(-1.0f, 1.0f, -1.0f), TVector(0.0f, 1.0f, 0.0f), TVector4(1.0f, 0.5f, 1.0f, 1.0f), TVector2(0.0f, 1.0f));
 
 	// ¾Æ·§¸é
-	m_VertexList[20] = SimpleVertex(TVector(-1.0f, -1.0f, -1.0f), TVector4(0.0f, 1.0f, 1.0f, 1.0f), TVector2(0.0f, 0.0f));
-	m_VertexList[21] = SimpleVertex(TVector(1.0f, -1.0f, -1.0f), TVector4(0.0f, 1.0f, 1.0f, 1.0f), TVector2(1.0f, 0.0f));
-	m_VertexList[22] = SimpleVertex(TVector(1.0f, -1.0f, 1.0f), TVector4(0.0f, 1.0f, 1.0f, 1.0f), TVector2(1.0f, 1.0f));
-	m_VertexList[23] = SimpleVertex(TVector(-1.0f, -1.0f, 1.0f), TVector4(0.0f, 1.0f, 1.0f, 1.0f), TVector2(0.0f, 1.0f));
+	m_VertexList[20] = PNCT_VERTEX(TVector(-1.0f, -1.0f, -1.0f), TVector(0.0f, -1.0f, 0.0f), TVector4(0.0f, 1.0f, 1.0f, 1.0f), TVector2(0.0f, 0.0f));
+	m_VertexList[21] = PNCT_VERTEX(TVector(1.0f, -1.0f, -1.0f), TVector(0.0f, -1.0f, 0.0f), TVector4(0.0f, 1.0f, 1.0f, 1.0f), TVector2(1.0f, 0.0f));
+	m_VertexList[22] = PNCT_VERTEX(TVector(1.0f, -1.0f, 1.0f), TVector(0.0f, -1.0f, 0.0f), TVector4(0.0f, 1.0f, 1.0f, 1.0f), TVector2(1.0f, 1.0f));
+	m_VertexList[23] = PNCT_VERTEX(TVector(-1.0f, -1.0f, 1.0f), TVector(0.0f, -1.0f, 0.0f), TVector4(0.0f, 1.0f, 1.0f, 1.0f), TVector2(0.0f, 1.0f));
 
 
     m_InitVertexList = m_VertexList;
@@ -88,8 +88,8 @@ void    TShapeLine::CreateVertexData()
 	  // 0    3  
 	  // ¾Õ¸é
 	m_VertexList.resize(2);
-	m_VertexList[0] = SimpleVertex(TVector(0.0f, 0.0f, 0.0f), TVector4(1.0f, 0.0f, 0.0f, 1.0f), TVector2(0.0f, 0.0f));
-	m_VertexList[1] = SimpleVertex(TVector(0.0f, 0.0f, 1000.0f), TVector4(1.0f, 0.0f, 0.0f, 1.0f), TVector2(1.0f, 0.0f));
+	m_VertexList[0] = PNCT_VERTEX(TVector(0.0f, 0.0f, 0.0f), TVector(0.0f, 0.0f, -1.0f), TVector4(1.0f, 0.0f, 0.0f, 1.0f), TVector2(0.0f, 0.0f));
+	m_VertexList[1] = PNCT_VERTEX(TVector(0.0f, 0.0f, 1000.0f), TVector(0.0f, 0.0f, -1.0f), TVector4(1.0f, 0.0f, 0.0f, 1.0f), TVector2(1.0f, 0.0f));
 	m_InitVertexList = m_VertexList;
 }
 void    TShapeLine::CreateIndexData()
@@ -123,12 +123,12 @@ void    TShapeDirectionLine::CreateVertexData()
 	  // 0    3  
 	  // ¾Õ¸é
 	m_VertexList.resize(6);
-	m_VertexList[0] = SimpleVertex(TVector(0.0f, 0.0f, 0.0f), TVector4(1.0f, 0.0f, 0.0f, 1.0f), TVector2(0.0f, 0.0f));
-	m_VertexList[1] = SimpleVertex(TVector(1.0f, 0.0f, 0.0f), TVector4(1.0f, 0.0f, 0.0f, 1.0f), TVector2(1.0f, 0.0f));
-	m_VertexList[2] = SimpleVertex(TVector(0.0f, 0.0f, 0.0f), TVector4(0.0f, 1.0f, 0.0f, 1.0f), TVector2(0.0f, 0.0f));
-	m_VertexList[3] = SimpleVertex(TVector(0.0f, 1.0f, 0.0f), TVector4(0.0f, 1.0f, 0.0f, 1.0f), TVector2(1.0f, 0.0f));
-	m_VertexList[4] = SimpleVertex(TVector(0.0f, 0.0f, 0.0f), TVector4(0.0f, 0.0f, 1.0f, 1.0f), TVector2(0.0f, 0.0f));
-	m_VertexList[5] = SimpleVertex(TVector(0.0f, 0.0f, 1.0f), TVector4(0.0f, 0.0f, 1.0f, 1.0f), TVector2(1.0f, 0.0f));
+	m_VertexList[0] = PNCT_VERTEX(TVector(0.0f, 0.0f, 0.0f), TVector(0.0f, 0.0f, -1.0f), TVector4(1.0f, 0.0f, 0.0f, 1.0f), TVector2(0.0f, 0.0f));
+	m_VertexList[1] = PNCT_VERTEX(TVector(1.0f, 0.0f, 0.0f), TVector(0.0f, 0.0f, -1.0f), TVector4(1.0f, 0.0f, 0.0f, 1.0f), TVector2(1.0f, 0.0f));
+	m_VertexList[2] = PNCT_VERTEX(TVector(0.0f, 0.0f, 0.0f), TVector(0.0f, 0.0f, -1.0f), TVector4(0.0f, 1.0f, 0.0f, 1.0f), TVector2(0.0f, 0.0f));
+	m_VertexList[3] = PNCT_VERTEX(TVector(0.0f, 1.0f, 0.0f), TVector(0.0f, 0.0f, -1.0f), TVector4(0.0f, 1.0f, 0.0f, 1.0f), TVector2(1.0f, 0.0f));
+	m_VertexList[4] = PNCT_VERTEX(TVector(0.0f, 0.0f, 0.0f), TVector(0.0f, 0.0f, -1.0f), TVector4(0.0f, 0.0f, 1.0f, 1.0f), TVector2(0.0f, 0.0f));
+	m_VertexList[5] = PNCT_VERTEX(TVector(0.0f, 0.0f, 1.0f), TVector(0.0f, 0.0f, -1.0f), TVector4(0.0f, 0.0f, 1.0f, 1.0f), TVector2(1.0f, 0.0f));
 	m_InitVertexList = m_VertexList;
 }
 void    TShapeDirectionLine::CreateIndexData()
