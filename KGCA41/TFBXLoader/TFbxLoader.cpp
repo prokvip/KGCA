@@ -72,7 +72,7 @@ void TFbxLoader::ParseMesh(FbxMesh* pFbxMesh)
 	{
 		VertexUVSet=pFbxLayer->GetUVs();
 	}
-	if (pFbxLayer->GetUVs() != nullptr)
+	if (pFbxLayer->GetVertexColors() != nullptr)
 	{
 		VertexColorSet = pFbxLayer->GetVertexColors();
 	}
@@ -87,8 +87,8 @@ void TFbxLoader::ParseMesh(FbxMesh* pFbxMesh)
 
 	std::string szFileName;
 	int iNumMtrl = pNode->GetMaterialCount();
-	std::vector< C_STR>   texList;
-	texList.resize(iNumMtrl);
+	std::vector< C_STR>   texFullNameList;
+	texFullNameList.resize(iNumMtrl);
 	
 	for (int iMtrl = 0; iMtrl < iNumMtrl; iMtrl++)
 	{
@@ -101,7 +101,7 @@ void TFbxLoader::ParseMesh(FbxMesh* pFbxMesh)
 			{
 				const FbxFileTexture* tex = property.GetSrcObject<FbxFileTexture>(0);
 				szFileName = tex->GetFileName();	
-				texList[iMtrl] = szFileName;
+				texFullNameList[iMtrl] = szFileName;
 			}
 		}
 	}
@@ -117,7 +117,7 @@ void TFbxLoader::ParseMesh(FbxMesh* pFbxMesh)
 		for (int iTex = 0; iTex < iNumMtrl; iTex++)
 		{
 			pObject->vbTexList[iTex] = I_Tex.GetSplitName(
-				texList[iTex]);
+				texFullNameList[iTex]);
 		}
 	}
 

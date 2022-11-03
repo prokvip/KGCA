@@ -55,26 +55,26 @@ void Sample::ClearD3D11DeviceContext(ID3D11DeviceContext* pd3dDeviceContext)
 }
 bool	Sample::Init()
 {
-	TFbxLoader* pFbxLoaderC = new TFbxLoader;
+	/*TFbxLoader* pFbxLoaderC = new TFbxLoader;
 	if (pFbxLoaderC->Init())
 	{
 		pFbxLoaderC->Load("../../data/fbx/MultiCameras.fbx");
 	}
-	m_fbxList.push_back(pFbxLoaderC);
+	m_fbxList.push_back(pFbxLoaderC);*/
 
 	TFbxLoader* pFbxLoaderA = new TFbxLoader;
 	if (pFbxLoaderA->Init())
 	{
-		pFbxLoaderA->Load("../../data/fbx/box.fbx");
+		pFbxLoaderA->Load("../../data/fbx/ship.fbx");
 	}
 	m_fbxList.push_back(pFbxLoaderA);
 
-	TFbxLoader* pFbxLoaderB = new TFbxLoader;
+	/*TFbxLoader* pFbxLoaderB = new TFbxLoader;
 	if (pFbxLoaderB->Init())
 	{
 		pFbxLoaderB->Load("../../data/fbx/sm_rock.fbx");
 	}
-	m_fbxList.push_back(pFbxLoaderB);
+	m_fbxList.push_back(pFbxLoaderB);*/
 
 	W_STR szDefaultDir = L"../../data/fbx/";
 	std::wstring shaderfilename = L"../../data/shader/DefaultObject.txt";
