@@ -21,17 +21,25 @@ bool TFbxLoader::Load( C_STR filename)
 	m_pRootNode = m_pFbxScene->GetRootNode();
 	PreProcess(m_pRootNode);
 
-	for (auto mesh : m_pFbxMeshList)
+	for (auto tObj : m_pObjectList)
 	{
-		ParseMesh(mesh);
+		if (tObj->m_pFbxParentNode != nullptr)
+		{
+			auto data = m_pObjectMap.find(tObj->m_pFbxParentNode);
+			tObj->SetParent(data->second);
+		}
+		FbxMesh* pFbxMesh = tObj->m_pFbxNode->GetMesh();
+		if (pFbxMesh)
+		{
+			m_pFbxMeshList.push_back(pFbxMesh);
+			ParseMesh(pFbxMesh, tObj);
+		}		
 	}
 	return true;
 }
-void TFbxLoader::ParseMesh(FbxMesh* pFbxMesh)
+void TFbxLoader::ParseMesh(FbxMesh* pFbxMesh, TFbxObject* pObject)
 {
-	FbxNode* pNode = pFbxMesh->GetNode();
-	TFbxObject* pObject = new TFbxObject;
-	
+	FbxNode* pNode = pFbxMesh->GetNode();	
 	FbxAMatrix geom; // 기하(로칼)행렬(초기 정점 위치를 변환할 때 사용한다.)
 	FbxVector4 trans = pNode->GetGeometricTranslation(FbxNode::eSourcePivot);
 	FbxVector4 rot = pNode->GetGeometricRotation(FbxNode::eSourcePivot);
@@ -100,8 +108,11 @@ void TFbxLoader::ParseMesh(FbxMesh* pFbxMesh)
 			if (property.IsValid())
 			{
 				const FbxFileTexture* tex = property.GetSrcObject<FbxFileTexture>(0);
-				szFileName = tex->GetFileName();	
-				texFullNameList[iMtrl] = szFileName;
+				if (tex)
+				{
+					szFileName = tex->GetFileName();
+					texFullNameList[iMtrl] = szFileName;
+				}
 			}
 		}
 	}
@@ -388,18 +399,34 @@ int TFbxLoader::GetSubMaterialIndex(int iPoly, FbxLayerElementMaterial* pMateria
 	return iSubMtrl;
 }
 void TFbxLoader::PreProcess(FbxNode* pFbxNode)
-{
-	if (pFbxNode == nullptr) return;
-	FbxMesh* pFbxMesh = pFbxNode->GetMesh();
-	if (pFbxMesh)
+{	
+	//if (pFbxNode && (pFbxNode->GetCamera() || pFbxNode->GetLight()))
+	if( pFbxNode == nullptr)
 	{
-		m_pFbxMeshList.push_back(pFbxMesh);
+		return;
 	}
+	
+	TFbxObject* pObject = new TFbxObject;
+	std::string name = pFbxNode->GetName();
+	pObject->m_csName = to_mw(name);
+	pObject->m_pFbxNode = pFbxNode;
+	pObject->m_pFbxParentNode = pFbxNode->GetParent();
+
+	m_pObjectList.push_back(pObject);
+	m_pObjectMap.insert(std::make_pair(pFbxNode, pObject));
+
 	int iNumChild = pFbxNode->GetChildCount();
 	for( int iChild=0; iChild < iNumChild; iChild++)
 	{
 		FbxNode* pChild = pFbxNode->GetChild(iChild);
-		PreProcess(pChild);
+		// 헬퍼오브젝트 + 지오메트리 오브젝트
+		FbxNodeAttribute::EType type = pChild->GetNodeAttribute()->GetAttributeType();
+		if( type == FbxNodeAttribute::eMesh ||
+			type == FbxNodeAttribute::eSkeleton||
+			type == FbxNodeAttribute::eNull)
+		{
+			PreProcess(pChild);
+		}		
 	}
 }
 bool TFbxLoader::Frame()

@@ -65,7 +65,7 @@ bool	Sample::Init()
 	TFbxLoader* pFbxLoaderA = new TFbxLoader;
 	if (pFbxLoaderA->Init())
 	{
-		pFbxLoaderA->Load("../../data/fbx/ship.fbx");
+		pFbxLoaderA->Load("../../data/fbx/Turret_Deploy1/Turret_Deploy1.fbx");
 	}
 	m_fbxList.push_back(pFbxLoaderA);
 

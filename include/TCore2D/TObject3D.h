@@ -3,6 +3,8 @@
 class TObject3D : public TBaseObject
 {
 public:
+	W_STR     m_csName;
+public:
 	TVector   m_vPos;
 	TVector   m_vLook;//z axis
 	TVector   m_vUp;// y
