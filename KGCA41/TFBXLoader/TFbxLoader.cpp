@@ -460,7 +460,7 @@ void TFbxLoader::PreProcess(FbxNode* pFbxNode)
 	
 	TFbxObject* pObject = new TFbxObject;
 	std::string name = pFbxNode->GetName();
-	pObject->m_csName = to_mw(name);
+	pObject->m_szName = to_mw(name);
 	pObject->m_pFbxNode = pFbxNode;
 	pObject->m_pFbxParentNode = pFbxNode->GetParent();
 

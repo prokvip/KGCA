@@ -90,7 +90,7 @@ bool	Sample::Init()
 	}
 
 	m_pMainCamera = new TCameraDebug;
-	m_pMainCamera->CreateViewMatrix(TVector(50, 6, -50), TVector(0, 0, 0), TVector(0, 1, 0));
+	m_pMainCamera->CreateViewMatrix(TVector3(50, 6, -50), TVector3(0, 0, 0), TVector3(0, 1, 0));
 	m_pMainCamera->CreateProjMatrix(1.0f, 10000.0f, T_PI * 0.25f,
 		(float)g_rtClient.right / (float)g_rtClient.bottom);
 
@@ -113,12 +113,12 @@ bool	Sample::Render()
 		m_pImmediateContext->RSSetState(TDxState::g_pDefaultRSWireFrame);
 	}
 	 
-	TVector vLight(0, 0, 1);
+	TVector3 vLight(0, 0, 1);
 	TMatrix matRotation;
-	matRotation.RotationY(g_fGameTimer);
-	vLight = vLight * matRotation;
-	vLight.Normalized();
-
+	D3DXMatrixRotationY(&matRotation, g_fGameTimer);
+	//vLight = vLight * matRotation;
+	D3DXVec3TransformCoord(&vLight, &vLight, &matRotation);
+	D3DXVec3Normalize(&vLight, &vLight);
 	for (int iModel=0; iModel < m_fbxList.size(); iModel++)
 	{
 		for (int iObj = 0; iObj < m_fbxList[iModel]->m_pDrawObjList.size(); iObj++)

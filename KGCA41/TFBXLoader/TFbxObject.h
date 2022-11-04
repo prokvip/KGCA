@@ -3,8 +3,6 @@
 #include "TObject3D.h"
 struct TAnimTrack
 {
-	FbxLongLong iFrame;
-	FbxAMatrix  fbxMatrix;	
 	UINT      iFrame; //fTime;
 	TBASIS_EX::TMatrix   matAnim;  // self * parent;
 	TBASIS_EX::TMatrix   matSelfAnim; // matAnim * inv(parent)

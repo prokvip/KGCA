@@ -14,9 +14,10 @@ void TCamera::Update()
 	m_vLook.y = m_matView._23;
 	m_vLook.z = m_matView._33;
 
-	m_vRight.Normalized();
-	m_vUp.Normalized();
-	m_vLook.Normalized();
+	D3DXVec3Normalize(&m_vRight, &m_vRight);
+	D3DXVec3Normalize(&m_vUp, &m_vUp);
+	D3DXVec3Normalize(&m_vLook, &m_vLook);
+
 }
 void TCamera::CreateViewMatrix(TVector3 vEye, TVector3 vAt, TVector3 vUp)
 {
@@ -75,8 +76,8 @@ bool TCamera::Frame()
 	TVector3 vUp = { 0,1,0 };
 	//TMatrix mCamera = TMath::RotationY(g_fGameTimer);
 	//vPos = (vPos + vPosMovement) * mCamera;
-	m_matView.ViewLookAt(m_vPos, m_vTarget, m_vUp);
-
+	//m_matView.ViewLookAt(m_vPos, m_vTarget, m_vUp);
+	D3DXMatrixLookAtLH(&m_matView, &m_vPos, &m_vTarget, &m_vUp);
 	Update();
 	return true;
 }
