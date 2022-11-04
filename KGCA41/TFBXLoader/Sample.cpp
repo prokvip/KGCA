@@ -124,9 +124,16 @@ bool	Sample::Render()
 		for (int iObj = 0; iObj < m_fbxList[iModel]->m_pDrawObjList.size(); iObj++)
 		{
 			TFbxObject* pObj = m_fbxList[iModel]->m_pDrawObjList[iObj];
-			TMatrix matWorld;
-			matWorld._41 = 100 * iModel;
+			pObj->m_fAnimFrame = pObj->m_fAnimFrame + 
+								 g_fSecondPerFrame* pObj->m_fAnimSpeed * 30.0f* pObj->m_fAnimInverse;
+			if (pObj->m_fAnimFrame > 50 || pObj->m_fAnimFrame < 0)
+			{
+				pObj->m_fAnimFrame = min(pObj->m_fAnimFrame, 50);
+				pObj->m_fAnimFrame = max(pObj->m_fAnimFrame, 0);
+				pObj->m_fAnimInverse *= -1.0f;
+			}
 
+			TMatrix matWorld = pObj->m_AnimTracks[pObj->m_fAnimFrame].matAnim;
 			pObj->m_cbData.x = vLight.x;
 			pObj->m_cbData.y = vLight.y;
 			pObj->m_cbData.z = vLight.z;

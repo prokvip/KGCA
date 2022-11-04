@@ -40,5 +40,9 @@ public:
 		int posIndex,
 		int colorIndex);
 	int GetSubMaterialIndex(int iPoly, FbxLayerElementMaterial* MaterialSet);
+	void LoadAnimation(TFbxObject* pObj);
+	TMatrix ConvertMatrix(FbxAMatrix& fbxMatrix);
+	TMatrix DxConvertMatrix(FbxAMatrix& fbxMatrix);
+
 };
 

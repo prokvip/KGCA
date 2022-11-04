@@ -28,6 +28,7 @@ bool TFbxLoader::Load( C_STR filename)
 			auto data = m_pObjectMap.find(tObj->m_pFbxParentNode);
 			tObj->SetParent(data->second);
 		}
+		LoadAnimation(tObj);
 		FbxMesh* pFbxMesh = tObj->m_pFbxNode->GetMesh();
 		if (pFbxMesh)
 		{
@@ -36,6 +37,62 @@ bool TFbxLoader::Load( C_STR filename)
 		}		
 	}
 	return true;
+}
+void TFbxLoader::LoadAnimation(TFbxObject* pObj)
+{
+	FbxNode* pNode = pObj->m_pFbxNode;
+	FbxAnimStack* stackAnim = m_pFbxScene->GetSrcObject<FbxAnimStack>(0);
+	FbxLongLong s = 0;
+	FbxLongLong n = 0;
+	FbxTime::EMode TimeMode;
+	if (stackAnim)
+	{
+		FbxString takeName = stackAnim->GetName();
+		FbxTakeInfo* take = m_pFbxScene->GetTakeInfo(takeName);
+		FbxTime::SetGlobalTimeMode(FbxTime::eFrames30);
+		TimeMode = FbxTime::GetGlobalTimeMode();
+		FbxTimeSpan localTimeSpan = take->mLocalTimeSpan;
+		FbxTime start = localTimeSpan.GetStart();
+		FbxTime end = localTimeSpan.GetStop();
+		FbxTime Duration = localTimeSpan.GetDirection();
+		s = start.GetFrameCount(TimeMode);
+		n = end.GetFrameCount(TimeMode);
+	}
+	FbxTime time;	
+	for (FbxLongLong t = s; t <= n; t++)
+	{
+		time.SetFrame(t, TimeMode);
+		TAnimTrack track;
+		track.iFrame = t;
+		FbxAMatrix fbxMatrix = pNode->EvaluateGlobalTransform(time);	
+		//track.fbxMatrix = fbxMatrix;
+		track.matAnim = DxConvertMatrix(fbxMatrix);		
+		pObj->m_AnimTracks.push_back(track);
+		
+	}
+}
+TMatrix TFbxLoader::ConvertMatrix(FbxAMatrix& fbxMatrix)
+{
+	TMatrix mat;
+	float* tArray = (float*)(&mat);
+	double* fbxArray = (double*)(&fbxMatrix);
+	for (int i = 0; i < 16; i++)
+	{
+		tArray[i] = fbxArray[i];
+	}
+	return mat;
+}
+TMatrix TFbxLoader::DxConvertMatrix(FbxAMatrix& fbxMatrix)
+{
+	TMatrix m = ConvertMatrix(fbxMatrix);
+	TMatrix mat;
+	mat._11 = m._11; mat._12 = m._13; mat._13 = m._12;
+	mat._21 = m._31; mat._22 = m._33; mat._23 = m._32;
+	mat._31 = m._21; mat._32 = m._23; mat._33 = m._22;
+	mat._41 = m._41; mat._42 = m._43; mat._43 = m._42;
+	mat._14 = mat._24 = mat._34 = 0.0f;
+	mat._44 = 1.0f;
+	return mat;
 }
 void TFbxLoader::ParseMesh(FbxMesh* pFbxMesh, TFbxObject* pObject)
 {
@@ -47,28 +104,21 @@ void TFbxLoader::ParseMesh(FbxMesh* pFbxMesh, TFbxObject* pObject)
 	geom.SetT(trans);
 	geom.SetR(rot);
 	geom.SetS(scale);
-
 	FbxAMatrix normalLocalMatrix = geom;
 	normalLocalMatrix = normalLocalMatrix.Inverse();
 	normalLocalMatrix = normalLocalMatrix.Transpose();
 
-	// 월드행렬
-	FbxVector4 Translation;
-	if (pNode->LclTranslation.IsValid())
-		Translation = pNode->LclTranslation.Get();
-
-	FbxVector4 Rotation;
-	if (pNode->LclRotation.IsValid())
-		Rotation = pNode->LclRotation.Get();
-
-	FbxVector4 Scale;
-	if (pNode->LclScaling.IsValid())
-		Scale = pNode->LclScaling.Get();
-
-	FbxAMatrix matWorldTransform(Translation, Rotation, Scale);
-	FbxAMatrix normalWorldMatrix = matWorldTransform;
-	normalWorldMatrix = normalWorldMatrix.Inverse();
-	normalWorldMatrix = normalWorldMatrix.Transpose();
+	//FbxAMatrix matWorldTransform= pObject->m_fbxLocalMatrix;
+	////// 최종월드행렬 = 자기(에니메이션) 행렬 * 부모((에니메이션))행렬
+	////if (pObject->m_pParent)
+	////{
+	////	matWorldTransform = 
+	////		pObject->m_pParent->m_fbxLocalMatrix * 
+	////		pObject->m_fbxLocalMatrix;
+	////}		
+	//FbxAMatrix normalWorldMatrix = matWorldTransform;
+	//normalWorldMatrix = normalWorldMatrix.Inverse();
+	//normalWorldMatrix = normalWorldMatrix.Transpose();
 
 	// Layer 개념
 	FbxLayerElementUV* VertexUVSet=nullptr;
@@ -168,8 +218,8 @@ void TFbxLoader::ParseMesh(FbxMesh* pFbxMesh, TFbxObject* pObject)
 				int vertexID = iCornerIndex[iIndex];
 				FbxVector4 v2 = pVertexPositions[vertexID];
 				PNCT_VERTEX tVertex; 
-				FbxVector4 v = geom.MultT(v2);
-				v = matWorldTransform.MultT(v);
+				FbxVector4 v = geom.MultT(v2);	
+				//v = pObject->m_AnimTracks[30].fbxMatrix.MultT(v);
 				tVertex.p.x = v.mData[0];
 				tVertex.p.y = v.mData[2];
 				tVertex.p.z = v.mData[1];
@@ -204,7 +254,6 @@ void TFbxLoader::ParseMesh(FbxMesh* pFbxMesh, TFbxObject* pObject)
 						iCornerIndex[iIndex],
 						iBasePolyIndex + VertexColor[iIndex]);
 					n = normalLocalMatrix.MultT(n);
-					n = normalWorldMatrix.MultT(n);
 					tVertex.n.x = n.mData[0];
 					tVertex.n.y = n.mData[2];
 					tVertex.n.z = n.mData[1];
@@ -400,8 +449,7 @@ int TFbxLoader::GetSubMaterialIndex(int iPoly, FbxLayerElementMaterial* pMateria
 }
 void TFbxLoader::PreProcess(FbxNode* pFbxNode)
 {	
-	//if (pFbxNode && (pFbxNode->GetCamera() || pFbxNode->GetLight()))
-	if( pFbxNode == nullptr)
+	if (pFbxNode && (pFbxNode->GetCamera() || pFbxNode->GetLight()))	
 	{
 		return;
 	}
