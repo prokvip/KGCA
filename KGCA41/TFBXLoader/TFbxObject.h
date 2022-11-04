@@ -8,9 +8,17 @@ struct TAnimTrack
 	UINT      iFrame; //fTime;
 	TMatrix   matAnim;
 };
+struct TAnimScene
+{
+	UINT iStartFrame;
+	UINT iEndFrame;
+	float fTickPerFrame; // 160
+	float fFrameSpeed; // 30
+};
 class TFbxObject : public TObject3D
 {
 public:
+	TAnimScene  m_AnimScene;
 	float       m_fAnimFrame = 0;
 	float       m_fAnimInverse = 1.0f;
 	float       m_fAnimSpeed = 1.0f;

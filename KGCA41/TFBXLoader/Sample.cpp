@@ -125,11 +125,13 @@ bool	Sample::Render()
 		{
 			TFbxObject* pObj = m_fbxList[iModel]->m_pDrawObjList[iObj];
 			pObj->m_fAnimFrame = pObj->m_fAnimFrame + 
-								 g_fSecondPerFrame* pObj->m_fAnimSpeed * 30.0f* pObj->m_fAnimInverse;
-			if (pObj->m_fAnimFrame > 50 || pObj->m_fAnimFrame < 0)
+								 g_fSecondPerFrame* pObj->m_fAnimSpeed * 
+				pObj->m_AnimScene.fFrameSpeed * pObj->m_fAnimInverse;
+			if (pObj->m_fAnimFrame > pObj->m_AnimScene.iEndFrame ||
+				pObj->m_fAnimFrame < pObj->m_AnimScene.iStartFrame)
 			{
-				pObj->m_fAnimFrame = min(pObj->m_fAnimFrame, 50);
-				pObj->m_fAnimFrame = max(pObj->m_fAnimFrame, 0);
+				pObj->m_fAnimFrame = min(pObj->m_fAnimFrame, pObj->m_AnimScene.iEndFrame);
+				pObj->m_fAnimFrame = max(pObj->m_fAnimFrame, pObj->m_AnimScene.iStartFrame);
 				pObj->m_fAnimInverse *= -1.0f;
 			}
 

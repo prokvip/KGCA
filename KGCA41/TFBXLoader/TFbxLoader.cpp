@@ -58,6 +58,10 @@ void TFbxLoader::LoadAnimation(TFbxObject* pObj)
 		s = start.GetFrameCount(TimeMode);
 		n = end.GetFrameCount(TimeMode);
 	}
+	pObj->m_AnimScene.iStartFrame = s;
+	pObj->m_AnimScene.iEndFrame = n;
+	pObj->m_AnimScene.fFrameSpeed = 30.0f;
+	pObj->m_AnimScene.fTickPerFrame = 160;
 	FbxTime time;	
 	for (FbxLongLong t = s; t <= n; t++)
 	{
