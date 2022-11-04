@@ -132,9 +132,9 @@ bool   TCollision::BoxToInBox(TBox& a, TBox& b)
         a.vMin.y <= b.vMin.y &&
         a.vMin.z <= b.vMin.z)
     {
-        if (a.vMax.x <= b.vMax.x &&
-            a.vMax.y <= b.vMax.y &&
-            a.vMax.z <= b.vMax.z)
+        if (a.vMax.x >= b.vMax.x &&
+            a.vMax.y >= b.vMax.y &&
+            a.vMax.z >= b.vMax.z)
         {
             return true;
         }
