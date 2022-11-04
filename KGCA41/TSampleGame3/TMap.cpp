@@ -52,7 +52,7 @@ bool TMap::UpdateBuffer(TCameraDebug* pMainCamera)
 {	
 	m_dwFace = 0;
 	DWORD index = 0;
-	TVector v[3];
+	TVector3 v[3];
 	for (int iFace = 0; iFace < m_IndexList.size() / 3; iFace++)
 	{
 		UINT i0 = m_IndexList[iFace * 3 + 0];

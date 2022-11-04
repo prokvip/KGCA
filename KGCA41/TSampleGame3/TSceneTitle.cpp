@@ -25,14 +25,14 @@ bool TSceneTitle::Init()
 
 	m_pBoxObjA = new TObjectBox;
 	m_pBoxObjA->Create(m_pd3dDevice, m_pImmediateContext, L"DefaultObject.txt", L"../../data/object/20200428_185613.jpg");
-	m_pBoxObjA->m_matWorld.Translation(0, 5, 0);
-
+	//m_pBoxObjA->m_matWorld.Translation(0, 5, 0);
+	D3DXMatrixTranslation(&m_pBoxObjA->m_matWorld, 0, 5, 0);
 	m_pBoxObjB = new TObjectBox;
 	m_pBoxObjB->Create(m_pd3dDevice, m_pImmediateContext, L"DefaultObject.txt", L"../../data/_RAINBOW.bmp");
-	m_pBoxObjB->m_matWorld.Translation(1, 5, 4);
-
+	//m_pBoxObjB->m_matWorld.Translation(1, 5, 4);
+	D3DXMatrixTranslation(&m_pBoxObjA->m_matWorld, 1, 5, 4);
 	m_pMainCamera = new TCameraDebug;
-	m_pMainCamera->CreateViewMatrix(TVector(0,30,-30), TVector(0, 0, 0), TVector(0,1, 0) );
+	m_pMainCamera->CreateViewMatrix(TVector3(0,30,-30), TVector3(0, 0, 0), TVector3(0,1, 0) );
 	m_pMainCamera->CreateProjMatrix(1.0f, 1000.0f, T_PI * 0.25f,
 									(float)g_rtClient.right/ (float)g_rtClient.bottom);
 	return true;
