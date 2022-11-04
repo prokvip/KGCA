@@ -31,26 +31,26 @@ void	 TFrustum::CreateFrustum(
 	// ->   <-
 	// 1    2
 	// 0    3 
-	m_Plane[0].Create(  *((TVector*)&m_vFrustum[1]),
-						*((TVector*)&m_vFrustum[5]),
-						*((TVector*)&m_vFrustum[0])); // left
-	m_Plane[1].Create(*((TVector*)&m_vFrustum[3]), // right
-		*((TVector*)&m_vFrustum[6]),
-		*((TVector*)&m_vFrustum[2])); 
-	m_Plane[2].Create(*((TVector*)&m_vFrustum[5]), // top
-		*((TVector*)&m_vFrustum[2]),
-		*((TVector*)&m_vFrustum[6])); 
-	m_Plane[3].Create(*((TVector*)&m_vFrustum[0]), // bottom
-		*((TVector*)&m_vFrustum[7]),
-		*((TVector*)&m_vFrustum[3])); 
-	m_Plane[4].Create(*((TVector*)&m_vFrustum[2]), // near
-		*((TVector*)&m_vFrustum[1]),
-		*((TVector*)&m_vFrustum[0])); 
-	m_Plane[5].Create(*((TVector*)&m_vFrustum[5]), // far
-		*((TVector*)&m_vFrustum[6]),
-		*((TVector*)&m_vFrustum[4])); 
+	m_Plane[0].Create(  *((TVector3*)&m_vFrustum[1]),
+						*((TVector3*)&m_vFrustum[5]),
+						*((TVector3*)&m_vFrustum[0])); // left
+	m_Plane[1].Create(*((TVector3*)&m_vFrustum[3]), // right
+		*((TVector3*)&m_vFrustum[6]),
+		*((TVector3*)&m_vFrustum[2])); 
+	m_Plane[2].Create(*((TVector3*)&m_vFrustum[5]), // top
+		*((TVector3*)&m_vFrustum[2]),
+		*((TVector3*)&m_vFrustum[6])); 
+	m_Plane[3].Create(*((TVector3*)&m_vFrustum[0]), // bottom
+		*((TVector3*)&m_vFrustum[7]),
+		*((TVector3*)&m_vFrustum[3])); 
+	m_Plane[4].Create(*((TVector3*)&m_vFrustum[2]), // near
+		*((TVector3*)&m_vFrustum[1]),
+		*((TVector3*)&m_vFrustum[0])); 
+	m_Plane[5].Create(*((TVector3*)&m_vFrustum[5]), // far
+		*((TVector3*)&m_vFrustum[6]),
+		*((TVector3*)&m_vFrustum[4])); 
 }
-T_POSITION	 TFrustum::ClassifyPoint(TVector v)
+T_POSITION	 TFrustum::ClassifyPoint(TVector3 v)
 {
 	for (int iPlane = 0; iPlane < 6; iPlane++)
 	{
@@ -80,7 +80,7 @@ T_POSITION	 TFrustum::ClassifyTBox(T_BOX box)
 {
 	float		fPlaneToCenter = 0.0;
 	float		fDistance = 0.0f;
-	TVector vDir;
+	TVector3 vDir;
 	T_POSITION  t_Position;
 
 	t_Position = P_FRONT;

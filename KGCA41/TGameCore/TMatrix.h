@@ -1,6 +1,8 @@
 #pragma once
 #include "TVector.h"
-struct float3x3
+namespace T_TEST
+{
+	struct float3x3
 {
 	union
 	{
@@ -42,18 +44,18 @@ class TMatrix : public float4x4
 {
 public:
 	TMatrix();
-	void Identity();	
+	void Identity();
 	void RotationX(float fRadian);
 	void RotationY(float fRadian);
 	void RotationZ(float fRadian);
 	void Scale(float x, float y, float z);
-	void Translation(float x, float y, float z);	
+	void Translation(float x, float y, float z);
 	TMatrix Transpose();
 
-	void ObjectLookAt(TVector& vPosition,TVector& vTarget,TVector& vUp);
-	TMatrix ViewLookAt(TVector& vPosition,TVector& vTarget,
-						TVector& vUp);
-	TMatrix PerspectiveFovLH(	float fNearPlane,
+	void ObjectLookAt(TVector3& vPosition,TVector3& vTarget,TVector3& vUp);
+	TMatrix ViewLookAt(TVector3& vPosition,TVector3& vTarget,
+						TVector3& vUp);
+	TMatrix PerspectiveFovLH(float fNearPlane,
 								float fFarPlane,
 								float fovy,
 								float Aspect);
@@ -113,4 +115,5 @@ namespace TMath
 		m._43 = z;
 		return m;
 	}
+};
 };

@@ -3,10 +3,10 @@
 class TObject3D : public TBaseObject
 {
 public:
-	TVector   m_vPos;
-	TVector   m_vLook;//z axis
-	TVector   m_vUp;// y
-	TVector   m_vRight; //z
+	TVector3   m_vPos;
+	TVector3   m_vLook;//z axis
+	TVector3   m_vUp;// y
+	TVector3   m_vRight; //z
 public:
 	TObject3D() {}
 	virtual ~TObject3D() {}

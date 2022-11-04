@@ -26,13 +26,13 @@ namespace TDX
     }
     void		TBaseObject::CreateConstantData()
     {
-        m_cbData.matWorld.Identity();
-        m_cbData.matView.Identity();
-        m_cbData.matProj.Identity();
+        D3DXMatrixInverse(&m_cbData.matWorld, NULL, &m_cbData.matWorld);
+        D3DXMatrixInverse(&m_cbData.matView, NULL, &m_cbData.matWorld);
+        D3DXMatrixInverse(&m_cbData.matProj, NULL, &m_cbData.matWorld);      
         m_cbData.fTimer = 0.0f;
-        m_cbData.matWorld.Transpose();
-        m_cbData.matView.Transpose();
-        m_cbData.matProj.Transpose();
+        D3DXMatrixTranspose(&m_cbData.matWorld, &m_cbData.matWorld);
+        D3DXMatrixTranspose(&m_cbData.matView, &m_cbData.matView);
+        D3DXMatrixTranspose(&m_cbData.matProj, &m_cbData.matProj);
     }
     HRESULT		TBaseObject::CreateConstantBuffer()
     {

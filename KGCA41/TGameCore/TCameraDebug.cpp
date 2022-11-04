@@ -1,7 +1,7 @@
 #include "TCameraDebug.h"
 #include "TInput.h"
 #include "TMath.h"
-void TCameraDebug::CreateViewMatrix(TVector vEye, TVector vAt, TVector vUp)
+void TCameraDebug::CreateViewMatrix(TVector3 vEye, TVector3 vAt, TVector3 vUp)
 {
 	m_vPos = vEye;
 	m_vTarget = vAt;
@@ -40,32 +40,32 @@ bool TCameraDebug::Frame()
 
 	if (I_Input.GetKey('W') == KEY_HOLD)
 	{
-		TVector v = m_vLook * m_fSpeed * g_fSecondPerFrame;
+		TVector3 v = m_vLook * m_fSpeed * g_fSecondPerFrame;
 		m_vPos += v;
 	}
 	if (I_Input.GetKey('S') == KEY_HOLD)
 	{
-		TVector v = m_vLook * -m_fSpeed * g_fSecondPerFrame;
+		TVector3 v = m_vLook * -m_fSpeed * g_fSecondPerFrame;
 		m_vPos += v;
 	}
 	if (I_Input.GetKey('A') == KEY_HOLD)
 	{
-		TVector v = m_vRight * m_fSpeed * g_fSecondPerFrame;
+		TVector3 v = m_vRight * m_fSpeed * g_fSecondPerFrame;
 		m_vPos += v;
 	}
 	if (I_Input.GetKey('D') == KEY_HOLD)
 	{
-		TVector v = m_vRight * -m_fSpeed * g_fSecondPerFrame;
+		TVector3 v = m_vRight * -m_fSpeed * g_fSecondPerFrame;
 		m_vPos += v;
 	}
 	if (I_Input.GetKey('Q') == KEY_HOLD)
 	{
-		TVector v = m_vUp * m_fSpeed * g_fSecondPerFrame;
+		TVector3 v = m_vUp * m_fSpeed * g_fSecondPerFrame;
 		m_vPos += v;
 	}
 	if (I_Input.GetKey('E') == KEY_HOLD)
 	{
-		TVector v = m_vUp * -m_fSpeed * g_fSecondPerFrame;
+		TVector3 v = m_vUp * -m_fSpeed * g_fSecondPerFrame;
 		m_vPos += v;
 	}
 	
@@ -86,17 +86,17 @@ bool TCameraDebug::Frame()
 	m_matView = *((TMatrix*)&matView);
 	
 	//////////////////////////// Model View////////////////////////////
-	/*TVector vLocalUp = { 0.0f, 1.0f, 0.0f };
-	TVector vLocalLook = { 0.0f, 0.0f, 1.0f };
+	/*TVector3 vLocalUp = { 0.0f, 1.0f, 0.0f };
+	TVector3 vLocalLook = { 0.0f, 0.0f, 1.0f };
 
 	TBASIS_EX::TMatrix matRotation;
 	TBASIS_EX::D3DXMatrixRotationYawPitchRoll(
 		&matRotation, m_fYaw, 0, m_fRoll);
 	TMatrix* matR = (TMatrix*)&matRotation;
 	
-	TVector vWorldLook = vLocalLook * (*matR);
-	TVector vWorldUp = vLocalUp * (*matR);
-	TVector vWorld = vWorldLook * 10.0f;
+	TVector3 vWorldLook = vLocalLook * (*matR);
+	TVector3 vWorldUp = vLocalUp * (*matR);
+	TVector3 vWorld = vWorldLook * 10.0f;
 	m_vPos = m_vTarget - vWorld;
 	m_matView.ViewLookAt(m_vPos, m_vTarget, m_vUp);*/
 

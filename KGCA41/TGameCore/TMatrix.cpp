@@ -1,4 +1,6 @@
 #include "TMatrix.h"
+namespace T_TEST
+{
 TMatrix3x3::TMatrix3x3()
 {
 	Identity();
@@ -43,14 +45,14 @@ TMatrix3x3 TMatrix3x3::Translation(float x, float y)
 	m._32 = y;
 	return m;
 }
-TMatrix3x3  TMatrix3x3::operator* (TMatrix3x3& matrix)
+TMatrix3x3  TMatrix3x3::operator* (TMatrix3x3 & matrix)
 {
 	TMatrix3x3 mat;
-	for ( int iColumn =0; iColumn < 3; iColumn++)
+	for (int iColumn = 0; iColumn < 3; iColumn++)
 	{
 		for (int iRow = 0; iRow < 3; iRow++)
 		{
-			mat.m[iRow][iColumn] = 
+			mat.m[iRow][iColumn] =
 				m[iRow][0] * matrix.m[0][iColumn] +
 				m[iRow][1] * matrix.m[1][iColumn] +
 				m[iRow][2] * matrix.m[2][iColumn];
@@ -112,7 +114,7 @@ void TMatrix::RotationZ(float fRadian)
 	float fCosTheta = cos(fRadian);
 	float fSinTheta = sin(fRadian);
 	_11 = fCosTheta; _12 = fSinTheta;
-	_21 = -fSinTheta; _22 = fCosTheta;	
+	_21 = -fSinTheta; _22 = fCosTheta;
 }
 void TMatrix::Scale(float x, float y, float z)
 {
@@ -129,7 +131,7 @@ void TMatrix::Translation(float x, float y, float z)
 	_43 = z;
 }
 
-TMatrix  TMatrix::operator* (TMatrix& matrix)
+TMatrix  TMatrix::operator* (TMatrix & matrix)
 {
 	TMatrix mat;
 	for (int iColumn = 0; iColumn < 4; iColumn++)
@@ -145,18 +147,18 @@ TMatrix  TMatrix::operator* (TMatrix& matrix)
 	}
 	return mat;
 }
-void TMatrix::ObjectLookAt(TVector& vPosition,
-	TVector& vTarget,
-	TVector& vUp)
+void TMatrix::ObjectLookAt(TVector3 & vPosition,
+	TVector3 & vTarget,
+	TVector3 & vUp)
 {
-	TVector vDirection = vTarget - vPosition;
+	TVector3 vDirection = vTarget - vPosition;
 	vDirection = vDirection.Normal();
 	float fDot = vUp | vDirection;
-	TVector vC = vDirection * fDot;
-	TVector vD = (vDirection * fDot);
-	TVector vUpVector = vUp - vD;
+	TVector3 vC = vDirection * fDot;
+	TVector3 vD = (vDirection * fDot);
+	TVector3 vUpVector = vUp - vD;
 	vUpVector = vUpVector.Normal();
-	TVector vRightVector = vUpVector ^ vDirection;
+	TVector3 vRightVector = vUpVector ^ vDirection;
 
 	_11 = vRightVector.x;	_12 = vRightVector.y;	_13 = vRightVector.z;
 	_21 = vUpVector.x;		_22 = vUpVector.y;		_23 = vUpVector.z;
@@ -165,14 +167,14 @@ void TMatrix::ObjectLookAt(TVector& vPosition,
 	_42 = vPosition.y;
 	_43 = vPosition.z;
 }
-TMatrix TMatrix::ViewLookAt(TVector& vPosition,
-	TVector& vTarget,
-	TVector& vUp)
+TMatrix TMatrix::ViewLookAt(TVector3 & vPosition,
+	TVector3 & vTarget,
+	TVector3 & vUp)
 {
 	TMatrix matrix;
-	TVector vDirection = (vTarget - vPosition).Normal();
-	TVector vRightVector = (vUp ^ vDirection).Normal();
-	TVector vUpVector = (vDirection ^ vRightVector).Normal();
+	TVector3 vDirection = (vTarget - vPosition).Normal();
+	TVector3 vRightVector = (vUp ^ vDirection).Normal();
+	TVector3 vUpVector = (vDirection ^ vRightVector).Normal();
 
 	_11 = vRightVector.x;	_12 = vUpVector.x;	_13 = vDirection.x;
 	_21 = vRightVector.y;	_22 = vUpVector.y;	_23 = vDirection.y;
@@ -211,7 +213,7 @@ TMatrix TMatrix::PerspectiveFovLH(float fNearPlane,
 	return ret;
 }
 
-TMatrix OrthoLH(TMatrix& mat,float w, float h, float n, float f)
+TMatrix OrthoLH(TMatrix & mat,float w, float h, float n, float f)
 {
 	mat.Identity();
 	mat._11 = 2.0f / w;
@@ -220,7 +222,7 @@ TMatrix OrthoLH(TMatrix& mat,float w, float h, float n, float f)
 	mat._43 = -n / (f - n);
 	return mat;
 }
-TMatrix OrthoOffCenterLH(TMatrix& mat, float l, float r, float b, float t, float n, float f)
+TMatrix OrthoOffCenterLH(TMatrix & mat, float l, float r, float b, float t, float n, float f)
 {
 	mat.Identity();
 	mat._11 = 2.0f / (r - l);
@@ -231,7 +233,7 @@ TMatrix OrthoOffCenterLH(TMatrix& mat, float l, float r, float b, float t, float
 	mat._42 = (t + b) / (b - t);
 	return mat;
 }
-TMatrix PerspectiveFovLH(TMatrix& mat, float fNearPlane,
+TMatrix PerspectiveFovLH(TMatrix & mat, float fNearPlane,
 	float fFarPlane,
 	float fovy,
 	float Aspect) // width / heght
@@ -249,11 +251,11 @@ TMatrix PerspectiveFovLH(TMatrix& mat, float fNearPlane,
 	mat._33 = Q;
 	mat._43 = -Q * fNearPlane;
 	mat._34 = 1;
-	mat._44 = 0.0f;	
+	mat._44 = 0.0f;
 	return mat;
 }
 TMatrix TMatrix::OrthoLH(float w, float h, float n, float f)
-{	
+{
 	Identity();
 	_11 = 2.0f / w;
 	_22 = 2.0f / h;
@@ -273,3 +275,4 @@ TMatrix TMatrix::OrthoOffCenterLH(float l, float r, float b, float t, float n, f
 	return *this;
 }
 
+};

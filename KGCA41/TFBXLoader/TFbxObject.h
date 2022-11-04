@@ -3,10 +3,14 @@
 #include "TObject3D.h"
 struct TAnimTrack
 {
-	//FbxLongLong iFrame;
-	//FbxAMatrix  fbxMatrix;	
+	FbxLongLong iFrame;
+	FbxAMatrix  fbxMatrix;	
 	UINT      iFrame; //fTime;
-	TMatrix   matAnim;
+	TBASIS_EX::TMatrix   matAnim;  // self * parent;
+	TBASIS_EX::TMatrix   matSelfAnim; // matAnim * inv(parent)
+	TBASIS_EX::TVector3     t; // self
+	TBASIS_EX::TQuaternion  r; // self
+	TBASIS_EX::TVector3     s; // self
 };
 struct TAnimScene
 {

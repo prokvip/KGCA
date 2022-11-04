@@ -104,7 +104,7 @@ TCollisionType   TCollision::BoxToBox(TBox& a, TBox& b)
             if ((a.vSize.z + b.vSize.z) >= (fMaxZ - fMinZ))
             {
                 // 교차한다. 교집합
-                TVector vMin, vMax;
+                TVector3 vMin, vMax;
                 TBox Intersect;
                 vMin.x = a.vMin.x > b.vMin.x ? a.vMin.x : b.vMin.x;
                 vMin.y = a.vMin.y > b.vMin.y ? a.vMin.y : b.vMin.y;
@@ -128,9 +128,13 @@ TCollisionType   TCollision::BoxToBox(TBox& a, TBox& b)
 bool   TCollision::BoxToInBox(TBox& a, TBox& b)
 {
     //  |             |
-    if (a.vMin <= b.vMin)
+    if (a.vMin.x <= b.vMin.x && 
+        a.vMin.y <= b.vMin.y &&
+        a.vMin.z <= b.vMin.z)
     {
-        if ( a.vMax >= b.vMax)
+        if (a.vMax.x <= b.vMax.x &&
+            a.vMax.y <= b.vMax.y &&
+            a.vMax.z <= b.vMax.z)
         {
             return true;
         }
@@ -140,7 +144,7 @@ bool   TCollision::BoxToInBox(TBox& a, TBox& b)
 bool             TCollision::SphereToSphere(TSphere& a, TSphere& b)
 {
     float fSumRadius = a.fRadius + b.fRadius;
-    TVector vDir = a.vCenter - b.vCenter;    
+    TVector3 vDir = a.vCenter - b.vCenter;    
     float fDistance = vDir.Length();
     if (fDistance <= fSumRadius)
     {

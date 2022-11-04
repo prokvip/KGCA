@@ -90,8 +90,8 @@ bool	Sample::Init()
 	}
 
 	m_pMainCamera = new TCameraDebug;
-	m_pMainCamera->CreateViewMatrix(TVector(50, 6, -50), TVector(0, 6, 0), TVector(0, 1, 0));
-	m_pMainCamera->CreateProjMatrix(1.0f, 1000.0f, T_PI * 0.25f,
+	m_pMainCamera->CreateViewMatrix(TVector(50, 6, -50), TVector(0, 0, 0), TVector(0, 1, 0));
+	m_pMainCamera->CreateProjMatrix(1.0f, 10000.0f, T_PI * 0.25f,
 		(float)g_rtClient.right / (float)g_rtClient.bottom);
 
 	return true;

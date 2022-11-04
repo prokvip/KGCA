@@ -5,11 +5,11 @@
 #include "TCollision.h"
 struct SimpleVertex
 {
-	TVector    p;	
+	TVector3    p;	
 	TVector4  c;
 	TVector2  t;
 	SimpleVertex() {}
-	SimpleVertex(TVector vp, TVector4 vc, TVector2 vt)
+	SimpleVertex(TVector3 vp, TVector4 vc, TVector2 vt)
 	{
 		p = vp;
 		c = vc;
@@ -18,12 +18,12 @@ struct SimpleVertex
 };
 struct PNCT_VERTEX
 {
-	TVector    p;
-	TVector    n;
+	TVector3    p;
+	TVector3    n;
 	TVector4   c;
 	TVector2   t;
 	PNCT_VERTEX() {}
-	PNCT_VERTEX(TVector vp, TVector vn, TVector4 vc, TVector2 vt)
+	PNCT_VERTEX(TVector3 vp, TVector3 vn, TVector4 vc, TVector2 vt)
 	{
 		p = vp;
 		n = vn;

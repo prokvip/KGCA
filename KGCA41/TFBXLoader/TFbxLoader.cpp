@@ -3,18 +3,18 @@ bool TFbxLoader::Init()
 {
 	m_pFbxManager = FbxManager::Create();
 	m_pFbxImporter = FbxImporter::Create(m_pFbxManager, "");	
-	m_pFbxScene = FbxScene::Create(m_pFbxManager, "");
-
-	// 단위
-	FbxSystemUnit::cm.ConvertScene(m_pFbxScene);
-	// 기저(행렬)
-	FbxAxisSystem::MayaZUp.ConvertScene(m_pFbxScene);
+	m_pFbxScene = FbxScene::Create(m_pFbxManager, "");	
 	return true;
 }
 bool TFbxLoader::Load( C_STR filename)
 {	
 	m_pFbxImporter->Initialize(filename.c_str());
 	m_pFbxImporter->Import(m_pFbxScene);
+	// 단위
+	FbxSystemUnit::m.ConvertScene(m_pFbxScene);
+	// 기저(행렬)	
+	FbxAxisSystem::MayaZUp.ConvertScene(m_pFbxScene);
+	
 	//FbxGeometryConverter converter(m_pFbxManager);
 	//converter.Triangulate(m_pFbxScene, true);
 

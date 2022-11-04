@@ -1,4 +1,5 @@
 #pragma once
+#include "TMath.h"
 #include "TVector.h"
 #include "TMatrix.h"
 #include <vector>
@@ -73,23 +74,23 @@ struct TRect : Rect
 
 struct TSphere
 {
-    TVector vCenter;
+    TVector3 vCenter;
     float fRadius;
     TSphere() {};
-    TSphere(TVector vC,  float r) {
+    TSphere(TVector3 vC,  float r) {
         vCenter = vC;
         fRadius = r;
     };
 };
 struct Box
 {
-    TVector vMin;
-    TVector vSize;
+    TVector3 vMin;
+    TVector3 vSize;
 };
 struct TBox : Box
 {
-    TVector vMax;
-    TVector vCenter;
+    TVector3 vMax;
+    TVector3 vCenter;
     bool   operator == (TBox& dest)
     {
         if ( vMin == dest.vMin)
@@ -102,39 +103,40 @@ struct TBox : Box
         return false;
     }
     TBox(){}
-    TBox(TVector vPos,TVector vSize) 
+    TBox(TVector3 vPos,TVector3 vSize) 
     {
         Set(vPos, vSize);
     }
-    void  Set(TVector vPos,TVector vSize)
+    void  Set(TVector3 vPos,TVector3 vSize)
     {
         vMin = vPos;
         this->vSize = vSize;
         vMax = vMin + vSize;
-        vCenter = (vMin + vMax) / 2.0f;
+        vCenter = (vMin + vMax);
+        vCenter /= 2.0f;
     }
 };
 
 struct T_AABB
 {
-    TVector vMin;
-    TVector vMax;
+    TVector3 vMin;
+    TVector3 vMax;
 };
 struct T_OBB
 {
-    TVector vCenter;
-    TVector vAxis[3];
+    TVector3 vCenter;
+    TVector3 vAxis[3];
     float   fDistance[3];
 };
 struct T_BOX
 {
-    TVector vPos[8];
+    TVector3 vPos[8];
     // aabb
-    TVector vMin;
-    TVector vMax;
+    TVector3 vMin;
+    TVector3 vMax;
     // obb    
-    TVector vCenter;
-    TVector vAxis[3];
+    TVector3 vCenter;
+    TVector3 vAxis[3];
     float   fExtent[3];
 };
 class TCollision

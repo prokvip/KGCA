@@ -42,9 +42,6 @@
     <ClInclude Include="TWriter.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="TVector.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="TBaseObject.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
@@ -126,6 +123,9 @@
     <ClInclude Include="TFrustum.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="TVector.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="TWindow.cpp">
@@ -144,9 +144,6 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="TWriter.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="TVector.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="TBaseObject.cpp">
@@ -228,6 +225,9 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="TFrustum.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="TVector.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
