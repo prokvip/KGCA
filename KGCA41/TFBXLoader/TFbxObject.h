@@ -20,6 +20,8 @@ struct TAnimScene
 class TFbxObject : public TObject3D
 {
 public:
+	TBASIS_EX::TMatrix m_matAnim;
+	TBASIS_EX::TMatrix m_matControl;
 	TAnimScene  m_AnimScene;
 	float       m_fAnimFrame = 0;
 	float       m_fAnimInverse = 1.0f;

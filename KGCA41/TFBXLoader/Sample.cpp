@@ -121,6 +121,8 @@ bool	Sample::Render()
 	D3DXVec3Normalize(&vLight, &vLight);
 	for (int iModel=0; iModel < m_fbxList.size(); iModel++)
 	{
+		TMatrix matWorld;
+		D3DXMatrixRotationY(&matWorld, g_fGameTimer);
 		for (int iObj = 0; iObj < m_fbxList[iModel]->m_pDrawObjList.size(); iObj++)		
 		{
 			TFbxObject* pObj = m_fbxList[iModel]->m_pDrawObjList[iObj];			
@@ -135,12 +137,12 @@ bool	Sample::Render()
 				pObj->m_fAnimInverse *= -1.0f;
 			}
 
-			//TMatrix matWorld = pObj->m_AnimTracks[pObj->m_fAnimFrame].matAnim;
-			TMatrix matWorld = pObj->Interplate(pObj->m_fAnimFrame);
+			pObj->m_matAnim = pObj->Interplate(pObj->m_fAnimFrame);
+			pObj->m_matWorld = pObj->m_matAnim * matWorld;
 			pObj->m_cbData.x = vLight.x;
 			pObj->m_cbData.y = vLight.y;
 			pObj->m_cbData.z = vLight.z;
-			pObj->SetMatrix(&matWorld,&m_pMainCamera->m_matView,&m_pMainCamera->m_matProj);
+			pObj->SetMatrix(&pObj->m_matWorld,&m_pMainCamera->m_matView,&m_pMainCamera->m_matProj);
 			pObj->Render();			
 		}
 	}
