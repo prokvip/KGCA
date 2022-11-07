@@ -104,9 +104,9 @@ TBASIS_EX::TMatrix TFbxObject::Interplate(float fFrame)
 	//   A=0 --------------- B=20
 	//   t=0 ~ t=0.5f     t=1
 	TAnimTrack A, B;
-	A = m_AnimTracks[max(0, fFrame+0)];
-	B = m_AnimTracks[min(50, fFrame+1)];
-	float t = fFrame - A.iFrame;
+	A = m_AnimTracks[max(m_AnimScene.iStartFrame, fFrame+0)];
+	B = m_AnimTracks[min(m_AnimScene.iEndFrame, fFrame+1)];
+	float t = (fFrame - A.iFrame) / (B.iFrame-A.iFrame);
 	TBASIS_EX::TVector3 pos;
 	TBASIS_EX::D3DXVec3Lerp(&pos, &A.t, &B.t, t);
 	TBASIS_EX::TVector3 scale;
