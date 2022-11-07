@@ -121,11 +121,11 @@ bool	Sample::Render()
 	D3DXVec3Normalize(&vLight, &vLight);
 	for (int iModel=0; iModel < m_fbxList.size(); iModel++)
 	{
-		for (int iObj = 0; iObj < m_fbxList[iModel]->m_pDrawObjList.size(); iObj++)
+		for (int iObj = 0; iObj < m_fbxList[iModel]->m_pDrawObjList.size(); iObj++)		
 		{
-			TFbxObject* pObj = m_fbxList[iModel]->m_pDrawObjList[iObj];
+			TFbxObject* pObj = m_fbxList[iModel]->m_pDrawObjList[iObj];			
 			pObj->m_fAnimFrame = pObj->m_fAnimFrame + 
-								 g_fSecondPerFrame* pObj->m_fAnimSpeed * 
+								 g_fSecondPerFrame* pObj->m_fAnimSpeed* pObj->m_fAnimSpeed * 
 				pObj->m_AnimScene.fFrameSpeed * pObj->m_fAnimInverse;
 			if (pObj->m_fAnimFrame > pObj->m_AnimScene.iEndFrame ||
 				pObj->m_fAnimFrame < pObj->m_AnimScene.iStartFrame)
@@ -135,7 +135,8 @@ bool	Sample::Render()
 				pObj->m_fAnimInverse *= -1.0f;
 			}
 
-			TMatrix matWorld = pObj->m_AnimTracks[pObj->m_fAnimFrame].matAnim;
+			//TMatrix matWorld = pObj->m_AnimTracks[pObj->m_fAnimFrame].matAnim;
+			TMatrix matWorld = pObj->Interplate(pObj->m_fAnimFrame);
 			pObj->m_cbData.x = vLight.x;
 			pObj->m_cbData.y = vLight.y;
 			pObj->m_cbData.z = vLight.z;

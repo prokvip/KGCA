@@ -98,3 +98,31 @@ bool	TFbxObject::Release()
 	}
 	return true;
 }
+TBASIS_EX::TMatrix TFbxObject::Interplate(float fFrame)
+{
+	//   10                20
+	//   A=0 --------------- B=20
+	//   t=0 ~ t=0.5f     t=1
+	TAnimTrack A, B;
+	A = m_AnimTracks[max(0, fFrame+0)];
+	B = m_AnimTracks[min(50, fFrame+1)];
+	float t = fFrame - A.iFrame;
+	TBASIS_EX::TVector3 pos;
+	TBASIS_EX::D3DXVec3Lerp(&pos, &A.t, &B.t, t);
+	TBASIS_EX::TVector3 scale;
+	TBASIS_EX::D3DXVec3Lerp(&scale, &A.s, &B.s, t);
+	TBASIS_EX::TQuaternion qRotation;
+	TBASIS_EX::D3DXQuaternionSlerp(&qRotation, &A.r, &B.r, t);
+
+	TBASIS_EX::TMatrix matScale;
+	//TBASIS_EX::D3DXMatrixScaling(&matScale, scale.x, scale.y, scale.z);
+	TBASIS_EX::TMatrix matRotation;
+	TBASIS_EX::D3DXMatrixRotationQuaternion(&matRotation, &qRotation);
+
+	TBASIS_EX::TMatrix  matCurrent = /*matScale **/ matRotation;
+	matCurrent._41 = pos.x;
+	matCurrent._42 = pos.y;
+	matCurrent._43 = pos.z;
+	return matCurrent;
+	//return m_AnimTracks[fFrame].matAnim;
+}

@@ -35,6 +35,7 @@ public:
 		pParentNode->m_pFbxChilds.push_back(this);
 		m_pParent = pParentNode;
 	}
+	TBASIS_EX::TMatrix Interplate(float fTime);
 public:
 	std::vector<ID3D11Buffer*> m_pSubVB;
 	std::vector< std::vector<PNCT_VERTEX>>   vbDataList;

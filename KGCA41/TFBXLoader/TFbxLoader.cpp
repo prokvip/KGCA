@@ -71,6 +71,7 @@ void TFbxLoader::LoadAnimation(TFbxObject* pObj)
 		FbxAMatrix fbxMatrix = pNode->EvaluateGlobalTransform(time);	
 		//track.fbxMatrix = fbxMatrix;
 		track.matAnim = DxConvertMatrix(fbxMatrix);		
+		TBASIS_EX::D3DXMatrixDecompose(&track.s, &track.r, &track.t, &track.matAnim);
 		pObj->m_AnimTracks.push_back(track);
 		
 	}
