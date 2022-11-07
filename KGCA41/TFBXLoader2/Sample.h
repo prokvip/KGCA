@@ -1,11 +1,11 @@
 #pragma once
 #include "TGameCore.h"
-#include "TFbxLoader.h"
+#include "TFbxFile.h"
 #include "TCameraDebug.h"
 class Sample : public TGameCore
 {
-	//TFbxLoader	m_FBXLoader;
-	std::vector< TFbxLoader*> m_fbxList;
+	//TFbxFile	m_FBXLoader;
+	std::vector< TFbxFile*> m_fbxList;
 	TCameraDebug* m_pMainCamera;
 public:
 	bool	Init() override;

@@ -35,23 +35,25 @@ VS_OUT VS(VS_IN input)
 {
 	VS_OUT output = (VS_OUT)0;
 	float4 vLocal = float4(input.p,1.0f);
-	float4 vAnim;
+	float4 vAnim=0;
+	float4 vAnimNomal=0;
 	for( int iBone=0; iBone < 4; iBone++)
 	{
 		uint iBoneIndex = input.index[iBone];
 		float fWeight = input.weight[iBone];
 		vAnim += mul(vLocal, g_matBone[iBoneIndex]) * fWeight;
+		vAnimNomal += mul(input.n, g_matBone[iBoneIndex]) * fWeight;
 	}
 	float4 vWorld = mul(vAnim, g_matWorld);
 	float4 vView = mul(vWorld, g_matView);
 	float4 vProj = mul(vView, g_matProj);	
 	output.p = vProj;
-	output.n = input.n;
+	output.n = vAnimNomal;
 	output.vWorld = vWorld;
 	//light
 	float3 vLight = vTimer.xyz;//float3(0,-1,0);
 	output.vLight = vLight;
-	float fDot = max(0.3f, dot(input.n, -vLight));
+	float fDot = max(0.3f, dot(vAnimNomal, -vLight));
 	output.lightcolor = float4(fDot,fDot,fDot,1);
 	output.c =input.c;
 	output.t = input.t;

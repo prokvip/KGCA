@@ -1,22 +1,24 @@
-#include "TFbxLoader.h"
-bool TFbxLoader::Init()
+#include "TFbxFile.h"
+bool TFbxFile::Init()
 {
 	m_pFbxManager = FbxManager::Create();
-	m_pFbxImporter = FbxImporter::Create(m_pFbxManager, "");	
-	m_pFbxScene = FbxScene::Create(m_pFbxManager, "");	
+	m_pFbxImporter = FbxImporter::Create(m_pFbxManager, "");
+	m_pFbxScene = FbxScene::Create(m_pFbxManager, "");
 	return true;
 }
-bool TFbxLoader::Load( C_STR filename)
-{	
+bool TFbxFile::Load(C_STR filename)
+{
 	m_pFbxImporter->Initialize(filename.c_str());
 	m_pFbxImporter->Import(m_pFbxScene);
 	// 단위
 	FbxSystemUnit::m.ConvertScene(m_pFbxScene);
 	// 기저(행렬)	
 	FbxAxisSystem::MayaZUp.ConvertScene(m_pFbxScene);
-	
+
 	//FbxGeometryConverter converter(m_pFbxManager);
 	//converter.Triangulate(m_pFbxScene, true);
+
+	InitAnimation();
 
 	m_pRootNode = m_pFbxScene->GetRootNode();
 	PreProcess(m_pRootNode);
@@ -34,74 +36,14 @@ bool TFbxLoader::Load( C_STR filename)
 		{
 			m_pFbxMeshList.push_back(pFbxMesh);
 			ParseMesh(pFbxMesh, tObj);
-		}		
+		}
 	}
 	return true;
 }
-void TFbxLoader::LoadAnimation(TFbxObjectSkinning* pObj)
+
+void TFbxFile::ParseMesh(FbxMesh* pFbxMesh, TFbxObjectSkinning* pObject)
 {
-	FbxNode* pNode = pObj->m_pFbxNode;
-	FbxAnimStack* stackAnim = m_pFbxScene->GetSrcObject<FbxAnimStack>(0);
-	FbxLongLong s = 0;
-	FbxLongLong n = 0;
-	FbxTime::EMode TimeMode;
-	if (stackAnim)
-	{
-		FbxString takeName = stackAnim->GetName();
-		FbxTakeInfo* take = m_pFbxScene->GetTakeInfo(takeName);
-		FbxTime::SetGlobalTimeMode(FbxTime::eFrames30);
-		TimeMode = FbxTime::GetGlobalTimeMode();
-		FbxTimeSpan localTimeSpan = take->mLocalTimeSpan;
-		FbxTime start = localTimeSpan.GetStart();
-		FbxTime end = localTimeSpan.GetStop();
-		FbxTime Duration = localTimeSpan.GetDirection();
-		s = start.GetFrameCount(TimeMode);
-		n = end.GetFrameCount(TimeMode);
-	}
-	pObj->m_AnimScene.iStartFrame = s;
-	pObj->m_AnimScene.iEndFrame = n;
-	pObj->m_AnimScene.fFrameSpeed = 30.0f;
-	pObj->m_AnimScene.fTickPerFrame = 160;
-	FbxTime time;	
-	for (FbxLongLong t = s; t <= n; t++)
-	{
-		time.SetFrame(t, TimeMode);
-		TAnimTrack track;
-		track.iFrame = t;
-		FbxAMatrix fbxMatrix = pNode->EvaluateGlobalTransform(time);	
-		//track.fbxMatrix = fbxMatrix;
-		track.matAnim = DxConvertMatrix(fbxMatrix);		
-		TBASIS_EX::D3DXMatrixDecompose(&track.s, &track.r, &track.t, &track.matAnim);
-		pObj->m_AnimTracks.push_back(track);
-		
-	}
-}
-TMatrix TFbxLoader::ConvertMatrix(FbxAMatrix& fbxMatrix)
-{
-	TMatrix mat;
-	float* tArray = (float*)(&mat);
-	double* fbxArray = (double*)(&fbxMatrix);
-	for (int i = 0; i < 16; i++)
-	{
-		tArray[i] = fbxArray[i];
-	}
-	return mat;
-}
-TMatrix TFbxLoader::DxConvertMatrix(FbxAMatrix& fbxMatrix)
-{
-	TMatrix m = ConvertMatrix(fbxMatrix);
-	TMatrix mat;
-	mat._11 = m._11; mat._12 = m._13; mat._13 = m._12;
-	mat._21 = m._31; mat._22 = m._33; mat._23 = m._32;
-	mat._31 = m._21; mat._32 = m._23; mat._33 = m._22;
-	mat._41 = m._41; mat._42 = m._43; mat._43 = m._42;
-	mat._14 = mat._24 = mat._34 = 0.0f;
-	mat._44 = 1.0f;
-	return mat;
-}
-void TFbxLoader::ParseMesh(FbxMesh* pFbxMesh, TFbxObjectSkinning* pObject)
-{
-	FbxNode* pNode = pFbxMesh->GetNode();	
+	FbxNode* pNode = pFbxMesh->GetNode();
 	FbxAMatrix geom; // 기하(로칼)행렬(초기 정점 위치를 변환할 때 사용한다.)
 	FbxVector4 trans = pNode->GetGeometricTranslation(FbxNode::eSourcePivot);
 	FbxVector4 rot = pNode->GetGeometricRotation(FbxNode::eSourcePivot);
@@ -126,14 +68,14 @@ void TFbxLoader::ParseMesh(FbxMesh* pFbxMesh, TFbxObjectSkinning* pObject)
 	//normalWorldMatrix = normalWorldMatrix.Transpose();
 
 	// Layer 개념
-	FbxLayerElementUV* VertexUVSet=nullptr;
+	FbxLayerElementUV* VertexUVSet = nullptr;
 	FbxLayerElementVertexColor* VertexColorSet = nullptr;
 	FbxLayerElementNormal* VertexNormalSet = nullptr;
 	FbxLayerElementMaterial* MaterialSet = nullptr;
-	FbxLayer* pFbxLayer  = pFbxMesh->GetLayer(0);
+	FbxLayer* pFbxLayer = pFbxMesh->GetLayer(0);
 	if (pFbxLayer->GetUVs() != nullptr)
 	{
-		VertexUVSet=pFbxLayer->GetUVs();
+		VertexUVSet = pFbxLayer->GetUVs();
 	}
 	if (pFbxLayer->GetVertexColors() != nullptr)
 	{
@@ -152,7 +94,7 @@ void TFbxLoader::ParseMesh(FbxMesh* pFbxMesh, TFbxObjectSkinning* pObject)
 	int iNumMtrl = pNode->GetMaterialCount();
 	std::vector< C_STR>   texFullNameList;
 	texFullNameList.resize(iNumMtrl);
-	
+
 	for (int iMtrl = 0; iMtrl < iNumMtrl; iMtrl++)
 	{
 		// 24 이상의 정보가 있다.
@@ -180,7 +122,7 @@ void TFbxLoader::ParseMesh(FbxMesh* pFbxMesh, TFbxObjectSkinning* pObject)
 	{
 		pObject->vbDataList.resize(iNumMtrl);
 		pObject->vbDataList_IW.resize(iNumMtrl);
-		
+
 		pObject->vbTexList.resize(iNumMtrl);
 		for (int iTex = 0; iTex < iNumMtrl; iTex++)
 		{
@@ -212,8 +154,8 @@ void TFbxLoader::ParseMesh(FbxMesh* pFbxMesh, TFbxObjectSkinning* pObject)
 			// 정점인덱스
 			int iCornerIndex[3];
 			iCornerIndex[0] = pFbxMesh->GetPolygonVertex(iPoly, 0);
-			iCornerIndex[1] = pFbxMesh->GetPolygonVertex(iPoly, iFace+2);
-			iCornerIndex[2] = pFbxMesh->GetPolygonVertex(iPoly, iFace+1);
+			iCornerIndex[1] = pFbxMesh->GetPolygonVertex(iPoly, iFace + 2);
+			iCornerIndex[2] = pFbxMesh->GetPolygonVertex(iPoly, iFace + 1);
 
 			int iUVIndex[3];
 			iUVIndex[0] = pFbxMesh->GetTextureUVIndex(iPoly, 0);
@@ -224,25 +166,25 @@ void TFbxLoader::ParseMesh(FbxMesh* pFbxMesh, TFbxObjectSkinning* pObject)
 			{
 				int vertexID = iCornerIndex[iIndex];
 				FbxVector4 v2 = pVertexPositions[vertexID];
-				PNCT_VERTEX tVertex; 
+				PNCT_VERTEX tVertex;
 				IW_VERTEX  IWVertex;
-				FbxVector4 v = geom.MultT(v2);	
+				FbxVector4 v = geom.MultT(v2);
 				//v = pObject->m_AnimTracks[30].fbxMatrix.MultT(v);
 				tVertex.p.x = v.mData[0];
 				tVertex.p.y = v.mData[2];
 				tVertex.p.z = v.mData[1];
-				tVertex.c = TVector4(1,1,1,1);
+				tVertex.c = TVector4(1, 1, 1, 1);
 				if (VertexColorSet)
 				{
 					FbxColor c = ReadColor(
 						pFbxMesh,
 						VertexColorSet,
 						iCornerIndex[iIndex],
-						iBasePolyIndex+ VertexColor[iIndex]);
+						iBasePolyIndex + VertexColor[iIndex]);
 					tVertex.c.x = c.mRed;
 					tVertex.c.y = c.mGreen;
 					tVertex.c.z = c.mBlue;
-					tVertex.c.w = 1.0f;					
+					tVertex.c.w = 1.0f;
 				}
 				if (VertexUVSet)
 				{
@@ -293,7 +235,7 @@ void TFbxLoader::ParseMesh(FbxMesh* pFbxMesh, TFbxObjectSkinning* pObject)
 
 	m_pDrawObjList.push_back(pObject);
 }
-FbxVector4 TFbxLoader::ReadNormal(FbxMesh* pFbxMesh,
+FbxVector4 TFbxFile::ReadNormal(FbxMesh* pFbxMesh,
 	FbxLayerElementNormal* VertexNormalSet,
 	int posIndex,
 	int colorIndex)
@@ -335,7 +277,7 @@ FbxVector4 TFbxLoader::ReadNormal(FbxMesh* pFbxMesh,
 	}
 	return normal;
 }
-FbxColor TFbxLoader::ReadColor(FbxMesh* pFbxMesh,
+FbxColor TFbxFile::ReadColor(FbxMesh* pFbxMesh,
 	FbxLayerElementVertexColor* VertexColorSet,
 	int posIndex,
 	int colorIndex)
@@ -377,7 +319,7 @@ FbxColor TFbxLoader::ReadColor(FbxMesh* pFbxMesh,
 	}
 	return color;
 }
-FbxVector2 TFbxLoader::ReadTextureCoord(FbxMesh* pFbxMesh, 
+FbxVector2 TFbxFile::ReadTextureCoord(FbxMesh* pFbxMesh,
 	FbxLayerElementUV* pUVSet,
 	int vertexIndex,
 	int uvIndex)
@@ -400,38 +342,38 @@ FbxVector2 TFbxLoader::ReadTextureCoord(FbxMesh* pFbxMesh,
 	//};
 	// 텍스처 매핑 방식이 뭐냐?
 	FbxLayerElement::EMappingMode mode = pUVSet->GetMappingMode();
-	switch(mode)
-	{ 
-		case FbxLayerElementUV::eByControlPoint:
+	switch (mode)
+	{
+	case FbxLayerElementUV::eByControlPoint:
+	{
+		switch (pUVSet->GetReferenceMode())
 		{
-			switch (pUVSet->GetReferenceMode())
-			{
-			case FbxLayerElementUV::eDirect:
-			{
-				t = pUVSet->GetDirectArray().GetAt(vertexIndex);
-			}break;
-			case FbxLayerElementUV::eIndexToDirect:
-			{
-				int index = pUVSet->GetIndexArray().GetAt(vertexIndex);
-				t = pUVSet->GetDirectArray().GetAt(index);
-			}break;
-			}break;
-		} break;
-		case FbxLayerElementUV::eByPolygonVertex:
+		case FbxLayerElementUV::eDirect:
 		{
-			switch (pUVSet->GetReferenceMode())
-			{
-				case FbxLayerElementUV::eDirect:
-				case FbxLayerElementUV::eIndexToDirect:
-				{
-					t = pUVSet->GetDirectArray().GetAt(uvIndex);
-				}break;
-			}break;
+			t = pUVSet->GetDirectArray().GetAt(vertexIndex);
 		}break;
+		case FbxLayerElementUV::eIndexToDirect:
+		{
+			int index = pUVSet->GetIndexArray().GetAt(vertexIndex);
+			t = pUVSet->GetDirectArray().GetAt(index);
+		}break;
+		}break;
+	} break;
+	case FbxLayerElementUV::eByPolygonVertex:
+	{
+		switch (pUVSet->GetReferenceMode())
+		{
+		case FbxLayerElementUV::eDirect:
+		case FbxLayerElementUV::eIndexToDirect:
+		{
+			t = pUVSet->GetDirectArray().GetAt(uvIndex);
+		}break;
+		}break;
+	}break;
 	}
 	return t;
 }
-int TFbxLoader::GetSubMaterialIndex(int iPoly, FbxLayerElementMaterial* pMaterialSetList)
+int TFbxFile::GetSubMaterialIndex(int iPoly, FbxLayerElementMaterial* pMaterialSetList)
 {
 	// 매핑방식
 	//eNone,
@@ -467,65 +409,50 @@ int TFbxLoader::GetSubMaterialIndex(int iPoly, FbxLayerElementMaterial* pMateria
 	}
 	return iSubMtrl;
 }
-void TFbxLoader::PreProcess(FbxNode* pFbxNode)
-{	
-	if (pFbxNode && (pFbxNode->GetCamera() || pFbxNode->GetLight()))	
+void TFbxFile::PreProcess(FbxNode* pFbxNode)
+{
+	if (pFbxNode && (pFbxNode->GetCamera() || pFbxNode->GetLight()))
 	{
 		return;
 	}
-	
+
 	TFbxObjectSkinning* pObject = new TFbxObjectSkinning;
 	std::string name = pFbxNode->GetName();
 	pObject->m_szName = to_mw(name);
 	pObject->m_pFbxNode = pFbxNode;
 	pObject->m_pFbxParentNode = pFbxNode->GetParent();
+	pObject->m_iObjectBone = m_pObjectList.size();
 
 	m_pObjectList.push_back(pObject);
 	m_pObjectMap.insert(std::make_pair(pFbxNode, pObject));
-	m_pObjectIDMap.insert(std::make_pair(pFbxNode, m_pObjectList.size()-1));
+	m_pObjectIDMap.insert(std::make_pair(pFbxNode, pObject->m_iObjectBone));
 
 	int iNumChild = pFbxNode->GetChildCount();
-	for( int iChild=0; iChild < iNumChild; iChild++)
+	for (int iChild = 0; iChild < iNumChild; iChild++)
 	{
 		FbxNode* pChild = pFbxNode->GetChild(iChild);
 		// 헬퍼오브젝트 + 지오메트리 오브젝트
 		FbxNodeAttribute::EType type = pChild->GetNodeAttribute()->GetAttributeType();
-		if( type == FbxNodeAttribute::eMesh ||
-			type == FbxNodeAttribute::eSkeleton||
+		if (type == FbxNodeAttribute::eMesh ||
+			type == FbxNodeAttribute::eSkeleton ||
 			type == FbxNodeAttribute::eNull)
 		{
 			PreProcess(pChild);
-		}		
+		}
 	}
 }
-bool TFbxLoader::Frame()
+bool TFbxFile::Release()
 {
-	for (auto obj : m_pDrawObjList)
-	{
-		obj->Frame();
-	}
-	return true;
-}
-bool TFbxLoader::Render()
-{
-	for (auto obj : m_pDrawObjList)
-	{
-		obj->Render();
-	}
-	return true;
-}
-
-bool TFbxLoader::Release()
-{
-	for (auto obj : m_pDrawObjList)
+	if (m_pConstantBufferBone)m_pConstantBufferBone->Release();
+	for (auto obj : m_pObjectList)
 	{
 		obj->Release();
 		delete obj;
 	}
-	
+
 	m_pFbxScene->Destroy();
 
-	if (m_pFbxImporter!=nullptr)
+	if (m_pFbxImporter != nullptr)
 	{
 		m_pFbxImporter->Destroy();
 		m_pFbxImporter = nullptr;

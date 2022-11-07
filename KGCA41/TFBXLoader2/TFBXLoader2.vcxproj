@@ -145,11 +145,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Sample.h" />
-    <ClInclude Include="TFbxLoader.h" />
+    <ClInclude Include="TFbxFile.h" />
     <ClInclude Include="TFbxObject.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Sample.cpp" />
+    <ClCompile Include="TFbxAnimation.cpp" />
+    <ClCompile Include="TFbxFile.cpp" />
     <ClCompile Include="TFbxLoader.cpp" />
     <ClCompile Include="TFbxObject.cpp" />
   </ItemGroup>

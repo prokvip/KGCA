@@ -55,21 +55,24 @@ void Sample::ClearD3D11DeviceContext(ID3D11DeviceContext* pd3dDeviceContext)
 }
 bool	Sample::Init()
 {
-	/*TFbxLoader* pFbxLoaderC = new TFbxLoader;
+	/*TFbxFile* pFbxLoaderC = new TFbxFile;
 	if (pFbxLoaderC->Init())
 	{
 		pFbxLoaderC->Load("../../data/fbx/MultiCameras.fbx");
 	}
 	m_fbxList.push_back(pFbxLoaderC);*/
 
-	TFbxLoader* pFbxLoaderA = new TFbxLoader;
+	TFbxFile* pFbxLoaderA = new TFbxFile;
 	if (pFbxLoaderA->Init())
 	{
-		pFbxLoaderA->Load("../../data/fbx/Turret_Deploy1/Turret_Deploy1.fbx");
+		if (pFbxLoaderA->Load("../../data/fbx/Turret_Deploy1/Turret_Deploy1.fbx"))
+		{
+			pFbxLoaderA->CreateConstantBuffer(m_pd3dDevice.Get());
+		}
 	}
 	m_fbxList.push_back(pFbxLoaderA);
 
-	/*TFbxLoader* pFbxLoaderB = new TFbxLoader;
+	/*TFbxFile* pFbxLoaderB = new TFbxFile;
 	if (pFbxLoaderB->Init())
 	{
 		pFbxLoaderB->Load("../../data/fbx/sm_rock.fbx");
@@ -100,9 +103,9 @@ bool	Sample::Frame()
 {
 	ClearD3D11DeviceContext(m_pImmediateContext.Get());
 	m_pMainCamera->Frame();
-	for (auto fbx : m_fbxList)
+	for (auto fbxfile : m_fbxList)
 	{
-		fbx->Frame();
+		fbxfile->UpdateFrame(m_pImmediateContext.Get());
 	}
 	return true;
 }
@@ -119,31 +122,19 @@ bool	Sample::Render()
 	//vLight = vLight * matRotation;
 	D3DXVec3TransformCoord(&vLight, &vLight, &matRotation);
 	D3DXVec3Normalize(&vLight, &vLight);
-	for (int iModel=0; iModel < m_fbxList.size(); iModel++)
+	for (int iFbxFile=0; iFbxFile < m_fbxList.size(); iFbxFile++)
 	{
-		TMatrix matWorld;
-		D3DXMatrixRotationY(&matWorld, g_fGameTimer);
-		for (int iObj = 0; iObj < m_fbxList[iModel]->m_pDrawObjList.size(); iObj++)		
+		m_pImmediateContext->VSSetConstantBuffers(1, 1,	&m_fbxList[iFbxFile]->m_pConstantBufferBone);
+		for (int iObj = 0; iObj < m_fbxList[iFbxFile]->m_pDrawObjList.size(); iObj++)
 		{
-			TFbxObjectSkinning* pObj = m_fbxList[iModel]->m_pDrawObjList[iObj];			
-			pObj->m_fAnimFrame = pObj->m_fAnimFrame + 
-								 g_fSecondPerFrame* pObj->m_fAnimSpeed* pObj->m_fAnimSpeed * 
-				pObj->m_AnimScene.fFrameSpeed * pObj->m_fAnimInverse;
-			if (pObj->m_fAnimFrame > pObj->m_AnimScene.iEndFrame ||
-				pObj->m_fAnimFrame < pObj->m_AnimScene.iStartFrame)
-			{
-				pObj->m_fAnimFrame = min(pObj->m_fAnimFrame, pObj->m_AnimScene.iEndFrame);
-				pObj->m_fAnimFrame = max(pObj->m_fAnimFrame, pObj->m_AnimScene.iStartFrame);
-				pObj->m_fAnimInverse *= -1.0f;
-			}
-
-			pObj->m_matAnim = pObj->Interplate(pObj->m_fAnimFrame);
-			pObj->m_matWorld = /*pObj->m_matAnim * */matWorld;
+			TFbxObject* pObj = m_fbxList[iFbxFile]->m_pDrawObjList[iObj];
+			TMatrix matControlWorld;
+			D3DXMatrixRotationY(&matControlWorld, g_fGameTimer);
 			pObj->m_cbData.x = vLight.x;
 			pObj->m_cbData.y = vLight.y;
 			pObj->m_cbData.z = vLight.z;
-			pObj->SetMatrix(&pObj->m_matWorld,&m_pMainCamera->m_matView,&m_pMainCamera->m_matProj);
-			pObj->Render();			
+			pObj->SetMatrix(&matControlWorld, &m_pMainCamera->m_matView, &m_pMainCamera->m_matProj);
+			pObj->Render();
 		}
 	}
 	m_pImmediateContext->RSSetState(TDxState::g_pDefaultRSSolid);

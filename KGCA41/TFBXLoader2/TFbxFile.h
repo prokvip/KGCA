@@ -6,8 +6,13 @@
 #pragma comment(lib, "libxml2-md.lib")
 #pragma comment(lib, "zlib-md.lib")
 
-class TFbxLoader
+class TFbxFile
 {
+public:
+	TAnimScene  m_AnimScene;
+	float       m_fAnimFrame = 0;
+	float       m_fAnimInverse = 1.0f;
+	float       m_fAnimSpeed = 1.0f;
 public:
 	FbxManager*		m_pFbxManager;
 	FbxImporter*	m_pFbxImporter;
@@ -20,9 +25,13 @@ public:
 	std::vector< FbxMesh* > m_pFbxMeshList;
 	std::vector< TFbxObjectSkinning* > m_pDrawObjList;
 	ID3D11DeviceContext* m_pContext=nullptr;
+
+	VS_CONSTANT_BONE_BUFFER  m_cbDataBone;
+	ID3D11Buffer* m_pConstantBufferBone;
+	HRESULT	CreateConstantBuffer(ID3D11Device* pDevice);
 public:
 	bool Init();
-	bool Frame();
+	bool UpdateFrame(ID3D11DeviceContext* pContext);
 	bool Render();
 	bool Release();
 	bool Load(C_STR filename);
@@ -41,6 +50,7 @@ public:
 		int posIndex,
 		int colorIndex);
 	int GetSubMaterialIndex(int iPoly, FbxLayerElementMaterial* MaterialSet);
+	void InitAnimation();
 	void LoadAnimation(TFbxObjectSkinning* pObj);
 	TMatrix ConvertMatrix(FbxAMatrix& fbxMatrix);
 	TMatrix DxConvertMatrix(FbxAMatrix& fbxMatrix);
