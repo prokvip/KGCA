@@ -10,6 +10,8 @@ bool TFbxFile::Load(C_STR filename)
 {
 	m_pFbxImporter->Initialize(filename.c_str());
 	m_pFbxImporter->Import(m_pFbxScene);
+
+	FbxAxisSystem SceneAxisSystem = m_pFbxScene->GetGlobalSettings().GetAxisSystem();
 	// 단위
 	FbxSystemUnit::m.ConvertScene(m_pFbxScene);
 	// 기저(행렬)	
