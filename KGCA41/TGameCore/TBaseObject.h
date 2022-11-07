@@ -44,13 +44,13 @@ struct VS_CONSTANT_BUFFER
 
 struct IW_VERTEX
 {
-	TVector4   w;
 	TVector4   i;
+	TVector4   w;
 	IW_VERTEX() {}
 	IW_VERTEX(TVector4 vIndex, TVector4 vWeight)
 	{	
-		w = vWeight;
 		i = vIndex;
+		w = vWeight;		
 	}
 };
 struct VS_CONSTANT_BONE_BUFFER

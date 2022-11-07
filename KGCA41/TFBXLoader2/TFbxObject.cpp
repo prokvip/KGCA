@@ -110,7 +110,7 @@ TBASIS_EX::TMatrix TFbxObject::Interplate(float fFrame)
 	{
 		return m_AnimTracks[fFrame].matAnim;
 	}
-	float t = (fFrame - A.iFrame)*(B.iFrame-A.iFrame);
+	float t = (fFrame - A.iFrame)/(B.iFrame-A.iFrame);
 	TBASIS_EX::TVector3 pos;
 	TBASIS_EX::D3DXVec3Lerp(&pos, &A.t, &B.t, t);
 	TBASIS_EX::TVector3 scale;
