@@ -148,6 +148,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TGameCore", "TGameCore\TGam
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TFBXLoader", "TFBXLoader\TFBXLoader.vcxproj", "{FFD81D85-7ED6-4943-924F-8343663027A9}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TFBXLoader2", "TFBXLoader2\TFBXLoader2.vcxproj", "{DA8493A1-0F4E-41A4-A582-623E13D1418B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|ARM = Debug|ARM
@@ -916,6 +918,18 @@ Global
 		{FFD81D85-7ED6-4943-924F-8343663027A9}.Release|x64.Build.0 = Release|x64
 		{FFD81D85-7ED6-4943-924F-8343663027A9}.Release|x86.ActiveCfg = Release|Win32
 		{FFD81D85-7ED6-4943-924F-8343663027A9}.Release|x86.Build.0 = Release|Win32
+		{DA8493A1-0F4E-41A4-A582-623E13D1418B}.Debug|ARM.ActiveCfg = Debug|Win32
+		{DA8493A1-0F4E-41A4-A582-623E13D1418B}.Debug|ARM64.ActiveCfg = Debug|Win32
+		{DA8493A1-0F4E-41A4-A582-623E13D1418B}.Debug|x64.ActiveCfg = Debug|x64
+		{DA8493A1-0F4E-41A4-A582-623E13D1418B}.Debug|x64.Build.0 = Debug|x64
+		{DA8493A1-0F4E-41A4-A582-623E13D1418B}.Debug|x86.ActiveCfg = Debug|Win32
+		{DA8493A1-0F4E-41A4-A582-623E13D1418B}.Debug|x86.Build.0 = Debug|Win32
+		{DA8493A1-0F4E-41A4-A582-623E13D1418B}.Release|ARM.ActiveCfg = Release|Win32
+		{DA8493A1-0F4E-41A4-A582-623E13D1418B}.Release|ARM64.ActiveCfg = Release|Win32
+		{DA8493A1-0F4E-41A4-A582-623E13D1418B}.Release|x64.ActiveCfg = Release|x64
+		{DA8493A1-0F4E-41A4-A582-623E13D1418B}.Release|x64.Build.0 = Release|x64
+		{DA8493A1-0F4E-41A4-A582-623E13D1418B}.Release|x86.ActiveCfg = Release|Win32
+		{DA8493A1-0F4E-41A4-A582-623E13D1418B}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
