@@ -29,6 +29,10 @@ public:
 	VS_CONSTANT_BONE_BUFFER  m_cbDataBone;
 	ID3D11Buffer* m_pConstantBufferBone;
 	HRESULT	CreateConstantBuffer(ID3D11Device* pDevice);
+	// 뼈대 공간으로 변환하는 행렬이 저장된다.
+	//std::map<FbxNode*, TMatrix > m_dxMatrixBindPseMap;
+	//std::map<std::wstring, TMatrix > m_dxMatrixBindPseMap;
+	
 public:
 	bool Init();
 	bool UpdateFrame(ID3D11DeviceContext* pContext);
@@ -54,6 +58,6 @@ public:
 	void LoadAnimation(TFbxObjectSkinning* pObj);
 	TMatrix ConvertMatrix(FbxAMatrix& fbxMatrix);
 	TMatrix DxConvertMatrix(FbxAMatrix& fbxMatrix);
-
+	bool ParseMeshSkinning(FbxMesh* pFbxMesh, TFbxObjectSkinning* pObject);
 };
 

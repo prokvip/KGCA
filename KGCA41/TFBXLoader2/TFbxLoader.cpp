@@ -45,6 +45,9 @@ bool TFbxFile::Load(C_STR filename)
 
 void TFbxFile::ParseMesh(FbxMesh* pFbxMesh, TFbxObjectSkinning* pObject)
 {
+	// 스키닝 정보 확인
+	pObject->m_bSkinned = ParseMeshSkinning(pFbxMesh, pObject);
+
 	FbxNode* pNode = pFbxMesh->GetNode();
 	FbxAMatrix geom; // 기하(로칼)행렬(초기 정점 위치를 변환할 때 사용한다.)
 	FbxVector4 trans = pNode->GetGeometricTranslation(FbxNode::eSourcePivot);
@@ -210,15 +213,29 @@ void TFbxFile::ParseMesh(FbxMesh* pFbxMesh, TFbxObjectSkinning* pObject)
 					tVertex.n.y = n.mData[2];
 					tVertex.n.z = n.mData[1];
 				}
-				IWVertex.i.x = m_pObjectIDMap.find(pNode)->second;
-				IWVertex.i.y = 0;
-				IWVertex.i.z = 0;
-				IWVertex.i.w = 0;
-
-				IWVertex.w.x = 1.0f;
-				IWVertex.w.y = 0.0f;
-				IWVertex.w.z = 0.0f;
-				IWVertex.w.w = 0.0f;
+				if (pObject->m_bSkinned == false)
+				{
+					IWVertex.i.x = m_pObjectIDMap.find(pNode)->second;
+					IWVertex.i.y = 0;
+					IWVertex.i.z = 0;
+					IWVertex.i.w = 0;
+					IWVertex.w.x = 1.0f;
+					IWVertex.w.y = 0.0f;
+					IWVertex.w.z = 0.0f;
+					IWVertex.w.w = 0.0f;
+				}
+				else
+				{
+					TWeight* pWeight = &pObject->m_WeightList[vertexID];
+					IWVertex.i.x = pWeight->Index[0];
+					IWVertex.i.y = pWeight->Index[1];
+					IWVertex.i.z = pWeight->Index[2];
+					IWVertex.i.w = pWeight->Index[3];
+					IWVertex.w.x = pWeight->weight[0];
+					IWVertex.w.y = pWeight->weight[1];
+					IWVertex.w.z = pWeight->weight[2];
+					IWVertex.w.w = pWeight->weight[3];
+				}
 
 				if (iNumMtrl <= 1)
 				{

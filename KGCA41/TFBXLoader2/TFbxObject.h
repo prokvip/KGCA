@@ -18,6 +18,33 @@ struct TAnimScene
 	float fTickPerFrame; // 160
 	float fFrameSpeed; // 30
 };
+struct TWeight
+{
+	std::vector<int>  Index;
+	std::vector<float>  weight;
+	void insert(int iBone, float fWeight)
+	{
+		for (int i = 0; i < Index.size(); i++)
+		{
+			if (fWeight > weight[i])
+			{
+				for (int j= Index.size()-1; j > i; --j)
+				{
+					Index[j] = Index[j - 1];
+					weight[j] = weight[j - 1];
+				}
+				Index[i] = iBone;
+				weight[i] = fWeight;
+				break;
+			}
+		}
+	}
+	TWeight()
+	{
+		Index.resize(8);
+		weight.resize(8);
+	}
+};
 class TFbxObject : public TObject3D
 {
 public:
@@ -55,10 +82,14 @@ public:
 class TFbxObjectSkinning : public TFbxObject
 {
 public:
+	bool			m_bSkinned = false;
 	std::vector<ID3D11Buffer*> m_pSubVB_IW;
 	std::vector< std::vector<IW_VERTEX>>   vbDataList_IW;
 	std::vector<IW_VERTEX>   m_VertexListIW;
 	ID3D11Buffer*			m_pVertexBufferIW;
+	std::vector< TWeight>   m_WeightList;
+	std::map<UINT, TMatrix > m_dxMatrixBindPseMap;
+
 	HRESULT CreateVertexLayout()
 	{
 		HRESULT hr;
@@ -111,6 +142,11 @@ public:
 		else
 		{
 			hr = TObject3D::CreateVertexBuffer();
+			m_pVertexBufferIW =
+				TDX::CreateVertexBuffer(m_pd3dDevice,
+					&m_VertexListIW.at(0),
+					m_VertexListIW.size(),
+					sizeof(IW_VERTEX));
 		}
 		return hr;		
 	}	
@@ -139,6 +175,11 @@ public:
 			}
 			else
 			{
+				UINT stride[2] = { sizeof(PNCT_VERTEX), sizeof(IW_VERTEX) }; // 정점1개의 바이트용량
+				UINT offset[2] = { 0, 0 }; // 정점버퍼에서 출발지점(바이트)
+				//SLOT(레지스터리)
+				ID3D11Buffer* buffer[2] = { m_pVertexBuffer,m_pVertexBufferIW };
+				m_pImmediateContext->IASetVertexBuffers(0, 2, buffer, stride, offset);
 				m_pImmediateContext->Draw(m_VertexList.size(), 0);
 			}
 		}
