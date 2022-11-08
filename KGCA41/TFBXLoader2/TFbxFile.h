@@ -52,7 +52,7 @@ public:
 		int colorIndex);
 	int GetSubMaterialIndex(int iPoly, FbxLayerElementMaterial* MaterialSet);
 	void InitAnimation();
-	void LoadAnimation(TFbxObjectSkinning* pObj, FbxLongLong t,FbxTime time);
+	void LoadAnimation(FbxLongLong t,FbxTime time);
 	TMatrix ConvertMatrix(FbxAMatrix& fbxMatrix);
 	TMatrix DxConvertMatrix(FbxAMatrix& fbxMatrix);
 	bool ParseMeshSkinning(FbxMesh* pFbxMesh, TFbxObjectSkinning* pObject);

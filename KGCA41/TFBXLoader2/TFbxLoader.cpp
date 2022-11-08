@@ -44,10 +44,7 @@ bool TFbxFile::Load(C_STR filename)
 	for (FbxLongLong t = m_AnimScene.iStartFrame; t <= m_AnimScene.iEndFrame; t++)
 	{
 		time.SetFrame(t, m_AnimScene.TimeMode);
-		for (auto tObj : m_pObjectList)
-		{
-			LoadAnimation(tObj, t, time);
-		}
+		LoadAnimation( t, time);
 	}
 	return true;
 }
