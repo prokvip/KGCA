@@ -62,7 +62,7 @@ bool	Sample::Init()
 	}
 	m_fbxList.push_back(pFbxLoaderC);*/
 
-	/*TFbxFile* pFbxLoaderA = new TFbxFile;
+	TFbxFile* pFbxLoaderA = new TFbxFile;
 	if (pFbxLoaderA->Init())
 	{
 		if (pFbxLoaderA->Load("../../data/fbx/Turret_Deploy1/Turret_Deploy1.fbx"))
@@ -70,7 +70,7 @@ bool	Sample::Init()
 			pFbxLoaderA->CreateConstantBuffer(m_pd3dDevice.Get());
 		}
 	}
-	m_fbxList.push_back(pFbxLoaderA);*/
+	m_fbxList.push_back(pFbxLoaderA);
 
 	/*TFbxFile* pFbxLoaderB = new TFbxFile;
 	if (pFbxLoaderB->Init())

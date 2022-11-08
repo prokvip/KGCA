@@ -61,7 +61,7 @@ bool TFbxFile::UpdateFrame(ID3D11DeviceContext* pContext)
 				}
 			}
 			pContext->UpdateSubresource(
-				m_pDrawObjList[iDraw]->m_pConstantBufferBone, 0, nullptr,
+				m_pDrawObjList[iDraw]->m_pSkinBoneCB, 0, nullptr,
 				&m_cbDataBone, 0, 0);
 		}				
 	}	

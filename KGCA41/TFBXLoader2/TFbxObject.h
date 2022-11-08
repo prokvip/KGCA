@@ -94,7 +94,7 @@ public:
 	std::map<UINT, TMatrix > m_dxMatrixBindPseMap;
 public:
 	VS_CONSTANT_BONE_BUFFER  m_cbDataBone;
-	ID3D11Buffer* m_pConstantBufferBone;
+	ID3D11Buffer* m_pSkinBoneCB;
 public:
 	HRESULT	CreateConstantBuffer()
 	{
@@ -119,7 +119,7 @@ public:
 		hr = m_pd3dDevice->CreateBuffer(
 			&bd, // 버퍼 할당
 			&sd, // 초기 할당된 버퍼를 체우는 CPU메모리 주소
-			&m_pConstantBufferBone);
+			&m_pSkinBoneCB);
 		return hr;
 	}
 	HRESULT CreateVertexLayout()
@@ -185,7 +185,7 @@ public:
 	{
 		if (m_bSkinned)
 		{
-			m_pImmediateContext->VSSetConstantBuffers(1, 1, &m_pConstantBufferBone);
+			m_pImmediateContext->VSSetConstantBuffers(1, 1, &m_pSkinBoneCB);
 		}
 		if (m_pIndexBuffer == nullptr)
 		{
@@ -226,10 +226,10 @@ public:
 	}
 	bool	Release()
 	{		
-		if (m_pConstantBufferBone)
+		if (m_pSkinBoneCB)
 		{
-			m_pConstantBufferBone->Release();
-			m_pConstantBufferBone = nullptr;
+			m_pSkinBoneCB->Release();
+			m_pSkinBoneCB = nullptr;
 		}
 		if (m_pVertexBufferIW)
 		{
