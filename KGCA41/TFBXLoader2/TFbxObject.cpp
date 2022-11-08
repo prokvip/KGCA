@@ -100,6 +100,9 @@ bool	TFbxObject::Release()
 }
 TBASIS_EX::TMatrix TFbxObject::Interplate(float fFrame, TAnimScene tScene)
 {
+	TMatrix matIdentity;
+	D3DXMatrixIdentity(&matIdentity);
+	if (m_AnimTracks.size() == 0) return matIdentity;
 	//   10                20
 	//   A=0 --------------- B=20
 	//   t=0 ~ t=0.5f     t=1

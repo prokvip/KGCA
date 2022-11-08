@@ -31,13 +31,22 @@ bool TFbxFile::Load(C_STR filename)
 		{
 			auto data = m_pObjectMap.find(tObj->m_pFbxParentNode);
 			tObj->SetParent(data->second);
-		}
-		LoadAnimation(tObj);
+		}		
 		FbxMesh* pFbxMesh = tObj->m_pFbxNode->GetMesh();
 		if (pFbxMesh)
 		{
 			m_pFbxMeshList.push_back(pFbxMesh);
 			ParseMesh(pFbxMesh, tObj);
+		}
+	}
+	// animation
+	FbxTime time;
+	for (FbxLongLong t = m_AnimScene.iStartFrame; t <= m_AnimScene.iEndFrame; t++)
+	{
+		time.SetFrame(t, m_AnimScene.TimeMode);
+		for (auto tObj : m_pObjectList)
+		{
+			LoadAnimation(tObj, t, time);
 		}
 	}
 	return true;

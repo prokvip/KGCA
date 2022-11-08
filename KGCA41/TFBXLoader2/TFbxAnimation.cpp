@@ -24,20 +24,18 @@ void TFbxFile::InitAnimation()
 	m_AnimScene.fTickPerFrame = 160;
 	m_AnimScene.TimeMode = TimeMode;
 }
-void TFbxFile::LoadAnimation(TFbxObjectSkinning* pObj)
-{
+void TFbxFile::LoadAnimation(TFbxObjectSkinning* pObj, FbxLongLong t, FbxTime time)
+{	
 	FbxNode* pNode = pObj->m_pFbxNode;	
-	FbxTime time;
-	for (FbxLongLong t = m_AnimScene.iStartFrame; t <= m_AnimScene.iEndFrame; t++)
+	for (auto tObj : m_pObjectList)
 	{
-		time.SetFrame(t, m_AnimScene.TimeMode);
 		TAnimTrack track;
 		track.iFrame = t;
 		FbxAMatrix fbxMatrix = pNode->EvaluateGlobalTransform(time);
 		track.matAnim = DxConvertMatrix(fbxMatrix);
 		TBASIS_EX::D3DXMatrixDecompose(&track.s, &track.r, &track.t, &track.matAnim);
 		pObj->m_AnimTracks.push_back(track);
-	}
+	}	
 }
 TMatrix TFbxFile::ConvertMatrix(FbxAMatrix& fbxMatrix)
 {
