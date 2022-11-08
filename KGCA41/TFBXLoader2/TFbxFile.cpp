@@ -20,7 +20,7 @@ HRESULT	TFbxFile::CreateConstantBuffer(ID3D11Device* pDevice)
 	hr = pDevice->CreateBuffer(
 		&bd, // 버퍼 할당
 		&sd, // 초기 할당된 버퍼를 체우는 CPU메모리 주소
-		&m_pConstantBufferBone);
+		&m_pAnimBoneCB);
 	return hr;
 }
 bool TFbxFile::UpdateFrame(ID3D11DeviceContext* pContext)
@@ -43,7 +43,7 @@ bool TFbxFile::UpdateFrame(ID3D11DeviceContext* pContext)
 		D3DXMatrixTranspose(&m_cbDataBone.matBone[iBone], &matAnimation);
 		matCurrentAnimList.push_back(matAnimation);
 	}
-	pContext->UpdateSubresource(m_pConstantBufferBone, 0, nullptr,&m_cbDataBone, 0, 0);
+	pContext->UpdateSubresource(m_pAnimBoneCB, 0, nullptr,&m_cbDataBone, 0, 0);
 
 	// skinning
 	for (int iDraw = 0; iDraw < m_pDrawObjList.size(); iDraw++)

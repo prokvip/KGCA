@@ -87,15 +87,17 @@ bool	TFbxObject::PostRender()
 }
 bool	TFbxObject::Release()
 {
-	TObject3D::Release();
-
 	for (int iSubObj = 0; iSubObj < m_pSubVB.size(); iSubObj++)
 	{
 		if (m_pSubVB[iSubObj])
 		{
 			m_pSubVB[iSubObj]->Release();
+			m_pSubVB[iSubObj] = nullptr;
 		}
 	}
+	m_pSubVB.clear();
+
+	TObject3D::Release();
 	return true;
 }
 TBASIS_EX::TMatrix TFbxObject::Interplate(float fFrame, TAnimScene tScene)

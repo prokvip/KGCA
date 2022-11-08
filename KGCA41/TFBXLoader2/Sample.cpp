@@ -62,7 +62,7 @@ bool	Sample::Init()
 	}
 	m_fbxList.push_back(pFbxLoaderC);*/
 
-	TFbxFile* pFbxLoaderA = new TFbxFile;
+	/*TFbxFile* pFbxLoaderA = new TFbxFile;
 	if (pFbxLoaderA->Init())
 	{
 		if (pFbxLoaderA->Load("../../data/fbx/Turret_Deploy1/Turret_Deploy1.fbx"))
@@ -70,7 +70,7 @@ bool	Sample::Init()
 			pFbxLoaderA->CreateConstantBuffer(m_pd3dDevice.Get());
 		}
 	}
-	m_fbxList.push_back(pFbxLoaderA);
+	m_fbxList.push_back(pFbxLoaderA);*/
 
 	/*TFbxFile* pFbxLoaderB = new TFbxFile;
 	if (pFbxLoaderB->Init())
@@ -134,7 +134,7 @@ bool	Sample::Render()
 	D3DXVec3Normalize(&vLight, &vLight);
 	for (int iFbxFile=0; iFbxFile < m_fbxList.size(); iFbxFile++)
 	{				
-		m_pImmediateContext->VSSetConstantBuffers(1, 1, &m_fbxList[iFbxFile]->m_pConstantBufferBone);
+		m_pImmediateContext->VSSetConstantBuffers(1, 1, &m_fbxList[iFbxFile]->m_pAnimBoneCB);
 
 		for (int iObj = 0; iObj < m_fbxList[iFbxFile]->m_pDrawObjList.size(); iObj++)
 		{
@@ -153,9 +153,11 @@ bool	Sample::Render()
 }
 bool	Sample::Release() 
 {
+	delete m_pMainCamera;
 	for (auto fbx : m_fbxList)
 	{
 		fbx->Release();
+		delete fbx;
 	}
 	return true;
 }

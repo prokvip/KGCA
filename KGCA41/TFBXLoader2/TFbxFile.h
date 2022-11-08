@@ -21,13 +21,11 @@ public:
 	std::map<FbxNode*, TFbxObjectSkinning* > m_pObjectMap;
 	std::map<FbxNode*, UINT > m_pObjectIDMap;
 	std::vector< TFbxObjectSkinning* > m_pObjectList;
-
-	std::vector< FbxMesh* > m_pFbxMeshList;
 	std::vector< TFbxObjectSkinning* > m_pDrawObjList;
 	ID3D11DeviceContext* m_pContext=nullptr;
 
 	VS_CONSTANT_BONE_BUFFER  m_cbDataBone;
-	ID3D11Buffer* m_pConstantBufferBone;
+	ID3D11Buffer* m_pAnimBoneCB;
 	HRESULT	CreateConstantBuffer(ID3D11Device* pDevice);
 	
 public:

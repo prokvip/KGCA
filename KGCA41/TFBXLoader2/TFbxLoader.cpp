@@ -35,7 +35,6 @@ bool TFbxFile::Load(C_STR filename)
 		FbxMesh* pFbxMesh = tObj->m_pFbxNode->GetMesh();
 		if (pFbxMesh)
 		{
-			m_pFbxMeshList.push_back(pFbxMesh);
 			ParseMesh(pFbxMesh, tObj);
 		}
 	}
@@ -52,7 +51,7 @@ bool TFbxFile::Load(C_STR filename)
 void TFbxFile::ParseMesh(FbxMesh* pFbxMesh, TFbxObjectSkinning* pObject)
 {
 	// 스키닝 정보 확인
-	pObject->m_bSkinned = ParseMeshSkinning(pFbxMesh, pObject);
+	pObject->m_bSkinned =  ParseMeshSkinning(pFbxMesh, pObject);
 
 	FbxNode* pNode = pFbxMesh->GetNode();
 	FbxAMatrix geom; // 기하(로칼)행렬(초기 정점 위치를 변환할 때 사용한다.)
@@ -137,8 +136,7 @@ void TFbxFile::ParseMesh(FbxMesh* pFbxMesh, TFbxObjectSkinning* pObject)
 		pObject->vbTexList.resize(iNumMtrl);
 		for (int iTex = 0; iTex < iNumMtrl; iTex++)
 		{
-			pObject->vbTexList[iTex] = I_Tex.GetSplitName(
-				texFullNameList[iTex]);
+			pObject->vbTexList[iTex] = I_Tex.GetSplitName(texFullNameList[iTex]);
 		}
 	}
 
@@ -468,12 +466,17 @@ void TFbxFile::PreProcess(FbxNode* pFbxNode)
 }
 bool TFbxFile::Release()
 {
-	if (m_pConstantBufferBone)m_pConstantBufferBone->Release();
+	if (m_pAnimBoneCB)
+	{
+		m_pAnimBoneCB->Release();
+		m_pAnimBoneCB = nullptr;
+	}
 	for (auto obj : m_pObjectList)
 	{
 		obj->Release();
 		delete obj;
 	}
+	m_pObjectList.clear();
 
 	m_pFbxScene->Destroy();
 

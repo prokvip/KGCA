@@ -173,7 +173,6 @@ public:
 		}
 		else
 		{
-			hr = TObject3D::CreateVertexBuffer();
 			m_pVertexBufferIW =
 				TDX::CreateVertexBuffer(m_pd3dDevice,
 					&m_VertexListIW.at(0),
@@ -226,18 +225,28 @@ public:
 		return true;
 	}
 	bool	Release()
-	{
-		TObject3D::Release();
-		if(m_pConstantBufferBone) m_pConstantBufferBone->Release();
-		if(m_pVertexBufferIW)m_pVertexBufferIW->Release();
-		for (int iSubObj = 0; iSubObj < m_pSubVB.size(); iSubObj++)
+	{		
+		if (m_pConstantBufferBone)
 		{
-			if (m_pSubVB[iSubObj])
+			m_pConstantBufferBone->Release();
+			m_pConstantBufferBone = nullptr;
+		}
+		if (m_pVertexBufferIW)
+		{
+			m_pVertexBufferIW->Release();
+			m_pVertexBufferIW = nullptr;
+		}
+		for (int iSubObj = 0; iSubObj < m_pSubVB_IW.size(); iSubObj++)
+		{
+			if (m_pSubVB_IW[iSubObj])
 			{
-				m_pSubVB[iSubObj]->Release();
 				m_pSubVB_IW[iSubObj]->Release();
+				m_pSubVB_IW[iSubObj] = nullptr;
 			}
 		}
+		m_pSubVB_IW.clear();
+
+		TFbxObject::Release();
 		return true;
 	}
 };
