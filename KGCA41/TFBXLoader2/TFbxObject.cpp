@@ -119,11 +119,11 @@ TBASIS_EX::TMatrix TFbxObject::Interplate(float fFrame, TAnimScene tScene)
 	TBASIS_EX::D3DXQuaternionSlerp(&qRotation, &A.r, &B.r, t);
 
 	TBASIS_EX::TMatrix matScale;
-	//TBASIS_EX::D3DXMatrixScaling(&matScale, scale.x, scale.y, scale.z);
+	TBASIS_EX::D3DXMatrixScaling(&matScale, scale.x, scale.y, scale.z);
 	TBASIS_EX::TMatrix matRotation;
 	TBASIS_EX::D3DXMatrixRotationQuaternion(&matRotation, &qRotation);
 
-	TBASIS_EX::TMatrix  matCurrent = /*matScale **/ matRotation;
+	TBASIS_EX::TMatrix  matCurrent = matScale * matRotation;
 	matCurrent._41 = pos.x;
 	matCurrent._42 = pos.y;
 	matCurrent._43 = pos.z;

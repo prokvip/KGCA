@@ -35,21 +35,36 @@ bool TFbxFile::UpdateFrame(ID3D11DeviceContext* pContext)
 		m_fAnimInverse *= -1.0f;
 	}
 
+	// object + skinning
+	std::vector<TMatrix> matCurrentAnimList;
 	for (int iBone = 0; iBone < m_pObjectList.size(); iBone++)
 	{
-		TMatrix matAnim2 = m_pObjectList[iBone]->Interplate(m_fAnimFrame, m_AnimScene);
-		if (m_pObjectList[iBone]->m_dxMatrixBindPseMap.size())
-		{
-			auto iter = m_pObjectList[iBone]->m_dxMatrixBindPseMap.find(iBone);
-			if (iter != m_pObjectList[iBone]->m_dxMatrixBindPseMap.end())
-			{
-				TMatrix matBind = iter->second;
-				TMatrix matAnim = matBind *matAnim2;
-				D3DXMatrixTranspose(&m_cbDataBone.matBone[iBone], &matAnim);
-			}
-		}
+		TMatrix matAnimation = m_pObjectList[iBone]->Interplate(m_fAnimFrame, m_AnimScene);		
+		D3DXMatrixTranspose(&m_cbDataBone.matBone[iBone], &matAnimation);
+		matCurrentAnimList.push_back(matAnimation);
 	}
 	pContext->UpdateSubresource(m_pConstantBufferBone, 0, nullptr,&m_cbDataBone, 0, 0);
+
+	// skinning
+	for (int iDraw = 0; iDraw < m_pDrawObjList.size(); iDraw++)
+	{
+		if (m_pDrawObjList[iDraw]->m_dxMatrixBindPseMap.size())
+		{
+			for (int iBone = 0; iBone < m_pObjectList.size(); iBone++)
+			{
+				auto iter = m_pDrawObjList[iDraw]->m_dxMatrixBindPseMap.find(iBone);
+				if (iter != m_pDrawObjList[iDraw]->m_dxMatrixBindPseMap.end())
+				{
+					TMatrix matBind = iter->second;
+					TMatrix matAnim = matBind * matCurrentAnimList[iBone];
+					D3DXMatrixTranspose(&m_cbDataBone.matBone[iBone], &matAnim);
+				}
+			}
+			pContext->UpdateSubresource(
+				m_pDrawObjList[iDraw]->m_pConstantBufferBone, 0, nullptr,
+				&m_cbDataBone, 0, 0);
+		}				
+	}	
 	return true;
 }
 bool TFbxFile::Render()

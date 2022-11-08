@@ -94,8 +94,7 @@ bool TFbxFile::ParseMeshSkinning(FbxMesh* pFbxMesh, TFbxObjectSkinning* pObject)
 				matXBindPose;
 
 			TMatrix matInvBindPos = DxConvertMatrix(matBindPos);
-			//matInvBindPos = matInvBindPos.Invert();
-			D3DXMatrixInverse(&matInvBindPos, NULL, &matInvBindPos);
+			matInvBindPos = matInvBindPos.Invert();			
 			pObject->m_dxMatrixBindPseMap.insert(std::make_pair(iBoneIndex, matInvBindPos));			
 			
 			// 임의의 1개 정점에 영향을 미치는 뼈대의 개수

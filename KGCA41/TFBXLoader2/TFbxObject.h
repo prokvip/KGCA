@@ -83,13 +83,45 @@ class TFbxObjectSkinning : public TFbxObject
 {
 public:
 	bool			m_bSkinned = false;
+	// sub material
 	std::vector<ID3D11Buffer*> m_pSubVB_IW;
 	std::vector< std::vector<IW_VERTEX>>   vbDataList_IW;
+	// single model
 	std::vector<IW_VERTEX>   m_VertexListIW;
-	ID3D11Buffer*			m_pVertexBufferIW;
-	std::vector< TWeight>   m_WeightList;
+	ID3D11Buffer*			 m_pVertexBufferIW;
+	// skinning
+	std::vector< TWeight>    m_WeightList;
 	std::map<UINT, TMatrix > m_dxMatrixBindPseMap;
+public:
+	VS_CONSTANT_BONE_BUFFER  m_cbDataBone;
+	ID3D11Buffer* m_pConstantBufferBone;
+public:
+	HRESULT	CreateConstantBuffer()
+	{
+		TObject3D::CreateConstantBuffer();
 
+		HRESULT hr;
+		for (int iBone = 0; iBone < 255; iBone++)
+		{
+			D3DXMatrixIdentity(&m_cbDataBone.matBone[iBone]);
+		}
+
+		D3D11_BUFFER_DESC       bd;
+		ZeroMemory(&bd, sizeof(bd));
+		bd.ByteWidth = sizeof(VS_CONSTANT_BONE_BUFFER) * 1; // 바이트 용량
+		// GPU 메모리에 할당
+		bd.Usage = D3D11_USAGE_DEFAULT; // 버퍼의 할당 장소 내지는 버퍼용도
+		bd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+
+		D3D11_SUBRESOURCE_DATA  sd;
+		ZeroMemory(&sd, sizeof(sd));
+		sd.pSysMem = &m_cbDataBone;
+		hr = m_pd3dDevice->CreateBuffer(
+			&bd, // 버퍼 할당
+			&sd, // 초기 할당된 버퍼를 체우는 CPU메모리 주소
+			&m_pConstantBufferBone);
+		return hr;
+	}
 	HRESULT CreateVertexLayout()
 	{
 		HRESULT hr;
@@ -152,6 +184,10 @@ public:
 	}	
 	bool	PostRender()
 	{
+		if (m_bSkinned)
+		{
+			m_pImmediateContext->VSSetConstantBuffers(1, 1, &m_pConstantBufferBone);
+		}
 		if (m_pIndexBuffer == nullptr)
 		{
 			if (vbDataList.size() > 0)
@@ -192,7 +228,7 @@ public:
 	bool	Release()
 	{
 		TObject3D::Release();
-
+		if(m_pConstantBufferBone) m_pConstantBufferBone->Release();
 		if(m_pVertexBufferIW)m_pVertexBufferIW->Release();
 		for (int iSubObj = 0; iSubObj < m_pSubVB.size(); iSubObj++)
 		{
