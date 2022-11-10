@@ -41,17 +41,34 @@ bool TCharacter::UpdateFrame(ID3D11DeviceContext* pContext)
 {
 	m_fAnimFrame = m_fAnimFrame +
 		g_fSecondPerFrame * m_fAnimSpeed *
-		m_AnimScene.fFrameSpeed * m_fAnimInverse;
-	if (m_fAnimFrame > m_iEndFrame ||
-		m_fAnimFrame < m_iStartFrame)
+		m_AnimScene.fFrameSpeed;// *m_fAnimInverse;
+	if (m_fAnimFrame > m_ActionCurrent.iEndFrame ||
+		m_fAnimFrame < m_ActionCurrent.iStartFrame)
 	{
-		m_fAnimFrame = min(m_fAnimFrame, m_iEndFrame);
-		m_fAnimFrame = max(m_fAnimFrame, m_iStartFrame);
-		m_fAnimInverse *= -1.0f;
+		m_fAnimFrame = min(m_fAnimFrame, m_ActionCurrent.iEndFrame);
+		m_fAnimFrame = max(m_fAnimFrame, m_ActionCurrent.iStartFrame);
+		//m_fAnimInverse *= -1.0f;
 	}
 
-	m_pFbxFile->UpdateFrameA(pContext, m_fAnimFrame, m_cbDataBone);
-	m_pFbxFile->UpdateFrameB(pContext, m_cbDataBone, m_cbDrawGeom);
+	if (m_ActionCurrent.bLoop)
+	{
+		if (m_fAnimFrame >= m_ActionCurrent.iEndFrame)
+		{
+			m_fAnimFrame = m_ActionCurrent.iStartFrame;
+		}
+	}
+	else
+	{
+		if (m_fAnimFrame >= m_ActionCurrent.iEndFrame)
+		{
+			m_ActionCurrent = m_ActionList.find(L"idle")->second;
+			m_fAnimFrame = m_ActionCurrent.iStartFrame;
+		}
+	}
+	
+
+	m_pFbxFile->UpdateSkeleton(pContext, m_fAnimFrame, m_cbDataBone);
+	m_pFbxFile->UpdateSkinning(pContext, m_cbDataBone, m_cbDrawGeom);
 	for (int ibone = 0; ibone < m_pSkinBoneCB.size(); ibone++)
 	{
 		pContext->UpdateSubresource(

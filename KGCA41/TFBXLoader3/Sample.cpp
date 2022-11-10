@@ -102,63 +102,46 @@ bool	Sample::Init()
 		}
 	}
 
+	m_UserCharacter = new TCharacter;
+	m_UserCharacter->m_iFbxListID = 0;
+	m_UserCharacter->m_pFbxFile = m_fbxList[m_UserCharacter->m_iFbxListID];
+	m_UserCharacter->m_AnimScene = m_UserCharacter->m_pFbxFile->m_AnimScene;
+	TActionTable action;
+	action.iStartFrame = 0;
+	action.iEndFrame = 60;
+	action.bLoop = true;
+	m_UserCharacter->m_ActionList.insert(std::make_pair(L"idle", action));
+	action.iStartFrame = 61;
+	action.iEndFrame = 91;
+	action.bLoop = true;
+	m_UserCharacter->m_ActionList.insert(std::make_pair(L"walk", action));
+	action.iStartFrame = 92;
+	action.iEndFrame = 116;
+	action.bLoop = true;
+	m_UserCharacter->m_ActionList.insert(std::make_pair(L"run", action));
+	action.iStartFrame = 120;
+	action.iEndFrame = 225;
+	action.bLoop = false;
+	m_UserCharacter->m_ActionList.insert(std::make_pair(L"jump", action));
+	action.iStartFrame = 205;
+	action.iEndFrame = 289;
+	action.bLoop = false;
+	m_UserCharacter->m_ActionList.insert(std::make_pair(L"attack", action));
+	m_UserCharacter->CreateConstantBuffer(m_pd3dDevice.Get());
+
 	for (int iObj = 0; iObj < 5; iObj++)
 	{
 		TCharacter* pNpc = new TCharacter;
 		pNpc->m_iFbxListID = 0;
 		pNpc->m_pFbxFile = m_fbxList[pNpc->m_iFbxListID];
 		pNpc->m_matWorld._41 = -4.0f + iObj * 2;
-		pNpc->m_AnimScene = pNpc->m_pFbxFile->m_AnimScene;
-		if (iObj == 0)
-		{
-			pNpc->m_iStartFrame = 0;
-			pNpc->m_iEndFrame = 60;
-		}
-		if (iObj == 1)
-		{
-			pNpc->m_iStartFrame = 61;
-			pNpc->m_iEndFrame = 91;
-		}
-		if (iObj == 2)
-		{
-			pNpc->m_iStartFrame = 92;
-			pNpc->m_iEndFrame = 116;
-		}
-		if (iObj == 3)
-		{
-			pNpc->m_iStartFrame = 120;
-			pNpc->m_iEndFrame = 225;
-		}
-		if (iObj == 4)
-		{
-			pNpc->m_iStartFrame = 205;
-			pNpc->m_iEndFrame = 289;
-		}
+		pNpc->m_AnimScene = pNpc->m_pFbxFile->m_AnimScene;	
 		pNpc->CreateConstantBuffer(m_pd3dDevice.Get());
+		pNpc->m_ActionList  = m_UserCharacter->m_ActionList;
+		pNpc->m_ActionCurrent = pNpc->m_ActionList.find(L"walk")->second;
 		m_NpcList.push_back(pNpc);
 	}
-	m_UserCharacter = new TCharacter;
-	m_UserCharacter->m_iFbxListID = 0;
-	m_UserCharacter->m_pFbxFile = m_fbxList[m_UserCharacter->m_iFbxListID];
-	m_UserCharacter->m_AnimScene = m_UserCharacter->m_pFbxFile->m_AnimScene;
-	TAnimScene action;
-	action.iStartFrame = 0;
-	action.iEndFrame = 60;
-	m_UserCharacter->m_ActionList.insert(std::make_pair(L"idle", action));
-	action.iStartFrame = 61;
-	action.iEndFrame = 91;
-	m_UserCharacter->m_ActionList.insert(std::make_pair(L"walk", action));
-	action.iStartFrame = 92;
-	action.iEndFrame = 116;
-	m_UserCharacter->m_ActionList.insert(std::make_pair(L"run", action));
-	action.iStartFrame = 120;
-	action.iEndFrame = 225;
-	m_UserCharacter->m_ActionList.insert(std::make_pair(L"jump", action));
-	action.iStartFrame = 205;
-	action.iEndFrame = 289;
-	m_UserCharacter->m_ActionList.insert(std::make_pair(L"attack", action));
-	m_UserCharacter->CreateConstantBuffer(m_pd3dDevice.Get());
-
+	
 	m_pMainCamera = new TCameraDebug;
 	m_pMainCamera->CreateViewMatrix(TVector3(0, 0, -10), TVector3(0, 0, 0), TVector3(0, 1, 0));
 	m_pMainCamera->CreateProjMatrix(1.0f, 10000.0f, T_PI * 0.25f,
@@ -176,15 +159,13 @@ bool	Sample::Frame()
 	}
 	if (I_Input.GetKey('J') == KEY_HOLD)
 	{
-		TAnimScene action = m_UserCharacter->m_ActionList.find(L"jump")->second;
-		m_UserCharacter->m_iStartFrame = action.iStartFrame;
-		m_UserCharacter->m_iEndFrame = action.iEndFrame;
+		TActionTable action = m_UserCharacter->m_ActionList.find(L"jump")->second;
+		m_UserCharacter->m_ActionCurrent = action;		
 	}
 	else
 	{
-		TAnimScene action = m_UserCharacter->m_ActionList.find(L"idle")->second;
-		m_UserCharacter->m_iStartFrame = action.iStartFrame;
-		m_UserCharacter->m_iEndFrame = action.iEndFrame;
+		TActionTable action = m_UserCharacter->m_ActionList.find(L"idle")->second;
+		m_UserCharacter->m_ActionCurrent = action;
 	}
 	m_UserCharacter->UpdateFrame(m_pImmediateContext.Get());
 	return true;
@@ -227,6 +208,8 @@ bool	Sample::Release()
 		fbx->Release();
 		delete fbx;
 	}
+	m_UserCharacter->Release();
+	delete m_UserCharacter;
 	return true;
 }
 GAME_RUN(TFBXLoader, 800, 600)

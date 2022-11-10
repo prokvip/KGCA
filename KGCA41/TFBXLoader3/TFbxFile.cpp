@@ -67,7 +67,7 @@ bool TFbxFile::UpdateFrame(ID3D11DeviceContext* pContext)
 	}	
 	return true;
 }
-void TFbxFile::UpdateFrameA(ID3D11DeviceContext* pContext,
+void TFbxFile::UpdateSkeleton(ID3D11DeviceContext* pContext,
 			float fTime, 
 			VS_CONSTANT_BONE_BUFFER& cbData)
 {
@@ -78,7 +78,7 @@ void TFbxFile::UpdateFrameA(ID3D11DeviceContext* pContext,
 		cbData.matBone[iBone] = matAnimation;		
 	}	
 }
-void TFbxFile::UpdateFrameB(ID3D11DeviceContext* pContext, 
+void TFbxFile::UpdateSkinning(ID3D11DeviceContext* pContext, 
 							VS_CONSTANT_BONE_BUFFER& cbInputData,
 	std::vector< VS_CONSTANT_BONE_BUFFER>& cbOutputData)
 {
