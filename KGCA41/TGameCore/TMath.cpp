@@ -2019,7 +2019,7 @@ namespace TBASIS_EX
 	{
 		using namespace DirectX;
 		XMMATRIX M1 = XMLoadFloat4x4(this);
-		XMMATRIX M2 = XMLoadFloat4x4((XMFLOAT4X4*)&m);
+		XMMATRIX M2 = XMLoadFloat4x4((XMFLOAT4X4*)&M);
 		XMMATRIX X = XMMatrixMultiply(M1, M2);
 		XMStoreFloat4x4(this, X);
 		return *this;
