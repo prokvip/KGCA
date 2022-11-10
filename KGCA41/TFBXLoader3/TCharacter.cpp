@@ -61,14 +61,21 @@ bool TCharacter::UpdateFrame(ID3D11DeviceContext* pContext)
 	{
 		if (m_fAnimFrame >= m_ActionCurrent.iEndFrame)
 		{
-			m_ActionCurrent = m_ActionList.find(L"idle")->second;
+			//m_ActionCurrent = m_ActionList.find(L"walking")->second;
 			m_fAnimFrame = m_ActionCurrent.iStartFrame;
 		}
 	}
 	
-
-	m_pFbxFile->UpdateSkeleton(pContext, m_fAnimFrame, m_cbDataBone);
-	m_pFbxFile->UpdateSkinning(pContext, m_cbDataBone, m_cbDrawGeom);
+	if (m_pAnionFbxFile)
+	{
+		m_pAnionFbxFile->UpdateSkeleton(pContext, m_fAnimFrame, m_cbDataBone);
+		m_pFbxFile->UpdateSkinning(pContext, m_cbDataBone, m_cbDrawGeom);
+	}
+	else
+	{
+		m_pFbxFile->UpdateSkeleton(pContext, m_fAnimFrame, m_cbDataBone);
+		m_pFbxFile->UpdateSkinning(pContext, m_cbDataBone, m_cbDrawGeom);
+	}
 	for (int ibone = 0; ibone < m_pSkinBoneCB.size(); ibone++)
 	{
 		pContext->UpdateSubresource(

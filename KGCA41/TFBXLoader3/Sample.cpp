@@ -62,22 +62,22 @@ bool	Sample::Init()
 	}
 	m_fbxList.push_back(pFbxLoaderC);*/
 
-	/*TFbxFile* pFbxLoaderA = new TFbxFile;
+	TFbxFile* pFbxLoaderA = new TFbxFile;
 	if (pFbxLoaderA->Init())
 	{
-		if (pFbxLoaderA->Load("../../data/fbx/Turret_Deploy1/Turret_Deploy1.fbx"))
+		if (pFbxLoaderA->Load("../../data/fbx/Swat@turning_right_45_degrees.fbx"))
 		{
 			pFbxLoaderA->CreateConstantBuffer(m_pd3dDevice.Get());
 		}
 	}
-	m_fbxList.push_back(pFbxLoaderA);*/
+	m_fbxList.push_back(pFbxLoaderA);
 
-	/*TFbxFile* pFbxLoaderB = new TFbxFile;
+	TFbxFile* pFbxLoaderB = new TFbxFile;
 	if (pFbxLoaderB->Init())
 	{
-		pFbxLoaderB->Load("../../data/fbx/sm_rock.fbx");
+		pFbxLoaderB->Load("../../data/fbx/Swat.fbx");		
 	}
-	m_fbxList.push_back(pFbxLoaderB);*/
+	m_fbxList.push_back(pFbxLoaderB);
 
 	TFbxFile* pFbxLoaderD = new TFbxFile;
 	if (pFbxLoaderD->Init())
@@ -103,15 +103,27 @@ bool	Sample::Init()
 	}
 
 	m_UserCharacter = new TCharacter;
-	m_UserCharacter->m_iFbxListID = 0;
+	m_UserCharacter->m_iFbxListID = 1;
 	m_UserCharacter->m_pFbxFile = m_fbxList[m_UserCharacter->m_iFbxListID];
-	m_UserCharacter->m_AnimScene = m_UserCharacter->m_pFbxFile->m_AnimScene;
-	TActionTable action;
-	action.iStartFrame = 0;
-	action.iEndFrame = 60;
-	action.bLoop = true;
-	m_UserCharacter->m_ActionList.insert(std::make_pair(L"idle", action));
-	action.iStartFrame = 61;
+	m_UserCharacter->m_pAnionFbxFile = pFbxLoaderA;
+	if (m_UserCharacter->m_pAnionFbxFile)
+	{
+		m_UserCharacter->m_AnimScene = m_UserCharacter->m_pAnionFbxFile->m_AnimScene;
+		m_UserCharacter->m_ActionFileList.insert(std::make_pair(L"walking", pFbxLoaderA));
+		m_UserCharacter->m_ActionCurrent.iStartFrame = pFbxLoaderA->m_AnimScene.iStartFrame;
+		m_UserCharacter->m_ActionCurrent.iEndFrame = 50;// pFbxLoaderA->m_AnimScene.iEndFrame;
+	}
+	else
+	{
+		m_UserCharacter->m_AnimScene = m_UserCharacter->m_pFbxFile->m_AnimScene;
+		TActionTable action;
+		action.iStartFrame = m_UserCharacter->m_AnimScene.iStartFrame;
+		action.iEndFrame = m_UserCharacter->m_AnimScene.iEndFrame;
+		action.bLoop = true;
+		m_UserCharacter->m_ActionList.insert(std::make_pair(L"idle", action));
+	}
+	
+	/*action.iStartFrame = 61;
 	action.iEndFrame = 91;
 	action.bLoop = true;
 	m_UserCharacter->m_ActionList.insert(std::make_pair(L"walk", action));
@@ -126,21 +138,25 @@ bool	Sample::Init()
 	action.iStartFrame = 205;
 	action.iEndFrame = 289;
 	action.bLoop = false;
-	m_UserCharacter->m_ActionList.insert(std::make_pair(L"attack", action));
+	m_UserCharacter->m_ActionList.insert(std::make_pair(L"attack", action));*/
 	m_UserCharacter->CreateConstantBuffer(m_pd3dDevice.Get());
 
-	for (int iObj = 0; iObj < 5; iObj++)
-	{
-		TCharacter* pNpc = new TCharacter;
-		pNpc->m_iFbxListID = 0;
-		pNpc->m_pFbxFile = m_fbxList[pNpc->m_iFbxListID];
-		pNpc->m_matWorld._41 = -4.0f + iObj * 2;
-		pNpc->m_AnimScene = pNpc->m_pFbxFile->m_AnimScene;	
-		pNpc->CreateConstantBuffer(m_pd3dDevice.Get());
-		pNpc->m_ActionList  = m_UserCharacter->m_ActionList;
-		pNpc->m_ActionCurrent = pNpc->m_ActionList.find(L"walk")->second;
-		m_NpcList.push_back(pNpc);
-	}
+	//for (int iObj = 0; iObj < 5; iObj++)
+	//{
+	//	TCharacter* pNpc = new TCharacter;
+	//	pNpc->m_iFbxListID = 1;
+	//	pNpc->m_pFbxFile = m_fbxList[pNpc->m_iFbxListID];
+	//	pNpc->m_matWorld._41 = -4.0f + iObj * 2;
+	//	pNpc->m_AnimScene = pNpc->m_pFbxFile->m_AnimScene;	
+	//	pNpc->CreateConstantBuffer(m_pd3dDevice.Get());
+	//	TActionTable action;
+	//	action.iStartFrame = 61;
+	//	action.iEndFrame = 91;
+	//	action.bLoop = true;
+	//	pNpc->m_ActionList.insert(std::make_pair(L"walk", action));
+	//	pNpc->m_ActionCurrent = pNpc->m_ActionList.find(L"walk")->second;
+	//	m_NpcList.push_back(pNpc);
+	//}
 	
 	m_pMainCamera = new TCameraDebug;
 	m_pMainCamera->CreateViewMatrix(TVector3(0, 0, -10), TVector3(0, 0, 0), TVector3(0, 1, 0));
@@ -153,11 +169,11 @@ bool	Sample::Frame()
 {
 	ClearD3D11DeviceContext(m_pImmediateContext.Get());
 	m_pMainCamera->Frame();
-	for (auto npc : m_NpcList)
-	{
-		npc->UpdateFrame(m_pImmediateContext.Get());
-	}
-	if (I_Input.GetKey('J') == KEY_HOLD)
+	//for (auto npc : m_NpcList)
+	//{
+	//	npc->UpdateFrame(m_pImmediateContext.Get());
+	//}
+	/*if (I_Input.GetKey('J') == KEY_HOLD)
 	{
 		TActionTable action = m_UserCharacter->m_ActionList.find(L"jump")->second;
 		m_UserCharacter->m_ActionCurrent = action;		
@@ -166,7 +182,7 @@ bool	Sample::Frame()
 	{
 		TActionTable action = m_UserCharacter->m_ActionList.find(L"idle")->second;
 		m_UserCharacter->m_ActionCurrent = action;
-	}
+	}*/
 	m_UserCharacter->UpdateFrame(m_pImmediateContext.Get());
 	return true;
 }
@@ -184,11 +200,11 @@ bool	Sample::Render()
 	D3DXVec3TransformCoord(&vLight, &vLight, &matRotation);
 	D3DXVec3Normalize(&vLight, &vLight);
 
-	for (int iNpc=0; iNpc < m_NpcList.size(); iNpc++)
-	{				
-		m_NpcList[iNpc]->SetMatrix(nullptr, &m_pMainCamera->m_matView, &m_pMainCamera->m_matProj);
-		m_NpcList[iNpc]->Render(m_pImmediateContext.Get());
-	}
+	//for (int iNpc=0; iNpc < m_NpcList.size(); iNpc++)
+	//{				
+	//	m_NpcList[iNpc]->SetMatrix(nullptr, &m_pMainCamera->m_matView, &m_pMainCamera->m_matProj);
+	//	m_NpcList[iNpc]->Render(m_pImmediateContext.Get());
+	//}
 
 	m_UserCharacter->SetMatrix(nullptr, &m_pMainCamera->m_matView, &m_pMainCamera->m_matProj);
 	m_UserCharacter->Render(m_pImmediateContext.Get());

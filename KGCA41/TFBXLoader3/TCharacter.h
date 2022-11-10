@@ -30,6 +30,8 @@ public:
 	float       m_fAnimInverse = 1.0f;
 	float       m_fAnimSpeed = 1.0f;
 
+	TFbxFile* m_pAnionFbxFile = nullptr;
+	std::map<std::wstring, TFbxFile*>    m_ActionFileList;
 	std::map<std::wstring, TActionTable> m_ActionList;
 
 	VS_CONSTANT_BONE_BUFFER  m_cbDataBone;

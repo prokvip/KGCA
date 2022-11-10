@@ -22,6 +22,9 @@ public:
 	FbxImporter*	m_pFbxImporter;
 	FbxScene*		m_pFbxScene;
 	FbxNode*		m_pRootNode;
+
+	
+
 	std::map<FbxNode*, TFbxObjectSkinning* > m_pObjectMap;
 	std::map<FbxNode*, UINT > m_pObjectIDMap;
 	std::vector< TFbxObjectSkinning* > m_pObjectList;
