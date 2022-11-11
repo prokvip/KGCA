@@ -19,5 +19,6 @@ public:
 	virtual bool		Render();
 	virtual bool		Release();
 	virtual bool        IsNextScene();
+	
 };
 

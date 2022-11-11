@@ -19,7 +19,9 @@ bool TSceneTitle::Init()
 	
 	m_pMap = new TMap;
 	// 2*n½Â+1
-	m_pMap->Build(256+1, 256 + 1);
+	m_pMap->LoadHeightMap(m_pd3dDevice, m_pImmediateContext, L"../../data/map/heightMap513.bmp");
+	//m_pMap->Build(256+1, 256 + 1);
+	m_pMap->Build(m_pMap->m_dwNumColumns, m_pMap->m_dwNumRows);
 	m_pMap->Create(m_pd3dDevice, m_pImmediateContext, L"DefaultObject.txt", L"../../data/map/Tile50.jpg");
 	
 
