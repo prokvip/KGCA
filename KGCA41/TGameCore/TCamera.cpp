@@ -42,42 +42,8 @@ void TCamera::CreateProjMatrix(float fNear, float fFar, float fFovY, float fAspe
 
 bool TCamera::Frame()
 {
-	if (I_Input.GetKey('W') == KEY_HOLD)
-	{
-		TVector3 v = m_vLook * 10.0f * g_fSecondPerFrame;
-		m_vPos += v;
-	}
-	if (I_Input.GetKey('S') == KEY_HOLD)
-	{
-		TVector3 v = m_vLook * -10.0f * g_fSecondPerFrame;
-		m_vPos += v;
-	}
-	if (I_Input.GetKey('A') == KEY_HOLD)
-	{
-		TVector3 v = m_vRight * 10.0f * g_fSecondPerFrame;
-		m_vPos += v;
-	}
-	if (I_Input.GetKey('D') == KEY_HOLD)
-	{
-		TVector3 v = m_vRight * -10.0f * g_fSecondPerFrame;
-		m_vPos += v;
-	}
-	if (I_Input.GetKey('Q') == KEY_HOLD)
-	{
-		TVector3 v = m_vUp * 10.0f * g_fSecondPerFrame;
-		m_vPos += v;
-	}
-	if (I_Input.GetKey('E') == KEY_HOLD)
-	{
-		TVector3 v = m_vUp * -10.0f * g_fSecondPerFrame;
-		m_vPos += v;
-	}
-
 	TVector3 vUp = { 0,1,0 };
-	//TMatrix mCamera = TMath::RotationY(g_fGameTimer);
-	//vPos = (vPos + vPosMovement) * mCamera;
-	//m_matView.ViewLookAt(m_vPos, m_vTarget, m_vUp);
-	D3DXMatrixLookAtLH(&m_matView, &m_vPos, &m_vTarget, &m_vUp);
+	D3DXMatrixLookAtLH(&m_matView, &m_vPos, &m_vTarget, &vUp);
 	Update();
 	return true;
 }

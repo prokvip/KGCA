@@ -1,25 +1,92 @@
 #include "TMap.h"
+float TMap::GetHeightmap(int row, int col)
+{
+	return m_VertexList[row * m_iNumRows + col].p.y;
+}
+float TMap::GetHeight(float fPosX, float fPosZ)
+{
+	
+	// fPosX/fPosZ의 위치에 해당하는 높이맵셀을 찾는다.
+	// m_iNumCols와m_iNumRows은 가로/세로의 실제 크기값임.
+	float fCellX = (float)(m_iNumCellCols * m_fCellDistance / 2.0f + fPosX);
+	float fCellZ = (float)(m_iNumCellRows * m_fCellDistance / 2.0f - fPosZ);
+
+	// 셀의 크기로 나누어 0~1 단위의 값으로 바꾸어 높이맵 배열에 접근한다.
+	fCellX /= (float)m_fCellDistance;
+	fCellZ /= (float)m_fCellDistance;
+
+	// fCellX, fCellZ 값보다 작거나 같은 최대 정수( 소수부분을 잘라낸다.)
+	float fVertexCol = ::floorf(fCellX);
+	float fVertexRow = ::floorf(fCellZ);
+
+	// 높이맵 범위를 벗어나면 강제로 초기화 한다.
+	if (fVertexCol < 0.0f)  fVertexCol = 0.0f;
+	if (fVertexRow < 0.0f)  fVertexRow = 0.0f;
+	if ((float)(m_iNumCols - 2) < fVertexCol)	fVertexCol = (float)(m_iNumCols - 2);
+	if ((float)(m_iNumRows - 2) < fVertexRow)	fVertexRow = (float)(m_iNumRows - 2);
+
+	// 계산된 셀의 플랜을 구성하는 4개 정점의 높이값을 찾는다. 
+	//  A   B
+	//  *---*
+	//  | / |
+	//  *---*  
+	//  C   D
+	float A = GetHeightmap((int)fVertexRow, (int)fVertexCol);
+	float B = GetHeightmap((int)fVertexRow, (int)fVertexCol + 1);
+	float C = GetHeightmap((int)fVertexRow + 1, (int)fVertexCol);
+	float D = GetHeightmap((int)fVertexRow + 1, (int)fVertexCol + 1);
+
+	// A정점의 위치에서 떨어진 값(변위값)을 계산한다. 0 ~ 1.0f
+	float fDeltaX = fCellX - fVertexCol;
+	float fDeltaZ = fCellZ - fVertexRow;
+	// 보간작업를 위한 기준 페잇스를 찾는다. 
+	float fHeight = 0.0f;
+	// 윗페이스를 기준으로 보간한다.
+	// fDeltaZ + fDeltaX < 1.0f
+	if (fDeltaZ < (1.0f - fDeltaX))  //ABC
+	{
+		float uy = B - A; // A->B
+		float vy = C - A; // A->C	
+						  // 두 정점의 높이값의 차이를 비교하여 델타X의 값에 따라 보간값을 찾는다.		
+		fHeight = A + Lerp(0.0f, uy, fDeltaX) + Lerp(0.0f, vy, fDeltaZ);
+	}
+	// 아래페이스를 기준으로 보간한다.
+	else // DCB
+	{
+		float uy = C - D; // D->C
+		float vy = B - D; // D->B
+						  // 두 정점의 높이값의 차이를 비교하여 델타Z의 값에 따라 보간값을 찾는다.		
+		fHeight = D + Lerp(0.0f, uy, 1.0f - fDeltaX) + Lerp(0.0f, vy, 1.0f - fDeltaZ);
+	}
+	return fHeight;
+}
+float TMap::Lerp(float fStart, float fEnd, float fTangent)
+{
+	return fStart - (fStart * fTangent) + (fEnd * fTangent);
+}
 bool  TMap::Build(UINT iWidth, UINT iHeight)
 {
 	// 전체 셀 개수 = (iWidth-1)*(iHeigth-1)
 	// 전체 페이스 개수 = (iWidth-1)*(iHeigth-1)*2
 	// 전체 정점 개수 = iWidth * iHeight
-	m_dwNumRows = iWidth;
-	m_dwNumColumns= iHeight;
+	m_iNumRows = iWidth;
+	m_iNumCols= iHeight;
+	m_iNumCellCols = m_iNumCols-1;
+	m_iNumCellRows = m_iNumRows-1;
 	m_VertexList.resize(iWidth * iHeight);
 	int iHalfWidth = iWidth /2;
 	int iHalfHeight = iHeight/2;
-	float fCellDistance = 1.0f;
+
 	for (int iRow = 0; iRow < iHeight; iRow++)
 	{
 		for (int iCol = 0; iCol < iWidth; iCol++)
 		{
 			m_VertexList[iRow * iWidth + iCol].p =
 				//{(float)iCol, 0.0f, (float)iHeight-iRow};
-			{	(float)(iCol- iHalfWidth)* fCellDistance, 
+			{	(float)(iCol- iHalfWidth)* m_fCellDistance, 
 				0.0f,//cosf(DegreeToRadian(iCol))*20.0f+ sinf(DegreeToRadian(iRow)) * 20.0f,
-				(float)(iHalfHeight- iRow)* fCellDistance };
-			m_VertexList[iRow * iWidth + iCol].p.y = m_fHeightList[iRow*m_dwNumColumns+iCol]*100.0f;
+				(float)(iHalfHeight- iRow)* m_fCellDistance };
+			m_VertexList[iRow * iWidth + iCol].p.y = m_fHeightList[iRow*m_iNumCols+iCol]* m_fScaleHeight;
 			m_VertexList[iRow * iWidth + iCol].c =	{ 1,1,1,1 };
 			m_VertexList[iRow * iWidth + iCol].t =	{ ((float)iCol / (float)(iWidth-1))*10.0f,
 													 ((float)iRow / (float)(iHeight - 1))* 10.0f };
@@ -123,8 +190,8 @@ bool TMap::LoadHeightMap(ID3D11Device* pd3dDevice,// 디바이스 객체
 		pContext->Unmap(pTexture2D, D3D11CalcSubresource(0, 0, 1));
 	}
 
-	m_dwNumRows = td.Height;
-	m_dwNumColumns = td.Width;
+	m_iNumRows = td.Height;
+	m_iNumCols = td.Width;
 	pTexture2D->Release();
 	return true;
 }
@@ -147,7 +214,7 @@ void TMap::GenVertexNormal()
 		TVector3 vNormal;
 	};
 	std::vector<tVertexInfo> m_VertexInfo;
-	m_VertexInfo.resize(m_dwNumColumns* m_dwNumRows);
+	m_VertexInfo.resize(m_iNumCols* m_iNumRows);
 	for (UINT iFace = 0; iFace < m_dwFace; iFace ++)
 	{
 		for (UINT i = 0; i < 3; i++)

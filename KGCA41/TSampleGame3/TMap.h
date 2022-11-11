@@ -4,8 +4,12 @@
 class TMap : public TBaseObject
 {
 public:
-	DWORD        m_dwNumRows;
-	DWORD        m_dwNumColumns;
+	UINT         m_iNumCellCols;
+	UINT         m_iNumCellRows;
+	DWORD        m_iNumRows;
+	DWORD        m_iNumCols;
+	float		 m_fCellDistance = 1.0f;
+	float        m_fScaleHeight = 100.0f;
 	DWORD_VECTOR indexlist;
 	std::vector<float>   m_fHeightList;
 public:
@@ -15,5 +19,8 @@ public:
 		ID3D11DeviceContext* pImmediateContext, W_STR loadTexture);
 	void  GenVertexNormal();
 	TVector3 ComputeFaceNormal(UINT i0, UINT i1, UINT i2);
+	float GetHeight(float fPosX, float fPosZ);
+	float GetHeightmap(int row, int col);
+	float Lerp(float fStart, float fEnd, float fTangent);
 };
 

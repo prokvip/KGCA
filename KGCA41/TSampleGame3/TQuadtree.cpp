@@ -7,10 +7,10 @@ bool TQuadtree::Create(TCamera* pMainCamera, TMap* pMap, int iMaxDepth)
     m_iMaxDepth = iMaxDepth;
     m_pRootNode = new TNode(nullptr, m_pMap, 
         0, 
-        pMap->m_dwNumRows-1,
-        pMap->m_dwNumRows * (pMap->m_dwNumColumns - 1),
-        pMap->m_dwNumRows* pMap->m_dwNumColumns-1,
-        pMap->m_dwNumColumns, pMap->m_dwNumRows);
+        pMap->m_iNumRows-1,
+        pMap->m_iNumRows * (pMap->m_iNumCols - 1),
+        pMap->m_iNumRows* pMap->m_iNumCols-1,
+        pMap->m_iNumCols, pMap->m_iNumRows);
     BuildTree(m_pRootNode);
     return true;
 }
@@ -55,15 +55,15 @@ void TQuadtree::BuildTree(TNode* pNode)
     {
         //pNode->CreateIndexBuffer(   m_pMap->m_pd3dDevice,
         //                            m_pMap->m_pImmediateContext,
-        //                            m_pMap->m_dwNumRows,
-        //                            m_pMap->m_dwNumColumns);
+        //                            m_pMap->m_iNumRows,
+        //                            m_pMap->m_iNumCols);
         pNode->m_bLeaf = true;
         m_pLeafNodeList.push_back(pNode);
         return;
     }
     pNode->CreateChildNode(pNode, m_pMap,
-        m_pMap->m_dwNumRows,
-        m_pMap->m_dwNumColumns);
+        m_pMap->m_iNumRows,
+        m_pMap->m_iNumCols);
 
     BuildTree(pNode->m_pChild[0]);
     BuildTree(pNode->m_pChild[1]);
