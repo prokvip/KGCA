@@ -132,3 +132,17 @@ bool        TGameCore::Run()
 	TCoreRelease();
 	return true;
 }
+bool        TGameCore::ToolRun()
+{
+	//TCoreInit();
+	//while (m_bGameRun)
+	{
+		if( !TCoreFrame() || !TCoreRender() )
+		{
+			m_bGameRun = false;
+			return false;
+		}
+	}
+	//TCoreRelease();
+	return true;
+}

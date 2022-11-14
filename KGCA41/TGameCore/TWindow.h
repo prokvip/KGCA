@@ -11,6 +11,7 @@ public:
 	UINT		m_iClientWidth;
 	UINT		m_iClientHeight;
 public:
+	void		SethWnd(HWND hWnd);
 	bool		SetWindow(HINSTANCE hInst, const WCHAR* szTitle, UINT iWidth=1024, UINT iHeight=768);
 	ATOM		MyRegisterClass();
 	BOOL		InitInstance(const WCHAR* szTitle, UINT iWidth, UINT iHeight);

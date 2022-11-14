@@ -69,17 +69,21 @@ BOOL TWindow::InitInstance(const WCHAR* szTitle, UINT iWidth, UINT iHeight)
     {
         return FALSE;
     }
+    SethWnd(hWnd);
+   
+    ShowWindow(hWnd, SW_SHOW);  
+    CenterWindow(); 
+    return TRUE;
+}
+void TWindow::SethWnd(HWND hWnd)
+{
     m_hWnd = hWnd;
     g_hWnd = hWnd;
-    ShowWindow(hWnd, SW_SHOW);
     GetWindowRect(hWnd, &m_rtWindow);
     GetClientRect(hWnd, &m_rtClient);
     g_rtClient = m_rtClient;
-
     m_iClientWidth = m_rtClient.right - m_rtClient.left;
     m_iClientHeight = m_rtClient.bottom - m_rtClient.top;
-    CenterWindow(); 
-    return TRUE;
 }
 void TWindow::CenterWindow()
 {
