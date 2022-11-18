@@ -7,7 +7,7 @@
 #include "TGameTool.h"
 
 #include "MainFrm.h"
-
+#include  "TCreateMap.h"
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
@@ -27,6 +27,10 @@ BEGIN_MESSAGE_MAP(CMainFrame, CFrameWndEx)
 	ON_COMMAND_RANGE(ID_VIEW_APPLOOK_WIN_2000, ID_VIEW_APPLOOK_WINDOWS_7, &CMainFrame::OnApplicationLook)
 	ON_UPDATE_COMMAND_UI_RANGE(ID_VIEW_APPLOOK_WIN_2000, ID_VIEW_APPLOOK_WINDOWS_7, &CMainFrame::OnUpdateApplicationLook)
 	ON_WM_SETTINGCHANGE()
+	ON_COMMAND(ID_LoadMap, &CMainFrame::OnLoadmap)
+	ON_COMMAND(ID_SaveMap, &CMainFrame::OnSavemap)
+	ON_COMMAND(ID_CreateMap, &CMainFrame::OnCreatemap)
+	ON_BN_CLICKED(IDOK, &CMainFrame::OnBnClickedOk)
 END_MESSAGE_MAP()
 
 static UINT indicators[] =
@@ -366,4 +370,33 @@ void CMainFrame::OnSettingChange(UINT uFlags, LPCTSTR lpszSection)
 {
 	CFrameWndEx::OnSettingChange(uFlags, lpszSection);
 	m_wndOutput.UpdateFonts();
+}
+
+
+void CMainFrame::OnLoadmap()
+{
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+}
+
+
+void CMainFrame::OnSavemap()
+{
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+}
+
+
+void CMainFrame::OnCreatemap()
+{
+	TCreateMap mapDlg;
+	mapDlg.DoModal();
+	//int iSelect =mapDlg.m_TextureSelectCtrl.GetCurSel();
+	//m_Map.CreateMap(mapDlg.m_iCompoment);
+	int k = 0;
+}
+
+
+void CMainFrame::OnBnClickedOk()
+{
+	UpdateData(TRUE);
+	UpdateData(FALSE);
 }

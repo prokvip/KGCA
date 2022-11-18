@@ -52,6 +52,11 @@ protected:
 
 	BOOL CreateDockingWindows();
 	void SetDockingWindowIcons(BOOL bHiColorIcons);
+public:
+	afx_msg void OnLoadmap();
+	afx_msg void OnSavemap();
+	afx_msg void OnCreatemap();
+	afx_msg void OnBnClickedOk();
 };
 
 
