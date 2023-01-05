@@ -14,67 +14,56 @@ std::list<TUser> userlist;
 
 // 시작함수
 DWORD WINAPI ServerThread(LPVOID lpThreadParameter)
-{
-    TUser* user = (TUser*)lpThreadParameter;
-    SOCKET sock = (SOCKET)user->sock;
+{    
     while (1)
     {
-        char szRecvMsg[256] = { 0, };
-        int iRecvBytes = recv(sock, szRecvMsg, 256, 0);
-        if (iRecvBytes == 0)
+        for (auto iterRecv = userlist.begin();
+            userlist.end() != iterRecv; )
         {
-            for (auto iter = userlist.begin();
-                userlist.end() != iter;
-                iter++)
+            char szRecvMsg[256] = { 0, };
+            int iRecvBytes = recv(iterRecv->sock, szRecvMsg, 256, 0);
+            if (iRecvBytes == 0)
             {
-                if (iter->sock == sock)
+                printf("클라이언트 접속 종료 : IP:%s, PORT:%d\n",
+                    inet_ntoa(iterRecv->address.sin_addr), ntohs(iterRecv->address.sin_port));
+                closesocket(iterRecv->sock);
+                iterRecv = userlist.erase(iterRecv);
+                continue;
+            }
+            if (iRecvBytes == SOCKET_ERROR)
+            {
+                if (WSAGetLastError() != WSAEWOULDBLOCK)
                 {
-                    printf("클라이언트 접속 종료 : IP:%s, PORT:%d\n",
-                        inet_ntoa(iter->address.sin_addr), ntohs(iter->address.sin_port));
-                    closesocket(sock);
-                    userlist.erase(iter);
-                    break;
+                    //WSAEWOULDBLOCK 아니라면 오류!
+                    closesocket(iterRecv->sock);
+                    iterRecv = userlist.erase(iterRecv);
+                    continue;
                 }
             }
-           
-            
-            break;
-        }
-        if (iRecvBytes == SOCKET_ERROR)
-        {
-            if (WSAGetLastError() != WSAEWOULDBLOCK)
+            if (iRecvBytes > 0)
             {
-                //WSAEWOULDBLOCK 아니라면 오류!
-                closesocket(sock);
-                return 1;
-            }
-        }
-        /*else
-        {
-            printf("%s\n", szRecvMsg);
-        }*/
-
-        if (iRecvBytes > 0)
-        {
-            for (auto iter = userlist.begin();
-                userlist.end() != iter;
-                )
-            {
-                int iSendBytes = send(iter->sock, szRecvMsg, strlen(szRecvMsg), 0);
-                if (iSendBytes == SOCKET_ERROR)
+                printf("%s\n", szRecvMsg);
+                for (auto iterSend = userlist.begin();
+                    userlist.end() != iterSend;
+                    )
                 {
-                    if (WSAGetLastError() != WSAEWOULDBLOCK)
+                    int iSendBytes = send(iterSend->sock, szRecvMsg, strlen(szRecvMsg), 0);
+                    if (iSendBytes == SOCKET_ERROR)
                     {
-                        //WSAEWOULDBLOCK 아니라면 오류!
-                        printf("클라이언트 접속 비정상 종료 : IP:%s, PORT:%d\n",
-                            inet_ntoa(iter->address.sin_addr), ntohs(iter->address.sin_port));
-                        closesocket(iter->sock);
-                        iter = userlist.erase(iter);
-                        continue;
+                        if (WSAGetLastError() != WSAEWOULDBLOCK)
+                        {
+                            //WSAEWOULDBLOCK 아니라면 오류!
+                            printf("클라이언트 접속 비정상 종료 : IP:%s, PORT:%d\n",
+                                inet_ntoa(iterSend->address.sin_addr), ntohs(iterSend->address.sin_port));
+                            closesocket(iterSend->sock);
+                            iterSend = userlist.erase(iterSend);
+                            continue;
+                        }
                     }
+                    iterSend++;
                 }
-                iter++;
             }
+            iterRecv++;
         }
     }
 };
@@ -110,6 +99,9 @@ int main()
         return 1;
     }
    
+    DWORD dwThreadID;
+    HANDLE hClient = CreateThread(  0, 0, ServerThread,
+                                    0, 0, &dwThreadID);
 
     while (1)
     {
@@ -125,17 +117,16 @@ int main()
         }
         printf("클라이언트 접속 : IP:%s, PORT:%d\n",
             inet_ntoa(clientaddr.sin_addr), ntohs(clientaddr.sin_port));
+        
+        u_long iMode = TRUE;
+        ioctlsocket(clientSock, FIONBIO, &iMode); 
+
         TUser user;
         user.sock = clientSock;
         user.address = clientaddr;
-        userlist.push_back(user);
+        userlist.push_back(user);        
 
-        DWORD dwThreadID;
-        HANDLE hClient = CreateThread(  0, 0, ServerThread,
-                                        (LPVOID)&user, 0, &dwThreadID);
-
-        //u_long iMode = TRUE;
-        //ioctlsocket(clientSock, FIONBIO, &iMode);       
+              
     }
     closesocket(listenSock);
 
