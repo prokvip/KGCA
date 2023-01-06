@@ -15,6 +15,7 @@ int   SendMsg(SOCKET sock, char* msg, short type)
 
     char* msgSend = (char*)&packet;    
     int iSendBytes = send(sock, msgSend, packet.ph.len, 0);
+
     if (iSendBytes == SOCKET_ERROR)
     {
         if (WSAGetLastError() != WSAEWOULDBLOCK)
@@ -58,9 +59,7 @@ int main()
     //SOCKET sock1 = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
     //SOCKET sock2 = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
     // 블록형 소켓 <-> 넌블록형 소켓
-    SOCKET sock3 = socket(AF_INET, SOCK_STREAM, 0);
-  
-    
+    SOCKET sock3 = socket(AF_INET, SOCK_STREAM, 0);   
 
     short sData = 10000;
     short tData = 0x2710;
@@ -94,7 +93,7 @@ int main()
     int iRecvPacketSize = PACKET_HEADER_SIZE;
     int iTotalRecvBytes = 0;
     while (1)
-    {       
+    {      
         Sleep(1);
         char szRecvMsg[256] = { 0, };         
         int iRecvBytes = recv(sock3, szRecvMsg, 
