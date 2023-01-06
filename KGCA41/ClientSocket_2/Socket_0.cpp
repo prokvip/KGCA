@@ -83,7 +83,7 @@ int main()
     //win api
     DWORD dwThreadID;
     HANDLE hClient = CreateThread(  0, 0, SendThread,
-                                    (LPVOID)sock3, 0, &dwThreadID);
+                                    (LPVOID)sock3, CREATE_SUSPENDED, &dwThreadID);
     
 
     //u_long iMode = TRUE;
@@ -114,6 +114,10 @@ int main()
             char* msg = (char*)&packet;            
             int iNumRecvByte = 0;
             do {
+                if (packet.ph.len == 4)
+                {
+                    break;
+                }
                 int iRecvBytes = recv(sock3, 
                     &packet.msg[iNumRecvByte],
                     packet.ph.len - PACKET_HEADER_SIZE - iNumRecvByte, 0);
@@ -144,6 +148,24 @@ int main()
                 case PACKET_CHAR_MSG:
                 {
                     printf("Recv---->%s\n", packet.msg);
+                }break;
+
+                case PACKET_CHATNAME_REQ:
+                {
+                    printf("이름을 입력하시오 : ");
+                    char szName[256] = { 0, };
+                    fgets(szName, 256, stdin);
+                    SendMsg(sock3, szName, PACKET_NAME_REQ);
+                    ResumeThread(hClient);
+                }break;
+
+                case PACKET_JOIN_USER:
+                {
+                    printf("%s %s\n", packet.msg,"님이 입장하였습니다.");
+                }break;
+                case PACKET_NAME_ACK:
+                {
+                    printf("대화명 사용 승인\n");
                 }break;
             }   
 

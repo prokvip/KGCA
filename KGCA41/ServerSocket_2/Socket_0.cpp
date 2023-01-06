@@ -10,11 +10,39 @@ struct TUser
 {
     SOCKET sock;
     SOCKADDR_IN address;
+    char m_szName[9] = { 0, };
     char szRecvMsg[255] = { 0, };
     int iTotalRecvBytes = 0;
 };
 std::list<TUser> userlist;
+int   SendMsg(SOCKET sock, char* msg, short type)
+{
+    UPACKET packet;
+    ZeroMemory(&packet, sizeof(UPACKET));
+    if (msg != nullptr)
+    {
+        packet.ph.len = strlen(msg) + PACKET_HEADER_SIZE;
+        memcpy(packet.msg, msg, strlen(msg));
+    }
+    else
+    {
+        packet.ph.len = PACKET_HEADER_SIZE;
+    }
+    packet.ph.type = type;    
 
+    char* msgSend = (char*)&packet;
+    int iSendBytes = send(sock, msgSend, packet.ph.len, 0);
+    if (iSendBytes == SOCKET_ERROR)
+    {
+        if (WSAGetLastError() != WSAEWOULDBLOCK)
+        {
+            //WSAEWOULDBLOCK 아니라면 오류!
+            closesocket(sock);
+            return -1;
+        }
+    }
+    return 1;
+}
 // 시작함수
 DWORD WINAPI ServerThread(LPVOID lpThreadParameter)
 {    
@@ -89,13 +117,35 @@ DWORD WINAPI ServerThread(LPVOID lpThreadParameter)
 
             if (iRecvBytes > 0)
             {
-                printf("%s\n", packet.msg);
+                switch (packet.ph.type)
+                {
+                case PACKET_CHAR_MSG:
+                {
+                    printf("Recv---->%s\n", packet.msg);
+                }break;
+
+                case PACKET_NAME_REQ:
+                {
+                    memcpy( iterRecv->m_szName,
+                            packet.msg, strlen(packet.msg)); 
+                    packet.ph.type = PACKET_JOIN_USER;
+                    SendMsg(iterRecv->sock, nullptr, PACKET_NAME_ACK);
+                }break;
+                }
+
+                
                 for (auto iterSend = userlist.begin();
                     userlist.end() != iterSend;
                     )
                 {
-                    int iSendBytes = send(  iterSend->sock, (char*)&packet, 
-                                            packet.ph.len, 0);
+                    if (iterSend == iterRecv)
+                    {
+                        iterSend++;
+                        continue;
+                    }
+                    int iSendBytes = send(iterSend->sock, (char*)&packet,
+                            packet.ph.len, 0);
+                              
                     if (iSendBytes == SOCKET_ERROR)
                     {
                         if (WSAGetLastError() != WSAEWOULDBLOCK)
@@ -175,9 +225,9 @@ int main()
         TUser user;
         user.sock = clientSock;
         user.address = clientaddr;
-        userlist.push_back(user);        
+        userlist.push_back(user);   
 
-              
+        SendMsg(clientSock, nullptr, PACKET_CHATNAME_REQ);
     }
     closesocket(listenSock);
 

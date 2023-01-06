@@ -13,23 +13,19 @@
 		char   msg[2048];
 	}UPACKET;
 
-	///   케릭터 생성 패킷
+	/// 대화명 입력 요청
 	typedef struct {
-		byte    szName[13];
-		int		iIndex;
-		int		iData[50];
-	}CHARACTER_INFO;
-	///   아이템 생성 패킷
-	typedef struct {
-		byte    szName[13];
-		int		iIndex;
-		int		iData[10];
-	}ITEM_INFO;
+		char    szName[9];
+	}USERNAME_REQ;
+	/// 대화명 입력 결과
+	typedef struct {		
+		int		iResult;// 1 성공, 0 중복, 실폐 < 0
+	}USERNAME_ACK;
 #pragma pack(pop)
 
-#define PACKET_CHAR_MSG   1000
-#define PACKET_GAME_START    2000
-#define PACKET_GAME_END    3000
-#define PACKET_CREATE_CHARACTER    4000
-#define PACKET_MOVE_CHARACTER    5000
+#define PACKET_CHAR_MSG   1000      // client ->
+#define PACKET_CHATNAME_REQ   1001  // server -> client
+#define PACKET_NAME_REQ   2000		// client -> server
+#define PACKET_NAME_ACK   3000		// server -> client
+#define PACKET_JOIN_USER  4000		// server -> client
 
