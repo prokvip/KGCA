@@ -144,6 +144,9 @@
   <ItemGroup>
     <ClCompile Include="Socket_0.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="TProtocol.h" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
