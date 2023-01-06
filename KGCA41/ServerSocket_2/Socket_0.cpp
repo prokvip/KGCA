@@ -121,7 +121,15 @@ DWORD WINAPI ServerThread(LPVOID lpThreadParameter)
                 {
                 case PACKET_CHAR_MSG:
                 {
-                    printf("Recv---->%s\n", packet.msg);
+                    printf("[%s]%s\n",  iterRecv->m_szName, 
+                                        packet.msg);
+                    packet.ph.len += strlen(iterRecv->m_szName)+2;
+                    std::string pMsg = "[";
+                    pMsg += iterRecv->m_szName;
+                    pMsg += "]";
+                    pMsg += packet.msg;
+                    ZeroMemory(packet.msg, 2048);
+                    memcpy(packet.msg, pMsg.c_str(), pMsg.size());
                 }break;
 
                 case PACKET_NAME_REQ:

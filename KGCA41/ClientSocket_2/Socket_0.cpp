@@ -33,7 +33,7 @@ DWORD WINAPI SendThread(LPVOID lpThreadParameter)
     while (1)
     {
         char szSendMsg[256] = { 0, };
-        printf("%s", "send---->");
+        printf("%s ", "->");
         fgets(szSendMsg, 256, stdin);
         szSendMsg[strlen(szSendMsg)-1] = 0;
         if (strcmp(szSendMsg, "exit")==0)
@@ -147,7 +147,7 @@ int main()
             {
                 case PACKET_CHAR_MSG:
                 {
-                    printf("Recv---->%s\n", packet.msg);
+                    printf("%s\n", packet.msg);
                 }break;
 
                 case PACKET_CHATNAME_REQ:
@@ -155,6 +155,7 @@ int main()
                     printf("이름을 입력하시오 : ");
                     char szName[256] = { 0, };
                     fgets(szName, 256, stdin);
+                    szName[strlen(szName) - 1] = 0;
                     SendMsg(sock3, szName, PACKET_NAME_REQ);
                     ResumeThread(hClient);
                 }break;
