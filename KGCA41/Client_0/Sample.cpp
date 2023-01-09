@@ -41,6 +41,20 @@ LRESULT Sample::MsgProc(
 				WCHAR szBuffer[255] = L"";
 				GetWindowText(m_hEdit, szBuffer, 255);
 				OutputDebugString(szBuffer);
+				if (m_bNameSend == false)
+				{
+					m_Net.SendMsg(m_Net.m_Sock,
+						to_wm(szBuffer).c_str(),
+						PACKET_NAME_REQ);
+					m_bNameSend = true;
+					//ResumeThread(m_Net.m_hClientThread);
+				}
+				else
+				{
+					m_Net.SendMsg(m_Net.m_Sock,
+						to_wm(szBuffer).c_str(),
+						PACKET_CHAR_MSG);
+				}
 			}break;
 		}
 	}break;
@@ -71,18 +85,60 @@ bool		Sample::Run()
 }
 bool	Sample::Init()
 {
+	std::wstring fmt = L"IP[%s]:PORT[%d] %s";
+	if (m_Net.NetStart("192.168.0.12", 10000))
+	{		
+		Print(fmt.c_str(), L"192.168.0.12", 10000, L"접속 성공");
+	}
+	else
+	{
+		Print(fmt.c_str(), L"192.168.0.12", 10000, L"접속 실폐");
+	}
+	
 	return true;
 }
 bool	Sample::Frame() 
 {
+	m_Net.Frame();
 	return true;
 }
 bool	Sample::Render() 
 {
+	for (auto& packet : m_Net.m_PacketList)
+	{
+		switch (packet.ph.type)
+		{
+		case PACKET_CHAR_MSG:
+		{
+			std::wstring fmt = L"%s";
+			Print(fmt.c_str(), to_mw(packet.msg).c_str());
+		}break;
+
+		case PACKET_CHATNAME_REQ:
+		{
+			std::wstring fmt = L"%s";
+			Print(fmt.c_str(), L"이름을 입력하시오 : ");			
+			
+		}break;
+
+		case PACKET_JOIN_USER:
+		{
+			printf("%s %s\n", packet.msg, "님이 입장하였습니다.");
+		}break;
+		case PACKET_NAME_ACK:
+		{
+			printf("대화명 사용 승인\n");
+		}break;
+		}
+	}
+	m_Net.m_PacketList.clear();
+
+	m_Net.Render();
 	return true;
 }
 bool	Sample::Release() 
 {
+	m_Net.Release();
 	return true;
 }
 GAME_RUN(SocketWin, 800, 600)
