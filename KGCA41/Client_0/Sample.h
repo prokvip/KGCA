@@ -12,6 +12,7 @@ class Sample : public TGameCore
 public:
 	void		Print(const WCHAR* msg, ...);
 	bool		Run() override;
+	void		NetProcess();
 	LRESULT		MsgProc(HWND hWnd,	UINT message,WPARAM wParam,LPARAM lParam)override;
 	bool	Init() override;
 	bool	Frame()override;

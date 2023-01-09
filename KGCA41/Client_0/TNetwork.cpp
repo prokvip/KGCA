@@ -115,7 +115,6 @@ bool TNetwork::Frame()
 {    
     return true;
 }
-
 bool TNetwork::Render()
 {
     return true;

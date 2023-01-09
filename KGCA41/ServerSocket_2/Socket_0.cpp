@@ -145,11 +145,14 @@ DWORD WINAPI ServerThread(LPVOID lpThreadParameter)
                 for (auto iterSend = userlist.begin();
                     userlist.end() != iterSend;
                     )
-                {
-                    if (iterSend == iterRecv)
+                {                   
+                    if (packet.ph.type == PACKET_JOIN_USER)
                     {
-                        iterSend++;
-                        continue;
+                        if (iterRecv == iterSend)
+                        {
+                            iterSend++;
+                            continue;
+                        }
                     }
                     int iSendBytes = send(iterSend->sock, (char*)&packet,
                             packet.ph.len, 0);

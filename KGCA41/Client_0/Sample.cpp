@@ -97,12 +97,7 @@ bool	Sample::Init()
 	
 	return true;
 }
-bool	Sample::Frame() 
-{
-	m_Net.Frame();
-	return true;
-}
-bool	Sample::Render() 
+void    Sample::NetProcess()
 {
 	for (auto& packet : m_Net.m_PacketList)
 	{
@@ -117,22 +112,32 @@ bool	Sample::Render()
 		case PACKET_CHATNAME_REQ:
 		{
 			std::wstring fmt = L"%s";
-			Print(fmt.c_str(), L"이름을 입력하시오 : ");			
-			
+			Print(fmt.c_str(), L"이름을 입력하시오 : ");
+
 		}break;
 
 		case PACKET_JOIN_USER:
 		{
-			printf("%s %s\n", packet.msg, "님이 입장하였습니다.");
+			std::wstring fmt = L"%s%s";
+			Print(fmt.c_str(), to_mw(packet.msg).c_str(), L"님이 입장하였습니다.");
 		}break;
 		case PACKET_NAME_ACK:
 		{
-			printf("대화명 사용 승인\n");
+			std::wstring fmt = L"%s%s";
+			Print(fmt.c_str(), to_mw(packet.msg).c_str(), L"대화명 사용 승인");
 		}break;
 		}
 	}
 	m_Net.m_PacketList.clear();
-
+}
+bool	Sample::Frame() 
+{
+	m_Net.Frame();
+	NetProcess();
+	return true;
+}
+bool	Sample::Render() 
+{
 	m_Net.Render();
 	return true;
 }
