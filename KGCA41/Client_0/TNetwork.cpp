@@ -121,6 +121,7 @@ bool TNetwork::Render()
 }
 bool TNetwork::Release()
 {
+    closesocket(m_Sock);
     return true;
 }
 TNetwork::TNetwork()
