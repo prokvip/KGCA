@@ -109,7 +109,7 @@ ATOM TWindow::MyRegisterClass()
     wcex.cbSize = sizeof(WNDCLASSEX);
     wcex.style = CS_HREDRAW | CS_VREDRAW;
     wcex.hInstance = m_hInstance;
-    wcex.hbrBackground = CreateSolidBrush(RGB(255, 0, 0));
+    wcex.hbrBackground = CreateSolidBrush(RGB(0, 0, 0));
     wcex.lpszClassName = L"KGCA윈도우";// 이름
     // 윈도우 메세지를 받을 함수를 지정한다.    
     wcex.lpfnWndProc = WndProc;  // 전화번호  

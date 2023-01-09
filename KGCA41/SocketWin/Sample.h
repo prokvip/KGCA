@@ -1,10 +1,11 @@
 #pragma once
 #include "TGameCore.h"
-#include "TFbxLoader.h"
-#include "TCameraDebug.h"
+
 class Sample : public TGameCore
 {
 public:
+	bool		Run() override;
+	LRESULT		MsgProc(HWND hWnd,	UINT message,WPARAM wParam,LPARAM lParam)override;
 	bool	Init() override;
 	bool	Frame()override;
 	bool	Render()override;
