@@ -1,5 +1,17 @@
 #include "TNetwork.h"
-
+void    TNetwork::PacketProcess()
+{
+    for (auto& packet : m_RecvPacketList)
+    {
+        TNetwork::FunIter iter = m_fnExecutePacket.find(packet.ph.type);
+        if (iter != m_fnExecutePacket.end())
+        {
+            TNetwork::CallFuction call = iter->second;
+            call(packet);
+        }
+    }
+    m_RecvPacketList.clear();
+}
 void  TNetwork::MakePacket(UPACKET& packet, const char* msg, int iSize, short type)
 {
     ZeroMemory(&packet, sizeof(UPACKET));

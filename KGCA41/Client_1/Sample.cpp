@@ -1,4 +1,5 @@
 #include "Sample.h"
+
 // printf("%s %d %f",a,b,c);
 void   Sample::Print(const WCHAR* fmt, ...)
 {
@@ -114,6 +115,16 @@ bool		Sample::Run()
 }
 bool	Sample::Init()
 {
+	/*m_fnExecutePacket[PACKET_CHATNAME_REQ] = &Sample::ChatNameReq;
+	m_fnExecutePacket[PACKET_CHAR_MSG] = &Sample::ChatMsg;
+	m_fnExecutePacket[PACKET_JOIN_USER] = &Sample::JoinUser;
+	m_fnExecutePacket[PACKET_NAME_ACK] = &Sample::NameAck;*/
+
+	m_Net.m_fnExecutePacket[PACKET_CHATNAME_REQ] = std::bind(&Sample::ChatNameReq, this, std::placeholders::_1);
+	m_Net.m_fnExecutePacket[PACKET_CHAR_MSG] = std::bind(&Sample::ChatMsg, this, std::placeholders::_1);
+	m_Net.m_fnExecutePacket[PACKET_JOIN_USER] = std::bind(&Sample::JoinUser, this, std::placeholders::_1);
+	m_Net.m_fnExecutePacket[PACKET_NAME_ACK] = std::bind(&Sample::NameAck, this, std::placeholders::_1);
+
 	std::wstring fmt = L"IP[%s]:PORT[%d] %s";
 	if (m_Net.NetStart("192.168.0.12", 10000))
 	{		
@@ -126,43 +137,9 @@ bool	Sample::Init()
 	
 	return true;
 }
-void    Sample::RecvProcess()
-{
-	for (auto& packet : m_Net.m_RecvPacketList)
-	{
-		switch (packet.ph.type)
-		{
-		case PACKET_CHAR_MSG:
-		{
-			std::wstring fmt = L"%s";
-			Print(fmt.c_str(), to_mw(packet.msg).c_str());
-		}break;
-
-		case PACKET_CHATNAME_REQ:
-		{
-			std::wstring fmt = L"%s";
-			Print(fmt.c_str(), L"이름을 입력하시오 : ");
-
-		}break;
-
-		case PACKET_JOIN_USER:
-		{
-			std::wstring fmt = L"%s%s";
-			Print(fmt.c_str(), to_mw(packet.msg).c_str(), L"님이 입장하였습니다.");
-		}break;
-		case PACKET_NAME_ACK:
-		{
-			std::wstring fmt = L"%s%s";
-			Print(fmt.c_str(), to_mw(packet.msg).c_str(), L"대화명 사용 승인");
-		}break;
-		}
-	}
-	m_Net.m_RecvPacketList.clear();
-}
-
 bool	Sample::PreProcess()
 {
-	RecvProcess();
+	m_Net.PacketProcess();
 	return true;
 }
 bool	Sample::PreFrame()

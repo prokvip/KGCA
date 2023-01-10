@@ -12,6 +12,11 @@ public:
 	std::list<UPACKET>  m_RecvPacketList;
 	std::list<UPACKET>  m_SendPacketList;
 public:
+	typedef std::function<void(UPACKET& t)> CallFuction;
+	typedef std::map<DWORD, CallFuction>::iterator FunIter;
+	std::map<DWORD, CallFuction> m_fnExecutePacket;
+public:
+	void   PacketProcess();
 	void   MakePacket(UPACKET& packet, const char* msg, int iSize, short type);
 	bool   NetStart(std::string ip, int iPort);
 	void   AddSend(SOCKET sock, const char* msg, int iSize, short type);

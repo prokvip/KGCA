@@ -149,6 +149,7 @@
     <ClInclude Include="TProtocol.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="CallFunction.cpp" />
     <ClCompile Include="Sample.cpp" />
     <ClCompile Include="TNetwork.cpp" />
   </ItemGroup>

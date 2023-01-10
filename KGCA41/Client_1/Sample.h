@@ -10,10 +10,18 @@ class Sample : public TGameCore
 	HWND		m_hSendBtn;
 	bool		m_bNameSend = false;
 public:
-	void		RecvPrecess();
+	void	ChatMsg(UPACKET& t);
+	void    ChatNameReq(UPACKET& t);
+	void	JoinUser(UPACKET& t);
+	void	NameAck(UPACKET& t);
+public:
+	/*typedef void (Sample::* CallFuction) (UPACKET& t);
+	typedef std::map<DWORD, CallFuction>::iterator FunIter;
+	std::map<DWORD, CallFuction> m_fnExecutePacket;*/
+	
+public:
 	void		Print(const WCHAR* msg, ...);
 	bool		Run() override;
-	void		RecvProcess();
 	LRESULT		MsgProc(HWND hWnd,	UINT message,WPARAM wParam,LPARAM lParam)override;
 	bool	Init() override;
 	bool	PreProcess()override;
