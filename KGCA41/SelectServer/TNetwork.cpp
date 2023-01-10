@@ -222,7 +222,7 @@ void   TNetwork::AddSend(SOCKET sock, const char* data, int iSize, short type)
 {
     UPACKET packet;
     MakePacket(packet, data, iSize, type);
-    //m_SendPacketList.push_back(packet);
+    m_BroadcasttingPacketList.push_back(packet);
 }
 void   TNetwork::SendPrecess()
 {
