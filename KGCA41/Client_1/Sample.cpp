@@ -9,72 +9,7 @@ void   Sample::Print(const WCHAR* fmt, ...)
 		SendMessage(m_hListbox, LB_ADDSTRING, 0, (LPARAM)msg);
 	va_end(arg);
 }
-void  Sample::RecvThread()
-{
-	TNetwork* net = (TNetwork*)&m_Net;
-	SOCKET sock = net->m_Sock;
-	int iRecvPacketSize = PACKET_HEADER_SIZE;
-	int iTotalRecvBytes = 0;
-	while (1)
-	{
-		char szRecvMsg[256] = { 0, };
-		int iRecvBytes = recv(net->m_Sock, szRecvMsg,
-			PACKET_HEADER_SIZE - iTotalRecvBytes, 0);
-		if (iRecvBytes == 0)
-		{
-			printf("서버 정상 종료\n");
-			return;
-		}
-		if (iRecvBytes == SOCKET_ERROR)
-		{
-			printf("비 정상 반환\n");
-			return;
-		}
-		iTotalRecvBytes += iRecvBytes;
-		if (iTotalRecvBytes == PACKET_HEADER_SIZE)
-		{
-			UPACKET packet;
-			ZeroMemory(&packet, sizeof(UPACKET));
-			memcpy(&packet.ph, szRecvMsg, PACKET_HEADER_SIZE);
 
-			char* msg = (char*)&packet;
-			int iNumRecvByte = 0;
-			do {
-				if (packet.ph.len == 4)
-				{
-					break;
-				}
-				int iRecvBytes = recv(net->m_Sock,
-					&packet.msg[iNumRecvByte],
-					packet.ph.len - PACKET_HEADER_SIZE - iNumRecvByte, 0);
-
-				if (iRecvBytes == 0)
-				{
-					printf("서버 정상 종료\n");
-					break;
-				}
-				if (iRecvBytes == SOCKET_ERROR)
-				{
-					if (WSAGetLastError() != WSAEWOULDBLOCK)
-					{
-						//WSAEWOULDBLOCK 아니라면 오류!
-						closesocket(net->m_Sock);
-						printf("서버 비정상 종료\n");
-						return;
-					}
-					continue;
-				}
-				iNumRecvByte += iRecvBytes;
-
-
-			} while ((packet.ph.len - PACKET_HEADER_SIZE) > iNumRecvByte);
-
-			net->m_PacketList.push_back(packet);
-			iTotalRecvBytes = 0;
-			return;
-		}
-	}	
-};
 LRESULT Sample::MsgProc(
     HWND hWnd,
     UINT message,
@@ -95,19 +30,19 @@ LRESULT Sample::MsgProc(
 		{
 		case FD_CONNECT:
 			{
-			int t = 0;
+				m_Net.m_bConnect = true;
 			}break;
 		case FD_READ:
-			{
-				RecvThread();
-			}break;
+		{
+			m_Net.RecvPrecess();
+		} break;
 		case FD_WRITE:
-			{
-			int t = 0;
+			{				
+				//m_Net.SendPrecess();
 			}break;
 		case FD_CLOSE:
 			{
-			int t = 0;
+				m_Net.m_bConnect = false;
 			}break;
 		}
 		}break;
@@ -136,16 +71,15 @@ LRESULT Sample::MsgProc(
 				OutputDebugString(szBuffer);
 				if (m_bNameSend == false)
 				{
-					m_Net.SendMsg(m_Net.m_Sock,
-						to_wm(szBuffer).c_str(),
+					std::string msg = to_wm(szBuffer);	
+					m_Net.AddSend(m_Net.m_Sock,	msg.c_str(), msg.size(),
 						PACKET_NAME_REQ);
-					m_bNameSend = true;
-					//ResumeThread(m_Net.m_hClientThread);
+					m_bNameSend = true;					
 				}
 				else
 				{
-					m_Net.SendMsg(m_Net.m_Sock,
-						to_wm(szBuffer).c_str(),
+					std::string msg = to_wm(szBuffer);
+					m_Net.AddSend(m_Net.m_Sock,	msg.c_str(), msg.size(),
 						PACKET_CHAR_MSG);
 				}
 			}break;
@@ -163,6 +97,7 @@ bool		Sample::Run()
 	Init();
 	while (m_bGameRun)
 	{
+		PreProcess();
 		if (TWindow::Run() == true)
 		{
 			Frame();
@@ -172,6 +107,7 @@ bool		Sample::Run()
 		{
 			m_bGameRun = false;
 		}
+		PostProcess();
 	}
 	Release();
 	return true;
@@ -190,9 +126,9 @@ bool	Sample::Init()
 	
 	return true;
 }
-void    Sample::NetProcess()
+void    Sample::RecvProcess()
 {
-	for (auto& packet : m_Net.m_PacketList)
+	for (auto& packet : m_Net.m_RecvPacketList)
 	{
 		switch (packet.ph.type)
 		{
@@ -221,17 +157,35 @@ void    Sample::NetProcess()
 		}break;
 		}
 	}
-	m_Net.m_PacketList.clear();
+	m_Net.m_RecvPacketList.clear();
+}
+
+bool	Sample::PreProcess()
+{
+	RecvProcess();
+	return true;
+}
+bool	Sample::PreFrame()
+{	
+	m_Net.Frame();	
+	return true;
 }
 bool	Sample::Frame() 
-{
-	m_Net.Frame();
-	NetProcess();
+{	
 	return true;
 }
 bool	Sample::Render() 
+{	
+	return true;
+}
+bool	Sample::PostRender()
 {
-	m_Net.Render();
+	m_Net.Render();	
+	return true;
+}
+bool	Sample::PostProcess()
+{
+	m_Net.SendPrecess();
 	return true;
 }
 bool	Sample::Release() 

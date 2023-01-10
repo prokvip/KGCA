@@ -45,7 +45,10 @@ bool		TGameCore::TCoreFrame()
 	I_Timer.Frame();
 	I_Sound.Frame();
 	m_Writer.Frame();
-    return Frame();
+	PreFrame();
+    Frame();
+	PostFrame();
+	return true;
 }
 bool		TGameCore::TCorePreRender()
 {
@@ -68,6 +71,8 @@ bool		TGameCore::TCorePreRender()
 bool		TGameCore::TCoreRender()
 {  	
 	TCorePreRender();
+
+	PreRender();
 	// 랜더타켓 지정
 	m_RT.m_pOldRTV = m_pRTV.Get();
 	m_RT.m_pOldDSV = m_pDepthStencilView.Get();
@@ -90,6 +95,7 @@ bool		TGameCore::TCoreRender()
 }
 bool		TGameCore::TCorePostRender()
 {
+	PostRender();
 	m_BG.SetMatrix(nullptr, nullptr, nullptr);
 	m_BG.Render();
 
@@ -99,6 +105,7 @@ bool		TGameCore::TCorePostRender()
 	m_Writer.Render();
 
 	m_pSwapChain->Present(0, 0);
+
     return true;
 }
 bool		TGameCore::TCoreRelease()
@@ -119,15 +126,17 @@ bool        TGameCore::Run()
 	TCoreInit();	
 	while (m_bGameRun)
 	{
+		PreProcess();
 		if (TWindow::Run() == true)
 		{
 			TCoreFrame();
-			TCoreRender();
+			TCoreRender();			
 		}
 		else
 		{
 			m_bGameRun = false;
 		}
+		PostProcess();
 	}
 	TCoreRelease();
 	return true;

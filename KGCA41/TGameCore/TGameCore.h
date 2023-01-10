@@ -18,8 +18,14 @@ public:
 	bool m_bGameRun = true;
 public:
 	virtual bool		Init() {return true;}; // 초기화
+	virtual bool		PreProcess() { return true; }; // 실시간 랜더링
+	virtual bool		PreFrame() { return true; }; // 실시간 계산	
 	virtual bool		Frame() { return true; }; // 실시간 계산
+	virtual bool		PostFrame() { return true; }; // 실시간 랜더링
+	virtual bool		PreRender() { return true; }; // 실시간 계산	
 	virtual bool		Render() { return true; }; // 실시간 랜더링
+	virtual bool		PostRender() { return true; }; // 실시간 랜더링
+	virtual bool		PostProcess() { return true; }; // 실시간 랜더링
 	virtual bool		Release() { return true; }; // 소멸 및 삭제
 public:
 	bool		TCoreInit(); // 초기화

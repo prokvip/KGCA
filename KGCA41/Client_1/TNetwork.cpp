@@ -1,21 +1,34 @@
 #include "TNetwork.h"
 
-// 시작함수
-DWORD WINAPI RecvThread(LPVOID lpThreadParameter)
+void  TNetwork::MakePacket(UPACKET& packet, const char* msg, int iSize, short type)
 {
-    TNetwork* net = (TNetwork*)lpThreadParameter;  
-    SOCKET sock = net->m_Sock;
+    ZeroMemory(&packet, sizeof(UPACKET));
+    packet.ph.len = iSize + PACKET_HEADER_SIZE;
+    packet.ph.type = type;
+    memcpy(packet.msg, msg, iSize);
+}
+void  TNetwork::RecvPrecess()
+{   
     int iRecvPacketSize = PACKET_HEADER_SIZE;
     int iTotalRecvBytes = 0;
     while (1)
     {
         char szRecvMsg[256] = { 0, };
-        int iRecvBytes = recv(net->m_Sock, szRecvMsg,
+        int iRecvBytes = recv(m_Sock, szRecvMsg,
             PACKET_HEADER_SIZE - iTotalRecvBytes, 0);
         if (iRecvBytes == 0)
         {
             printf("서버 정상 종료\n");
-            return true;
+            return;
+        }
+        if (iRecvBytes == SOCKET_ERROR)
+        {
+            DWORD dwError = WSAGetLastError();
+            if (dwError != WSAEWOULDBLOCK)
+            {
+                closesocket(m_Sock);            
+            }      
+            return;            
         }
         iTotalRecvBytes += iRecvBytes;
         if (iTotalRecvBytes == PACKET_HEADER_SIZE)
@@ -31,7 +44,7 @@ DWORD WINAPI RecvThread(LPVOID lpThreadParameter)
                 {
                     break;
                 }
-                int iRecvBytes = recv(net->m_Sock,
+                int iRecvBytes = recv(m_Sock,
                     &packet.msg[iNumRecvByte],
                     packet.ph.len - PACKET_HEADER_SIZE - iNumRecvByte, 0);
 
@@ -45,9 +58,9 @@ DWORD WINAPI RecvThread(LPVOID lpThreadParameter)
                     if (WSAGetLastError() != WSAEWOULDBLOCK)
                     {
                         //WSAEWOULDBLOCK 아니라면 오류!
-                        closesocket(net->m_Sock);
+                        closesocket(m_Sock);
                         printf("서버 비정상 종료\n");
-                        return 1;
+                        return;
                     }
                     continue;
                 }
@@ -56,19 +69,41 @@ DWORD WINAPI RecvThread(LPVOID lpThreadParameter)
 
             } while ((packet.ph.len - PACKET_HEADER_SIZE) > iNumRecvByte);
 
-            net->m_PacketList.push_back(packet);
+            m_RecvPacketList.push_back(packet);
             iTotalRecvBytes = 0;
+            return;
         }
     }
-    closesocket(sock);
 };
-int   TNetwork::SendMsg(SOCKET sock, const char* msg, short type)
+void   TNetwork::AddSend(SOCKET sock, const char* data, int iSize, short type)
 {
     UPACKET packet;
-    ZeroMemory(&packet, sizeof(UPACKET));
-    packet.ph.len = strlen(msg) + PACKET_HEADER_SIZE;
-    packet.ph.type = type;
-    memcpy(packet.msg, msg, strlen(msg));
+    MakePacket(packet, data, iSize, type);
+    m_SendPacketList.push_back(packet);
+}
+void   TNetwork::SendPrecess()
+{
+    for (auto& packet : m_SendPacketList)
+    {
+        char* msgSend = (char*)&packet;
+        int iSendBytes = send(m_Sock, msgSend, packet.ph.len, 0);
+
+        if (iSendBytes == SOCKET_ERROR)
+        {
+            if (WSAGetLastError() != WSAEWOULDBLOCK)
+            {
+                //WSAEWOULDBLOCK 아니라면 오류!
+                closesocket(m_Sock);
+                break;
+            }
+        }
+    }
+    m_SendPacketList.clear();
+}
+int   TNetwork::SendMsg(SOCKET sock, const char* data, int iSize, short type)
+{
+    UPACKET packet;
+    MakePacket(packet, data, iSize, type);
 
     char* msgSend = (char*)&packet;
     int iSendBytes = send(sock, msgSend, packet.ph.len, 0);
@@ -111,11 +146,6 @@ bool   TNetwork::NetStart(std::string ip, int iPort)
 
    // u_long iMode = TRUE;
    // ioctlsocket(m_Sock, FIONBIO, &iMode);
-
-    //win api
-    //DWORD dwThreadID;
-    //m_hClientThread = CreateThread(0, 0, RecvThread,
-    //    (LPVOID)this, 0,/*CREATE_SUSPENDED*/ &dwThreadID);
 
     return true;
 }

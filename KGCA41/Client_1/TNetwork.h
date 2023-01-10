@@ -6,12 +6,18 @@
 class TNetwork
 {
 public:
-	SOCKET m_Sock;
-	HANDLE m_hClientThread;
-	std::list<UPACKET>  m_PacketList;
+	bool	m_bConnect=false;
+	SOCKET	m_Sock;
+	HANDLE	m_hClientThread;
+	std::list<UPACKET>  m_RecvPacketList;
+	std::list<UPACKET>  m_SendPacketList;
 public:
+	void   MakePacket(UPACKET& packet, const char* msg, int iSize, short type);
 	bool   NetStart(std::string ip, int iPort);
-	int    SendMsg(SOCKET sock, const char* msg, short type);
+	void   AddSend(SOCKET sock, const char* msg, int iSize, short type);
+	int    SendMsg(SOCKET sock, const char* msg, int iSize, short type);
+	void   SendPrecess();
+	void   RecvPrecess();
 	bool   Frame();
 	bool   Render();
 	bool   Release();

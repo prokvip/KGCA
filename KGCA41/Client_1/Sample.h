@@ -10,14 +10,18 @@ class Sample : public TGameCore
 	HWND		m_hSendBtn;
 	bool		m_bNameSend = false;
 public:
-	void		RecvThread();
+	void		RecvPrecess();
 	void		Print(const WCHAR* msg, ...);
 	bool		Run() override;
-	void		NetProcess();
+	void		RecvProcess();
 	LRESULT		MsgProc(HWND hWnd,	UINT message,WPARAM wParam,LPARAM lParam)override;
 	bool	Init() override;
-	bool	Frame()override;
-	bool	Render()override;
+	bool	PreProcess()override;
+		bool	PreFrame()override;
+		bool	Frame()override;
+		bool	Render()override;
+		bool	PostRender()override;
+	bool	PostProcess()override;
 	bool	Release()override;
 	void    ClearD3D11DeviceContext(ID3D11DeviceContext* pd3dDeviceContext);
 };
