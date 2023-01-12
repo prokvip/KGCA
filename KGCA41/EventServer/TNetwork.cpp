@@ -38,7 +38,8 @@ void    TNetwork::PacketProcess()
                        return;
                    }
 
-                   std::wstring fmt = L"클라이언트 접속 : IP:%s, PORT:%d\n";
+                   m_Print({  L"클라이언트 접속->IP:"+to_mw(inet_ntoa(clientaddr.sin_addr)),
+                              L" PORT:"+std::to_wstring(ntohs(clientaddr.sin_port))       });
 
                    u_long iMode = TRUE;
                    ioctlsocket(clientSock, FIONBIO, &iMode);

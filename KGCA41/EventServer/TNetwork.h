@@ -1,7 +1,20 @@
 #pragma once
 #define _WINSOCK_DEPRECATED_NO_WARNINGS
 #include "TStd.h"
+#include <cstdarg>
+#include <functional>
 #include "TProtocol.h"
+
+class PrintWrapper
+{
+public:
+	void operator()(std::list<std::wstring> myArguments)
+	{
+		func(myArguments);
+	}
+	std::function< void(std::list<std::wstring> myArguments)> func;
+};
+
 struct TUser
 {
 	SOCKET sock;
@@ -21,6 +34,7 @@ struct TPacket
 class TNetwork
 {
 public:
+	PrintWrapper m_Print;
 	HANDLE	m_EventArray[64];
 	SOCKET	m_SocketArray[64];
 	std::list<TUser> userlist;
@@ -35,7 +49,6 @@ public:
 	typedef std::function<void(UPACKET& t)> CallFuction;
 	typedef std::map<DWORD, CallFuction>::iterator FunIter;
 	std::map<DWORD, CallFuction> m_fnExecutePacket;
-
 public:
 	void   PacketProcess();
 	void   MakePacket(UPACKET& packet, const char* msg, int iSize, short type);

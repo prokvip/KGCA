@@ -10,7 +10,15 @@ void   Sample::Print(const WCHAR* fmt, ...)
 		SendMessage(m_hListbox, LB_ADDSTRING, 0, (LPARAM)msg);
 	va_end(arg);
 }
-
+void Sample::PRINT(std::list<std::wstring> myArguments) 
+{
+	std::wstring buffer;
+	for (auto data : myArguments)
+	{
+		buffer += data;
+	}
+	SendMessage(m_hListbox, LB_ADDSTRING, 0, (LPARAM)buffer.c_str());
+}
 //
 LRESULT Sample::MsgProc(
     HWND hWnd,
@@ -87,12 +95,19 @@ bool		Sample::Run()
 	return true;
 }
 bool	Sample::Init()
-{
+{	
+	
+	
+
 	/*m_fnExecutePacket[PACKET_CHATNAME_REQ] = &Sample::ChatNameReq;
 	m_fnExecutePacket[PACKET_CHAR_MSG] = &Sample::ChatMsg;
 	m_fnExecutePacket[PACKET_JOIN_USER] = &Sample::JoinUser;
 	m_fnExecutePacket[PACKET_NAME_ACK] = &Sample::NameAck;*/
 
+	using namespace std::placeholders;
+	m_Net.m_Print.func = std::bind(&Sample::PRINT, this, _1);
+
+	//m_Net.PRINT = std::bind(&Sample::PRINT, this, _1);
 	m_Net.m_fnExecutePacket[PACKET_CHAR_MSG] = std::bind(&Sample::ChatMsg, this, std::placeholders::_1);
 	m_Net.m_fnExecutePacket[PACKET_NAME_REQ] = std::bind(&Sample::NameReq, this, std::placeholders::_1);
 

@@ -3,30 +3,9 @@
 #include "TGameCore.h"
 #include "TNetwork.h"
 
-#include <cstdarg>
-#include <functional>
-class PrintWrapper
-{
-public:
-	PrintWrapper() = default;
-	template<typename T>
-	PrintWrapper(T&& t) : func(std::forward<T>(t))
-	{
-	}
-	void operator()(const WCHAR* fmt, ...)
-	{
-		va_list args;
-		va_start(args, fmt);
-		func(fmt, args);
-		va_end(args);
-	}
-private:
-	std::function< void(const WCHAR* fmt, va_list)> func;
-};
-
 class Sample : public TGameCore
 {
-	PrintWrapper m_Print;
+	
 	TNetwork	m_Net;
 	HWND		m_hEdit;
 	HWND		m_hListbox;
@@ -40,6 +19,7 @@ public:
 	typedef std::map<DWORD, CallFuction>::iterator FunIter;
 	std::map<DWORD, CallFuction> m_fnExecutePacket;*/	
 public:
+	void		PRINT(std::list<std::wstring> myArguments);
 	void		Print(const WCHAR* fmt, ...);	
 	bool		Run() override;
 	LRESULT		MsgProc(HWND hWnd,	UINT message,WPARAM wParam,LPARAM lParam)override;
