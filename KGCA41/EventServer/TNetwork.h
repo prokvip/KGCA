@@ -15,6 +15,8 @@ public:
 	std::function< void(std::list<std::wstring> myArguments)> func;
 };
 
+
+
 struct TUser
 {
 	SOCKET sock;
@@ -23,12 +25,7 @@ struct TUser
 	bool m_bExit = false;
 	char m_szName[9] = { 0, };
 	char szRecvMsg[255] = { 0, };
-	int iTotalRecvBytes = 0;
-};
-struct TPacket
-{
-	TUser* pUser;
-	UPACKET packet;
+	int iTotalRecvBytes = 0;	
 };
 
 class TNetwork

@@ -10,9 +10,6 @@ void   Sample::ChatMsg(UPACKET& t)
 }
 void   Sample::NameReq(UPACKET& t)
 {
-	std::wstring fmt = L"%s";
-	Print(fmt.c_str(), L"이름을 입력하시오 : ");
-
    /* UPACKET packet1;
     m_Net.MakePacket(packet1, nullptr, 0, PACKET_NAME_ACK);
     m_Net.m_SendPacketList.insert(std::make_pair(sock, packet1));*/

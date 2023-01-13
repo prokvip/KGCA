@@ -65,11 +65,12 @@ void    TNetwork::PacketProcess()
     for ( int iEvent = dwIndex; iEvent < userlist.size()+1; iEvent++)
     {
         TUser* user = UserFind(m_SocketArray[iEvent]);
+        if (user->m_bExit) continue;
         DWORD dwSignal = WSAWaitForMultipleEvents(1, 
                                                  &m_EventArray[iEvent],
                                                  TRUE, 0, FALSE);
-        if (dwIndex == WSA_WAIT_FAILED) continue;
-        if (dwIndex == WSA_WAIT_TIMEOUT) continue;
+        if (dwSignal == WSA_WAIT_FAILED) continue;
+        if (dwSignal == WSA_WAIT_TIMEOUT) continue;
 
         WSANETWORKEVENTS netEvent;
         int iRet = WSAEnumNetworkEvents(
@@ -85,10 +86,7 @@ void    TNetwork::PacketProcess()
                 int iRecvBytes = recv(user->sock, user->szRecvMsg,
                     PACKET_HEADER_SIZE - user->iTotalRecvBytes, 0);
                 if (iRecvBytes == 0)
-                {
-                    printf("클라이언트 접속 종료 : IP:%s, PORT:%d\n",
-                        inet_ntoa(user->address.sin_addr), ntohs(user->address.sin_port));
-                    closesocket(user->sock);
+                {             
                     user->m_bExit = true;
                     continue;
                 }
@@ -97,14 +95,11 @@ void    TNetwork::PacketProcess()
                 {
                     if (dwError != WSAEWOULDBLOCK)
                     {
-                        //WSAEWOULDBLOCK 아니라면 오류!
-                        closesocket(user->sock);
                         user->m_bExit = true;
                     }
                     continue;
                 }
-
-                user->m_bExit = true; 
+               
                 user->iTotalRecvBytes += iRecvBytes;
                 if (user->iTotalRecvBytes == PACKET_HEADER_SIZE)
                 {
@@ -118,17 +113,15 @@ void    TNetwork::PacketProcess()
                             packet.ph.len - PACKET_HEADER_SIZE - iNumRecvByte, 0);
 
                         if (iRecvBytes == 0)
-                        {
-                            printf("서버 정상 종료\n");
+                        {             
+                            user->m_bExit = true;
                             break;
                         }
                         if (iRecvBytes == SOCKET_ERROR)
                         {
                             if (WSAGetLastError() != WSAEWOULDBLOCK)
                             {
-                                //WSAEWOULDBLOCK 아니라면 오류!
-                                closesocket(user->sock);
-                                printf("서버 비정상 종료\n");
+                                //WSAEWOULDBLOCK 아니라면 오류!                                
                                 user->m_bExit = true;
                             }
                             continue;
@@ -139,18 +132,21 @@ void    TNetwork::PacketProcess()
 
                 if (iRecvBytes > 0)
                 {
-                    m_RecvPacketList.push_back(packet);
-                }
-
-                //ZeroMemory(&packet, sizeof(UPACKET));
+                    if (packet.ph.type == PACKET_NAME_REQ)
+                    {
+                        //m_SendPacketList.push_back(std::make_pair(user->sock, packet));
+                        SendMsg(user->sock, nullptr, 0, PACKET_NAME_ACK);
+                    }
+                    else
+                    {
+                        m_RecvPacketList.push_back(packet);
+                    }                    
+                }               
                 user->iTotalRecvBytes = 0;
             }
             if (netEvent.lNetworkEvents & FD_WRITE)
             {
-                if (packet.ph.type == PACKET_NAME_REQ)
-                {
-                     SendMsg(user->sock, nullptr, 0, PACKET_NAME_ACK);
-                }
+
             }
             if (netEvent.lNetworkEvents & FD_CLOSE)
             {
@@ -174,6 +170,10 @@ void    TNetwork::PacketProcess()
     {
         if (userIter->m_bExit)
         {
+            closesocket(userIter->sock);
+            m_Print({ L"클라이언트 종료->IP:" + to_mw(inet_ntoa(userIter->address.sin_addr)),
+                        L" PORT:" + std::to_wstring(ntohs(userIter->address.sin_port)) });
+
             userIter = userlist.erase(userIter);
         }
         else
