@@ -78,6 +78,7 @@ DWORD AsyncLoad(std::wstring file)
         {
             g_dwMaxReadSize = FileSize.LowPart;
         }
+        // 버퍼의 용량의 잔여량이 입출력 단위보다 작으면 오류가 발생한다. 
         g_pFileBuffer = new wchar_t[FileSize.LowPart];
         dwReadCounter = FileSize.LowPart / g_dwMaxReadSize;
         
