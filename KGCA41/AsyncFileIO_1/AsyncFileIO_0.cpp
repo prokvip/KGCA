@@ -148,6 +148,7 @@ DWORD AsyncCopy(std::wstring file, DWORD dwFileSize)
     }
     return dwTrans;
 }
+
 int main()
 {
     std::wstring readfile = L"test.exe";
