@@ -5,8 +5,8 @@
 //#define USE_THREAD
 
 
+HANDLE  g_hEventReadStart;
 HANDLE  g_hEventWriteStart;
-HANDLE  g_hEventMain;
 
 DWORD g_dwMaxReadSize = 4096;
 DWORD g_dwMaxWriteSize = 4096;
@@ -196,6 +196,8 @@ unsigned WINAPI ReadProc(LPVOID arg)
 	bool bReadEnd = false;
 	while (bReadEnd == false)
 	{
+		WaitForSingleObject(g_hEventReadStart, INFINITE);
+
 		DWORD dwCurrent = FileRead(hReadFile, dwReadOffset);
 
 		::SetEvent(g_hEventWriteStart);
@@ -241,6 +243,9 @@ unsigned WINAPI WriteProc(LPVOID arg)
 		WaitForSingleObject(g_hEventWriteStart, INFINITE);
 
 		DWORD dwWriteCurrent = FileWrite(hWriteFile, dwWriteOffset);
+
+		::SetEvent(g_hEventReadStart);
+
 		if (dwWriteCurrent < g_dwMaxWriteSize &&
 			g_LoadFileSize.QuadPart == g_LargerWrite.QuadPart + dwWriteCurrent)
 		{
@@ -255,7 +260,6 @@ unsigned WINAPI WriteProc(LPVOID arg)
 		{
 			dwWriteOffset = (g_LoadFileSize.QuadPart - writeOV.Offset);
 		}
-		::SetEvent(g_hEventMain);
 	}
 	CloseHandle(hWriteFile);
 	return 0;
@@ -265,7 +269,9 @@ unsigned WINAPI WriteProc(LPVOID arg)
 void main()
 {
 	g_hEventWriteStart = ::CreateEvent(0, TRUE, FALSE, 0);
-	g_hEventMain = ::CreateEvent(0, TRUE, FALSE, 0);
+	g_hEventReadStart = ::CreateEvent(0, TRUE, FALSE, 0);
+
+	::SetEvent(g_hEventReadStart);
 
 	unsigned int idRead, idWrite;
 	std::wstring readfile = L"test.iso";
@@ -277,7 +283,7 @@ void main()
 
 	while (1)
 	{
-		WaitForSingleObject(g_hEventMain, INFINITE);
+		Sleep(100);
 		float fCurentSize = (float)g_LargerRead.QuadPart / (float)g_LoadFileSize.QuadPart;
 		std::cout << fCurentSize * 100.0f << "\n";
 		if (g_LargerRead.QuadPart == g_LoadFileSize.QuadPart)
