@@ -2,7 +2,6 @@
 #include <windows.h>
 #include <iostream>
 
-
 DWORD g_dwMaxReadSize = 4096 * 4096;
 DWORD g_dwMaxWriteSize = 4096 * 4096;
 wchar_t* g_pFileBuffer = nullptr;
