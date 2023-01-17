@@ -154,6 +154,9 @@
     <ClInclude Include="TSessionMgr.h" />
     <ClInclude Include="TSessionUser.h" />
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="패킷처리.png" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
