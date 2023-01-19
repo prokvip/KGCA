@@ -20,12 +20,13 @@ struct OVERLAPPED2 : OVERLAPPED
 class TSessionUser
 {
 public:
-    bool        m_bDisConnect;
+    bool        m_bDisConnect=false;
     SOCKET      m_Sock;
     SOCKADDR_IN m_Address;
     char    m_szName[9] = { 0, };
 public:
-    char    m_szRecvBuffer[g_iMaxRecvBufferSize] = { 0, };
+    //char    m_szRecvBuffer[g_iMaxRecvBufferSize] = { 0, };
+    // 배열 사용의 한계->리스트+배열(무한대)
     char    m_szDataBuffer[g_iMaxDataBufferSize] = { 0, };
     int		m_iPacketPos=0; // 페킷의 시작 주소
     int		m_iWritePos = 0; // 페킷 데이터 저장 주소

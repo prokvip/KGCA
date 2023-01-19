@@ -15,7 +15,7 @@ DWORD WINAPI ServerThread(LPVOID lpThreadParameter)
         for (auto userRecv = pMgr->m_SessionList.begin();
                 pMgr->m_SessionList.end() != userRecv; userRecv++)
         {           
-            TSessionUser* pUser = *userRecv;
+            TSessionUser* pUser = (*userRecv).get();
             for (auto packet = pUser->m_RecvPacketList.begin();
                 pUser->m_RecvPacketList.end() != packet;
                 packet++)
@@ -58,10 +58,11 @@ DWORD WINAPI ServerThread(LPVOID lpThreadParameter)
         for (auto user = pMgr->m_SessionList.begin();
             pMgr->m_SessionList.end() != user;)
         {
-            TSessionUser* pUser = *user;
+            TSessionUser* pUser = (*user).get();
             if (pUser->m_bDisConnect)
             {
-                user = pMgr->m_SessionList.erase(user);
+                pMgr->Delete(*user);
+                user = pMgr->m_SessionList.erase(user);                
             }else
             {
                 user++;

@@ -3,11 +3,14 @@ TSessionUser* TSessionMgr::Add(SOCKET sock, SOCKADDR_IN address)
 {
 	//u_long iMode = TRUE;
 	//ioctlsocket(sock, FIONBIO, &iMode);
-
-	TSessionUser* user = new TSessionUser;
-	user->Set(sock, address);	
+    auto user = m_Pool.NewChunk();
+    user->Set(sock, address);	
 	m_SessionList.push_back(user);
-	return user;
+	return user.get();
+}
+void   TSessionMgr::Delete(std::shared_ptr<TSessionUser> user)
+{
+    m_Pool.DeleteChunk(user);
 }
 void   TSessionMgr::SendPrecess()
 {
@@ -16,7 +19,7 @@ void   TSessionMgr::SendPrecess()
         for (auto iterSend = m_SessionList.begin(); 
              m_SessionList.end() != iterSend; iterSend++)
         {
-            TSessionUser* pUser = (*iterSend);
+            TSessionUser* pUser = (*iterSend).get();
             pUser->SendMsg(packet);
         }
     }

@@ -149,6 +149,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TIocp.h" />
+    <ClInclude Include="TObjectPool.h" />
     <ClInclude Include="TProtocol.h" />
     <ClInclude Include="TServerStd.h" />
     <ClInclude Include="TSessionMgr.h" />
