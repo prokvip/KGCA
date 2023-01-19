@@ -12,7 +12,11 @@ public:
 	void   SendPrecess();
 	TSessionMgr() : m_Pool(20)
 	{
-
+		OVERLAPPED2::Allocation();
+	}
+	~TSessionMgr()
+	{
+		OVERLAPPED2::Release();
 	}
 };
 

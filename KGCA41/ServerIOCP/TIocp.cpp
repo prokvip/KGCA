@@ -25,12 +25,12 @@ unsigned WINAPI TIocp::WorkProc(LPVOID arg)
 			// 읽기 또는 쓰기 비동기 완성
 			if (OVERLAPPED2::MODE_RECV == pOV2->iType)
 			{
-				user->DispatchRead(dwTransfer);
+				user->DispatchRead(dwTransfer, pOV2);
 				user->RecvMsg();
 			}
 			if (OVERLAPPED2::MODE_SEND == pOV2->iType)
 			{				
-				user->DispatchSend(dwTransfer);
+				user->DispatchSend(dwTransfer, pOV2);
 			}
 		}
 		else

@@ -1,19 +1,23 @@
 #pragma once
 #include "TServerStd.h"
+#include "TObjectPool.h"
 
 #define g_iMaxRecvBufferSize 256
 #define g_iMaxDataBufferSize (PACKET_MAX_DATA_SIZE+PACKET_HEADER_SIZE*2)
 
-struct OVERLAPPED2 : OVERLAPPED
+struct OVERLAPPED2 : TObjectPool< OVERLAPPED2>
 {    
     enum { MODE_RECV = 1, MODE_SEND = 2, MODE_EXIT =3};
+    OVERLAPPED ov;
     int  iType;
     OVERLAPPED2()
     {
+        memset(&ov, 0, sizeof(OVERLAPPED));
         iType = 0;
     }
     OVERLAPPED2(int type)
     {
+        memset(&ov, 0, sizeof(OVERLAPPED));
         iType = type;
     }
 };
@@ -34,8 +38,6 @@ public:
 
     WSABUF      m_wsaRecvBuffer;    
     WSABUF      m_wsaSendBuffer;
-    OVERLAPPED2  m_RecvOV;
-    OVERLAPPED2  m_SendOV;
 
     std::list<UPACKET>  m_RecvPacketList;
     std::list<UPACKET>  m_SendPacketList;
@@ -44,8 +46,8 @@ public:
     int     SendMsg(short type, char* msg=nullptr );
     int     SendMsg(UPACKET& packet);
     int     RecvMsg();
-    void    DispatchRead(DWORD dwTrans);
-    void    DispatchSend(DWORD dwTrans);
+    void    DispatchRead(DWORD dwTrans,OVERLAPPED2* pOV2);
+    void    DispatchSend(DWORD dwTrans,OVERLAPPED2* pOV2);
 public:
     TSessionUser()
     {

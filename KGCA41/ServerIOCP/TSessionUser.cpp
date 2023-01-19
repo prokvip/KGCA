@@ -12,11 +12,11 @@ int     TSessionUser::SendMsg(UPACKET& packet)
     m_wsaSendBuffer.buf = (char*)&packet;
     m_wsaSendBuffer.len = packet.ph.len;
 
-    ZeroMemory(&m_SendOV, sizeof(OVERLAPPED2));
-    m_SendOV.iType = OVERLAPPED2::MODE_SEND;
-
+    OVERLAPPED2* ov = new OVERLAPPED2(OVERLAPPED2::MODE_SEND);
+    
     DWORD dwSendBytes;// = send(sock, msgSend, packet.ph.len, 0);
-    int iRet = WSASend(m_Sock, &m_wsaSendBuffer, 1, &dwSendBytes, 0, &m_SendOV, NULL);
+    int iRet = WSASend(m_Sock, &m_wsaSendBuffer, 1, &dwSendBytes, 0, 
+        (OVERLAPPED*)ov, NULL);
 
     if (iRet == SOCKET_ERROR)
     {
@@ -42,15 +42,12 @@ int   TSessionUser::SendMsg(short type, char* msg)
         packet.ph.len = PACKET_HEADER_SIZE;
     }
     packet.ph.type = type;
-
+    DWORD dwSendBytes;
+    OVERLAPPED2* ov = new OVERLAPPED2(OVERLAPPED2::MODE_SEND);
     m_wsaSendBuffer.buf = (char*)&packet;
-    m_wsaSendBuffer.len = packet.ph.len;
-    
-    ZeroMemory(&m_SendOV, sizeof(OVERLAPPED2));
-    m_SendOV.iType = OVERLAPPED2::MODE_SEND;
-
-    DWORD dwSendBytes;// = send(sock, msgSend, packet.ph.len, 0);
-    int iRet = WSASend(m_Sock, &m_wsaSendBuffer, 1, &dwSendBytes, 0, &m_SendOV, NULL);
+    m_wsaSendBuffer.len = packet.ph.len; 
+    int iRet = WSASend(m_Sock, &m_wsaSendBuffer, 1, &dwSendBytes, 0, 
+        (OVERLAPPED*)ov, NULL);
 
     if (iRet == SOCKET_ERROR)
     {
@@ -65,13 +62,13 @@ int   TSessionUser::SendMsg(short type, char* msg)
 
 int   TSessionUser::RecvMsg()
 {
+    OVERLAPPED2* ov = new OVERLAPPED2(OVERLAPPED2::MODE_RECV);
     m_wsaRecvBuffer.buf = &m_szDataBuffer[m_iWritePos];
     m_wsaRecvBuffer.len = g_iMaxDataBufferSize;
-    ZeroMemory(&m_RecvOV, sizeof(OVERLAPPED2));
-    m_RecvOV.iType = OVERLAPPED2::MODE_RECV;
     DWORD dwRecvBytes;
     DWORD dwFlag = 0;
-    int iRet = WSARecv(m_Sock, &m_wsaRecvBuffer, 1, &dwRecvBytes, &dwFlag, &m_RecvOV, NULL);
+    int iRet = WSARecv(m_Sock, &m_wsaRecvBuffer, 1, &dwRecvBytes, &dwFlag, 
+        (OVERLAPPED*)ov, NULL);
 
     if (iRet == SOCKET_ERROR)
     {
@@ -84,8 +81,9 @@ int   TSessionUser::RecvMsg()
     return 1;
 }
 
-void    TSessionUser::DispatchRead(DWORD dwTrans)
+void    TSessionUser::DispatchRead(DWORD dwTrans, OVERLAPPED2* ov)
 {
+    delete ov;
     int iMaxSize = g_iMaxDataBufferSize;
     if (m_iWritePos + dwTrans >= g_iMaxDataBufferSize)
     {
@@ -129,6 +127,7 @@ void    TSessionUser::DispatchRead(DWORD dwTrans)
         }
     }
 }
-void    TSessionUser::DispatchSend(DWORD dwTrans)
+void    TSessionUser::DispatchSend(DWORD dwTrans, OVERLAPPED2* ov)
 {
+    delete ov;
 }
