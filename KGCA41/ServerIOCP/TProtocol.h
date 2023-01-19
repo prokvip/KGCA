@@ -1,5 +1,6 @@
 #pragma once
 #define PACKET_HEADER_SIZE 4
+#define PACKET_MAX_DATA_SIZE 1024
 #pragma pack(push, 1)
 	typedef struct
 	{
@@ -10,7 +11,7 @@
 	typedef struct
 	{
 		PACKET_HEADER ph;
-		char   msg[2048];
+		char   msg[PACKET_MAX_DATA_SIZE];
 	}UPACKET;
 
 	/// 대화명 입력 요청

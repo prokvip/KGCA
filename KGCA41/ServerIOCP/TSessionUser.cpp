@@ -65,8 +65,8 @@ int   TSessionUser::SendMsg(short type, char* msg)
 
 int   TSessionUser::RecvMsg()
 {
-    m_wsaRecvBuffer.buf = m_szRecvBuffer;
-    m_wsaRecvBuffer.len = sizeof(char)*255;
+    m_wsaRecvBuffer.buf = &m_szDataBuffer[m_iWritePos];
+    m_wsaRecvBuffer.len = g_iMaxDataBufferSize;
     ZeroMemory(&m_RecvOV, sizeof(OVERLAPPED2));
     m_RecvOV.iType = OVERLAPPED2::MODE_RECV;
     DWORD dwRecvBytes;
@@ -86,6 +86,7 @@ int   TSessionUser::RecvMsg()
 
 void    TSessionUser::DispatchRead(DWORD dwTrans)
 {
+    int iMaxSize = g_iMaxDataBufferSize;
     if (m_iWritePos + dwTrans >= g_iMaxDataBufferSize)
     {
         if (m_iReadPos > 0)
@@ -96,7 +97,7 @@ void    TSessionUser::DispatchRead(DWORD dwTrans)
         m_iWritePos = m_iReadPos;
     }
     // 받은 데이터 누적
-    memcpy(&m_szDataBuffer[m_iWritePos], m_szRecvBuffer, dwTrans);
+    //memcpy(&m_szDataBuffer[m_iWritePos], m_szRecvBuffer, dwTrans);
     m_iWritePos += dwTrans;// 다음에 저장되는 버퍼 주소
     m_iReadPos += dwTrans; // 받은 데이터에서 읽은 버퍼 주소
 

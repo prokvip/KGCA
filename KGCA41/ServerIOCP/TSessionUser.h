@@ -1,7 +1,8 @@
 #pragma once
 #include "TServerStd.h"
 
-#define g_iMaxDataBufferSize 255
+#define g_iMaxRecvBufferSize 256
+#define g_iMaxDataBufferSize (PACKET_MAX_DATA_SIZE+PACKET_HEADER_SIZE*2)
 
 struct OVERLAPPED2 : OVERLAPPED
 {    
@@ -24,7 +25,7 @@ public:
     SOCKADDR_IN m_Address;
     char    m_szName[9] = { 0, };
 public:
-    char    m_szRecvBuffer[g_iMaxDataBufferSize] = { 0, };
+    char    m_szRecvBuffer[g_iMaxRecvBufferSize] = { 0, };
     char    m_szDataBuffer[g_iMaxDataBufferSize] = { 0, };
     int		m_iPacketPos=0; // 其哦狼 矫累 林家
     int		m_iWritePos = 0; // 其哦 单捞磐 历厘 林家
