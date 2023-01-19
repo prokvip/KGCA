@@ -26,6 +26,7 @@ unsigned WINAPI TIocp::WorkProc(LPVOID arg)
 			if (OVERLAPPED2::MODE_RECV == pOV2->iType)
 			{
 				user->DispatchRead(dwTransfer);
+				user->RecvMsg();
 			}
 			if (OVERLAPPED2::MODE_SEND == pOV2->iType)
 			{				
@@ -35,13 +36,9 @@ unsigned WINAPI TIocp::WorkProc(LPVOID arg)
 		else
 		{
 			DWORD dwError = GetLastError();
-			if (dwError == ERROR_HANDLE_EOF)
+			if (dwError == ERROR_NETNAME_DELETED)
 			{
-				break;
-			}
-			else
-			{
-				int k = 0;
+				user->m_bDisConnect = true;
 			}
 		}
 	}

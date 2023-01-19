@@ -5,5 +5,7 @@ class TSessionMgr
 public:
 	std::list<TSessionUser*> m_SessionList;
 	TSessionUser* Add(SOCKET sock, SOCKADDR_IN address);
+	std::list<UPACKET>  m_BroadcasttingPacketList;
+	void   SendPrecess();
 };
 

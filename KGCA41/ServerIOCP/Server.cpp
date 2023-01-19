@@ -3,7 +3,7 @@
 #include "TIocp.h"
 #include "TSessionMgr.h"
 
-TSessionMgr    userlist;
+TSessionMgr    g_SessionMgr;
 
 // 시작함수
 DWORD WINAPI ServerThread(LPVOID lpThreadParameter)
@@ -24,23 +24,16 @@ DWORD WINAPI ServerThread(LPVOID lpThreadParameter)
                 {
                 case PACKET_CHAR_MSG:
                 {
-                  /*  printf("[%s]%s\n", user->m_szName,
-                        packet.msg);
-                    packet.ph.len += strlen(user->m_szName) + 2;
-                    std::string pMsg = "[";
-                    pMsg += user->m_szName;
-                    pMsg += "]";
-                    pMsg += packet.msg;
-                    ZeroMemory(packet.msg, 2048);
-                    memcpy(packet.msg, pMsg.c_str(), pMsg.size());*/
+                   printf("[%s]%s\n", pUser->m_szName, packet->msg);
+                   pMgr->m_BroadcasttingPacketList.push_back(*packet);
                 }break;
 
                 case PACKET_NAME_REQ:
                 {
-                   /* memcpy(user->m_szName,
-                        packet.msg, strlen(packet.msg));
-                    packet.ph.type = PACKET_JOIN_USER;
-                    SendMsg(user->sock, nullptr, PACKET_NAME_ACK);*/
+                    memcpy(pUser->m_szName,
+                        packet->msg, packet->ph.len- PACKET_HEADER_SIZE);
+                    packet->ph.type = PACKET_JOIN_USER;
+                    pUser->SendMsg(PACKET_NAME_ACK);
                 }break;
                 }
                 for (auto userSend = pMgr->m_SessionList.begin();
@@ -57,6 +50,22 @@ DWORD WINAPI ServerThread(LPVOID lpThreadParameter)
                 }
             }  
             pUser->m_RecvPacketList.clear();
+        }
+
+
+        pMgr->SendPrecess();
+
+        for (auto user = pMgr->m_SessionList.begin();
+            pMgr->m_SessionList.end() != user;)
+        {
+            TSessionUser* pUser = *user;
+            if (pUser->m_bDisConnect)
+            {
+                user = pMgr->m_SessionList.erase(user);
+            }else
+            {
+                user++;
+            }
         }
     }
 };
@@ -90,7 +99,7 @@ int main()
 
     DWORD dwThreadID;
     HANDLE hClient = CreateThread(0, 0, ServerThread,
-        0, 0, &dwThreadID);
+        &g_SessionMgr, 0, &dwThreadID);
 
     while (1)
     {
@@ -108,7 +117,7 @@ int main()
             inet_ntoa(clientaddr.sin_addr), ntohs(clientaddr.sin_port));
 
         
-        TSessionUser* pUser = userlist.Add(clientSock, clientaddr);
+        TSessionUser* pUser = g_SessionMgr.Add(clientSock, clientaddr);
         m_Iocp.SetBind(clientSock, (ULONG_PTR)pUser);
         pUser->SendMsg(PACKET_CHATNAME_REQ);
     }

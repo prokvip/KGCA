@@ -44,5 +44,10 @@ public:
     int     RecvMsg();
     void    DispatchRead(DWORD dwTrans);
     void    DispatchSend(DWORD dwTrans);
+public:
+    TSessionUser()
+    {
+        ZeroMemory(m_szName, sizeof(char)*1);
+    }
 };
 
