@@ -1,0 +1,53 @@
+// HLSL 
+// 정점쉐이더란 정점버퍼에 있는 모든 정점을 
+// 1번씩 작업한다.
+// 반드시 정점위치(SV_POSITION레지스터에)는 반드시 float4로 반환해야 한다.
+// POSITION(시멘틱:의미구조)
+struct VS_in
+{
+	float3 p : POSITION;
+	float4 color : COLOR;
+	float2 tex : TEXTURE;
+};
+struct VS_out
+{
+	float4 p : SV_POSITION;
+	float4 c : COLOR0; // COLOR0~COLOR1
+	float2 t : TEXCOORD0; // TEXCOORD0 ~ TEXCOORD7 (15)
+};
+VS_out VS(VS_in input) 
+{
+	VS_out output = (VS_out)0;
+	//  px,py,pz, 1.0f
+	output.p = float4(input.p,1.0f); // 수의즐링
+	output.c = input.color;
+	output.t = input.tex;
+	return output;
+}
+// 픽쉘 마다 호출된다.
+//v0-------v1
+/////////
+//////
+////
+//v2
+Texture2D    g_txTexA		: register(t0);
+Texture2D    g_txTexMaskA	: register(t1);
+SamplerState g_SampleWrap		: register(s0);
+struct PS_input
+{
+	float4 p : SV_POSITION;
+	float4 c : COLOR0; // COLOR0~COLOR1
+	float2 t : TEXCOORD0; // TEXCOORD0 ~ TEXCOORD7 (15)
+};
+// 해당 픽쉘(SV_Target레지스터에)의 컬러를 반환한다.
+float4 PS(	PS_input input) : SV_Target
+{
+	float4 vColor = g_txTexA.Sample(g_SampleWrap , input.t);	
+	float4 vMask  = g_txTexMaskA.Sample(g_SampleWrap , input.t);
+	float4 vFinalColor = vColor*input.c;
+	if( vMask.r > 0.5f)
+	{
+		discard;
+	}	
+	return vColor;
+}
