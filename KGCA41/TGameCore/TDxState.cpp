@@ -9,6 +9,7 @@ ID3D11RasterizerState* TDxState::g_pDefaultRSSolid = nullptr;
 
 ID3D11DepthStencilState* TDxState::g_pDefaultDepthStencil = nullptr;
 ID3D11DepthStencilState* TDxState::g_pGreaterDepthStencil = nullptr;
+ID3D11DepthStencilState* TDxState::g_pDisableDepthStencil = nullptr;
 bool TDxState::SetState(ID3D11Device* pd3dDevice)
 {
     HRESULT hr;
@@ -91,6 +92,8 @@ bool TDxState::SetState(ID3D11Device* pd3dDevice)
     hr=pd3dDevice->CreateDepthStencilState(&dsd, &g_pDefaultDepthStencil);
     dsd.DepthFunc = D3D11_COMPARISON_GREATER;
     hr = pd3dDevice->CreateDepthStencilState(&dsd, &g_pGreaterDepthStencil);
+    dsd.DepthEnable = FALSE;
+    hr = pd3dDevice->CreateDepthStencilState(&dsd, &g_pDisableDepthStencil);
     
 	return true;
 }
@@ -103,5 +106,6 @@ bool TDxState::Release()
     if (g_pDefaultRSWireFrame)g_pDefaultRSWireFrame->Release();
     if (g_pDefaultDepthStencil)g_pDefaultDepthStencil->Release();
     if (g_pGreaterDepthStencil)g_pGreaterDepthStencil->Release();
+    if (g_pDisableDepthStencil)g_pDisableDepthStencil->Release();
 	return true;
 }

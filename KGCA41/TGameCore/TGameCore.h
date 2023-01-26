@@ -27,6 +27,8 @@ public:
 	virtual bool		PostRender() { return true; }; // 실시간 랜더링
 	virtual bool		PostProcess() { return true; }; // 실시간 랜더링
 	virtual bool		Release() { return true; }; // 소멸 및 삭제
+
+	virtual bool		UIRender();
 public:
 	bool		TCoreInit(); // 초기화
 	bool		TCoreFrame();// 실시간 계산

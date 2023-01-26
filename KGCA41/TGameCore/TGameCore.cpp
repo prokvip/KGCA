@@ -73,6 +73,7 @@ bool		TGameCore::TCoreRender()
 	TCorePreRender();
 
 	PreRender();
+	
 	// 랜더타켓 지정
 	m_RT.m_pOldRTV = m_pRTV.Get();
 	m_RT.m_pOldDSV = m_pDepthStencilView.Get();
@@ -93,11 +94,17 @@ bool		TGameCore::TCoreRender()
 	TCorePostRender();
     return true;
 }
+bool		TGameCore::UIRender()
+{
+	return true;
+}
 bool		TGameCore::TCorePostRender()
 {
 	PostRender();
 	m_BG.SetMatrix(nullptr, nullptr, nullptr);
 	m_BG.Render();
+
+	UIRender();
 
 	I_Input.Render();
 	I_Timer.Render();

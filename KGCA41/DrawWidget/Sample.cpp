@@ -180,8 +180,9 @@ bool Sample::Frame()
 	}
 	return true;
 }
-bool Sample::Render()
+bool Sample::UIRender()
 {	
+	m_pImmediateContext->OMSetDepthStencilState(TDxState::g_pDisableDepthStencil, 0xff);
 	if (m_pTBasisUI != nullptr)	m_pTBasisUI->Render(g_fGameTimer,g_fSecondPerFrame );
 	while (!m_DrawWidgets.empty())
 	{
@@ -189,8 +190,8 @@ bool Sample::Render()
 		widget->Render();
 		m_DrawWidgets.pop();
 	}
-	
-	/*m_pListBox->Render();
+	/*m_pText->Render();
+	m_pListBox->Render();
 	m_pComboBox->Render();
 	m_pText->Render();	
 	m_pEditBox->Render();
