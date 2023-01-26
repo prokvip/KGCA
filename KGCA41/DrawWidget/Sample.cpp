@@ -182,7 +182,6 @@ bool Sample::Frame()
 }
 bool Sample::UIRender()
 {	
-	m_pImmediateContext->OMSetDepthStencilState(TDxState::g_pDisableDepthStencil, 0xff);
 	if (m_pTBasisUI != nullptr)	m_pTBasisUI->Render(g_fGameTimer,g_fSecondPerFrame );
 	while (!m_DrawWidgets.empty())
 	{

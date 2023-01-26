@@ -7,6 +7,13 @@ namespace TUI
 
     ID3D11RasterizerState* TDxStateUI::g_pUI_WireFrameRS = nullptr;
     ID3D11RasterizerState* TDxStateUI::g_pUI_SolidRS = nullptr;
+
+    ID3D11DepthStencilState* TDxStateUI::g_pDSSDepthEnable = 0;
+    ID3D11DepthStencilState* TDxStateUI::g_pDSSDepthDisable = 0;
+    ID3D11DepthStencilState* TDxStateUI::g_pDSSDepthEnableNoWrite = 0;
+    ID3D11DepthStencilState* TDxStateUI::g_pDSSDepthDisableNoWrite = 0;
+    ID3D11DepthStencilState* TDxStateUI::g_pDSSDepthAlways = 0;
+
     bool TDxStateUI::SetState(ID3D11Device* pd3dDevice)
     {
         HRESULT hr;
@@ -75,6 +82,42 @@ namespace TUI
             D3D11_COLOR_WRITE_ENABLE_ALL;
         pd3dDevice->CreateBlendState(&bd, &g_pUI_AlphaBlend);
 
+
+        // 깊이버퍼 상태값 세팅
+        D3D11_DEPTH_STENCIL_DESC dsDescDepth;
+        ZeroMemory(&dsDescDepth, sizeof(D3D11_DEPTH_STENCIL_DESC));
+        dsDescDepth.DepthEnable = TRUE;
+        dsDescDepth.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+        dsDescDepth.DepthFunc = D3D11_COMPARISON_LESS_EQUAL;
+        dsDescDepth.StencilEnable = FALSE;
+        dsDescDepth.StencilReadMask = 1;
+        dsDescDepth.StencilWriteMask = 1;
+        dsDescDepth.FrontFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
+        dsDescDepth.FrontFace.StencilPassOp = D3D11_STENCIL_OP_INCR;
+        dsDescDepth.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+        dsDescDepth.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_KEEP;
+
+        // 디폴트 값
+        dsDescDepth.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
+        dsDescDepth.BackFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+        dsDescDepth.BackFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+        dsDescDepth.BackFace.StencilDepthFailOp = D3D11_STENCIL_OP_KEEP;
+        if (FAILED(hr = pd3dDevice->CreateDepthStencilState(&dsDescDepth, &g_pDSSDepthEnable)))
+        {
+            return hr;
+        }
+        // 깊이 버퍼 비교 비 활성화.
+        dsDescDepth.DepthEnable = FALSE;
+        if (FAILED(hr = pd3dDevice->CreateDepthStencilState(&dsDescDepth, &g_pDSSDepthDisable)))
+        {
+            return hr;
+        }
+        dsDescDepth.DepthEnable = TRUE;
+        dsDescDepth.DepthFunc = D3D11_COMPARISON_ALWAYS;//DepthEnable = TRUE 이어야 한다.
+        if (FAILED(hr = pd3dDevice->CreateDepthStencilState(&dsDescDepth, &g_pDSSDepthAlways)))
+        {
+            return hr;
+        }
         return true;
     }
     bool TDxStateUI::Release()
@@ -104,6 +147,32 @@ namespace TUI
             g_pUI_WireFrameRS->Release();
             g_pUI_WireFrameRS = nullptr;
         }
+        if (g_pDSSDepthEnable)
+        {
+            g_pDSSDepthEnable->Release();
+            g_pDSSDepthEnable = nullptr;
+        }
+        if (g_pDSSDepthDisable)
+        {
+            g_pDSSDepthDisable->Release();
+            g_pDSSDepthDisable = nullptr;
+        }
+        if (g_pDSSDepthEnableNoWrite)
+        {
+            g_pDSSDepthEnableNoWrite->Release();
+            g_pDSSDepthEnableNoWrite = nullptr;
+        }
+        if (g_pDSSDepthDisableNoWrite)
+        {
+            g_pDSSDepthDisableNoWrite->Release();
+            g_pDSSDepthDisableNoWrite = nullptr;
+        }
+        if (g_pDSSDepthAlways)
+        {
+            g_pDSSDepthAlways->Release();
+            g_pDSSDepthAlways = nullptr;
+        }
+
         return true;
     }
 };
