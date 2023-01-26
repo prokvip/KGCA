@@ -1,6 +1,7 @@
 #pragma once
 #include <windows.h>
 #include <vector>
+#include <list>
 #include <set>
 #include <iostream>
 struct TIndex
@@ -22,7 +23,8 @@ struct TIndex
 namespace AStar
 {
 	using uint = unsigned int;
-	using pathlist = std::vector<TIndex>;
+	using pathlist = std::list<TIndex>;
+	using pathvector = std::vector<TIndex>;
 	
 	struct Node
 	{
@@ -47,8 +49,8 @@ namespace AStar
 	private:
 		TIndex  m_WorldSize;
 		uint    m_Direction;
-		pathlist m_Direction8;
-		pathlist m_Walls;
+		pathvector m_Direction8;
+		pathvector m_Walls;
 	public:
 		void SetWorldSize(TIndex ws);
 		void AddColision(TIndex ws);

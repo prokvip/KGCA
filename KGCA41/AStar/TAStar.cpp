@@ -84,7 +84,7 @@ namespace AStar
 		pathlist path;
 		while (current != nullptr)
 		{
-			path.push_back(current->index);
+			path.push_front(current->index);
 			current = current->parent;
 		}
 		DeleteNodes(openSet);
