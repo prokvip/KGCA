@@ -27,6 +27,9 @@
     <ClCompile Include="TFiniteState.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="TPlayer.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TNpc.h">
@@ -36,6 +39,9 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="TFiniteState.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="TPlayer.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

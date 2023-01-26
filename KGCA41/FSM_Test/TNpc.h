@@ -4,12 +4,13 @@
 #include <iostream>
 #include "TFsm.h"
 class TNpc;
+class TPlayer;
 class TNpcState
 {
 public:
 	TNpc* m_pOwner = nullptr;
 public:
-	virtual void Process() = 0;
+	virtual void Process(TPlayer* player) = 0;
 	TNpcState() = delete;
 	TNpcState(TNpc* npc)
 	{
@@ -19,7 +20,7 @@ public:
 class TStandState : public TNpcState
 {
 public:
-	virtual void Process();
+	virtual void Process(TPlayer* player);
 	TStandState() = delete;
 	TStandState(TNpc* npc) : TNpcState(npc)
 	{	
@@ -28,7 +29,7 @@ public:
 class TMoveState : public TNpcState
 {
 public:
-	virtual void Process();
+	virtual void Process(TPlayer* player);
 	TMoveState() = delete;
 	TMoveState(TNpc* npc) : TNpcState(npc)
 	{
@@ -37,7 +38,7 @@ public:
 class TAttackState : public TNpcState
 {
 public:
-	virtual void Process();
+	virtual void Process(TPlayer* player);
 	TAttackState() = delete;
 	TAttackState(TNpc* npc) : TNpcState(npc)
 	{
@@ -50,7 +51,7 @@ class TNpc
 public:
 	TNpcState* m_pCurentState=nullptr;
 	std::vector< TNpcState*> m_pActionList;
-	void Process();
+	void Process(TPlayer* player);
 	void SetTransition(DWORD dwEvent);
 public:
 	TNpc(TFsm* fsm);

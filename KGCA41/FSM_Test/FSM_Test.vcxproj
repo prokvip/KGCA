@@ -145,11 +145,13 @@
     <ClCompile Include="TFiniteState.cpp" />
     <ClCompile Include="TFsm.cpp" />
     <ClCompile Include="TNpc.cpp" />
+    <ClCompile Include="TPlayer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TFiniteState.h" />
     <ClInclude Include="TFsm.h" />
     <ClInclude Include="TNpc.h" />
+    <ClInclude Include="TPlayer.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

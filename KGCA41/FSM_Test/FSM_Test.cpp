@@ -4,6 +4,7 @@
 #include <iostream>
 #include "TFsm.h"
 #include "TNpc.h"
+#include "TPlayer.h"
 // 현재상태         이벤트				전이상태
 // STAND         EVENT_TIMEMOVE           MOVE
 // STAND         EVENT_POINTMOVE          MOVE
@@ -19,10 +20,11 @@ int main()
     fsm.AddTransition(STATE_ATTACK,EVENT_LOSTTARGET,STATE_STAND);
     std::cout << "Hello World!\n";
 
+    TPlayer player;
     TNpc npc(&fsm);
     while (1)
     {
-        npc.Process();
+        npc.Process(&player);
         Sleep(1000);
     }
 }

@@ -1,5 +1,6 @@
 #include "TNpc.h"
-void TStandState::Process()
+#include "TPlayer.h"
+void TStandState::Process(TPlayer* player)
 {
 	std::cout << "TStandState!\n";
 	if (rand() % 2 == 0)
@@ -11,7 +12,7 @@ void TStandState::Process()
 		m_pOwner->SetTransition(EVENT_FINDTARGET);
 	}
 }
-void TMoveState::Process()
+void TMoveState::Process(TPlayer* player)
 {
 	std::cout << "TMoveState!\n";
 	if (rand() % 100 < 5)
@@ -19,7 +20,7 @@ void TMoveState::Process()
 		m_pOwner->SetTransition(EVENT_STOPMOVE);
 	}
 }
-void TAttackState::Process()
+void TAttackState::Process(TPlayer* player)
 {
 	std::cout << "TAttackState!\n";
 	if (rand() % 100 < 5)
@@ -36,9 +37,9 @@ TNpc::TNpc(TFsm* fsm)
 	m_pCurentState = m_pActionList[0];
 	m_dwState = STATE_STAND;
 }
-void TNpc::Process()
+void TNpc::Process(TPlayer* player)
 {
-	m_pCurentState->Process();
+	m_pCurentState->Process(player);
 }
 void TNpc::SetTransition(DWORD dwEvent)
 {
