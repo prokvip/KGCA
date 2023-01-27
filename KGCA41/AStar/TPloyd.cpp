@@ -42,7 +42,10 @@ namespace TPloyd
 				{
 					if (m_AllNodeList[newIndex.y * m_WorldSize.x + newIndex.x] == 1)
 					{
-						cost[newIndex.y * m_WorldSize.x + newIndex.x] = 1;
+						if( i < 4)
+							cost[newIndex.y * m_WorldSize.x + newIndex.x] = 10;
+						else
+							cost[newIndex.y * m_WorldSize.x + newIndex.x] = 14;
 					}
 				}
 			}
