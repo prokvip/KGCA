@@ -3,9 +3,11 @@
 
 
 #include "TAStar.h"
+#include "TPloyd.h"
 int main()
 {
-    AStar::TMapGenerator gen;
+    //AStar::TMapGenerator gen;
+    TPloyd::TMapGenerator gen;
     gen.SetWorldSize({ 8, 5 });
     //                x, y
     gen.AddColision({ 1, 1 });
@@ -17,6 +19,9 @@ int main()
     gen.AddColision({ 4, 3 });
     gen.AddColision({ 2, 3 });
     gen.AddColision({ 3, 3 });
+
+    gen.Initialize();
+    gen.AllPathGenerator();
 
     auto path = gen.findpath({2,2}, {6,2});
 

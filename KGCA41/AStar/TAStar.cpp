@@ -1,12 +1,13 @@
 #include "TAStar.h"
+
 namespace AStar
 {
 	TMapGenerator::TMapGenerator()
 	{
-		m_Direction8.push_back({ 0,-1 });
-		m_Direction8.push_back({ 0,+1 });
-		m_Direction8.push_back({ -1,0 });
-		m_Direction8.push_back({ +1,0 });
+		m_Direction8.push_back({ 0,-1 });// 상
+		m_Direction8.push_back({ 0,+1 });// 하
+		m_Direction8.push_back({ -1,0 });// 서
+		m_Direction8.push_back({ +1,0 });// 동
 
 		m_Direction8.push_back({-1,-1});		
 		m_Direction8.push_back({ +1,-1 });

@@ -143,9 +143,12 @@
   <ItemGroup>
     <ClCompile Include="Sample.cpp" />
     <ClCompile Include="TAStar.cpp" />
+    <ClCompile Include="TPloyd.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TAStar.h" />
+    <ClInclude Include="TPathStd.h" />
+    <ClInclude Include="TPloyd.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
