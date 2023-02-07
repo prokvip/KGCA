@@ -16,6 +16,9 @@
     <Filter Include="MFC">
       <UniqueIdentifier>{f95f71b0-a875-4223-a087-14e76f880a91}</UniqueIdentifier>
     </Filter>
+    <Filter Include="PaneWindow">
+      <UniqueIdentifier>{85ae86c8-c50a-4f78-9df7-14328128f10e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Sample.h">
@@ -75,6 +78,12 @@
     <ClInclude Include="TCreateMapDlg.h">
       <Filter>MFC</Filter>
     </ClInclude>
+    <ClInclude Include="TMapCtrl.h">
+      <Filter>PaneWindow</Filter>
+    </ClInclude>
+    <ClInclude Include="TPaneWindowMap.h">
+      <Filter>PaneWindow</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Sample.cpp">
@@ -130,6 +139,12 @@
     </ClCompile>
     <ClCompile Include="TCreateMapDlg.cpp">
       <Filter>MFC</Filter>
+    </ClCompile>
+    <ClCompile Include="TMapCtrl.cpp">
+      <Filter>PaneWindow</Filter>
+    </ClCompile>
+    <ClCompile Include="TPaneWindowMap.cpp">
+      <Filter>PaneWindow</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

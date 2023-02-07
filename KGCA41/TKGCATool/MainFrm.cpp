@@ -149,6 +149,30 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 	CMFCToolBar::SetBasicCommands(lstBasicCommands);
 
+	/// <summary>
+	/// 페인윈도우 생성
+	/// </summary>
+	/// <param name="lpCreateStruct"></param>
+	/// <returns></returns>
+	DWORD dwStyle = WS_CHILD | WS_VISIBLE |
+					WS_CLIPSIBLINGS | WS_CLIPCHILDREN |
+					CBRS_LEFT | CBRS_FLOAT_MULTI;
+	DWORD dwID = 0;
+	m_TabbedPane.CreateEx(NULL, L"TAB", this,
+		CRect(0, 0, 100, 100),
+		TRUE,
+		dwID, dwStyle);
+	m_TabbedPane.EnableDocking(CBRS_ALIGN_ANY);
+	DockPane(&m_TabbedPane);
+
+	m_PaneMap.CreateEx(NULL, L"지형컨트럴", this, 
+		CRect(0,0,300,300), 
+		TRUE, 
+		dwID, dwStyle);
+	m_PaneMap.EnableDocking(CBRS_ALIGN_ANY);
+	DockPane(&m_PaneMap);
+
+	m_TabbedPane.AddTab(&m_PaneMap);
 	return 0;
 }
 

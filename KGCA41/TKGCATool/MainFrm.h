@@ -3,7 +3,8 @@
 //
 
 #pragma once
-#include "TCreateMapDlg.h""
+#include "TCreateMapDlg.h"
+#include "TPaneWindowMap.h"
 class CMainFrame : public CFrameWndEx
 {
 	
@@ -17,6 +18,8 @@ public:
 // 작업입니다.
 public:
 	TCreateMapDlg	m_MapDlg;
+	TPaneWindowMap  m_PaneMap;
+	CTabbedPane     m_TabbedPane;
 // 재정의입니다.
 public:
 	virtual BOOL PreCreateWindow(CREATESTRUCT& cs);

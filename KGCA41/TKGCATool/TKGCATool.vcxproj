@@ -202,8 +202,10 @@
     <ClInclude Include="TKGCAToolDoc.h" />
     <ClInclude Include="TKGCAToolView.h" />
     <ClInclude Include="TMap.h" />
+    <ClInclude Include="TMapCtrl.h" />
     <ClInclude Include="TMatrix.h" />
     <ClInclude Include="TNode.h" />
+    <ClInclude Include="TPaneWindowMap.h" />
     <ClInclude Include="TQuadtree.h" />
     <ClInclude Include="TSceneInGame.h" />
     <ClInclude Include="TSceneTitle.h" />
@@ -227,8 +229,10 @@
     <ClCompile Include="TKGCAToolDoc.cpp" />
     <ClCompile Include="TKGCAToolView.cpp" />
     <ClCompile Include="TMap.cpp" />
+    <ClCompile Include="TMapCtrl.cpp" />
     <ClCompile Include="TMatrix.cpp" />
     <ClCompile Include="TNode.cpp" />
+    <ClCompile Include="TPaneWindowMap.cpp" />
     <ClCompile Include="TQuadtree.cpp" />
     <ClCompile Include="TSceneInGame.cpp" />
     <ClCompile Include="TSceneTitle.cpp" />
