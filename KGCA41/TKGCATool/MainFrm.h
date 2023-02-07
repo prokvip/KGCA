@@ -5,6 +5,7 @@
 #pragma once
 #include "TCreateMapDlg.h"
 #include "TPaneWindowMap.h"
+#include "TPaneWindowUI.h"
 class CMainFrame : public CFrameWndEx
 {
 	
@@ -19,6 +20,7 @@ public:
 public:
 	TCreateMapDlg	m_MapDlg;
 	TPaneWindowMap  m_PaneMap;
+	TPaneWindowUI	m_PaneUI;
 	CTabbedPane     m_TabbedPane;
 // 재정의입니다.
 public:

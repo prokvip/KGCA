@@ -147,10 +147,11 @@ bool Sample::Frame()
 }
 bool Sample::Render()
 {		
-	if (I_Input.GetKey('V') == KEY_HOLD)
-	{
+	if (m_bWireFrame)
 		m_pImmediateContext->RSSetState(TDxState::g_pDefaultRSWireFrame);
-	}
+	else
+		m_pImmediateContext->RSSetState(TDxState::g_pDefaultRSSolid);
+
 	TSceneTitle* pScene = (TSceneTitle*)m_pCurrentScene.get();
 
 	TVector3 vLight(0, 0, 1);
@@ -176,8 +177,7 @@ bool Sample::Render()
 	matWorld._43 = pScene->m_pUser->m_vPos.z;
 	m_UserCharacter->SetMatrix(&matWorld, &pScene->m_pMainCamera->m_matView, &pScene->m_pMainCamera->m_matProj);
 	m_UserCharacter->Render(m_pImmediateContext.Get());
-	m_pImmediateContext->RSSetState(TDxState::g_pDefaultRSSolid);
-
+	
 	m_pImmediateContext->OMSetDepthStencilState(TDxState::g_pDefaultDepthStencil, 0xff);
 	
 	pScene->m_pMap->SetMatrix(nullptr,

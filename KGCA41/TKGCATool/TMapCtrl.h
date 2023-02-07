@@ -8,6 +8,7 @@ class TMapCtrl : public CFormView
 {
 	DECLARE_DYNCREATE(TMapCtrl)
 public:
+	std::vector<T_STR>  m_objList;
 	static TMapCtrl* CreateFormView(CWnd* pParent);
 protected:
 	TMapCtrl();           // 동적 만들기에 사용되는 protected 생성자입니다.
@@ -32,6 +33,13 @@ public:
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
 	afx_msg void OnBnClickedOk();
 	afx_msg void OnBnClickedCheck1();
+	BOOL m_bWireFrame;
+	afx_msg void OnBnClickedCheck2();
+	CListBox m_TextureList;
+	virtual void OnInitialUpdate();
+	afx_msg void OnLbnSelchangeList1();
+
+	void Recurse(LPCTSTR pstr);
 };
 
 

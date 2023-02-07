@@ -206,9 +206,11 @@
     <ClInclude Include="TMatrix.h" />
     <ClInclude Include="TNode.h" />
     <ClInclude Include="TPaneWindowMap.h" />
+    <ClInclude Include="TPaneWindowUI.h" />
     <ClInclude Include="TQuadtree.h" />
     <ClInclude Include="TSceneInGame.h" />
     <ClInclude Include="TSceneTitle.h" />
+    <ClInclude Include="TUIDlg.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MainFrm.cpp" />
@@ -233,9 +235,11 @@
     <ClCompile Include="TMatrix.cpp" />
     <ClCompile Include="TNode.cpp" />
     <ClCompile Include="TPaneWindowMap.cpp" />
+    <ClCompile Include="TPaneWindowUI.cpp" />
     <ClCompile Include="TQuadtree.cpp" />
     <ClCompile Include="TSceneInGame.cpp" />
     <ClCompile Include="TSceneTitle.cpp" />
+    <ClCompile Include="TUIDlg.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="TKGCATool.rc" />

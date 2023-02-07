@@ -73,24 +73,29 @@ bool		TGameCore::TCoreRender()
 	TCorePreRender();
 
 	PreRender();
-	
-	// 랜더타켓 지정
-	m_RT.m_pOldRTV = m_pRTV.Get();
-	m_RT.m_pOldDSV = m_pDepthStencilView.Get();
-	m_RT.m_vpOld[0] = m_vp;
-	//ID3D11DeviceContext::OMSetRenderTargets: Resource being set to OM RenderTarget slot 0 is still bound on input
-	if (m_RT.Begin(m_pImmediateContext.Get()))
+	if (m_bUsedRT)
+	{
+		// 랜더타켓 지정
+		m_RT.m_pOldRTV = m_pRTV.Get();
+		m_RT.m_pOldDSV = m_pDepthStencilView.Get();
+		m_RT.m_vpOld[0] = m_vp;
+		//ID3D11DeviceContext::OMSetRenderTargets: Resource being set to OM RenderTarget slot 0 is still bound on input
+		if (m_RT.Begin(m_pImmediateContext.Get()))
+		{
+			Render();
+			m_RT.End(m_pImmediateContext.Get());
+		}
+
+		if (m_RT.m_pSRV)
+		{
+			//m_BG.m_pTextureSRV = m_RT.m_pDsvSRV.Get();
+			m_BG.m_pTextureSRV = m_RT.m_pSRV.Get();
+		}
+	}
+	else
 	{
 		Render();
-		m_RT.End(m_pImmediateContext.Get());
 	}
-
-	if (m_RT.m_pSRV)
-	{
-		//m_BG.m_pTextureSRV = m_RT.m_pDsvSRV.Get();
-		m_BG.m_pTextureSRV = m_RT.m_pSRV.Get();
-	}	
-		
 	TCorePostRender();
     return true;
 }
@@ -101,8 +106,11 @@ bool		TGameCore::UIRender()
 bool		TGameCore::TCorePostRender()
 {
 	PostRender();
-	m_BG.SetMatrix(nullptr, nullptr, nullptr);
-	m_BG.Render();
+	if (m_bUsedRT)
+	{
+		m_BG.SetMatrix(nullptr, nullptr, nullptr);
+		m_BG.Render();
+	}
 
 	UIRender();
 

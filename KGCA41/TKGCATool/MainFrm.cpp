@@ -159,7 +159,7 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 					CBRS_LEFT | CBRS_FLOAT_MULTI;
 	DWORD dwID = 0;
 	m_TabbedPane.CreateEx(NULL, L"TAB", this,
-		CRect(0, 0, 100, 100),
+		CRect(0, 0, 300, 300),
 		TRUE,
 		dwID, dwStyle);
 	m_TabbedPane.EnableDocking(CBRS_ALIGN_ANY);
@@ -172,7 +172,15 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	m_PaneMap.EnableDocking(CBRS_ALIGN_ANY);
 	DockPane(&m_PaneMap);
 
+	m_PaneUI.CreateEx(NULL, L"인터페이스", this,
+		CRect(0, 0, 300, 300),
+		TRUE,
+		5554, dwStyle);
+	m_PaneUI.EnableDocking(CBRS_ALIGN_ANY);
+	DockPane(&m_PaneUI);
+
 	m_TabbedPane.AddTab(&m_PaneMap);
+	m_TabbedPane.AddTab(&m_PaneUI);
 	return 0;
 }
 

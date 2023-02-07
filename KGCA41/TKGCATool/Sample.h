@@ -20,6 +20,8 @@ public:
 	std::vector< TCharacter*> m_NpcList;
 	TCharacter* m_UserCharacter;
 public:
+	bool		m_bWireFrame = false;
+public:
 	virtual bool		Init() override;
 	virtual bool		Frame() override;
 	virtual bool		Render() override;

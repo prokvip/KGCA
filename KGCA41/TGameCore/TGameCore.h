@@ -15,7 +15,9 @@ public:
 	TWriter				m_Writer;
 	TBaseObject			m_BG;
 	TRenderTarget		m_RT;
-	bool m_bGameRun = true;
+	bool				m_bUsedRT=false;
+	bool				m_bGameRun = true;
+
 public:
 	virtual bool		Init() {return true;}; // 초기화
 	virtual bool		PreProcess() { return true; }; // 실시간 랜더링

@@ -84,6 +84,12 @@
     <ClInclude Include="TPaneWindowMap.h">
       <Filter>PaneWindow</Filter>
     </ClInclude>
+    <ClInclude Include="TUIDlg.h">
+      <Filter>PaneWindow</Filter>
+    </ClInclude>
+    <ClInclude Include="TPaneWindowUI.h">
+      <Filter>PaneWindow</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Sample.cpp">
@@ -144,6 +150,12 @@
       <Filter>PaneWindow</Filter>
     </ClCompile>
     <ClCompile Include="TPaneWindowMap.cpp">
+      <Filter>PaneWindow</Filter>
+    </ClCompile>
+    <ClCompile Include="TUIDlg.cpp">
+      <Filter>PaneWindow</Filter>
+    </ClCompile>
+    <ClCompile Include="TPaneWindowUI.cpp">
       <Filter>PaneWindow</Filter>
     </ClCompile>
   </ItemGroup>
