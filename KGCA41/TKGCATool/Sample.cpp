@@ -204,12 +204,17 @@ bool Sample::Release()
 		fbx->Release();
 		delete fbx;
 	}
-	m_UserCharacter->Release();
-	delete m_UserCharacter;
+	if (m_UserCharacter)
+	{
+		m_UserCharacter->Release();
+		delete m_UserCharacter;
+	}
 
 	m_DirLine.Release();
-	m_pTitle->Release();
-	m_pInGame->Release();
+	if(m_pTitle!=nullptr)m_pTitle->Release();
+	if(m_pInGame != nullptr)m_pInGame->Release();
+
+	
 	return true;
 }
 HRESULT Sample::CreateDXResource()

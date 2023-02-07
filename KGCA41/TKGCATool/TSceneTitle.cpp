@@ -90,11 +90,25 @@ bool TSceneTitle::Render()
 }
 bool TSceneTitle::Release()
 {
-	m_pBG->Release();	
-	m_pUser->Release();
-	delete m_pUser;
-
-	m_pMap->Release();
-	delete m_pMap;
+	if (m_pBG)
+	{
+		m_pBG->Release();
+		delete m_pBG;
+	}
+	if (m_pUser)
+	{
+		m_pUser->Release();
+		delete m_pUser;
+	}
+	if (m_pMap)
+	{
+		m_pMap->Release();
+		delete m_pMap;
+	}
+	if (m_pMainCamera)
+	{
+		m_pMainCamera->Release();
+		delete m_pMainCamera;
+	}
 	return true;
 }

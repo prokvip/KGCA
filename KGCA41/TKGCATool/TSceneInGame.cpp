@@ -119,7 +119,7 @@ bool TSceneInGame::Init()
 	m_pUser->SetPosition({ 0.0f,0.0f });
 
 	m_vCamera = m_pUser->m_vPos;
-	//m_vCamera.y -= 200.0f;
+	m_vCamera.y -= 200.0f;
 
 	for (int iNpc = 0; iNpc < 100; iNpc++)
 	{
@@ -345,13 +345,18 @@ void TSceneInGame::DrawMiniMap(UINT x, UINT y, UINT w, UINT h)
 }
 bool TSceneInGame::Release()
 {
-	m_pMap->Release();
-	delete m_pMap;
-	m_pMap = nullptr;
-
-	m_pUser->Release();
-	delete m_pUser;
-	m_pUser = nullptr;
+	if (m_pMap)
+	{
+		m_pMap->Release();
+		delete m_pMap;
+		m_pMap = nullptr;
+	}
+	if (m_pUser)
+	{
+		m_pUser->Release();
+		delete m_pUser;
+		m_pUser = nullptr;
+	}
 
 	for (auto data : m_pNpcList)
 	{
