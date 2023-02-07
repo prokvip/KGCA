@@ -3,7 +3,7 @@
 //
 
 #pragma once
-
+#include "TCreateMapDlg.h""
 class CMainFrame : public CFrameWndEx
 {
 	
@@ -16,7 +16,7 @@ public:
 
 // 작업입니다.
 public:
-
+	TCreateMapDlg	m_MapDlg;
 // 재정의입니다.
 public:
 	virtual BOOL PreCreateWindow(CREATESTRUCT& cs);
@@ -45,6 +45,8 @@ protected:
 	afx_msg void OnUpdateApplicationLook(CCmdUI* pCmdUI);
 	DECLARE_MESSAGE_MAP()
 
+public:
+	afx_msg void OnCreateMap();
 };
 
 
