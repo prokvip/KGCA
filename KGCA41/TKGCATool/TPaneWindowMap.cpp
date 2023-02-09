@@ -46,7 +46,7 @@ int TPaneWindowMap::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	if (CDockablePane::OnCreate(lpCreateStruct) == -1)
 		return -1;
 	
-	m_wndForm = TMapCtrl::CreateFormView(this);
+	m_wndForm = TMapGen::CreateFormView(this);
 	return 0;
 }
 

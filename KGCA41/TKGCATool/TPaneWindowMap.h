@@ -1,13 +1,13 @@
 #pragma once
 
-#include "TMapCtrl.h"
+#include "TMapGen.h"
 // TPaneWindowMap
 
 class TPaneWindowMap : public CDockablePane
 {
 	DECLARE_DYNAMIC(TPaneWindowMap)
 public:
-	TMapCtrl*		m_wndForm=nullptr;
+	TMapGen*		m_wndForm=nullptr;
 public:
 	TPaneWindowMap();
 	virtual ~TPaneWindowMap();

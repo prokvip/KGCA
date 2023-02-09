@@ -78,9 +78,6 @@
     <ClInclude Include="TCreateMapDlg.h">
       <Filter>MFC</Filter>
     </ClInclude>
-    <ClInclude Include="TMapCtrl.h">
-      <Filter>PaneWindow</Filter>
-    </ClInclude>
     <ClInclude Include="TPaneWindowMap.h">
       <Filter>PaneWindow</Filter>
     </ClInclude>
@@ -88,6 +85,9 @@
       <Filter>PaneWindow</Filter>
     </ClInclude>
     <ClInclude Include="TPaneWindowUI.h">
+      <Filter>PaneWindow</Filter>
+    </ClInclude>
+    <ClInclude Include="TMapGen.h">
       <Filter>PaneWindow</Filter>
     </ClInclude>
   </ItemGroup>
@@ -146,9 +146,6 @@
     <ClCompile Include="TCreateMapDlg.cpp">
       <Filter>MFC</Filter>
     </ClCompile>
-    <ClCompile Include="TMapCtrl.cpp">
-      <Filter>PaneWindow</Filter>
-    </ClCompile>
     <ClCompile Include="TPaneWindowMap.cpp">
       <Filter>PaneWindow</Filter>
     </ClCompile>
@@ -156,6 +153,9 @@
       <Filter>PaneWindow</Filter>
     </ClCompile>
     <ClCompile Include="TPaneWindowUI.cpp">
+      <Filter>PaneWindow</Filter>
+    </ClCompile>
+    <ClCompile Include="TMapGen.cpp">
       <Filter>PaneWindow</Filter>
     </ClCompile>
   </ItemGroup>

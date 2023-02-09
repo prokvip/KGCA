@@ -30,12 +30,11 @@
 #define ID_VIEW_APPLOOK_WINDOWS_7       219
 #define IDS_EDIT_MENU                   306
 #define IDD_CREATE_MAP_DLG              310
-#define IDD_MAP_CTL                     312
 #define IDD_UI_DLG                      314
+#define IDD_DIALOG1                     322
 #define IDC_OPENFILE_DLG                1001
-#define IDC_CHECK2                      1003
-#define IDC_WIREFRAME                   1003
-#define IDC_LIST1                       1004
+#define IDC_EDIT1                       1013
+#define IDC_EDIT2                       1015
 #define ID_32771                        32771
 #define ID_CREATE_MAP                   32772
 
@@ -43,9 +42,9 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        316
+#define _APS_NEXT_RESOURCE_VALUE        324
 #define _APS_NEXT_COMMAND_VALUE         32773
-#define _APS_NEXT_CONTROL_VALUE         1005
+#define _APS_NEXT_CONTROL_VALUE         1017
 #define _APS_NEXT_SYMED_VALUE           310
 #endif
 #endif

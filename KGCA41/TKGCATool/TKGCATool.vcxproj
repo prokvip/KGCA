@@ -202,7 +202,7 @@
     <ClInclude Include="TKGCAToolDoc.h" />
     <ClInclude Include="TKGCAToolView.h" />
     <ClInclude Include="TMap.h" />
-    <ClInclude Include="TMapCtrl.h" />
+    <ClInclude Include="TMapGen.h" />
     <ClInclude Include="TMatrix.h" />
     <ClInclude Include="TNode.h" />
     <ClInclude Include="TPaneWindowMap.h" />
@@ -231,7 +231,7 @@
     <ClCompile Include="TKGCAToolDoc.cpp" />
     <ClCompile Include="TKGCAToolView.cpp" />
     <ClCompile Include="TMap.cpp" />
-    <ClCompile Include="TMapCtrl.cpp" />
+    <ClCompile Include="TMapGen.cpp" />
     <ClCompile Include="TMatrix.cpp" />
     <ClCompile Include="TNode.cpp" />
     <ClCompile Include="TPaneWindowMap.cpp" />
