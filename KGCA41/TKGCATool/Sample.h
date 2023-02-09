@@ -24,6 +24,7 @@ public:
 public:
 	bool		CreateMapData(UINT iColumn = 257, UINT iRows = 257);
 	bool		CreateFbxLoader();
+	bool		LoadFbx(T_STR filepath);
 public:
 	virtual bool		Init() override;
 	virtual bool		Frame() override;

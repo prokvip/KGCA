@@ -118,10 +118,17 @@ bool TQuadtree::Render()
 {
     for (auto node : m_pDrawLeafNodeList)
     {
+
         m_pMap->PreRender();
         m_pMap->m_pImmediateContext->IASetIndexBuffer(
             node->m_pIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
         m_pMap->m_pImmediateContext->DrawIndexed(node->m_dwFace * 3, 0, 0);
+
+        for (auto fbx : node->m_pDynamicObjectlist)
+        {
+            fbx->SetMatrix(nullptr, &m_pMap->m_matView, &m_pMap->m_matProj);
+            fbx->Render();
+        }
     }
     return true;
 }

@@ -8,9 +8,10 @@ class TMapGen : public CFormView
 {
 	DECLARE_DYNCREATE(TMapGen)
 public:
-	void Recurse(LPCTSTR pstr);
+	void Recurse(LPCTSTR pstr, LPCTSTR ext, std::vector<T_STR>& list);
 public:
-	std::vector<T_STR>  m_objList;
+	std::vector<T_STR>  m_TextureNameList;
+	std::vector<T_STR>  m_ObjectNameList;
 	static TMapGen* CreateFormView(CWnd* pParent);
 protected:
 	TMapGen();           // 동적 만들기에 사용되는 protected 생성자입니다.
@@ -32,9 +33,18 @@ protected:
 
 	DECLARE_MESSAGE_MAP()
 public:
-	UINT m_iCols;
+	UINT m_iCols = 65;
 	afx_msg void OnBnClickedButton1();
-	UINT m_iRows;
+	UINT m_iRows =65;
+	BOOL m_bWireFrame=FALSE;
+	CListBox m_TextureList;
+	afx_msg void OnLbnSelchangeList1();
+	virtual void OnInitialUpdate();
+	virtual void OnFinalRelease();
+	afx_msg void OnBnClickedWireframe();
+	CString m_strSelectObject;
+	CListBox m_ObjectList;
+	afx_msg void OnLbnSelchangeObject();
 };
 
 

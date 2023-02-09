@@ -69,7 +69,7 @@ bool TSceneTitle::Init()
 	m_pBG->Create(m_pd3dDevice,m_pImmediateContext,shaderfilename,L"../../data/gameHeight.png");
 		
 	m_pMainCamera = new TCamera;
-	TVector3 vCamera = TVector3(0, 50, -30);
+	TVector3 vCamera = TVector3(0, 10, -10);
 	TVector3 vTarget = TVector3(0, 0, 0);
 	if (m_pUser)
 	{

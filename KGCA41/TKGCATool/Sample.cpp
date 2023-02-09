@@ -14,16 +14,47 @@ bool Sample::CreateMapData(UINT iColumn, UINT iRows)
 	}	
 	return true;
 }
-bool Sample::CreateFbxLoader()
+bool Sample::LoadFbx(T_STR filepath)
 {
-	if (m_pTitle)
+	TFbxFile* pFbxFile = new TFbxFile;
+	if (pFbxFile->Init())
 	{
-		m_pTitle->CreateMap();
-		m_Quadtree.Create(
-			((TSceneTitle*)m_pCurrentScene.get())->m_pMainCamera,
-			((TSceneTitle*)m_pCurrentScene.get())->m_pMap);
+		if (pFbxFile->Load(to_wm(filepath)))
+		{
+			pFbxFile->CreateConstantBuffer(m_pd3dDevice.Get());
+		}
+	}
+	m_fbxList.push_back(pFbxFile);
+
+	W_STR szDefaultDir = L"../../data/fbx/";
+	std::wstring fbxShaderfilename = L"Skinning.txt";
+	for (int iObj = 0; iObj < pFbxFile->m_pDrawObjList.size(); iObj++)
+	{
+		TFbxObject* pObj = pFbxFile->m_pDrawObjList[iObj];
+		std::wstring  szLoad = szDefaultDir + pObj->m_szTextureName;
+		pObj->Create(m_pd3dDevice.Get(), m_pImmediateContext.Get(), 
+					fbxShaderfilename, szLoad);
 	}
 
+	TCharacter* pNpc = new TCharacter;
+	pNpc->m_iFbxListID = m_fbxList.size()-1;
+	pNpc->m_pFbxFile = m_fbxList[pNpc->m_iFbxListID];
+	///pNpc->m_matWorld._41 = -4.0f + iObj * 2;
+	pNpc->m_AnimScene = pNpc->m_pFbxFile->m_AnimScene;
+	pNpc->CreateConstantBuffer(m_pd3dDevice.Get());
+	TActionTable action;
+	action.iStartFrame = 61;
+	action.iEndFrame = 91;
+	action.bLoop = true;
+	pNpc->m_ActionList.insert(std::make_pair(L"walk", action));
+	pNpc->m_ActionCurrent = pNpc->m_ActionList.find(L"walk")->second;
+
+	m_NpcList.push_back(pNpc);
+	//m_Quadtree.AddObject((TObject3D*)pFbxFile);
+	return true;
+}
+bool Sample::CreateFbxLoader()
+{
 	TFbxFile* pFbxLoaderD = new TFbxFile;
 	if (pFbxLoaderD->Init())
 	{
@@ -203,7 +234,7 @@ bool Sample::Render()
 	}
 	for (int iNpc = 0; iNpc < m_NpcList.size(); iNpc++)
 	{
-		matWorld._41 += iNpc * 10.0f;
+		matWorld._41 += iNpc * 1.0f;
 		m_NpcList[iNpc]->SetMatrix(&matWorld, &pScene->m_pMainCamera->m_matView, &pScene->m_pMainCamera->m_matProj);
 		m_NpcList[iNpc]->Render(m_pImmediateContext.Get());
 	}
