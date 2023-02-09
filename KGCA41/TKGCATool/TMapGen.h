@@ -33,6 +33,8 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
 	UINT m_iCols;
+	afx_msg void OnBnClickedButton1();
+	UINT m_iRows;
 };
 
 

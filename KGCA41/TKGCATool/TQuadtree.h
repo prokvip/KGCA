@@ -19,6 +19,7 @@ public:
 	void	Reset(TNode* pNode);
 	bool	Frame();
 	bool	Render();
+	bool	Release();
 	TNode*  VisibleNode(TNode* pNode);
 	virtual ~TQuadtree();
 };

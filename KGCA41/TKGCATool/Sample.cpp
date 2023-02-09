@@ -4,6 +4,9 @@ bool Sample::CreateMapData(UINT iColumn, UINT iRows)
 {
 	if (m_pTitle)
 	{
+		m_Quadtree.Release();
+		m_pTitle->DeletaMap();
+
 		m_pTitle->CreateMap(iColumn, iRows);
 		m_Quadtree.Create(
 			((TSceneTitle*)m_pCurrentScene.get())->m_pMainCamera,

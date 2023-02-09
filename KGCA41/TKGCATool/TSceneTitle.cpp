@@ -2,6 +2,16 @@
 #include "TSceneTitle.h"
 #include "TInput.h"
 #include "TDxState.h"
+bool TSceneTitle::DeletaMap()
+{
+	if (m_pMap)
+	{
+		m_pMap->Release();
+		delete m_pMap;
+		
+	}
+	return true;
+}
 bool TSceneTitle::CreateMap(UINT iColumn, UINT iRows )
 {
 	m_pMap = new TMap;

@@ -125,7 +125,15 @@ bool TQuadtree::Render()
     }
     return true;
 }
-
+bool TQuadtree::Release()
+{
+    if (m_pRootNode)
+    {
+        delete m_pRootNode;
+        m_pRootNode = nullptr;
+    }
+    return true;
+}
 TQuadtree::~TQuadtree()
 {
     if (m_pRootNode)

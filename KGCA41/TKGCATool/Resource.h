@@ -34,7 +34,9 @@
 #define IDD_DIALOG1                     322
 #define IDC_OPENFILE_DLG                1001
 #define IDC_EDIT1                       1013
+#define IDC_EDIT3                       1014
 #define IDC_EDIT2                       1015
+#define IDC_BUTTON1                     1017
 #define ID_32771                        32771
 #define ID_CREATE_MAP                   32772
 
@@ -44,7 +46,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        324
 #define _APS_NEXT_COMMAND_VALUE         32773
-#define _APS_NEXT_CONTROL_VALUE         1017
+#define _APS_NEXT_CONTROL_VALUE         1018
 #define _APS_NEXT_SYMED_VALUE           310
 #endif
 #endif

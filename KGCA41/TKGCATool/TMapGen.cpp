@@ -13,6 +13,7 @@ IMPLEMENT_DYNCREATE(TMapGen, CFormView)
 TMapGen::TMapGen()
 	: CFormView(IDD_DIALOG1)
 	, m_iCols(0)
+	, m_iRows(0)
 {
 
 }
@@ -25,9 +26,11 @@ void TMapGen::DoDataExchange(CDataExchange* pDX)
 {
 	CFormView::DoDataExchange(pDX);
 	DDX_Text(pDX, IDC_EDIT1, m_iCols);
+	DDX_Text(pDX, IDC_EDIT3, m_iRows);
 }
 
 BEGIN_MESSAGE_MAP(TMapGen, CFormView)
+	ON_BN_CLICKED(IDC_BUTTON1, &TMapGen::OnBnClickedButton1)
 END_MESSAGE_MAP()
 
 
@@ -77,3 +80,11 @@ void TMapGen::Dump(CDumpContext& dc) const
 
 
 // TMapGen 메시지 처리기
+
+
+void TMapGen::OnBnClickedButton1()
+{
+	CTKGCAToolApp* pApp = (CTKGCAToolApp*)AfxGetApp();
+	UpdateData(TRUE);
+	pApp->m_Sample.CreateMapData(m_iCols, m_iRows);
+}

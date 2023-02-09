@@ -66,6 +66,7 @@ public:
 	TUser*			m_pUser=nullptr;
 public:
 	bool				CreateMap(UINT iColumn=257, UINT iRows=257);
+	bool				DeletaMap();
 	bool				CreatePlayer();
 public:
 	virtual bool		Init();
