@@ -14,13 +14,16 @@ public:
 	std::shared_ptr<TScene>			m_pCurrentScene = nullptr;
 	TShapeDirectionLine						m_DirLine;
 	TQuadtree						m_Quadtree;
-
+	
 	//TFbxFile	m_FBXLoader;
 	std::vector< TFbxFile*> m_fbxList;
 	std::vector< TCharacter*> m_NpcList;
 	TCharacter* m_UserCharacter;
 public:
 	bool		m_bWireFrame = false;
+public:
+	bool		CreateMapData(UINT iColumn = 257, UINT iRows = 257);
+	bool		CreateFbxLoader();
 public:
 	virtual bool		Init() override;
 	virtual bool		Frame() override;

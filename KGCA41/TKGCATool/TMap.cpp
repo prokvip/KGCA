@@ -87,7 +87,10 @@ bool  TMap::Build(UINT iWidth, UINT iHeight)
 			{	(float)(iCol- iHalfWidth)* m_fCellDistance, 
 				0.0f,//cosf(DegreeToRadian(iCol))*20.0f+ sinf(DegreeToRadian(iRow)) * 20.0f,
 				(float)(iHalfHeight- iRow)* m_fCellDistance };
-			m_VertexList[iRow * iWidth + iCol].p.y = m_fHeightList[iRow*m_iNumCols+iCol]* m_fScaleHeight;
+			if(m_fHeightList.size() > 0)
+				m_VertexList[iRow * iWidth + iCol].p.y = m_fHeightList[iRow*m_iNumCols+iCol]* m_fScaleHeight;
+			else
+				m_VertexList[iRow * iWidth + iCol].p.y = 0.0f;
 			m_VertexList[iRow * iWidth + iCol].c =	{ 1,1,1,1 };
 			m_VertexList[iRow * iWidth + iCol].t =	{ ((float)iCol / (float)(iWidth-1))*10.0f,
 													 ((float)iRow / (float)(iHeight - 1))* 10.0f };

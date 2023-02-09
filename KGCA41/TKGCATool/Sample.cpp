@@ -1,24 +1,26 @@
 #include "pch.h"
 #include "Sample.h"
+bool Sample::CreateMapData(UINT iColumn, UINT iRows)
+{
+	if (m_pTitle)
+	{
+		m_pTitle->CreateMap(iColumn, iRows);
+		m_Quadtree.Create(
+			((TSceneTitle*)m_pCurrentScene.get())->m_pMainCamera,
+			((TSceneTitle*)m_pCurrentScene.get())->m_pMap);
+	}	
+	return true;
+}
+bool Sample::CreateFbxLoader()
+{
+	if (m_pTitle)
+	{
+		m_pTitle->CreateMap();
+		m_Quadtree.Create(
+			((TSceneTitle*)m_pCurrentScene.get())->m_pMainCamera,
+			((TSceneTitle*)m_pCurrentScene.get())->m_pMap);
+	}
 
-bool Sample::Init()
-{	
-	m_pTitle = std::make_shared<TSceneTitle>();
-	m_pInGame = std::make_shared<TSceneInGame>(); 
-	m_pTitle->Create(m_pd3dDevice.Get(), m_pImmediateContext.Get(), L"");
-	m_pInGame->Create(m_pd3dDevice.Get(), m_pImmediateContext.Get(), L"");
-	m_pTitle->Init();
-	m_pInGame->Init();
-	m_pCurrentScene = m_pTitle;
-
-	m_Quadtree.Create(
-		((TSceneTitle*)m_pCurrentScene.get())->m_pMainCamera,
-		((TSceneTitle*)m_pCurrentScene.get())->m_pMap);
-
-	std::wstring shaderfilename = L"DefaultShape.txt";	
-	m_DirLine.Create(m_pd3dDevice.Get(), m_pImmediateContext.Get(), shaderfilename,
-										L"../../data/gameHeight.png");
-	
 	TFbxFile* pFbxLoaderD = new TFbxFile;
 	if (pFbxLoaderD->Init())
 	{
@@ -116,11 +118,35 @@ bool Sample::Init()
 		m_NpcList.push_back(pNpc);
 	}
 
+	return true;
+}
+bool Sample::Init()
+{	
+	if (m_pTitle==nullptr)
+	{
+		m_pTitle = std::make_shared<TSceneTitle>();
+		m_pTitle->Create(m_pd3dDevice.Get(), m_pImmediateContext.Get(), L"");
+		m_pTitle->Init();
+	}
+	if (m_pInGame == nullptr)
+	{
+		m_pInGame = std::make_shared<TSceneInGame>();
+		m_pInGame->Create(m_pd3dDevice.Get(), m_pImmediateContext.Get(), L"");
+		m_pInGame->Init();
+	}
+	m_pCurrentScene = m_pTitle;
+
+	//CreateFbxLoader();
+
+	std::wstring shaderfilename = L"DefaultShape.txt";
+	m_DirLine.Create(m_pd3dDevice.Get(), m_pImmediateContext.Get(), shaderfilename,
+		L"../../data/gameHeight.png");
 	D3DXMatrixScaling(&m_DirLine.m_matWorld, 1000.0f, 1000.0f, 1000.0f);
 	return true;
 }
 bool Sample::Frame()
 {		
+	if (m_pCurrentScene == nullptr) return true;
 	ClearD3D11DeviceContext(m_pImmediateContext.Get());
 	if (m_pCurrentScene->IsNextScene())
 	{
@@ -142,11 +168,15 @@ bool Sample::Frame()
 		TActionTable action = m_UserCharacter->m_ActionList.find(L"idle")->second;
 		m_UserCharacter->m_ActionCurrent = action;
 	}*/
-	m_UserCharacter->UpdateFrame(m_pImmediateContext.Get());
+	if (m_UserCharacter)
+	{
+		m_UserCharacter->UpdateFrame(m_pImmediateContext.Get());
+	}
 	return true;
 }
 bool Sample::Render()
 {		
+	if (m_pCurrentScene == nullptr) return true;
 	if (m_bWireFrame)
 		m_pImmediateContext->RSSetState(TDxState::g_pDefaultRSWireFrame);
 	else
@@ -162,30 +192,34 @@ bool Sample::Render()
 	D3DXVec3Normalize(&vLight, &vLight);
 
 	TMatrix matWorld;
-	matWorld._41 = pScene->m_pUser->m_vPos.x;
-	matWorld._42 = pScene->m_pUser->m_vPos.y;
-	matWorld._43 = pScene->m_pUser->m_vPos.z;
-
+	if (pScene->m_pUser)
+	{
+		matWorld._41 = pScene->m_pUser->m_vPos.x;
+		matWorld._42 = pScene->m_pUser->m_vPos.y;
+		matWorld._43 = pScene->m_pUser->m_vPos.z;
+	}
 	for (int iNpc = 0; iNpc < m_NpcList.size(); iNpc++)
 	{
 		matWorld._41 += iNpc * 10.0f;
 		m_NpcList[iNpc]->SetMatrix(&matWorld, &pScene->m_pMainCamera->m_matView, &pScene->m_pMainCamera->m_matProj);
 		m_NpcList[iNpc]->Render(m_pImmediateContext.Get());
 	}
-	matWorld._41 = pScene->m_pUser->m_vPos.x;
-	matWorld._42 = pScene->m_pUser->m_vPos.y;
-	matWorld._43 = pScene->m_pUser->m_vPos.z;
-	m_UserCharacter->SetMatrix(&matWorld, &pScene->m_pMainCamera->m_matView, &pScene->m_pMainCamera->m_matProj);
-	m_UserCharacter->Render(m_pImmediateContext.Get());
-	
+
+	if (m_UserCharacter)
+	{
+		m_UserCharacter->SetMatrix(&matWorld, &pScene->m_pMainCamera->m_matView, &pScene->m_pMainCamera->m_matProj);
+		m_UserCharacter->Render(m_pImmediateContext.Get());		
+	}
+
 	m_pImmediateContext->OMSetDepthStencilState(TDxState::g_pDefaultDepthStencil, 0xff);
-	
-	pScene->m_pMap->SetMatrix(nullptr,
-		&pScene->m_pMainCamera->m_matView,
-		&pScene->m_pMainCamera->m_matProj);
-	m_Quadtree.Frame();
-	m_Quadtree.Render();
-	
+	if (pScene->m_pMap)
+	{
+		pScene->m_pMap->SetMatrix(nullptr,
+			&pScene->m_pMainCamera->m_matView,
+			&pScene->m_pMainCamera->m_matProj);
+		m_Quadtree.Frame();
+		m_Quadtree.Render();
+	}
 	m_pCurrentScene->Render();
 	m_DirLine.SetMatrix(nullptr, &m_pCurrentScene->m_pMainCamera->m_matView,
 		&m_pCurrentScene->m_pMainCamera->m_matProj);

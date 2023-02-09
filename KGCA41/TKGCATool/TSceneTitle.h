@@ -65,6 +65,9 @@ public:
 	TMap* m_pMap = nullptr;
 	TUser*			m_pUser=nullptr;
 public:
+	bool				CreateMap(UINT iColumn=257, UINT iRows=257);
+	bool				CreatePlayer();
+public:
 	virtual bool		Init();
 	virtual bool		Frame();
 	virtual bool		Render();
