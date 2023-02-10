@@ -90,6 +90,12 @@
     <ClInclude Include="TMapGen.h">
       <Filter>PaneWindow</Filter>
     </ClInclude>
+    <ClInclude Include="TSelect.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="TObjectManager.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Sample.cpp">
@@ -157,6 +163,12 @@
     </ClCompile>
     <ClCompile Include="TMapGen.cpp">
       <Filter>PaneWindow</Filter>
+    </ClCompile>
+    <ClCompile Include="TSelect.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="TObjectManager.cpp">
+      <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

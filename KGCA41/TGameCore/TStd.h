@@ -7,6 +7,13 @@
 #include <list>
 #include <set>
 #include <string>
+
+#include <algorithm>
+#include <bitset>
+#include <limits>
+#include <functional>
+#include <unordered_map> // unordered_map
+
 #include <codecvt>
 #include <atlconv.h> 
 #include <d3d11.h>

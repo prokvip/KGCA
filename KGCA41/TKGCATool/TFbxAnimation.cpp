@@ -5,7 +5,7 @@ void TFbxFile::InitAnimation()
 	FbxAnimStack* stackAnim = m_pFbxScene->GetSrcObject<FbxAnimStack>(0);
 	FbxLongLong s = 0;
 	FbxLongLong n = 0;
-	FbxTime::EMode TimeMode;
+	FbxTime::EMode TimeMode= FbxTime::GetGlobalTimeMode();
 	if (stackAnim)
 	{
 		FbxString takeName = stackAnim->GetName();

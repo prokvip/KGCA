@@ -14,43 +14,22 @@ bool Sample::CreateMapData(UINT iColumn, UINT iRows)
 	}	
 	return true;
 }
-bool Sample::LoadFbx(T_STR filepath)
+bool Sample::LoadFbx(T_STR filepath, TVector3 vPos)
 {
-	TFbxFile* pFbxFile = new TFbxFile;
-	if (pFbxFile->Init())
-	{
-		if (pFbxFile->Load(to_wm(filepath)))
-		{
-			pFbxFile->CreateConstantBuffer(m_pd3dDevice.Get());
-		}
-	}
-	m_fbxList.push_back(pFbxFile);
+	TCharacter* pCharacter = I_Object.Load(filepath, L"");	
+	pCharacter->m_matWorld._41 = vPos.x;
+	pCharacter->m_matWorld._42 = vPos.y;
+	pCharacter->m_matWorld._43 = vPos.z;
 
-	W_STR szDefaultDir = L"../../data/fbx/";
-	std::wstring fbxShaderfilename = L"Skinning.txt";
-	for (int iObj = 0; iObj < pFbxFile->m_pDrawObjList.size(); iObj++)
-	{
-		TFbxObject* pObj = pFbxFile->m_pDrawObjList[iObj];
-		std::wstring  szLoad = szDefaultDir + pObj->m_szTextureName;
-		pObj->Create(m_pd3dDevice.Get(), m_pImmediateContext.Get(), 
-					fbxShaderfilename, szLoad);
-	}
-
-	TCharacter* pNpc = new TCharacter;
-	pNpc->m_iFbxListID = m_fbxList.size()-1;
-	pNpc->m_pFbxFile = m_fbxList[pNpc->m_iFbxListID];
-	///pNpc->m_matWorld._41 = -4.0f + iObj * 2;
-	pNpc->m_AnimScene = pNpc->m_pFbxFile->m_AnimScene;
-	pNpc->CreateConstantBuffer(m_pd3dDevice.Get());
-	TActionTable action;
+	/*TActionTable action;
 	action.iStartFrame = 61;
 	action.iEndFrame = 91;
 	action.bLoop = true;
-	pNpc->m_ActionList.insert(std::make_pair(L"walk", action));
-	pNpc->m_ActionCurrent = pNpc->m_ActionList.find(L"walk")->second;
+	pCharacter->m_ActionList.insert(std::make_pair(L"walk", action));
+	pCharacter->m_ActionCurrent = pCharacter->m_ActionList.find(L"walk")->second;*/
 
-	m_NpcList.push_back(pNpc);
-	//m_Quadtree.AddObject((TObject3D*)pFbxFile);
+	m_NpcList.push_back(pCharacter);
+	m_Quadtree.AddObject(pCharacter);
 	return true;
 }
 bool Sample::CreateFbxLoader()
@@ -96,8 +75,9 @@ bool Sample::CreateFbxLoader()
 	}
 
 	m_UserCharacter = new TCharacter;
-	m_UserCharacter->m_iFbxListID = 2;
-	m_UserCharacter->m_pFbxFile = m_fbxList[m_UserCharacter->m_iFbxListID];
+	m_UserCharacter->m_pd3dDevice = m_pd3dDevice.Get();
+	m_UserCharacter->m_pImmediateContext = m_pImmediateContext.Get();	
+	/*m_UserCharacter->m_pFbxFile = m_fbxList[m_UserCharacter->m_iFbxListID];*/
 	m_UserCharacter->m_pAnionFbxFile = pFbxLoaderA;
 	if (m_UserCharacter->m_pAnionFbxFile)
 	{
@@ -132,16 +112,17 @@ bool Sample::CreateFbxLoader()
 	action.iEndFrame = 289;
 	action.bLoop = false;
 	m_UserCharacter->m_ActionList.insert(std::make_pair(L"attack", action));*/
-	m_UserCharacter->CreateConstantBuffer(m_pd3dDevice.Get());
+	m_UserCharacter->CreateConstantBuffer();
 
 	for (int iObj = 0; iObj < 5; iObj++)
 	{
 		TCharacter* pNpc = new TCharacter;
-		pNpc->m_iFbxListID = 0;
-		pNpc->m_pFbxFile = m_fbxList[pNpc->m_iFbxListID];
+		pNpc->m_pd3dDevice = m_pd3dDevice.Get();
+		pNpc->m_pImmediateContext = m_pImmediateContext.Get();		
+		//pNpc->m_pFbxFile = m_fbxList[pNpc->m_iFbxListID];
 		pNpc->m_matWorld._41 = -4.0f + iObj * 2;
 		pNpc->m_AnimScene = pNpc->m_pFbxFile->m_AnimScene;
-		pNpc->CreateConstantBuffer(m_pd3dDevice.Get());
+		pNpc->CreateConstantBuffer();
 		TActionTable action;
 		action.iStartFrame = 61;
 		action.iEndFrame = 91;
@@ -156,6 +137,7 @@ bool Sample::CreateFbxLoader()
 }
 bool Sample::Init()
 {	
+	I_Object.SetDevice(m_pd3dDevice.Get(), m_pImmediateContext.Get());
 	if (m_pTitle==nullptr)
 	{
 		m_pTitle = std::make_shared<TSceneTitle>();
@@ -181,6 +163,41 @@ bool Sample::Init()
 bool Sample::Frame()
 {		
 	if (m_pCurrentScene == nullptr) return true;
+	m_Select.SetMatrix(nullptr, 
+		&m_pCurrentScene->m_pMainCamera->m_matView,
+		&m_pCurrentScene->m_pMainCamera->m_matProj);
+
+	if (m_bPicking)
+	{
+		if( I_Input.GetKey(VK_LBUTTON) == KEY_PUSH)
+		{
+			for (auto node : m_Quadtree.m_pDrawLeafNodeList)
+			{
+				for (UINT index = node->m_IndexList[0];
+					index < node->m_IndexList.size();
+					index += 3)
+				{
+					UINT i0 = node->m_IndexList[index + 0];
+					UINT i1 = node->m_IndexList[index + 1];
+					UINT i2 = node->m_IndexList[index + 2];
+					TVector3 v0 = m_Quadtree.m_pMap->m_VertexList[i0].p;
+					TVector3 v1 = m_Quadtree.m_pMap->m_VertexList[i1].p;
+					TVector3 v2 = m_Quadtree.m_pMap->m_VertexList[i2].p;
+					if (m_Select.ChkPick(v0, v1, v2))
+					{
+						if (m_pTitle && m_pTitle->m_pMap)
+						{
+							LoadFbx(m_szSelectFbxFile, m_Select.m_vIntersection);
+						};
+						return true;
+					}
+				}
+			}
+		}
+		//m_bPicking = false;
+	}
+
+
 	ClearD3D11DeviceContext(m_pImmediateContext.Get());
 	if (m_pCurrentScene->IsNextScene())
 	{
@@ -232,17 +249,17 @@ bool Sample::Render()
 		matWorld._42 = pScene->m_pUser->m_vPos.y;
 		matWorld._43 = pScene->m_pUser->m_vPos.z;
 	}
-	for (int iNpc = 0; iNpc < m_NpcList.size(); iNpc++)
+	/*for (int iNpc = 0; iNpc < m_NpcList.size(); iNpc++)
 	{
 		matWorld._41 += iNpc * 1.0f;
 		m_NpcList[iNpc]->SetMatrix(&matWorld, &pScene->m_pMainCamera->m_matView, &pScene->m_pMainCamera->m_matProj);
-		m_NpcList[iNpc]->Render(m_pImmediateContext.Get());
-	}
+		m_NpcList[iNpc]->Render();
+	}*/
 
 	if (m_UserCharacter)
 	{
 		m_UserCharacter->SetMatrix(&matWorld, &pScene->m_pMainCamera->m_matView, &pScene->m_pMainCamera->m_matProj);
-		m_UserCharacter->Render(m_pImmediateContext.Get());		
+		m_UserCharacter->Render();		
 	}
 
 	m_pImmediateContext->OMSetDepthStencilState(TDxState::g_pDefaultDepthStencil, 0xff);

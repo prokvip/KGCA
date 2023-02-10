@@ -210,6 +210,8 @@
     <ClInclude Include="TQuadtree.h" />
     <ClInclude Include="TSceneInGame.h" />
     <ClInclude Include="TSceneTitle.h" />
+    <ClInclude Include="TSelect.h" />
+    <ClInclude Include="TObjectManager.h" />
     <ClInclude Include="TUIDlg.h" />
   </ItemGroup>
   <ItemGroup>
@@ -239,6 +241,8 @@
     <ClCompile Include="TQuadtree.cpp" />
     <ClCompile Include="TSceneInGame.cpp" />
     <ClCompile Include="TSceneTitle.cpp" />
+    <ClCompile Include="TSelect.cpp" />
+    <ClCompile Include="TObjectManager.cpp" />
     <ClCompile Include="TUIDlg.cpp" />
   </ItemGroup>
   <ItemGroup>

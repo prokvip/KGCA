@@ -12,15 +12,10 @@ struct TActionTable
 		bLoop = false;
 	}
 };
-class TCharacter
+class TCharacter : public TObject3D
 {
 public:
-	UINT	    m_iFbxListID;
-	TFbxFile* m_pFbxFile = nullptr;
-public:
-	TMatrix     m_matWorld;
-	TMatrix     m_matView;
-	TMatrix     m_matProj;
+	TFbxFile*	m_pFbxFile = nullptr;
 public:
 	TActionTable m_ActionCurrent;
 	TAnimScene  m_AnimScene;
@@ -40,9 +35,11 @@ public:
 	ID3D11Buffer* m_pAnimBoneCB;
 	std::vector< ID3D11Buffer*>m_pSkinBoneCB;
 public:
-	HRESULT	CreateConstantBuffer(ID3D11Device* pDevice);
-	bool UpdateFrame(ID3D11DeviceContext* pContext);
-	void	SetMatrix(TMatrix* matWorld, TMatrix* matView, TMatrix* matProj);
-	bool Render(ID3D11DeviceContext* pContext);
-	bool Release();
+	bool	UpdateFrame(ID3D11DeviceContext* pContext);
+public:
+	HRESULT	CreateConstantBuffer()override;
+	void	SetMatrix(TMatrix* matWorld, TMatrix* matView, TMatrix* matProj) override;
+	bool	Render() override;
+	bool	Release() override;
+	HRESULT Load(ID3D11Device* , ID3D11DeviceContext* , TFbxFile* , T_STR);
 };

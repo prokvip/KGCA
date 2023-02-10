@@ -1,6 +1,29 @@
 #include "pch.h"
 #include "TCharacter.h"
-HRESULT	TCharacter::CreateConstantBuffer(ID3D11Device* pDevice)
+
+HRESULT TCharacter::Load(ID3D11Device* pd3dDevice, 
+						 ID3D11DeviceContext* pContext, 
+						 TFbxFile* pFbxFile,
+						 T_STR name)
+{
+	HRESULT hr = S_OK;
+	m_pd3dDevice = pd3dDevice;
+	m_pImmediateContext = pContext;
+	m_pFbxFile = pFbxFile;
+	m_AnimScene = m_pFbxFile->m_AnimScene;
+
+	W_STR szDefaultDir = L"../../data/fbx/";
+	std::wstring fbxShaderfilename = L"Skinning.txt";
+	for (int iObj = 0; iObj < pFbxFile->m_pDrawObjList.size(); iObj++)
+	{
+		TFbxObject* pObj = pFbxFile->m_pDrawObjList[iObj];
+		std::wstring  szLoadTexture = szDefaultDir + pObj->m_szTextureName;
+		pObj->Create(m_pd3dDevice, pContext,fbxShaderfilename, szLoadTexture);
+	}	
+	CreateConstantBuffer();
+	return hr;
+}
+HRESULT	TCharacter::CreateConstantBuffer()
 {
 	HRESULT hr;
 	for (int iBone = 0; iBone < 255; iBone++)
@@ -18,7 +41,7 @@ HRESULT	TCharacter::CreateConstantBuffer(ID3D11Device* pDevice)
 	D3D11_SUBRESOURCE_DATA  sd;
 	ZeroMemory(&sd, sizeof(sd));
 	sd.pSysMem = &m_cbDataBone;
-	hr = pDevice->CreateBuffer(
+	hr = m_pd3dDevice->CreateBuffer(
 		&bd, // 버퍼 할당
 		&sd, // 초기 할당된 버퍼를 체우는 CPU메모리 주소
 		&m_pAnimBoneCB);
@@ -30,7 +53,7 @@ HRESULT	TCharacter::CreateConstantBuffer(ID3D11Device* pDevice)
 		D3D11_SUBRESOURCE_DATA  sd;
 		ZeroMemory(&sd, sizeof(sd));
 		sd.pSysMem = &m_cbDataBone;
-		hr = pDevice->CreateBuffer(
+		hr = m_pd3dDevice->CreateBuffer(
 			&bd, // 버퍼 할당
 			&sd, // 초기 할당된 버퍼를 체우는 CPU메모리 주소
 			&m_pSkinBoneCB[iMesh]);
@@ -107,14 +130,14 @@ void	TCharacter::SetMatrix(TMatrix* matWorld, TMatrix* matView, TMatrix* matProj
 		m_matProj = *matProj;
 	}
 }
-bool TCharacter::Render(ID3D11DeviceContext* pContext)
+bool TCharacter::Render()
 {
-	pContext->VSSetConstantBuffers(1, 1, &m_pAnimBoneCB);
+	m_pImmediateContext->VSSetConstantBuffers(1, 1, &m_pAnimBoneCB);
 	for (int iMesh = 0; iMesh < m_pFbxFile->m_pDrawObjList.size(); iMesh++)
 	{
 		if (m_pFbxFile->m_pDrawObjList[iMesh]->m_bSkinned)
 		{
-			pContext->VSSetConstantBuffers(1, 1, &m_pSkinBoneCB[iMesh]);
+			m_pImmediateContext->VSSetConstantBuffers(1, 1, &m_pSkinBoneCB[iMesh]);
 		}
 		m_pFbxFile->m_pDrawObjList[iMesh]->SetMatrix(&m_matWorld, &m_matView, &m_matProj);
 		m_pFbxFile->m_pDrawObjList[iMesh]->Render();

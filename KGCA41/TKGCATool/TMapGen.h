@@ -45,6 +45,7 @@ public:
 	CString m_strSelectObject;
 	CListBox m_ObjectList;
 	afx_msg void OnLbnSelchangeObject();
+	afx_msg void OnBnClickedButton2();
 };
 
 

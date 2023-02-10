@@ -40,6 +40,7 @@ BEGIN_MESSAGE_MAP(TMapGen, CFormView)
 	ON_LBN_SELCHANGE(IDC_LIST1, &TMapGen::OnLbnSelchangeList1)
 	ON_BN_CLICKED(IDC_WIREFRAME, &TMapGen::OnBnClickedWireframe)
 	ON_LBN_SELCHANGE(IDC_LIST2, &TMapGen::OnLbnSelchangeObject)
+	ON_BN_CLICKED(IDC_BUTTON2, &TMapGen::OnBnClickedButton2)
 END_MESSAGE_MAP()
 
 
@@ -164,17 +165,18 @@ void TMapGen::OnLbnSelchangeObject()
 {
 	CString name;
 	int iSelect = m_ObjectList.GetCurSel();
-	m_ObjectList.GetText(iSelect, name);
-
-	CTKGCAToolApp* pApp = (CTKGCAToolApp*)AfxGetApp();
-	T_STR filepath = L"D:/00_KGCA41Leture/data/fbx/";
-	filepath += name.GetBuffer();
+	m_ObjectList.GetText(iSelect, name);	
 	m_strSelectObject = name.GetBuffer();
-	UpdateData(FALSE);
+	UpdateData(FALSE);	
+}
 
+
+void TMapGen::OnBnClickedButton2()
+{
+	CTKGCAToolApp* pApp = (CTKGCAToolApp*)AfxGetApp();
+	pApp->m_Sample.m_bPicking = true;
+	T_STR filepath = L"D:/00_KGCA41Leture/data/fbx/";
+	filepath += m_strSelectObject.GetBuffer();
+	pApp->m_Sample.m_szSelectFbxFile = filepath;
 	
-	if (pApp->m_Sample.m_pTitle && pApp->m_Sample.m_pTitle->m_pMap)
-	{
-		pApp->m_Sample.LoadFbx(filepath);
-	}
 }

@@ -9,6 +9,8 @@
 class TFbxFile
 {
 public:
+	T_STR       m_szName;
+public:
 	TMatrix     m_matWorld;
 	TMatrix     m_matView;
 	TMatrix     m_matProj;

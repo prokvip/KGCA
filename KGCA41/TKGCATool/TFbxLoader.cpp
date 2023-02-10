@@ -10,7 +10,10 @@ bool TFbxFile::Init()
 bool TFbxFile::Load(C_STR filename)
 {
 	m_pFbxImporter->Initialize(filename.c_str());
-	m_pFbxImporter->Import(m_pFbxScene);
+	if (m_pFbxImporter->Import(m_pFbxScene)==false)
+	{
+		return false;
+	}
 
 	FbxAxisSystem SceneAxisSystem = m_pFbxScene->GetGlobalSettings().GetAxisSystem();
 	// 단위
@@ -456,10 +459,17 @@ void TFbxFile::PreProcess(FbxNode* pFbxNode)
 	{
 		FbxNode* pChild = pFbxNode->GetChild(iChild);
 		// 헬퍼오브젝트 + 지오메트리 오브젝트
-		FbxNodeAttribute::EType type = pChild->GetNodeAttribute()->GetAttributeType();
-		if (type == FbxNodeAttribute::eMesh ||
-			type == FbxNodeAttribute::eSkeleton ||
-			type == FbxNodeAttribute::eNull)
+		if (pChild->GetNodeAttribute() != nullptr)
+		{
+			FbxNodeAttribute::EType type = pChild->GetNodeAttribute()->GetAttributeType();
+			if (type == FbxNodeAttribute::eMesh ||
+				type == FbxNodeAttribute::eSkeleton ||
+				type == FbxNodeAttribute::eNull)
+			{
+				PreProcess(pChild);
+			}
+		}
+		else
 		{
 			PreProcess(pChild);
 		}

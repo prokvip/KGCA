@@ -130,15 +130,52 @@ struct T_OBB
 };
 struct T_BOX
 {
-    TVector3 vPos[8];
-    // aabb
-    TVector3 vMin;
-    TVector3 vMax;
-    // obb    
-    TVector3 vCenter;
-    TVector3 vAxis[3];
-    float   fExtent[3];
+    // Common
+    TVector3		vCenter;
+    TVector3		vPos[8];
+    // AABB
+    TVector3		vMax;
+    TVector3		vMin;
+    // OBB
+    TVector3		vAxis[3];
+    float			fExtent[3];
 };
+//--------------------------------------------------------------------------------------
+// Structures
+//--------------------------------------------------------------------------------------
+struct T_PLANE
+{
+    float	fA, fB, fC, fD;
+    bool	CreatePlane(TVector3 v0, TVector3 v1, TVector3 v2);
+    bool	CreatePlane(TVector3 vNormal, TVector3 v0);
+    void	Normalize()
+    {
+        float fMag = sqrt(fA * fA + fB * fB + fC * fC);
+        fA = fA / fMag;
+        fB = fB / fMag;
+        fC = fC / fMag;
+        fD = fD / fMag;
+    }
+
+};
+struct T_SPHERE
+{
+    TVector3		vCenter;
+    float			fRadius;
+};
+
+struct T_RAY
+{
+    float			fExtent;
+    TVector3		vOrigin;
+    TVector3		vDirection;
+    T_RAY()
+    {
+        //  fExtent > 0 : 세그먼트로 사용 
+        fExtent = -1;
+    }
+};
+
 class TCollision
 {
 public:
