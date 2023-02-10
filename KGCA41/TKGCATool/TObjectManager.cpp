@@ -105,11 +105,20 @@ TObjectManager::TObjectManager()
 }
 bool TObjectManager::Release()
 {
+    for (auto data : m_fbxList)
+    {
+        TFbxFile* pData = data.second;
+        if (pData) pData->Release();
+        delete pData;
+        pData = nullptr;
+    }
+    m_fbxList.clear();
     for (auto data : m_List)
     {
-        TCharacter* pTexture = data.second;
-        if (pTexture) pTexture->Release();
-        delete pTexture;
+        TCharacter* pData = data.second;
+        if (pData) pData->Release();
+        delete pData;
+        pData = nullptr;
     }
     m_List.clear();
     return true;

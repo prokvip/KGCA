@@ -279,7 +279,7 @@ bool Sample::Render()
 }
 bool Sample::Release()
 {	
-	for (auto npc : m_NpcList)
+	/*for (auto npc : m_NpcList)
 	{
 		npc->Release();
 		delete npc;
@@ -288,7 +288,7 @@ bool Sample::Release()
 	{
 		fbx->Release();
 		delete fbx;
-	}
+	}*/
 	if (m_UserCharacter)
 	{
 		m_UserCharacter->Release();
