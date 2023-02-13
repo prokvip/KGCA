@@ -2,12 +2,13 @@
 ID3D11SamplerState* TDxState::g_pDefaultSSWrap = nullptr;
 ID3D11SamplerState* TDxState::g_pDefaultSSMirror = nullptr;
 ID3D11BlendState* TDxState::g_pAlphaBlend = nullptr;
-
+ID3D11BlendState* TDxState::g_pDualSourceBlend = nullptr;
 ID3D11RasterizerState* TDxState::g_pDefaultRSWireFrame = nullptr;
 ID3D11RasterizerState* TDxState::g_pDefaultRSSolid = nullptr;
 
 
 ID3D11DepthStencilState* TDxState::g_pDefaultDepthStencil = nullptr;
+ID3D11DepthStencilState* TDxState::g_pDefaultDepthStencilAndNoWrite = nullptr;
 ID3D11DepthStencilState* TDxState::g_pGreaterDepthStencil = nullptr;
 ID3D11DepthStencilState* TDxState::g_pDisableDepthStencil = nullptr;
 bool TDxState::SetState(ID3D11Device* pd3dDevice)
@@ -78,6 +79,15 @@ bool TDxState::SetState(ID3D11Device* pd3dDevice)
         D3D11_COLOR_WRITE_ENABLE_ALL;
     pd3dDevice->CreateBlendState(&bd, &g_pAlphaBlend);
 
+
+    bd.AlphaToCoverageEnable = FALSE; // 알파 (0.5) 기준 알파테스팅 활성화 여부
+    bd.IndependentBlendEnable = TRUE; // TRUE: 모든 랜더타켓 상태 적용, FALSE:0번만 적용됨.
+    bd.RenderTarget[0].BlendEnable = TRUE;
+    bd.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
+    bd.RenderTarget[0].SrcBlend = D3D11_BLEND_ONE;
+    bd.RenderTarget[0].DestBlend = D3D11_BLEND_SRC1_COLOR;
+    pd3dDevice->CreateBlendState(&bd, &g_pDualSourceBlend);
+
     D3D11_DEPTH_STENCIL_DESC dsd;
     ZeroMemory(&dsd, sizeof(dsd));
     dsd.DepthEnable = TRUE;
@@ -90,6 +100,10 @@ bool TDxState::SetState(ID3D11Device* pd3dDevice)
     D3D11_DEPTH_STENCILOP_DESC FrontFace;
     D3D11_DEPTH_STENCILOP_DESC BackFace;*/
     hr=pd3dDevice->CreateDepthStencilState(&dsd, &g_pDefaultDepthStencil);
+    dsd.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
+    hr=pd3dDevice->CreateDepthStencilState(&dsd, &g_pDefaultDepthStencilAndNoWrite);
+    dsd.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+    
     dsd.DepthFunc = D3D11_COMPARISON_GREATER;
     hr = pd3dDevice->CreateDepthStencilState(&dsd, &g_pGreaterDepthStencil);
     dsd.DepthEnable = FALSE;
@@ -99,7 +113,9 @@ bool TDxState::SetState(ID3D11Device* pd3dDevice)
 }
 bool TDxState::Release() 
 {
+    if (g_pDefaultDepthStencilAndNoWrite)g_pDefaultDepthStencilAndNoWrite->Release();
     if (g_pAlphaBlend) g_pAlphaBlend->Release();
+    if (g_pDualSourceBlend) g_pDualSourceBlend->Release();
 	if (g_pDefaultSSWrap) g_pDefaultSSWrap->Release();
     if (g_pDefaultSSMirror) g_pDefaultSSMirror->Release();
     if (g_pDefaultRSSolid)g_pDefaultRSSolid->Release();

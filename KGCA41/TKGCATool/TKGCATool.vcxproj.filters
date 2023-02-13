@@ -96,6 +96,9 @@
     <ClInclude Include="TObjectManager.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="TParticleObj.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Sample.cpp">
@@ -170,6 +173,9 @@
     <ClCompile Include="TObjectManager.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="TParticleObj.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="TKGCATool.rc">
@@ -204,5 +210,6 @@
     <Text Include="SpriteInfo.txt" />
     <Text Include="ui.txt" />
     <Text Include="Skinning.txt" />
+    <Text Include="Particle.txt" />
   </ItemGroup>
 </Project>

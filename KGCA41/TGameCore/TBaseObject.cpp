@@ -115,9 +115,10 @@ namespace TDX
     }
     HRESULT TBaseObject::CreateIndexBuffer()
     {
-        HRESULT hr;
+        HRESULT hr=S_OK;
 
         CreateIndexData();
+        if (m_IndexList.size() == 0) return hr;
 
         D3D11_BUFFER_DESC       bd;
         ZeroMemory(&bd, sizeof(bd));

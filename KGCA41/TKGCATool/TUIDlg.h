@@ -13,6 +13,9 @@ protected:
 	virtual ~TUIDlg();
 
 public:
+	T_STR  m_strSelectTexture;
+	std::vector<T_STR>  m_TextureNameList;
+	void Recurse(LPCTSTR pFilePath, LPCTSTR ext, std::vector<T_STR>& list);
 public:
 	static TUIDlg* CreateFormView(CWnd* pParent);
 #ifdef AFX_DESIGN_TIME
@@ -29,6 +32,13 @@ protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV 지원입니다.
 
 	DECLARE_MESSAGE_MAP()
+public:
+	UINT m_iParticleCounter;
+	afx_msg void OnBnClickedButton1();
+	CListBox m_TextureList;
+	afx_msg void OnLbnSelchangeList1();
+	virtual void OnInitialUpdate();
+	virtual void OnFinalRelease();
 };
 
 

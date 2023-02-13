@@ -1,5 +1,26 @@
 #include "pch.h"
 #include "Sample.h"
+
+void  Sample::NewEffect(UINT iParticleCounter, T_STR tex)
+{
+	TParticleObj* p = new TParticleObj;	
+	std::wstring shaderfilename = L"Particle.txt";
+	if (iParticleCounter <= 0) iParticleCounter = 1;
+	p->m_iParticleCounter = iParticleCounter;
+	p->m_Paticles.resize(iParticleCounter);
+	p->Create(m_pd3dDevice.Get(), m_pImmediateContext.Get(),
+		shaderfilename,
+		tex);
+	
+	p->m_matWorld = TMatrix::CreateScale(10.0f);
+
+	p->m_matWorld._41 = randstep(-10.0f, +10.0f);
+	p->m_matWorld._42 = randstep(-10.0f, +10.0f);
+	p->m_matWorld._43 = randstep(-10.0f, +10.0f);
+	m_ParticleList.push_back(p);
+}
+
+
 bool Sample::CreateMapData(UINT iColumn, UINT iRows)
 {
 	if (m_pTitle)
@@ -205,6 +226,11 @@ bool Sample::Frame()
 	}
 	m_pCurrentScene->Frame();
 
+	for (auto data : m_ParticleList)
+	{
+		data->Frame();
+	}
+
 	for (auto npc : m_NpcList)
 	{
 		npc->UpdateFrame(m_pImmediateContext.Get());
@@ -234,6 +260,28 @@ bool Sample::Render()
 		m_pImmediateContext->RSSetState(TDxState::g_pDefaultRSSolid);
 
 	TSceneTitle* pScene = (TSceneTitle*)m_pCurrentScene.get();
+
+	// particle
+	m_pImmediateContext->OMSetBlendState(TDxState::g_pDualSourceBlend, 0, -1);
+	m_pImmediateContext->OMSetDepthStencilState(
+		TDxState::g_pDefaultDepthStencilAndNoWrite,
+		0xff);
+	m_pImmediateContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_POINTLIST);
+	for (auto data : m_ParticleList)
+	{
+		//TMatrix matWorld = TMatrix::CreateRotationZ(g_fGameTimer);
+		//matWorld = data->m_matWorld* matWorld;
+		data->SetMatrix(&data->m_matWorld,
+			&pScene->m_pMainCamera->m_matView, 
+			&pScene->m_pMainCamera->m_matProj);
+		data->Render();
+	}
+
+	m_pImmediateContext->OMSetBlendState(TDxState::g_pAlphaBlend, 0, -1);
+	m_pImmediateContext->OMSetDepthStencilState(
+		TDxState::g_pDefaultDepthStencil,0xff);
+	m_pImmediateContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	m_pImmediateContext->GSSetShader(nullptr, NULL, 0);
 
 	TVector3 vLight(0, 0, 1);
 	TMatrix matRotation;
@@ -279,6 +327,11 @@ bool Sample::Render()
 }
 bool Sample::Release()
 {	
+	for (auto data : m_ParticleList)
+	{
+		data->Release();
+		delete data;
+	}
 	/*for (auto npc : m_NpcList)
 	{
 		npc->Release();

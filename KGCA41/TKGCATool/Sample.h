@@ -7,6 +7,7 @@
 #include "TFbxFile.h"
 #include "TObjectManager.h"
 #include "TSelect.h"
+#include "TParticleObj.h"
 class Sample : public TGameCore
 {
 public:
@@ -19,6 +20,9 @@ public:
 	std::vector< TCharacter*> m_NpcList;
 	TCharacter* m_UserCharacter;
 	TSelect		m_Select;
+public:
+	std::vector< TParticleObj*>  m_ParticleList;
+	void		NewEffect(UINT iParticleCounter, T_STR tex);
 public:
 	bool		m_bWireFrame = false;
 	bool		m_bPicking = false;

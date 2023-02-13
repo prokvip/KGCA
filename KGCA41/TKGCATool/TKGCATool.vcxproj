@@ -207,6 +207,7 @@
     <ClInclude Include="TNode.h" />
     <ClInclude Include="TPaneWindowMap.h" />
     <ClInclude Include="TPaneWindowUI.h" />
+    <ClInclude Include="TParticleObj.h" />
     <ClInclude Include="TQuadtree.h" />
     <ClInclude Include="TSceneInGame.h" />
     <ClInclude Include="TSceneTitle.h" />
@@ -238,6 +239,7 @@
     <ClCompile Include="TNode.cpp" />
     <ClCompile Include="TPaneWindowMap.cpp" />
     <ClCompile Include="TPaneWindowUI.cpp" />
+    <ClCompile Include="TParticleObj.cpp" />
     <ClCompile Include="TQuadtree.cpp" />
     <ClCompile Include="TSceneInGame.cpp" />
     <ClCompile Include="TSceneTitle.cpp" />
@@ -261,6 +263,7 @@
   <ItemGroup>
     <Text Include="DefaultObject.txt" />
     <Text Include="DefaultShape.txt" />
+    <Text Include="Particle.txt" />
     <Text Include="Skinning.txt" />
     <Text Include="SpriteInfo.txt" />
     <Text Include="ui.txt" />
