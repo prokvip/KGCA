@@ -75,9 +75,9 @@ bool TParticleObj::Frame()
 		m_Paticles[i].fTimer += g_fSecondPerFrame;
 		if (m_Paticles[i].fTimer > m_Paticles[i].fLifeTime)
 		{
-			m_Paticles[i].bEnable = false;
-			m_VertexList[i].p = TVector3(0, 0, 0);
-			continue;
+			//m_Paticles[i].bEnable = false;
+			m_Paticles[i].vPos = TVector3(0, 0, 0);	
+			m_Paticles[i].fTimer = 0.0f;
 		}
 		m_Paticles[i].vPos = m_Paticles[i].vPos + m_Paticles[i].vVel * g_fSecondPerFrame;
 		m_VertexList[i].p = m_Paticles[i].vPos;
