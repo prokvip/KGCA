@@ -20,6 +20,8 @@ public:
 	bool	Frame();
 	bool	Render();
 	bool	Release();
+
+	void    RenderObject(TNode* pNode);
 	TNode*  VisibleNode(TNode* pNode);
 	virtual ~TQuadtree();
 };

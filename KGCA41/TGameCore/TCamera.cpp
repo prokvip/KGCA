@@ -1,5 +1,10 @@
 #include "TCamera.h"
 #include "TInput.h"
+
+void  TCamera::SetPos(TVector3 vTargetPos, TVector3 vMapHeight)
+{
+
+}
 void TCamera::Update()
 {
 	m_vRight.x = m_matView._11;

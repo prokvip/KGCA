@@ -99,6 +99,9 @@
     <ClInclude Include="TParticleObj.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="TCameraMap.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Sample.cpp">
@@ -174,6 +177,9 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="TParticleObj.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="TCameraMap.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

@@ -12,11 +12,11 @@ void  Sample::NewEffect(UINT iParticleCounter, T_STR tex)
 		shaderfilename,
 		tex);
 	
-	p->m_matWorld = TMatrix::CreateScale(10.0f);
+	/*p->m_matScale = TMatrix::CreateScale(10.0f);
 
-	p->m_matWorld._41 = randstep(-10.0f, +10.0f);
-	p->m_matWorld._42 = randstep(-10.0f, +10.0f);
-	p->m_matWorld._43 = randstep(-10.0f, +10.0f);
+	p->m_matTranslate._41 = randstep(-10.0f, +10.0f);
+	p->m_matTranslate._42 = randstep(-10.0f, +10.0f);
+	p->m_matTranslate._43 = randstep(-10.0f, +10.0f);*/
 	m_ParticleList.push_back(p);
 }
 
@@ -41,7 +41,9 @@ bool Sample::LoadFbx(T_STR filepath, TVector3 vPos)
 	pCharacter->m_matWorld._41 = vPos.x;
 	pCharacter->m_matWorld._42 = vPos.y;
 	pCharacter->m_matWorld._43 = vPos.z;
-
+	TVector3 vMin = TVector3(-10, -10, -10) + vPos;
+	TVector3 vMax = TVector3( 10,  10,  10) + vPos;
+	pCharacter->m_tBox.Set(vMax, vMin);
 	/*TActionTable action;
 	action.iStartFrame = 61;
 	action.iEndFrame = 91;
@@ -190,13 +192,13 @@ bool Sample::Frame()
 
 	if (m_bPicking)
 	{
-		if( I_Input.GetKey(VK_LBUTTON) == KEY_PUSH)
+		if( I_Input.GetKey(VK_RBUTTON) == KEY_PUSH)
 		{
 			for (auto node : m_Quadtree.m_pDrawLeafNodeList)
 			{
-				for (UINT index = node->m_IndexList[0];
-					index < node->m_IndexList.size();
-					index += 3)
+				UINT index=0;
+				UINT iNumFace = node->m_IndexList.size() / 3;
+				for (UINT face = 0;face < iNumFace; face++)
 				{
 					UINT i0 = node->m_IndexList[index + 0];
 					UINT i1 = node->m_IndexList[index + 1];
@@ -212,6 +214,7 @@ bool Sample::Frame()
 						};
 						return true;
 					}
+					index += 3;
 				}
 			}
 		}
@@ -231,10 +234,10 @@ bool Sample::Frame()
 		data->Frame();
 	}
 
-	for (auto npc : m_NpcList)
+	/*for (auto npc : m_NpcList)
 	{
 		npc->UpdateFrame(m_pImmediateContext.Get());
-	}
+	}*/
 	/*if (I_Input.GetKey('J') == KEY_HOLD)
 	{
 		TActionTable action = m_UserCharacter->m_ActionList.find(L"jump")->second;
@@ -267,11 +270,19 @@ bool Sample::Render()
 		TDxState::g_pDefaultDepthStencilAndNoWrite,
 		0xff);
 	m_pImmediateContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_POINTLIST);
+	
+	TMatrix matBillboard;
+	//TMatrix::CreateBillboard(); 
+	matBillboard = m_pCurrentScene->m_pMainCamera->m_matView.Invert();
+	matBillboard._41 = 0.0f;
+	matBillboard._42 = 0.0f;
+	matBillboard._43 = 0.0f;
 	for (auto data : m_ParticleList)
 	{
 		//TMatrix matWorld = TMatrix::CreateRotationZ(g_fGameTimer);
-		//matWorld = data->m_matWorld* matWorld;
-		data->SetMatrix(&data->m_matWorld,
+		//matWorld = matBillboard * matWorld;
+		// matworld = s* r* t;
+		data->SetMatrix(&matBillboard,
 			&pScene->m_pMainCamera->m_matView, 
 			&pScene->m_pMainCamera->m_matProj);
 		data->Render();
@@ -297,10 +308,10 @@ bool Sample::Render()
 		matWorld._42 = pScene->m_pUser->m_vPos.y;
 		matWorld._43 = pScene->m_pUser->m_vPos.z;
 	}
+
 	/*for (int iNpc = 0; iNpc < m_NpcList.size(); iNpc++)
-	{
-		matWorld._41 += iNpc * 1.0f;
-		m_NpcList[iNpc]->SetMatrix(&matWorld, &pScene->m_pMainCamera->m_matView, &pScene->m_pMainCamera->m_matProj);
+	{	
+		m_NpcList[iNpc]->SetMatrix(nullptr, &pScene->m_pMainCamera->m_matView, &pScene->m_pMainCamera->m_matProj);
 		m_NpcList[iNpc]->Render();
 	}*/
 

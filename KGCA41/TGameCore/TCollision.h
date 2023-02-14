@@ -31,7 +31,6 @@ struct Rect
     float  w;
     float  h;
 };
-
 struct TRect : Rect
 {
     float  x2;//x+w
@@ -82,41 +81,6 @@ struct TSphere
         fRadius = r;
     };
 };
-struct Box
-{
-    TVector3 vMin;
-    TVector3 vSize;
-};
-struct TBox : Box
-{
-    TVector3 vMax;
-    TVector3 vCenter;
-    bool   operator == (TBox& dest)
-    {
-        if ( vMin == dest.vMin)
-        {
-            if (vSize == dest.vSize)
-            {
-               return true;                      
-            }          
-        }
-        return false;
-    }
-    TBox(){}
-    TBox(TVector3 vPos,TVector3 vSize) 
-    {
-        Set(vPos, vSize);
-    }
-    void  Set(TVector3 vPos,TVector3 vSize)
-    {
-        vMin = vPos;
-        this->vSize = vSize;
-        vMax = vMin + vSize;
-        vCenter = (vMin + vMax);
-        vCenter /= 2.0f;
-    }
-};
-
 struct T_AABB
 {
     TVector3 vMin;
@@ -139,6 +103,27 @@ struct T_BOX
     // OBB
     TVector3		vAxis[3];
     float			fExtent[3];
+
+    T_BOX()
+    {
+
+    }
+    T_BOX(TVector3	max,  TVector3		min)
+    {
+        Set(max, min);
+    }
+    void Set(TVector3	max, TVector3	min)
+    {
+        vMax = max;
+        vMin = min;
+        vCenter = (vMax + vMin) * 0.5f;
+        vAxis[0] = { 1,0,0 };
+        vAxis[1] = { 0,1,0 };
+        vAxis[2] = { 0,0,1 };
+        fExtent[0] = vMax.x - vCenter.x;
+        fExtent[1] = vMax.y - vCenter.y;
+        fExtent[2] = vMax.z - vCenter.z;
+    }
 };
 //--------------------------------------------------------------------------------------
 // Structures
@@ -184,7 +169,8 @@ public:
     static bool             RectToPoint(TRect& a, POINT& p);
     static bool             CircleToCircle(TCircle& a, TCircle& b);
 public:
-    static TCollisionType   BoxToBox(TBox& a, TBox& b);
-    static bool             BoxToInBox(TBox& a, TBox& b);
+    static TCollisionType   BoxToBox(T_BOX& a, T_BOX& b);
+    static bool             BoxToInBox(T_BOX& a, T_BOX& b);
+    static bool             BoxToPosition(T_BOX& a, TVector3& p);
     static bool             SphereToSphere(TSphere& a, TSphere& b);
 };

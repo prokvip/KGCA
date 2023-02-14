@@ -28,7 +28,7 @@ bool TSceneTitle::CreateMap(UINT iColumn, UINT iRows )
 			m_pMainCamera->CreateViewMatrix(vCamera, m_pUser->m_vPos, TVector3(0, 1, 0));
 		m_pMainCamera->CreateProjMatrix(1.0f, 1000.0f, T_PI * 0.25f,
 			(float)g_rtClient.right / (float)g_rtClient.bottom);
-		vBeforePos = m_pUser->m_vPos;
+		m_vBeforePos = m_pUser->m_vPos;
 	}
 	return true;
 }
@@ -49,7 +49,7 @@ bool TSceneTitle::CreatePlayer()
 		m_pMainCamera->CreateViewMatrix(vCamera, m_pUser->m_vPos, TVector3(0, 1, 0));
 	m_pMainCamera->CreateProjMatrix(1.0f, 1000.0f, T_PI * 0.25f,
 		(float)g_rtClient.right / (float)g_rtClient.bottom);
-	vBeforePos = m_pUser->m_vPos;
+	m_vBeforePos = m_pUser->m_vPos;
 	return true;
 }
 bool TSceneTitle::IsNextScene()
@@ -68,26 +68,23 @@ bool TSceneTitle::Init()
 	m_pBG = new TBaseObject;
 	m_pBG->Create(m_pd3dDevice,m_pImmediateContext,shaderfilename,L"../../data/gameHeight.png");
 		
-	m_pMainCamera = new TCamera;
-	TVector3 vCamera = TVector3(0, 100, -100);
-	TVector3 vTarget = TVector3(0, 0, 0);
-	if (m_pUser)
-	{
-		vCamera = m_pUser->m_vPos + vCamera;
-		vBeforePos = m_pUser->m_vPos;
-		vTarget = m_pUser->m_vPos;
-	}
-	if (m_pMap)
-	{
-		vCamera.y = m_pMap->GetHeight(vCamera.x, vCamera.z);
-	}
+	m_pMapCamera = new TCameraMap;
+	m_pDebugCamera = new TCameraDebug;
 	
-	m_pMainCamera->CreateViewMatrix(
-		vCamera, vTarget, 
-		TVector3(0,1, 0) );
-	m_pMainCamera->CreateProjMatrix(1.0f, 10000.0f, T_PI * 0.25f,
-									(float)g_rtClient.right/ (float)g_rtClient.bottom);
-	m_pMainCamera->Frame();
+	TVector3 vCamera = TVector3(0, 0, 0);
+	TVector3 vHeight = TVector3(0, 10, -10);
+	m_pMapCamera->SetPos(vCamera, vHeight);	
+	m_pMapCamera->CreateViewMatrix(m_pMapCamera->m_vPos, m_pMapCamera->m_vTarget, TVector3(0, 1, 0));
+	m_pMapCamera->CreateProjMatrix(1.0f, 10000.0f, T_PI * 0.25f,
+										(float)g_rtClient.right / (float)g_rtClient.bottom);
+	m_pMapCamera->Frame();
+
+	m_pDebugCamera->SetPos(vCamera, vHeight);
+	m_pDebugCamera->CreateViewMatrix(m_pMapCamera->m_vPos, m_pMapCamera->m_vTarget, TVector3(0, 1, 0));
+	m_pDebugCamera->CreateProjMatrix(1.0f, 10000.0f, T_PI * 0.25f,
+		(float)g_rtClient.right / (float)g_rtClient.bottom);
+
+	m_pMainCamera = m_pDebugCamera;
 	return true;
 }
 bool TSceneTitle::Frame()
@@ -102,31 +99,12 @@ bool TSceneTitle::Frame()
 		m_pUser->m_vPos.y = m_pMap->GetHeight(m_pUser->m_vPos.x, m_pUser->m_vPos.z);
 		m_pUser->Frame();
 	
-	
-		m_pMainCamera->m_vTarget = m_pUser->m_vPos;	
-		TVector3 vOffset = m_pUser->m_vPos - vBeforePos;
-		m_pMainCamera->m_vPos += vOffset;
-		m_pMainCamera->m_vPos.y = m_pMap->GetHeight(m_pMainCamera->m_vPos.x, m_pMainCamera->m_vPos.z);
-		m_pMainCamera->m_vPos.y = max(m_pUser->m_vPos.y, m_pMainCamera->m_vPos.y) + 10.0f;
+		TVector3 vHeight;
+		vHeight.y = m_pMap->GetHeight(m_pMainCamera->m_vPos.x, m_pMainCamera->m_vPos.z);
+		m_pMainCamera->SetPos(m_pUser->m_vPos, vHeight);
 	}
 	m_pMainCamera->Frame();
-
-	TVector3 r = m_pMainCamera->m_vRight;
-	r.y = 0;
-	D3DXVec3Normalize(&r, &r);
-
-	if (I_Input.GetKey('A') == KEY_HOLD)
-	{
-		TVector3 v = -r * g_fSecondPerFrame * 10.0f;
-		m_pMainCamera->m_vPos += v;
-	}
-	if (I_Input.GetKey('D') == KEY_HOLD)
-	{
-		TVector3 v = r * g_fSecondPerFrame * 10.0f;
-		m_pMainCamera->m_vPos += v;
-	}
-
-	if(m_pUser) vBeforePos = m_pUser->m_vPos;
+	
 	return true;
 }
 bool TSceneTitle::Render()
@@ -141,6 +119,9 @@ bool TSceneTitle::Render()
 }
 bool TSceneTitle::Release()
 {
+	delete m_pMapCamera;
+	delete m_pDebugCamera;
+
 	if (m_pBG)
 	{
 		m_pBG->Release();
@@ -155,11 +136,6 @@ bool TSceneTitle::Release()
 	{
 		m_pMap->Release();
 		delete m_pMap;
-	}
-	if (m_pMainCamera)
-	{
-		m_pMainCamera->Release();
-		delete m_pMainCamera;
-	}
+	}	
 	return true;
 }

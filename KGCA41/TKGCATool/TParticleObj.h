@@ -8,6 +8,9 @@ struct TPaticle
 	float    fLifeTime;
 	float    fTimer;
 	TVector4 vColor;
+	TMatrix  m_matScale;
+	TMatrix  m_matRotation;
+	TMatrix  m_matTranslate;
 	TPaticle()
 	{
 		fTimer = 0.0f;

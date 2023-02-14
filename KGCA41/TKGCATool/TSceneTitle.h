@@ -4,6 +4,7 @@
 #include "TProjectile2D.h"
 #include "TObject3D.h"
 #include "TCameraDebug.h"
+#include "TCameraMap.h"
 #include "TMap.h"
 #include "TInput.h"
 class TUser : public TObjectBox
@@ -60,10 +61,12 @@ public:
 class TSceneTitle :   public TScene
 {
 public:
-	TVector3 vBeforePos;
+	TVector3        m_vBeforePos;
 	TBaseObject*	m_pBG;
 	TMap* m_pMap = nullptr;
 	TUser*			m_pUser=nullptr;
+	TCamera* m_pMapCamera=nullptr;
+	TCamera* m_pDebugCamera = nullptr;
 public:
 	bool				CreateMap(UINT iColumn=257, UINT iRows=257);
 	bool				DeletaMap();

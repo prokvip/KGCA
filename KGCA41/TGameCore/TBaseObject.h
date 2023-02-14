@@ -88,6 +88,7 @@ namespace TDX
 		std::vector<PNCT_VERTEX>    m_InitVertexList;
 		std::vector<DWORD>			 m_IndexList;
 		TRect						 m_rtCollision;
+		T_BOX						 m_tBox;
 	public:
 		ID3D11VertexShader* m_pVS;
 		ID3D11PixelShader* m_pPS;

@@ -21,7 +21,18 @@ TNode* TQuadtree::FindNode(TNode* pNode, TObject3D* pObj)
     {
         if (pNode->m_pChild[i] != nullptr)
         {
-            /*if (TCollision::RectToInRect(pNode->m_pChild[i]->m_rt, pObj->m_rt))
+            if (pNode->m_pChild[i]->m_tBox.vMin.x <= pObj->m_tBox.vMin.x &&
+                pNode->m_pChild[i]->m_tBox.vMin.z <= pObj->m_tBox.vMin.z)
+            {
+                if (pNode->m_pChild[i]->m_tBox.vMax.x >= pObj->m_tBox.vMax.x &&
+                    pNode->m_pChild[i]->m_tBox.vMax.z >= pObj->m_tBox.vMax.z)
+                {
+                    pNode = FindNode(pNode->m_pChild[i], pObj);
+                    break;
+                }
+            }
+            /*if (TCollision::BoxToInBox(   pNode->m_pChild[i]->m_tBox,
+                                          pObj->m_tBox))
             {
                 pNode = FindNode(pNode->m_pChild[i], pObj);
                 break;
@@ -103,22 +114,38 @@ TNode* TQuadtree::VisibleNode(TNode* pNode)
 bool TQuadtree::Frame()
 {
     m_pDrawLeafNodeList.clear();
-    VisibleNode(m_pRootNode);
-   /* 
+    //VisibleNode(m_pRootNode);
+   
     for (auto node : m_pLeafNodeList)
     {
         if (m_pCamera->m_vFrustum.ClassifyTBox(node->m_tBox))
         {
             m_pDrawLeafNodeList.push_back(node);
         }
-    }*/
+    }
     return true;
+}
+void TQuadtree::RenderObject(TNode* pNode)
+{
+    if (pNode==nullptr || pNode->m_bLeaf) return;
+    for (auto fbx : pNode->m_pDynamicObjectlist)
+    {
+        T_POSITION dwRet = m_pCamera->m_vFrustum.ClassifyTBox(fbx->m_tBox);
+        if (P_FRONT > 0)// 완전포함.
+        {
+            fbx->SetMatrix(nullptr, &m_pMap->m_matView, &m_pMap->m_matProj);
+            fbx->Render();
+        }
+    }
+    for (int iChild = 0; iChild < 4; iChild++)
+    {
+        RenderObject(pNode->m_pChild[iChild]);
+    }
 }
 bool TQuadtree::Render()
 {
     for (auto node : m_pDrawLeafNodeList)
     {
-
         m_pMap->PreRender();
         m_pMap->m_pImmediateContext->IASetIndexBuffer(
             node->m_pIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
@@ -130,6 +157,8 @@ bool TQuadtree::Render()
             fbx->Render();
         }
     }
+
+    RenderObject(m_pRootNode);
     return true;
 }
 bool TQuadtree::Release()

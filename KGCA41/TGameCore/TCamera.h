@@ -25,6 +25,7 @@ public:
 	virtual void  CreateViewMatrix(TVector3 vEye, TVector3 vAt, TVector3 vUp);
 	virtual void  CreateProjMatrix(float fNear, float fFar, float fFovY, float fAspectRatio);
 	virtual bool  Frame();
-	virtual void Update();
+	virtual void  Update();
+	virtual void  SetPos(TVector3 vTargetPos, TVector3 vMapHeight);
 };
 
