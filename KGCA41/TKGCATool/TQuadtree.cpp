@@ -15,19 +15,19 @@ bool TQuadtree::Create(TCamera* pMainCamera, TMap* pMap, int iMaxDepth)
     BuildTree(m_pRootNode);
     return true;
 }
-TNode* TQuadtree::FindNode(TNode* pNode, TObject3D* pObj)
+TNode* TQuadtree::FindNode(TNode* pNode, T_BOX tBox)
 {
     for (int i = 0; i < 4; i++)
     {
         if (pNode->m_pChild[i] != nullptr)
         {
-            if (pNode->m_pChild[i]->m_tBox.vMin.x <= pObj->m_tBox.vMin.x &&
-                pNode->m_pChild[i]->m_tBox.vMin.z <= pObj->m_tBox.vMin.z)
+            if (pNode->m_pChild[i]->m_tBox.vMin.x <= tBox.vMin.x &&
+                pNode->m_pChild[i]->m_tBox.vMin.z <= tBox.vMin.z)
             {
-                if (pNode->m_pChild[i]->m_tBox.vMax.x >= pObj->m_tBox.vMax.x &&
-                    pNode->m_pChild[i]->m_tBox.vMax.z >= pObj->m_tBox.vMax.z)
+                if (pNode->m_pChild[i]->m_tBox.vMax.x >= tBox.vMax.x &&
+                    pNode->m_pChild[i]->m_tBox.vMax.z >= tBox.vMax.z)
                 {
-                    pNode = FindNode(pNode->m_pChild[i], pObj);
+                    pNode = FindNode(pNode->m_pChild[i], tBox);
                     break;
                 }
             }
@@ -43,13 +43,29 @@ TNode* TQuadtree::FindNode(TNode* pNode, TObject3D* pObj)
 }
 bool TQuadtree::AddObject(TObject3D* pObj)
 {
-    TNode* pFindNode = FindNode(m_pRootNode, pObj);
+    TNode* pFindNode = FindNode(m_pRootNode, pObj->m_tBox);
     if (pFindNode != nullptr)
     {
         pFindNode->m_pDynamicObjectlist.push_back(pObj);
         return true;
     }
     return false;
+}
+UINT TQuadtree::SelectVertexList(T_BOX& tBox)
+{
+    std::vector<TNode*> selectNodeList;
+    for (auto node : m_pDrawLeafNodeList)
+    {
+        if (node != nullptr)
+        {
+            TCollisionType ret = TCollision::BoxToBox(node->m_tBox, tBox);
+            if (ret > 0)
+            {
+                selectNodeList.push_back(node);
+            }
+        }
+    }
+    return selectNodeList.size();
 }
 void TQuadtree::Reset(TNode* pNode)
 {

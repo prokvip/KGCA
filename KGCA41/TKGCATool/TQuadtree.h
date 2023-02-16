@@ -15,8 +15,9 @@ public:
 	bool	AddObject(TObject3D* pObj);
 	void	BuildTree(TNode* pNode);
 	bool	IsSubDivide(TNode* pNode);
-	TNode* FindNode(TNode* pNode, TObject3D* pObj);
+	TNode* FindNode(TNode* pNode, T_BOX tBox);
 	void	Reset(TNode* pNode);
+	UINT    SelectVertexList(T_BOX& tBox);
 	bool	Frame();
 	bool	Render();
 	bool	Release();
