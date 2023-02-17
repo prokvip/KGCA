@@ -41,6 +41,7 @@ BEGIN_MESSAGE_MAP(TMapGen, CFormView)
 	ON_BN_CLICKED(IDC_WIREFRAME, &TMapGen::OnBnClickedWireframe)
 	ON_LBN_SELCHANGE(IDC_LIST2, &TMapGen::OnLbnSelchangeObject)
 	ON_BN_CLICKED(IDC_BUTTON2, &TMapGen::OnBnClickedButton2)
+	ON_BN_CLICKED(IDC_LANDSCAPE_UP, &TMapGen::OnBnClickedLandscapeUp)
 END_MESSAGE_MAP()
 
 
@@ -174,9 +175,22 @@ void TMapGen::OnLbnSelchangeObject()
 void TMapGen::OnBnClickedButton2()
 {
 	CTKGCAToolApp* pApp = (CTKGCAToolApp*)AfxGetApp();
-	pApp->m_Sample.m_bPicking = true;
+	pApp->m_Sample.m_bObjectPicking = true;
 	T_STR filepath = L"D:/00_KGCA41Leture/data/fbx/";
 	filepath += m_strSelectObject.GetBuffer();
 	pApp->m_Sample.m_szSelectFbxFile = filepath;
 	
+	pApp->m_Sample.m_bUpPicking = true;
+	pApp->m_Sample.m_bDownPicking = true;
+	pApp->m_Sample.m_bPlatPicking = true;
+}
+
+
+void TMapGen::OnBnClickedLandscapeUp()
+{
+	CTKGCAToolApp* pApp = (CTKGCAToolApp*)AfxGetApp();
+	pApp->m_Sample.m_bUpPicking = true;
+	pApp->m_Sample.m_bDownPicking = false;
+	pApp->m_Sample.m_bPlatPicking = false;
+	pApp->m_Sample.m_bObjectPicking = false;
 }

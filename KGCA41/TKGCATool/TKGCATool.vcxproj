@@ -263,6 +263,7 @@
     <None Include="res\TKGCATool.rc2" />
   </ItemGroup>
   <ItemGroup>
+    <Text Include="DefaultMap.txt" />
     <Text Include="DefaultObject.txt" />
     <Text Include="DefaultShape.txt" />
     <Text Include="Particle.txt" />

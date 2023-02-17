@@ -51,9 +51,8 @@ bool TQuadtree::AddObject(TObject3D* pObj)
     }
     return false;
 }
-UINT TQuadtree::SelectVertexList(T_BOX& tBox)
+UINT TQuadtree::SelectVertexList(T_BOX& tBox, std::vector<TNode*>& selectNodeList)
 {
-    std::vector<TNode*> selectNodeList;
     for (auto node : m_pDrawLeafNodeList)
     {
         if (node != nullptr)

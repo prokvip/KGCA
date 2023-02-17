@@ -19,7 +19,35 @@ void  Sample::NewEffect(UINT iParticleCounter, T_STR tex)
 	p->m_matTranslate._43 = randstep(-10.0f, +10.0f);*/
 	m_ParticleList.push_back(p);
 }
-
+bool  Sample::GetIntersection()
+{
+	//if (m_bObjectPicking)
+	{
+		if (I_Input.GetKey(VK_RBUTTON) == KEY_PUSH)
+		{
+			for (auto node : m_Quadtree.m_pDrawLeafNodeList)
+			{
+				UINT index = 0;
+				UINT iNumFace = node->m_IndexList.size() / 3;
+				for (UINT face = 0; face < iNumFace; face++)
+				{
+					UINT i0 = node->m_IndexList[index + 0];
+					UINT i1 = node->m_IndexList[index + 1];
+					UINT i2 = node->m_IndexList[index + 2];
+					TVector3 v0 = m_Quadtree.m_pMap->m_VertexList[i0].p;
+					TVector3 v1 = m_Quadtree.m_pMap->m_VertexList[i1].p;
+					TVector3 v2 = m_Quadtree.m_pMap->m_VertexList[i2].p;
+					if (m_Select.ChkPick(v0, v1, v2))
+					{										
+						return true;
+					}
+					index += 3;
+				}
+			}
+		}		
+	}
+	return false;
+}
 
 bool Sample::CreateMapData(UINT iColumn, UINT iRows)
 {
@@ -190,37 +218,53 @@ bool Sample::Frame()
 		&m_pCurrentScene->m_pMainCamera->m_matView,
 		&m_pCurrentScene->m_pMainCamera->m_matProj);
 
-	if (m_bPicking)
+	if (m_bObjectPicking)
 	{
-		if( I_Input.GetKey(VK_RBUTTON) == KEY_PUSH)
+		if (GetIntersection())
 		{
-			for (auto node : m_Quadtree.m_pDrawLeafNodeList)
+			if (m_pTitle && m_pTitle->m_pMap)
 			{
-				UINT index=0;
-				UINT iNumFace = node->m_IndexList.size() / 3;
-				for (UINT face = 0;face < iNumFace; face++)
+				LoadFbx(m_szSelectFbxFile, m_Select.m_vIntersection);
+			};
+		}
+	}
+	if (m_bUpPicking)
+	{
+		if (GetIntersection())
+		{
+			if (m_pTitle && m_pTitle->m_pMap)
+			{
+				std::vector<TNode*> nodelist;
+				T_BOX box;
+				TVector3 vMin, vMax;
+				TVector3 vRange(30, 30, 30);
+				vMax = m_Select.m_vIntersection + vRange;
+				vMin = m_Select.m_vIntersection - vRange;
+				box.Set(vMax, vMin);
+				if (m_Quadtree.SelectVertexList(box, nodelist) > 0)
 				{
-					UINT i0 = node->m_IndexList[index + 0];
-					UINT i1 = node->m_IndexList[index + 1];
-					UINT i2 = node->m_IndexList[index + 2];
-					TVector3 v0 = m_Quadtree.m_pMap->m_VertexList[i0].p;
-					TVector3 v1 = m_Quadtree.m_pMap->m_VertexList[i1].p;
-					TVector3 v2 = m_Quadtree.m_pMap->m_VertexList[i2].p;
-					if (m_Select.ChkPick(v0, v1, v2))
+					for (auto node : nodelist)
 					{
-						if (m_pTitle && m_pTitle->m_pMap)
+						for (UINT iVertex = 0; iVertex < m_Quadtree.m_pMap->m_VertexList.size(); iVertex++)
 						{
-							LoadFbx(m_szSelectFbxFile, m_Select.m_vIntersection);
-						};
-						return true;
+							TVector3 v0 = m_Quadtree.m_pMap->m_VertexList[iVertex].p;							
+							TVector3 v = v0 - m_Select.m_vIntersection;
+							float fDistance = D3DXVec3Length(&v);
+							if (fDistance <= 30.0f)
+							{
+								float fValue = (fDistance / 30.0f) * 90.0f;
+								float fdot = cosf(DegreeToRadian(fValue));
+								m_Quadtree.m_pMap->m_VertexList[iVertex].p.y += fdot;
+								m_Quadtree.m_pMap->ComputeVertexNormal(iVertex);
+							}							
+						}
 					}
-					index += 3;
+					m_Quadtree.m_pMap->UpdateVertexBuffer();
 				}
 			}
 		}
-		//m_bPicking = false;
+		
 	}
-
 
 	ClearD3D11DeviceContext(m_pImmediateContext.Get());
 	if (m_pCurrentScene->IsNextScene())

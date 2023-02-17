@@ -217,5 +217,6 @@
     <Text Include="ui.txt" />
     <Text Include="Skinning.txt" />
     <Text Include="Particle.txt" />
+    <Text Include="DefaultMap.txt" />
   </ItemGroup>
 </Project>

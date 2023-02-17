@@ -25,9 +25,13 @@ public:
 	void		NewEffect(UINT iParticleCounter, T_STR tex);
 public:
 	bool		m_bWireFrame = false;
-	bool		m_bPicking = false;
+	bool		m_bObjectPicking = false;
+	bool		m_bUpPicking = false;
+	bool		m_bDownPicking = false;
+	bool		m_bPlatPicking = false;
 	T_STR		m_szSelectFbxFile;
 public:
+	bool		GetIntersection();
 	bool		CreateMapData(UINT iColumn = 257, UINT iRows = 257);
 	bool		CreateFbxLoader();
 	bool		LoadFbx(T_STR filepath, TVector3 vPos);

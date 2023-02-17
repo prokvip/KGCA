@@ -17,7 +17,7 @@ public:
 	bool	IsSubDivide(TNode* pNode);
 	TNode* FindNode(TNode* pNode, T_BOX tBox);
 	void	Reset(TNode* pNode);
-	UINT    SelectVertexList(T_BOX& tBox);
+	UINT    SelectVertexList(T_BOX& tBox, std::vector<TNode*>& selectNodeList);
 	bool	Frame();
 	bool	Render();
 	bool	Release();

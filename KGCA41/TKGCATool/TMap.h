@@ -1,8 +1,24 @@
 #pragma once
 #include "TBaseObject.h"
 #include "TCameraDebug.h"
+
+struct tFaceInfo
+{
+	UINT     vertexArray[3];
+	TVector3 vNormal;
+};
+struct tVertexInfo
+{
+	std::vector<UINT >  faceIndexArray;
+	TVector3 vNormal;
+};
+
 class TMap : public TBaseObject
 {
+public:	
+	std::vector<tFaceInfo> m_FaceNormals;
+	std::vector<tVertexInfo> m_VertexInfo;
+	void ComputeVertexNormal(UINT iVertex);
 public:
 	UINT         m_iNumCellCols;
 	UINT         m_iNumCellRows;

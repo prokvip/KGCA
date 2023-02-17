@@ -41,6 +41,10 @@
 #define IDC_LIST1                       1019
 #define IDC_LIST2                       1020
 #define IDC_BUTTON2                     1021
+#define IDC_LANDSCAPE_UP                1022
+#define IDC_LANDSCAPE_DOWN              1023
+#define IDC_LANDSCAPE_UP3               1024
+#define IDC_LANDSCAPE_PLAT              1024
 #define ID_32771                        32771
 #define ID_CREATE_MAP                   32772
 

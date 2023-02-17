@@ -201,8 +201,7 @@ bool TMap::LoadHeightMap(ID3D11Device* pd3dDevice,// 디바이스 객체
 }
 
 void TMap::GenVertexNormal()
-{
-	std::vector<TVector3> m_FaceNormals;
+{	
 	m_FaceNormals.resize(m_dwFace);
 	UINT iFace = 0;
 	for( UINT i=0; i < m_IndexList.size(); i+=3)
@@ -210,14 +209,12 @@ void TMap::GenVertexNormal()
 		UINT i0 = m_IndexList[i+0];
 		UINT i1 = m_IndexList[i + 1];
 		UINT i2 = m_IndexList[i + 2];
-		m_FaceNormals[iFace++] = ComputeFaceNormal(i0, i1, i2);
+		m_FaceNormals[iFace].vertexArray[0] = i0;
+		m_FaceNormals[iFace].vertexArray[1] = i1;
+		m_FaceNormals[iFace].vertexArray[2] = i2;
+		m_FaceNormals[iFace++].vNormal = ComputeFaceNormal(i0, i1, i2);
 	}
-	struct tVertexInfo
-	{
-		std::vector<UINT >  faceIndexArray;		
-		TVector3 vNormal;
-	};
-	std::vector<tVertexInfo> m_VertexInfo;
+	
 	m_VertexInfo.resize(m_iNumCols* m_iNumRows);
 	for (UINT iFace = 0; iFace < m_dwFace; iFace ++)
 	{
@@ -229,21 +226,34 @@ void TMap::GenVertexNormal()
 	}
 	for (UINT iVertex = 0; iVertex < m_VertexInfo.size(); iVertex++)
 	{
-		for (UINT i = 0; i < m_VertexInfo[iVertex].faceIndexArray.size(); i++)
-		{
-			m_VertexInfo[iVertex].vNormal += 
-				m_FaceNormals[m_VertexInfo[iVertex].faceIndexArray[i]];
-		}
-		D3DXVec3Normalize(&m_VertexInfo[iVertex].vNormal, 
-						  &m_VertexInfo[iVertex].vNormal);
-
-		m_VertexList[iVertex].n = m_VertexInfo[iVertex].vNormal;
-#ifdef _DEBUG
-		TVector3 vLight = { 0, 1, 0 };
-		float fDot = D3DXVec3Dot(&vLight, &m_VertexList[iVertex].n);
-		m_VertexList[iVertex].c = { fDot ,fDot ,fDot , 1 };
-#endif
+		ComputeVertexNormal(iVertex);
 	}
+}
+void TMap::ComputeVertexNormal(UINT iVertex)
+{
+
+	for (UINT i = 0; i < m_VertexInfo[iVertex].faceIndexArray.size(); i++)
+	{
+		UINT faceindex = m_VertexInfo[iVertex].faceIndexArray[i];
+		UINT i0 = m_FaceNormals[faceindex].vertexArray[0];
+		UINT i1 = m_FaceNormals[faceindex].vertexArray[1];
+		UINT i2 = m_FaceNormals[faceindex].vertexArray[2];
+		m_FaceNormals[faceindex].vNormal = ComputeFaceNormal(i0, i1, i2);
+
+		m_VertexInfo[iVertex].vNormal += m_FaceNormals[faceindex].vNormal;
+	}
+	D3DXVec3Normalize(&m_VertexInfo[iVertex].vNormal,
+		&m_VertexInfo[iVertex].vNormal);
+
+	m_VertexList[iVertex].n = m_VertexInfo[iVertex].vNormal;
+#ifdef _DEBUG
+	TVector3 vLight = { -1, 0, 0 };
+	TVector3 vTarget = { 0, 0, 0 };
+	TVector3 vDir = vTarget - vLight;
+	D3DXVec3Normalize(&vLight, &vLight);
+	float fDot = D3DXVec3Dot(&-vLight, &m_VertexList[iVertex].n);
+	m_VertexList[iVertex].c = { fDot+0.3f ,fDot + 0.3f ,fDot + 0.3f , 1 };
+#endif
 }
 TVector3 TMap::ComputeFaceNormal(UINT i0, UINT i1, UINT i2)
 {

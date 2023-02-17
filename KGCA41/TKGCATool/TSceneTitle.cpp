@@ -19,7 +19,7 @@ bool TSceneTitle::CreateMap(UINT iColumn, UINT iRows )
 	//m_pMap->LoadHeightMap(m_pd3dDevice, m_pImmediateContext, L"../../data/map/heightMap513.bmp");
 	m_pMap->Build(iColumn, iRows);
 	//m_pMap->Build(m_pMap->m_iNumCols, m_pMap->m_iNumRows);
-	m_pMap->Create(m_pd3dDevice, m_pImmediateContext, L"DefaultObject.txt", L"../../data/map/Tile50.jpg");
+	m_pMap->Create(m_pd3dDevice, m_pImmediateContext, L"DefaultMap.txt", L"../../data/map/Tile50.jpg");
 
 	if (m_pUser)
 	{
