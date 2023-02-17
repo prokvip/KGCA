@@ -205,7 +205,7 @@ bool Sample::Init()
 
 	//CreateFbxLoader();
 
-	std::wstring shaderfilename = L"DefaultShape.txt";
+	std::wstring shaderfilename = L"DefaultShape.hlsl";
 	m_DirLine.Create(m_pd3dDevice.Get(), m_pImmediateContext.Get(), shaderfilename,
 		L"../../data/gameHeight.png");
 	D3DXMatrixScaling(&m_DirLine.m_matWorld, 1000.0f, 1000.0f, 1000.0f);
@@ -366,8 +366,29 @@ bool Sample::Render()
 	}
 
 	m_pImmediateContext->OMSetDepthStencilState(TDxState::g_pDefaultDepthStencil, 0xff);
+	
+	TVector3 vLightPos(100, 100, 0);
+	TVector3 vLightDir;
+	D3DXVec3Normalize(&vLightDir, &-vLightPos);
 	if (pScene->m_pMap)
 	{
+		pScene->m_pMap->m_cbData.vLightDir = 
+			TVector4(vLightDir.x, vLightDir.y, vLightDir.z, 100.0f) ;
+		pScene->m_pMap->m_cbData.vLightPos = 
+			TVector4(vLightPos.x, vLightPos.y, vLightPos.z, 100.0f); 
+		pScene->m_pMap->m_cbData.vEyeDir =
+		{ 
+			pScene->m_pMainCamera->m_vLook.x,
+			pScene->m_pMainCamera->m_vLook.y,
+			pScene->m_pMainCamera->m_vLook.z,
+			10.0f
+		};
+		pScene->m_pMap->m_cbData.vEyePos = {
+			pScene->m_pMainCamera->m_vPos.x,
+			pScene->m_pMainCamera->m_vPos.y,
+			pScene->m_pMainCamera->m_vPos.z,
+			10.0f
+		};
 		pScene->m_pMap->SetMatrix(nullptr,
 			&pScene->m_pMainCamera->m_matView,
 			&pScene->m_pMainCamera->m_matProj);

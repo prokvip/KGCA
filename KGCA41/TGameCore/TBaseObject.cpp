@@ -29,10 +29,12 @@ namespace TDX
         D3DXMatrixIdentity(&m_cbData.matWorld);
         D3DXMatrixIdentity(&m_cbData.matView);
         D3DXMatrixIdentity(&m_cbData.matProj);
+        D3DXMatrixIdentity(&m_cbData.matWorldInverse);
         m_cbData.fTimer = 0.0f;
         D3DXMatrixTranspose(&m_cbData.matWorld, &m_cbData.matWorld);
         D3DXMatrixTranspose(&m_cbData.matView, &m_cbData.matView);
         D3DXMatrixTranspose(&m_cbData.matProj, &m_cbData.matProj);
+        D3DXMatrixTranspose(&m_cbData.matWorldInverse, &m_cbData.matWorldInverse);
     }
     HRESULT		TBaseObject::CreateConstantBuffer()
     {
@@ -325,6 +327,7 @@ namespace TDX
         m_cbData.matWorld = m_matWorld.Transpose();
         m_cbData.matView = m_matView.Transpose();
         m_cbData.matProj = m_matProj.Transpose();
+        m_cbData.matWorldInverse = m_matWorld.Invert();
         m_pImmediateContext->UpdateSubresource(
             m_pConstantBuffer, 0, nullptr,
             &m_cbData, 0, 0);
@@ -364,6 +367,8 @@ namespace TDX
             &m_pVertexBuffer, &stride, &offset);
         m_pImmediateContext->IASetIndexBuffer(m_pIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
         m_pImmediateContext->VSSetConstantBuffers(0, 1, &m_pConstantBuffer);
+        m_pImmediateContext->PSSetConstantBuffers(0, 1, &m_pConstantBuffer);
+        m_pImmediateContext->GSSetConstantBuffers(0, 1, &m_pConstantBuffer);
         return true;
     }
     bool TBaseObject::PostRender()

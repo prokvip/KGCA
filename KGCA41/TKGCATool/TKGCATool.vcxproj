@@ -263,9 +263,12 @@
     <None Include="res\TKGCATool.rc2" />
   </ItemGroup>
   <ItemGroup>
+    <Text Include="Default.h" />
     <Text Include="DefaultMap.txt" />
     <Text Include="DefaultObject.txt" />
-    <Text Include="DefaultShape.txt" />
+    <Text Include="DefaultShape.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </Text>
     <Text Include="Particle.txt" />
     <Text Include="Skinning.txt" />
     <Text Include="SpriteInfo.txt" />

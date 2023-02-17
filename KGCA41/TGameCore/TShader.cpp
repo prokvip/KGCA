@@ -36,11 +36,17 @@ HRESULT TShader::Load(
     dwShaderFlags |= D3DCOMPILE_DEBUG;
 #endif
     // 정점쉐이더 컴파일 
+    const D3D_SHADER_MACRO defines[] =
+    {
+        "EXAMPLE_DEFINE", "1",
+        NULL, NULL
+    };
+
     ID3DBlob* pErrorCode = nullptr;
     hr = D3DCompileFromFile(
         filename.c_str(),
-        NULL,
-        NULL,
+        defines,
+        D3D_COMPILE_STANDARD_FILE_INCLUDE,
         "VS",
         "vs_5_0",
         dwShaderFlags,
@@ -65,8 +71,8 @@ HRESULT TShader::Load(
     // 픽쉘쉐이더 컴파일  
     hr = D3DCompileFromFile(
         filename.c_str(),
-        NULL,
-        NULL,
+        defines,
+        D3D_COMPILE_STANDARD_FILE_INCLUDE,
         "PS",
         "ps_5_0",
         dwShaderFlags,

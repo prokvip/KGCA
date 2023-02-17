@@ -1,3 +1,4 @@
+#include "Default.h"
 struct VS_IN
 {
 	float3 p : POSITION; 
@@ -12,15 +13,7 @@ struct VS_OUT
 	float4 c : COLOR0;
 	float2 t : TEXCOORD0;
 };
-// 상수버퍼는 레지스터 단위로만 저장된다.
-// 레지스터 단위란 :  float4(x,y,z,w)
-cbuffer cb_data : register(b0)
-{
-	matrix g_matWorld : packoffset(c0);
-	matrix g_matView : packoffset(c4);
-	matrix g_matProj : packoffset(c8);
-	float4 vTimer : packoffset(c12);
-};
+
 VS_OUT VS_Default(VS_IN input) 
 {
 	VS_OUT output = (VS_OUT)0;
@@ -81,12 +74,13 @@ void GS(in point VS_OUT vIn[1], inout TriangleStream<G_OUT> vOut)
 	G_OUT vVertex;
 	for (int i = 0; i < 4; i++)
 	{
-		vVertex.p = float4(vIn[0].p.xyz + g_positions[i].xyz, 1.0f);
+		float3 vLocal = mul(float4(g_positions[i].xyz,1), g_matWorld);
+		float4 vWorld = float4(vIn[0].p.xyz + vLocal, 1.0f);
 		vVertex.c = vIn[0].c;
 		vVertex.t = g_texcoords[i];
 		vVertex.n = vIn[0].n;
 
-		float4 vWorld = mul(vVertex.p, g_matWorld);
+		//vWorld = vVertex.p;//mul(vVertex.p, g_matWorld);
 		float4 vView  = mul(vWorld, g_matView);
 		vVertex.p	  = mul(vView, g_matProj);
 
@@ -95,8 +89,6 @@ void GS(in point VS_OUT vIn[1], inout TriangleStream<G_OUT> vOut)
 	vOut.RestartStrip();
 }
 
-Texture2D    g_txTex			: register(t0);
-SamplerState g_SampleWrap		: register(s0);
 
 struct PS_OUT
 {

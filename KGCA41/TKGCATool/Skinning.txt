@@ -1,3 +1,4 @@
+#include "Default.h"
 struct VS_IN
 {
 	float3 p : POSITION; 
@@ -18,15 +19,7 @@ struct VS_OUT
 	float4 vWorld : TEXCOORD2;
 	float3 vLight : TEXCOORD3;
 };
-// 상수버퍼는 레지스터 단위로만 저장된다.
-// 레지스터 단위란 :  float4(x,y,z,w)
-cbuffer cb_data : register(b0)
-{
-	matrix g_matWorld : packoffset(c0);
-	matrix g_matView : packoffset(c4);
-	matrix g_matProj : packoffset(c8);
-	float4 vTimer : packoffset(c12);
-};
+
 cbuffer cb_Animation : register(b1)
 {
 	matrix  g_matBone[255];
@@ -51,7 +44,7 @@ VS_OUT VS(VS_IN input)
 	output.n = vAnimNomal;
 	output.vWorld = vWorld;
 	//light
-	float3 vLight = vTimer.xyz;//float3(0,-1,0);
+	float3 vLight = g_vLightDir.xyz;//float3(0,-1,0);
 	output.vLight = vLight;
 	float fDot = max(0.3f, dot(vAnimNomal, -vLight));
 	output.lightcolor = float4(fDot,fDot,fDot,1);
@@ -59,9 +52,6 @@ VS_OUT VS(VS_IN input)
 	output.t = input.t;
 	return output;
 }
-
-Texture2D    g_txTex			: register(t0);
-SamplerState g_SampleWrap		: register(s0);
 
 float4 PS(VS_OUT input) : SV_Target
 {

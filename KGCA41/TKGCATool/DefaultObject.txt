@@ -1,3 +1,4 @@
+#include "Default.h"
 struct VS_IN
 {
 	float3 p : POSITION; 
@@ -10,15 +11,7 @@ struct VS_OUT
 	float4 c : COLOR0;
 	float2 t : TEXCOORD0;
 };
-// 상수버퍼는 레지스터 단위로만 저장된다.
-// 레지스터 단위란 :  float4(x,y,z,w)
-cbuffer cb_data : register(b0)
-{
-	matrix g_matWorld : packoffset(c0);
-	matrix g_matView : packoffset(c4);
-	matrix g_matProj : packoffset(c8);
-	float  fTimer : packoffset(c12.z);
-};
+
 VS_OUT VS(VS_IN input) 
 {
 	VS_OUT output = (VS_OUT)0;
@@ -37,9 +30,6 @@ VS_OUT VS(VS_IN input)
 	output.t = input.t;
 	return output;
 }
-
-Texture2D    g_txTex			: register(t0);
-SamplerState g_SampleWrap		: register(s0);
 
 float4 PS(VS_OUT input) : SV_Target
 {

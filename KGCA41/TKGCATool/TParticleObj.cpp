@@ -35,13 +35,18 @@ bool TParticleObj::CreateShader(std::wstring filename)
 #if defined( _DEBUG ) 
 	dwShaderFlags |= D3DCOMPILE_DEBUG;
 #endif
+	const D3D_SHADER_MACRO defines[] =
+	{
+		"EXAMPLE_DEFINE", "1",
+		NULL, NULL
+	};
 	// 정점쉐이더 컴파일 
 	ID3DBlob* pErrorCode = nullptr;
 	ID3DBlob* pGSCode = nullptr;
 	HRESULT hr = D3DCompileFromFile(
 		L"Particle.txt",
-		NULL,
-		NULL,
+		defines,
+		D3D_COMPILE_STANDARD_FILE_INCLUDE,
 		"GS",
 		"gs_5_0",
 		dwShaderFlags,

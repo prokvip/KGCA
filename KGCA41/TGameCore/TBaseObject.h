@@ -36,6 +36,11 @@ struct VS_CONSTANT_BUFFER
 	TMatrix  matWorld;
 	TMatrix  matView;
 	TMatrix  matProj;	
+	TMatrix  matWorldInverse;
+	TVector4 vLightDir;
+	TVector4 vLightPos;
+	TVector4 vEyeDir;
+	TVector4 vEyePos;
 	float    x;
 	float    y;
 	float    z;

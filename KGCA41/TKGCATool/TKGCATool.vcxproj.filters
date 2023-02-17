@@ -212,11 +212,12 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="DefaultObject.txt" />
-    <Text Include="DefaultShape.txt" />
+    <Text Include="DefaultShape.hlsl" />
     <Text Include="SpriteInfo.txt" />
     <Text Include="ui.txt" />
     <Text Include="Skinning.txt" />
     <Text Include="Particle.txt" />
     <Text Include="DefaultMap.txt" />
+    <Text Include="Default.h" />
   </ItemGroup>
 </Project>
