@@ -338,12 +338,14 @@ bool Sample::Render()
 	m_pImmediateContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	m_pImmediateContext->GSSetShader(nullptr, NULL, 0);
 
-	TVector3 vLight(0, 0, 1);
+	TVector3 vLightPos(0, 10, -50);
 	TMatrix matRotation;
 	D3DXMatrixRotationY(&matRotation, g_fGameTimer);
 	//vLight = vLight * matRotation;
-	D3DXVec3TransformCoord(&vLight, &vLight, &matRotation);
-	D3DXVec3Normalize(&vLight, &vLight);
+	D3DXVec3TransformCoord(&vLightPos, &vLightPos, &matRotation);
+
+	TVector3 vLightDir;
+	D3DXVec3Normalize(&vLightDir, &-vLightPos);
 
 	TMatrix matWorld;
 	if (pScene->m_pUser)
@@ -367,27 +369,24 @@ bool Sample::Render()
 
 	m_pImmediateContext->OMSetDepthStencilState(TDxState::g_pDefaultDepthStencil, 0xff);
 	
-	TVector3 vLightPos(100, 100, 0);
-	TVector3 vLightDir;
-	D3DXVec3Normalize(&vLightDir, &-vLightPos);
 	if (pScene->m_pMap)
 	{
 		pScene->m_pMap->m_cbData.vLightDir = 
-			TVector4(vLightDir.x, vLightDir.y, vLightDir.z, 100.0f) ;
+			TVector4(vLightDir.x, vLightDir.y, vLightDir.z, 55.0f) ;
 		pScene->m_pMap->m_cbData.vLightPos = 
-			TVector4(vLightPos.x, vLightPos.y, vLightPos.z, 100.0f); 
+			TVector4(vLightPos.x, vLightPos.y, vLightPos.z, 55.0f); 
 		pScene->m_pMap->m_cbData.vEyeDir =
 		{ 
 			pScene->m_pMainCamera->m_vLook.x,
 			pScene->m_pMainCamera->m_vLook.y,
 			pScene->m_pMainCamera->m_vLook.z,
-			10.0f
+			0.90f
 		};
 		pScene->m_pMap->m_cbData.vEyePos = {
 			pScene->m_pMainCamera->m_vPos.x,
 			pScene->m_pMainCamera->m_vPos.y,
 			pScene->m_pMainCamera->m_vPos.z,
-			10.0f
+			0.98f
 		};
 		pScene->m_pMap->SetMatrix(nullptr,
 			&pScene->m_pMainCamera->m_matView,
