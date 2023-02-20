@@ -48,7 +48,7 @@ float4 ComputePointLight(float3 vVertexPos,
 		vLight.w = distance(vVertexPos,g_vLightPos.xyz);
 		//if (vLight.w <= g_fRadius2)
 		{
-			float fLuminace = smoothstep(vLight.w-5.0f, vLight.w, g_fRadius2);
+			float fLuminace = smoothstep(vLight.w-5.0f, vLight.w, g_fRadius1);
 			float fIntensity = saturate(dot(vVertexNormal, -vLight.xyz));
 		//	//vPointLightColor += float4(g_vLightColor.rgb * fIntensity, 1.0f);
 			vPointLightColor += float4(vLightColor.rgb * fLuminace* fIntensity, 1.0f);

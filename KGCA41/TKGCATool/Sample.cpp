@@ -237,7 +237,7 @@ bool Sample::Frame()
 				std::vector<TNode*> nodelist;
 				T_BOX box;
 				TVector3 vMin, vMax;
-				TVector3 vRange(30, 30, 30);
+				TVector3 vRange(10, 10, 10);
 				vMax = m_Select.m_vIntersection + vRange;
 				vMin = m_Select.m_vIntersection - vRange;
 				box.Set(vMax, vMin);
@@ -250,9 +250,9 @@ bool Sample::Frame()
 							TVector3 v0 = m_Quadtree.m_pMap->m_VertexList[iVertex].p;							
 							TVector3 v = v0 - m_Select.m_vIntersection;
 							float fDistance = D3DXVec3Length(&v);
-							if (fDistance <= 30.0f)
+							if (fDistance <= 10.0f)
 							{
-								float fValue = (fDistance / 30.0f) * 90.0f;
+								float fValue = (fDistance / 10.0f) * 90.0f;
 								float fdot = cosf(DegreeToRadian(fValue));
 								m_Quadtree.m_pMap->m_VertexList[iVertex].p.y += fdot;
 								m_Quadtree.m_pMap->ComputeVertexNormal(iVertex);
@@ -338,6 +338,10 @@ bool Sample::Render()
 	m_pImmediateContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	m_pImmediateContext->GSSetShader(nullptr, NULL, 0);
 
+
+	TVector3 vSunLightDir(0, 100, 100);
+	D3DXVec3Normalize(&vSunLightDir, &-vSunLightDir);
+
 	TVector3 vLightPos(0, 10, -50);
 	TMatrix matRotation;
 	D3DXMatrixRotationY(&matRotation, g_fGameTimer);
@@ -372,7 +376,7 @@ bool Sample::Render()
 	if (pScene->m_pMap)
 	{
 		pScene->m_pMap->m_cbData.vLightDir = 
-			TVector4(vLightDir.x, vLightDir.y, vLightDir.z, 55.0f) ;
+			TVector4(vLightDir.x, vLightDir.y, vLightDir.z, 100.0f);
 		pScene->m_pMap->m_cbData.vLightPos = 
 			TVector4(vLightPos.x, vLightPos.y, vLightPos.z, 55.0f); 
 		pScene->m_pMap->m_cbData.vEyeDir =
