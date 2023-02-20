@@ -42,7 +42,11 @@ VS_OUT VS(VS_IN input)
 float4 PS(VS_OUT input) : SV_Target
 {
 	float4 vColor = g_txTex.Sample(g_SampleWrap , input.t);	
-	float4 vLightColor = ComputePointLight(input.w, input.n, 1)*ComputeSpotLight(input.w, input.n, 1);
+	float4 vLightColor = 
+						ComputePointDiffuseLight(input.w, input.n, 1)
+						+ComputeSpotDiffuseLight(input.w, input.n, 1)
+						+ComputePointSpecularLight(input.w, input.n, 1)
+						+ComputeSpotSpecularLight(input.w, input.n, 1);
 	float4 fFinalColor = vColor*vLightColor;
 	fFinalColor.a = 1.0f;
 	return fFinalColor;	

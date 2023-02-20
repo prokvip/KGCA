@@ -250,9 +250,9 @@ bool Sample::Frame()
 							TVector3 v0 = m_Quadtree.m_pMap->m_VertexList[iVertex].p;							
 							TVector3 v = v0 - m_Select.m_vIntersection;
 							float fDistance = D3DXVec3Length(&v);
-							if (fDistance <= 10.0f)
+							if (fDistance <= 30.0f)
 							{
-								float fValue = (fDistance / 10.0f) * 90.0f;
+								float fValue = (fDistance / 30.0f) * 90.0f;
 								float fdot = cosf(DegreeToRadian(fValue));
 								m_Quadtree.m_pMap->m_VertexList[iVertex].p.y += fdot;
 								m_Quadtree.m_pMap->ComputeVertexNormal(iVertex);
