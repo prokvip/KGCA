@@ -8,6 +8,7 @@ public:
 	int		m_iMaxDepth;
 	TMap* m_pMap = nullptr;
 	TCamera* m_pCamera = nullptr;
+	std::vector<TObject3D*>   m_ObjectList;
 	std::vector<TNode*> m_pLeafNodeList;
 	std::vector<TNode*> m_pDrawLeafNodeList;
 public:

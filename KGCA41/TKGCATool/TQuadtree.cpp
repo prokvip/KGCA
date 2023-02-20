@@ -43,6 +43,8 @@ TNode* TQuadtree::FindNode(TNode* pNode, T_BOX tBox)
 }
 bool TQuadtree::AddObject(TObject3D* pObj)
 {
+    m_ObjectList.push_back(pObj);
+
     TNode* pFindNode = FindNode(m_pRootNode, pObj->m_tBox);
     if (pFindNode != nullptr)
     {

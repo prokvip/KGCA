@@ -175,14 +175,15 @@ void TMapGen::OnLbnSelchangeObject()
 void TMapGen::OnBnClickedButton2()
 {
 	CTKGCAToolApp* pApp = (CTKGCAToolApp*)AfxGetApp();
-	pApp->m_Sample.m_bObjectPicking = true;
+	
 	T_STR filepath = L"D:/00_KGCA41Leture/data/fbx/";
 	filepath += m_strSelectObject.GetBuffer();
 	pApp->m_Sample.m_szSelectFbxFile = filepath;
 	
-	pApp->m_Sample.m_bUpPicking = true;
-	pApp->m_Sample.m_bDownPicking = true;
-	pApp->m_Sample.m_bPlatPicking = true;
+	pApp->m_Sample.m_bObjectPicking = true;
+	pApp->m_Sample.m_bUpPicking = false;
+	pApp->m_Sample.m_bDownPicking = false;
+	pApp->m_Sample.m_bPlatPicking = false;
 }
 
 

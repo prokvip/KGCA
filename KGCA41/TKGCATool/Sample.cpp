@@ -66,19 +66,13 @@ bool Sample::CreateMapData(UINT iColumn, UINT iRows)
 bool Sample::LoadFbx(T_STR filepath, TVector3 vPos)
 {
 	TCharacter* pCharacter = I_Object.Load(filepath, L"");	
-	pCharacter->m_matWorld._41 = vPos.x;
-	pCharacter->m_matWorld._42 = vPos.y;
-	pCharacter->m_matWorld._43 = vPos.z;
-	TVector3 vMin = TVector3(-10, -10, -10) + vPos;
-	TVector3 vMax = TVector3( 10,  10,  10) + vPos;
-	pCharacter->m_tBox.Set(vMax, vMin);
+	pCharacter->SetPos(vPos);
 	/*TActionTable action;
 	action.iStartFrame = 61;
 	action.iEndFrame = 91;
 	action.bLoop = true;
 	pCharacter->m_ActionList.insert(std::make_pair(L"walk", action));
 	pCharacter->m_ActionCurrent = pCharacter->m_ActionList.find(L"walk")->second;*/
-
 	m_NpcList.push_back(pCharacter);
 	m_Quadtree.AddObject(pCharacter);
 	return true;
@@ -218,16 +212,7 @@ bool Sample::Frame()
 		&m_pCurrentScene->m_pMainCamera->m_matView,
 		&m_pCurrentScene->m_pMainCamera->m_matProj);
 
-	if (m_bObjectPicking)
-	{
-		if (GetIntersection())
-		{
-			if (m_pTitle && m_pTitle->m_pMap)
-			{
-				LoadFbx(m_szSelectFbxFile, m_Select.m_vIntersection);
-			};
-		}
-	}
+	
 	if (m_bUpPicking)
 	{
 		if (GetIntersection())
@@ -261,9 +246,27 @@ bool Sample::Frame()
 					}
 					m_Quadtree.m_pMap->UpdateVertexBuffer();
 				}
+
+				for (auto npc : m_NpcList)
+				{
+					TVector3 vPos = npc->m_vPos;
+					vPos.y = npc->m_matWorld._42 = 
+						m_Quadtree.m_pMap->GetHeight(vPos.x, vPos.z);
+					npc->SetPos(vPos);
+				}
 			}
+		}		
+	}
+
+	if (m_bObjectPicking)
+	{
+		if (GetIntersection())
+		{
+			if (m_pTitle && m_pTitle->m_pMap)
+			{
+				LoadFbx(m_szSelectFbxFile, m_Select.m_vIntersection);
+			};
 		}
-		
 	}
 
 	ClearD3D11DeviceContext(m_pImmediateContext.Get());
@@ -278,10 +281,11 @@ bool Sample::Frame()
 		data->Frame();
 	}
 
-	/*for (auto npc : m_NpcList)
+	for (auto npc : m_NpcList)
 	{
 		npc->UpdateFrame(m_pImmediateContext.Get());
-	}*/
+	}
+
 	/*if (I_Input.GetKey('J') == KEY_HOLD)
 	{
 		TActionTable action = m_UserCharacter->m_ActionList.find(L"jump")->second;
