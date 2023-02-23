@@ -62,7 +62,7 @@ bool Sample::CreateMapData(UINT iColumn, UINT iRows)
 			((TSceneTitle*)m_pCurrentScene.get())->m_pMap);
 
 		m_Quadtree.m_TexArray[0] =
-			I_Tex.Load(L"../../data/map/034.bmp");
+			I_Tex.Load(L"../../data/ui/smile.bmp");
 		m_Quadtree.m_TexArray[1] =
 			I_Tex.Load(L"../../data/map/002.jpg");
 		m_Quadtree.m_TexArray[2] =

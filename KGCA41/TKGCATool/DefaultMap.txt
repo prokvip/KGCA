@@ -11,9 +11,10 @@ struct VS_OUT
 	float4 p : SV_POSITION;
 	float3 n : NORMAL; 
 	float4 c : COLOR0;
-	float4 t : TEXCOORD0;
+	float2 t : TEXCOORD0;
 	float3 L : TEXCOORD1;
 	float3 w : TEXCOORD2;//world
+	float4 t2 : TEXCOORD3;
 };
 
 VS_OUT VS(VS_IN input) 
@@ -33,15 +34,16 @@ VS_OUT VS(VS_IN input)
 	float4 vProj = mul(vView, g_matProj);	
 	output.p = vProj;
 	output.c = input.c;
-	//output.t = input.t;
+	output.t = input.t;
+	
 	// 0 ~ 65, cellDistange = 1.0f, tileCnt = 10.0f
 	//float xMin = 32*1.0f;
 	//float xMax = +32*1.0f;
 	// 월드 좌표를 기준으로 텍스처 좌표 생성
-	output.t.x = (vWorld.x+ 32.0f*1.0f) / 65.0f; // 0 ~1
-	output.t.y = 1.0f-((vWorld.z / 32.0f*1.0f)* 0.5f+0.5f);//0~1	
-	output.t.x = output.t.x*10.0f;
-	output.t.y = output.t.y*10.0f;
+	output.t2.x = (vWorld.x+ 32.0f*1.0f) / 65.0f; // 0 ~1
+	output.t2.y = 1.0f-((vWorld.z / 32.0f*1.0f)* 0.5f+0.5f);//0~1	
+	output.t2.x = output.t2.x*10.0f;
+	output.t2.y = output.t2.y*10.0f;
 
 	// 텍스처 변환 행렬 사용
 	matrix matTex=0;
@@ -51,13 +53,13 @@ VS_OUT VS(VS_IN input)
 	matTex._42 = 0.0f;
 
 	float4 vUV = mul(vWorld, matTex);
-	output.t.x = vUV.x;
-	output.t.y = vUV.y;
+	output.t2.x = vUV.x;
+	output.t2.y = vUV.y;
 
 	// 투영좌표 사용
-	output.t.z = (vProj.x / vProj.w)*0.5f+0.5f;
-	output.t.w = (vProj.y / vProj.w)*0.5f+0.5f;
-
+	output.t2.z = (vProj.x / vProj.w)*0.5f+0.5f;
+	output.t2.w = (vProj.y / vProj.w)*0.5f+0.5f;
+	
 
 	output.w = vWorld.xyz;
 	output.n = mul(input.n.xyz, matNormal);
@@ -122,21 +124,31 @@ float4 LoadTex5Color(float2 uv, float3 vWorld)
 }
 float4 PS(VS_OUT input) : SV_Target
 {
-	float4 vColor = LoadTex1Color(input.t.xy,input.w);	
-	vColor += LoadTex2Color(input.t.xy,input.w);	
-	vColor += LoadTex3Color(input.t.xy,input.w);	
-	vColor += LoadTex4Color(input.t.xy,input.w);	
-	vColor += LoadTex5Color(input.t.xy,input.w);	
+	float4 vBaseColor = g_txTex.Sample(g_SampleWrap , input.t2.xy);	
+	float4 vColor = LoadTex1Color(input.t2.xy,input.w);
+	vColor += LoadTex2Color(input.t2.xy,input.w);	
+	vColor += LoadTex3Color(input.t2.xy,input.w);	
+	vColor += LoadTex4Color(input.t2.xy,input.w);	
+	vColor += LoadTex5Color(input.t2.xy,input.w);	
 
-	float4 vBaseColor = g_txTex.Sample(g_SampleWrap , input.t.xy);	
+	float4 mask	  = g_txTex1.Sample( g_SampleWrap, input.t.xy );
+	mask = float4(0,0,0,0);
+    float4 vColorTile = g_txTex2.SampleLevel( g_SampleWrap, input.t.xy*10.0f, 0 ) * mask.r;
+    vColorTile +=       g_txTex3.SampleLevel( g_SampleWrap, input.t.xy*10.0f, 0 ) * mask.g;
+    vColorTile +=       g_txTex4.SampleLevel( g_SampleWrap, input.t.xy*10.0f, 0 ) * mask.b;
+    vColorTile +=       g_txTex5.SampleLevel( g_SampleWrap, input.t.xy*10.0f, 0 ) * mask.a;
+  
+
+
+	//float4 vBaseColor = g_txTex.Sample(g_SampleWrap , input.t.xy);	
 	float4 vLightColor = 
 						ComputePointDiffuseLight(input.w, input.n, 1)
 						+ComputeSpotDiffuseLight(input.w, input.n, 1)
 						+ComputePointSpecularLight(input.w, input.n, 1)
 						+ComputeSpotSpecularLight(input.w, input.n, 1);
-	float4 fFinalColor = vColor*vBaseColor*vLightColor;
+	float4 fFinalColor = vColorTile+vColor*vLightColor;
 	fFinalColor.a = 1.0f;
-	return fFinalColor;	
+	return vColor;	
 }
 
 float4 PSColor(VS_OUT input) : SV_Target
