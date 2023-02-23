@@ -60,6 +60,18 @@ bool Sample::CreateMapData(UINT iColumn, UINT iRows)
 		m_Quadtree.Create(
 			((TSceneTitle*)m_pCurrentScene.get())->m_pMainCamera,
 			((TSceneTitle*)m_pCurrentScene.get())->m_pMap);
+
+		m_Quadtree.m_TexArray[0] =
+			I_Tex.Load(L"../../data/map/034.bmp");
+		m_Quadtree.m_TexArray[1] =
+			I_Tex.Load(L"../../data/map/002.jpg");
+		m_Quadtree.m_TexArray[2] =
+			I_Tex.Load(L"../../data/map/026.jpg");
+		m_Quadtree.m_TexArray[3] =
+			I_Tex.Load(L"../../data/map/036.bmp");
+		m_Quadtree.m_TexArray[4] =
+			I_Tex.Load(L"../../data/map/000.jpg");
+
 	}	
 	return true;
 }

@@ -1,5 +1,12 @@
 #define g_iNumLight 1
 Texture2D    g_txTex			: register(t0);
+Texture2D    g_txTex1 : register(t1);
+Texture2D    g_txTex2 : register(t2);
+Texture2D    g_txTex3 : register(t3);
+Texture2D    g_txTex4 : register(t4);
+Texture2D    g_txTex5 : register(t5);
+//Texture2D    g_txTexArray[16] : register(t6);
+
 SamplerState g_SampleWrap		: register(s0);
 
 cbuffer cb_data : register(b0)

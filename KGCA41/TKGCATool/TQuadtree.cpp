@@ -164,6 +164,12 @@ bool TQuadtree::Render()
     for (auto node : m_pDrawLeafNodeList)
     {
         m_pMap->PreRender();
+        m_pMap->m_pImmediateContext->PSSetShaderResources(1, 1, &m_TexArray[0]->m_pTextureSRV);
+        m_pMap->m_pImmediateContext->PSSetShaderResources(2, 1, &m_TexArray[1]->m_pTextureSRV);
+        m_pMap->m_pImmediateContext->PSSetShaderResources(3, 1, &m_TexArray[2]->m_pTextureSRV);
+        m_pMap->m_pImmediateContext->PSSetShaderResources(4, 1, &m_TexArray[3]->m_pTextureSRV);
+        m_pMap->m_pImmediateContext->PSSetShaderResources(5, 1, &m_TexArray[4]->m_pTextureSRV);
+
         m_pMap->m_pImmediateContext->IASetIndexBuffer(
             node->m_pIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
         m_pMap->m_pImmediateContext->DrawIndexed(node->m_dwFace * 3, 0, 0);
