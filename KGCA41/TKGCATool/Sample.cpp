@@ -23,7 +23,7 @@ bool  Sample::GetIntersection()
 {
 	//if (m_bObjectPicking)
 	{
-		if (I_Input.GetKey(VK_RBUTTON) == KEY_PUSH)
+		if (I_Input.GetKey(VK_MBUTTON) == KEY_HOLD)
 		{
 			for (auto node : m_Quadtree.m_pDrawLeafNodeList)
 			{
@@ -277,6 +277,18 @@ bool Sample::Frame()
 			if (m_pTitle && m_pTitle->m_pMap)
 			{
 				LoadFbx(m_szSelectFbxFile, m_Select.m_vIntersection);
+			};
+		}
+	}
+	bool m_bSplatting = true;
+	UINT m_iSplattingTexIndex = 0;
+	if (m_bSplatting)
+	{
+		if (GetIntersection())
+		{
+			if (m_pTitle && m_pTitle->m_pMap)
+			{
+				m_Quadtree.Splatting(m_Select.m_vIntersection, m_iSplattingTexIndex);
 			};
 		}
 	}

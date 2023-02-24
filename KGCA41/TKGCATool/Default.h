@@ -45,7 +45,7 @@ float4 ComputePointDiffuseLight(float3 vVertexPos,
 						 float3 vVertexNormal, 
 						 int iNumLight)
 {
-	float4 vAmbintColor = float4(0.3f, 0.3f, 0.3f, 1.0f);
+	
 	float4 vPointLightColor = float4(0, 0, 0, 1);
 	float4 vLightColor = float4(1, 1, 1, 1);
 	////for (int iLight = 0; iLight < iNumLight; iLight++)
@@ -61,14 +61,14 @@ float4 ComputePointDiffuseLight(float3 vVertexPos,
 		//specular
 		
 	//}
-	return vPointLightColor +vAmbintColor;
+	return vPointLightColor;
 }
 
 float4 ComputeSpotDiffuseLight(float3 vVertexPos,
 	float3 vVertexNormal,
 	int iNumLight)
 {
-	float4 vAmbintColor = float4(0.3f, 0.3f, 0.3f, 1.0f);
+	
 	float4 vPointLightColor = float4(0, 0, 0, 1);
 	float4 vLightInColor = float4(1, 0, 0, 1);
 	float4 vLightOutColor = float4(1, 0, 0, 1);
@@ -94,14 +94,14 @@ float4 ComputeSpotDiffuseLight(float3 vVertexPos,
 			}
 		}
 	//}
-	return vPointLightColor +vAmbintColor;
+	return vPointLightColor;
 }
 
 float4 ComputePointSpecularLight(float3 vVertexPos,
 	float3 vVertexNormal,
 	int iNumLight)
 {
-	float4 vAmbintColor = float4(0.3f, 0.3f, 0.3f, 1.0f);
+	
 	float4 vPointLightColor = float4(0, 0, 0, 1);
 	float4 vLightColor = float4(1, 1, 1, 1);
 	////for (int iLight = 0; iLight < iNumLight; iLight++)
@@ -114,14 +114,14 @@ float4 ComputePointSpecularLight(float3 vVertexPos,
 	vPointLightColor += float4(vLightColor.rgb * fLuminace * fIntensity, 1.0f);
 
 //}
-	return vPointLightColor + vAmbintColor;
+	return vPointLightColor;
 }
 
 float4 ComputeSpotSpecularLight(float3 vVertexPos,
 	float3 vVertexNormal,
 	int iNumLight)
 {
-	float4 vAmbintColor = float4(0.3f, 0.3f, 0.3f, 1.0f);
+	
 	float4 vPointLightColor = float4(0, 0, 0, 1);
 	float4 vLightInColor = float4(1, 0, 0, 1);
 	float4 vLightOutColor = float4(1, 0, 0, 1);
@@ -147,5 +147,5 @@ float4 ComputeSpotSpecularLight(float3 vVertexPos,
 		}
 	}
 	//}
-	return vPointLightColor + vAmbintColor;
+	return vPointLightColor;
 }

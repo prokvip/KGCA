@@ -13,6 +13,12 @@ public:
 	std::vector<TNode*> m_pLeafNodeList;
 	std::vector<TNode*> m_pDrawLeafNodeList;
 public:
+	BYTE* m_fAlphaData;
+	ComPtr<ID3D11Texture2D>  m_pMaskAlphaTex;
+	ComPtr<ID3D11ShaderResourceView>  m_pMaskAlphaTexSRV;
+	HRESULT CreateAlphaTexture(ID3D11Device* pDevice, DWORD dwWidth, DWORD dwHeight);
+	void    Splatting(TVector3 vIntersection, UINT iSplattingTexIndex, float fSplattingRadius=5.0f);
+public:
 	bool	Create(TCamera* pMainCamera, TMap* m_pMap, int iMaxDepth = 3);
 	bool	AddObject(TObject3D* pObj);
 	void	BuildTree(TNode* pNode);

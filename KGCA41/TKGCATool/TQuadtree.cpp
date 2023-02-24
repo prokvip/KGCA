@@ -1,8 +1,104 @@
 #include "pch.h"
 #include "TQuadtree.h"
 #include "TCollision.h"
-bool TQuadtree::Create(TCamera* pMainCamera, TMap* pMap, int iMaxDepth)
+
+void TQuadtree::Splatting(TVector3 vIntersection, UINT iSplattingTexIndex, float fSplattingRadius)
 {
+    UINT m_iSplattingIndex = iSplattingTexIndex;
+    UINT const DataSize = sizeof(BYTE) * 4;
+    UINT const RowPitch = DataSize * 1024;
+    UINT const DepthPitch = 0;
+
+    // pick data    ->  texture data
+    // 0 ~ 64      ->   0 ~ 1
+    // - 32 ~ +32  ->   0 ~ 1024 -> 0 ~ 1
+    TVector2 vTexIndex;
+    TVector2 vUV;
+    TVector2 vMaxSize = { +32, +32 };
+    UINT     iTexSize = 1024;
+    TVector3 vTexPos;
+    TVector3 vPickPos = vIntersection;
+
+    m_iSplattingIndex = rand() % 4;
+
+    for (UINT y = 0; y < iTexSize; y++)
+    {
+        vTexIndex.y = y;
+        for (UINT x = 0; x < iTexSize; x++)
+        {
+            vTexIndex.x = x;
+            // -1 ~ +1
+            vUV = TVector2((vTexIndex.x / (float)iTexSize) * 2.0f - 1.0f,
+                -(vTexIndex.y / (float)iTexSize * 2.0f - 1.0f));
+            // -32 ~ +32
+            vTexPos = TVector3(vUV.x * vMaxSize.x, 0.0f, vUV.y * vMaxSize.y);
+            BYTE* pixel = &m_fAlphaData[iTexSize * y * 4 + x * 4];
+
+            float fRadius = D3DXVec3Length(&(vPickPos - vTexPos));
+            
+            if (fRadius < fSplattingRadius)
+            {
+                float fDot = 1.0f - (fRadius / fSplattingRadius);
+                if (m_iSplattingIndex == 0 && (fDot*255) > pixel[0])
+                    pixel[0] = fDot * 255;// (cosf(g_fGameTimer) * 0.5f + 0.5f) * 255.0f;
+                if (m_iSplattingIndex == 1 && (fDot * 255) > pixel[1])
+                    pixel[1] = fDot * 255;//g
+                if (m_iSplattingIndex == 2 && (fDot * 255) > pixel[2])
+                    pixel[2] = fDot * 255;//b
+                if (m_iSplattingIndex == 3 && (fDot * 255) > pixel[3])
+                    pixel[3] = fDot * 255;//a
+            }
+        }
+    }
+    m_pMap->m_pImmediateContext->UpdateSubresource(m_pMaskAlphaTex.Get(), 0, nullptr, m_fAlphaData, RowPitch, DepthPitch);
+
+}
+HRESULT TQuadtree::CreateAlphaTexture(ID3D11Device* pDevice, DWORD dwWidth, DWORD dwHeight)
+{
+    HRESULT hr;
+    D3D11_TEXTURE2D_DESC td;
+    ZeroMemory(&td, sizeof(td));
+    td.Width = dwWidth;
+    td.Height = dwHeight;
+    td.MipLevels = 1;
+    td.ArraySize = 1;
+    td.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+    td.SampleDesc.Count = 1;
+    td.SampleDesc.Quality = 0;
+    td.Usage = D3D11_USAGE_DEFAULT;
+    td.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+    td.CPUAccessFlags = 0;
+    td.MiscFlags = 0;
+
+    m_fAlphaData = new BYTE[dwWidth* dwHeight*4];
+    for (UINT y = 0; y < dwHeight; y++)
+    {
+        for (UINT x = 0; x < dwWidth; x++)
+        {
+            BYTE* pixel = &m_fAlphaData[dwWidth*y*4 + x*4];
+            pixel[0] = 0;//r
+            pixel[1] = 0;//g
+            pixel[2] = 0;//b
+            pixel[3] = 0;//a
+        }
+    }
+    D3D11_SUBRESOURCE_DATA initData;
+    initData.pSysMem = m_fAlphaData;
+    initData.SysMemPitch = sizeof(BYTE) * 4 * dwWidth;
+    initData.SysMemSlicePitch = 0;
+    if (FAILED(hr = pDevice->CreateTexture2D(&td, &initData, m_pMaskAlphaTex.GetAddressOf())))
+    {
+        return hr;
+    }
+    if (FAILED(hr = pDevice->CreateShaderResourceView(m_pMaskAlphaTex.Get(), NULL, m_pMaskAlphaTexSRV.GetAddressOf())))
+    {
+        return hr;
+    }
+    
+    return hr;
+}
+bool TQuadtree::Create(TCamera* pMainCamera, TMap* pMap, int iMaxDepth)
+{    
     m_pCamera = pMainCamera;
     m_pMap = pMap;
     m_iMaxDepth = iMaxDepth;
@@ -13,6 +109,8 @@ bool TQuadtree::Create(TCamera* pMainCamera, TMap* pMap, int iMaxDepth)
         pMap->m_iNumRows* pMap->m_iNumCols-1,
         pMap->m_iNumCols, pMap->m_iNumRows);
     BuildTree(m_pRootNode);
+
+    CreateAlphaTexture(this->m_pMap->m_pd3dDevice, 1024, 1024);
     return true;
 }
 TNode* TQuadtree::FindNode(TNode* pNode, T_BOX tBox)
@@ -129,7 +227,8 @@ TNode* TQuadtree::VisibleNode(TNode* pNode)
    }   
 }
 bool TQuadtree::Frame()
-{
+{    
+    
     m_pDrawLeafNodeList.clear();
     //VisibleNode(m_pRootNode);
    
@@ -164,7 +263,8 @@ bool TQuadtree::Render()
     for (auto node : m_pDrawLeafNodeList)
     {
         m_pMap->PreRender();
-        m_pMap->m_pImmediateContext->PSSetShaderResources(1, 1, &m_TexArray[0]->m_pTextureSRV);
+        ID3D11ShaderResourceView* pSRV = nullptr;
+        m_pMap->m_pImmediateContext->PSSetShaderResources(1, 1, m_pMaskAlphaTexSRV.GetAddressOf());
         m_pMap->m_pImmediateContext->PSSetShaderResources(2, 1, &m_TexArray[1]->m_pTextureSRV);
         m_pMap->m_pImmediateContext->PSSetShaderResources(3, 1, &m_TexArray[2]->m_pTextureSRV);
         m_pMap->m_pImmediateContext->PSSetShaderResources(4, 1, &m_TexArray[3]->m_pTextureSRV);
@@ -186,6 +286,7 @@ bool TQuadtree::Render()
 }
 bool TQuadtree::Release()
 {
+    delete[] m_fAlphaData;
     if (m_pRootNode)
     {
         delete m_pRootNode;
