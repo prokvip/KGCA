@@ -1,6 +1,6 @@
 #define g_iNumLight 1
 Texture2D    g_txTex			: register(t0);
-Texture2D    g_txTex1 : register(t1);
+Texture2D    g_txMaskTex : register(t1);
 Texture2D    g_txTex2 : register(t2);
 Texture2D    g_txTex3 : register(t3);
 Texture2D    g_txTex4 : register(t4);
