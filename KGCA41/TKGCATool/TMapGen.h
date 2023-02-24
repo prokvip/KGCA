@@ -1,5 +1,5 @@
 ﻿#pragma once
-
+#include <atlimage.h>
 
 
 // TMapGen 폼 보기
@@ -8,6 +8,7 @@ class TMapGen : public CFormView
 {
 	DECLARE_DYNCREATE(TMapGen)
 public:
+	CImage  m_img; //JPEG, GIF, BMP 및 PNG
 	void Recurse(LPCTSTR pstr, LPCTSTR ext, std::vector<T_STR>& list);
 public:
 	std::vector<T_STR>  m_TextureNameList;
@@ -47,6 +48,9 @@ public:
 	afx_msg void OnLbnSelchangeObject();
 	afx_msg void OnBnClickedButton2();
 	afx_msg void OnBnClickedLandscapeUp();
+	CStatic m_PictureTextureCtrl;
+	virtual void OnPrint(CDC* pDC, CPrintInfo* pInfo);
+	afx_msg void OnPaint();
 };
 
 

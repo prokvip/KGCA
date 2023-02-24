@@ -33,6 +33,7 @@ void TMapGen::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_LIST1, m_TextureList);
 	DDX_Text(pDX, IDC_EDIT2, m_strSelectObject);
 	DDX_Control(pDX, IDC_LIST2, m_ObjectList);
+	DDX_Control(pDX, IDC_PICTURE_TEXTURE, m_PictureTextureCtrl);
 }
 
 BEGIN_MESSAGE_MAP(TMapGen, CFormView)
@@ -42,6 +43,7 @@ BEGIN_MESSAGE_MAP(TMapGen, CFormView)
 	ON_LBN_SELCHANGE(IDC_LIST2, &TMapGen::OnLbnSelchangeObject)
 	ON_BN_CLICKED(IDC_BUTTON2, &TMapGen::OnBnClickedButton2)
 	ON_BN_CLICKED(IDC_LANDSCAPE_UP, &TMapGen::OnBnClickedLandscapeUp)
+	ON_WM_PAINT()
 END_MESSAGE_MAP()
 
 
@@ -116,6 +118,13 @@ void TMapGen::OnLbnSelchangeList1()
 	{
 		pApp->m_Sample.m_pTitle->m_pMap->m_pTextureSRV = pTex->m_pTextureSRV;
 	}
+
+
+	m_img.Destroy();
+	HRESULT hr = m_img.Load(filepath.c_str());
+	if (FAILED(hr))	{}
+		
+	RedrawWindow();
 }
 
 
@@ -141,6 +150,12 @@ void TMapGen::OnInitialUpdate()
 		CString str(data.c_str());
 		m_ObjectList.InsertString(m_ObjectList.GetCount(), str);
 	}
+
+	
+
+	T_STR filepath = L"D:/00_KGCA41Leture/data/map/";
+	filepath += L"000.jpg";
+	m_img.Load(filepath.c_str());
 }
 
 
@@ -184,6 +199,8 @@ void TMapGen::OnBnClickedButton2()
 	pApp->m_Sample.m_bUpPicking = false;
 	pApp->m_Sample.m_bDownPicking = false;
 	pApp->m_Sample.m_bPlatPicking = false;
+
+	
 }
 
 
@@ -194,4 +211,31 @@ void TMapGen::OnBnClickedLandscapeUp()
 	pApp->m_Sample.m_bDownPicking = false;
 	pApp->m_Sample.m_bPlatPicking = false;
 	pApp->m_Sample.m_bObjectPicking = false;
+}
+
+
+void TMapGen::OnPrint(CDC* pDC, CPrintInfo* pInfo)
+{
+}
+
+
+void TMapGen::OnPaint()
+{
+	CPaintDC dc(this); // device context for painting
+					   // TODO: 여기에 메시지 처리기 코드를 추가합니다.
+					   // 그리기 메시지에 대해서는 CFormView::OnPaint()을(를) 호출하지 마십시오.
+	CRect rect;
+	CRect rect2;
+	m_PictureTextureCtrl.GetWindowRect(rect);
+	ScreenToClient(rect);
+	::SetStretchBltMode(dc, COLORONCOLOR);  // set iMode.
+	if (m_img.IsNull()==false)
+	{
+		//int width = m_img.GetWidth();
+		//int height = m_img.GetHeight();
+		//m_PictureTextureCtrl.MoveWindow(rect.left, rect.top, width,height);
+		//m_PictureTextureCtrl.GetWindowRect(rect2);
+		//ScreenToClient(rect2);
+		m_img.StretchBlt(dc, rect,SRCCOPY);
+	}
 }
