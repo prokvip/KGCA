@@ -7,14 +7,21 @@
 #define IDC_NAME                        1002
 #define IDC_PASS                        1003
 #define IDC_KOREAN                      1004
+#define IDC_                            1004
+#define IDC_SEX                         1004
 #define IDC_INSERT                      1005
 #define IDC_DELETE                      1006
 #define IDC_BUTTON3                     1007
 #define IDC_UPDATE                      1007
 #define IDC_LEVEL                       1008
-#define IDC_NAME2                       1009
 #define IDC_ACCOUNTTIME                 1009
 #define IDC_ACCOUNT                     1010
+#define IDC_LOGINTIME                   1011
+#define IDC_ACCOUNT2                    1012
+#define IDC_LOGOUTTIME                  1013
+#define IDC_ACCOUNT3                    1014
+#define IDC_NAME2                       1015
+#define IDC_ID                          1015
 
 // Next default values for new objects
 // 

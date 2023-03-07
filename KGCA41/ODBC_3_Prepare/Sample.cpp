@@ -6,10 +6,16 @@
 TObdc  g_odbc;
 
 HWND g_hDlgList;
+
+HWND g_hDlgID;
 HWND g_hDlgName;
 HWND g_hDlgPass;
 HWND g_hDlgLevel;
+HWND g_hDlgSex;
 HWND g_hDlgAccount;
+HWND g_hDlgLogin;
+HWND g_hDlgLogout;
+
 void Load();
 
 void SelectReadRecord()
@@ -105,10 +111,15 @@ LRESULT CALLBACK DlgProc(HWND hDlg, UINT iMessage, WPARAM wParam, LPARAM lParam)
 		case WM_INITDIALOG:
 		{
 			g_hDlgList = GetDlgItem(hDlg, IDC_LIST1);
+			g_hDlgID = GetDlgItem(hDlg, IDC_ID);			
 			g_hDlgName = GetDlgItem(hDlg, IDC_NAME);
 			g_hDlgPass = GetDlgItem(hDlg, IDC_PASS);
 			g_hDlgLevel = GetDlgItem(hDlg, IDC_LEVEL);
+			g_hDlgSex = GetDlgItem(hDlg, IDC_SEX);
 			g_hDlgAccount = GetDlgItem(hDlg, IDC_ACCOUNTTIME);
+			g_hDlgLogin = GetDlgItem(hDlg, IDC_LOGINTIME);
+			g_hDlgLogout = GetDlgItem(hDlg, IDC_LOGOUTTIME);		
+
 			for( auto rec : g_odbc.m_dbDataList)
 			{
 				SendMessage(g_hDlgList, LB_ADDSTRING, 0, (LPARAM)rec[1].c_str());
@@ -147,33 +158,57 @@ LRESULT CALLBACK DlgProc(HWND hDlg, UINT iMessage, WPARAM wParam, LPARAM lParam)
 								//int iDiff = std::difftime(difftime, now);
 		
 
-								TCHAR retName[25] = { 0, };
-								SQLLEN  lName;
-								TCHAR retPass[25] = { 0, };
-								SQLLEN  lPass;
-								int    retLevel;
-								SQLLEN  lLevel;			
-								TIMESTAMP_STRUCT ts1;
-								SQLBindCol(g_odbc.g_hReadStmt, 1, SQL_UNICODE, retName, _countof(retName), &lName);
-								SQLBindCol(g_odbc.g_hReadStmt, 2, SQL_UNICODE, retPass, _countof(retPass), &lPass);
-								SQLBindCol(g_odbc.g_hReadStmt, 3, SQL_INTEGER, &retLevel, 0, &lLevel);
-								SQLBindCol(g_odbc.g_hReadStmt, 4, SQL_TYPE_TIMESTAMP, &ts1, sizeof(ts1), NULL);
-							
+								int    retID;					SQLLEN  lID;
+								TCHAR retName[25] = { 0, };		SQLLEN  lName;
+								TCHAR retPass[25] = { 0, };		SQLLEN  lPass;
+								int    retLevel;				SQLLEN  lLevel;			
+								int    retSex;					SQLLEN  lSex;
+								TIMESTAMP_STRUCT accountTS;
+								TIMESTAMP_STRUCT loginTS;
+								TIMESTAMP_STRUCT logoutTS;
+
+								SQLBindCol(g_odbc.g_hReadStmt, 1, SQL_INTEGER, &retID, _countof(retName), &lID);
+								SQLBindCol(g_odbc.g_hReadStmt, 2, SQL_UNICODE, retName, _countof(retName), &lName);
+								SQLBindCol(g_odbc.g_hReadStmt, 3, SQL_UNICODE, retPass, _countof(retPass), &lPass);
+								SQLBindCol(g_odbc.g_hReadStmt, 4, SQL_INTEGER, &retLevel, 0, &lLevel);
+								SQLBindCol(g_odbc.g_hReadStmt, 5, SQL_INTEGER, &retSex, 0, &lSex);
+								SQLBindCol(g_odbc.g_hReadStmt, 6, SQL_TYPE_TIMESTAMP, &accountTS, sizeof(accountTS), NULL);
+								SQLBindCol(g_odbc.g_hReadStmt, 7, SQL_TYPE_TIMESTAMP, &loginTS, sizeof(loginTS), NULL);
+								SQLBindCol(g_odbc.g_hReadStmt, 8, SQL_TYPE_TIMESTAMP, &logoutTS, sizeof(logoutTS), NULL);							
 
 								if (g_odbc.ReadRecord(selectName))
 								{
+									SetWindowText(g_hDlgID, std::to_wstring(retID).c_str());
 									SetWindowText(g_hDlgName, retName);
 									SetWindowText(g_hDlgPass, retPass);
-									SetWindowText(g_hDlgLevel, std::to_wstring(retLevel).c_str());
-
+									SetWindowText(g_hDlgLevel, std::to_wstring(retLevel).c_str());				
+									SendMessage(g_hDlgSex, BM_SETCHECK,((retSex) ? BST_CHECKED : BST_UNCHECKED), 0);
 									std::wstring account;
-									account += std::to_wstring(ts1.year); account += L"년";
-									account += std::to_wstring(ts1.month); account += L"월";
-									account += std::to_wstring(ts1.day); account += L"일";										
-									account += std::to_wstring(ts1.hour); account += L"시";
-									account += std::to_wstring(ts1.minute); account += L"분";
-									account += std::to_wstring(ts1.second); account += L"초";
+									account += std::to_wstring(accountTS.year); account += L"년";
+									account += std::to_wstring(accountTS.month); account += L"월";
+									account += std::to_wstring(accountTS.day); account += L"일";
+									account += std::to_wstring(accountTS.hour); account += L"시";
+									account += std::to_wstring(accountTS.minute); account += L"분";
+									account += std::to_wstring(accountTS.second); account += L"초";
 									SetWindowText(g_hDlgAccount, account.c_str());									
+
+									std::wstring login;
+									login += std::to_wstring(loginTS.year); login += L"년";
+									login += std::to_wstring(loginTS.month); login += L"월";
+									login += std::to_wstring(loginTS.day); login += L"일";
+									login += std::to_wstring(loginTS.hour); login += L"시";
+									login += std::to_wstring(loginTS.minute); login += L"분";
+									login += std::to_wstring(loginTS.second); login += L"초";
+									SetWindowText(g_hDlgLogin, login.c_str());
+
+									std::wstring logout;
+									logout += std::to_wstring(logoutTS.year); logout += L"년";
+									logout += std::to_wstring(logoutTS.month); logout += L"월";
+									logout += std::to_wstring(logoutTS.day); logout += L"일";
+									logout += std::to_wstring(logoutTS.hour); logout += L"시";
+									logout += std::to_wstring(logoutTS.minute); logout += L"분";
+									logout += std::to_wstring(logoutTS.second); logout += L"초";
+									SetWindowText(g_hDlgLogout, logout.c_str());
 								}
 								return TRUE;
 							}
@@ -248,8 +283,7 @@ void Load()
 
 	SQLFreeStmt(g_odbc.g_hSelectAllStmt, SQL_CLOSE);
 }
-int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance
-					, LPSTR lpszCmdParam, int nCmdShow)
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdParam, int nCmdShow)
 {
 	g_odbc.Init();
 	g_odbc.Connect(L"../../data/db/Account.accdb");

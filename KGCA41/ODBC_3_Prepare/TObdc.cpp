@@ -18,7 +18,8 @@ bool TObdc::CreatePrepare()
 	/// g_hReadStmt
 	/// </summary>
 	/// <returns></returns>
-	std::wstring sql2 = L"select NAME,PASS,GLEVEL,ACCOUNT from ACCOUNT where NAME=?";
+	//std::wstring sql2 = L"select NAME,PASS,GLEVEL,ACCOUNT from ACCOUNT where NAME=?";
+	std::wstring sql2 = L"select * from ACCOUNT where NAME=?";
 	ret = SQLAllocHandle(SQL_HANDLE_STMT, g_hDbc, &g_hReadStmt);
 	ret = SQLPrepare(g_hReadStmt, (SQLTCHAR*)sql2.c_str(), SQL_NTS);
 	if (ret != SQL_SUCCESS)
@@ -130,15 +131,15 @@ bool TObdc::CreatePrepare()
 		ErrorMsg();
 		return false;
 	}
-	/*WCHAR szTime[] = L"2023-01-01 12:33:02.123456"; 밀리초(소수점6자리)
-	ret = SQLBindParameter(g_hUpdateStmt, 4, SQL_PARAM_INPUT, SQL_TYPE_TIMESTAMP, SQL_TYPE_TIMESTAMP,
-		sizeof(szTime), 6, szTime,
-		0, &m_cbColumn);
-	if (ret != SQL_SUCCESS)
-	{
-		ErrorMsg();
-		return false;
-	}*/
+	//WCHAR szTime[] = L"2023-01-01 12:33:02.123456"; //밀리초(소수점6자리)
+	//ret = SQLBindParameter(g_hUpdateStmt, 4, SQL_PARAM_INPUT, SQL_TYPE_TIMESTAMP, SQL_TYPE_TIMESTAMP,
+	//	sizeof(szTime), 6, szTime,
+	//	0, &m_cbColumn);
+	//if (ret != SQL_SUCCESS)
+	//{
+	//	ErrorMsg();
+	//	return false;
+	//}
 
 	ret = SQLBindParameter(g_hUpdateStmt, 5, SQL_PARAM_INPUT, SQL_UNICODE, SQL_CHAR,
 		m_iDataLength, 0, m_szSelectName,
@@ -201,14 +202,14 @@ void TObdc::Connect(std::wstring dbName)
 }
 void TObdc::DisConnect()
 {	
-	if (g_hStmt) SQLFreeHandle(SQL_HANDLE_ENV, g_hStmt);
-	if (g_hSelectAllStmt) SQLFreeHandle(SQL_HANDLE_ENV, g_hSelectAllStmt);
-	if (g_hInsertStmt) SQLFreeHandle(SQL_HANDLE_ENV, g_hInsertStmt);
-	if (g_hUpdateStmt) SQLFreeHandle(SQL_HANDLE_ENV, g_hUpdateStmt);
-	if (g_hDeleteStmt) SQLFreeHandle(SQL_HANDLE_ENV, g_hDeleteStmt);
+	if (g_hStmt) SQLFreeHandle(SQL_HANDLE_STMT, g_hStmt);
+	if (g_hSelectAllStmt) SQLFreeHandle(SQL_HANDLE_STMT, g_hSelectAllStmt);
+	if (g_hInsertStmt) SQLFreeHandle(SQL_HANDLE_STMT, g_hInsertStmt);
+	if (g_hUpdateStmt) SQLFreeHandle(SQL_HANDLE_STMT, g_hUpdateStmt);
+	if (g_hDeleteStmt) SQLFreeHandle(SQL_HANDLE_STMT, g_hDeleteStmt);
 
 	if (g_hDbc) SQLFreeHandle(SQL_HANDLE_DBC, g_hDbc);
-	if (g_hEnv) SQLFreeHandle(SQL_HANDLE_STMT, g_hEnv);
+	if (g_hEnv) SQLFreeHandle(SQL_HANDLE_ENV, g_hEnv);
 }
 
 void TObdc::ErrorMsg()
@@ -254,11 +255,6 @@ bool TObdc::AddSQL(dbitem& record)
 }
 bool TObdc::UpdateSQL(dbitem& record, std::wstring selectName)
 {
-	//TCHAR sql[256] = { 0, };
-	//_stprintf(sql, L"update tblCigar set name='%s',price=%d,korean=%d where name='%s'",
-	//	record.name.c_str(), record.price, (int)record.korean, name);
-	//SQLRETURN hr = SQLExecDirect(g_hStmt, sql, SQL_NTS);
-
 	ZeroMemory(m_szSelectName, sizeof(m_szSelectName));
 	CopyMemory(m_szSelectName, selectName.c_str(), selectName.size() * sizeof(TCHAR));
 

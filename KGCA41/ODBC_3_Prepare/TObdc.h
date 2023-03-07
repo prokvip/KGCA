@@ -8,7 +8,8 @@
 #include <time.h>
 #include <ctime>
 #include <vector>
-
+//#pragma comment(lib, "legacy_stdio_definitions.lib")
+//참고 Roaming::RoamingNotInitializedException C++ 예외 발생시 accessdatabaseengine_X64.exe 설치
 using RECORD = std::vector<std::wstring>;
 
 struct dbitem
@@ -40,11 +41,9 @@ public:
 	SQLHENV   g_hEnv;
 	SQLHDBC	  g_hDbc;
 	SQLHSTMT  g_hStmt;
-	SQLHSTMT  g_hReadStmt;
-	
-	
-	
+	SQLHSTMT  g_hReadStmt;	
 	SQLHSTMT  g_hDeleteStmt;
+
 	std::vector<TColDescription>	m_ColumnList;
 	std::vector<RECORD>				m_dbDataList;
 	std::vector<dbitem>				m_dbList;
@@ -62,14 +61,13 @@ public:
 	SQLHSTMT  g_hInsertStmt;
 	TCHAR	   m_szInsertName[64] = { 0, };
 	TCHAR	   m_szInsertPass[64] = { 0, };
-	SQLINTEGER m_iSelectLevel;
-	SQLINTEGER m_iSelectKorean;
-	TIMESTAMP_STRUCT m_ts;
+	SQLINTEGER m_iSelectLevel;	
 	/// <summary>
 	/// 
 	/// </summary>
 	SQLHSTMT  g_hUpdateStmt;
-	
+	TIMESTAMP_STRUCT m_ts;
+
 public:
 	void Init();
 	bool CreatePrepare();
