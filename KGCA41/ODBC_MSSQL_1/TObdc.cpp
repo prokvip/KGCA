@@ -19,7 +19,8 @@ bool TObdc::CreatePrepare()
 	/// </summary>
 	/// <returns></returns>
 	//std::wstring sql2 = L"select NAME,PASS,GLEVEL,ACCOUNT from ACCOUNT where NAME=?";
-	std::wstring sql2 = L"select * from ACCOUNT where NAME=?";
+	//std::wstring sql2 = L"select * from ACCOUNT where NAME=?";
+	std::wstring sql2 = L"{?=CALL dbo.usp_userinfo(?)}";
 	ret = SQLAllocHandle(SQL_HANDLE_STMT, g_hDbc, &g_hReadStmt);
 	ret = SQLPrepare(g_hReadStmt, (SQLTCHAR*)sql2.c_str(), SQL_NTS);
 	if (ret != SQL_SUCCESS)
@@ -31,7 +32,17 @@ bool TObdc::CreatePrepare()
 	m_iDataLength = sizeof(m_szSelectName);
 	m_cbColumn = SQL_NTS;
 
-	ret = SQLBindParameter(g_hReadStmt, 1, SQL_PARAM_INPUT, SQL_UNICODE, SQL_CHAR, 
+	
+	ret = SQLBindParameter(g_hReadStmt, 1, SQL_PARAM_OUTPUT,SQL_C_SHORT, SQL_INTEGER,
+		0, 0, &sRet,
+		0, &m_cbColumn);
+	if (ret != SQL_SUCCESS)
+	{
+		ErrorMsg();
+		return false;
+	}
+
+	ret = SQLBindParameter(g_hReadStmt, 2, SQL_PARAM_INPUT, SQL_UNICODE, SQL_CHAR, 
 		m_iDataLength, 0, m_szSelectName, 
 		m_iDataLength, &m_cbColumn);
 	if (ret != SQL_SUCCESS)
@@ -149,6 +160,51 @@ bool TObdc::CreatePrepare()
 		ErrorMsg();
 		return false;
 	}
+
+
+	/// <summary>
+	/// g_hPassStmt
+	/// </summary>
+	/// <returns></returns>
+	TCHAR sql5[] = L"{?=CALL dbo.usp_passout(?,?)}";
+	ret = SQLAllocHandle(SQL_HANDLE_STMT, g_hDbc, &g_hPassStmt);
+	ret = SQLPrepare(g_hPassStmt, (SQLTCHAR*)sql5, SQL_NTS);
+	if (ret != SQL_SUCCESS)
+	{
+		ErrorMsg();
+		return false;
+	}
+
+	m_iDataLength = sizeof(m_szSelectName);
+	m_cbColumn = SQL_NTS;
+
+
+	ret = SQLBindParameter(g_hPassStmt, 1, SQL_PARAM_OUTPUT, SQL_C_SHORT, SQL_INTEGER,
+		0, 0, &sRet,
+		0, &m_cbColumn);
+	if (ret != SQL_SUCCESS)
+	{
+		ErrorMsg();
+		return false;
+	}
+
+	ret = SQLBindParameter(g_hPassStmt, 2, SQL_PARAM_INPUT, SQL_UNICODE, SQL_CHAR,
+		m_iDataLength, 0, m_szSelectName,
+		m_iDataLength, &m_cbColumn);
+	if (ret != SQL_SUCCESS)
+	{
+		ErrorMsg();
+		return false;
+	}
+
+	ret = SQLBindParameter(g_hPassStmt, 3, SQL_PARAM_OUTPUT, SQL_UNICODE, SQL_CHAR,
+		m_iDataLength, 0, m_szOutPass,
+		m_iDataLength, &m_cbColumn);
+	if (ret != SQL_SUCCESS)
+	{
+		ErrorMsg();
+		return false;
+	}
 	return true;
 }
 void TObdc::Init()
@@ -200,6 +256,47 @@ void TObdc::Connect(std::wstring dbName)
 	SQLAllocHandle(SQL_HANDLE_STMT, g_hDbc, &g_hStmt);
 	CreatePrepare();
 }
+void TObdc::ConnectMsSql(std::wstring dbName)
+{
+	TCHAR  inConnect[255] = { 0, };
+	TCHAR  outConnect[255] = { 0, };
+	TCHAR  dir[MAX_PATH] = { 0, };
+	GetCurrentDirectory(MAX_PATH, dir);
+	//_stprintf(inConnect, _T("DRIVER={Microsoft Access Driver (*.mdb, *.accdb)};DBQ=%s;"), dbName.c_str());
+	/*TCHAR dsn[] = L"Driver={SQL Server};Server=shader.kr;Address=192.168.0.12,1433;Network=dbmssocn;Database=KGCATest;Uid=sa;Pwd=kgca!@34;";
+	SQLSMALLINT  cbOutCon;
+	SQLRETURN hr = SQLDriverConnect(g_hDbc, NULL, dsn, _countof(dsn),
+		outConnect, _countof(outConnect),
+		&cbOutCon, SQL_DRIVER_NOPROMPT);
+	if (hr != SQL_SUCCESS && hr != SQL_SUCCESS_WITH_INFO)
+	{
+		ErrorMsg();
+		return;
+	}*/
+	/*_stprintf(inConnect, _T("FileDsn=%s;"), dbName.c_str());	
+	SQLSMALLINT  cbOutCon;
+	SQLRETURN hr = SQLDriverConnect(g_hDbc, NULL, inConnect, _countof(inConnect),
+		outConnect, _countof(outConnect),
+		&cbOutCon, SQL_DRIVER_NOPROMPT);
+	if (hr != SQL_SUCCESS && hr != SQL_SUCCESS_WITH_INFO)
+	{
+		ErrorMsg();
+		return;
+	}*/
+
+	// KGCATest, sa, kgca!@34
+	SQLRETURN hr = SQLConnect(g_hDbc, (SQLTCHAR*)L"KGCATest", SQL_NTS,
+									  (SQLTCHAR*)L"sa", SQL_NTS, 
+									  (SQLTCHAR*)L"kgca!@34", SQL_NTS);
+	if (hr != SQL_SUCCESS && hr != SQL_SUCCESS_WITH_INFO)
+	{
+		ErrorMsg();
+		return;
+	}
+	//명령핸들(g_hStmt)
+	SQLAllocHandle(SQL_HANDLE_STMT, g_hDbc, &g_hStmt);
+	CreatePrepare();
+}
 void TObdc::DisConnect()
 {	
 	if (g_hStmt) SQLFreeHandle(SQL_HANDLE_STMT, g_hStmt);
@@ -244,7 +341,7 @@ bool TObdc::AddSQL(dbitem& record)
 	m_iSelectLevel = record.level;
 
 	SQLRETURN hr = SQLExecute(g_hInsertStmt);
-	if (hr != SQL_SUCCESS)
+	if (hr != SQL_SUCCESS || hr == SQL_SUCCESS_WITH_INFO)
 	{
 		ErrorMsg();
 		return false;
@@ -279,7 +376,7 @@ bool TObdc::UpdateSQL(dbitem& record, std::wstring selectName)
 
 	SQLRETURN hr = SQLExecute(g_hUpdateStmt);
 
-	if (hr != SQL_SUCCESS)
+	if (hr != SQL_SUCCESS || hr == SQL_SUCCESS_WITH_INFO)
 	{
 		ErrorMsg();
 		return false;
@@ -292,12 +389,39 @@ bool TObdc::ReadRecord(const TCHAR* szName)
 {
 	if (szName != nullptr)
 	{
-		ZeroMemory(m_szSelectName, sizeof(m_szSelectName));
-		CopyMemory(m_szSelectName, szName, _tcslen(szName));
+		ZeroMemory(m_szSelectName, sizeof(TCHAR)*64);
+		CopyMemory(m_szSelectName, szName, _tcslen(szName));		
 
-		SQLRETURN hr = SQLExecute(g_hReadStmt);
+		//std::wstring sql2 = L"{?=CALL dbo.usp_userinfo(?)}";
+		//SQLRETURN ret;// = SQLAllocHandle(SQL_HANDLE_STMT, g_hDbc, &g_hReadStmt);
+		//
+		//m_iDataLength = sizeof(m_szSelectName);
+		//m_cbColumn = SQL_NTS;
 
-		if (hr == SQL_SUCCESS)
+
+		//ret = SQLBindParameter(g_hStmt, 1, SQL_PARAM_OUTPUT, SQL_C_SHORT, SQL_INTEGER,
+		//	0, 0, &sRet,
+		//	0, &m_cbColumn);
+		//if (ret != SQL_SUCCESS)
+		//{
+		//	ErrorMsg();
+		//	return false;
+		//}
+
+		//ret = SQLBindParameter(g_hStmt, 2, SQL_PARAM_INPUT, SQL_UNICODE, SQL_CHAR,
+		//	m_iDataLength, 0, m_szSelectName,
+		//	m_iDataLength, &m_cbColumn);
+		//if (ret != SQL_SUCCESS)
+		//{
+		//	ErrorMsg();
+		//	return false;
+		//}
+
+		//ret = SQLExecDirect(g_hStmt, (SQLTCHAR*)sql2.c_str(), SQL_NTS);
+
+		SQLRETURN hr = SQLExecute(g_hPassStmt);
+
+		if (hr == SQL_SUCCESS || hr == SQL_SUCCESS_WITH_INFO)
 		{
 			if (SQLFetch(g_hReadStmt) != SQL_NO_DATA)
 			{
@@ -310,5 +434,28 @@ bool TObdc::ReadRecord(const TCHAR* szName)
 	ErrorMsg();
 	if (g_hReadStmt) SQLCloseCursor(g_hReadStmt);
 	SQLFreeStmt(g_hReadStmt, SQL_CLOSE);
+	return false;
+}
+
+bool TObdc::UserPass(std::wstring szName)
+{
+	if (!szName.empty())
+	{
+		ZeroMemory(m_szSelectName, sizeof(TCHAR) * 64);
+		CopyMemory(m_szSelectName, szName.c_str(), szName.size()*sizeof(TCHAR));
+		SQLRETURN hr = SQLExecute(g_hPassStmt);
+		if (hr == SQL_SUCCESS || hr == SQL_SUCCESS_WITH_INFO)
+		{
+			if (SQLFetch(g_hPassStmt) != SQL_NO_DATA)
+			{
+				if (g_hPassStmt) SQLCloseCursor(g_hPassStmt);
+				SQLFreeStmt(g_hPassStmt, SQL_CLOSE);
+				return true;
+			}
+		}
+	}
+	ErrorMsg();
+	if (g_hPassStmt) SQLCloseCursor(g_hPassStmt);
+	SQLFreeStmt(g_hPassStmt, SQL_CLOSE);
 	return false;
 }

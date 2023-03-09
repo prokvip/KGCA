@@ -1,0 +1,126 @@
+// Microsoft Visual C++ generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "winres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// 한국어(대한민국) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_KOR)
+LANGUAGE LANG_KOREAN, SUBLANG_DEFAULT
+#pragma code_page(949)
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE 
+BEGIN
+    "#include ""winres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE 
+BEGIN
+    "\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_DIALOG1 DIALOGEX 0, 0, 361, 222
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Dialog"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "확인",IDOK,304,178,50,14
+    PUSHBUTTON      "취소",IDCANCEL,304,201,50,14
+    LISTBOX         IDC_LIST1,7,20,122,188,LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
+    EDITTEXT        IDC_NAME,137,81,59,19,ES_AUTOHSCROLL
+    EDITTEXT        IDC_PASS,208,81,59,19,ES_AUTOHSCROLL
+    CONTROL         "남자",IDC_SEX,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,314,121,31,10
+    LTEXT           "이름",IDC_STATIC,140,67,16,8
+    LTEXT           "패스워드",IDC_STATIC,223,67,30,8
+    LTEXT           "성별",IDC_STATIC,291,122,16,8
+    PUSHBUTTON      "삽입",IDC_INSERT,155,22,50,14
+    PUSHBUTTON      "삭제",IDC_DELETE,221,22,50,14
+    PUSHBUTTON      "수정",IDC_UPDATE,287,22,50,14
+    EDITTEXT        IDC_LEVEL,283,79,59,19,ES_AUTOHSCROLL
+    LTEXT           "게임레벨",IDC_STATIC,298,66,30,8
+    EDITTEXT        IDC_ACCOUNTTIME,138,119,128,19,ES_AUTOHSCROLL
+    LTEXT           "생성일자",IDC_ACCOUNT,141,108,30,8
+    EDITTEXT        IDC_LOGINTIME,137,153,128,19,ES_AUTOHSCROLL
+    LTEXT           "로그인일시",IDC_ACCOUNT2,139,142,38,8
+    EDITTEXT        IDC_LOGOUTTIME,137,191,128,19,ES_AUTOHSCROLL
+    LTEXT           "로그아웃일시",IDC_ACCOUNT3,139,180,45,8
+    EDITTEXT        IDC_ID,170,42,59,19,ES_AUTOHSCROLL
+    LTEXT           "ID",IDC_STATIC,139,47,16,8
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO
+BEGIN
+    IDD_DIALOG1, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 354
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 215
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// AFX_DIALOG_LAYOUT
+//
+
+IDD_DIALOG1 AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
+
+#endif    // 한국어(대한민국) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

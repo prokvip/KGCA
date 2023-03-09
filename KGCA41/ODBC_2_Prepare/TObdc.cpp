@@ -257,7 +257,7 @@ bool TObdc::ReadRecord(const TCHAR* szName)
 	if (szName != nullptr)
 	{
 		ZeroMemory(m_szSelectName, sizeof(m_szSelectName));
-		CopyMemory(m_szSelectName, szName, sizeof(szName));
+		CopyMemory(m_szSelectName, szName, _tcslen(szName));
 
 		SQLRETURN hr = SQLExecute(g_hReadStmt);
 
