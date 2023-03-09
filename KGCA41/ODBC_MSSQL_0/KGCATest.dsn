@@ -1,0 +1,10 @@
+[ODBC]
+DRIVER=SQL Server
+UID=sa
+PWD=kgca!@34
+Network=DBMSSOCN
+DATABASE=KGCATest
+WSID=KGCA3D
+APP=Microsoft¢ç Windows¢ç Operating System
+SERVER=192.168.0.12
+Description=test
