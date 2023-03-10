@@ -120,8 +120,8 @@ bool TOdbc::CreateUserinfo()
 	//}	
 
 	//SQLBindCol(g_hReadStmt, 1, SQL_INTEGER, &retID, 0, &lID);
-	//SQLBindCol(g_hReadStmt, 2, SQL_UNICODE, retName, _countof(retName), &lName);
-	//SQLBindCol(g_hReadStmt, 3, SQL_UNICODE, retPass, _countof(retPass), &lPass);
+	//SQLBindCol(g_hReadStmt, 2, SQL_UNICODE, retName, sizeof(TCHAR)*10, &lName);
+	//SQLBindCol(g_hReadStmt, 3, SQL_UNICODE, retPass, sizeof(TCHAR)*10, &lPass);
 	//SQLBindCol(g_hReadStmt, 4, SQL_INTEGER, &retLevel, 0, &lLevel);
 	//SQLBindCol(g_hReadStmt, 5, SQL_INTEGER, &retSex, 0, &lSex);
 	//SQLBindCol(g_hReadStmt, 6, SQL_TYPE_TIMESTAMP, &accountTS, sizeof(accountTS), &lAccount);
