@@ -59,6 +59,7 @@ public:
 	TCHAR		m_szReadName[10] = { 0, };
 	SQLINTEGER m_iDataLength;
 	SQLLEN m_cbColumn;
+	void		Load();
 	/// <summary>
 	/// 
 	/// </summary>

@@ -97,36 +97,36 @@ bool TOdbc::CreateUserinfo()
 		return false;
 	}
 
-	/*m_iDataLength = sizeof(m_szReadName);
-	m_cbColumn = SQL_NTS;
+	//m_iDataLength = sizeof(m_szReadName);
+	//m_cbColumn = SQL_NTS;
 
 
-	ret = SQLBindParameter(g_hReadStmt, 1, SQL_PARAM_OUTPUT, SQL_C_SHORT, SQL_SMALLINT,
-		0, 0, &sRet,
-		0, &m_cbColumn);
-	if (ret != SQL_SUCCESS)
-	{
-		ErrorMsg(g_hReadStmt);
-		return false;
-	}
+	//ret = SQLBindParameter(g_hReadStmt, 1, SQL_PARAM_OUTPUT, SQL_C_SHORT, SQL_SMALLINT,
+	//	0, 0, &sRet,
+	//	0, &m_cbColumn);
+	//if (ret != SQL_SUCCESS)
+	//{
+	//	ErrorMsg(g_hReadStmt);
+	//	return false;
+	//}
 
-	ret = SQLBindParameter(g_hReadStmt, 2, SQL_PARAM_INPUT, SQL_UNICODE, SQL_UNICODE,
-		m_iDataLength, 0, m_szReadName,
-		m_iDataLength, &m_cbColumn);
-	if (ret != SQL_SUCCESS)
-	{
-		ErrorMsg(g_hReadStmt);
-		return false;
-	}	
+	//ret = SQLBindParameter(g_hReadStmt, 2, SQL_PARAM_INPUT, SQL_UNICODE, SQL_UNICODE,
+	//	m_iDataLength, 0, m_szReadName,
+	//	m_iDataLength, &m_cbColumn);
+	//if (ret != SQL_SUCCESS)
+	//{
+	//	ErrorMsg(g_hReadStmt);
+	//	return false;
+	//}	
 
-	SQLBindCol(g_hReadStmt, 1, SQL_INTEGER, &retID, 0, &lID);
-	SQLBindCol(g_hReadStmt, 2, SQL_UNICODE, retName, _countof(retName), &lName);
-	SQLBindCol(g_hReadStmt, 3, SQL_UNICODE, retPass, _countof(retPass), &lPass);
-	SQLBindCol(g_hReadStmt, 4, SQL_INTEGER, &retLevel, 0, &lLevel);
-	SQLBindCol(g_hReadStmt, 5, SQL_INTEGER, &retSex, 0, &lSex);
-	SQLBindCol(g_hReadStmt, 6, SQL_TYPE_TIMESTAMP, &accountTS, sizeof(accountTS), &lAccount);
-	SQLBindCol(g_hReadStmt, 7, SQL_TYPE_TIMESTAMP, &loginTS, sizeof(loginTS), &llogin);
-	SQLBindCol(g_hReadStmt, 8, SQL_TYPE_TIMESTAMP, &logoutTS, sizeof(logoutTS), &llogout);*/
+	//SQLBindCol(g_hReadStmt, 1, SQL_INTEGER, &retID, 0, &lID);
+	//SQLBindCol(g_hReadStmt, 2, SQL_UNICODE, retName, _countof(retName), &lName);
+	//SQLBindCol(g_hReadStmt, 3, SQL_UNICODE, retPass, _countof(retPass), &lPass);
+	//SQLBindCol(g_hReadStmt, 4, SQL_INTEGER, &retLevel, 0, &lLevel);
+	//SQLBindCol(g_hReadStmt, 5, SQL_INTEGER, &retSex, 0, &lSex);
+	//SQLBindCol(g_hReadStmt, 6, SQL_TYPE_TIMESTAMP, &accountTS, sizeof(accountTS), &lAccount);
+	//SQLBindCol(g_hReadStmt, 7, SQL_TYPE_TIMESTAMP, &loginTS, sizeof(loginTS), &llogin);
+	//SQLBindCol(g_hReadStmt, 8, SQL_TYPE_TIMESTAMP, &logoutTS, sizeof(logoutTS), &llogout);
 	return true;
 }
 bool TOdbc::CreateAlluserinfo()
@@ -597,9 +597,12 @@ bool TOdbc::UpdateSQL(dbitem& record, std::wstring selectName)
 }
 bool TOdbc::ReadRecord(std::wstring selectName)
 {
+	ZeroMemory(retName, sizeof(TCHAR) * 10);
+	ZeroMemory(retPass, sizeof(TCHAR) * 10);
+	// 중의 : sizeof(TCHAR)*10 의 설정이 중요함.
 	SQLRETURN hr1 = SQLBindCol(g_hReadStmt, 1, SQL_INTEGER, &retID, 0, &lID);
-	SQLBindCol(g_hReadStmt, 2, SQL_UNICODE, retName, _countof(retName), &lName);
-	SQLBindCol(g_hReadStmt, 3, SQL_UNICODE, retPass, _countof(retPass), &lPass);
+	SQLBindCol(g_hReadStmt, 2, SQL_UNICODE, retName, sizeof(TCHAR)*10, &lName);
+	SQLBindCol(g_hReadStmt, 3, SQL_UNICODE, retPass, sizeof(TCHAR)*10, &lPass);
 	SQLBindCol(g_hReadStmt, 4, SQL_INTEGER, &retLevel, 0, &lLevel);
 	SQLBindCol(g_hReadStmt, 5, SQL_INTEGER, &retSex, 0, &lSex);
 	SQLBindCol(g_hReadStmt, 6, SQL_TYPE_TIMESTAMP, &accountTS, sizeof(accountTS), &lAccount);
@@ -702,4 +705,70 @@ bool TOdbc::UserPass(std::wstring szName)
 	if (g_hPassStmt) SQLCloseCursor(g_hPassStmt);
 	SQLFreeStmt(g_hPassStmt, SQL_CLOSE);
 	return false;
+}
+void TOdbc::Load()
+{
+	m_dbDataList.clear();
+	m_ColumnList.clear();
+
+	// 전체 레코드 조회, 추가, 수정, 삭제
+	/*TCHAR sql[] = L"select * from tblCigar";
+	SQLRETURN hr = SQLExecDirect(g_odbc.g_hStmt, sql, SQL_NTS);*/
+	SQLRETURN hr = SQLExecute(g_hSelectAllStmt);
+	if (hr != SQL_SUCCESS)
+	{
+		ErrorMsg(g_hSelectAllStmt);
+		return;
+	}
+	SQLLEN  count; // update, insert, delete 사용가능함다.
+	SQLRETURN ret = SQLRowCount(g_hSelectAllStmt, &count);
+
+	SQLSMALLINT  colCount;
+	SQLNumResultCols(g_hSelectAllStmt, &colCount);
+
+	TColDescription col;
+	for (int iCol = 1; iCol < colCount + 1; iCol++)
+	{
+		col.icol = iCol;
+		hr = SQLDescribeCol(g_hSelectAllStmt,
+			col.icol,
+			col.szColName, sizeof(col.szColName),
+			&col.pcchColName,
+			&col.pfSqlType,
+			&col.pcbColDef,
+			&col.pibScale,
+			&col.pfNullable);
+		if (hr != SQL_SUCCESS)
+		{
+			ErrorMsg(g_hSelectAllStmt);
+			break;
+		}
+		m_ColumnList.push_back(col);
+	}
+
+
+	while (SQLFetch(g_hSelectAllStmt) != SQL_NO_DATA)
+	{
+		RECORD record;
+		dbitem dtItem;
+		for (int iCol = 0; iCol < m_ColumnList.size(); iCol++)
+		{
+			/* SQLBindCol 대체한다.
+			   데이터형 상관없이 모든 것을 스트링으로 받겠다.*/
+			ret = SQLGetData(g_hSelectAllStmt, m_ColumnList[iCol].icol,
+				SQL_WCHAR, m_ColumnList[iCol].bindData,
+				sizeof(m_ColumnList[iCol].bindData), NULL);
+			if (ret == SQL_SUCCESS)
+			{
+				record.push_back(m_ColumnList[iCol].bindData);
+			}
+		}
+		if (ret == SQL_SUCCESS)
+		{
+			m_dbDataList.push_back(record);
+		}
+	}
+	if (g_hSelectAllStmt) SQLCloseCursor(g_hSelectAllStmt);
+
+	SQLFreeStmt(g_hSelectAllStmt, SQL_CLOSE);
 }
