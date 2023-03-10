@@ -142,7 +142,7 @@ LRESULT CALLBACK DlgProc(HWND hDlg, UINT iMessage, WPARAM wParam, LPARAM lParam)
 							int id = SendMessage(g_hDlgList, LB_GETCURSEL, 0, 0);
 							if (id != -1)
 							{
-								TCHAR selectName[256] = { 0, };
+								TCHAR selectName[60] = { 0, };
 								SendMessage(g_hDlgList, LB_GETTEXT, id, (LPARAM)selectName);
 								
 								// 현재 시간을 스트링화
@@ -273,20 +273,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 	//g_odbc.Connect(L"../../data/db/Account.accdb");
 	g_odbc.ConnectMsSql(L"KGCATest.dsn");
 	Load();
-
-	//dbitem recore;
-	//recore.name = L"USER";
-	//recore.pass = L"55555";
-	//recore.level = 2;
-	//recore.sex = 3;
-	//if (g_odbc.UpdateSQL(recore, L"홍길동"))
-	//{
-	//}
-	//
-	/*if (g_odbc.UserPass(L"GAME"))
+	if (g_odbc.UserPass(L"GAME"))
 	{	
 		MessageBox(NULL, (LPCWSTR)g_odbc.m_szOutPass, L"CheckPass", MB_OK);
-	}	*/
+	}	
 	DialogBox(hInstance, MAKEINTRESOURCE(IDD_DIALOG1), HWND_DESKTOP, (DLGPROC)DlgProc );
 	g_odbc.DisConnect();
 }

@@ -12,10 +12,10 @@ bool TOdbc::CreateInsertAccount()
 		return false;
 	}
 
-	m_iDataLength = sizeof(m_szInsertName);
+	/*m_iDataLength = sizeof(m_szInsertName);
 	m_cbColumn = SQL_NTS;
 
-	ret = SQLBindParameter(g_hInsertStmt, 1, SQL_PARAM_OUTPUT, SQL_C_SHORT, SQL_INTEGER,
+	ret = SQLBindParameter(g_hInsertStmt, 1, SQL_PARAM_OUTPUT, SQL_C_SHORT, SQL_SMALLINT,
 		0, 0, &sRet,
 		0, &m_cbColumn);
 	if (ret != SQL_SUCCESS)
@@ -39,7 +39,7 @@ bool TOdbc::CreateInsertAccount()
 	{
 		ErrorMsg(g_hInsertStmt);
 		return false;
-	}
+	}*/
 	return true;
 }
 bool TOdbc::CreateDeleteAccount()
@@ -55,27 +55,27 @@ bool TOdbc::CreateDeleteAccount()
 		return false;
 	}
 
-	m_iDataLength = sizeof(m_szSelectName);
-	m_cbColumn = SQL_NTS;
+	//m_iDataLength = sizeof(m_szSelectName);
+	//m_cbColumn = SQL_NTS;
 
 
-	ret = SQLBindParameter(g_hDeleteStmt, 1, SQL_PARAM_OUTPUT, SQL_C_SHORT, SQL_INTEGER,
-		0, 0, &sRet,
-		0, &m_cbColumn);
-	if (ret != SQL_SUCCESS)
-	{
-		ErrorMsg(g_hDeleteStmt);
-		return false;
-	}
+	//ret = SQLBindParameter(g_hDeleteStmt, 1, SQL_PARAM_OUTPUT, SQL_C_SHORT, SQL_SMALLINT,
+	//	0, 0, &sRet,
+	//	0, &m_cbColumn);
+	//if (ret != SQL_SUCCESS)
+	//{
+	//	ErrorMsg(g_hDeleteStmt);
+	//	return false;
+	//}
 
-	ret = SQLBindParameter(g_hDeleteStmt, 2, SQL_PARAM_INPUT, SQL_UNICODE, SQL_CHAR,
-		m_iDataLength, 0, m_szSelectName,
-		m_iDataLength, &m_cbColumn);
-	if (ret != SQL_SUCCESS)
-	{
-		ErrorMsg(g_hDeleteStmt);
-		return false;
-	}
+	//ret = SQLBindParameter(g_hDeleteStmt, 2, SQL_PARAM_INPUT, SQL_UNICODE, SQL_CHAR,
+	//	m_iDataLength, 0, m_szSelectName,
+	//	m_iDataLength, &m_cbColumn);
+	//if (ret != SQL_SUCCESS)
+	//{
+	//	ErrorMsg(g_hDeleteStmt);
+	//	return false;
+	//}
 	return true;
 }
 bool TOdbc::CreateUserinfo()
@@ -97,11 +97,11 @@ bool TOdbc::CreateUserinfo()
 		return false;
 	}
 
-	m_iDataLength = sizeof(m_szSelectName);
+	/*m_iDataLength = sizeof(m_szReadName);
 	m_cbColumn = SQL_NTS;
 
 
-	ret = SQLBindParameter(g_hReadStmt, 1, SQL_PARAM_OUTPUT, SQL_C_SHORT, SQL_INTEGER,
+	ret = SQLBindParameter(g_hReadStmt, 1, SQL_PARAM_OUTPUT, SQL_C_SHORT, SQL_SMALLINT,
 		0, 0, &sRet,
 		0, &m_cbColumn);
 	if (ret != SQL_SUCCESS)
@@ -110,16 +110,14 @@ bool TOdbc::CreateUserinfo()
 		return false;
 	}
 
-	ret = SQLBindParameter(g_hReadStmt, 2, SQL_PARAM_INPUT, SQL_UNICODE, SQL_CHAR,
-		m_iDataLength, 0, m_szSelectName,
+	ret = SQLBindParameter(g_hReadStmt, 2, SQL_PARAM_INPUT, SQL_UNICODE, SQL_UNICODE,
+		m_iDataLength, 0, m_szReadName,
 		m_iDataLength, &m_cbColumn);
 	if (ret != SQL_SUCCESS)
 	{
 		ErrorMsg(g_hReadStmt);
 		return false;
-	}
-
-	
+	}	
 
 	SQLBindCol(g_hReadStmt, 1, SQL_INTEGER, &retID, 0, &lID);
 	SQLBindCol(g_hReadStmt, 2, SQL_UNICODE, retName, _countof(retName), &lName);
@@ -128,7 +126,7 @@ bool TOdbc::CreateUserinfo()
 	SQLBindCol(g_hReadStmt, 5, SQL_INTEGER, &retSex, 0, &lSex);
 	SQLBindCol(g_hReadStmt, 6, SQL_TYPE_TIMESTAMP, &accountTS, sizeof(accountTS), &lAccount);
 	SQLBindCol(g_hReadStmt, 7, SQL_TYPE_TIMESTAMP, &loginTS, sizeof(loginTS), &llogin);
-	//SQLBindCol(g_hReadStmt, 8, SQL_TYPE_TIMESTAMP, &logoutTS, sizeof(logoutTS), &llogout);
+	SQLBindCol(g_hReadStmt, 8, SQL_TYPE_TIMESTAMP, &logoutTS, sizeof(logoutTS), &llogout);*/
 	return true;
 }
 bool TOdbc::CreateAlluserinfo()
@@ -164,7 +162,7 @@ bool TOdbc::CreatePassOut()
 	m_cbColumn = SQL_NTS;
 
 
-	ret = SQLBindParameter(g_hPassStmt, 1, SQL_PARAM_OUTPUT, SQL_C_SHORT, SQL_INTEGER,
+	ret = SQLBindParameter(g_hPassStmt, 1, SQL_PARAM_OUTPUT, SQL_C_SHORT, SQL_SMALLINT,
 		0, 0, &sRet,
 		0, &m_cbColumn);
 	if (ret != SQL_SUCCESS)
@@ -182,7 +180,7 @@ bool TOdbc::CreatePassOut()
 		return false;
 	}
 
-	ret = SQLBindParameter(g_hPassStmt, 3, SQL_PARAM_OUTPUT, SQL_UNICODE, SQL_CHAR,
+	ret = SQLBindParameter(g_hPassStmt, 3, SQL_PARAM_OUTPUT, SQL_UNICODE, SQL_UNICODE,
 		m_iDataLength, 0, m_szOutPass,
 		m_iDataLength, &m_cbColumn);
 	if (ret != SQL_SUCCESS)
@@ -209,7 +207,7 @@ bool TOdbc::CreateUpdate()
 	m_cbColumn = SQL_NTS;
 	::ZeroMemory(&m_ts, sizeof(m_ts));
 
-	ret = SQLBindParameter(g_hUpdateStmt, 1, SQL_PARAM_OUTPUT, SQL_C_SHORT, SQL_INTEGER,
+	ret = SQLBindParameter(g_hUpdateStmt, 1, SQL_PARAM_OUTPUT, SQL_C_SHORT, SQL_SMALLINT,
 		0, 0, &sRet,
 		0, &m_cbColumn);
 	if (ret != SQL_SUCCESS)
@@ -427,9 +425,29 @@ void TOdbc::DisConnect()
 }
 bool TOdbc::DeleteAccount(std::wstring szName)
 {
-	ZeroMemory(m_szSelectName, sizeof(TCHAR)* 64);
+	ZeroMemory(m_szSelectName, sizeof(TCHAR)* 10);
 	CopyMemory(m_szSelectName, szName.c_str(), szName.size() * sizeof(TCHAR));
+	m_iDataLength = sizeof(m_szSelectName);
+	m_cbColumn = SQL_NTS;
 
+
+	SQLRETURN ret = SQLBindParameter(g_hDeleteStmt, 1, SQL_PARAM_OUTPUT, SQL_C_SHORT, SQL_SMALLINT,
+		0, 0, &sRet,
+		0, &m_cbColumn);
+	if (ret != SQL_SUCCESS)
+	{
+		ErrorMsg(g_hDeleteStmt);
+		return false;
+	}
+
+	ret = SQLBindParameter(g_hDeleteStmt, 2, SQL_PARAM_INPUT, SQL_UNICODE, SQL_CHAR,
+		m_iDataLength, 0, m_szSelectName,
+		m_iDataLength, &m_cbColumn);
+	if (ret != SQL_SUCCESS)
+	{
+		ErrorMsg(g_hDeleteStmt);
+		return false;
+	}
 	SQLRETURN hr = SQLExecute(g_hDeleteStmt);
 	if (hr != SQL_SUCCESS || hr == SQL_SUCCESS_WITH_INFO)
 	{
@@ -437,6 +455,7 @@ bool TOdbc::DeleteAccount(std::wstring szName)
 		return false;
 	}
 	if (g_hDeleteStmt) SQLCloseCursor(g_hDeleteStmt);
+	SQLFreeStmt(g_hReadStmt, SQL_RESET_PARAMS);
 	SQLFreeStmt(g_hDeleteStmt, SQL_CLOSE);
 	return true;
 }
@@ -464,11 +483,38 @@ void TOdbc::ErrorMsg(SQLHSTMT  stmt)
 }
 bool TOdbc::AddSQL(dbitem& record)
 {	
-	ZeroMemory(m_szInsertName, sizeof(TCHAR) * 64);
+	ZeroMemory(m_szInsertName, sizeof(TCHAR) * 10);
 	CopyMemory(m_szInsertName, record.name.c_str(), record.name.size()*sizeof(TCHAR));
-	ZeroMemory(m_szInsertPass, sizeof(TCHAR) * 64);
+	ZeroMemory(m_szInsertPass, sizeof(TCHAR) * 10);
 	CopyMemory(m_szInsertPass, record.pass.c_str(), record.pass.size() * sizeof(TCHAR));
+	m_iDataLength = sizeof(m_szInsertName);
+	m_cbColumn = SQL_NTS;
 
+	SQLRETURN ret = SQLBindParameter(g_hInsertStmt, 1, SQL_PARAM_OUTPUT, SQL_C_SHORT, SQL_SMALLINT,
+		0, 0, &sRet,
+		0, &m_cbColumn);
+	if (ret != SQL_SUCCESS && ret != SQL_DATA_AT_EXEC)
+	{
+		ErrorMsg(g_hInsertStmt);
+		return false;
+	}
+
+	ret = SQLBindParameter(g_hInsertStmt, 2, SQL_PARAM_INPUT, SQL_UNICODE, SQL_CHAR,
+		m_iDataLength, 0, m_szInsertName,
+		m_iDataLength, &m_cbColumn);
+	if (ret != SQL_SUCCESS)
+	{
+		ErrorMsg(g_hInsertStmt);
+		return false;
+	}
+	ret = SQLBindParameter(g_hInsertStmt, 3, SQL_PARAM_INPUT, SQL_UNICODE, SQL_CHAR,
+		m_iDataLength, 0, m_szInsertPass,
+		m_iDataLength, &m_cbColumn);
+	if (ret != SQL_SUCCESS)
+	{
+		ErrorMsg(g_hInsertStmt);
+		return false;
+	}
 	//m_iSelectLevel = record.level;
 
 	SQLRETURN hr = SQLExecute(g_hInsertStmt);
@@ -478,22 +524,48 @@ bool TOdbc::AddSQL(dbitem& record)
 		return false;
 	}
 	if (g_hInsertStmt) SQLCloseCursor(g_hInsertStmt);
+	SQLFreeStmt(g_hReadStmt, SQL_RESET_PARAMS);
 	SQLFreeStmt(g_hInsertStmt, SQL_CLOSE);
 	return true;
 }
 bool TOdbc::UpdateSQL(dbitem& record, std::wstring selectName)
 {
-	ZeroMemory(m_szSelectName, sizeof(TCHAR) * 64);
+	// 버퍼의 길이가 NCHAR(10) 보다 크면 안된다. 
+	ZeroMemory(m_szSelectName, sizeof(TCHAR) * 10);
 	CopyMemory(m_szSelectName, selectName.c_str(), selectName.size() * sizeof(TCHAR));
 
-	ZeroMemory(m_szUpdateName, sizeof(TCHAR) * 64);
+	ZeroMemory(m_szUpdateName, sizeof(TCHAR) * 10);
 	CopyMemory(m_szUpdateName, record.name.c_str(), record.name.size() * sizeof(TCHAR));
 
-	ZeroMemory(m_szUpdatePass, sizeof(TCHAR) * 64);
+	ZeroMemory(m_szUpdatePass, sizeof(TCHAR) * 10);
 	CopyMemory(m_szUpdatePass, record.pass.c_str(), record.pass.size() * sizeof(TCHAR));
+
 
 	m_iUpdateLevel = record.level;
 	m_iUpdateSex = record.sex;
+
+	m_iDataLength = sizeof(m_szUpdateName);
+	m_cbColumn = SQL_NTS;
+	::ZeroMemory(&m_ts, sizeof(m_ts));
+	SWORD sReturn;
+	SQLBindParameter(g_hUpdateStmt, 1, SQL_PARAM_OUTPUT, SQL_C_SHORT, SQL_SMALLINT,
+		0, 0, &sReturn,
+		0, &m_cbColumn);
+	SQLBindParameter(g_hUpdateStmt, 2, SQL_PARAM_INPUT, SQL_UNICODE, SQL_UNICODE,
+		m_iDataLength, 0, m_szSelectName,
+		m_iDataLength, &m_cbColumn);
+	SQLBindParameter(g_hUpdateStmt, 3, SQL_PARAM_INPUT, SQL_UNICODE, SQL_UNICODE,
+		m_iDataLength, 0, m_szUpdateName,
+		m_iDataLength, &m_cbColumn);
+	SQLBindParameter(g_hUpdateStmt, 4, SQL_PARAM_INPUT, SQL_UNICODE, SQL_UNICODE,
+		m_iDataLength, 0, m_szUpdatePass,
+		m_iDataLength, &m_cbColumn);	
+	SQLBindParameter(g_hUpdateStmt, 5, SQL_PARAM_INPUT, SQL_INTEGER, SQL_INTEGER,
+		0, 0, &m_iUpdateLevel,
+		0, &m_cbColumn);	
+	SQLBindParameter(g_hUpdateStmt, 6, SQL_PARAM_INPUT, SQL_INTEGER, SQL_INTEGER,
+		0, 0, &m_iUpdateSex,
+		0, &m_cbColumn);
 
 	std::time_t now = std::time(NULL); // 1970,01,01, 0시
 	std::tm* ptm = std::localtime(&now);
@@ -507,33 +579,66 @@ bool TOdbc::UpdateSQL(dbitem& record, std::wstring selectName)
 	m_ts.fraction = 0;
 
 	SQLRETURN hr = SQLExecute(g_hUpdateStmt);
-	if (hr == SQL_NO_DATA)
+	if (hr == SQL_SUCCESS || hr == SQL_SUCCESS_WITH_INFO)
 	{
-		if (g_hUpdateStmt) SQLCloseCursor(g_hUpdateStmt);
-		SQLFreeStmt(g_hUpdateStmt, SQL_CLOSE);
-		return false;
+		if (SQLFetch(g_hUpdateStmt) != SQL_NO_DATA)
+		{
+			if (g_hUpdateStmt) SQLCloseCursor(g_hUpdateStmt);
+			SQLFreeStmt(g_hUpdateStmt, SQL_RESET_PARAMS);
+			SQLFreeStmt(g_hUpdateStmt, SQL_CLOSE);
+			return true;
+		}
 	}
-	else if(hr != SQL_SUCCESS && hr != SQL_SUCCESS_WITH_INFO)
-	{
-		ErrorMsg(g_hUpdateStmt);
-		return false;
-	}
+	ErrorMsg(g_hUpdateStmt);
 	if (g_hUpdateStmt) SQLCloseCursor(g_hUpdateStmt);
+	SQLFreeStmt(g_hReadStmt, SQL_RESET_PARAMS);
 	SQLFreeStmt(g_hUpdateStmt, SQL_CLOSE);
 	return true;
 }
-bool TOdbc::ReadRecord(const TCHAR* szName)
+bool TOdbc::ReadRecord(std::wstring selectName)
 {
-	if (szName != nullptr)
+	SQLRETURN hr1 = SQLBindCol(g_hReadStmt, 1, SQL_INTEGER, &retID, 0, &lID);
+	SQLBindCol(g_hReadStmt, 2, SQL_UNICODE, retName, _countof(retName), &lName);
+	SQLBindCol(g_hReadStmt, 3, SQL_UNICODE, retPass, _countof(retPass), &lPass);
+	SQLBindCol(g_hReadStmt, 4, SQL_INTEGER, &retLevel, 0, &lLevel);
+	SQLBindCol(g_hReadStmt, 5, SQL_INTEGER, &retSex, 0, &lSex);
+	SQLBindCol(g_hReadStmt, 6, SQL_TYPE_TIMESTAMP, &accountTS, sizeof(accountTS), &lAccount);
+	SQLBindCol(g_hReadStmt, 7, SQL_TYPE_TIMESTAMP, &loginTS, sizeof(loginTS), &llogin);
+	SQLBindCol(g_hReadStmt, 8, SQL_TYPE_TIMESTAMP, &logoutTS, sizeof(logoutTS), &llogout);
+	m_iDataLength = sizeof(m_szReadName);
+	m_cbColumn = SQL_NTS;
+
+
+	SQLRETURN ret = SQLBindParameter(g_hReadStmt, 1, SQL_PARAM_OUTPUT, SQL_C_SHORT, SQL_SMALLINT,
+		0, 0, &sRet,
+		0, &m_cbColumn);
+	if (ret != SQL_SUCCESS)
 	{
-		ZeroMemory(m_szSelectName, sizeof(TCHAR)*64);
-		CopyMemory(m_szSelectName, szName, _tcslen(szName));	
+		ErrorMsg(g_hReadStmt);
+		return false;
+	}
+
+	ret = SQLBindParameter(g_hReadStmt, 2, SQL_PARAM_INPUT, SQL_UNICODE, SQL_UNICODE,
+		m_iDataLength, 0, m_szReadName,
+		m_iDataLength, &m_cbColumn);
+	if (ret != SQL_SUCCESS)
+	{
+		ErrorMsg(g_hReadStmt);
+		return false;
+	}
+
+	if (!selectName.empty())
+	{
+		ZeroMemory(m_szReadName, sizeof(TCHAR)*10);
+		CopyMemory(m_szReadName, selectName.c_str(), selectName.size()*sizeof(TCHAR));
 		SQLRETURN hr = SQLExecute(g_hReadStmt);
 		if (hr == SQL_SUCCESS || hr == SQL_SUCCESS_WITH_INFO)
 		{
 			if (SQLFetch(g_hReadStmt) != SQL_NO_DATA)
 			{
 				if (g_hReadStmt) SQLCloseCursor(g_hReadStmt);
+				SQLFreeStmt(g_hReadStmt, SQL_RESET_PARAMS);
+				SQLFreeStmt(g_hReadStmt, SQL_UNBIND);
 				SQLFreeStmt(g_hReadStmt, SQL_CLOSE);
 				return true;
 			}			
@@ -544,19 +649,50 @@ bool TOdbc::ReadRecord(const TCHAR* szName)
 	SQLFreeStmt(g_hReadStmt, SQL_CLOSE);
 	return false;
 }
-
 bool TOdbc::UserPass(std::wstring szName)
 {
 	if (!szName.empty())
 	{
-		ZeroMemory(m_szSelectName, sizeof(TCHAR) * 64);
+		ZeroMemory(m_szSelectName, sizeof(TCHAR) * 10);
 		CopyMemory(m_szSelectName, szName.c_str(), szName.size()*sizeof(TCHAR));
+		m_iDataLength = sizeof(m_szSelectName);
+		m_cbColumn = SQL_NTS;
+
+
+		SQLRETURN ret = SQLBindParameter(g_hPassStmt, 1, SQL_PARAM_OUTPUT, SQL_C_SHORT, SQL_SMALLINT,
+			0, 0, &sRet,
+			0, &m_cbColumn);
+		if (ret != SQL_SUCCESS)
+		{
+			ErrorMsg(g_hPassStmt);
+			return false;
+		}
+
+		ret = SQLBindParameter(g_hPassStmt, 2, SQL_PARAM_INPUT, SQL_UNICODE, SQL_CHAR,
+			m_iDataLength, 0, m_szSelectName,
+			m_iDataLength, &m_cbColumn);
+		if (ret != SQL_SUCCESS)
+		{
+			ErrorMsg(g_hPassStmt);
+			return false;
+		}
+
+		ret = SQLBindParameter(g_hPassStmt, 3, SQL_PARAM_OUTPUT, SQL_UNICODE, SQL_UNICODE,
+			m_iDataLength, 0, m_szOutPass,
+			m_iDataLength, &m_cbColumn);
+		if (ret != SQL_SUCCESS)
+		{
+			ErrorMsg(g_hPassStmt);
+			return false;
+		}
+
 		SQLRETURN hr = SQLExecute(g_hPassStmt);
 		if (hr == SQL_SUCCESS || hr == SQL_SUCCESS_WITH_INFO)
 		{
 			if (SQLFetch(g_hPassStmt) != SQL_NO_DATA)
 			{
 				if (g_hPassStmt) SQLCloseCursor(g_hPassStmt);
+				SQLFreeStmt(g_hPassStmt, SQL_RESET_PARAMS);
 				SQLFreeStmt(g_hPassStmt, SQL_CLOSE);
 				return true;
 			}

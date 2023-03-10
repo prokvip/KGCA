@@ -24,7 +24,7 @@ struct dbitem
 struct TColDescription
 {
 	SQLUSMALLINT    icol;
-	SQLWCHAR		szColName[80];
+	SQLWCHAR		szColName[10];
 	SQLSMALLINT     cchColNameMax;
 	SQLSMALLINT     pcchColName;
 	SQLSMALLINT     pfSqlType;
@@ -51,27 +51,27 @@ public:
 	std::vector<TColDescription>	m_ColumnList;
 	std::vector<RECORD>				m_dbDataList;
 	std::vector<dbitem>				m_dbList;
-
+	TCHAR m_szSelectName[10] = { 0, };
 	/// <summary>
 	/// 
 	/// </summary>
 	SQLHSTMT  g_hSelectAllStmt;
-	TCHAR m_szSelectName[64] = { 0, };
+	TCHAR		m_szReadName[10] = { 0, };
 	SQLINTEGER m_iDataLength;
 	SQLLEN m_cbColumn;
 	/// <summary>
 	/// 
 	/// </summary>
 	SQLHSTMT  g_hInsertStmt;
-	TCHAR	   m_szInsertName[64] = { 0, };
-	TCHAR	   m_szInsertPass[64] = { 0, };
+	TCHAR	   m_szInsertName[10] = { 0, };
+	TCHAR	   m_szInsertPass[10] = { 0, };
 	SQLINTEGER m_iSelectLevel;	
 	/// <summary>
 	/// 
 	/// </summary>
 	SQLHSTMT   g_hUpdateStmt;
-	TCHAR	   m_szUpdateName[64] = { 0, };
-	TCHAR	   m_szUpdatePass[64] = { 0, };
+	TCHAR	   m_szUpdateName[10] = { 0, };
+	TCHAR	   m_szUpdatePass[10] = { 0, };
 	SQLINTEGER m_iUpdateLevel;
 	SQLINTEGER m_iUpdateSex;
 	TIMESTAMP_STRUCT m_ts;
@@ -80,7 +80,7 @@ public:
 	/// 
 	/// </summary>
 	SQLHSTMT  g_hPassStmt;
-	TCHAR	  m_szOutPass[64] = { 0, };
+	TCHAR	  m_szOutPass[10] = { 0, };
 
 public:
 	void Init();
@@ -91,7 +91,7 @@ public:
 	void DisConnect();
 	bool AddSQL(dbitem& record);
 	bool UpdateSQL(dbitem& record, std::wstring selectName);
-	bool ReadRecord(const TCHAR* szName);
+	bool ReadRecord(std::wstring selectName);
 	bool DeleteAccount(std::wstring szName);
 	bool UserPass(std::wstring szName);
 public:
@@ -104,8 +104,8 @@ public:
 	bool CreateDeleteAccount();
 public:
 	int    retID;					SQLLEN  lID;
-	TCHAR  retName[25] = { 0, };	SQLLEN  lName;
-	TCHAR  retPass[25] = { 0, };	SQLLEN  lPass;
+	TCHAR  retName[10] = { 0, };	SQLLEN  lName;
+	TCHAR  retPass[10] = { 0, };	SQLLEN  lPass;
 	int    retLevel;				SQLLEN  lLevel;
 	int    retSex;					SQLLEN  lSex;
 	TIMESTAMP_STRUCT accountTS;		SQLLEN  lAccount;
