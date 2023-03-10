@@ -35,7 +35,7 @@ struct TColDescription
 	SQLLEN			byteSize;
 };
 
-class TObdc
+class TOdbc
 {
 public:
 	SQLHENV   g_hEnv;

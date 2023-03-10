@@ -142,17 +142,18 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Sample.cpp" />
-    <ClCompile Include="TObdc.cpp" />
+    <ClCompile Include="TOdbc.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h" />
-    <ClInclude Include="TObdc.h" />
+    <ClInclude Include="TOdbc.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="ODBC_0.rc" />
   </ItemGroup>
   <ItemGroup>
     <None Include="KGCATest.dsn" />
+    <None Include="sql\KGCATest1.sql" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

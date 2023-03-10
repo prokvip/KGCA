@@ -1,5 +1,5 @@
-#include "TObdc.h"
-void TObdc::Connect()
+#include "TOdbc.h"
+void TOdbc::Connect()
 {
 	// 환경핸들(g_hEnv), 연결핸들(g_hDbc), 명령핸들(g_hStmt)
 	SQLRETURN hr = SQLAllocHandle(SQL_HANDLE_ENV, SQL_NULL_HANDLE, &g_hEnv);
@@ -46,14 +46,14 @@ void TObdc::Connect()
 		SQLAllocHandle(SQL_HANDLE_STMT, g_hDbc, &g_hStmt);
 	}
 }
-void TObdc::DisConnect()
+void TOdbc::DisConnect()
 {
 	if (g_hEnv) SQLFreeHandle(SQL_HANDLE_STMT, g_hEnv);
 	if (g_hDbc) SQLFreeHandle(SQL_HANDLE_DBC, g_hDbc);
 	if (g_hStmt) SQLFreeHandle(SQL_HANDLE_ENV, g_hStmt);
 }
 
-void TObdc::ErrorMsg()
+void TOdbc::ErrorMsg()
 {
 	int value = -1;
 	SQLTCHAR sqlState[10] = { 0, };
@@ -75,7 +75,7 @@ void TObdc::ErrorMsg()
 		::MessageBox(NULL, errorMsg, L"진단정보", 0);
 	}
 }
-bool TObdc::AddSQL(dbitem& record)
+bool TOdbc::AddSQL(dbitem& record)
 {
 	TCHAR sql[256] = { 0, };
 	_stprintf(sql, L"insert into tblCigar (name,price,korean) values('%s',%d,%d)",
@@ -89,7 +89,7 @@ bool TObdc::AddSQL(dbitem& record)
 	if (g_hStmt) SQLCloseCursor(g_hStmt);
 	return true;
 }
-bool TObdc::UpdateSQL(dbitem& record, const TCHAR* name)
+bool TOdbc::UpdateSQL(dbitem& record, const TCHAR* name)
 {
 	TCHAR sql[256] = { 0, };
 	_stprintf(sql, L"update tblCigar set name='%s',price=%d,korean=%d where name='%s'",
@@ -103,7 +103,7 @@ bool TObdc::UpdateSQL(dbitem& record, const TCHAR* name)
 	if (g_hStmt) SQLCloseCursor(g_hStmt);
 	return true;
 }
-bool TObdc::ReadRecord(const TCHAR* szName)
+bool TOdbc::ReadRecord(const TCHAR* szName)
 {
 	if (szName != nullptr)
 	{

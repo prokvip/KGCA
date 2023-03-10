@@ -1,9 +1,9 @@
 #define _CRT_SECURE_NO_WARNINGS
-#include "TObdc.h"
+#include "TOdbc.h"
 
 #include "resource.h"
 
-TObdc  g_odbc;
+TOdbc  g_odbc;
 
 HWND g_hDlgList;
 
@@ -233,14 +233,17 @@ void Load()
 		g_odbc.ErrorMsg();
 		return;
 	}
-	SQLLEN  count; // update, insert, delete 사용가능함다.
-	SQLRETURN ret = SQLRowCount(g_odbc.g_hSelectAllStmt, &count);
+	//SQLLEN  count; // update, insert, delete 사용가능함다.
+	//SQLRETURN ret = SQLRowCount(g_odbc.g_hSelectAllStmt, &count);
+	SQLSMALLINT  colCount;
+	SQLNumResultCols(g_odbc.g_hSelectAllStmt, &colCount);
 
 	TColDescription col;
-	col.icol = 1;
-	while (1)
+	
+	for( int iCol=1; iCol < colCount+1; iCol++)
 	{
-		ret = SQLDescribeCol(g_odbc.g_hSelectAllStmt,
+		col.icol = iCol;
+		hr = SQLDescribeCol(g_odbc.g_hSelectAllStmt,
 			col.icol,
 			col.szColName,sizeof(col.szColName),
 			&col.pcchColName,
@@ -248,13 +251,12 @@ void Load()
 			&col.pcbColDef,
 			&col.pibScale,
 			&col.pfNullable	);
-		if (ret != SQL_SUCCESS)
+		if (hr != SQL_SUCCESS)
 		{
-			//g_odbc.ErrorMsg();
+			g_odbc.ErrorMsg();
 			break;
 		}
-		g_odbc.m_ColumnList.push_back(col);
-		col.icol++;
+		g_odbc.m_ColumnList.push_back(col);		
 	}
 
 
@@ -266,15 +268,15 @@ void Load()
 		{
 			/* SQLBindCol 대체한다.
 			   데이터형 상관없이 모든 것을 스트링으로 받겠다.*/
-			ret = SQLGetData(g_odbc.g_hSelectAllStmt, g_odbc.m_ColumnList[iCol].icol,
+			hr = SQLGetData(g_odbc.g_hSelectAllStmt, g_odbc.m_ColumnList[iCol].icol,
 				SQL_WCHAR, g_odbc.m_ColumnList[iCol].bindData,
 				sizeof(g_odbc.m_ColumnList[iCol].bindData), NULL);
-			if (ret == SQL_SUCCESS)
+			if (hr == SQL_SUCCESS)
 			{	
 				record.push_back(g_odbc.m_ColumnList[iCol].bindData);
 			}
 		}
-		if (ret == SQL_SUCCESS)
+		if (hr == SQL_SUCCESS)
 		{
 			g_odbc.m_dbDataList.push_back(record);
 		}

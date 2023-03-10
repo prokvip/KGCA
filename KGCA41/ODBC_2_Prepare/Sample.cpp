@@ -1,8 +1,8 @@
 #define _CRT_SECURE_NO_WARNINGS
-#include "TObdc.h"
+#include "TOdbc.h"
 #include "resource.h"
 
-TObdc  g_odbc;
+TOdbc  g_odbc;
 
 HWND g_hDlgList;
 HWND g_hDlgName;

@@ -1,5 +1,5 @@
-#include "TObdc.h"
-bool TObdc::CreatePrepare()
+#include "TOdbc.h"
+bool TOdbc::CreatePrepare()
 {
 	SQLRETURN ret;
 	/// <summary>
@@ -131,7 +131,7 @@ bool TObdc::CreatePrepare()
 	}
 	return true;
 }
-void TObdc::Init()
+void TOdbc::Init()
 {
 	// 환경핸들(g_hEnv), 연결핸들(g_hDbc), 명령핸들(g_hStmt)
 	SQLRETURN hr = SQLAllocHandle(SQL_HANDLE_ENV, SQL_NULL_HANDLE, &g_hEnv);
@@ -158,7 +158,7 @@ void TObdc::Init()
 		}
 	}
 }
-void TObdc::Connect()
+void TOdbc::Connect()
 {
 	TCHAR  inConnect[255] = { 0, };
 	TCHAR  outConnect[255] = { 0, };
@@ -180,14 +180,14 @@ void TObdc::Connect()
 	SQLAllocHandle(SQL_HANDLE_STMT, g_hDbc, &g_hStmt);
 	CreatePrepare();
 }
-void TObdc::DisConnect()
+void TOdbc::DisConnect()
 {
 	if (g_hEnv) SQLFreeHandle(SQL_HANDLE_STMT, g_hEnv);
 	if (g_hDbc) SQLFreeHandle(SQL_HANDLE_DBC, g_hDbc);
 	if (g_hStmt) SQLFreeHandle(SQL_HANDLE_ENV, g_hStmt);
 }
 
-void TObdc::ErrorMsg()
+void TOdbc::ErrorMsg()
 {
 	int value = -1;
 	SQLTCHAR sqlState[10] = { 0, };
@@ -209,7 +209,7 @@ void TObdc::ErrorMsg()
 		::MessageBox(NULL, errorMsg, L"진단정보", 0);
 	}
 }
-bool TObdc::AddSQL(dbitem& record)
+bool TOdbc::AddSQL(dbitem& record)
 {	
 	ZeroMemory(m_szInsertName, sizeof(m_szInsertName));
 	CopyMemory(m_szInsertName, record.name.c_str(), record.name.size()*sizeof(TCHAR));
@@ -226,7 +226,7 @@ bool TObdc::AddSQL(dbitem& record)
 	SQLFreeStmt(g_hInsertStmt, SQL_CLOSE);
 	return true;
 }
-bool TObdc::UpdateSQL(dbitem& record, std::wstring selectName)
+bool TOdbc::UpdateSQL(dbitem& record, std::wstring selectName)
 {
 	//TCHAR sql[256] = { 0, };
 	//_stprintf(sql, L"update tblCigar set name='%s',price=%d,korean=%d where name='%s'",
@@ -252,7 +252,7 @@ bool TObdc::UpdateSQL(dbitem& record, std::wstring selectName)
 	SQLFreeStmt(g_hUpdateStmt, SQL_CLOSE);
 	return true;
 }
-bool TObdc::ReadRecord(const TCHAR* szName)
+bool TOdbc::ReadRecord(const TCHAR* szName)
 {
 	if (szName != nullptr)
 	{

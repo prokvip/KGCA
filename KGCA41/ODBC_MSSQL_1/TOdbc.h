@@ -17,6 +17,7 @@ struct dbitem
 	std::wstring name;
 	std::wstring pass;
 	int			level;	
+	int			sex;
 };
 
 // 1개의 필드 정보
@@ -35,7 +36,7 @@ struct TColDescription
 	SQLLEN			byteSize;
 };
 
-class TObdc
+class TOdbc
 {
 public:
 	SWORD sRet;
@@ -68,7 +69,11 @@ public:
 	/// <summary>
 	/// 
 	/// </summary>
-	SQLHSTMT  g_hUpdateStmt;
+	SQLHSTMT   g_hUpdateStmt;
+	TCHAR	   m_szUpdateName[64] = { 0, };
+	TCHAR	   m_szUpdatePass[64] = { 0, };
+	SQLINTEGER m_iUpdateLevel;
+	SQLINTEGER m_iUpdateSex;
 	TIMESTAMP_STRUCT m_ts;
 
 	/// <summary>
@@ -79,15 +84,32 @@ public:
 
 public:
 	void Init();
-	bool CreatePrepare();
-	void ErrorMsg();
+	
+	void ErrorMsg(SQLHSTMT  stmt);
 	void Connect(std::wstring dbName);
 	void ConnectMsSql(std::wstring dbName);
 	void DisConnect();
 	bool AddSQL(dbitem& record);
 	bool UpdateSQL(dbitem& record, std::wstring selectName);
 	bool ReadRecord(const TCHAR* szName);
-
+	bool DeleteAccount(std::wstring szName);
 	bool UserPass(std::wstring szName);
+public:
+	bool CreatePrepare();
+	bool CreateAlluserinfo();
+	bool CreateUserinfo();
+	bool CreatePassOut();
+	bool CreateUpdate();
+	bool CreateInsertAccount();
+	bool CreateDeleteAccount();
+public:
+	int    retID;					SQLLEN  lID;
+	TCHAR  retName[25] = { 0, };	SQLLEN  lName;
+	TCHAR  retPass[25] = { 0, };	SQLLEN  lPass;
+	int    retLevel;				SQLLEN  lLevel;
+	int    retSex;					SQLLEN  lSex;
+	TIMESTAMP_STRUCT accountTS;		SQLLEN  lAccount;
+	TIMESTAMP_STRUCT loginTS;		SQLLEN  llogin;
+	TIMESTAMP_STRUCT logoutTS;		SQLLEN  llogout;
 };
 
