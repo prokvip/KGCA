@@ -1,9 +1,9 @@
 #include "pch.h"
 #include "Sample.h"
-
+const float g_fMaxSize = 4096;
 void  Sample::NewEffect(UINT iParticleCounter, T_STR tex)
 {
-	TParticleObj* p = new TParticleObj;	
+	TParticleObj* p = new TParticleObj;
 	std::wstring shaderfilename = L"Particle.txt";
 	if (iParticleCounter <= 0) iParticleCounter = 1;
 	p->m_iParticleCounter = iParticleCounter;
@@ -11,7 +11,7 @@ void  Sample::NewEffect(UINT iParticleCounter, T_STR tex)
 	p->Create(m_pd3dDevice.Get(), m_pImmediateContext.Get(),
 		shaderfilename,
 		tex);
-	
+
 	/*p->m_matScale = TMatrix::CreateScale(10.0f);
 
 	p->m_matTranslate._41 = randstep(-10.0f, +10.0f);
@@ -38,13 +38,13 @@ bool  Sample::GetIntersection()
 					TVector3 v1 = m_Quadtree.m_pMap->m_VertexList[i1].p;
 					TVector3 v2 = m_Quadtree.m_pMap->m_VertexList[i2].p;
 					if (m_Select.ChkPick(v0, v1, v2))
-					{										
+					{
 						return true;
 					}
 					index += 3;
 				}
 			}
-		}		
+		}
 	}
 	return false;
 }
@@ -72,12 +72,12 @@ bool Sample::CreateMapData(UINT iColumn, UINT iRows)
 		m_Quadtree.m_TexArray[4] =
 			I_Tex.Load(L"../../data/map/000.jpg");
 
-	}	
+	}
 	return true;
 }
 bool Sample::LoadFbx(T_STR filepath, TVector3 vPos)
 {
-	TCharacter* pCharacter = I_Object.Load(filepath, L"");	
+	TCharacter* pCharacter = I_Object.Load(filepath, L"");
 	pCharacter->SetPos(vPos);
 	/*TActionTable action;
 	action.iStartFrame = 61;
@@ -133,7 +133,7 @@ bool Sample::CreateFbxLoader()
 
 	m_UserCharacter = new TCharacter;
 	m_UserCharacter->m_pd3dDevice = m_pd3dDevice.Get();
-	m_UserCharacter->m_pImmediateContext = m_pImmediateContext.Get();	
+	m_UserCharacter->m_pImmediateContext = m_pImmediateContext.Get();
 	/*m_UserCharacter->m_pFbxFile = m_fbxList[m_UserCharacter->m_iFbxListID];*/
 	m_UserCharacter->m_pAnionFbxFile = pFbxLoaderA;
 	if (m_UserCharacter->m_pAnionFbxFile)
@@ -175,7 +175,7 @@ bool Sample::CreateFbxLoader()
 	{
 		TCharacter* pNpc = new TCharacter;
 		pNpc->m_pd3dDevice = m_pd3dDevice.Get();
-		pNpc->m_pImmediateContext = m_pImmediateContext.Get();		
+		pNpc->m_pImmediateContext = m_pImmediateContext.Get();
 		//pNpc->m_pFbxFile = m_fbxList[pNpc->m_iFbxListID];
 		pNpc->m_matWorld._41 = -4.0f + iObj * 2;
 		pNpc->m_AnimScene = pNpc->m_pFbxFile->m_AnimScene;
@@ -193,9 +193,11 @@ bool Sample::CreateFbxLoader()
 	return true;
 }
 bool Sample::Init()
-{	
+{
+	InitRT();
+
 	I_Object.SetDevice(m_pd3dDevice.Get(), m_pImmediateContext.Get());
-	if (m_pTitle==nullptr)
+	if (m_pTitle == nullptr)
 	{
 		m_pTitle = std::make_shared<TSceneTitle>();
 		m_pTitle->Create(m_pd3dDevice.Get(), m_pImmediateContext.Get(), L"");
@@ -218,13 +220,13 @@ bool Sample::Init()
 	return true;
 }
 bool Sample::Frame()
-{		
+{
 	if (m_pCurrentScene == nullptr) return true;
-	m_Select.SetMatrix(nullptr, 
+	m_Select.SetMatrix(nullptr,
 		&m_pCurrentScene->m_pMainCamera->m_matView,
 		&m_pCurrentScene->m_pMainCamera->m_matProj);
 
-	
+
 	if (m_bUpPicking)
 	{
 		if (GetIntersection())
@@ -244,7 +246,7 @@ bool Sample::Frame()
 					{
 						for (UINT iVertex = 0; iVertex < m_Quadtree.m_pMap->m_VertexList.size(); iVertex++)
 						{
-							TVector3 v0 = m_Quadtree.m_pMap->m_VertexList[iVertex].p;							
+							TVector3 v0 = m_Quadtree.m_pMap->m_VertexList[iVertex].p;
 							TVector3 v = v0 - m_Select.m_vIntersection;
 							float fDistance = D3DXVec3Length(&v);
 							if (fDistance <= 30.0f)
@@ -253,7 +255,7 @@ bool Sample::Frame()
 								float fdot = cosf(DegreeToRadian(fValue));
 								m_Quadtree.m_pMap->m_VertexList[iVertex].p.y += fdot;
 								m_Quadtree.m_pMap->ComputeVertexNormal(iVertex);
-							}							
+							}
 						}
 					}
 					m_Quadtree.m_pMap->UpdateVertexBuffer();
@@ -262,12 +264,12 @@ bool Sample::Frame()
 				for (auto npc : m_NpcList)
 				{
 					TVector3 vPos = npc->m_vPos;
-					vPos.y = npc->m_matWorld._42 = 
+					vPos.y = npc->m_matWorld._42 =
 						m_Quadtree.m_pMap->GetHeight(vPos.x, vPos.z);
 					npc->SetPos(vPos);
 				}
 			}
-		}		
+		}
 	}
 
 	if (m_bObjectPicking)
@@ -327,8 +329,24 @@ bool Sample::Frame()
 	return true;
 }
 bool Sample::Render()
-{		
+{
+	PreDepthShadow();
+	ObjectRender();
+	return true;
+}
+
+bool Sample::ObjectRender()
+{
 	if (m_pCurrentScene == nullptr) return true;
+
+	m_pImmediateContext->PSSetSamplers(2, 1, g_pSSShadowMap.GetAddressOf());
+
+	m_pImmediateContext->UpdateSubresource(
+		m_pShadowConstantBuffer.Get(), 0, NULL, &m_cbShadow, 0, 0);
+	m_pImmediateContext->VSSetConstantBuffers(3, 1, m_pShadowConstantBuffer.GetAddressOf());
+	m_pImmediateContext->PSSetConstantBuffers(3, 1, m_pShadowConstantBuffer.GetAddressOf());
+
+
 	if (m_bWireFrame)
 		m_pImmediateContext->RSSetState(TDxState::g_pDefaultRSWireFrame);
 	else
@@ -342,7 +360,7 @@ bool Sample::Render()
 		TDxState::g_pDefaultDepthStencilAndNoWrite,
 		0xff);
 	m_pImmediateContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_POINTLIST);
-	
+
 	TMatrix matBillboard;
 	//TMatrix::CreateBillboard(); 
 	matBillboard = m_pCurrentScene->m_pMainCamera->m_matView.Invert();
@@ -355,14 +373,14 @@ bool Sample::Render()
 		//matWorld = matBillboard * matWorld;
 		// matworld = s* r* t;
 		data->SetMatrix(&matBillboard,
-			&pScene->m_pMainCamera->m_matView, 
+			&pScene->m_pMainCamera->m_matView,
 			&pScene->m_pMainCamera->m_matProj);
 		data->Render();
 	}
 
 	m_pImmediateContext->OMSetBlendState(TDxState::g_pAlphaBlend, 0, -1);
 	m_pImmediateContext->OMSetDepthStencilState(
-		TDxState::g_pDefaultDepthStencil,0xff);
+		TDxState::g_pDefaultDepthStencil, 0xff);
 	m_pImmediateContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	m_pImmediateContext->GSSetShader(nullptr, NULL, 0);
 
@@ -370,9 +388,9 @@ bool Sample::Render()
 	TVector3 vSunLightDir(0, 100, 100);
 	D3DXVec3Normalize(&vSunLightDir, &-vSunLightDir);
 
-	TVector3 vLightPos(0, 10, -50);
+	TVector3 vLightPos(0, 100, -100);
 	TMatrix matRotation;
-	D3DXMatrixRotationY(&matRotation, g_fGameTimer);
+	D3DXMatrixRotationY(&matRotation, 0);// g_fGameTimer);
 	//vLight = vLight * matRotation;
 	D3DXVec3TransformCoord(&vLightPos, &vLightPos, &matRotation);
 
@@ -388,7 +406,7 @@ bool Sample::Render()
 	}
 
 	/*for (int iNpc = 0; iNpc < m_NpcList.size(); iNpc++)
-	{	
+	{
 		m_NpcList[iNpc]->SetMatrix(nullptr, &pScene->m_pMainCamera->m_matView, &pScene->m_pMainCamera->m_matProj);
 		m_NpcList[iNpc]->Render();
 	}*/
@@ -396,19 +414,19 @@ bool Sample::Render()
 	if (m_UserCharacter)
 	{
 		m_UserCharacter->SetMatrix(&matWorld, &pScene->m_pMainCamera->m_matView, &pScene->m_pMainCamera->m_matProj);
-		m_UserCharacter->Render();		
+		m_UserCharacter->Render();
 	}
 
 	m_pImmediateContext->OMSetDepthStencilState(TDxState::g_pDefaultDepthStencil, 0xff);
-	
+
 	if (pScene->m_pMap)
 	{
-		pScene->m_pMap->m_cbData.vLightDir = 
+		pScene->m_pMap->m_cbData.vLightDir =
 			TVector4(vLightDir.x, vLightDir.y, vLightDir.z, 100.0f);
-		pScene->m_pMap->m_cbData.vLightPos = 
-			TVector4(vLightPos.x, vLightPos.y, vLightPos.z, 55.0f); 
+		pScene->m_pMap->m_cbData.vLightPos =
+			TVector4(vLightPos.x, vLightPos.y, vLightPos.z, 55.0f);
 		pScene->m_pMap->m_cbData.vEyeDir =
-		{ 
+		{
 			pScene->m_pMainCamera->m_vLook.x,
 			pScene->m_pMainCamera->m_vLook.y,
 			pScene->m_pMainCamera->m_vLook.z,
@@ -424,16 +442,19 @@ bool Sample::Render()
 			&pScene->m_pMainCamera->m_matView,
 			&pScene->m_pMainCamera->m_matProj);
 		m_Quadtree.Frame();
+		m_Quadtree.m_pMap->m_pImmediateContext->PSSetShaderResources(
+			6, 1, m_RT.m_pDsvSRV.GetAddressOf());
+
 		m_Quadtree.Render();
 	}
-	m_pCurrentScene->Render();
+	//m_pCurrentScene->Render();
 	m_DirLine.SetMatrix(nullptr, &m_pCurrentScene->m_pMainCamera->m_matView,
 		&m_pCurrentScene->m_pMainCamera->m_matProj);
-	m_DirLine.Render();		
+	m_DirLine.Render();
 	return true;
 }
 bool Sample::Release()
-{	
+{
 	for (auto data : m_ParticleList)
 	{
 		data->Release();
@@ -456,10 +477,10 @@ bool Sample::Release()
 	}
 
 	m_DirLine.Release();
-	if(m_pTitle!=nullptr)m_pTitle->Release();
-	if(m_pInGame != nullptr)m_pInGame->Release();
+	if (m_pTitle != nullptr)m_pTitle->Release();
+	if (m_pInGame != nullptr)m_pInGame->Release();
 
-	
+
 	return true;
 }
 HRESULT Sample::CreateDXResource()

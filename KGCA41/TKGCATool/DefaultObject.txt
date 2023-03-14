@@ -10,6 +10,7 @@ struct VS_OUT
 	float4 p : SV_POSITION;
 	float4 c : COLOR0;
 	float2 t : TEXCOORD0;
+	float4 TexShadow : TEXCOORD1;
 };
 
 VS_OUT VS(VS_IN input) 
@@ -28,6 +29,8 @@ VS_OUT VS(VS_IN input)
 	output.p = vProj;
 	output.c = input.c;
 	output.t = input.t;
+	 // ±Ì¿Ã∏ ¿« ≈ÿΩ∫√≥¡¬«•
+	output.TexShadow = mul(float4(input.p,1.0f), g_matShadow );
 	return output;
 }
 

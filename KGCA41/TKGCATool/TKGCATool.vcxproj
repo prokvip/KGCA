@@ -198,6 +198,7 @@
     <ClInclude Include="TCameraMap.h" />
     <ClInclude Include="TCharacter.h" />
     <ClInclude Include="TCreateMapDlg.h" />
+    <ClInclude Include="TDxRT.h" />
     <ClInclude Include="TFbxFile.h" />
     <ClInclude Include="TFbxObject.h" />
     <ClInclude Include="TKGCATool.h" />
@@ -226,9 +227,11 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Sample.cpp" />
+    <ClCompile Include="Shadow.cpp" />
     <ClCompile Include="TCameraMap.cpp" />
     <ClCompile Include="TCharacter.cpp" />
     <ClCompile Include="TCreateMapDlg.cpp" />
+    <ClCompile Include="TDxRT.cpp" />
     <ClCompile Include="TFbxAnimation.cpp" />
     <ClCompile Include="TFbxFile.cpp" />
     <ClCompile Include="TFbxLoader.cpp" />

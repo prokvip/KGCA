@@ -1,4 +1,5 @@
 #include "Default.h"
+
 struct VS_IN
 {
 	float3 p : POSITION; 
@@ -15,6 +16,7 @@ struct VS_OUT
 	float3 L : TEXCOORD1;
 	float3 w : TEXCOORD2;//world
 	float4 t2 : TEXCOORD3;
+	float4 TexShadow : TEXCOORD4;
 };
 
 VS_OUT VS(VS_IN input) 
@@ -63,6 +65,10 @@ VS_OUT VS(VS_IN input)
 
 	output.w = vWorld.xyz;
 	output.n = mul(input.n.xyz, matNormal);
+
+
+	 // ±Ì¿Ã∏ ¿« ≈ÿΩ∫√≥¡¬«•
+	output.TexShadow = mul(vWorld, g_matShadow );
 	return output;
 }
 float4 LoadTex1Color(float2 uv, float3 vWorld) 
@@ -124,6 +130,11 @@ float4 LoadTex5Color(float2 uv, float3 vWorld)
 }
 float4 PS(VS_OUT input) : SV_Target
 {
+	float3 ShadowTexColor =input.TexShadow.xyz / input.TexShadow.w;
+	float  fShadowDepth = g_txDepthShadow.SampleCmpLevelZero(g_samComShadowMap, 
+							ShadowTexColor.xy, 
+							ShadowTexColor.z);	
+
 	//float4 vBaseColor = g_txTex.Sample(g_SampleWrap , input.t2.xy);	
 	float4 vColor =  LoadTex1Color(input.t2.xy,input.w);	
 	vColor += LoadTex2Color(input.t2.xy,input.w);	
@@ -149,6 +160,8 @@ float4 PS(VS_OUT input) : SV_Target
 	fBlendColor.b = max(vColor.b, vColorTile.b);
 	fBlendColor.a = min(vColor.a, vColorTile.a);
 	float4 fFinalColor = fBlendColor*(vAmbintColor+vLightColor);
+	fShadowDepth = max(0.7f, fShadowDepth);
+	fFinalColor = fFinalColor*float4(fShadowDepth,fShadowDepth,fShadowDepth,1);	
 	fFinalColor.a = 1.0f;
 	return fFinalColor;	
 }
