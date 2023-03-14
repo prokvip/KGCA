@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "Sample.h"
-const float g_fMaxSize = 4096*2;
+
 void  Sample::NewEffect(UINT iParticleCounter, T_STR tex)
 {
 	TParticleObj* p = new TParticleObj;
