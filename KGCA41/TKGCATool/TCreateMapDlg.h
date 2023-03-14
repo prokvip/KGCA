@@ -22,4 +22,5 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
 	afx_msg void OnBnClickedOpenfileDlg();
+	afx_msg void OnBnClickedLandscapeDown();
 };

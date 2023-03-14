@@ -44,6 +44,7 @@ BEGIN_MESSAGE_MAP(TMapGen, CFormView)
 	ON_BN_CLICKED(IDC_BUTTON2, &TMapGen::OnBnClickedButton2)
 	ON_BN_CLICKED(IDC_LANDSCAPE_UP, &TMapGen::OnBnClickedLandscapeUp)
 	ON_WM_PAINT()
+	ON_BN_CLICKED(IDC_LANDSCAPE_DOWN, &TMapGen::OnBnClickedLandscapeDown)
 END_MESSAGE_MAP()
 
 
@@ -198,11 +199,8 @@ void TMapGen::OnBnClickedButton2()
 	pApp->m_Sample.m_bObjectPicking = true;
 	pApp->m_Sample.m_bUpPicking = false;
 	pApp->m_Sample.m_bDownPicking = false;
-	pApp->m_Sample.m_bPlatPicking = false;
-
-	
+	pApp->m_Sample.m_bPlatPicking = false;	
 }
-
 
 void TMapGen::OnBnClickedLandscapeUp()
 {
@@ -238,4 +236,14 @@ void TMapGen::OnPaint()
 		//ScreenToClient(rect2);
 		m_img.StretchBlt(dc, rect,SRCCOPY);
 	}
+}
+
+
+void TMapGen::OnBnClickedLandscapeDown()
+{
+	CTKGCAToolApp* pApp = (CTKGCAToolApp*)AfxGetApp();
+	pApp->m_Sample.m_bUpPicking = false;
+	pApp->m_Sample.m_bDownPicking = true;
+	pApp->m_Sample.m_bPlatPicking = false;
+	pApp->m_Sample.m_bObjectPicking = false;
 }

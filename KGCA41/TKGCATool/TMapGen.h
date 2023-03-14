@@ -51,6 +51,7 @@ public:
 	CStatic m_PictureTextureCtrl;
 	virtual void OnPrint(CDC* pDC, CPrintInfo* pInfo);
 	afx_msg void OnPaint();
+	afx_msg void OnBnClickedLandscapeDown();
 };
 
 

@@ -227,7 +227,7 @@ bool Sample::Frame()
 		&m_pCurrentScene->m_pMainCamera->m_matProj);
 
 
-	if (m_bUpPicking)
+	if (m_bUpPicking|| m_bDownPicking)
 	{
 		if (GetIntersection())
 		{
@@ -253,10 +253,31 @@ bool Sample::Frame()
 							{
 								float fValue = (fDistance / 30.0f) * 90.0f;
 								float fdot = cosf(DegreeToRadian(fValue));
-								m_Quadtree.m_pMap->m_VertexList[iVertex].p.y += fdot;
+
+								if(m_bUpPicking)
+									m_Quadtree.m_pMap->m_VertexList[iVertex].p.y += fdot;
+								if(m_bDownPicking)
+									m_Quadtree.m_pMap->m_VertexList[iVertex].p.y -= fdot;
+
 								m_Quadtree.m_pMap->ComputeVertexNormal(iVertex);
+
+								if (node->m_tBox.vMin.y > m_Quadtree.m_pMap->m_VertexList[iVertex].p.y)
+								{
+									node->m_tBox.vMin.y = m_Quadtree.m_pMap->m_VertexList[iVertex].p.y;
+								}
+								if (node->m_tBox.vMax.y < m_Quadtree.m_pMap->m_VertexList[iVertex].p.y)
+								{
+									node->m_tBox.vMax.y = m_Quadtree.m_pMap->m_VertexList[iVertex].p.y;
+								}
 							}
-						}
+						}	
+						node->m_tBox.vCenter = (node->m_tBox.vMax + node->m_tBox.vMin) * 0.5f;
+						node->m_tBox.vAxis[0] = { 1,0,0 };
+						node->m_tBox.vAxis[1] = { 0,1,0 };
+						node->m_tBox.vAxis[2] = { 0,0,1 };
+						node->m_tBox.fExtent[0] = node->m_tBox.vMax.x - node->m_tBox.vCenter.x;
+						node->m_tBox.fExtent[1] = node->m_tBox.vMax.y - node->m_tBox.vCenter.y;
+						node->m_tBox.fExtent[2] = node->m_tBox.vMax.z - node->m_tBox.vCenter.z;
 					}
 					m_Quadtree.m_pMap->UpdateVertexBuffer();
 				}

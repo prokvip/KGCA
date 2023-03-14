@@ -29,6 +29,7 @@ void TCreateMapDlg::DoDataExchange(CDataExchange* pDX)
 
 BEGIN_MESSAGE_MAP(TCreateMapDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_OPENFILE_DLG, &TCreateMapDlg::OnBnClickedOpenfileDlg)
+	ON_BN_CLICKED(IDC_LANDSCAPE_DOWN, &TCreateMapDlg::OnBnClickedLandscapeDown)
 END_MESSAGE_MAP()
 
 
@@ -77,4 +78,10 @@ void TCreateMapDlg::OnBnClickedOpenfileDlg()
 			GetBValue(color));
 		AfxMessageBox(selectFileName);
 	}*/
+}
+
+
+void TCreateMapDlg::OnBnClickedLandscapeDown()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 }
