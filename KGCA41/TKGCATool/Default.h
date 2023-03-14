@@ -39,10 +39,10 @@ cbuffer cb0 : register(b0)
 
 cbuffer cb1 : register(b3)
 {
-	matrix  g_matShadow : packoffset(c0);
-	float4  g_vLightDir2 : packoffset(c4);
-	float4  g_vLightPos2 : packoffset(c5);
-	float4  g_vLightColor2 : packoffset(c6);
+	matrix  g_matShadow;
+	float4  g_vLightDir2[g_iNumLight];
+	float4  g_vLightPos2[g_iNumLight];
+	float4  g_vLightColor2[g_iNumLight];
 };
 
 float4 ComputePointDiffuseLight(float3 vVertexPos,
