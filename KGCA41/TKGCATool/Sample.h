@@ -38,6 +38,7 @@ public:
 	Microsoft::WRL::ComPtr<ID3D11SamplerState> g_pSSShadowMap;
 	SHADOW_CONSTANT_BUFFER			m_cbShadow;
 	ComPtr<ID3D11Buffer>			m_pShadowConstantBuffer;
+	D3D11_RASTERIZER_DESC			m_SlopeScaledDepthBiasDesc;
 public:
 	std::vector< TParticleObj*>  m_ParticleList;
 	void		NewEffect(UINT iParticleCounter, T_STR tex);

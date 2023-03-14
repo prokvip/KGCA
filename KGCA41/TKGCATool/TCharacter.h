@@ -39,7 +39,10 @@ public:
 public:
 	HRESULT	CreateConstantBuffer()override;
 	void	SetMatrix(TMatrix* matWorld, TMatrix* matView, TMatrix* matProj) override;
+	bool	PreRender() override;
 	bool	Render() override;
+	bool	RenderShadow()override;
+	bool	PostRender() override;
 	bool	Release() override;
 	HRESULT Load(ID3D11Device* , ID3D11DeviceContext* , TFbxFile* , T_STR);
 };

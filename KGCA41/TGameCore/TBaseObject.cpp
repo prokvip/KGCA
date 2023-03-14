@@ -349,6 +349,10 @@ namespace TDX
 
         UpdateConstantBuffer();
     }
+    bool TBaseObject::RenderShadow()
+    {
+        return true;
+    }
     bool TBaseObject::Render()
     {
         PreRender();

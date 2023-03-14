@@ -130,6 +130,10 @@ void	TCharacter::SetMatrix(TMatrix* matWorld, TMatrix* matView, TMatrix* matProj
 		m_matProj = *matProj;
 	}
 }
+bool TCharacter::PreRender()
+{
+	return true;
+}
 bool TCharacter::Render()
 {
 	m_pImmediateContext->VSSetConstantBuffers(1, 1, &m_pAnimBoneCB);
@@ -142,6 +146,26 @@ bool TCharacter::Render()
 		m_pFbxFile->m_pDrawObjList[iMesh]->SetMatrix(&m_matWorld, &m_matView, &m_matProj);
 		m_pFbxFile->m_pDrawObjList[iMesh]->Render();
 	}
+	return true;
+}
+bool TCharacter::RenderShadow()
+{
+	m_pImmediateContext->VSSetConstantBuffers(1, 1, &m_pAnimBoneCB);
+	for (int iMesh = 0; iMesh < m_pFbxFile->m_pDrawObjList.size(); iMesh++)
+	{
+		if (m_pFbxFile->m_pDrawObjList[iMesh]->m_bSkinned)
+		{
+			m_pImmediateContext->VSSetConstantBuffers(1, 1, &m_pSkinBoneCB[iMesh]);
+		}
+		m_pFbxFile->m_pDrawObjList[iMesh]->SetMatrix(&m_matWorld, &m_matView, &m_matProj);
+		m_pFbxFile->m_pDrawObjList[iMesh]->PreRender();
+		m_pImmediateContext->PSSetShader(NULL, NULL, 0);
+		m_pFbxFile->m_pDrawObjList[iMesh]->PostRender();
+	}
+	return true;
+}
+bool TCharacter::PostRender()
+{
 	return true;
 }
 bool TCharacter::Release()

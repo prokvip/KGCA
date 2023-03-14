@@ -160,7 +160,7 @@ float4 PS(VS_OUT input) : SV_Target
 	fBlendColor.b = max(vColor.b, vColorTile.b);
 	fBlendColor.a = min(vColor.a, vColorTile.a);
 	float4 fFinalColor = fBlendColor*(vAmbintColor+vLightColor);
-	fShadowDepth = max(0.7f, fShadowDepth);
+	fShadowDepth = max(0.5f, fShadowDepth);
 	fFinalColor = fFinalColor*float4(fShadowDepth,fShadowDepth,fShadowDepth,1);	
 	fFinalColor.a = 1.0f;
 	return fFinalColor;	

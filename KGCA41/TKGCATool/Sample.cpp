@@ -193,7 +193,7 @@ bool Sample::CreateFbxLoader()
 	return true;
 }
 bool Sample::Init()
-{
+{	
 	InitRT();
 
 	I_Object.SetDevice(m_pd3dDevice.Get(), m_pImmediateContext.Get());
@@ -226,7 +226,8 @@ bool Sample::Frame()
 		&m_pCurrentScene->m_pMainCamera->m_matView,
 		&m_pCurrentScene->m_pMainCamera->m_matProj);
 
-
+	m_Quadtree.Frame();
+	
 	if (m_bUpPicking|| m_bDownPicking)
 	{
 		if (GetIntersection())
@@ -249,26 +250,27 @@ bool Sample::Frame()
 							TVector3 v0 = m_Quadtree.m_pMap->m_VertexList[iVertex].p;
 							TVector3 v = v0 - m_Select.m_vIntersection;
 							float fDistance = D3DXVec3Length(&v);
-							if (fDistance <= 30.0f)
+							if (fDistance <= 20.0f) // 높이 사이즈 보다 크게 잡아서 노말 갱신한다.
 							{
-								float fValue = (fDistance / 30.0f) * 90.0f;
-								float fdot = cosf(DegreeToRadian(fValue));
+								if (fDistance < 10.0f)
+								{
+									float fValue = (fDistance / 10.0f) * 90.0f;
+									float fdot = cosf(DegreeToRadian(fValue));
+									if (m_bUpPicking)
+										m_Quadtree.m_pMap->m_VertexList[iVertex].p.y += fdot;
+									if (m_bDownPicking)
+										m_Quadtree.m_pMap->m_VertexList[iVertex].p.y -= fdot;									
 
-								if(m_bUpPicking)
-									m_Quadtree.m_pMap->m_VertexList[iVertex].p.y += fdot;
-								if(m_bDownPicking)
-									m_Quadtree.m_pMap->m_VertexList[iVertex].p.y -= fdot;
-
+									if (node->m_tBox.vMin.y > m_Quadtree.m_pMap->m_VertexList[iVertex].p.y)
+									{
+										node->m_tBox.vMin.y = m_Quadtree.m_pMap->m_VertexList[iVertex].p.y;
+									}
+									if (node->m_tBox.vMax.y < m_Quadtree.m_pMap->m_VertexList[iVertex].p.y)
+									{
+										node->m_tBox.vMax.y = m_Quadtree.m_pMap->m_VertexList[iVertex].p.y;
+									}
+								}
 								m_Quadtree.m_pMap->ComputeVertexNormal(iVertex);
-
-								if (node->m_tBox.vMin.y > m_Quadtree.m_pMap->m_VertexList[iVertex].p.y)
-								{
-									node->m_tBox.vMin.y = m_Quadtree.m_pMap->m_VertexList[iVertex].p.y;
-								}
-								if (node->m_tBox.vMax.y < m_Quadtree.m_pMap->m_VertexList[iVertex].p.y)
-								{
-									node->m_tBox.vMax.y = m_Quadtree.m_pMap->m_VertexList[iVertex].p.y;
-								}
 							}
 						}	
 						node->m_tBox.vCenter = (node->m_tBox.vMax + node->m_tBox.vMin) * 0.5f;
@@ -316,7 +318,6 @@ bool Sample::Frame()
 		}
 	}
 
-	ClearD3D11DeviceContext(m_pImmediateContext.Get());
 	if (m_pCurrentScene->IsNextScene())
 	{
 		m_pCurrentScene = m_pInGame;
@@ -352,7 +353,11 @@ bool Sample::Frame()
 bool Sample::Render()
 {
 	PreDepthShadow();
+
+	TGameCore::TCorePreRender();
 	ObjectRender();
+
+	ClearD3D11DeviceContext(m_pImmediateContext.Get());
 	return true;
 }
 
@@ -406,17 +411,16 @@ bool Sample::ObjectRender()
 	m_pImmediateContext->GSSetShader(nullptr, NULL, 0);
 
 
-	TVector3 vSunLightDir(0, 100, 100);
-	D3DXVec3Normalize(&vSunLightDir, &-vSunLightDir);
+	//TVector3 vSunLightDir(0, 100, 100);
+	//D3DXVec3Normalize(&vSunLightDir, &-vSunLightDir);
 
-	TVector3 vLightPos(0, 100, -100);
-	TMatrix matRotation;
-	D3DXMatrixRotationY(&matRotation, 0);// g_fGameTimer);
-	//vLight = vLight * matRotation;
-	D3DXVec3TransformCoord(&vLightPos, &vLightPos, &matRotation);
+	//TVector3 vLightPos(0, 50, 50);
+	//TMatrix matRotation;
+	////D3DXMatrixRotationY(&matRotation, g_fGameTimer);
+	//D3DXVec3TransformCoord(&vLightPos, &vLightPos, &matRotation);
 
-	TVector3 vLightDir;
-	D3DXVec3Normalize(&vLightDir, &-vLightPos);
+	//TVector3 vLightDir;
+	//D3DXVec3Normalize(&vLightDir, &-vLightPos);
 
 	TMatrix matWorld;
 	if (pScene->m_pUser)
@@ -442,10 +446,10 @@ bool Sample::ObjectRender()
 
 	if (pScene->m_pMap)
 	{
-		pScene->m_pMap->m_cbData.vLightDir =
-			TVector4(vLightDir.x, vLightDir.y, vLightDir.z, 100.0f);
+		/*pScene->m_pMap->m_cbData.vLightDir =
+			TVector4(vLightDir.x, vLightDir.y, vLightDir.z, 300.0f);
 		pScene->m_pMap->m_cbData.vLightPos =
-			TVector4(vLightPos.x, vLightPos.y, vLightPos.z, 55.0f);
+			TVector4(vLightPos.x, vLightPos.y, vLightPos.z, 30.0f);
 		pScene->m_pMap->m_cbData.vEyeDir =
 		{
 			pScene->m_pMainCamera->m_vLook.x,
@@ -458,17 +462,18 @@ bool Sample::ObjectRender()
 			pScene->m_pMainCamera->m_vPos.y,
 			pScene->m_pMainCamera->m_vPos.z,
 			0.98f
-		};
+		};*/
 		pScene->m_pMap->SetMatrix(nullptr,
 			&pScene->m_pMainCamera->m_matView,
 			&pScene->m_pMainCamera->m_matProj);
-		m_Quadtree.Frame();
+		
 		m_Quadtree.m_pMap->m_pImmediateContext->PSSetShaderResources(
 			6, 1, m_RT.m_pDsvSRV.GetAddressOf());
 
 		m_Quadtree.Render();
 	}
 	//m_pCurrentScene->Render();
+
 	m_DirLine.SetMatrix(nullptr, &m_pCurrentScene->m_pMainCamera->m_matView,
 		&m_pCurrentScene->m_pMainCamera->m_matProj);
 	m_DirLine.Render();
@@ -528,44 +533,44 @@ void Sample::ClearD3D11DeviceContext(ID3D11DeviceContext* pd3dDeviceContext)
 	UINT StrideOffset[16] = { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 };
 
 	// Shaders
-	//pd3dDeviceContext->VSSetShader(NULL, NULL, 0);
-	//pd3dDeviceContext->HSSetShader(NULL, NULL, 0);
-	//pd3dDeviceContext->DSSetShader(NULL, NULL, 0);
-	//pd3dDeviceContext->GSSetShader(NULL, NULL, 0);
-	//pd3dDeviceContext->PSSetShader(NULL, NULL, 0);
+	pd3dDeviceContext->VSSetShader(NULL, NULL, 0);
+	pd3dDeviceContext->HSSetShader(NULL, NULL, 0);
+	pd3dDeviceContext->DSSetShader(NULL, NULL, 0);
+	pd3dDeviceContext->GSSetShader(NULL, NULL, 0);
+	pd3dDeviceContext->PSSetShader(NULL, NULL, 0);
 
-	//// IA clear
-	//pd3dDeviceContext->IASetVertexBuffers(0, 16, pBuffers, StrideOffset, StrideOffset);
-	//pd3dDeviceContext->IASetIndexBuffer(NULL, DXGI_FORMAT_R16_UINT, 0);
-	//pd3dDeviceContext->IASetInputLayout(NULL);
+	// IA clear
+	pd3dDeviceContext->IASetVertexBuffers(0, 16, pBuffers, StrideOffset, StrideOffset);
+	pd3dDeviceContext->IASetIndexBuffer(NULL, DXGI_FORMAT_R16_UINT, 0);
+	pd3dDeviceContext->IASetInputLayout(NULL);
 
-	//// Constant buffers
-	//pd3dDeviceContext->VSSetConstantBuffers(0, 14, pBuffers);
-	//pd3dDeviceContext->HSSetConstantBuffers(0, 14, pBuffers);
-	//pd3dDeviceContext->DSSetConstantBuffers(0, 14, pBuffers);
-	//pd3dDeviceContext->GSSetConstantBuffers(0, 14, pBuffers);
-	//pd3dDeviceContext->PSSetConstantBuffers(0, 14, pBuffers);
+	// Constant buffers
+	pd3dDeviceContext->VSSetConstantBuffers(0, 14, pBuffers);
+	pd3dDeviceContext->HSSetConstantBuffers(0, 14, pBuffers);
+	pd3dDeviceContext->DSSetConstantBuffers(0, 14, pBuffers);
+	pd3dDeviceContext->GSSetConstantBuffers(0, 14, pBuffers);
+	pd3dDeviceContext->PSSetConstantBuffers(0, 14, pBuffers);
 
 	// Resources
 	pd3dDeviceContext->VSSetShaderResources(0, 16, pSRVs);
-	//pd3dDeviceContext->HSSetShaderResources(0, 16, pSRVs);
-	//pd3dDeviceContext->DSSetShaderResources(0, 16, pSRVs);
-	//pd3dDeviceContext->GSSetShaderResources(0, 16, pSRVs);
+	pd3dDeviceContext->HSSetShaderResources(0, 16, pSRVs);
+	pd3dDeviceContext->DSSetShaderResources(0, 16, pSRVs);
+	pd3dDeviceContext->GSSetShaderResources(0, 16, pSRVs);
 	pd3dDeviceContext->PSSetShaderResources(0, 16, pSRVs);
 
 	//// Samplers
-	//pd3dDeviceContext->VSSetSamplers(0, 16, pSamplers);
-	//pd3dDeviceContext->HSSetSamplers(0, 16, pSamplers);
-	//pd3dDeviceContext->DSSetSamplers(0, 16, pSamplers);
-	//pd3dDeviceContext->GSSetSamplers(0, 16, pSamplers);
-	//pd3dDeviceContext->PSSetSamplers(0, 16, pSamplers);
+	pd3dDeviceContext->VSSetSamplers(0, 16, pSamplers);
+	pd3dDeviceContext->HSSetSamplers(0, 16, pSamplers);
+	pd3dDeviceContext->DSSetSamplers(0, 16, pSamplers);
+	pd3dDeviceContext->GSSetSamplers(0, 16, pSamplers);
+	pd3dDeviceContext->PSSetSamplers(0, 16, pSamplers);
 
 	//// Render targets
-	//pd3dDeviceContext->OMSetRenderTargets(8, pRTVs, pDSV);
+	pd3dDeviceContext->OMSetRenderTargets(8, pRTVs, pDSV);
 
 	//// States
-	//FLOAT blendFactor[4] = { 0,0,0,0 };
-	//pd3dDeviceContext->OMSetBlendState(NULL, blendFactor, 0xFFFFFFFF);
-	//pd3dDeviceContext->OMSetDepthStencilState(NULL, 0);
-	//pd3dDeviceContext->RSSetState(NULL);
+	FLOAT blendFactor[4] = { 0,0,0,0 };
+	pd3dDeviceContext->OMSetBlendState(NULL, blendFactor, 0xFFFFFFFF);
+	pd3dDeviceContext->OMSetDepthStencilState(NULL, 0);
+	pd3dDeviceContext->RSSetState(NULL);
 }

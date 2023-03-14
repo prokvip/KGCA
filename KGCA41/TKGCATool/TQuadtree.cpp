@@ -258,6 +258,23 @@ void TQuadtree::RenderObject(TNode* pNode)
         RenderObject(pNode->m_pChild[iChild]);
     }
 }
+void TQuadtree::RenderShadowObject(TNode* pNode)
+{
+    if (pNode == nullptr || pNode->m_bLeaf) return;
+    for (auto fbx : pNode->m_pDynamicObjectlist)
+    {
+        T_POSITION dwRet = m_pCamera->m_vFrustum.ClassifyTBox(fbx->m_tBox);
+        if (P_FRONT > 0)// 완전포함.
+        {
+            fbx->SetMatrix(nullptr, &m_pMap->m_matView, &m_pMap->m_matProj);
+            fbx->RenderShadow();           
+        }
+    }
+    for (int iChild = 0; iChild < 4; iChild++)
+    {
+        RenderShadowObject(pNode->m_pChild[iChild]);
+    }
+}
 bool TQuadtree::Render()
 {
     for (auto node : m_pDrawLeafNodeList)
@@ -270,8 +287,7 @@ bool TQuadtree::Render()
         m_pMap->m_pImmediateContext->PSSetShaderResources(4, 1, &m_TexArray[3]->m_pTextureSRV);
         m_pMap->m_pImmediateContext->PSSetShaderResources(5, 1, &m_TexArray[4]->m_pTextureSRV);
 
-        m_pMap->m_pImmediateContext->IASetIndexBuffer(
-            node->m_pIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
+        m_pMap->m_pImmediateContext->IASetIndexBuffer(  node->m_pIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
         m_pMap->m_pImmediateContext->DrawIndexed(node->m_dwFace * 3, 0, 0);
 
         for (auto fbx : node->m_pDynamicObjectlist)
@@ -282,6 +298,27 @@ bool TQuadtree::Render()
     }
 
     RenderObject(m_pRootNode);
+    return true;
+}
+bool TQuadtree::RenderShadow()
+{
+    for (auto node : m_pDrawLeafNodeList)
+    {
+        m_pMap->PreRender();       
+        m_pMap->m_pImmediateContext->PSSetShader(NULL, NULL, 0);
+        m_pMap->m_pImmediateContext->IASetIndexBuffer(node->m_pIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
+        m_pMap->m_pImmediateContext->DrawIndexed(node->m_dwFace * 3, 0, 0);
+
+        for (auto fbx : node->m_pDynamicObjectlist)
+        {
+            fbx->SetMatrix(nullptr, &m_pMap->m_matView, &m_pMap->m_matProj);
+            fbx->PreRender();
+            fbx->m_pImmediateContext->PSSetShader(NULL, NULL, 0);
+            fbx->PostRender();
+        }
+    }
+
+    RenderShadowObject(m_pRootNode);
     return true;
 }
 bool TQuadtree::Release()

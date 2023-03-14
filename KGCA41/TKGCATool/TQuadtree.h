@@ -29,7 +29,8 @@ public:
 	bool	Frame();
 	bool	Render();
 	bool	Release();
-
+	bool    RenderShadow();
+	void	RenderShadowObject(TNode* pNode);
 	void    RenderObject(TNode* pNode);
 	TNode*  VisibleNode(TNode* pNode);
 	virtual ~TQuadtree();

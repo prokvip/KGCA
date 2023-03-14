@@ -122,6 +122,7 @@ namespace TDX
 		virtual bool		Frame();
 		virtual bool		PreRender();
 		virtual bool		Render();
+		virtual bool		RenderShadow();
 		virtual bool		PostRender();
 		virtual bool		Release();
 		virtual void		SetMatrix(TMatrix* matWorld, TMatrix* matView, TMatrix* matProj);

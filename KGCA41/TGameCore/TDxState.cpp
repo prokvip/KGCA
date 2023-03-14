@@ -1,19 +1,121 @@
 #include "TDxState.h"
+
+ID3D11Device* TDxState::m_pd3dDevice = nullptr;
 ID3D11SamplerState* TDxState::g_pDefaultSSWrap = nullptr;
 ID3D11SamplerState* TDxState::g_pDefaultSSMirror = nullptr;
 ID3D11BlendState* TDxState::g_pAlphaBlend = nullptr;
 ID3D11BlendState* TDxState::g_pDualSourceBlend = nullptr;
 ID3D11RasterizerState* TDxState::g_pDefaultRSWireFrame = nullptr;
 ID3D11RasterizerState* TDxState::g_pDefaultRSSolid = nullptr;
-ID3D11RasterizerState* TDxState::g_pRSSlopeScaledDepthBias=nullptr;
-
+ID3D11RasterizerState* TDxState::g_pRSSlopeScaledDepthBias = nullptr;
 ID3D11DepthStencilState* TDxState::g_pDefaultDepthStencil = nullptr;
 ID3D11DepthStencilState* TDxState::g_pDefaultDepthStencilAndNoWrite = nullptr;
 ID3D11DepthStencilState* TDxState::g_pGreaterDepthStencil = nullptr;
 ID3D11DepthStencilState* TDxState::g_pDisableDepthStencil = nullptr;
+
+/// <summary>
+///  Tool & Editer
+/// </summary>
+Microsoft::WRL::ComPtr<ID3D11BlendState>		TDxState::g_pBSEdit = 0;
+Microsoft::WRL::ComPtr<ID3D11RasterizerState>	TDxState::g_pRSEdit = 0;
+Microsoft::WRL::ComPtr<ID3D11SamplerState>      TDxState::g_pSSEdit = 0;
+Microsoft::WRL::ComPtr<ID3D11DepthStencilState> TDxState::g_pDSSEdit = 0;
+D3D11_BLEND_DESC			TDxState::g_BlendDesc = { 0, };
+D3D11_RASTERIZER_DESC		TDxState::g_RasterizerDesc;
+D3D11_SAMPLER_DESC			TDxState::g_SamplerDesc;
+D3D11_DEPTH_STENCIL_DESC	TDxState::g_DepthStencilDesc = { 0, };
+FLOAT TDxState::g_fBlendFactor[4] = { 0, };
+UINT  TDxState::g_iMask = 0xff;
+UINT TDxState::g_iSlot = 0;
+UINT TDxState::g_iArray = 1;
+UINT TDxState::g_iRef = 1;
+
+HRESULT TDxState::SetBlendState(ID3D11Device* pd3dDevice,
+    ID3D11DeviceContext* pContext,
+    D3D11_BLEND_DESC& ds,
+    const FLOAT fBlendFactor[],
+    UINT iMask)
+{
+    HRESULT hr = S_OK;
+    g_pBSEdit.Reset();
+    g_BlendDesc = ds;
+    memcpy(&g_fBlendFactor, fBlendFactor, sizeof(FLOAT) * 4);
+    g_iMask = iMask;
+    if (FAILED(hr = pd3dDevice->CreateBlendState(&ds, g_pBSEdit.GetAddressOf())))
+    {
+        return hr;
+    }
+    if (pContext != nullptr)
+    {
+        ApplyBS(pContext, g_pBSEdit.Get(), fBlendFactor, iMask);
+    }
+    return hr;
+}
+HRESULT TDxState::SetRasterizerState(ID3D11Device* pd3dDevice,
+    ID3D11DeviceContext* pContext,
+    D3D11_RASTERIZER_DESC& rsDesc)
+{
+    HRESULT hr = S_OK;
+    g_pRSEdit.Reset();
+    g_RasterizerDesc = rsDesc;
+    if (FAILED(hr =
+        pd3dDevice->CreateRasterizerState(&rsDesc, g_pRSEdit.GetAddressOf())))
+    {
+        return hr;
+    }
+    if (pContext != nullptr)
+    {
+        ApplyRS(pContext, g_pRSEdit.Get());
+    }
+    return hr;
+}
+HRESULT TDxState::SetSamplerState(ID3D11Device* pd3dDevice,
+    ID3D11DeviceContext* pContext,
+    D3D11_SAMPLER_DESC& sd,
+    UINT iSlot,
+    UINT iArray)
+{
+    HRESULT hr = S_OK;
+    g_pSSEdit.Reset();
+    g_SamplerDesc = sd;
+    g_iSlot = iSlot;
+    g_iArray = iArray;
+    if (FAILED(hr = pd3dDevice->CreateSamplerState(
+        &sd,
+        g_pSSEdit.GetAddressOf())))
+    {
+        return hr;
+    }
+    if (pContext != nullptr)
+    {
+        ApplySS(pContext, g_pSSEdit.Get(), iSlot, iArray);
+    }
+    return hr;
+}
+HRESULT TDxState::SetDipthStencilState(ID3D11Device* pd3dDevice,
+    ID3D11DeviceContext* pContext,
+    D3D11_DEPTH_STENCIL_DESC& dsd,
+    UINT iRef)
+{
+    HRESULT hr;
+    g_pDSSEdit.Reset();
+    g_DepthStencilDesc = dsd;
+    g_iRef = iRef;
+    if (FAILED(hr = pd3dDevice->CreateDepthStencilState(&dsd, g_pDSSEdit.GetAddressOf())))
+    {
+        return hr;
+    }
+    if (pContext != nullptr)
+    {
+        ApplyDSS(pContext, g_pDSSEdit.Get(), iRef);
+    }
+    return hr;
+}
+
 bool TDxState::SetState(ID3D11Device* pd3dDevice)
 {
     HRESULT hr;
+    m_pd3dDevice = pd3dDevice;
 	// SS
 	D3D11_SAMPLER_DESC sd;
     ZeroMemory(&sd, sizeof(sd));
@@ -48,15 +150,17 @@ bool TDxState::SetState(ID3D11Device* pd3dDevice)
         &g_pDefaultRSWireFrame);
 
     rd.FillMode = D3D11_FILL_SOLID;
-    pd3dDevice->CreateRasterizerState(&rd,
-        &g_pDefaultRSSolid);
+    pd3dDevice->CreateRasterizerState(&rd,  &g_pDefaultRSSolid);
 
-    rd.DepthBias = 20000;
+
+    rd.DepthBias = 500;
     rd.DepthBiasClamp = 0.0f;
     rd.SlopeScaledDepthBias = 1.0f;
-    if (FAILED(hr = pd3dDevice->CreateRasterizerState(&rd,
-        &g_pRSSlopeScaledDepthBias)))
-        return hr;
+    g_RasterizerDesc = rd;
+    if (FAILED(hr = pd3dDevice->CreateRasterizerState(&rd,  &g_pRSSlopeScaledDepthBias)))
+    {
+        return false;
+    }
 
     D3D11_BLEND_DESC bd;
     ZeroMemory(&bd, sizeof(bd));
@@ -125,8 +229,8 @@ bool TDxState::Release()
 	if (g_pDefaultSSWrap) g_pDefaultSSWrap->Release();
     if (g_pDefaultSSMirror) g_pDefaultSSMirror->Release();
     if (g_pDefaultRSSolid)g_pDefaultRSSolid->Release();
-    if (g_pDefaultRSWireFrame)g_pDefaultRSWireFrame->Release();
     if (g_pRSSlopeScaledDepthBias)g_pRSSlopeScaledDepthBias->Release();
+    if (g_pDefaultRSWireFrame)g_pDefaultRSWireFrame->Release();   
     if (g_pDefaultDepthStencil)g_pDefaultDepthStencil->Release();
     if (g_pGreaterDepthStencil)g_pGreaterDepthStencil->Release();
     if (g_pDisableDepthStencil)g_pDisableDepthStencil->Release();
