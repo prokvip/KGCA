@@ -16,6 +16,11 @@ TMapGen::TMapGen()
 	, m_iRows(0)
 	, m_bWireFrame(FALSE)
 	, m_strSelectObject(_T(""))
+	, m_iDepthBias(0)
+	, m_fDepthBiasClamp(0)
+	, m_fSlopeScaledDepthBias(0)
+	, m_fCameraNear(0)
+	, m_fCameraFar(0)
 {
 
 }
@@ -34,6 +39,11 @@ void TMapGen::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_EDIT2, m_strSelectObject);
 	DDX_Control(pDX, IDC_LIST2, m_ObjectList);
 	DDX_Control(pDX, IDC_PICTURE_TEXTURE, m_PictureTextureCtrl);
+	DDX_Text(pDX, IDC_DEPHBIAS, m_iDepthBias);
+	DDX_Text(pDX, IDC_DEPTHBIASCLAMP, m_fDepthBiasClamp);
+	DDX_Text(pDX, IDC_SLOPESCALEDDEPTHBIAS, m_fSlopeScaledDepthBias);
+	DDX_Text(pDX, IDC_CAMERANEAR, m_fCameraNear);
+	DDX_Text(pDX, IDC_CAMERAFAR, m_fCameraFar);
 }
 
 BEGIN_MESSAGE_MAP(TMapGen, CFormView)
@@ -45,6 +55,12 @@ BEGIN_MESSAGE_MAP(TMapGen, CFormView)
 	ON_BN_CLICKED(IDC_LANDSCAPE_UP, &TMapGen::OnBnClickedLandscapeUp)
 	ON_WM_PAINT()
 	ON_BN_CLICKED(IDC_LANDSCAPE_DOWN, &TMapGen::OnBnClickedLandscapeDown)
+	ON_BN_CLICKED(IDC_LANDSCAPE_PLAT, &TMapGen::OnBnClickedLandscapePlat)
+	ON_EN_CHANGE(IDC_DEPHBIAS, &TMapGen::OnEnChangeDephbias)
+	ON_EN_CHANGE(IDC_DEPTHBIASCLAMP, &TMapGen::OnEnChangeDepthbiasclamp)
+	ON_EN_CHANGE(IDC_SLOPESCALEDDEPTHBIAS, &TMapGen::OnEnChangeSlopescaleddepthbias)
+	ON_EN_CHANGE(IDC_CAMERANEAR, &TMapGen::OnEnChangeCameranear)
+	ON_EN_CHANGE(IDC_CAMERAFAR, &TMapGen::OnEnChangeCamerafar)
 END_MESSAGE_MAP()
 
 
@@ -135,7 +151,11 @@ void TMapGen::OnInitialUpdate()
 	m_iCols = 65;
 	m_iRows = 65;
 	m_bWireFrame = FALSE;
-
+	m_iDepthBias = 500;
+	m_fDepthBiasClamp = 0.0f;
+	m_fSlopeScaledDepthBias = 10.0f;
+	m_fCameraNear = 0.1f;
+	m_fCameraFar = 1000.0f;
 	UpdateData(FALSE);
 
 	Recurse(L"D:/00_KGCA41Leture/data/map", L"/*.*", m_TextureNameList);
@@ -246,4 +266,86 @@ void TMapGen::OnBnClickedLandscapeDown()
 	pApp->m_Sample.m_bDownPicking = true;
 	pApp->m_Sample.m_bPlatPicking = false;
 	pApp->m_Sample.m_bObjectPicking = false;
+}
+
+
+void TMapGen::OnBnClickedLandscapePlat()
+{
+	CTKGCAToolApp* pApp = (CTKGCAToolApp*)AfxGetApp();
+	pApp->m_Sample.m_bUpPicking = false;
+	pApp->m_Sample.m_bDownPicking = false;
+	pApp->m_Sample.m_bPlatPicking = true;
+	pApp->m_Sample.m_bObjectPicking = false;
+}
+
+
+void TMapGen::OnEnChangeDephbias()
+{
+	// TODO:  RICHEDIT 컨트롤인 경우, 이 컨트롤은
+	// CFormView::OnInitDialog() 함수를 재지정 
+	//하고 마스크에 OR 연산하여 설정된 ENM_CHANGE 플래그를 지정하여 CRichEditCtrl().SetEventMask()를 호출하지 않으면
+	// 이 알림 메시지를 보내지 않습니다.
+
+	// TODO:  여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	CTKGCAToolApp* pApp = (CTKGCAToolApp*)AfxGetApp();
+	UpdateData(TRUE);
+	pApp->m_Sample.m_SlopeScaledDepthBiasDesc.DepthBias = m_iDepthBias;
+}
+
+
+void TMapGen::OnEnChangeDepthbiasclamp()
+{
+	// TODO:  RICHEDIT 컨트롤인 경우, 이 컨트롤은
+	// CFormView::OnInitDialog() 함수를 재지정 
+	//하고 마스크에 OR 연산하여 설정된 ENM_CHANGE 플래그를 지정하여 CRichEditCtrl().SetEventMask()를 호출하지 않으면
+	// 이 알림 메시지를 보내지 않습니다.
+
+	// TODO:  여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	CTKGCAToolApp* pApp = (CTKGCAToolApp*)AfxGetApp();
+	UpdateData(TRUE);
+	pApp->m_Sample.m_SlopeScaledDepthBiasDesc.DepthBiasClamp = m_fDepthBiasClamp;
+}
+
+
+void TMapGen::OnEnChangeSlopescaleddepthbias()
+{
+	// TODO:  RICHEDIT 컨트롤인 경우, 이 컨트롤은
+	// CFormView::OnInitDialog() 함수를 재지정 
+	//하고 마스크에 OR 연산하여 설정된 ENM_CHANGE 플래그를 지정하여 CRichEditCtrl().SetEventMask()를 호출하지 않으면
+	// 이 알림 메시지를 보내지 않습니다.
+
+	// TODO:  여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	CTKGCAToolApp* pApp = (CTKGCAToolApp*)AfxGetApp();
+	UpdateData(TRUE);
+	pApp->m_Sample.m_SlopeScaledDepthBiasDesc.SlopeScaledDepthBias = m_fSlopeScaledDepthBias;
+}
+
+
+void TMapGen::OnEnChangeCameranear()
+{
+	// TODO:  RICHEDIT 컨트롤인 경우, 이 컨트롤은
+	// CFormView::OnInitDialog() 함수를 재지정 
+	//하고 마스크에 OR 연산하여 설정된 ENM_CHANGE 플래그를 지정하여 CRichEditCtrl().SetEventMask()를 호출하지 않으면
+	// 이 알림 메시지를 보내지 않습니다.
+
+	// TODO:  여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	CTKGCAToolApp* pApp = (CTKGCAToolApp*)AfxGetApp();
+	UpdateData(TRUE);
+	pApp->m_Sample.m_fDepthMapCameraNear = m_fCameraNear;	
+	pApp->m_Sample.SetShadowProjectionDistance();
+}
+
+
+void TMapGen::OnEnChangeCamerafar()
+{
+	// TODO:  RICHEDIT 컨트롤인 경우, 이 컨트롤은
+	// CFormView::OnInitDialog() 함수를 재지정 
+	//하고 마스크에 OR 연산하여 설정된 ENM_CHANGE 플래그를 지정하여 CRichEditCtrl().SetEventMask()를 호출하지 않으면
+	// 이 알림 메시지를 보내지 않습니다.
+
+	// TODO:  여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	CTKGCAToolApp* pApp = (CTKGCAToolApp*)AfxGetApp();
+	UpdateData(TRUE);
+	pApp->m_Sample.m_fDepthMapCameraFar = m_fCameraFar;
+	pApp->m_Sample.SetShadowProjectionDistance();
 }

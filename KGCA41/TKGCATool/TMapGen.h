@@ -52,6 +52,17 @@ public:
 	virtual void OnPrint(CDC* pDC, CPrintInfo* pInfo);
 	afx_msg void OnPaint();
 	afx_msg void OnBnClickedLandscapeDown();
+	afx_msg void OnBnClickedLandscapePlat();
+	INT m_iDepthBias;
+	float m_fDepthBiasClamp;
+	float m_fSlopeScaledDepthBias;
+	afx_msg void OnEnChangeDephbias();
+	afx_msg void OnEnChangeDepthbiasclamp();
+	afx_msg void OnEnChangeSlopescaleddepthbias();
+	float m_fCameraNear;
+	float m_fCameraFar;
+	afx_msg void OnEnChangeCameranear();
+	afx_msg void OnEnChangeCamerafar();
 };
 
 

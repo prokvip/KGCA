@@ -36,6 +36,7 @@
 #define IDC_EDIT1                       1013
 #define IDC_EDIT3                       1014
 #define IDC_EDIT2                       1015
+#define IDC_DEPTHBIASCLAMP              1016
 #define IDC_BUTTON1                     1017
 #define IDC_WIREFRAME                   1018
 #define IDC_LIST1                       1019
@@ -45,6 +46,11 @@
 #define IDC_LANDSCAPE_DOWN              1023
 #define IDC_LANDSCAPE_PLAT              1024
 #define IDC_PICTURE_TEXTURE             1025
+#define IDC_DEPHBIAS                    1026
+#define IDC_SLOPESCALEDDEPTHBIAS        1027
+#define IDC_CAMERANEAR                  1028
+#define IDC_SLOPESCALEDDEPTHBIAS3       1029
+#define IDC_CAMERAFAR                   1029
 #define ID_32771                        32771
 #define ID_CREATE_MAP                   32772
 
@@ -54,7 +60,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        324
 #define _APS_NEXT_COMMAND_VALUE         32773
-#define _APS_NEXT_CONTROL_VALUE         1026
+#define _APS_NEXT_CONTROL_VALUE         1032
 #define _APS_NEXT_SYMED_VALUE           310
 #endif
 #endif

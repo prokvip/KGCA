@@ -49,6 +49,9 @@ public:
 	bool		m_bDownPicking = false;
 	bool		m_bPlatPicking = false;
 	T_STR		m_szSelectFbxFile;
+	float		m_fDepthMapCameraNear = 1.0f;
+	float		m_fDepthMapCameraFar = 1000.0f;
+	void		SetShadowProjectionDistance();
 public:
 	bool		GetIntersection();
 	bool		CreateMapData(UINT iColumn = 257, UINT iRows = 257);

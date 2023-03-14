@@ -41,6 +41,11 @@ ID3D11Buffer* Sample::CreateConstantBuffer(ID3D11Device* pd3dDevice, void* data,
 	}
 	return pBuffer;
 }
+void Sample::SetShadowProjectionDistance()
+{
+	D3DXMatrixOrthoOffCenterLH(&m_matShadowProj,
+		-500 / 2, 500 / 2, -500 / 2, 500 / 2, m_fDepthMapCameraNear, m_fDepthMapCameraFar);
+}
 void Sample::InitRT()
 {
 	m_SlopeScaledDepthBiasDesc = TDxState::g_RasterizerDesc;
@@ -58,8 +63,7 @@ void Sample::InitRT()
 
 	m_RT.m_DSFormat = DXGI_FORMAT_R32_TYPELESS;
 	m_RT.Create(m_pd3dDevice.Get(), g_fMaxSize, g_fMaxSize);// m_bColorTexRender );	
-	D3DXMatrixOrthoOffCenterLH(&m_matShadowProj,
-		-100 / 2, 100 / 2, -100 / 2, 100 / 2, 0.0f, 500.0f);
+	SetShadowProjectionDistance();
 
 	HRESULT hr;
 	D3D11_SAMPLER_DESC SamDescShad =

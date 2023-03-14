@@ -148,10 +148,10 @@ float4 PS(VS_OUT input) : SV_Target
     vColorTile +=       g_txTex4.SampleLevel( g_SampleWrap, input.t.xy*10.0f, 0 ) * mask.b;
     vColorTile +=       g_txTex5.SampleLevel( g_SampleWrap, input.t.xy*10.0f, 0 ) * mask.a;
   
-
-     float4 vAmbintColor = float4(0.3f, 0.3f, 0.3f, 1.0f);
+    float4 vAmbintColor = float4(0.3f, 0.3f, 0.3f, 1.0f);
+	
 	float4 vLightColor = ComputePointDiffuseLight(input.w, input.n, 1)
-						+ComputeSpotDiffuseLight(input.w, input.n, 1)
+						+ComputeSpotDiffuseLight(input.w, input.n, 1);
 						+ComputePointSpecularLight(input.w, input.n, 1)
 						+ComputeSpotSpecularLight(input.w, input.n, 1);
 	float4 fBlendColor=0;
@@ -159,9 +159,9 @@ float4 PS(VS_OUT input) : SV_Target
 	fBlendColor.g = max(vColor.g, vColorTile.g);
 	fBlendColor.b = max(vColor.b, vColorTile.b);
 	fBlendColor.a = min(vColor.a, vColorTile.a);
-	float4 fFinalColor = fBlendColor*(vAmbintColor+vLightColor);
-	fShadowDepth = max(0.5f, fShadowDepth);
-	fFinalColor = fFinalColor*float4(fShadowDepth,fShadowDepth,fShadowDepth,1);	
+	float4 fFinalColor = fBlendColor*(vAmbintColor+vLightColor);	
+	if(fShadowDepth < 0.5f)
+		fFinalColor = fFinalColor * float4(0.8f, 0.8f, 0.8f, 1.0f);
 	fFinalColor.a = 1.0f;
 	return fFinalColor;	
 }
