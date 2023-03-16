@@ -26,9 +26,10 @@ public:
 	std::shared_ptr<TScene>			m_pCurrentScene = nullptr;
 	TShapeDirectionLine				m_DirLine;
 	TQuadtree						m_Quadtree;
-	std::vector< TFbxFile*> m_fbxList;
-	std::vector< TCharacter*> m_NpcList;
-	TCharacter* m_UserCharacter;
+	std::vector<std::shared_ptr<TFbxFile>> m_fbxList;
+	std::vector< TCharacter*> m_ObjectList;
+	std::vector<std::shared_ptr<TCharacter>> m_NpcList;
+	std::shared_ptr<TCharacter> m_UserCharacter;
 	TSelect		m_Select;
 	DX::TDxRT	m_RT;
 	TMatrix			m_matShadow;
@@ -40,7 +41,7 @@ public:
 	ComPtr<ID3D11Buffer>			m_pShadowConstantBuffer;
 	D3D11_RASTERIZER_DESC			m_SlopeScaledDepthBiasDesc;
 public:
-	std::vector< TParticleObj*>  m_ParticleList;
+	std::vector<std::shared_ptr<TParticleObj>>  m_ParticleList;
 	void		NewEffect(UINT iParticleCounter, T_STR tex);
 public:
 	bool		m_bWireFrame = false;

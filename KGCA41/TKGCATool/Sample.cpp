@@ -3,7 +3,7 @@
 
 void  Sample::NewEffect(UINT iParticleCounter, T_STR tex)
 {
-	TParticleObj* p = new TParticleObj;
+	auto p = std::shared_ptr<TParticleObj>();
 	std::wstring shaderfilename = L"Particle.txt";
 	if (iParticleCounter <= 0) iParticleCounter = 1;
 	p->m_iParticleCounter = iParticleCounter;
@@ -85,13 +85,13 @@ bool Sample::LoadFbx(T_STR filepath, TVector3 vPos)
 	action.bLoop = true;
 	pCharacter->m_ActionList.insert(std::make_pair(L"walk", action));
 	pCharacter->m_ActionCurrent = pCharacter->m_ActionList.find(L"walk")->second;*/
-	m_NpcList.push_back(pCharacter);
+	m_ObjectList.push_back(pCharacter);
 	m_Quadtree.AddObject(pCharacter);
 	return true;
 }
 bool Sample::CreateFbxLoader()
 {
-	TFbxFile* pFbxLoaderD = new TFbxFile;
+	auto pFbxLoaderD = std::shared_ptr<TFbxFile>();
 	if (pFbxLoaderD->Init())
 	{
 		if (pFbxLoaderD->Load("../../data/fbx/Man.FBX"))
@@ -101,7 +101,7 @@ bool Sample::CreateFbxLoader()
 	}
 	m_fbxList.push_back(pFbxLoaderD);
 
-	TFbxFile* pFbxLoaderA = new TFbxFile;
+	auto pFbxLoaderA = std::shared_ptr<TFbxFile>();
 	if (pFbxLoaderA->Init())
 	{
 		if (pFbxLoaderA->Load("../../data/fbx/Swat@turning_right_45_degrees.fbx"))
@@ -111,7 +111,7 @@ bool Sample::CreateFbxLoader()
 	}
 	m_fbxList.push_back(pFbxLoaderA);
 
-	TFbxFile* pFbxLoaderB = new TFbxFile;
+	auto pFbxLoaderB = std::shared_ptr<TFbxFile>();
 	if (pFbxLoaderB->Init())
 	{
 		pFbxLoaderB->Load("../../data/fbx/Swat.fbx");
@@ -131,15 +131,15 @@ bool Sample::CreateFbxLoader()
 		}
 	}
 
-	m_UserCharacter = new TCharacter;
+	m_UserCharacter = std::shared_ptr<TCharacter>();
 	m_UserCharacter->m_pd3dDevice = m_pd3dDevice.Get();
 	m_UserCharacter->m_pImmediateContext = m_pImmediateContext.Get();
 	/*m_UserCharacter->m_pFbxFile = m_fbxList[m_UserCharacter->m_iFbxListID];*/
-	m_UserCharacter->m_pAnionFbxFile = pFbxLoaderA;
+	m_UserCharacter->m_pAnionFbxFile = pFbxLoaderA.get();
 	if (m_UserCharacter->m_pAnionFbxFile)
 	{
 		m_UserCharacter->m_AnimScene = m_UserCharacter->m_pAnionFbxFile->m_AnimScene;
-		m_UserCharacter->m_ActionFileList.insert(std::make_pair(L"walking", pFbxLoaderA));
+		m_UserCharacter->m_ActionFileList.insert(std::make_pair(L"walking", pFbxLoaderA.get()));
 		m_UserCharacter->m_ActionCurrent.iStartFrame = pFbxLoaderA->m_AnimScene.iStartFrame;
 		m_UserCharacter->m_ActionCurrent.iEndFrame = 50;// pFbxLoaderA->m_AnimScene.iEndFrame;
 	}
@@ -173,7 +173,8 @@ bool Sample::CreateFbxLoader()
 
 	for (int iObj = 0; iObj < 5; iObj++)
 	{
-		TCharacter* pNpc = new TCharacter;
+		auto pNpc = std::shared_ptr<TCharacter>();
+		//TCharacter* pCharacter = I_Object.Load(filepath, L"");
 		pNpc->m_pd3dDevice = m_pd3dDevice.Get();
 		pNpc->m_pImmediateContext = m_pImmediateContext.Get();
 		//pNpc->m_pFbxFile = m_fbxList[pNpc->m_iFbxListID];
@@ -193,7 +194,7 @@ bool Sample::CreateFbxLoader()
 	return true;
 }
 bool Sample::Init()
-{	
+{
 	InitRT();
 
 	I_Object.SetDevice(m_pd3dDevice.Get(), m_pImmediateContext.Get());
@@ -227,8 +228,8 @@ bool Sample::Frame()
 		&m_pCurrentScene->m_pMainCamera->m_matProj);
 
 	m_Quadtree.Frame();
-	
-	if (m_bUpPicking|| m_bDownPicking)
+
+	if (m_bUpPicking || m_bDownPicking)
 	{
 		if (GetIntersection())
 		{
@@ -259,7 +260,7 @@ bool Sample::Frame()
 									if (m_bUpPicking)
 										m_Quadtree.m_pMap->m_VertexList[iVertex].p.y += fdot;
 									if (m_bDownPicking)
-										m_Quadtree.m_pMap->m_VertexList[iVertex].p.y -= fdot;									
+										m_Quadtree.m_pMap->m_VertexList[iVertex].p.y -= fdot;
 
 									if (node->m_tBox.vMin.y > m_Quadtree.m_pMap->m_VertexList[iVertex].p.y)
 									{
@@ -272,7 +273,7 @@ bool Sample::Frame()
 								}
 								m_Quadtree.m_pMap->ComputeVertexNormal(iVertex);
 							}
-						}	
+						}
 						node->m_tBox.vCenter = (node->m_tBox.vMax + node->m_tBox.vMin) * 0.5f;
 						node->m_tBox.vAxis[0] = { 1,0,0 };
 						node->m_tBox.vAxis[1] = { 0,1,0 };
@@ -284,7 +285,7 @@ bool Sample::Frame()
 					m_Quadtree.m_pMap->UpdateVertexBuffer();
 				}
 
-				for (auto npc : m_NpcList)
+				for (auto npc : m_ObjectList)
 				{
 					TVector3 vPos = npc->m_vPos;
 					vPos.y = npc->m_matWorld._42 =
@@ -329,7 +330,7 @@ bool Sample::Frame()
 		data->Frame();
 	}
 
-	for (auto npc : m_NpcList)
+	for (auto npc : m_ObjectList)
 	{
 		npc->UpdateFrame(m_pImmediateContext.Get());
 	}
@@ -430,10 +431,10 @@ bool Sample::ObjectRender()
 		matWorld._43 = pScene->m_pUser->m_vPos.z;
 	}
 
-	/*for (int iNpc = 0; iNpc < m_NpcList.size(); iNpc++)
+	/*for (int iNpc = 0; iNpc < m_ObjectList.size(); iNpc++)
 	{
-		m_NpcList[iNpc]->SetMatrix(nullptr, &pScene->m_pMainCamera->m_matView, &pScene->m_pMainCamera->m_matProj);
-		m_NpcList[iNpc]->Render();
+		m_ObjectList[iNpc]->SetMatrix(nullptr, &pScene->m_pMainCamera->m_matView, &pScene->m_pMainCamera->m_matProj);
+		m_ObjectList[iNpc]->Render();
 	}*/
 
 	if (m_UserCharacter)
@@ -444,7 +445,7 @@ bool Sample::ObjectRender()
 
 	m_pImmediateContext->OMSetDepthStencilState(TDxState::g_pDefaultDepthStencil, 0xff);
 
-	if (pScene->m_pMap)
+	if (pScene->m_pMap && m_Quadtree.m_pMap)
 	{
 		/*pScene->m_pMap->m_cbData.vLightDir =
 			TVector4(vLightDir.x, vLightDir.y, vLightDir.z, 300.0f);
@@ -466,7 +467,7 @@ bool Sample::ObjectRender()
 		pScene->m_pMap->SetMatrix(nullptr,
 			&pScene->m_pMainCamera->m_matView,
 			&pScene->m_pMainCamera->m_matProj);
-		
+
 		m_Quadtree.m_pMap->m_pImmediateContext->PSSetShaderResources(
 			6, 1, m_RT.m_pDsvSRV.GetAddressOf());
 
@@ -481,32 +482,32 @@ bool Sample::ObjectRender()
 }
 bool Sample::Release()
 {
+	m_Quadtree.Release();
 	for (auto data : m_ParticleList)
 	{
 		data->Release();
-		delete data;
 	}
-	/*for (auto npc : m_NpcList)
+	for (auto npc : m_NpcList)
 	{
 		npc->Release();
-		delete npc;
 	}
 	for (auto fbx : m_fbxList)
 	{
 		fbx->Release();
-		delete fbx;
-	}*/
+	}
 	if (m_UserCharacter)
 	{
 		m_UserCharacter->Release();
-		delete m_UserCharacter;
 	}
+
+	m_ParticleList.clear();
+	m_NpcList.clear();
+	m_ObjectList.clear();
+	m_fbxList.clear();
 
 	m_DirLine.Release();
 	if (m_pTitle != nullptr)m_pTitle->Release();
 	if (m_pInGame != nullptr)m_pInGame->Release();
-
-
 	return true;
 }
 HRESULT Sample::CreateDXResource()
