@@ -3,7 +3,7 @@
 #include "TObject3D.h"
 struct TAnimTrack
 {
-	UINT      iFrame; //fTime;
+	INT      iFrame; //fTime;
 	TBASIS_EX::TMatrix   matAnim;  // self * parent;
 	TBASIS_EX::TMatrix   matSelfAnim; // matAnim * inv(parent)
 	TBASIS_EX::TVector3     t; // self
@@ -13,8 +13,8 @@ struct TAnimTrack
 struct TAnimScene
 {
 	FbxTime::EMode TimeMode;
-	UINT iStartFrame;
-	UINT iEndFrame;
+	INT iStartFrame;
+	INT iEndFrame;
 	float fTickPerFrame; // 160
 	float fFrameSpeed; // 30
 };
