@@ -20,7 +20,7 @@ bool TSceneTitle::CreateMap(UINT iColumn, UINT iRows )
 	m_pMap->Build(iColumn, iRows);
 	//m_pMap->Build(m_pMap->m_iNumCols, m_pMap->m_iNumRows);
 	//m_pMap->Create(m_pd3dDevice, m_pImmediateContext, L"DefaultMap.txt", L"../../data/map/003.jpg");
-	m_pMap->Create(m_pd3dDevice, m_pImmediateContext, L"TessellationMap.hlsl", L"../../data/map/003.jpg");
+	m_pMap->Create(m_pd3dDevice, m_pImmediateContext, L"TessellationMap.hlsl", L"../../data/map/009.jpg");
 
 	if (m_pUser)
 	{

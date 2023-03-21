@@ -159,10 +159,11 @@ void TMapGen::OnInitialUpdate()
 	m_fSlopeScaledDepthBias = 0.0f;
 	m_fCameraNear = 0.1f;
 	m_fCameraFar = 1000.0f;
-	m_CBSplattingTexturfe.InsertString(0, L"002.jpg");
-	m_CBSplattingTexturfe.InsertString(1, L"026.jpg");
-	m_CBSplattingTexturfe.InsertString(2, L"036.bmp");
-	m_CBSplattingTexturfe.InsertString(3, L"000.jpg");
+
+	m_CBSplattingTexturfe.InsertString(0, L"017.bmp");
+	m_CBSplattingTexturfe.InsertString(1, L"037.bmp");
+	m_CBSplattingTexturfe.InsertString(2, L"036.jpg");
+	m_CBSplattingTexturfe.InsertString(3, L"026.jpg");
 	m_CBSplattingTexturfe.SetCurSel(0);
 	UpdateData(FALSE);
 
