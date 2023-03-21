@@ -229,7 +229,7 @@ float4 PS(DS_OUT input) : SV_Target
 	fBlueDepth /= g_iNumKernel*g_iNumKernel;		
 	
 
-	//float4 vBaseColor = g_txTex.Sample(g_SampleWrap , input.t2.xy);	
+	float4 vBaseColor = g_txTex.Sample(g_SampleWrap , input.t2.xy);	
 	float4 vColor =  LoadTex1Color(input.t2.xy,input.w);	
 	vColor += LoadTex2Color(input.t2.xy,input.w);	
 	vColor += LoadTex3Color(input.t2.xy,input.w);	
@@ -237,11 +237,12 @@ float4 PS(DS_OUT input) : SV_Target
 	vColor += LoadTex5Color(input.t2.xy,input.w);	
 
 	float4 mask	  = g_txMaskTex.Sample( g_SampleWrap, input.t.xy );
-    float4 vColorTile = g_txTex2.SampleLevel( g_SampleWrap, input.t.xy*10.0f, 0 ) * mask.r;
-    vColorTile +=       g_txTex3.SampleLevel( g_SampleWrap, input.t.xy*10.0f, 0 ) * mask.g;
-    vColorTile +=       g_txTex4.SampleLevel( g_SampleWrap, input.t.xy*10.0f, 0 ) * mask.b;
-    vColorTile +=       g_txTex5.SampleLevel( g_SampleWrap, input.t.xy*10.0f, 0 ) * mask.a;
-  
+    float4 vColorTile ;
+	vColorTile = lerp(vBaseColor, g_txTex2.SampleLevel(g_SampleWrap, input.t.xy * 10, 0), mask.r);
+    vColorTile =  lerp(vColorTile, g_txTex3.SampleLevel( g_SampleWrap, input.t.xy * 10, 0 ),mask.g );
+	vColorTile = lerp(vColorTile, g_txTex4.SampleLevel(g_SampleWrap, input.t.xy * 10, 0), mask.b);
+	vColorTile = lerp(vColorTile, g_txTex5.SampleLevel(g_SampleWrap, input.t.xy * 10, 0), mask.a);
+ 
     float4 vAmbintColor = float4(0.3f, 0.3f, 0.3f, 1.0f);
 	
 	float4 vLightColor = ComputePointDiffuseLight(input.w, input.n, 1)
@@ -254,7 +255,7 @@ float4 PS(DS_OUT input) : SV_Target
 	fBlendColor.b = max(vColor.b, vColorTile.b);
 	fBlendColor.a = min(vColor.a, vColorTile.a);
 
-	float4 fFinalColor = fBlendColor*(vAmbintColor+vLightColor*fBlueDepth);// PCF 반영
+	float4 fFinalColor = fBlendColor *(vAmbintColor + vLightColor * fBlueDepth);// PCF 반영
 	//float fIntensity =1.0f-saturate(dot(input.n, -g_vLightDir.xyz));
 	fFinalColor.a = 1.0f;
 	return fFinalColor;

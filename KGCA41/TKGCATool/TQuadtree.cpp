@@ -19,8 +19,6 @@ void TQuadtree::Splatting(TVector3 vIntersection, UINT iSplattingTexIndex, float
     TVector3 vTexPos;
     TVector3 vPickPos = vIntersection;
 
-    m_iSplattingIndex = rand() % 4;
-
     for (UINT y = 0; y < iTexSize; y++)
     {
         vTexIndex.y = y;
@@ -36,17 +34,18 @@ void TQuadtree::Splatting(TVector3 vIntersection, UINT iSplattingTexIndex, float
 
             float fRadius = D3DXVec3Length(&(vPickPos - vTexPos));
             
-            if (fRadius < fSplattingRadius)
+            if (fRadius <= fSplattingRadius)
             {
                 float fDot = 1.0f - (fRadius / fSplattingRadius);
-                if (m_iSplattingIndex == 0 && (fDot*255) > pixel[0])
-                    pixel[0] = fDot * 255;// (cosf(g_fGameTimer) * 0.5f + 0.5f) * 255.0f;
-                if (m_iSplattingIndex == 1 && (fDot * 255) > pixel[1])
-                    pixel[1] = fDot * 255;//g
-                if (m_iSplattingIndex == 2 && (fDot * 255) > pixel[2])
-                    pixel[2] = fDot * 255;//b
-                if (m_iSplattingIndex == 3 && (fDot * 255) > pixel[3])
-                    pixel[3] = fDot * 255;//a
+                float fAlpha = fDot * 255.0f;
+                if (m_iSplattingIndex == 0)
+                    pixel[0] = min(255.0f, pixel[0] + fAlpha);
+                if (m_iSplattingIndex == 1)
+                    pixel[1] = min(255.0f, pixel[1] + fAlpha);
+                if (m_iSplattingIndex == 2)
+                    pixel[2] = min(255.0f, pixel[2] + fAlpha);
+                if (m_iSplattingIndex == 3)
+                    pixel[3] = min(255.0f, pixel[3] + fAlpha);
             }
         }
     }

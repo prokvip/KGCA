@@ -44,6 +44,7 @@ void TMapGen::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_SLOPESCALEDDEPTHBIAS, m_fSlopeScaledDepthBias);
 	DDX_Text(pDX, IDC_CAMERANEAR, m_fCameraNear);
 	DDX_Text(pDX, IDC_CAMERAFAR, m_fCameraFar);
+	DDX_Control(pDX, IDC_COMBO1, m_CBSplattingTexturfe);
 }
 
 BEGIN_MESSAGE_MAP(TMapGen, CFormView)
@@ -62,6 +63,7 @@ BEGIN_MESSAGE_MAP(TMapGen, CFormView)
 	ON_EN_CHANGE(IDC_CAMERANEAR, &TMapGen::OnEnChangeCameranear)
 	ON_EN_CHANGE(IDC_CAMERAFAR, &TMapGen::OnEnChangeCamerafar)
 	ON_BN_CLICKED(IDC_SPLATTING, &TMapGen::OnBnClickedSplatting)
+	ON_CBN_SELCHANGE(IDC_COMBO1, &TMapGen::OnCbnSelchangeCombo1)
 END_MESSAGE_MAP()
 
 
@@ -157,6 +159,11 @@ void TMapGen::OnInitialUpdate()
 	m_fSlopeScaledDepthBias = 0.0f;
 	m_fCameraNear = 0.1f;
 	m_fCameraFar = 1000.0f;
+	m_CBSplattingTexturfe.InsertString(0, L"002.jpg");
+	m_CBSplattingTexturfe.InsertString(1, L"026.jpg");
+	m_CBSplattingTexturfe.InsertString(2, L"036.bmp");
+	m_CBSplattingTexturfe.InsertString(3, L"000.jpg");
+	m_CBSplattingTexturfe.SetCurSel(0);
 	UpdateData(FALSE);
 
 	Recurse(L"../../data/map", L"/*.*", m_TextureNameList);
@@ -364,4 +371,15 @@ void TMapGen::OnBnClickedSplatting()
 	pApp->m_Sample.m_bPlatPicking = false;
 	pApp->m_Sample.m_bObjectPicking = false;
 	pApp->m_Sample.m_bSplatting = true;
+}
+
+
+void TMapGen::OnCbnSelchangeCombo1()
+{
+	UINT iIndex = m_CBSplattingTexturfe.GetCurSel();
+	CString name;
+	m_CBSplattingTexturfe.GetLBText(iIndex, name);
+
+	CTKGCAToolApp* pApp = (CTKGCAToolApp*)AfxGetApp();
+	pApp->m_Sample.m_iSplattingTexIndex = iIndex;
 }

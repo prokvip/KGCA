@@ -35,6 +35,8 @@ public:
 	SHADOW_CONSTANT_BUFFER			m_cbShadow;
 	ComPtr<ID3D11Buffer>			m_pShadowConstantBuffer;
 	D3D11_RASTERIZER_DESC			m_SlopeScaledDepthBiasDesc;
+
+	UINT m_iSplattingTexIndex = 0;
 public:
 	std::vector<std::shared_ptr<TParticleObj>>  m_ParticleList;
 	void		NewEffect(UINT iParticleCounter, T_STR tex);

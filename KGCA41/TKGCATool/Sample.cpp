@@ -18,31 +18,29 @@ void Sample::NewEffect(UINT iParticleCounter, T_STR tex)
 }
 bool Sample::GetIntersection()
 {
-	//if (m_bObjectPicking)
+	if (I_Input.GetKey(VK_MBUTTON) == KEY_PUSH || I_Input.GetKey(VK_MBUTTON) == KEY_HOLD )
 	{
-		if (I_Input.GetKey(VK_MBUTTON) == KEY_HOLD)
+		for (auto node : m_Quadtree.m_pDrawLeafNodeList)
 		{
-			for (auto node : m_Quadtree.m_pDrawLeafNodeList)
+			UINT index = 0;
+			UINT iNumFace = node->m_IndexList.size() / 3;
+			for (UINT face = 0; face < iNumFace; face++)
 			{
-				UINT index = 0;
-				UINT iNumFace = node->m_IndexList.size() / 3;
-				for (UINT face = 0; face < iNumFace; face++)
+				UINT i0 = node->m_IndexList[index + 0];
+				UINT i1 = node->m_IndexList[index + 1];
+				UINT i2 = node->m_IndexList[index + 2];
+				TVector3 v0 = m_Quadtree.m_pMap->m_VertexList[i0].p;
+				TVector3 v1 = m_Quadtree.m_pMap->m_VertexList[i1].p;
+				TVector3 v2 = m_Quadtree.m_pMap->m_VertexList[i2].p;
+				if (m_Select.ChkPick(v0, v1, v2))
 				{
-					UINT i0 = node->m_IndexList[index + 0];
-					UINT i1 = node->m_IndexList[index + 1];
-					UINT i2 = node->m_IndexList[index + 2];
-					TVector3 v0 = m_Quadtree.m_pMap->m_VertexList[i0].p;
-					TVector3 v1 = m_Quadtree.m_pMap->m_VertexList[i1].p;
-					TVector3 v2 = m_Quadtree.m_pMap->m_VertexList[i2].p;
-					if (m_Select.ChkPick(v0, v1, v2))
-					{
-						return true;
-					}
-					index += 3;
+					return true;
 				}
+				index += 3;
 			}
 		}
 	}
+	
 	return false;
 }
 bool Sample::CreateMapData(UINT iColumn, UINT iRows)
@@ -57,7 +55,7 @@ bool Sample::CreateMapData(UINT iColumn, UINT iRows)
 			((TSceneTitle*)m_pCurrentScene.get())->m_pMainCamera,
 			((TSceneTitle*)m_pCurrentScene.get())->m_pMap);
 
-		m_Quadtree.m_TexArray[0] = 	I_Tex.Load(L"../../data/ui/smile.bmp");
+		m_Quadtree.m_TexArray[0] = 	I_Tex.Load(L"../../data/map/base1.bmp");
 		m_Quadtree.m_TexArray[1] =	I_Tex.Load(L"../../data/map/002.jpg");
 		m_Quadtree.m_TexArray[2] =	I_Tex.Load(L"../../data/map/026.jpg");
 		m_Quadtree.m_TexArray[3] =	I_Tex.Load(L"../../data/map/036.bmp");
@@ -201,16 +199,18 @@ bool Sample::Frame()
 			};
 		}
 	}
-
-	UINT m_iSplattingTexIndex = 0;
-	if (m_bSplatting)
-	{
+		
+	static float fStep = 0.0f;
+	fStep += g_fSecondPerFrame;
+	if (m_bSplatting && fStep > 0.1f)
+	{		
 		if (GetIntersection())
 		{
+			fStep = 0.0f;// g_fSecondPerFrame;
 			if (m_pTitle && m_pTitle->m_pMap)
 			{
 				m_Quadtree.Splatting(m_Select.m_vIntersection, m_iSplattingTexIndex);
-			};
+			};			
 		}
 	}
 
