@@ -95,13 +95,13 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_WINDOWS;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>../../include/TCore2D;../../dxtk/inc;../../fmod/inc;../../fbxsdk/include;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./TCore;../../dxtk/inc;../../fmod/inc;../../fbxsdk/include;</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
-      <AdditionalLibraryDirectories>../../lib;../../dxtk/lib;../../fmod/lib/x64;../../fbxsdk/lib/vs2019/x64/Debug</AdditionalLibraryDirectories>
-      <AdditionalDependencies>TGameCore_d.lib;</AdditionalDependencies>
+      <AdditionalLibraryDirectories>../../dxtk/lib;../../fmod/lib/x64;../../fbxsdk/lib/vs2019/x64/debug;</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Winmm.lib</AdditionalDependencies>
     </Link>
     <Midl>
       <MkTypLibCompatible>false</MkTypLibCompatible>
@@ -171,11 +171,14 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_WINDOWS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>./TCore;../../dxtk/inc;../../fmod/inc;../../fbxsdk/include;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalLibraryDirectories>../../dxtk/lib;../../fmod/lib/x64;../../fbxsdk/lib/vs2019/x64/release;</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Winmm.lib</AdditionalDependencies>
     </Link>
     <Midl>
       <MkTypLibCompatible>false</MkTypLibCompatible>
@@ -197,6 +200,41 @@
     <ClInclude Include="targetver.h" />
     <ClInclude Include="TCameraMap.h" />
     <ClInclude Include="TCharacter.h" />
+    <ClInclude Include="TCore\TBaseObject.h" />
+    <ClInclude Include="TCore\TCamera.h" />
+    <ClInclude Include="TCore\TCameraDebug.h" />
+    <ClInclude Include="TCore\TCollision.h" />
+    <ClInclude Include="TCore\TDevice.h" />
+    <ClInclude Include="TCore\TDxState.h" />
+    <ClInclude Include="TCore\TEffect2D.h" />
+    <ClInclude Include="TCore\TFrustum.h" />
+    <ClInclude Include="TCore\TGameCore.h" />
+    <ClInclude Include="TCore\TInput.h" />
+    <ClInclude Include="TCore\TInterface.h" />
+    <ClInclude Include="TCore\TMapObject.h" />
+    <ClInclude Include="TCore\TMath.h" />
+    <ClInclude Include="TCore\TMatrix.h" />
+    <ClInclude Include="TCore\TNpc2D.h" />
+    <ClInclude Include="TCore\TObject2D.h" />
+    <ClInclude Include="TCore\TObject3D.h" />
+    <ClInclude Include="TCore\TProjectile2D.h" />
+    <ClInclude Include="TCore\TRenderTarget.h" />
+    <ClInclude Include="TCore\TScene.h" />
+    <ClInclude Include="TCore\TShader.h" />
+    <ClInclude Include="TCore\TShaderManager.h" />
+    <ClInclude Include="TCore\TShape.h" />
+    <ClInclude Include="TCore\TSound.h" />
+    <ClInclude Include="TCore\TSoundManager.h" />
+    <ClInclude Include="TCore\TSprite.h" />
+    <ClInclude Include="TCore\TSpriteManager.h" />
+    <ClInclude Include="TCore\TStd.h" />
+    <ClInclude Include="TCore\TTexture.h" />
+    <ClInclude Include="TCore\TTextureManager.h" />
+    <ClInclude Include="TCore\TTimer.h" />
+    <ClInclude Include="TCore\TUser2D.h" />
+    <ClInclude Include="TCore\TVector.h" />
+    <ClInclude Include="TCore\TWindow.h" />
+    <ClInclude Include="TCore\TWriter.h" />
     <ClInclude Include="TCreateMapDlg.h" />
     <ClInclude Include="TDxRT.h" />
     <ClInclude Include="TFbxFile.h" />
@@ -217,6 +255,7 @@
     <ClInclude Include="TSelect.h" />
     <ClInclude Include="TObjectManager.h" />
     <ClInclude Include="TUIDlg.h" />
+    <ClInclude Include="TWorldObject.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MainFrm.cpp" />
@@ -230,6 +269,40 @@
     <ClCompile Include="Shadow.cpp" />
     <ClCompile Include="TCameraMap.cpp" />
     <ClCompile Include="TCharacter.cpp" />
+    <ClCompile Include="TCore\TBaseObject.cpp" />
+    <ClCompile Include="TCore\TCamera.cpp" />
+    <ClCompile Include="TCore\TCameraDebug.cpp" />
+    <ClCompile Include="TCore\TCollision.cpp" />
+    <ClCompile Include="TCore\TDevice.cpp" />
+    <ClCompile Include="TCore\TDxState.cpp" />
+    <ClCompile Include="TCore\TEffect2D.cpp" />
+    <ClCompile Include="TCore\TFrustum.cpp" />
+    <ClCompile Include="TCore\TGameCore.cpp" />
+    <ClCompile Include="TCore\TInput.cpp" />
+    <ClCompile Include="TCore\TInterface.cpp" />
+    <ClCompile Include="TCore\TMapObject.cpp" />
+    <ClCompile Include="TCore\TMath.cpp" />
+    <ClCompile Include="TCore\TMatrix.cpp" />
+    <ClCompile Include="TCore\TNpc2D.cpp" />
+    <ClCompile Include="TCore\TObject2D.cpp" />
+    <ClCompile Include="TCore\TObject3D.cpp" />
+    <ClCompile Include="TCore\TProjectile2D.cpp" />
+    <ClCompile Include="TCore\TRenderTarget.cpp" />
+    <ClCompile Include="TCore\TScene.cpp" />
+    <ClCompile Include="TCore\TShader.cpp" />
+    <ClCompile Include="TCore\TShaderManager.cpp" />
+    <ClCompile Include="TCore\TShape.cpp" />
+    <ClCompile Include="TCore\TSound.cpp" />
+    <ClCompile Include="TCore\TSoundManager.cpp" />
+    <ClCompile Include="TCore\TSprite.cpp" />
+    <ClCompile Include="TCore\TSpriteManager.cpp" />
+    <ClCompile Include="TCore\TTexture.cpp" />
+    <ClCompile Include="TCore\TTextureManager.cpp" />
+    <ClCompile Include="TCore\TTimer.cpp" />
+    <ClCompile Include="TCore\TUser2D.cpp" />
+    <ClCompile Include="TCore\TVector.cpp" />
+    <ClCompile Include="TCore\TWindow.cpp" />
+    <ClCompile Include="TCore\TWriter.cpp" />
     <ClCompile Include="TCreateMapDlg.cpp" />
     <ClCompile Include="TDxRT.cpp" />
     <ClCompile Include="TFbxAnimation.cpp" />
@@ -252,6 +325,7 @@
     <ClCompile Include="TSelect.cpp" />
     <ClCompile Include="TObjectManager.cpp" />
     <ClCompile Include="TUIDlg.cpp" />
+    <ClCompile Include="TWorldObject.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="TKGCATool.rc" />
@@ -279,9 +353,10 @@
     <Text Include="ui.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\TGameCore\TGameCore.vcxproj">
-      <Project>{665e0ce5-e135-453e-8a17-2a9b66bb933d}</Project>
-    </ProjectReference>
+    <FxCompile Include="DefaultRT.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </FxCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

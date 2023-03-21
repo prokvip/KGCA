@@ -35,6 +35,7 @@ public:
 	ID3D11Buffer* m_pAnimBoneCB;
 	std::vector< ID3D11Buffer*>m_pSkinBoneCB;
 public:
+	TFbxFile* GetFbxFile() {	return m_pFbxFile;	}
 	bool	UpdateFrame(ID3D11DeviceContext* pContext);
 public:
 	HRESULT	CreateConstantBuffer()override;
@@ -44,5 +45,5 @@ public:
 	bool	RenderShadow()override;
 	bool	PostRender() override;
 	bool	Release() override;
-	HRESULT Load(ID3D11Device* , ID3D11DeviceContext* , TFbxFile* , T_STR);
+	HRESULT Load(ID3D11Device* , ID3D11DeviceContext* , TFbxFile* );
 };

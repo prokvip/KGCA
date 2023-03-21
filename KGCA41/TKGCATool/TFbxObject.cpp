@@ -111,7 +111,7 @@ TBASIS_EX::TMatrix TFbxObject::Interplate(float fFrame, TAnimScene tScene)
 	//   t=0 ~ t=0.5f     t=1
 	TAnimTrack A, B;
 	A = m_AnimTracks[max(tScene.iStartFrame, fFrame+0)];
-	B = m_AnimTracks[min(max(0, tScene.iEndFrame - 1), fFrame + 1)];
+	B = m_AnimTracks[min(max(0,tScene.iEndFrame-1), fFrame+1)];
 	if (A.iFrame == B.iFrame)
 	{
 		return m_AnimTracks[fFrame].matAnim;

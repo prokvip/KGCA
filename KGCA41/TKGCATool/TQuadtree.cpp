@@ -139,7 +139,7 @@ TNode* TQuadtree::FindNode(TNode* pNode, T_BOX tBox)
     }
     return pNode;
 }
-bool TQuadtree::AddObject(TObject3D* pObj)
+bool TQuadtree::AddObject(TWorldObject* pObj)
 {
     m_ObjectList.push_back(pObj);
 
@@ -203,13 +203,13 @@ bool TQuadtree::IsSubDivide(TNode* pNode)
     if (pNode->m_iDepth < m_iMaxDepth) return true;
     return false;
 }
-TNode* TQuadtree::VisibleNode(TNode* pNode)
+void TQuadtree::VisibleNode(TNode* pNode)
 {
     T_POSITION dwRet = m_pCamera->m_vFrustum.ClassifyTBox(pNode->m_tBox);
     if (P_FRONT== dwRet)// 완전포함.
     {
         m_pDrawLeafNodeList.push_back(pNode);
-        return pNode;
+        return;
     }
     if(P_SPANNING== dwRet) // 걸쳐있다.
     {
@@ -227,8 +227,7 @@ TNode* TQuadtree::VisibleNode(TNode* pNode)
    }   
 }
 bool TQuadtree::Frame()
-{    
-    
+{        
     m_pDrawLeafNodeList.clear();
     //VisibleNode(m_pRootNode);
    
@@ -282,11 +281,13 @@ bool TQuadtree::Render()
         m_pMap->PreRender();
         ID3D11ShaderResourceView* pSRV = nullptr;
         m_pMap->m_pImmediateContext->PSSetShaderResources(1, 1, m_pMaskAlphaTexSRV.GetAddressOf());
-        m_pMap->m_pImmediateContext->PSSetShaderResources(2, 1, &m_TexArray[1]->m_pTextureSRV);
-        m_pMap->m_pImmediateContext->PSSetShaderResources(3, 1, &m_TexArray[2]->m_pTextureSRV);
-        m_pMap->m_pImmediateContext->PSSetShaderResources(4, 1, &m_TexArray[3]->m_pTextureSRV);
-        m_pMap->m_pImmediateContext->PSSetShaderResources(5, 1, &m_TexArray[4]->m_pTextureSRV);
-
+        if (m_TexArray[0] != nullptr)
+        {
+            m_pMap->m_pImmediateContext->PSSetShaderResources(2, 1, &m_TexArray[1]->m_pTextureSRV);
+            m_pMap->m_pImmediateContext->PSSetShaderResources(3, 1, &m_TexArray[2]->m_pTextureSRV);
+            m_pMap->m_pImmediateContext->PSSetShaderResources(4, 1, &m_TexArray[3]->m_pTextureSRV);
+            m_pMap->m_pImmediateContext->PSSetShaderResources(5, 1, &m_TexArray[4]->m_pTextureSRV);
+        }
         m_pMap->m_pImmediateContext->IASetIndexBuffer(  node->m_pIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
         m_pMap->m_pImmediateContext->DrawIndexed(node->m_dwFace * 3, 0, 0);
 
@@ -300,8 +301,12 @@ bool TQuadtree::Render()
     RenderObject(m_pRootNode);
     return true;
 }
-bool TQuadtree::RenderShadow()
+bool TQuadtree::RenderShadow(TCamera* pShadowCamera)
 {
+    TCamera* pSaveCamera = m_pCamera;
+    m_pCamera = pShadowCamera;
+    Frame();
+
     for (auto node : m_pDrawLeafNodeList)
     {
         m_pMap->PreRender();       
@@ -319,6 +324,8 @@ bool TQuadtree::RenderShadow()
     }
 
     RenderShadowObject(m_pRootNode);
+
+    m_pCamera = pSaveCamera;
     return true;
 }
 bool TQuadtree::Release()

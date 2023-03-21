@@ -51,6 +51,8 @@
 #define IDC_CAMERANEAR                  1028
 #define IDC_SLOPESCALEDDEPTHBIAS3       1029
 #define IDC_CAMERAFAR                   1029
+#define IDC_LANDSCAPE_UP2               1030
+#define IDC_SPLATTING                   1030
 #define ID_32771                        32771
 #define ID_CREATE_MAP                   32772
 

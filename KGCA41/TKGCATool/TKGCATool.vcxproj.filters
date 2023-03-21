@@ -19,6 +19,9 @@
     <Filter Include="PaneWindow">
       <UniqueIdentifier>{85ae86c8-c50a-4f78-9df7-14328128f10e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Core">
+      <UniqueIdentifier>{13bf6dbf-3504-44c8-9ebe-c079e34fd773}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Sample.h">
@@ -103,6 +106,114 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="TDxRT.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="TCore\TBaseObject.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="TCore\TCamera.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="TCore\TCameraDebug.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="TCore\TCollision.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="TCore\TDevice.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="TCore\TDxState.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="TCore\TEffect2D.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="TCore\TFrustum.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="TCore\TGameCore.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="TCore\TInput.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="TCore\TInterface.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="TCore\TMapObject.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="TCore\TMath.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="TCore\TMatrix.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="TCore\TNpc2D.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="TCore\TObject2D.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="TCore\TObject3D.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="TCore\TProjectile2D.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="TCore\TRenderTarget.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="TCore\TScene.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="TCore\TShader.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="TCore\TShaderManager.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="TCore\TShape.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="TCore\TSound.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="TCore\TSoundManager.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="TCore\TSprite.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="TCore\TSpriteManager.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="TCore\TStd.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="TCore\TTexture.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="TCore\TTextureManager.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="TCore\TTimer.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="TCore\TUser2D.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="TCore\TVector.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="TCore\TWindow.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="TCore\TWriter.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="TWorldObject.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
@@ -191,6 +302,111 @@
     <ClCompile Include="Shadow.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="TCore\TBaseObject.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="TCore\TCamera.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="TCore\TCameraDebug.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="TCore\TCollision.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="TCore\TDevice.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="TCore\TDxState.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="TCore\TEffect2D.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="TCore\TFrustum.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="TCore\TGameCore.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="TCore\TInput.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="TCore\TInterface.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="TCore\TMapObject.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="TCore\TMath.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="TCore\TMatrix.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="TCore\TNpc2D.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="TCore\TObject2D.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="TCore\TObject3D.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="TCore\TProjectile2D.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="TCore\TRenderTarget.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="TCore\TScene.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="TCore\TShader.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="TCore\TShaderManager.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="TCore\TShape.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="TCore\TSound.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="TCore\TSoundManager.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="TCore\TSprite.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="TCore\TSpriteManager.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="TCore\TTexture.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="TCore\TTextureManager.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="TCore\TTimer.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="TCore\TUser2D.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="TCore\TVector.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="TCore\TWindow.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="TCore\TWriter.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="TWorldObject.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="TKGCATool.rc">
@@ -228,5 +444,8 @@
     <Text Include="Particle.txt" />
     <Text Include="DefaultMap.txt" />
     <Text Include="Default.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="DefaultRT.hlsl" />
   </ItemGroup>
 </Project>

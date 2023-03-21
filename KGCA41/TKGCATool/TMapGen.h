@@ -63,6 +63,7 @@ public:
 	float m_fCameraFar;
 	afx_msg void OnEnChangeCameranear();
 	afx_msg void OnEnChangeCamerafar();
+	afx_msg void OnBnClickedSplatting();
 };
 
 

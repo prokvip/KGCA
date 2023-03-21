@@ -12,9 +12,10 @@ private:
 	std::map<std::wstring, TFbxFile*> m_fbxList;
 public:
 	TFbxFile*   LoadFbx(std::wstring name);
-	TCharacter*	Load(std::wstring fbxfilename, std::wstring charName);
+	TCharacter*	Load(std::wstring fbxfilename);
 
 	TFbxFile*   FindFbx(std::wstring name);
+	TCharacter* FindCharacter(std::wstring name);
 	TCharacter*	Find(std::wstring name);
 	bool		Release();
 	W_STR		GetSplitName(std::wstring fullpath);

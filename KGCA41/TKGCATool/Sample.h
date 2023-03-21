@@ -21,15 +21,16 @@ struct SHADOW_CONSTANT_BUFFER // b1
 class Sample : public TGameCore
 {
 public:
+	std::shared_ptr<TCamera>		m_pShadowCamera;
 	std::shared_ptr<TSceneTitle>	m_pTitle = nullptr;
 	std::shared_ptr<TSceneInGame>	m_pInGame = nullptr;
 	std::shared_ptr<TScene>			m_pCurrentScene = nullptr;
 	TShapeDirectionLine				m_DirLine;
 	TQuadtree						m_Quadtree;
-	std::vector<std::shared_ptr<TFbxFile>> m_fbxList;
-	std::vector< TCharacter*> m_ObjectList;
-	std::vector<std::shared_ptr<TCharacter>> m_NpcList;
-	std::shared_ptr<TCharacter> m_UserCharacter;
+	std::vector<std::shared_ptr<TFbxFile>>		m_fbxList;
+	std::vector< std::shared_ptr<TWorldObject>> m_WorldObjectList;
+	std::vector<std::shared_ptr<TWorldObject>>	m_NpcList;
+	std::shared_ptr<TWorldObject>				m_UserCharacter;
 	TSelect		m_Select;
 	DX::TDxRT	m_RT;
 	TMatrix			m_matShadow;
@@ -49,6 +50,7 @@ public:
 	bool		m_bUpPicking = false;
 	bool		m_bDownPicking = false;
 	bool		m_bPlatPicking = false;
+	bool		m_bSplatting = false;
 	T_STR		m_szSelectFbxFile;
 	float		m_fDepthMapCameraNear = 1.0f;
 	float		m_fDepthMapCameraFar = 1000.0f;

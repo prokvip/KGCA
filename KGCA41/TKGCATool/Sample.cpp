@@ -1,9 +1,9 @@
 #include "pch.h"
 #include "Sample.h"
 
-void  Sample::NewEffect(UINT iParticleCounter, T_STR tex)
+void Sample::NewEffect(UINT iParticleCounter, T_STR tex)
 {
-	auto p = std::shared_ptr<TParticleObj>();
+	auto p = std::shared_ptr<TParticleObj>();	
 	std::wstring shaderfilename = L"Particle.txt";
 	if (iParticleCounter <= 0) iParticleCounter = 1;
 	p->m_iParticleCounter = iParticleCounter;
@@ -19,7 +19,7 @@ void  Sample::NewEffect(UINT iParticleCounter, T_STR tex)
 	p->m_matTranslate._43 = randstep(-10.0f, +10.0f);*/
 	m_ParticleList.push_back(p);
 }
-bool  Sample::GetIntersection()
+bool Sample::GetIntersection()
 {
 	//if (m_bObjectPicking)
 	{
@@ -48,7 +48,6 @@ bool  Sample::GetIntersection()
 	}
 	return false;
 }
-
 bool Sample::CreateMapData(UINT iColumn, UINT iRows)
 {
 	if (m_pTitle)
@@ -61,140 +60,40 @@ bool Sample::CreateMapData(UINT iColumn, UINT iRows)
 			((TSceneTitle*)m_pCurrentScene.get())->m_pMainCamera,
 			((TSceneTitle*)m_pCurrentScene.get())->m_pMap);
 
-		m_Quadtree.m_TexArray[0] =
-			I_Tex.Load(L"../../data/ui/smile.bmp");
-		m_Quadtree.m_TexArray[1] =
-			I_Tex.Load(L"../../data/map/002.jpg");
-		m_Quadtree.m_TexArray[2] =
-			I_Tex.Load(L"../../data/map/026.jpg");
-		m_Quadtree.m_TexArray[3] =
-			I_Tex.Load(L"../../data/map/036.bmp");
-		m_Quadtree.m_TexArray[4] =
-			I_Tex.Load(L"../../data/map/000.jpg");
+		m_Quadtree.m_TexArray[0] = 	I_Tex.Load(L"../../data/ui/smile.bmp");
+		m_Quadtree.m_TexArray[1] =	I_Tex.Load(L"../../data/map/002.jpg");
+		m_Quadtree.m_TexArray[2] =	I_Tex.Load(L"../../data/map/026.jpg");
+		m_Quadtree.m_TexArray[3] =	I_Tex.Load(L"../../data/map/036.bmp");
+		m_Quadtree.m_TexArray[4] =	I_Tex.Load(L"../../data/map/000.jpg");
 
 	}
 	return true;
 }
 bool Sample::LoadFbx(T_STR filepath, TVector3 vPos)
 {
-	TCharacter* pCharacter = I_Object.Load(filepath, L"");
-	pCharacter->SetPos(vPos);
-	/*TActionTable action;
-	action.iStartFrame = 61;
-	action.iEndFrame = 91;
-	action.bLoop = true;
-	pCharacter->m_ActionList.insert(std::make_pair(L"walk", action));
-	pCharacter->m_ActionCurrent = pCharacter->m_ActionList.find(L"walk")->second;*/
-	m_ObjectList.push_back(pCharacter);
-	m_Quadtree.AddObject(pCharacter);
-	return true;
-}
-bool Sample::CreateFbxLoader()
-{
-	auto pFbxLoaderD = std::shared_ptr<TFbxFile>();
-	if (pFbxLoaderD->Init())
+	TCharacter* pCharacter = I_Object.Load(filepath);
+	auto pWObject = std::make_shared<TWorldObject>();
+	if (pWObject->Load(m_pd3dDevice.Get(), m_pImmediateContext.Get(), pCharacter, L""))
 	{
-		if (pFbxLoaderD->Load("../../data/fbx/Man.FBX"))
-		{
-			pFbxLoaderD->CreateConstantBuffer(m_pd3dDevice.Get());
-		}
-	}
-	m_fbxList.push_back(pFbxLoaderD);
-
-	auto pFbxLoaderA = std::shared_ptr<TFbxFile>();
-	if (pFbxLoaderA->Init())
-	{
-		if (pFbxLoaderA->Load("../../data/fbx/Swat@turning_right_45_degrees.fbx"))
-		{
-			pFbxLoaderA->CreateConstantBuffer(m_pd3dDevice.Get());
-		}
-	}
-	m_fbxList.push_back(pFbxLoaderA);
-
-	auto pFbxLoaderB = std::shared_ptr<TFbxFile>();
-	if (pFbxLoaderB->Init())
-	{
-		pFbxLoaderB->Load("../../data/fbx/Swat.fbx");
-	}
-	m_fbxList.push_back(pFbxLoaderB);
-
-	W_STR szDefaultDir = L"../../data/fbx/";
-	std::wstring fbxShaderfilename = L"Skinning.txt";
-
-	for (auto fbx : m_fbxList)
-	{
-		for (int iObj = 0; iObj < fbx->m_pDrawObjList.size(); iObj++)
-		{
-			TFbxObject* pObj = fbx->m_pDrawObjList[iObj];
-			std::wstring  szLoad = szDefaultDir + pObj->m_szTextureName;
-			pObj->Create(m_pd3dDevice.Get(), m_pImmediateContext.Get(), fbxShaderfilename, szLoad);
-		}
-	}
-
-	m_UserCharacter = std::shared_ptr<TCharacter>();
-	m_UserCharacter->m_pd3dDevice = m_pd3dDevice.Get();
-	m_UserCharacter->m_pImmediateContext = m_pImmediateContext.Get();
-	/*m_UserCharacter->m_pFbxFile = m_fbxList[m_UserCharacter->m_iFbxListID];*/
-	m_UserCharacter->m_pAnionFbxFile = pFbxLoaderA.get();
-	if (m_UserCharacter->m_pAnionFbxFile)
-	{
-		m_UserCharacter->m_AnimScene = m_UserCharacter->m_pAnionFbxFile->m_AnimScene;
-		m_UserCharacter->m_ActionFileList.insert(std::make_pair(L"walking", pFbxLoaderA.get()));
-		m_UserCharacter->m_ActionCurrent.iStartFrame = pFbxLoaderA->m_AnimScene.iStartFrame;
-		m_UserCharacter->m_ActionCurrent.iEndFrame = 50;// pFbxLoaderA->m_AnimScene.iEndFrame;
-	}
-	else
-	{
-		m_UserCharacter->m_AnimScene = m_UserCharacter->m_pFbxFile->m_AnimScene;
-		TActionTable action;
-		action.iStartFrame = m_UserCharacter->m_AnimScene.iStartFrame;
-		action.iEndFrame = m_UserCharacter->m_AnimScene.iEndFrame;
-		action.bLoop = true;
-		m_UserCharacter->m_ActionList.insert(std::make_pair(L"idle", action));
-	}
-
-	/*action.iStartFrame = 61;
-	action.iEndFrame = 91;
-	action.bLoop = true;
-	m_UserCharacter->m_ActionList.insert(std::make_pair(L"walk", action));
-	action.iStartFrame = 92;
-	action.iEndFrame = 116;
-	action.bLoop = true;
-	m_UserCharacter->m_ActionList.insert(std::make_pair(L"run", action));
-	action.iStartFrame = 120;
-	action.iEndFrame = 225;
-	action.bLoop = false;
-	m_UserCharacter->m_ActionList.insert(std::make_pair(L"jump", action));
-	action.iStartFrame = 205;
-	action.iEndFrame = 289;
-	action.bLoop = false;
-	m_UserCharacter->m_ActionList.insert(std::make_pair(L"attack", action));*/
-	m_UserCharacter->CreateConstantBuffer();
-
-	for (int iObj = 0; iObj < 5; iObj++)
-	{
-		auto pNpc = std::shared_ptr<TCharacter>();
-		//TCharacter* pCharacter = I_Object.Load(filepath, L"");
-		pNpc->m_pd3dDevice = m_pd3dDevice.Get();
-		pNpc->m_pImmediateContext = m_pImmediateContext.Get();
-		//pNpc->m_pFbxFile = m_fbxList[pNpc->m_iFbxListID];
-		pNpc->m_matWorld._41 = -4.0f + iObj * 2;
-		pNpc->m_AnimScene = pNpc->m_pFbxFile->m_AnimScene;
-		pNpc->CreateConstantBuffer();
-		TActionTable action;
+		pWObject->m_szName = L"Character";
+		pWObject->m_szName += std::to_wstring(m_WorldObjectList.size());
+		pWObject->SetPos(vPos);
+		/*TActionTable action;
 		action.iStartFrame = 61;
 		action.iEndFrame = 91;
 		action.bLoop = true;
-		pNpc->m_ActionList.insert(std::make_pair(L"walk", action));
-		pNpc->m_ActionCurrent = pNpc->m_ActionList.find(L"walk")->second;
-
-		m_NpcList.push_back(pNpc);
+		pCharacter->m_ActionList.insert(std::make_pair(L"walk", action));
+		pCharacter->m_ActionCurrent = pCharacter->m_ActionList.find(L"walk")->second;*/
+		m_WorldObjectList.push_back(pWObject);
+		m_Quadtree.AddObject(pWObject.get());
 	}
-
 	return true;
 }
 bool Sample::Init()
-{
+{	
+	m_pShadowCamera = std::make_shared<TCamera>();
+	SetShadowProjectionDistance();
+
 	InitRT();
 
 	I_Object.SetDevice(m_pd3dDevice.Get(), m_pImmediateContext.Get());
@@ -215,8 +114,7 @@ bool Sample::Init()
 	//CreateFbxLoader();
 
 	std::wstring shaderfilename = L"DefaultShape.hlsl";
-	m_DirLine.Create(m_pd3dDevice.Get(), m_pImmediateContext.Get(), shaderfilename,
-		L"../../data/gameHeight.png");
+	m_DirLine.Create(m_pd3dDevice.Get(), m_pImmediateContext.Get(), shaderfilename,	L"../../data/gameHeight.png");
 	D3DXMatrixScaling(&m_DirLine.m_matWorld, 1000.0f, 1000.0f, 1000.0f);
 	return true;
 }
@@ -228,8 +126,8 @@ bool Sample::Frame()
 		&m_pCurrentScene->m_pMainCamera->m_matProj);
 
 	m_Quadtree.Frame();
-
-	if (m_bUpPicking || m_bDownPicking)
+	
+	if (m_bUpPicking|| m_bDownPicking)
 	{
 		if (GetIntersection())
 		{
@@ -244,6 +142,7 @@ bool Sample::Frame()
 				box.Set(vMax, vMin);
 				if (m_Quadtree.SelectVertexList(box, nodelist) > 0)
 				{
+					float fWorkRadius = randstep(3.0f, 20.0f);
 					for (auto node : nodelist)
 					{
 						for (UINT iVertex = 0; iVertex < m_Quadtree.m_pMap->m_VertexList.size(); iVertex++)
@@ -251,16 +150,17 @@ bool Sample::Frame()
 							TVector3 v0 = m_Quadtree.m_pMap->m_VertexList[iVertex].p;
 							TVector3 v = v0 - m_Select.m_vIntersection;
 							float fDistance = D3DXVec3Length(&v);
-							if (fDistance <= 20.0f) // 높이 사이즈 보다 크게 잡아서 노말 갱신한다.
+							
+							if (fDistance <= (fWorkRadius + 3.0f)) // 높이 사이즈 보다 크게 잡아서 노말 갱신한다.
 							{
-								if (fDistance < 10.0f)
+								if (fDistance < fWorkRadius)
 								{
-									float fValue = (fDistance / 10.0f) * 90.0f;
+									float fValue = (fDistance / fWorkRadius) * 90.0f;
 									float fdot = cosf(DegreeToRadian(fValue));
 									if (m_bUpPicking)
-										m_Quadtree.m_pMap->m_VertexList[iVertex].p.y += fdot;
+										m_Quadtree.m_pMap->m_VertexList[iVertex].p.y += fdot*g_fSecondPerFrame;
 									if (m_bDownPicking)
-										m_Quadtree.m_pMap->m_VertexList[iVertex].p.y -= fdot;
+										m_Quadtree.m_pMap->m_VertexList[iVertex].p.y -= fdot * g_fSecondPerFrame;
 
 									if (node->m_tBox.vMin.y > m_Quadtree.m_pMap->m_VertexList[iVertex].p.y)
 									{
@@ -273,7 +173,7 @@ bool Sample::Frame()
 								}
 								m_Quadtree.m_pMap->ComputeVertexNormal(iVertex);
 							}
-						}
+						}	
 						node->m_tBox.vCenter = (node->m_tBox.vMax + node->m_tBox.vMin) * 0.5f;
 						node->m_tBox.vAxis[0] = { 1,0,0 };
 						node->m_tBox.vAxis[1] = { 0,1,0 };
@@ -285,7 +185,7 @@ bool Sample::Frame()
 					m_Quadtree.m_pMap->UpdateVertexBuffer();
 				}
 
-				for (auto npc : m_ObjectList)
+				for (auto npc : m_WorldObjectList)
 				{
 					TVector3 vPos = npc->m_vPos;
 					vPos.y = npc->m_matWorld._42 =
@@ -306,7 +206,7 @@ bool Sample::Frame()
 			};
 		}
 	}
-	bool m_bSplatting = true;
+
 	UINT m_iSplattingTexIndex = 0;
 	if (m_bSplatting)
 	{
@@ -330,9 +230,9 @@ bool Sample::Frame()
 		data->Frame();
 	}
 
-	for (auto npc : m_ObjectList)
+	for (auto wo : m_WorldObjectList)
 	{
-		npc->UpdateFrame(m_pImmediateContext.Get());
+		wo->UpdateFrame(m_pImmediateContext.Get());
 	}
 
 	/*if (I_Input.GetKey('J') == KEY_HOLD)
@@ -361,7 +261,6 @@ bool Sample::Render()
 	ClearD3D11DeviceContext(m_pImmediateContext.Get());
 	return true;
 }
-
 bool Sample::ObjectRender()
 {
 	if (m_pCurrentScene == nullptr) return true;
@@ -381,11 +280,38 @@ bool Sample::ObjectRender()
 
 	TSceneTitle* pScene = (TSceneTitle*)m_pCurrentScene.get();
 
+	m_pImmediateContext->OMSetDepthStencilState(TDxState::g_pDefaultDepthStencil, 0xff);
+
+	TVector3 vLightPos = m_pShadowCamera->m_vPos;
+	TVector3 vLightDir = m_pShadowCamera->m_vLook;
+	if (pScene->m_pMap && m_Quadtree.m_pMap)
+	{
+		pScene->m_pMap->m_cbData.vLightDir = TVector4(vLightDir.x, vLightDir.y, vLightDir.z, 300.0f);
+		pScene->m_pMap->m_cbData.vLightPos = TVector4(vLightPos.x, vLightPos.y, vLightPos.z, 30.0f);
+		pScene->m_pMap->m_cbData.vEyeDir =
+		{
+			pScene->m_pMainCamera->m_vLook.x,
+			pScene->m_pMainCamera->m_vLook.y,
+			pScene->m_pMainCamera->m_vLook.z,
+			0.90f
+		};
+		pScene->m_pMap->m_cbData.vEyePos = {
+			pScene->m_pMainCamera->m_vPos.x,
+			pScene->m_pMainCamera->m_vPos.y,
+			pScene->m_pMainCamera->m_vPos.z,
+			0.98f
+		};
+		pScene->m_pMap->SetMatrix(nullptr,
+			&pScene->m_pMainCamera->m_matView,
+			&pScene->m_pMainCamera->m_matProj);
+		m_Quadtree.m_pMap->m_pImmediateContext->PSSetShaderResources(6, 1, m_RT.m_pDsvSRV.GetAddressOf());
+		m_Quadtree.Render();
+	}
+	//m_pCurrentScene->Render();
+
 	// particle
 	m_pImmediateContext->OMSetBlendState(TDxState::g_pDualSourceBlend, 0, -1);
-	m_pImmediateContext->OMSetDepthStencilState(
-		TDxState::g_pDefaultDepthStencilAndNoWrite,
-		0xff);
+	m_pImmediateContext->OMSetDepthStencilState(TDxState::g_pDefaultDepthStencilAndNoWrite,	0xff);
 	m_pImmediateContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_POINTLIST);
 
 	TMatrix matBillboard;
@@ -431,7 +357,7 @@ bool Sample::ObjectRender()
 		matWorld._43 = pScene->m_pUser->m_vPos.z;
 	}
 
-	/*for (int iNpc = 0; iNpc < m_ObjectList.size(); iNpc++)
+	/*for (int iNpc = 0; iNpc < m_WorldObjectList.size(); iNpc++)
 	{
 		m_ObjectList[iNpc]->SetMatrix(nullptr, &pScene->m_pMainCamera->m_matView, &pScene->m_pMainCamera->m_matProj);
 		m_ObjectList[iNpc]->Render();
@@ -443,50 +369,23 @@ bool Sample::ObjectRender()
 		m_UserCharacter->Render();
 	}
 
-	m_pImmediateContext->OMSetDepthStencilState(TDxState::g_pDefaultDepthStencil, 0xff);
+	
 
-	if (pScene->m_pMap && m_Quadtree.m_pMap)
-	{
-		/*pScene->m_pMap->m_cbData.vLightDir =
-			TVector4(vLightDir.x, vLightDir.y, vLightDir.z, 300.0f);
-		pScene->m_pMap->m_cbData.vLightPos =
-			TVector4(vLightPos.x, vLightPos.y, vLightPos.z, 30.0f);
-		pScene->m_pMap->m_cbData.vEyeDir =
-		{
-			pScene->m_pMainCamera->m_vLook.x,
-			pScene->m_pMainCamera->m_vLook.y,
-			pScene->m_pMainCamera->m_vLook.z,
-			0.90f
-		};
-		pScene->m_pMap->m_cbData.vEyePos = {
-			pScene->m_pMainCamera->m_vPos.x,
-			pScene->m_pMainCamera->m_vPos.y,
-			pScene->m_pMainCamera->m_vPos.z,
-			0.98f
-		};*/
-		pScene->m_pMap->SetMatrix(nullptr,
-			&pScene->m_pMainCamera->m_matView,
-			&pScene->m_pMainCamera->m_matProj);
-
-		m_Quadtree.m_pMap->m_pImmediateContext->PSSetShaderResources(
-			6, 1, m_RT.m_pDsvSRV.GetAddressOf());
-
-		m_Quadtree.Render();
-	}
-	//m_pCurrentScene->Render();
-
-	m_DirLine.SetMatrix(nullptr, &m_pCurrentScene->m_pMainCamera->m_matView,
-		&m_pCurrentScene->m_pMainCamera->m_matProj);
+	m_DirLine.SetMatrix(nullptr, &m_pCurrentScene->m_pMainCamera->m_matView,&m_pCurrentScene->m_pMainCamera->m_matProj);
 	m_DirLine.Render();
 	return true;
 }
 bool Sample::Release()
 {
 	m_Quadtree.Release();
+	for (auto obj : m_WorldObjectList)
+	{
+		obj->Release();
+	}
 	for (auto data : m_ParticleList)
 	{
 		data->Release();
-	}
+	}	
 	for (auto npc : m_NpcList)
 	{
 		npc->Release();
@@ -502,7 +401,7 @@ bool Sample::Release()
 
 	m_ParticleList.clear();
 	m_NpcList.clear();
-	m_ObjectList.clear();
+	m_WorldObjectList.clear();
 	m_fbxList.clear();
 
 	m_DirLine.Release();
@@ -574,4 +473,108 @@ void Sample::ClearD3D11DeviceContext(ID3D11DeviceContext* pd3dDeviceContext)
 	pd3dDeviceContext->OMSetBlendState(NULL, blendFactor, 0xFFFFFFFF);
 	pd3dDeviceContext->OMSetDepthStencilState(NULL, 0);
 	pd3dDeviceContext->RSSetState(NULL);
+}
+bool Sample::CreateFbxLoader()
+{
+	auto pFbxLoaderD = std::shared_ptr<TFbxFile>();
+	if (pFbxLoaderD->Init())
+	{
+		if (pFbxLoaderD->Load("../../data/fbx/Man.FBX"))
+		{
+			pFbxLoaderD->CreateConstantBuffer(m_pd3dDevice.Get());
+		}
+	}
+	m_fbxList.push_back(pFbxLoaderD);
+
+	auto pFbxLoaderA = std::shared_ptr<TFbxFile>();
+	if (pFbxLoaderA->Init())
+	{
+		if (pFbxLoaderA->Load("../../data/fbx/Swat@turning_right_45_degrees.fbx"))
+		{
+			pFbxLoaderA->CreateConstantBuffer(m_pd3dDevice.Get());
+		}
+	}
+	m_fbxList.push_back(pFbxLoaderA);
+
+	auto pFbxLoaderB = std::shared_ptr<TFbxFile>();
+	if (pFbxLoaderB->Init())
+	{
+		pFbxLoaderB->Load("../../data/fbx/Swat.fbx");
+	}
+	m_fbxList.push_back(pFbxLoaderB);
+
+	W_STR szDefaultDir = L"../../data/fbx/";
+	std::wstring fbxShaderfilename = L"Skinning.txt";
+
+	for (auto fbx : m_fbxList)
+	{
+		for (int iObj = 0; iObj < fbx->m_pDrawObjList.size(); iObj++)
+		{
+			TFbxObject* pObj = fbx->m_pDrawObjList[iObj];
+			std::wstring  szLoad = szDefaultDir + pObj->m_szTextureName;
+			pObj->Create(m_pd3dDevice.Get(), m_pImmediateContext.Get(), fbxShaderfilename, szLoad);
+		}
+	}
+
+	m_UserCharacter = std::shared_ptr<TWorldObject>();
+	m_UserCharacter->m_pd3dDevice = m_pd3dDevice.Get();
+	m_UserCharacter->m_pImmediateContext = m_pImmediateContext.Get();
+	/*m_UserCharacter->m_pFbxFile = m_fbxList[m_UserCharacter->m_iFbxListID];*/
+	m_UserCharacter->m_pAnionFbxFile = pFbxLoaderA.get();
+	if (m_UserCharacter->m_pAnionFbxFile)
+	{
+		m_UserCharacter->m_AnimScene = m_UserCharacter->m_pAnionFbxFile->m_AnimScene;
+		m_UserCharacter->m_ActionFileList.insert(std::make_pair(L"walking", pFbxLoaderA.get()));
+		m_UserCharacter->m_ActionCurrent.iStartFrame = pFbxLoaderA->m_AnimScene.iStartFrame;
+		m_UserCharacter->m_ActionCurrent.iEndFrame = 50;// pFbxLoaderA->m_AnimScene.iEndFrame;
+	}
+	else
+	{
+		m_UserCharacter->m_AnimScene = m_UserCharacter->m_pFbxFile->m_AnimScene;
+		TActionTable action;
+		action.iStartFrame = m_UserCharacter->m_AnimScene.iStartFrame;
+		action.iEndFrame = m_UserCharacter->m_AnimScene.iEndFrame;
+		action.bLoop = true;
+		m_UserCharacter->m_ActionList.insert(std::make_pair(L"idle", action));
+	}
+
+	/*action.iStartFrame = 61;
+	action.iEndFrame = 91;
+	action.bLoop = true;
+	m_UserCharacter->m_ActionList.insert(std::make_pair(L"walk", action));
+	action.iStartFrame = 92;
+	action.iEndFrame = 116;
+	action.bLoop = true;
+	m_UserCharacter->m_ActionList.insert(std::make_pair(L"run", action));
+	action.iStartFrame = 120;
+	action.iEndFrame = 225;
+	action.bLoop = false;
+	m_UserCharacter->m_ActionList.insert(std::make_pair(L"jump", action));
+	action.iStartFrame = 205;
+	action.iEndFrame = 289;
+	action.bLoop = false;
+	m_UserCharacter->m_ActionList.insert(std::make_pair(L"attack", action));*/
+	m_UserCharacter->CreateConstantBuffer();
+
+	for (int iObj = 0; iObj < 5; iObj++)
+	{
+		auto pNpc = std::shared_ptr<TWorldObject>();
+		//TCharacter* pCharacter = I_Object.Load(filepath, L"");
+		pNpc->m_pd3dDevice = m_pd3dDevice.Get();
+		pNpc->m_pImmediateContext = m_pImmediateContext.Get();
+		//pNpc->m_pFbxFile = m_fbxList[pNpc->m_iFbxListID];
+		pNpc->m_matWorld._41 = -4.0f + iObj * 2;
+		pNpc->m_AnimScene = pNpc->m_pFbxFile->m_AnimScene;
+		pNpc->CreateConstantBuffer();
+		TActionTable action;
+		action.iStartFrame = 61;
+		action.iEndFrame = 91;
+		action.bLoop = true;
+		pNpc->m_ActionList.insert(std::make_pair(L"walk", action));
+		pNpc->m_ActionCurrent = pNpc->m_ActionList.find(L"walk")->second;
+
+		m_NpcList.push_back(pNpc);
+	}
+
+	return true;
 }

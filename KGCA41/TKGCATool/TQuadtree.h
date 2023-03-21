@@ -9,7 +9,7 @@ public:
 	TMap* m_pMap = nullptr;
 	TCamera* m_pCamera = nullptr;
 	TTexture* m_TexArray[5];
-	std::vector<TObject3D*>   m_ObjectList;
+	std::vector<TWorldObject*>   m_ObjectList;
 	std::vector<TNode*> m_pLeafNodeList;
 	std::vector<TNode*> m_pDrawLeafNodeList;
 public:
@@ -20,7 +20,7 @@ public:
 	void    Splatting(TVector3 vIntersection, UINT iSplattingTexIndex, float fSplattingRadius=5.0f);
 public:
 	bool	Create(TCamera* pMainCamera, TMap* m_pMap, int iMaxDepth = 3);
-	bool	AddObject(TObject3D* pObj);
+	bool	AddObject(TWorldObject* pObj);
 	void	BuildTree(TNode* pNode);
 	bool	IsSubDivide(TNode* pNode);
 	TNode* FindNode(TNode* pNode, T_BOX tBox);
@@ -29,10 +29,10 @@ public:
 	bool	Frame();
 	bool	Render();
 	bool	Release();
-	bool    RenderShadow();
+	bool    RenderShadow(TCamera* pCamera);
 	void	RenderShadowObject(TNode* pNode);
 	void    RenderObject(TNode* pNode);
-	TNode*  VisibleNode(TNode* pNode);
+	void    VisibleNode(TNode* pNode);
 	virtual ~TQuadtree();
 };
 

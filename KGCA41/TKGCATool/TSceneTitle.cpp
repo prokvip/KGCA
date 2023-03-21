@@ -19,7 +19,7 @@ bool TSceneTitle::CreateMap(UINT iColumn, UINT iRows )
 	//m_pMap->LoadHeightMap(m_pd3dDevice, m_pImmediateContext, L"../../data/map/heightMap513.bmp");
 	m_pMap->Build(iColumn, iRows);
 	//m_pMap->Build(m_pMap->m_iNumCols, m_pMap->m_iNumRows);
-	m_pMap->Create(m_pd3dDevice, m_pImmediateContext, L"DefaultMap.txt", L"../../data/map/Tile50.jpg");
+	m_pMap->Create(m_pd3dDevice, m_pImmediateContext, L"DefaultMap.txt", L"../../data/map/003.jpg");
 
 	if (m_pUser)
 	{
@@ -68,9 +68,7 @@ bool TSceneTitle::Init()
 	m_pBG = new TBaseObject;
 	m_pBG->Create(m_pd3dDevice,m_pImmediateContext,shaderfilename,L"../../data/gameHeight.png");
 		
-	m_pMapCamera = new TCameraMap;
-	m_pDebugCamera = new TCameraDebug;
-	
+	m_pMapCamera = std::make_shared<TCameraMap>();
 	TVector3 vCamera = TVector3(0, 0, 0);
 	TVector3 vHeight = TVector3(0, 10, -10);
 	m_pMapCamera->SetPos(vCamera, vHeight);	
@@ -79,12 +77,13 @@ bool TSceneTitle::Init()
 										(float)g_rtClient.right / (float)g_rtClient.bottom);
 	m_pMapCamera->Frame();
 
+	m_pDebugCamera = std::make_shared<TCameraDebug>();
 	m_pDebugCamera->SetPos(vCamera, vHeight);
 	m_pDebugCamera->CreateViewMatrix(m_pMapCamera->m_vPos, m_pMapCamera->m_vTarget, TVector3(0, 1, 0));
 	m_pDebugCamera->CreateProjMatrix(1.0f, 10000.0f, T_PI * 0.25f,
 		(float)g_rtClient.right / (float)g_rtClient.bottom);
 
-	m_pMainCamera = m_pDebugCamera;
+	m_pMainCamera = m_pDebugCamera.get();
 	return true;
 }
 bool TSceneTitle::Frame()
@@ -119,9 +118,6 @@ bool TSceneTitle::Render()
 }
 bool TSceneTitle::Release()
 {
-	delete m_pMapCamera;
-	delete m_pDebugCamera;
-
 	if (m_pBG)
 	{
 		m_pBG->Release();

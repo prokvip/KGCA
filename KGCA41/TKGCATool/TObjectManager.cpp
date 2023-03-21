@@ -50,35 +50,33 @@ TFbxFile* TObjectManager::LoadFbx(std::wstring name)
     return pFbxFile;
 }
 
-TCharacter* TObjectManager::Load(std::wstring fbxfilepath, 
-                                 std::wstring charName)
+TCharacter* TObjectManager::Load(std::wstring fbxfilepath)
 {
     HRESULT hr;
+    auto obj = FindCharacter(fbxfilepath);
+    if (obj != nullptr)
+    {
+        return obj;
+    }
     // 중복제거
     auto data = LoadFbx(fbxfilepath);
     if (data != nullptr)
     {
         TCharacter* pNewData = new TCharacter;
-        pNewData->m_szName = GetSplitName(charName);
-        if (charName.empty())
-        {
-            pNewData->m_szName = L"Character";
-            pNewData->m_szName += std::to_wstring(m_List.size());
-        }
+        pNewData->m_szName = GetSplitName(fbxfilepath);
         if (pNewData)
         {
-            hr = pNewData->Load(m_pd3dDevice, m_pImmediateContext, data, charName);
+            hr = pNewData->Load(m_pd3dDevice, m_pImmediateContext, data);
             if (SUCCEEDED(hr))
             {
-                m_List.insert(std::make_pair(charName, pNewData));
+                m_List.insert(std::make_pair(pNewData->m_szName, pNewData));
                 return pNewData;
             }
             else
             {
                 delete pNewData;
             }
-        }
-       
+        }       
     } 
 	return nullptr;
 }
@@ -93,8 +91,17 @@ TCharacter* TObjectManager::Find(std::wstring name)
 }
 TFbxFile* TObjectManager::FindFbx(std::wstring name)
 {
-    auto iter = m_fbxList.find(name);
+    auto iter = m_fbxList.find(GetSplitName(name));
     if (iter != m_fbxList.end())
+    {
+        return iter->second;
+    }
+    return nullptr;
+}
+TCharacter* TObjectManager::FindCharacter(std::wstring name)
+{
+    auto iter = m_List.find(GetSplitName(name));
+    if (iter != m_List.end())
     {
         return iter->second;
     }

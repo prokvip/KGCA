@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "Sample.h"
-const float g_fMaxSize = 4096;
+const float g_fMaxSize = D3D11_REQ_TEXTURE2D_U_OR_V_DIMENSION;
 ID3D11Buffer* Sample::CreateConstantBuffer(ID3D11Device* pd3dDevice, void* data, UINT iNumIndex,
 	UINT iSize, bool bDynamic)
 {
@@ -42,9 +42,8 @@ ID3D11Buffer* Sample::CreateConstantBuffer(ID3D11Device* pd3dDevice, void* data,
 	return pBuffer;
 }
 void Sample::SetShadowProjectionDistance()
-{
-	D3DXMatrixOrthoOffCenterLH(&m_matShadowProj,
-		-500 / 2, 500 / 2, -500 / 2, 500 / 2, m_fDepthMapCameraNear, m_fDepthMapCameraFar);
+{	
+	m_pShadowCamera->CreateOrthoProjMatrix(1000,1000, m_fDepthMapCameraNear, m_fDepthMapCameraFar);
 }
 void Sample::InitRT()
 {
@@ -63,7 +62,7 @@ void Sample::InitRT()
 
 	m_RT.m_DSFormat = DXGI_FORMAT_R32_TYPELESS;
 	m_RT.Create(m_pd3dDevice.Get(), g_fMaxSize, g_fMaxSize);// m_bColorTexRender );	
-	SetShadowProjectionDistance();
+	
 
 	HRESULT hr;
 	D3D11_SAMPLER_DESC SamDescShad =
@@ -79,8 +78,7 @@ void Sample::InitRT()
 		0,//FLOAT MinLOD;
 		0//FLOAT MaxLOD;   
 	};
-	if (FAILED(hr = m_pd3dDevice->CreateSamplerState(&SamDescShad, 
-		g_pSSShadowMap.GetAddressOf())))
+	if (FAILED(hr = m_pd3dDevice->CreateSamplerState(&SamDescShad, g_pSSShadowMap.GetAddressOf())))
 	{
 		return;
 	}
@@ -120,41 +118,22 @@ bool Sample::ObjectShadow()
 	//D3DXMatrixRotationY(&matRotation, g_fGameTimer);
 	//vLight = vLight * matRotation;
 	D3DXVec3TransformCoord(&vLightPos, &vLightPos, &matRotation);
-	TVector3 vLightDir;
-	D3DXVec3Normalize(&vLightDir, &-vLightPos);	
-
+	
 	TVector3 vLookat = TVector3(0, 0, 0);
 	TVector3 vUp = TVector3(0.0f, 1.0f, 0.0f);
-	D3DXMatrixLookAtLH(&m_matShadowView, &vLightPos, &vLookat, &vUp);
-
-
+	m_pShadowCamera->CreateViewMatrix(vLightPos, vLookat, vUp);	
+	m_matShadowView = m_pShadowCamera->m_matView;
+	m_matShadowProj = m_pShadowCamera->m_matProj;
+	//D3DXMatrixLookAtLH(&m_matShadowView, &vLightPos, &vLookat, &vUp);
 	TMatrix matWVPT = m_matShadowView * m_matShadowProj * m_matTexture;
 	D3DXMatrixTranspose(&m_cbShadow.g_matShadow, &matWVPT);
-
 
 	m_pImmediateContext->OMSetDepthStencilState(TDxState::g_pDefaultDepthStencil, 0xff);
 
 	if (pScene->m_pMap)
 	{
-		pScene->m_pMap->m_cbData.vLightDir =
-			TVector4(vLightDir.x, vLightDir.y, vLightDir.z, 100.0f);
-		pScene->m_pMap->m_cbData.vLightPos =
-			TVector4(vLightPos.x, vLightPos.y, vLightPos.z, 55.0f);
-		pScene->m_pMap->m_cbData.vEyeDir =
-		{
-			pScene->m_pMainCamera->m_vLook.x,
-			pScene->m_pMainCamera->m_vLook.y,
-			pScene->m_pMainCamera->m_vLook.z,
-			0.90f
-		};
-		pScene->m_pMap->m_cbData.vEyePos = {
-			pScene->m_pMainCamera->m_vPos.x,
-			pScene->m_pMainCamera->m_vPos.y,
-			pScene->m_pMainCamera->m_vPos.z,
-			0.98f
-		};
 		pScene->m_pMap->SetMatrix(nullptr,	&m_matShadowView,	&m_matShadowProj);		
-		m_Quadtree.RenderShadow();
+		m_Quadtree.RenderShadow(m_pShadowCamera.get());
 	}
 
 	TMatrix matWorld;
@@ -166,9 +145,7 @@ bool Sample::ObjectShadow()
 	}
 	if (m_UserCharacter)
 	{
-		m_UserCharacter->SetMatrix(&matWorld, 
-			&m_matShadowView,
-			&m_matShadowProj);
+		m_UserCharacter->SetMatrix(&matWorld, &m_matShadowView,	&m_matShadowProj);
 		m_UserCharacter->PreRender();
 		m_pImmediateContext->PSSetShader(NULL, NULL, 0);
 		m_UserCharacter->PostRender();

@@ -65,8 +65,8 @@ public:
 	TBaseObject*	m_pBG;
 	TMap* m_pMap = nullptr;
 	TUser*			m_pUser=nullptr;
-	TCamera* m_pMapCamera=nullptr;
-	TCamera* m_pDebugCamera = nullptr;
+	std::shared_ptr<TCamera> m_pMapCamera=nullptr;
+	std::shared_ptr<TCamera> m_pDebugCamera = nullptr;
 public:
 	bool				CreateMap(UINT iColumn=257, UINT iRows=257);
 	bool				DeletaMap();

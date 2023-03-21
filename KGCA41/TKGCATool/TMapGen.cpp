@@ -61,6 +61,7 @@ BEGIN_MESSAGE_MAP(TMapGen, CFormView)
 	ON_EN_CHANGE(IDC_SLOPESCALEDDEPTHBIAS, &TMapGen::OnEnChangeSlopescaleddepthbias)
 	ON_EN_CHANGE(IDC_CAMERANEAR, &TMapGen::OnEnChangeCameranear)
 	ON_EN_CHANGE(IDC_CAMERAFAR, &TMapGen::OnEnChangeCamerafar)
+	ON_BN_CLICKED(IDC_SPLATTING, &TMapGen::OnBnClickedSplatting)
 END_MESSAGE_MAP()
 
 
@@ -128,7 +129,7 @@ void TMapGen::OnLbnSelchangeList1()
 	m_TextureList.GetText(iSelect, name);
 
 	CTKGCAToolApp* pApp = (CTKGCAToolApp*)AfxGetApp();
-	T_STR filepath = L"D:/00_KGCA41Leture/data/map/";
+	T_STR filepath = L"../../data/map/";
 	filepath += name.GetBuffer();
 	TTexture* pTex = I_Tex.Load(filepath);
 	if (pTex && pApp->m_Sample.m_pTitle && pApp->m_Sample.m_pTitle->m_pMap)
@@ -151,21 +152,21 @@ void TMapGen::OnInitialUpdate()
 	m_iCols = 65;
 	m_iRows = 65;
 	m_bWireFrame = FALSE;
-	m_iDepthBias = 500;
+	m_iDepthBias = 200000;
 	m_fDepthBiasClamp = 0.0f;
 	m_fSlopeScaledDepthBias = 10.0f;
 	m_fCameraNear = 0.1f;
 	m_fCameraFar = 1000.0f;
 	UpdateData(FALSE);
 
-	Recurse(L"D:/00_KGCA41Leture/data/map", L"/*.*", m_TextureNameList);
+	Recurse(L"../..//data/map", L"/*.*", m_TextureNameList);
 	for (T_STR data : m_TextureNameList)
 	{
 		CString str(data.c_str());
 		m_TextureList.InsertString(m_TextureList.GetCount(), str);
 	}
 
-	Recurse(L"D:/00_KGCA41Leture/data/fbx", L"/*.fbx", m_ObjectNameList);
+	Recurse(L"../../data/fbx", L"/*.fbx", m_ObjectNameList);
 	for (T_STR data : m_ObjectNameList)
 	{
 		CString str(data.c_str());
@@ -174,7 +175,7 @@ void TMapGen::OnInitialUpdate()
 
 	
 
-	T_STR filepath = L"D:/00_KGCA41Leture/data/map/";
+	T_STR filepath = L"../../data/map/";
 	filepath += L"000.jpg";
 	m_img.Load(filepath.c_str());
 }
@@ -212,7 +213,7 @@ void TMapGen::OnBnClickedButton2()
 {
 	CTKGCAToolApp* pApp = (CTKGCAToolApp*)AfxGetApp();
 	
-	T_STR filepath = L"D:/00_KGCA41Leture/data/fbx/";
+	T_STR filepath = L"../../data/fbx/";
 	filepath += m_strSelectObject.GetBuffer();
 	pApp->m_Sample.m_szSelectFbxFile = filepath;
 	
@@ -220,6 +221,7 @@ void TMapGen::OnBnClickedButton2()
 	pApp->m_Sample.m_bUpPicking = false;
 	pApp->m_Sample.m_bDownPicking = false;
 	pApp->m_Sample.m_bPlatPicking = false;	
+	pApp->m_Sample.m_bSplatting = false;
 }
 
 void TMapGen::OnBnClickedLandscapeUp()
@@ -229,6 +231,7 @@ void TMapGen::OnBnClickedLandscapeUp()
 	pApp->m_Sample.m_bDownPicking = false;
 	pApp->m_Sample.m_bPlatPicking = false;
 	pApp->m_Sample.m_bObjectPicking = false;
+	pApp->m_Sample.m_bSplatting = false;
 }
 
 
@@ -266,6 +269,7 @@ void TMapGen::OnBnClickedLandscapeDown()
 	pApp->m_Sample.m_bDownPicking = true;
 	pApp->m_Sample.m_bPlatPicking = false;
 	pApp->m_Sample.m_bObjectPicking = false;
+	pApp->m_Sample.m_bSplatting = false;
 }
 
 
@@ -276,6 +280,7 @@ void TMapGen::OnBnClickedLandscapePlat()
 	pApp->m_Sample.m_bDownPicking = false;
 	pApp->m_Sample.m_bPlatPicking = true;
 	pApp->m_Sample.m_bObjectPicking = false;
+	pApp->m_Sample.m_bSplatting = false;
 }
 
 
@@ -348,4 +353,15 @@ void TMapGen::OnEnChangeCamerafar()
 	UpdateData(TRUE);
 	pApp->m_Sample.m_fDepthMapCameraFar = m_fCameraFar;
 	pApp->m_Sample.SetShadowProjectionDistance();
+}
+
+
+void TMapGen::OnBnClickedSplatting()
+{
+	CTKGCAToolApp* pApp = (CTKGCAToolApp*)AfxGetApp();
+	pApp->m_Sample.m_bUpPicking = false;
+	pApp->m_Sample.m_bDownPicking = true;
+	pApp->m_Sample.m_bPlatPicking = false;
+	pApp->m_Sample.m_bObjectPicking = false;
+	pApp->m_Sample.m_bSplatting = true;
 }

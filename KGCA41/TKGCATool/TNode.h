@@ -1,5 +1,5 @@
 #pragma once
-#include "TObject3D.h"
+#include "TWorldObject.h"
 #include "TMap.h"
 class TNode
 {
@@ -13,8 +13,8 @@ public:
 	std::vector<DWORD>		m_IndexList;
 	ID3D11Buffer*			m_pIndexBuffer;
 	std::vector<TNode*>		m_pChild;
-	std::vector<TObject3D*>	m_pStaticObjectlist;
-	std::vector<TObject3D*>	m_pDynamicObjectlist;// 실시간
+	std::vector<TWorldObject*>	m_pStaticObjectlist;
+	std::vector<TWorldObject*>	m_pDynamicObjectlist;// 실시간
 public:
 	void   CreateChildNode(TNode* pParent, TMap* pMap, DWORD dwNumCols,	DWORD dwNumRows	);
 	void   CreateIndexData(TMap* pMap, DWORD dwNumRows, DWORD dNumCols);

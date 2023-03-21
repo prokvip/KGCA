@@ -3,8 +3,7 @@
 
 HRESULT TCharacter::Load(ID3D11Device* pd3dDevice, 
 						 ID3D11DeviceContext* pContext, 
-						 TFbxFile* pFbxFile,
-						 T_STR name)
+						 TFbxFile* pFbxFile)
 {
 	HRESULT hr = S_OK;
 	m_pd3dDevice = pd3dDevice;
