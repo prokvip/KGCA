@@ -129,41 +129,41 @@ void	TCharacter::SetMatrix(TMatrix* matWorld, TMatrix* matView, TMatrix* matProj
 		m_matProj = *matProj;
 	}
 }
-bool TCharacter::PreRender()
+bool TCharacter::PreRender(ID3D11DeviceContext* pContext)
 {
 	return true;
 }
-bool TCharacter::Render()
+bool TCharacter::Render(ID3D11DeviceContext* pContext)
 {
-	m_pImmediateContext->VSSetConstantBuffers(1, 1, &m_pAnimBoneCB);
+	pContext->VSSetConstantBuffers(1, 1, &m_pAnimBoneCB);
 	for (int iMesh = 0; iMesh < m_pFbxFile->m_pDrawObjList.size(); iMesh++)
 	{
 		if (m_pFbxFile->m_pDrawObjList[iMesh]->m_bSkinned)
 		{
-			m_pImmediateContext->VSSetConstantBuffers(1, 1, &m_pSkinBoneCB[iMesh]);
+			pContext->VSSetConstantBuffers(1, 1, &m_pSkinBoneCB[iMesh]);
 		}
 		m_pFbxFile->m_pDrawObjList[iMesh]->SetMatrix(&m_matWorld, &m_matView, &m_matProj);
-		m_pFbxFile->m_pDrawObjList[iMesh]->Render();
+		m_pFbxFile->m_pDrawObjList[iMesh]->Render(pContext);
 	}
 	return true;
 }
-bool TCharacter::RenderShadow()
+bool TCharacter::RenderShadow(ID3D11DeviceContext* pContext)
 {
-	m_pImmediateContext->VSSetConstantBuffers(1, 1, &m_pAnimBoneCB);
+	pContext->VSSetConstantBuffers(1, 1, &m_pAnimBoneCB);
 	for (int iMesh = 0; iMesh < m_pFbxFile->m_pDrawObjList.size(); iMesh++)
 	{
 		if (m_pFbxFile->m_pDrawObjList[iMesh]->m_bSkinned)
 		{
-			m_pImmediateContext->VSSetConstantBuffers(1, 1, &m_pSkinBoneCB[iMesh]);
+			pContext->VSSetConstantBuffers(1, 1, &m_pSkinBoneCB[iMesh]);
 		}
 		m_pFbxFile->m_pDrawObjList[iMesh]->SetMatrix(&m_matWorld, &m_matView, &m_matProj);
-		m_pFbxFile->m_pDrawObjList[iMesh]->PreRender();
-		m_pImmediateContext->PSSetShader(NULL, NULL, 0);
-		m_pFbxFile->m_pDrawObjList[iMesh]->PostRender();
+		m_pFbxFile->m_pDrawObjList[iMesh]->PreRender(pContext);
+		pContext->PSSetShader(NULL, NULL, 0);
+		m_pFbxFile->m_pDrawObjList[iMesh]->PostRender(pContext);
 	}
 	return true;
 }
-bool TCharacter::PostRender()
+bool TCharacter::PostRender(ID3D11DeviceContext* pContext)
 {
 	return true;
 }

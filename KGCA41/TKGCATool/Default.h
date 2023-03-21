@@ -40,9 +40,12 @@ cbuffer cb0 : register(b0)
 cbuffer cb1 : register(b3)
 {
 	matrix  g_matShadow;
+	float   g_fTessellationAmount;
+	float3  padding;
 	float4  g_vLightDir2[g_iNumLight];
 	float4  g_vLightPos2[g_iNumLight];
 	float4  g_vLightColor2[g_iNumLight];
+	
 };
 
 float4 ComputePointDiffuseLight(float3 vVertexPos,

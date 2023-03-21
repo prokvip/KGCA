@@ -106,9 +106,8 @@ bool TSound::Frame()
 	}
 	return true;
 }
-bool TSound::Render()
+bool TSound::Render(ID3D11DeviceContext* pContext)
 {
-
 	return true;
 }
 bool TSound::Release()

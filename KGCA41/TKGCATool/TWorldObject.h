@@ -28,10 +28,10 @@ public:
 public:
 	HRESULT	CreateConstantBuffer()override;
 	void	SetMatrix(TMatrix* matWorld, TMatrix* matView, TMatrix* matProj) override;
-	bool	PreRender() override;
-	bool	Render() override;
-	bool	RenderShadow()override;
-	bool	PostRender() override;
+	bool	PreRender(ID3D11DeviceContext* pContext) override;
+	bool	Render(ID3D11DeviceContext* pContext) override;
+	bool	RenderShadow(ID3D11DeviceContext* pContext)override;
+	bool	PostRender(ID3D11DeviceContext* pContext) override;
 	bool	Release() override;
 	bool	Load(ID3D11Device*, ID3D11DeviceContext*, TCharacter* , T_STR);
 public:

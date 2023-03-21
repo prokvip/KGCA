@@ -64,7 +64,7 @@ class TButton :public TInterface
 public:
 	virtual bool  Init() override;
 	virtual bool  Frame() override;
-	virtual bool  Render() override;
+	virtual bool  Render(ID3D11DeviceContext* pContext) override;
 	virtual bool  Release() override;
 	virtual void  SetRect(TRect rt) override;
 };
@@ -73,7 +73,7 @@ class TListControl : public TInterface
 public:
 	virtual bool  Init() override;
 	virtual bool  Frame() override;
-	virtual bool  Render() override;
+	virtual bool  Render(ID3D11DeviceContext* pContext) override;
 	virtual bool  Release() override;
 	virtual void  SetRect(TRect rt)override;
 };
@@ -82,6 +82,6 @@ class TDialog : public TInterface
 public:
 	virtual bool  Init() override;
 	virtual bool  Frame() override;
-	virtual bool  Render() override;
+	virtual bool  Render(ID3D11DeviceContext* pContext) override;
 	virtual bool  Release() override;
 };

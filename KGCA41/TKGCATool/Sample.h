@@ -11,13 +11,7 @@
 #include "TDxRT.h"
 
 
-struct SHADOW_CONSTANT_BUFFER // b1
-{
-	TMatrix			g_matShadow;
-	TVector4        g_vLightDir[3];
-	TVector4		g_vLightPos[3];
-	TVector4		g_vLightColor[3];
-};
+
 class Sample : public TGameCore
 {
 public:
@@ -60,16 +54,16 @@ public:
 	bool		CreateMapData(UINT iColumn = 257, UINT iRows = 257);
 	bool		CreateFbxLoader();
 	bool		LoadFbx(T_STR filepath, TVector3 vPos);
-	bool		ObjectRender();
-	void		PreDepthShadow();
+	bool		ObjectRender(ID3D11DeviceContext* pContext);
+	void		PreDepthShadow(ID3D11DeviceContext* pContext);
 	void		InitRT();
-	bool		ObjectShadow();
+	bool		ObjectShadow(ID3D11DeviceContext* pContext);
 	ID3D11Buffer* CreateConstantBuffer(ID3D11Device* pd3dDevice, void* data, UINT iNumIndex, UINT iSize, bool bDynamic = false);
 	;
 public:
 	virtual bool		Init() override;
 	virtual bool		Frame() override;
-	virtual bool		Render() override;
+	virtual bool		Render(ID3D11DeviceContext* pContext) override;
 	virtual bool		Release() override;
 	virtual HRESULT		CreateDXResource() override;
 	void    ClearD3D11DeviceContext(ID3D11DeviceContext* pd3dDeviceContext);

@@ -19,7 +19,7 @@ private:
 public:
 	virtual bool		Init(); // 초기화
 	virtual bool		Frame();// 실시간 계산
-	virtual bool		Render();// 실시간 랜더링
+	virtual bool		Render(ID3D11DeviceContext* pContext);// 실시간 랜더링
 	virtual bool		Release();// 소멸 및 삭제
 };
 

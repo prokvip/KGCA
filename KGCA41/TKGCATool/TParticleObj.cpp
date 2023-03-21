@@ -95,26 +95,26 @@ bool TParticleObj::Frame()
 						&m_VertexList.at(0), 0, 0);
 	return true;
 }
-bool TParticleObj::Render()
+bool TParticleObj::Render(ID3D11DeviceContext* pContext)
 {
-	m_pImmediateContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_POINTLIST);
-	m_pImmediateContext->PSSetShaderResources(0, 1, &m_pTextureSRV);
-	m_pImmediateContext->IASetInputLayout(m_pVertexLayout);
-	m_pImmediateContext->VSSetShader(m_pVS, NULL, 0);
-	m_pImmediateContext->GSSetShader(m_pGS, NULL, 0);
-	m_pImmediateContext->PSSetShader(m_pPS, NULL, 0);
+	pContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_POINTLIST);
+	pContext->PSSetShaderResources(0, 1, &m_pTextureSRV);
+	pContext->IASetInputLayout(m_pVertexLayout);
+	pContext->VSSetShader(m_pVS, NULL, 0);
+	pContext->GSSetShader(m_pGS, NULL, 0);
+	pContext->PSSetShader(m_pPS, NULL, 0);
 	UINT stride = sizeof(PNCT_VERTEX); // 정점1개의 바이트용량
 	UINT offset = 0; // 정점버퍼에서 출발지점(바이트)
-	m_pImmediateContext->IASetVertexBuffers(0, 1,
+	pContext->IASetVertexBuffers(0, 1,
 		&m_pVertexBuffer, &stride, &offset);
-	m_pImmediateContext->IASetIndexBuffer(m_pIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
-	m_pImmediateContext->VSSetConstantBuffers(0, 1, &m_pConstantBuffer);
-	m_pImmediateContext->GSSetConstantBuffers(0, 1, &m_pConstantBuffer);
+	pContext->IASetIndexBuffer(m_pIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
+	pContext->VSSetConstantBuffers(0, 1, &m_pConstantBuffer);
+	pContext->GSSetConstantBuffers(0, 1, &m_pConstantBuffer);
 
 	if (m_pIndexBuffer == nullptr)
-		m_pImmediateContext->Draw(m_VertexList.size(), 0);
+		pContext->Draw(m_VertexList.size(), 0);
 	else
-		m_pImmediateContext->DrawIndexed(m_dwFace * 3, 0, 0);
+		pContext->DrawIndexed(m_dwFace * 3, 0, 0);
 	return true;
 }
 bool TParticleObj::Release()

@@ -59,7 +59,7 @@ bool		TWriter::Init()
 bool		TWriter::Frame() {
 	return true;
 }
-bool		TWriter::Render()
+bool		TWriter::Render(ID3D11DeviceContext* pContext)
 {
 	Draw(0, 0, m_szDefaultText, { 1,0,0,1 });
 	return true;

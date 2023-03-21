@@ -95,8 +95,12 @@ namespace TDX
 		TRect						 m_rtCollision;
 		T_BOX						 m_tBox;
 	public:
-		ID3D11VertexShader* m_pVS;
-		ID3D11PixelShader* m_pPS;
+		ID3D11VertexShader*		m_pVS;
+		ID3D11PixelShader*		m_pPS;
+		ID3D11HullShader*		m_pHS;
+		ID3D11DomainShader*		m_pDS;
+		ID3D11GeometryShader*	m_pGS;
+		ID3D11ComputeShader*	m_pCS;
 		ID3DBlob* m_pVSCode = nullptr;
 		ID3DBlob* m_pPSCode = nullptr;
 	public:
@@ -120,10 +124,10 @@ namespace TDX
 	public:
 		virtual bool		Init();
 		virtual bool		Frame();
-		virtual bool		PreRender();
-		virtual bool		Render();
-		virtual bool		RenderShadow();
-		virtual bool		PostRender();
+		virtual bool		PreRender(ID3D11DeviceContext* pContext);
+		virtual bool		Render(ID3D11DeviceContext* pContext);
+		virtual bool		RenderShadow(ID3D11DeviceContext* pContext);
+		virtual bool		PostRender(ID3D11DeviceContext* pContext);
 		virtual bool		Release();
 		virtual void		SetMatrix(TMatrix* matWorld, TMatrix* matView, TMatrix* matProj);
 	public:

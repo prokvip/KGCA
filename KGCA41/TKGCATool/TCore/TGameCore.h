@@ -24,13 +24,13 @@ public:
 	virtual bool		PreFrame() { return true; }; // 실시간 계산	
 	virtual bool		Frame() { return true; }; // 실시간 계산
 	virtual bool		PostFrame() { return true; }; // 실시간 랜더링
-	virtual bool		PreRender() { return true; }; // 실시간 계산	
-	virtual bool		Render() { return true; }; // 실시간 랜더링
-	virtual bool		PostRender() { return true; }; // 실시간 랜더링
+	virtual bool		PreRender(ID3D11DeviceContext* pContext) { return true; }; // 실시간 계산	
+	virtual bool		Render(ID3D11DeviceContext* pContext) { return true; }; // 실시간 랜더링
+	virtual bool		PostRender(ID3D11DeviceContext* pContext) { return true; }; // 실시간 랜더링
 	virtual bool		PostProcess() { return true; }; // 실시간 랜더링
 	virtual bool		Release() { return true; }; // 소멸 및 삭제
 
-	virtual bool		UIRender();
+	virtual bool		UIRender(ID3D11DeviceContext* pContext);
 public:
 	bool		TCoreInit(); // 초기화
 	bool		TCoreFrame();// 실시간 계산

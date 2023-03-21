@@ -244,11 +244,11 @@ bool  TButton::Frame()
     m_pImmediateContext->UpdateSubresource(m_pVertexBuffer, NULL, NULL, &m_VertexList.at(0), 0, 0);
   */  return true;
 }
-bool  TButton::Render()
+bool  TButton::Render(ID3D11DeviceContext* pContext)
 {
-    TBaseObject::PreRender();
-    m_pImmediateContext->PSSetShaderResources(0, 1, &m_pCurrentTex->m_pTextureSRV);
-    TBaseObject::PostRender();
+    TBaseObject::PreRender(pContext);
+    pContext->PSSetShaderResources(0, 1, &m_pCurrentTex->m_pTextureSRV);
+    TBaseObject::PostRender(pContext);
     return true;
 }
 bool  TButton::Release()
@@ -280,15 +280,15 @@ bool  TListControl::Frame()
     }
     return true;
 }
-bool  TListControl::Render()
+bool  TListControl::Render(ID3D11DeviceContext* pContext)
 {
-    TBaseObject::PreRender();
+    TBaseObject::PreRender(pContext);
     m_pImmediateContext->PSSetShaderResources(0, 1, &m_pCurrentTex->m_pTextureSRV);
-    TBaseObject::PostRender();
+    TBaseObject::PostRender(pContext);
 
     for (auto data : m_pChildList)
     {
-        data->Render();
+        data->Render(pContext);
     }
     return true;
 }
@@ -317,15 +317,15 @@ bool  TDialog::Init()
 {
     return true;
 }
-bool  TDialog::Render()
+bool  TDialog::Render(ID3D11DeviceContext* pContext)
 {
     for (int iSub = 0; iSub < m_rtDrawList.size(); iSub++)
     {
-        m_rtDrawList[iSub]->Render();
+        m_rtDrawList[iSub]->Render(pContext);
     }
     for (int iChild = 0; iChild < m_pChildList.size(); iChild++)
     {
-        m_pChildList[iChild]->Render();
+        m_pChildList[iChild]->Render(pContext);
     }
     return true;
 }

@@ -1,6 +1,15 @@
 #pragma once
 #include "TNode.h"
 
+struct SHADOW_CONSTANT_BUFFER // b1
+{
+	TMatrix			g_matShadow;
+	TVector4        g_vTessellation;
+	TVector4        g_vLightDir[3];
+	TVector4		g_vLightPos[3];
+	TVector4		g_vLightColor[3];
+};
+
 class TQuadtree
 {
 public:
@@ -12,6 +21,9 @@ public:
 	std::vector<TWorldObject*>   m_ObjectList;
 	std::vector<TNode*> m_pLeafNodeList;
 	std::vector<TNode*> m_pDrawLeafNodeList;
+	
+	SHADOW_CONSTANT_BUFFER			m_cbShadow;
+	ComPtr<ID3D11Buffer>			m_pShadowConstantBuffer;
 public:
 	BYTE* m_fAlphaData;
 	ComPtr<ID3D11Texture2D>  m_pMaskAlphaTex;
@@ -27,11 +39,11 @@ public:
 	void	Reset(TNode* pNode);
 	UINT    SelectVertexList(T_BOX& tBox, std::vector<TNode*>& selectNodeList);
 	bool	Frame();
-	bool	Render();
+	bool	Render(ID3D11DeviceContext* pContext);
 	bool	Release();
-	bool    RenderShadow(TCamera* pCamera);
-	void	RenderShadowObject(TNode* pNode);
-	void    RenderObject(TNode* pNode);
+	bool    RenderShadow(ID3D11DeviceContext* pContext, TCamera* pCamera);
+	void	RenderShadowObject(ID3D11DeviceContext* pContext, TNode* pNode);
+	void    RenderObject(ID3D11DeviceContext* pContext, TNode* pNode);
 	void    VisibleNode(TNode* pNode);
 	virtual ~TQuadtree();
 };

@@ -29,12 +29,10 @@ public:
 	void SetLoop(bool bLoop=false);
 	bool IsPlay();
 public:
-	virtual bool		Load(
-		FMOD::System* pSystem, 
-		std::wstring filename);
+	virtual bool		Load(FMOD::System* pSystem, std::wstring filename);
 	virtual bool		Init() ;
 	virtual bool		Frame();
-	virtual bool		Render();
+	virtual bool		Render(ID3D11DeviceContext* pContext);
 	virtual bool		Release() ;
 };
 

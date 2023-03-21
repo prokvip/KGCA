@@ -181,11 +181,11 @@ public:
 		}
 		return hr;		
 	}	
-	bool	PostRender()
+	bool	PostRender(ID3D11DeviceContext* pContext)
 	{
 		/*if (m_bSkinned)
 		{
-			m_pImmediateContext->VSSetConstantBuffers(1, 1, &m_pSkinBoneCB);
+			pContext->VSSetConstantBuffers(1, 1, &m_pSkinBoneCB);
 		}*/
 		if (m_pIndexBuffer == nullptr)
 		{
@@ -198,14 +198,14 @@ public:
 					UINT offset[2] = { 0, 0 }; // 정점버퍼에서 출발지점(바이트)
 					//SLOT(레지스터리)
 					ID3D11Buffer* buffer[2] = { m_pSubVB[iSubObj],m_pSubVB_IW[iSubObj] };
-					m_pImmediateContext->IASetVertexBuffers(0, 2, buffer, stride, offset);
+					pContext->IASetVertexBuffers(0, 2, buffer, stride, offset);
 					
 
 					if (m_pSubTexture.size()> 0 && m_pSubTexture[iSubObj] != nullptr)
 					{
-						m_pImmediateContext->PSSetShaderResources(0, 1, &m_pSubTexture[iSubObj]->m_pTextureSRV);
+						pContext->PSSetShaderResources(0, 1, &m_pSubTexture[iSubObj]->m_pTextureSRV);
 					}
-					m_pImmediateContext->Draw(vbDataList[iSubObj].size(), 0);
+					pContext->Draw(vbDataList[iSubObj].size(), 0);
 				}
 			}
 			else
@@ -214,13 +214,13 @@ public:
 				UINT offset[2] = { 0, 0 }; // 정점버퍼에서 출발지점(바이트)
 				//SLOT(레지스터리)
 				ID3D11Buffer* buffer[2] = { m_pVertexBuffer,m_pVertexBufferIW };
-				m_pImmediateContext->IASetVertexBuffers(0, 2, buffer, stride, offset);
-				m_pImmediateContext->Draw(m_VertexList.size(), 0);
+				pContext->IASetVertexBuffers(0, 2, buffer, stride, offset);
+				pContext->Draw(m_VertexList.size(), 0);
 			}
 		}
 		else
 		{
-			m_pImmediateContext->DrawIndexed(m_dwFace * 3, 0, 0);
+			pContext->DrawIndexed(m_dwFace * 3, 0, 0);
 		}
 		return true;
 	}

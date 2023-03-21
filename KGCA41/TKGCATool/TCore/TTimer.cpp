@@ -42,7 +42,7 @@ bool		TTimer::Frame()
     m_Frame = m_Current;
     return true;
 }
-bool		TTimer::Render()
+bool		TTimer::Render(ID3D11DeviceContext* pContext)
 {
     m_szTimer = std::to_wstring(m_fGameTimer);
     m_szTimer += L"   ";

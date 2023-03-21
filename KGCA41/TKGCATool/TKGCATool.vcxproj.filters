@@ -22,6 +22,9 @@
     <Filter Include="Core">
       <UniqueIdentifier>{13bf6dbf-3504-44c8-9ebe-c079e34fd773}</UniqueIdentifier>
     </Filter>
+    <Filter Include="shader">
+      <UniqueIdentifier>{a4bc8b22-d75c-4435-8524-ba6cb6ad8f31}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Sample.h">
@@ -436,16 +439,33 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="DefaultObject.txt" />
-    <Text Include="DefaultShape.hlsl" />
     <Text Include="SpriteInfo.txt" />
     <Text Include="ui.txt" />
-    <Text Include="Skinning.txt" />
-    <Text Include="Particle.txt" />
-    <Text Include="DefaultMap.txt" />
-    <Text Include="Default.h" />
+    <Text Include="Default.h">
+      <Filter>shader</Filter>
+    </Text>
+    <Text Include="DefaultMap.txt">
+      <Filter>shader</Filter>
+    </Text>
+    <Text Include="DefaultObject.txt">
+      <Filter>shader</Filter>
+    </Text>
+    <Text Include="DefaultShape.hlsl">
+      <Filter>shader</Filter>
+    </Text>
+    <Text Include="Skinning.txt">
+      <Filter>shader</Filter>
+    </Text>
+    <Text Include="Particle.txt">
+      <Filter>shader</Filter>
+    </Text>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="DefaultRT.hlsl" />
+    <FxCompile Include="DefaultRT.hlsl">
+      <Filter>shader</Filter>
+    </FxCompile>
+    <FxCompile Include="TessellationMap.hlsl">
+      <Filter>shader</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

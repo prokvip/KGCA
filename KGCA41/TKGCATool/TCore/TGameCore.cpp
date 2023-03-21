@@ -53,27 +53,23 @@ bool		TGameCore::TCoreFrame()
 }
 bool		TGameCore::TCorePreRender()
 {
-	m_pImmediateContext->OMSetRenderTargets(1, m_pRTV.GetAddressOf(),
-		m_pDepthStencilView.Get());
+	m_pImmediateContext->OMSetRenderTargets(1, m_pRTV.GetAddressOf(),m_pDepthStencilView.Get());
 	float color[4] = { 0.34324f,0.52342f,0.798320f,1.0f };
 	m_pImmediateContext->ClearRenderTargetView(m_pRTV.Get(), color);
-	m_pImmediateContext->ClearDepthStencilView(m_pDepthStencilView.Get(),
-		D3D11_CLEAR_DEPTH| D3D11_CLEAR_STENCIL, 1.0f, 0);
-
+	m_pImmediateContext->ClearDepthStencilView(m_pDepthStencilView.Get(),D3D11_CLEAR_DEPTH| D3D11_CLEAR_STENCIL, 1.0f, 0);
 	m_pImmediateContext->PSSetSamplers(0, 1, &TDxState::g_pDefaultSSMirror);
 	m_pImmediateContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	m_pImmediateContext->RSSetViewports(1, &m_vp);
 	m_pImmediateContext->RSSetState(TDxState::g_pDefaultRSSolid);
 	m_pImmediateContext->OMSetBlendState(TDxState::g_pAlphaBlend, 0, -1);
-	m_pImmediateContext->OMSetDepthStencilState(TDxState::g_pDefaultDepthStencil,
-		0xff);
+	m_pImmediateContext->OMSetDepthStencilState(TDxState::g_pDefaultDepthStencil,0xff);
     return true;
 }
 bool		TGameCore::TCoreRender()
 {  	
 	TCorePreRender();
 
-	PreRender();
+	PreRender(m_pImmediateContext.Get());
 	if (m_bUsedRT)
 	{
 		// 랜더타켓 지정
@@ -83,7 +79,7 @@ bool		TGameCore::TCoreRender()
 		//ID3D11DeviceContext::OMSetRenderTargets: Resource being set to OM RenderTarget slot 0 is still bound on input
 		if (m_RT.Begin(m_pImmediateContext.Get()))
 		{
-			Render();
+			Render(m_pImmediateContext.Get());
 			m_RT.End(m_pImmediateContext.Get());
 		}
 
@@ -95,30 +91,30 @@ bool		TGameCore::TCoreRender()
 	}
 	else
 	{
-		Render();
+		Render(m_pImmediateContext.Get());
 	}
 	TCorePostRender();
     return true;
 }
-bool		TGameCore::UIRender()
+bool		TGameCore::UIRender(ID3D11DeviceContext* pContext)
 {
 	return true;
 }
 bool		TGameCore::TCorePostRender()
 {
-	PostRender();
+	PostRender(m_pImmediateContext.Get());
 	if (m_bUsedRT)
 	{
 		m_BG.SetMatrix(nullptr, nullptr, nullptr);
-		m_BG.Render();
+		m_BG.Render(m_pImmediateContext.Get());
 	}
 
-	UIRender();
+	UIRender(m_pImmediateContext.Get());
 
-	I_Input.Render();
-	I_Timer.Render();
+	I_Input.Render(m_pImmediateContext.Get());
+	I_Timer.Render(m_pImmediateContext.Get());
 	m_Writer.m_szDefaultText = I_Timer.m_szTimer;
-	m_Writer.Render();
+	m_Writer.Render(m_pImmediateContext.Get());
 
 	m_pSwapChain->Present(0, 0);
 

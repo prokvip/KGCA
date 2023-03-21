@@ -99,25 +99,25 @@ bool		TGameCore::TCoreRender()
 	TCorePostRender();
     return true;
 }
-bool		TGameCore::UIRender()
+bool		TGameCore::UIRender(ID3D11DeviceContext* pContext)
 {
 	return true;
 }
-bool		TGameCore::TCorePostRender()
+bool		TGameCore::TCorePostRender(ID3D11DeviceContext* pContext)
 {
-	PostRender();
+	PostRender(pContext);
 	if (m_bUsedRT)
 	{
 		m_BG.SetMatrix(nullptr, nullptr, nullptr);
-		m_BG.Render();
+		m_BG.Render(pContext);
 	}
 
-	UIRender();
+	UIRender(pContext);
 
-	I_Input.Render();
-	I_Timer.Render();
+	I_Input.Render(pContext);
+	I_Timer.Render(pContext);
 	m_Writer.m_szDefaultText = I_Timer.m_szTimer;
-	m_Writer.Render();
+	m_Writer.Render(pContext);
 
 	m_pSwapChain->Present(0, 0);
 

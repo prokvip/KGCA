@@ -107,7 +107,7 @@ bool TFbxFile::Render(ID3D11DeviceContext* pContext)
 	for (auto obj : m_pDrawObjList)
 	{			
 		obj->SetMatrix(&m_matWorld, &m_matView, &m_matProj);
-		obj->Render();
+		obj->Render(pContext);
 	}
 	return true;
 }

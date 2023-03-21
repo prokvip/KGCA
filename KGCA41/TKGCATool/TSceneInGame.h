@@ -19,8 +19,8 @@ public:
 public:
 	virtual bool		Init();
 	virtual bool		Frame();
-	virtual bool		Render();
+	virtual bool		Render(ID3D11DeviceContext* pContext );
 	virtual bool		Release();
-	virtual void		DrawMiniMap(UINT x, UINT y, UINT w=100, UINT h=100);
+	virtual void		DrawMiniMap(ID3D11DeviceContext* pContext, UINT x, UINT y, UINT w=100, UINT h=100);
 };
 

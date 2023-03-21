@@ -146,6 +146,10 @@ namespace TDX
         {
             m_pVS = m_pShader->m_pVS;
             m_pPS = m_pShader->m_pPS;
+            m_pGS = m_pShader->m_pGS.Get();
+            m_pHS = m_pShader->m_pHS.Get();
+            m_pDS = m_pShader->m_pDS.Get();
+            m_pCS = m_pShader->m_pCS.Get();
             m_pVSCode = m_pShader->m_pVSCode;
             return true;
         }
@@ -350,38 +354,40 @@ namespace TDX
 
         UpdateConstantBuffer();
     }
-    bool TBaseObject::RenderShadow()
+    bool TBaseObject::RenderShadow(ID3D11DeviceContext* pContext)
     {
         return true;
     }
-    bool TBaseObject::Render()
+    bool TBaseObject::Render(ID3D11DeviceContext* pContext)
     {
-        PreRender();
-        PostRender();
+        PreRender(pContext);
+        PostRender(pContext);
         return true;
     }
-    bool TBaseObject::PreRender()
+    bool TBaseObject::PreRender(ID3D11DeviceContext* pContext)
     {
-        m_pImmediateContext->PSSetShaderResources(0, 1, &m_pTextureSRV);
-        m_pImmediateContext->IASetInputLayout(m_pVertexLayout);
-        m_pImmediateContext->VSSetShader(m_pVS, NULL, 0);
-        m_pImmediateContext->PSSetShader(m_pPS, NULL, 0);
+        pContext->PSSetShaderResources(0, 1, &m_pTextureSRV);
+        pContext->IASetInputLayout(m_pVertexLayout);
+        pContext->VSSetShader(m_pVS, NULL, 0);
+        pContext->PSSetShader(m_pPS, NULL, 0);
+        pContext->HSSetShader(m_pHS, NULL, 0);
+        pContext->DSSetShader(m_pDS, NULL, 0);
         UINT stride = sizeof(PNCT_VERTEX); // 정점1개의 바이트용량
         UINT offset = 0; // 정점버퍼에서 출발지점(바이트)
-        m_pImmediateContext->IASetVertexBuffers(0, 1,
-            &m_pVertexBuffer, &stride, &offset);
-        m_pImmediateContext->IASetIndexBuffer(m_pIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
-        m_pImmediateContext->VSSetConstantBuffers(0, 1, &m_pConstantBuffer);
-        m_pImmediateContext->PSSetConstantBuffers(0, 1, &m_pConstantBuffer);
-        m_pImmediateContext->GSSetConstantBuffers(0, 1, &m_pConstantBuffer);
+        pContext->IASetVertexBuffers(0, 1,&m_pVertexBuffer, &stride, &offset);
+        pContext->IASetIndexBuffer(m_pIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
+        pContext->VSSetConstantBuffers(0, 1, &m_pConstantBuffer);
+        pContext->PSSetConstantBuffers(0, 1, &m_pConstantBuffer);
+        pContext->GSSetConstantBuffers(0, 1, &m_pConstantBuffer);
+        pContext->DSSetConstantBuffers(0, 1, &m_pConstantBuffer);
         return true;
     }
-    bool TBaseObject::PostRender()
+    bool TBaseObject::PostRender(ID3D11DeviceContext* pContext)
     {
         if (m_pIndexBuffer == nullptr)
-            m_pImmediateContext->Draw(m_VertexList.size(), 0);
+            pContext->Draw(m_VertexList.size(), 0);
         else
-            m_pImmediateContext->DrawIndexed(m_dwFace * 3, 0, 0);
+            pContext->DrawIndexed(m_dwFace * 3, 0, 0);
 
         return true;
     }

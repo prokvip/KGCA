@@ -17,7 +17,7 @@ bool TScene::Frame()
 {
 	return true;
 }
-bool TScene::Render()
+bool TScene::Render(ID3D11DeviceContext* pContext)
 {	
 	return true;
 }

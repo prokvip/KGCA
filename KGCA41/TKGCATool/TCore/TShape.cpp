@@ -61,10 +61,10 @@ void    TShapeBox::CreateIndexData()
 
 }
 
-bool TShapeBox::Render()
+bool TShapeBox::Render(ID3D11DeviceContext* pContext)
 {
-    PreRender();
-    PostRender();
+    PreRender(pContext);
+    PostRender(pContext);
     return true;
 }
 bool TShapeBox::Frame()
@@ -100,12 +100,12 @@ void    TShapeLine::CreateIndexData()
 	m_IndexList[iIndex++] = 0; 	m_IndexList[iIndex++] = 1; 
 }
 
-bool TShapeLine::Render()
+bool TShapeLine::Render(ID3D11DeviceContext* pContext)
 {
-	m_pImmediateContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_LINELIST);
-	PreRender();
-	PostRender();
-	m_pImmediateContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	pContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_LINELIST);
+	PreRender(pContext);
+	PostRender(pContext);
+	pContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	return true;
 }
 bool TShapeLine::Frame()

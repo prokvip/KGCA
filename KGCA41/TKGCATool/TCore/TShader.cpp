@@ -8,7 +8,7 @@ bool	TShader::Init()
 bool	TShader::Frame() {
     return true;
 }
-bool	TShader::Render() {
+bool	TShader::Render(ID3D11DeviceContext* pContext) {
     return true;
 }
 bool	TShader::Release() {
@@ -23,10 +23,7 @@ bool	TShader::Release() {
     m_pPSCode = nullptr;
     return true;
 }
-HRESULT TShader::Load(
-    ID3D11Device* pd3dDevice,
-    ID3D11DeviceContext* pImmediateContext,
-    std::wstring filename)
+HRESULT TShader::Load(ID3D11Device* pd3dDevice, ID3D11DeviceContext* pImmediateContext,std::wstring filename)
 {
     HRESULT hr;
     m_pd3dDevice = pd3dDevice;
@@ -103,5 +100,57 @@ HRESULT TShader::Load(
         }
         return hr;
     }
+
+    ComPtr<ID3DBlob> m_pBlob;
+    hr = D3DCompileFromFile(
+        filename.c_str(),
+        defines,
+        D3D_COMPILE_STANDARD_FILE_INCLUDE,
+        "HS",
+        "hs_5_0",
+        dwShaderFlags,
+        0,
+        m_pBlob.GetAddressOf(),
+        &pErrorCode);
+    if (FAILED(hr))
+    {
+        if (pErrorCode)
+        {
+            OutputDebugStringA((char*)pErrorCode->GetBufferPointer());
+            pErrorCode->Release();
+        }
+        return hr;
+    }
+    hr = m_pd3dDevice->CreateHullShader(
+        m_pBlob->GetBufferPointer(),
+        m_pBlob->GetBufferSize(),
+        NULL,
+        m_pHS.GetAddressOf());
+
+    m_pBlob.Reset();
+    hr = D3DCompileFromFile(
+        filename.c_str(),
+        defines,
+        D3D_COMPILE_STANDARD_FILE_INCLUDE,
+        "DS",
+        "ds_5_0",
+        dwShaderFlags,
+        0,
+        m_pBlob.GetAddressOf(),
+        &pErrorCode);
+    if (FAILED(hr))
+    {
+        if (pErrorCode)
+        {
+            OutputDebugStringA((char*)pErrorCode->GetBufferPointer());
+            pErrorCode->Release();
+        }
+        return hr;
+    }
+    hr = m_pd3dDevice->CreateDomainShader(
+        m_pBlob->GetBufferPointer(),
+        m_pBlob->GetBufferSize(),
+        NULL,
+        m_pDS.GetAddressOf());
     return hr;
 }

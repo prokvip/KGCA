@@ -10,10 +10,10 @@ bool TObjectBox::Frame()
 {
 	return true;
 }
-bool TObjectBox::Render()
+bool TObjectBox::Render(ID3D11DeviceContext* pContext)
 {
-	TBaseObject::Render();
-	m_pDirLineShape->Render();
+	TBaseObject::Render(pContext);
+	m_pDirLineShape->Render(pContext);
 	return true;
 }
 bool TObjectBox::Release()

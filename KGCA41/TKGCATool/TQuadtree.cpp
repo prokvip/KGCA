@@ -240,24 +240,25 @@ bool TQuadtree::Frame()
     }
     return true;
 }
-void TQuadtree::RenderObject(TNode* pNode)
+void TQuadtree::RenderObject(ID3D11DeviceContext* pContext, TNode* pNode)
 {
     if (pNode==nullptr || pNode->m_bLeaf) return;
+    pContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     for (auto fbx : pNode->m_pDynamicObjectlist)
     {
         T_POSITION dwRet = m_pCamera->m_vFrustum.ClassifyTBox(fbx->m_tBox);
         if (P_FRONT > 0)// 완전포함.
         {
             fbx->SetMatrix(nullptr, &m_pMap->m_matView, &m_pMap->m_matProj);
-            fbx->Render();
+            fbx->Render(pContext);
         }
     }
     for (int iChild = 0; iChild < 4; iChild++)
     {
-        RenderObject(pNode->m_pChild[iChild]);
+        RenderObject(pContext,pNode->m_pChild[iChild]);
     }
 }
-void TQuadtree::RenderShadowObject(TNode* pNode)
+void TQuadtree::RenderShadowObject(ID3D11DeviceContext* pContext, TNode* pNode)
 {
     if (pNode == nullptr || pNode->m_bLeaf) return;
     for (auto fbx : pNode->m_pDynamicObjectlist)
@@ -266,42 +267,54 @@ void TQuadtree::RenderShadowObject(TNode* pNode)
         if (P_FRONT > 0)// 완전포함.
         {
             fbx->SetMatrix(nullptr, &m_pMap->m_matView, &m_pMap->m_matProj);
-            fbx->RenderShadow();           
+            fbx->RenderShadow(pContext);
         }
     }
     for (int iChild = 0; iChild < 4; iChild++)
     {
-        RenderShadowObject(pNode->m_pChild[iChild]);
+        RenderShadowObject(pContext, pNode->m_pChild[iChild]);
     }
 }
-bool TQuadtree::Render()
+bool TQuadtree::Render(ID3D11DeviceContext* pContext)
 {
     for (auto node : m_pDrawLeafNodeList)
     {
-        m_pMap->PreRender();
+        TVector3 vCam = m_pCamera->m_vPos;
+        TVector3 vNode = node->m_tBox.vCenter;
+        float fDistance = D3DXVec3Length(&(vCam - vNode));
+        int iAmount = min(7, max(1,7-fabs(fDistance) / 10.0f));
+        m_cbShadow.g_vTessellation = TVector4(iAmount, 0, 0, 0);
+        pContext->UpdateSubresource(m_pShadowConstantBuffer.Get(), 0, NULL, &m_cbShadow, 0, 0);
+        pContext->HSSetConstantBuffers(3, 1, m_pShadowConstantBuffer.GetAddressOf());
+
+        m_pMap->PreRender(pContext);
         ID3D11ShaderResourceView* pSRV = nullptr;
-        m_pMap->m_pImmediateContext->PSSetShaderResources(1, 1, m_pMaskAlphaTexSRV.GetAddressOf());
+        pContext->PSSetShaderResources(1, 1, m_pMaskAlphaTexSRV.GetAddressOf());
+        pContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_3_CONTROL_POINT_PATCHLIST);
+
         if (m_TexArray[0] != nullptr)
         {
-            m_pMap->m_pImmediateContext->PSSetShaderResources(2, 1, &m_TexArray[1]->m_pTextureSRV);
-            m_pMap->m_pImmediateContext->PSSetShaderResources(3, 1, &m_TexArray[2]->m_pTextureSRV);
-            m_pMap->m_pImmediateContext->PSSetShaderResources(4, 1, &m_TexArray[3]->m_pTextureSRV);
-            m_pMap->m_pImmediateContext->PSSetShaderResources(5, 1, &m_TexArray[4]->m_pTextureSRV);
+            pContext->PSSetShaderResources(2, 1, &m_TexArray[1]->m_pTextureSRV);
+            pContext->PSSetShaderResources(3, 1, &m_TexArray[2]->m_pTextureSRV);
+            pContext->PSSetShaderResources(4, 1, &m_TexArray[3]->m_pTextureSRV);
+            pContext->PSSetShaderResources(5, 1, &m_TexArray[4]->m_pTextureSRV);
         }
-        m_pMap->m_pImmediateContext->IASetIndexBuffer(  node->m_pIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
-        m_pMap->m_pImmediateContext->DrawIndexed(node->m_dwFace * 3, 0, 0);
+        pContext->IASetIndexBuffer(  node->m_pIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
+        pContext->DrawIndexed(node->m_dwFace * 3, 0, 0);
+
+        pContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
         for (auto fbx : node->m_pDynamicObjectlist)
         {
             fbx->SetMatrix(nullptr, &m_pMap->m_matView, &m_pMap->m_matProj);
-            fbx->Render();
+            fbx->Render(pContext);
         }
     }
 
-    RenderObject(m_pRootNode);
+    RenderObject(pContext,m_pRootNode);
     return true;
 }
-bool TQuadtree::RenderShadow(TCamera* pShadowCamera)
+bool TQuadtree::RenderShadow(ID3D11DeviceContext* pContext, TCamera* pShadowCamera)
 {
     TCamera* pSaveCamera = m_pCamera;
     m_pCamera = pShadowCamera;
@@ -309,21 +322,32 @@ bool TQuadtree::RenderShadow(TCamera* pShadowCamera)
 
     for (auto node : m_pDrawLeafNodeList)
     {
-        m_pMap->PreRender();       
+        pContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_3_CONTROL_POINT_PATCHLIST);
+        m_pMap->PreRender(pContext);
+
+        TVector3 vCam = m_pCamera->m_vPos;
+        TVector3 vNode = node->m_tBox.vCenter;
+        float fDistance = D3DXVec3Length(&(vCam - vNode));
+        int iAmount = min(7, max(1, 7 - fabs(fDistance) / 10.0f));
+        m_cbShadow.g_vTessellation = TVector4(iAmount, 0, 0, 0);
+        pContext->UpdateSubresource(m_pShadowConstantBuffer.Get(), 0, NULL, &m_cbShadow, 0, 0);
+        pContext->HSSetConstantBuffers(3, 1, m_pShadowConstantBuffer.GetAddressOf());
+
         m_pMap->m_pImmediateContext->PSSetShader(NULL, NULL, 0);
         m_pMap->m_pImmediateContext->IASetIndexBuffer(node->m_pIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
         m_pMap->m_pImmediateContext->DrawIndexed(node->m_dwFace * 3, 0, 0);
 
+        pContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
         for (auto fbx : node->m_pDynamicObjectlist)
         {
             fbx->SetMatrix(nullptr, &m_pMap->m_matView, &m_pMap->m_matProj);
-            fbx->PreRender();
-            fbx->m_pImmediateContext->PSSetShader(NULL, NULL, 0);
-            fbx->PostRender();
+            fbx->PreRender(pContext);
+            pContext->PSSetShader(NULL, NULL, 0);
+            fbx->PostRender(pContext);
         }
     }
 
-    RenderShadowObject(m_pRootNode);
+    RenderShadowObject( pContext, m_pRootNode);
 
     m_pCamera = pSaveCamera;
     return true;

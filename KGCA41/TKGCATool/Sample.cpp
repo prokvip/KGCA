@@ -8,10 +8,7 @@ void Sample::NewEffect(UINT iParticleCounter, T_STR tex)
 	if (iParticleCounter <= 0) iParticleCounter = 1;
 	p->m_iParticleCounter = iParticleCounter;
 	p->m_Paticles.resize(iParticleCounter);
-	p->Create(m_pd3dDevice.Get(), m_pImmediateContext.Get(),
-		shaderfilename,
-		tex);
-
+	p->Create(m_pd3dDevice.Get(), m_pImmediateContext.Get(),shaderfilename,tex);
 	/*p->m_matScale = TMatrix::CreateScale(10.0f);
 
 	p->m_matTranslate._41 = randstep(-10.0f, +10.0f);
@@ -110,8 +107,6 @@ bool Sample::Init()
 		m_pInGame->Init();
 	}
 	m_pCurrentScene = m_pTitle;
-
-	//CreateFbxLoader();
 
 	std::wstring shaderfilename = L"DefaultShape.hlsl";
 	m_DirLine.Create(m_pd3dDevice.Get(), m_pImmediateContext.Get(), shaderfilename,	L"../../data/gameHeight.png");
@@ -219,10 +214,10 @@ bool Sample::Frame()
 		}
 	}
 
-	if (m_pCurrentScene->IsNextScene())
+	/*if (m_pCurrentScene->IsNextScene())
 	{
 		m_pCurrentScene = m_pInGame;
-	}
+	}*/
 	m_pCurrentScene->Frame();
 
 	for (auto data : m_ParticleList)
@@ -251,36 +246,38 @@ bool Sample::Frame()
 	}
 	return true;
 }
-bool Sample::Render()
-{
-	PreDepthShadow();
+bool Sample::Render(ID3D11DeviceContext* pContext)
+{	
+	if (m_pCurrentScene == nullptr) return true;
+	m_Quadtree.m_cbShadow = m_cbShadow;
+	m_Quadtree.m_pShadowConstantBuffer = m_pShadowConstantBuffer;
+
+	PreDepthShadow(pContext);
 
 	TGameCore::TCorePreRender();
-	ObjectRender();
+	ObjectRender(pContext);
 
-	ClearD3D11DeviceContext(m_pImmediateContext.Get());
+	ClearD3D11DeviceContext(pContext);
 	return true;
 }
-bool Sample::ObjectRender()
+bool Sample::ObjectRender(ID3D11DeviceContext* pContext)
 {
 	if (m_pCurrentScene == nullptr) return true;
-
-	m_pImmediateContext->PSSetSamplers(2, 1, g_pSSShadowMap.GetAddressOf());
-
-	m_pImmediateContext->UpdateSubresource(
-		m_pShadowConstantBuffer.Get(), 0, NULL, &m_cbShadow, 0, 0);
-	m_pImmediateContext->VSSetConstantBuffers(3, 1, m_pShadowConstantBuffer.GetAddressOf());
-	m_pImmediateContext->PSSetConstantBuffers(3, 1, m_pShadowConstantBuffer.GetAddressOf());
+	pContext->PSSetSamplers(2, 1, g_pSSShadowMap.GetAddressOf());
+	pContext->UpdateSubresource(m_pShadowConstantBuffer.Get(), 0, NULL, &m_cbShadow, 0, 0);
+	pContext->HSSetConstantBuffers(3, 1, m_pShadowConstantBuffer.GetAddressOf());
+	pContext->DSSetConstantBuffers(3, 1, m_pShadowConstantBuffer.GetAddressOf());
+	pContext->PSSetConstantBuffers(3, 1, m_pShadowConstantBuffer.GetAddressOf());
 
 
 	if (m_bWireFrame)
-		m_pImmediateContext->RSSetState(TDxState::g_pDefaultRSWireFrame);
+		pContext->RSSetState(TDxState::g_pDefaultRSWireFrame);
 	else
-		m_pImmediateContext->RSSetState(TDxState::g_pDefaultRSSolid);
+		pContext->RSSetState(TDxState::g_pDefaultRSSolid);
 
 	TSceneTitle* pScene = (TSceneTitle*)m_pCurrentScene.get();
 
-	m_pImmediateContext->OMSetDepthStencilState(TDxState::g_pDefaultDepthStencil, 0xff);
+	pContext->OMSetDepthStencilState(TDxState::g_pDefaultDepthStencil, 0xff);
 
 	TVector3 vLightPos = m_pShadowCamera->m_vPos;
 	TVector3 vLightDir = m_pShadowCamera->m_vLook;
@@ -301,18 +298,21 @@ bool Sample::ObjectRender()
 			pScene->m_pMainCamera->m_vPos.z,
 			0.98f
 		};
-		pScene->m_pMap->SetMatrix(nullptr,
-			&pScene->m_pMainCamera->m_matView,
-			&pScene->m_pMainCamera->m_matProj);
-		m_Quadtree.m_pMap->m_pImmediateContext->PSSetShaderResources(6, 1, m_RT.m_pDsvSRV.GetAddressOf());
-		m_Quadtree.Render();
+		pScene->m_pMap->SetMatrix(nullptr,&pScene->m_pMainCamera->m_matView,&pScene->m_pMainCamera->m_matProj);
+		pContext->PSSetShaderResources(6, 1, m_RT.m_pDsvSRV.GetAddressOf());
+		if (pScene->m_pMap->m_pHS!=nullptr && pScene->m_pMap->m_pDS != nullptr)
+		{
+			pContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_3_CONTROL_POINT_PATCHLIST);
+		}
+		
+		m_Quadtree.Render(pContext);
 	}
-	//m_pCurrentScene->Render();
+	//m_pCurrentScene->Render(pContext);
 
 	// particle
-	m_pImmediateContext->OMSetBlendState(TDxState::g_pDualSourceBlend, 0, -1);
-	m_pImmediateContext->OMSetDepthStencilState(TDxState::g_pDefaultDepthStencilAndNoWrite,	0xff);
-	m_pImmediateContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_POINTLIST);
+	pContext->OMSetBlendState(TDxState::g_pDualSourceBlend, 0, -1);
+	pContext->OMSetDepthStencilState(TDxState::g_pDefaultDepthStencilAndNoWrite,	0xff);
+	pContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_POINTLIST);
 
 	TMatrix matBillboard;
 	//TMatrix::CreateBillboard(); 
@@ -328,14 +328,13 @@ bool Sample::ObjectRender()
 		data->SetMatrix(&matBillboard,
 			&pScene->m_pMainCamera->m_matView,
 			&pScene->m_pMainCamera->m_matProj);
-		data->Render();
+		data->Render(pContext);
 	}
 
-	m_pImmediateContext->OMSetBlendState(TDxState::g_pAlphaBlend, 0, -1);
-	m_pImmediateContext->OMSetDepthStencilState(
-		TDxState::g_pDefaultDepthStencil, 0xff);
-	m_pImmediateContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	m_pImmediateContext->GSSetShader(nullptr, NULL, 0);
+	pContext->OMSetBlendState(TDxState::g_pAlphaBlend, 0, -1);
+	pContext->OMSetDepthStencilState(TDxState::g_pDefaultDepthStencil, 0xff);
+	pContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	pContext->GSSetShader(nullptr, NULL, 0);
 
 
 	//TVector3 vSunLightDir(0, 100, 100);
@@ -366,13 +365,13 @@ bool Sample::ObjectRender()
 	if (m_UserCharacter)
 	{
 		m_UserCharacter->SetMatrix(&matWorld, &pScene->m_pMainCamera->m_matView, &pScene->m_pMainCamera->m_matProj);
-		m_UserCharacter->Render();
+		m_UserCharacter->Render(pContext);
 	}
 
 	
 
 	m_DirLine.SetMatrix(nullptr, &m_pCurrentScene->m_pMainCamera->m_matView,&m_pCurrentScene->m_pMainCamera->m_matProj);
-	m_DirLine.Render();
+	m_DirLine.Render(pContext);
 	return true;
 }
 bool Sample::Release()

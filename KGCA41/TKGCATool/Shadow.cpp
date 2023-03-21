@@ -83,33 +83,32 @@ void Sample::InitRT()
 		return;
 	}
 }
-void Sample::PreDepthShadow()
+void Sample::PreDepthShadow(ID3D11DeviceContext* pContext)
 {
 	TVector4 vClearColor(1.0f, 1.0f, 1.0f, 1.0f);	
 	
-	if (m_RT.Begin(m_pImmediateContext.Get(), vClearColor))
+	if (m_RT.Begin(pContext, vClearColor))
 	{		
 		//m_SlopeScaledDepthBiasDesc.DepthBias += (cos(g_fGameTimer) * 0.5f + 0.5f);
 		//m_SlopeScaledDepthBiasDesc.DepthBias = max(100, m_SlopeScaledDepthBiasDesc.DepthBias);
 		//m_SlopeScaledDepthBiasDesc.SlopeScaledDepthBias += (cos(g_fGameTimer)*0.5f+0.5f)*0.001f;
 		//m_SlopeScaledDepthBiasDesc.SlopeScaledDepthBias = max(1, m_SlopeScaledDepthBiasDesc.SlopeScaledDepthBias);
-		TDxState::SetRasterizerState(m_pd3dDevice.Get(), m_pImmediateContext.Get(), m_SlopeScaledDepthBiasDesc);
-		ApplyRS(m_pImmediateContext.Get(), TDxState::g_pRSEdit.Get());
+		TDxState::SetRasterizerState(m_pd3dDevice.Get(), pContext, m_SlopeScaledDepthBiasDesc);
+		ApplyRS(pContext, TDxState::g_pRSEdit.Get());
 
-		ObjectShadow();
-		m_RT.End(m_pImmediateContext.Get());
+		ObjectShadow(pContext);
+		m_RT.End(pContext);
 	}
 }
-bool Sample::ObjectShadow()
+bool Sample::ObjectShadow(ID3D11DeviceContext* pContext)
 {
 	if (m_pCurrentScene == nullptr) return true;
 
 	TSceneTitle* pScene = (TSceneTitle*)m_pCurrentScene.get();
-	m_pImmediateContext->OMSetBlendState(TDxState::g_pAlphaBlend, 0, -1);
-	m_pImmediateContext->OMSetDepthStencilState(
-		TDxState::g_pDefaultDepthStencil, 0xff);
-	m_pImmediateContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	m_pImmediateContext->GSSetShader(nullptr, NULL, 0);
+	pContext->OMSetBlendState(TDxState::g_pAlphaBlend, 0, -1);
+	pContext->OMSetDepthStencilState(TDxState::g_pDefaultDepthStencil, 0xff);
+	pContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	pContext->GSSetShader(nullptr, NULL, 0);
 
 	TVector3 vSunLightDir(0, 100, 100);
 	D3DXVec3Normalize(&vSunLightDir, &-vSunLightDir);
@@ -133,8 +132,9 @@ bool Sample::ObjectShadow()
 	if (pScene->m_pMap)
 	{
 		pScene->m_pMap->SetMatrix(nullptr,	&m_matShadowView,	&m_matShadowProj);		
-		m_Quadtree.RenderShadow(m_pShadowCamera.get());
+		m_Quadtree.RenderShadow(pContext, m_pCurrentScene->m_pMainCamera);
 	}
+	pContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	TMatrix matWorld;
 	if (pScene->m_pUser)
@@ -146,11 +146,11 @@ bool Sample::ObjectShadow()
 	if (m_UserCharacter)
 	{
 		m_UserCharacter->SetMatrix(&matWorld, &m_matShadowView,	&m_matShadowProj);
-		m_UserCharacter->PreRender();
-		m_pImmediateContext->PSSetShader(NULL, NULL, 0);
-		m_UserCharacter->PostRender();
+		m_UserCharacter->PreRender(pContext);
+		pContext->PSSetShader(NULL, NULL, 0);
+		m_UserCharacter->PostRender(pContext);
 	}
 
-	ClearD3D11DeviceContext(m_pImmediateContext.Get());
+	ClearD3D11DeviceContext(pContext);
 	return true;
 }

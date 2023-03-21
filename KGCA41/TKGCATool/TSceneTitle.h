@@ -74,7 +74,7 @@ public:
 public:
 	virtual bool		Init();
 	virtual bool		Frame();
-	virtual bool		Render();
+	virtual bool		Render(ID3D11DeviceContext* pContext );
 	virtual bool		Release();
 	virtual bool        IsNextScene();
 	

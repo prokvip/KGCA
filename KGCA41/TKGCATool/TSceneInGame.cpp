@@ -272,19 +272,18 @@ bool TSceneInGame::Frame()
 	}
 	return true;
 }
-bool TSceneInGame::Render()
+bool TSceneInGame::Render(ID3D11DeviceContext* pContext)
 {
-	m_pMap->Render();
+	m_pMap->Render(pContext);
 
 	for (auto data : m_pNpcList)
 	{
-		data->Render();
+		data->Render(pContext);
 	}
 
-	m_pUser->PreRender();
-	m_pImmediateContext->PSSetShaderResources(1, 1,
-		&m_pUser->m_pMaskTex->m_pTextureSRV);
-	m_pUser->PostRender();
+	m_pUser->PreRender(pContext);
+	pContext->PSSetShaderResources(1, 1,&m_pUser->m_pMaskTex->m_pTextureSRV);
+	m_pUser->PostRender(pContext);
 
 
 	for (auto pEffect : m_pEffectList)
@@ -293,10 +292,9 @@ bool TSceneInGame::Render()
 		pEffect->m_pSprite->SetCameraPos(m_vCamera);
 		pEffect->m_pSprite->SetRect(pEffect->m_tRect);
 		pEffect->m_pSprite->SetPosition(pEffect->m_vPos, m_vCamera);
-		pEffect->m_pSprite->PreRender();
-		m_pImmediateContext->PSSetShaderResources(1, 1,
-			&pEffect->m_pSprite->m_pMaskTex->m_pTextureSRV);
-		pEffect->m_pSprite->PostRender();
+		pEffect->m_pSprite->PreRender(pContext);
+		m_pImmediateContext->PSSetShaderResources(1, 1,	&pEffect->m_pSprite->m_pMaskTex->m_pTextureSRV);
+		pEffect->m_pSprite->PostRender(pContext);
 	}
 
 	for (auto projectile : m_Projectile)
@@ -305,16 +303,15 @@ bool TSceneInGame::Render()
 		projectile->m_pSprite->SetCameraPos(m_vCamera);
 		projectile->m_pSprite->SetRect(projectile->m_tRect);
 		projectile->m_pSprite->SetPosition(projectile->m_vPos, m_vCamera);
-		projectile->m_pSprite->PreRender();
-		m_pImmediateContext->PSSetShaderResources(1, 1,
-			&projectile->m_pSprite->m_pMaskTex->m_pTextureSRV);
-		projectile->m_pSprite->PostRender();
+		projectile->m_pSprite->PreRender(pContext);
+		m_pImmediateContext->PSSetShaderResources(1, 1,	&projectile->m_pSprite->m_pMaskTex->m_pTextureSRV);
+		projectile->m_pSprite->PostRender(pContext);
 	}
 
 	//DrawMiniMap(0, 0);
 	return true;
 }
-void TSceneInGame::DrawMiniMap(UINT x, UINT y, UINT w, UINT h)
+void TSceneInGame::DrawMiniMap(ID3D11DeviceContext* pContext, UINT x, UINT y, UINT w, UINT h)
 {
 	D3D11_VIEWPORT saveViewPort[15];
 	UINT SaveNumView=1;
@@ -333,15 +330,15 @@ void TSceneInGame::DrawMiniMap(UINT x, UINT y, UINT w, UINT h)
 	m_pMap->SetCameraSize(vSize);
 	m_pMap->SetCameraPos(m_vCamera);
 	m_pMap->Frame();
-	m_pMap->Render();
+	m_pMap->Render(pContext);
 	for (auto npc : m_pNpcList)
 	{
 		npc->SetCameraSize(vSize);
 		npc->SetCameraPos(m_vCamera);
 		npc->Frame();
-		npc->Render();
+		npc->Render(pContext);
 	}
-	m_pImmediateContext->RSSetViewports(SaveNumView, saveViewPort);
+	pContext->RSSetViewports(SaveNumView, saveViewPort);
 }
 bool TSceneInGame::Release()
 {

@@ -42,7 +42,7 @@ bool		TInput::Frame()
     m_ptPrePos = m_ptPos;
     return true;
 }
-bool		TInput::Render()
+bool		TInput::Render(ID3D11DeviceContext* pContext)
 {
     return true;
 }

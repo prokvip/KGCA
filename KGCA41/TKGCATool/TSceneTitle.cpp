@@ -19,7 +19,8 @@ bool TSceneTitle::CreateMap(UINT iColumn, UINT iRows )
 	//m_pMap->LoadHeightMap(m_pd3dDevice, m_pImmediateContext, L"../../data/map/heightMap513.bmp");
 	m_pMap->Build(iColumn, iRows);
 	//m_pMap->Build(m_pMap->m_iNumCols, m_pMap->m_iNumRows);
-	m_pMap->Create(m_pd3dDevice, m_pImmediateContext, L"DefaultMap.txt", L"../../data/map/003.jpg");
+	//m_pMap->Create(m_pd3dDevice, m_pImmediateContext, L"DefaultMap.txt", L"../../data/map/003.jpg");
+	m_pMap->Create(m_pd3dDevice, m_pImmediateContext, L"TessellationMap.hlsl", L"../../data/map/003.jpg");
 
 	if (m_pUser)
 	{
@@ -106,13 +107,13 @@ bool TSceneTitle::Frame()
 	
 	return true;
 }
-bool TSceneTitle::Render()
+bool TSceneTitle::Render(ID3D11DeviceContext* pContext)
 {	
 	TCameraDebug* pDCam = (TCameraDebug*)m_pMainCamera;
 	if (m_pUser)
 	{
 		m_pUser->SetMatrix(nullptr, &m_pMainCamera->m_matView, &m_pMainCamera->m_matProj);
-		m_pUser->Render();
+		m_pUser->Render(pContext);
 	}
 	return true;
 }

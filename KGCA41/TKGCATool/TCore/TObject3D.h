@@ -31,7 +31,7 @@ public:
 public:
 	bool  Init() override;
 	bool  Frame() override;
-	bool  Render() override;
+	bool  Render(ID3D11DeviceContext* pContext) override;
 	bool  Release() override;
 	virtual void		SetMatrix(TMatrix* matWorld, TMatrix* matView, TMatrix* matProj);
 public:

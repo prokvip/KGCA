@@ -13,7 +13,7 @@ public:
 	virtual void		CreateVertexData() override;
 	virtual void		CreateIndexData() override;
 	virtual bool		Frame() override;
-	virtual bool		Render() override;
+	virtual bool		Render(ID3D11DeviceContext* pContext) override;
 public:
 	TShapeBox() {};
 	virtual ~TShapeBox() {};
@@ -25,7 +25,7 @@ public:
 	virtual void		CreateVertexData() override;
 	virtual void		CreateIndexData() override;
 	virtual bool		Frame() override;
-	virtual bool		Render() override;
+	virtual bool		Render(ID3D11DeviceContext* pContext) override;
 public:
 	TShapeLine() {};
 	virtual ~TShapeLine() {};

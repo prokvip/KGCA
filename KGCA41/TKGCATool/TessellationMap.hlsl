@@ -1,4 +1,9 @@
 #include "Default.h"
+struct HS_CONSTANT_OUTPUT
+{
+	float edges[3] : SV_TessFactor;
+	float inside : SV_InsideTessFactor;
+};
 
 struct VS_IN
 {
@@ -8,6 +13,20 @@ struct VS_IN
 	float2 t : TEXTURE;
 };
 struct VS_OUT
+{
+	float4 p : POSITION;
+	float3 n : NORMAL;
+	float4 c : COLOR0;
+	float2 t : TEXCOORD0;
+};
+struct HS_OUT
+{
+	float4 p : POSITION;
+	float3 n : NORMAL;
+	float4 c : COLOR0;
+	float2 t : TEXCOORD0;
+};
+struct DS_OUT
 {
 	float4 p : SV_POSITION;
 	float3 n : NORMAL; 
@@ -21,10 +40,45 @@ struct VS_OUT
 
 VS_OUT VS(VS_IN input) 
 {
-#ifdef EXAMPLE_DEFINE
-#endif
-	VS_OUT output = (VS_OUT)0;
-	float4 vLocal = float4(input.p,1.0f);
+	VS_OUT output = (VS_OUT)0;	
+	output.p = float4(input.p,1.0f);
+	output.n = input.n;
+	output.c = input.c;
+	output.t = input.t;
+	return output;
+}
+HS_CONSTANT_OUTPUT PatchConstantFunction(
+	InputPatch<VS_OUT, 3> inputPatch,
+	uint patchId : SV_PrimitiveID)
+{
+	HS_CONSTANT_OUTPUT output;
+	output.edges[0] = 3;
+	output.edges[1] = 3;
+	output.edges[2] = 3;
+	output.inside = g_fTessellationAmount;
+	return output;
+}
+[domain("tri")]
+[partitioning("integer")]
+[outputtopology("triangle_cw")]
+[outputcontrolpoints(3)]
+[patchconstantfunc("PatchConstantFunction")]
+[maxtessfactor(64.0f)]
+HS_OUT HS(		InputPatch< VS_OUT, 3> patch,
+					uint pointId : SV_OutputControlPointID,
+					uint patchId : SV_PrimitiveID)
+{
+	HS_OUT output;
+	output.p = patch[pointId].p;
+	output.n = patch[pointId].n;
+	output.c = patch[pointId].c;
+	output.t = patch[pointId].t;
+	return output;
+}
+DS_OUT VertexWork(VS_IN input)
+{
+	DS_OUT output = (DS_OUT)0;
+	float4 vLocal = float4(input.p, 1.0f);
 	// 중요:  mul 함수는 내적으로 처리된다.
 	// vWolrd.x = vLocal dot c0; // 행*행
 	// vWolrd.y = vLocal dot c1;
@@ -33,24 +87,24 @@ VS_OUT VS(VS_IN input)
 	matrix matNormal = transpose(g_matWorldInverse);
 	float4 vWorld = mul(vLocal, g_matWorld);
 	float4 vView = mul(vWorld, g_matView);
-	float4 vProj = mul(vView, g_matProj);	
+	float4 vProj = mul(vView, g_matProj);
 	output.p = vProj;
 	output.c = input.c;
 	output.t = input.t;
-	
+
 	// 0 ~ 65, cellDistange = 1.0f, tileCnt = 10.0f
 	//float xMin = 32*1.0f;
 	//float xMax = +32*1.0f;
 	// 월드 좌표를 기준으로 텍스처 좌표 생성
-	output.t2.x = (vWorld.x+ 32.0f*1.0f) / 65.0f; // 0 ~1
-	output.t2.y = 1.0f-((vWorld.z / 32.0f*1.0f)* 0.5f+0.5f);//0~1	
-	output.t2.x = output.t2.x*10.0f;
-	output.t2.y = output.t2.y*10.0f;
+	output.t2.x = (vWorld.x + 32.0f * 1.0f) / 65.0f; // 0 ~1
+	output.t2.y = 1.0f - ((vWorld.z / 32.0f * 1.0f) * 0.5f + 0.5f);//0~1	
+	output.t2.x = output.t2.x * 10.0f;
+	output.t2.y = output.t2.y * 10.0f;
 
 	// 텍스처 변환 행렬 사용
-	matrix matTex=0;
-	matTex._11 = 1.0f / ((65.0f/10.0f)*1.0f);
-	matTex._32 = -1.0f / ((65.0f/10.0f)*1.0f);
+	matrix matTex = 0;
+	matTex._11 = 1.0f / ((65.0f / 10.0f) * 1.0f);
+	matTex._32 = -1.0f / ((65.0f / 10.0f) * 1.0f);
 	matTex._41 = 0.0f; // 타일에 개수 홀수=0.5f, 짝수=-0.0f
 	matTex._42 = 0.0f;
 
@@ -59,17 +113,43 @@ VS_OUT VS(VS_IN input)
 	output.t2.y = vUV.y;
 
 	// 투영좌표 사용
-	output.t2.z = (vProj.x / vProj.w)*0.5f+0.5f;
-	output.t2.w = (vProj.y / vProj.w)*0.5f+0.5f;
-	
+	output.t2.z = (vProj.x / vProj.w) * 0.5f + 0.5f;
+	output.t2.w = (vProj.y / vProj.w) * 0.5f + 0.5f;
+
 
 	output.w = vWorld.xyz;
 	output.n = mul(input.n.xyz, matNormal);
 
 
-	 // 깊이맵의 텍스처좌표
-	output.TexShadow = mul(vWorld, g_matShadow );
+	// 깊이맵의 텍스처좌표
+	output.TexShadow = mul(vWorld, g_matShadow);
 	return output;
+}
+[domain("tri")]
+DS_OUT DS(HS_CONSTANT_OUTPUT input,
+	float3 BarycentricCoordinates : SV_DomainLocation,
+	const OutputPatch<HS_OUT, 3> patch)
+{
+	float3 vertexPosition;
+	VS_IN newVertex;
+
+	newVertex.p =	BarycentricCoordinates.x * patch[0].p +
+					BarycentricCoordinates.y * patch[1].p +
+					BarycentricCoordinates.z * patch[2].p;
+
+	newVertex.t =	BarycentricCoordinates.x * patch[0].t +
+				BarycentricCoordinates.y * patch[1].t +
+				BarycentricCoordinates.z * patch[2].t;
+
+	newVertex.c = BarycentricCoordinates.x * patch[0].c +
+		BarycentricCoordinates.y * patch[1].c +
+		BarycentricCoordinates.z * patch[2].c;
+
+	newVertex.n = BarycentricCoordinates.x * patch[0].n +
+		BarycentricCoordinates.y * patch[1].n +
+		BarycentricCoordinates.z * patch[2].n;
+
+	return VertexWork(newVertex);
 }
 float4 LoadTex1Color(float2 uv, float3 vWorld) 
 {
@@ -128,11 +208,12 @@ float4 LoadTex5Color(float2 uv, float3 vWorld)
 	}
 	return vColor;
 }
-float4 PS(VS_OUT input) : SV_Target
+float4 PS(DS_OUT input) : SV_Target
 {
 	float3 ShadowTexColor =input.TexShadow.xyz / input.TexShadow.w;
 	float  fShadowDepth = g_txDepthShadow.SampleCmpLevelZero(g_samComShadowMap, ShadowTexColor.xy, ShadowTexColor.z);	
-	
+	//float4  vShadowDepth = g_txDepthShadow.Sample(g_SampleWrap, ShadowTexColor.xy);
+
 	float fBlueDepth= 1.0f;
 	const int g_iNumKernel = 5;
 	const float fdelta = 1.0f / 16384.0f;
@@ -178,7 +259,7 @@ float4 PS(VS_OUT input) : SV_Target
 	float fIntensity =1.0f-saturate(dot(input.n, -g_vLightDir.xyz));
 	fFinalColor = fFinalColor * (fBlueDepth + fIntensity);
 	fFinalColor.a = 1.0f;
-	return fFinalColor;	
+	return fFinalColor;
 }
 
 float4 PSColor(VS_OUT input) : SV_Target
