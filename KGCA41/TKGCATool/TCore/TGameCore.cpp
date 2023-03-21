@@ -26,17 +26,13 @@ bool		TGameCore::TCoreInit()
 	I_Input.Init();
 	I_Timer.Init();
 	m_Writer.Init();
-	IDXGISurface1* pBackBuffer;
-	m_pSwapChain->GetBuffer(0, __uuidof(IDXGISurface1),
-		(void**)&pBackBuffer);
-	m_Writer.Set(pBackBuffer);
-	pBackBuffer->Release();
 
+	ComPtr<IDXGISurface1> pBackBuffer;
+	m_pSwapChain->GetBuffer(0, __uuidof(IDXGISurface1),(void**)&pBackBuffer);
+	m_Writer.Set(pBackBuffer.Get());
 
 	std::wstring shaderfilename = L"DefaultRT.hlsl";
-	m_BG.Create(m_pd3dDevice.Get(), 
-				m_pImmediateContext.Get(), shaderfilename, 
-				L"../../data/kgcabk.bmp");
+	m_BG.Create(m_pd3dDevice.Get(),m_pImmediateContext.Get(), shaderfilename, L"../../data/kgcabk.bmp");
 	m_RT.Create(m_pd3dDevice.Get(), m_pImmediateContext.Get(), 4096*2, 4096*2);
 	return Init();
 }
@@ -82,7 +78,6 @@ bool		TGameCore::TCoreRender()
 			Render(m_pImmediateContext.Get());
 			m_RT.End(m_pImmediateContext.Get());
 		}
-
 		if (m_RT.m_pSRV)
 		{
 			//m_BG.m_pTextureSRV = m_RT.m_pDsvSRV.Get();
