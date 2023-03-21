@@ -24,6 +24,11 @@ TShader* TShaderManager::Load(std::wstring name)
         {
             m_List.insert(std::make_pair(name, pNewData));
         }
+        else
+        {
+            pNewData->Release();
+            delete pNewData;
+        }
     }
 	return pNewData;
 }

@@ -95,14 +95,14 @@ namespace TDX
 		TRect						 m_rtCollision;
 		T_BOX						 m_tBox;
 	public:
-		ID3D11VertexShader*		m_pVS;
-		ID3D11PixelShader*		m_pPS;
-		ID3D11HullShader*		m_pHS;
-		ID3D11DomainShader*		m_pDS;
-		ID3D11GeometryShader*	m_pGS;
-		ID3D11ComputeShader*	m_pCS;
-		ID3DBlob* m_pVSCode = nullptr;
-		ID3DBlob* m_pPSCode = nullptr;
+		ID3D11VertexShader*		m_pVS = nullptr;
+		ID3D11PixelShader*		m_pPS = nullptr;
+		ID3D11HullShader*		m_pHS = nullptr;
+		ID3D11DomainShader*		m_pDS = nullptr;
+		ID3D11GeometryShader*	m_pGS = nullptr;
+		ID3D11ComputeShader*	m_pCS = nullptr;
+		ID3DBlob*				m_pVSCode = nullptr;
+		ID3DBlob*				m_pPSCode = nullptr;
 	public:
 		virtual bool		Create(
 			ID3D11Device* pd3dDevice,// 디바이스 객체

@@ -212,8 +212,7 @@ float4 PS(DS_OUT input) : SV_Target
 {
 	float3 ShadowTexColor =input.TexShadow.xyz / input.TexShadow.w;
 	float  fShadowDepth = g_txDepthShadow.SampleCmpLevelZero(g_samComShadowMap, ShadowTexColor.xy, ShadowTexColor.z);	
-	//float4  vShadowDepth = g_txDepthShadow.Sample(g_SampleWrap, ShadowTexColor.xy);
-
+	
 	float fBlueDepth= 1.0f;
 	const int g_iNumKernel = 5;
 	const float fdelta = 1.0f / 16384.0f;
@@ -255,9 +254,8 @@ float4 PS(DS_OUT input) : SV_Target
 	fBlendColor.b = max(vColor.b, vColorTile.b);
 	fBlendColor.a = min(vColor.a, vColorTile.a);
 
-	float4 fFinalColor = fBlendColor*(vAmbintColor+vLightColor);	
-	float fIntensity =1.0f-saturate(dot(input.n, -g_vLightDir.xyz));
-	fFinalColor = fFinalColor * (fBlueDepth + fIntensity);
+	float4 fFinalColor = fBlendColor*(vAmbintColor+vLightColor*fBlueDepth);// PCF ¹Ý¿µ
+	//float fIntensity =1.0f-saturate(dot(input.n, -g_vLightDir.xyz));
 	fFinalColor.a = 1.0f;
 	return fFinalColor;
 }

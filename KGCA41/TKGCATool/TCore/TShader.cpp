@@ -40,6 +40,7 @@ HRESULT TShader::Load(ID3D11Device* pd3dDevice, ID3D11DeviceContext* pImmediateC
         NULL, NULL
     };
 
+    // 필수 (VS & PS)
     ID3DBlob* pErrorCode = nullptr;
     hr = D3DCompileFromFile(
         filename.c_str(),
@@ -60,12 +61,7 @@ HRESULT TShader::Load(ID3D11Device* pd3dDevice, ID3D11DeviceContext* pImmediateC
         }
         return hr;
     }
-    hr = m_pd3dDevice->CreateVertexShader(
-        m_pVSCode->GetBufferPointer(),
-        m_pVSCode->GetBufferSize(),
-        NULL,
-        &m_pVS);
-
+    hr = m_pd3dDevice->CreateVertexShader(m_pVSCode->GetBufferPointer(),m_pVSCode->GetBufferSize(),NULL, &m_pVS);
     // 픽쉘쉐이더 컴파일  
     hr = D3DCompileFromFile(
         filename.c_str(),
@@ -82,25 +78,24 @@ HRESULT TShader::Load(ID3D11Device* pd3dDevice, ID3D11DeviceContext* pImmediateC
         if (pErrorCode)
         {
             OutputDebugStringA((char*)pErrorCode->GetBufferPointer());
+            MessageBoxA(NULL, (char*)pErrorCode->GetBufferPointer(), "VS Compile", MB_OK);
             pErrorCode->Release();
         }
         return hr;
     }
-    hr = m_pd3dDevice->CreatePixelShader(
-        m_pPSCode->GetBufferPointer(),
-        m_pPSCode->GetBufferSize(),
-        NULL,
-        &m_pPS);
+    hr = m_pd3dDevice->CreatePixelShader(m_pPSCode->GetBufferPointer(),m_pPSCode->GetBufferSize(),NULL, &m_pPS);
     if (FAILED(hr))
     {
         if (pErrorCode)
         {
             OutputDebugStringA((char*)pErrorCode->GetBufferPointer());
+            MessageBoxA(NULL, (char*)pErrorCode->GetBufferPointer(), "PS Compile", MB_OK);
             pErrorCode->Release();
         }
         return hr;
     }
 
+    // 선택( HS & DS)
     ComPtr<ID3DBlob> m_pBlob;
     hr = D3DCompileFromFile(
         filename.c_str(),
@@ -112,20 +107,17 @@ HRESULT TShader::Load(ID3D11Device* pd3dDevice, ID3D11DeviceContext* pImmediateC
         0,
         m_pBlob.GetAddressOf(),
         &pErrorCode);
-    if (FAILED(hr))
+    if (SUCCEEDED(hr))
     {
-        if (pErrorCode)
+        hr = m_pd3dDevice->CreateHullShader(m_pBlob->GetBufferPointer(),m_pBlob->GetBufferSize(),NULL,m_pHS.GetAddressOf());
+        if (FAILED(hr) && pErrorCode)
         {
             OutputDebugStringA((char*)pErrorCode->GetBufferPointer());
+            MessageBoxA(NULL, (char*)pErrorCode->GetBufferPointer(), "HS Compile", MB_OK);
             pErrorCode->Release();
-        }
-        return hr;
-    }
-    hr = m_pd3dDevice->CreateHullShader(
-        m_pBlob->GetBufferPointer(),
-        m_pBlob->GetBufferSize(),
-        NULL,
-        m_pHS.GetAddressOf());
+            return hr;
+        }       
+    }  
 
     m_pBlob.Reset();
     hr = D3DCompileFromFile(
@@ -138,19 +130,16 @@ HRESULT TShader::Load(ID3D11Device* pd3dDevice, ID3D11DeviceContext* pImmediateC
         0,
         m_pBlob.GetAddressOf(),
         &pErrorCode);
-    if (FAILED(hr))
+    if (SUCCEEDED(hr))
     {
-        if (pErrorCode)
+        hr = m_pd3dDevice->CreateDomainShader(m_pBlob->GetBufferPointer(), m_pBlob->GetBufferSize(), NULL, m_pDS.GetAddressOf());
+        if (FAILED(hr) && pErrorCode)
         {
             OutputDebugStringA((char*)pErrorCode->GetBufferPointer());
+            MessageBoxA(NULL, (char*)pErrorCode->GetBufferPointer(), "DS Compile", MB_OK);
             pErrorCode->Release();
+            return hr;
         }
-        return hr;
-    }
-    hr = m_pd3dDevice->CreateDomainShader(
-        m_pBlob->GetBufferPointer(),
-        m_pBlob->GetBufferSize(),
-        NULL,
-        m_pDS.GetAddressOf());
-    return hr;
+    }  
+    return S_OK;
 }

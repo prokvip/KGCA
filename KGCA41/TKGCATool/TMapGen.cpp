@@ -152,14 +152,14 @@ void TMapGen::OnInitialUpdate()
 	m_iCols = 65;
 	m_iRows = 65;
 	m_bWireFrame = FALSE;
-	m_iDepthBias = 200000;
+	m_iDepthBias = 100000;
 	m_fDepthBiasClamp = 0.0f;
-	m_fSlopeScaledDepthBias = 10.0f;
+	m_fSlopeScaledDepthBias = 0.0f;
 	m_fCameraNear = 0.1f;
 	m_fCameraFar = 1000.0f;
 	UpdateData(FALSE);
 
-	Recurse(L"../..//data/map", L"/*.*", m_TextureNameList);
+	Recurse(L"../../data/map", L"/*.*", m_TextureNameList);
 	for (T_STR data : m_TextureNameList)
 	{
 		CString str(data.c_str());
@@ -360,7 +360,7 @@ void TMapGen::OnBnClickedSplatting()
 {
 	CTKGCAToolApp* pApp = (CTKGCAToolApp*)AfxGetApp();
 	pApp->m_Sample.m_bUpPicking = false;
-	pApp->m_Sample.m_bDownPicking = true;
+	pApp->m_Sample.m_bDownPicking = false;
 	pApp->m_Sample.m_bPlatPicking = false;
 	pApp->m_Sample.m_bObjectPicking = false;
 	pApp->m_Sample.m_bSplatting = true;
