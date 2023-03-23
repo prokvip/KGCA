@@ -3,18 +3,21 @@
 
 void Sample::NewEffect(UINT iParticleCounter, T_STR tex)
 {
-	auto p = std::shared_ptr<TParticleObj>();	
-	std::wstring shaderfilename = L"Particle.txt";
-	if (iParticleCounter <= 0) iParticleCounter = 1;
-	p->m_iParticleCounter = iParticleCounter;
-	p->m_Paticles.resize(iParticleCounter);
-	p->Create(m_pd3dDevice.Get(), m_pImmediateContext.Get(),shaderfilename,tex);
-	/*p->m_matScale = TMatrix::CreateScale(10.0f);
+	auto p = std::make_shared<TParticleObj>();	
+	if (p)
+	{
+		std::wstring shaderfilename = L"Particle.txt";
+		if (iParticleCounter <= 0) iParticleCounter = 1;
+		p->m_iParticleCounter = iParticleCounter;
+		p->m_Paticles.resize(iParticleCounter);
+		p->Create(m_pd3dDevice.Get(), m_pImmediateContext.Get(), shaderfilename, tex);
+		/*p->m_matScale = TMatrix::CreateScale(10.0f);
 
-	p->m_matTranslate._41 = randstep(-10.0f, +10.0f);
-	p->m_matTranslate._42 = randstep(-10.0f, +10.0f);
-	p->m_matTranslate._43 = randstep(-10.0f, +10.0f);*/
-	m_ParticleList.push_back(p);
+		p->m_matTranslate._41 = randstep(-10.0f, +10.0f);
+		p->m_matTranslate._42 = randstep(-10.0f, +10.0f);
+		p->m_matTranslate._43 = randstep(-10.0f, +10.0f);*/
+		m_ParticleList.push_back(p);
+	}
 }
 bool Sample::GetIntersection()
 {
@@ -55,7 +58,7 @@ bool Sample::CreateMapData(UINT iColumn, UINT iRows)
 			((TSceneTitle*)m_pCurrentScene.get())->m_pMainCamera,
 			((TSceneTitle*)m_pCurrentScene.get())->m_pMap);
 		
-		m_Quadtree.m_TexArray[0] = 	I_Tex.Load(L"../../data/map/024.jpg");
+		m_Quadtree.m_TexArray[0] = 	I_Tex.Load(L"../../data/map/Dirt_Diff.dds");
 		m_Quadtree.m_TexArray[1] =	I_Tex.Load(L"../../data/map/017.bmp");
 		m_Quadtree.m_TexArray[2] = I_Tex.Load(L"../../data/map/037.bmp");
 		m_Quadtree.m_TexArray[3] = I_Tex.Load(L"../../data/map/036.bmp");
@@ -307,47 +310,12 @@ bool Sample::ObjectRender(ID3D11DeviceContext* pContext)
 		
 		m_Quadtree.Render(pContext);
 	}
-	//m_pCurrentScene->Render(pContext);
 
-	// particle
-	pContext->OMSetBlendState(TDxState::g_pDualSourceBlend, 0, -1);
-	pContext->OMSetDepthStencilState(TDxState::g_pDefaultDepthStencilAndNoWrite,	0xff);
-	pContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_POINTLIST);
-
-	TMatrix matBillboard;
-	//TMatrix::CreateBillboard(); 
-	matBillboard = m_pCurrentScene->m_pMainCamera->m_matView.Invert();
-	matBillboard._41 = 0.0f;
-	matBillboard._42 = 0.0f;
-	matBillboard._43 = 0.0f;
-	for (auto data : m_ParticleList)
+	/*for (int iNpc = 0; iNpc < m_WorldObjectList.size(); iNpc++)
 	{
-		//TMatrix matWorld = TMatrix::CreateRotationZ(g_fGameTimer);
-		//matWorld = matBillboard * matWorld;
-		// matworld = s* r* t;
-		data->SetMatrix(&matBillboard,
-			&pScene->m_pMainCamera->m_matView,
-			&pScene->m_pMainCamera->m_matProj);
-		data->Render(pContext);
-	}
-
-	pContext->OMSetBlendState(TDxState::g_pAlphaBlend, 0, -1);
-	pContext->OMSetDepthStencilState(TDxState::g_pDefaultDepthStencil, 0xff);
-	pContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	pContext->GSSetShader(nullptr, NULL, 0);
-
-
-	//TVector3 vSunLightDir(0, 100, 100);
-	//D3DXVec3Normalize(&vSunLightDir, &-vSunLightDir);
-
-	//TVector3 vLightPos(0, 50, 50);
-	//TMatrix matRotation;
-	////D3DXMatrixRotationY(&matRotation, g_fGameTimer);
-	//D3DXVec3TransformCoord(&vLightPos, &vLightPos, &matRotation);
-
-	//TVector3 vLightDir;
-	//D3DXVec3Normalize(&vLightDir, &-vLightPos);
-
+		m_ObjectList[iNpc]->SetMatrix(nullptr, &pScene->m_pMainCamera->m_matView, &pScene->m_pMainCamera->m_matProj);
+		m_ObjectList[iNpc]->Render();
+	}*/
 	TMatrix matWorld;
 	if (pScene->m_pUser)
 	{
@@ -355,23 +323,41 @@ bool Sample::ObjectRender(ID3D11DeviceContext* pContext)
 		matWorld._42 = pScene->m_pUser->m_vPos.y;
 		matWorld._43 = pScene->m_pUser->m_vPos.z;
 	}
-
-	/*for (int iNpc = 0; iNpc < m_WorldObjectList.size(); iNpc++)
-	{
-		m_ObjectList[iNpc]->SetMatrix(nullptr, &pScene->m_pMainCamera->m_matView, &pScene->m_pMainCamera->m_matProj);
-		m_ObjectList[iNpc]->Render();
-	}*/
-
 	if (m_UserCharacter)
 	{
 		m_UserCharacter->SetMatrix(&matWorld, &pScene->m_pMainCamera->m_matView, &pScene->m_pMainCamera->m_matProj);
 		m_UserCharacter->Render(pContext);
 	}
-
 	
+	m_pCurrentScene->Render(pContext);
 
+	// particle
+	pContext->OMSetBlendState(TDxState::g_pDualSourceBlend, 0, -1);
+	pContext->OMSetDepthStencilState(TDxState::g_pDefaultDepthStencilAndNoWrite,	0xff);
+	pContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_POINTLIST);
+	pContext->PSSetSamplers(0, 1, &TDxState::g_pDefaultSSMirror);
+	pContext->RSSetState(TDxState::g_pDefaultRSSolid);
+
+	TMatrix matBillboard;	
+	matBillboard = m_pCurrentScene->m_pMainCamera->m_matView.Invert();
+	matBillboard._41 = 0.0f;
+	matBillboard._42 = 0.0f;
+	matBillboard._43 = 0.0f;
+	for (auto data : m_ParticleList)
+	{
+		//TMatrix matBillboard2 = TMatrix::CreateBillboard(data->m_vPos, pScene->m_pMainCamera->m_vPos, pScene->m_pMainCamera->m_vUp,& pScene->m_pMainCamera->m_vLook);
+		//TMatrix matWorld = TMatrix::CreateRotationZ(g_fGameTimer);
+		//matWorld = matBillboard * matWorld;
+		// matworld = s* r* t;
+		data->SetMatrix(&matBillboard,&pScene->m_pMainCamera->m_matView,&pScene->m_pMainCamera->m_matProj);
+		data->Render(pContext);
+	}
+
+	pContext->OMSetBlendState(TDxState::g_pAlphaBlend, 0, -1);
+	pContext->OMSetDepthStencilState(TDxState::g_pDisableDepthStencil, 0xff);
 	m_DirLine.SetMatrix(nullptr, &m_pCurrentScene->m_pMainCamera->m_matView,&m_pCurrentScene->m_pMainCamera->m_matProj);
 	m_DirLine.Render(pContext);
+	pContext->OMSetDepthStencilState(TDxState::g_pDefaultDepthStencil, 0xff);
 	return true;
 }
 bool Sample::Release()

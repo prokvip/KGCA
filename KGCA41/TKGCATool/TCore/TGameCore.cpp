@@ -100,6 +100,7 @@ bool		TGameCore::TCorePostRender()
 	PostRender(m_pImmediateContext.Get());
 	if (m_bUsedRT)
 	{
+		m_pImmediateContext.Get()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 		m_BG.SetMatrix(nullptr, nullptr, nullptr);
 		m_BG.Render(m_pImmediateContext.Get());
 	}

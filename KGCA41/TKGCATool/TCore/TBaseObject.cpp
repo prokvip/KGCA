@@ -289,8 +289,6 @@ namespace TDX
         {
             return false;
         }
-
-
         if (LoadTexture(texturename))
         {
             m_pTextureSRV = m_pTexture->m_pTextureSRV;
@@ -318,7 +316,6 @@ namespace TDX
     }
     bool TBaseObject::Frame()
     {
-
         return true;
     }
     void   TBaseObject::UpdateVertexBuffer()
@@ -333,9 +330,7 @@ namespace TDX
         m_cbData.matView = m_matView.Transpose();
         m_cbData.matProj = m_matProj.Transpose();
         m_cbData.matWorldInverse = m_matWorld.Invert();
-        m_pImmediateContext->UpdateSubresource(
-            m_pConstantBuffer, 0, nullptr,
-            &m_cbData, 0, 0);
+        m_pImmediateContext->UpdateSubresource( m_pConstantBuffer, 0, nullptr,    &m_cbData, 0, 0);
     }
     void	TBaseObject::SetMatrix(TMatrix* matWorld, TMatrix* matView, TMatrix* matProj)
     {
@@ -370,8 +365,10 @@ namespace TDX
         pContext->IASetInputLayout(m_pVertexLayout);
         pContext->VSSetShader(m_pVS, NULL, 0);
         pContext->PSSetShader(m_pPS, NULL, 0);
+        pContext->GSSetShader(m_pGS, NULL, 0);
         pContext->HSSetShader(m_pHS, NULL, 0);
         pContext->DSSetShader(m_pDS, NULL, 0);
+        pContext->CSSetShader(m_pCS, NULL, 0);
         UINT stride = sizeof(PNCT_VERTEX); // 정점1개의 바이트용량
         UINT offset = 0; // 정점버퍼에서 출발지점(바이트)
         pContext->IASetVertexBuffers(0, 1,&m_pVertexBuffer, &stride, &offset);
@@ -393,10 +390,24 @@ namespace TDX
     }
     bool TBaseObject::Release()
     {
+        m_VertexList.clear();
+        m_InitVertexList.clear();
+        m_IndexList.clear();
+
         if (m_pVertexBuffer) m_pVertexBuffer->Release();
         if (m_pIndexBuffer) m_pIndexBuffer->Release();
         if (m_pConstantBuffer) m_pConstantBuffer->Release();
         if (m_pVertexLayout) m_pVertexLayout->Release();
+
+        m_pVS = nullptr;
+        m_pPS = nullptr;
+        m_pHS = nullptr;
+        m_pDS = nullptr;
+        m_pVertexBuffer = nullptr;
+        m_pIndexBuffer = nullptr;
+        m_pConstantBuffer = nullptr;
+        m_pVertexLayout = nullptr;       
+        m_pTextureSRV = nullptr;
         return true;
     }
 

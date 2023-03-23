@@ -154,9 +154,9 @@ void TMapGen::OnInitialUpdate()
 	m_iCols = 65;
 	m_iRows = 65;
 	m_bWireFrame = FALSE;
-	m_iDepthBias = 100000;
+	m_iDepthBias = 35000;
 	m_fDepthBiasClamp = 0.0f;
-	m_fSlopeScaledDepthBias = 0.0f;
+	m_fSlopeScaledDepthBias = 3.0f;
 	m_fCameraNear = 0.1f;
 	m_fCameraFar = 1000.0f;
 

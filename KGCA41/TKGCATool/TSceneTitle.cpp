@@ -8,6 +8,7 @@ bool TSceneTitle::DeletaMap()
 	{
 		m_pMap->Release();
 		delete m_pMap;
+		m_pMap = nullptr;
 		
 	}
 	return true;
@@ -20,15 +21,13 @@ bool TSceneTitle::CreateMap(UINT iColumn, UINT iRows )
 	m_pMap->Build(iColumn, iRows);
 	//m_pMap->Build(m_pMap->m_iNumCols, m_pMap->m_iNumRows);
 	//m_pMap->Create(m_pd3dDevice, m_pImmediateContext, L"DefaultMap.txt", L"../../data/map/003.jpg");
-	m_pMap->Create(m_pd3dDevice, m_pImmediateContext, L"TessellationMap.hlsl", L"../../data/map/009.jpg");
+	m_pMap->Create(m_pd3dDevice, m_pImmediateContext, L"TessellationMap.hlsl", L"../../data/map/Dirt_Diff.dds");
 
 	if (m_pUser)
 	{
 		TVector3 vCamera = m_pUser->m_vPos + TVector3(0, 10, -10);
-		vCamera.y = m_pMap->GetHeight(vCamera.x, vCamera.z),
-			m_pMainCamera->CreateViewMatrix(vCamera, m_pUser->m_vPos, TVector3(0, 1, 0));
-		m_pMainCamera->CreateProjMatrix(1.0f, 1000.0f, T_PI * 0.25f,
-			(float)g_rtClient.right / (float)g_rtClient.bottom);
+		vCamera.y = m_pMap->GetHeight(vCamera.x, vCamera.z),m_pMainCamera->CreateViewMatrix(vCamera, m_pUser->m_vPos, TVector3(0, 1, 0));
+		m_pMainCamera->CreateProjMatrix(1.0f, 1000.0f, T_PI * 0.25f,(float)g_rtClient.right / (float)g_rtClient.bottom);
 		m_vBeforePos = m_pUser->m_vPos;
 	}
 	return true;

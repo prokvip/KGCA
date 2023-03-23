@@ -116,7 +116,7 @@ bool  TMap::Build(UINT iWidth, UINT iHeight)
 			iIndex += 6;
 		}
 	}
-	indexlist.resize(m_IndexList.size());
+	m_UpdateIndexList.resize(m_IndexList.size());
 	m_dwFace = m_IndexList.size() / 3;
 
 	GenVertexNormal();
@@ -125,6 +125,8 @@ bool  TMap::Build(UINT iWidth, UINT iHeight)
 bool TMap::UpdateBuffer(TCameraDebug* pMainCamera)
 {	
 	m_dwFace = 0;
+	m_UpdateIndexList.clear();
+
 	DWORD index = 0;
 	TVector3 v[3];
 	for (int iFace = 0; iFace < m_IndexList.size() / 3; iFace++)
@@ -140,22 +142,18 @@ bool TMap::UpdateBuffer(TCameraDebug* pMainCamera)
 			bool bRender = pMainCamera->m_vFrustum.ClassifyPoint(v[i]);
 			if (bRender)
 			{
-				indexlist[index++] = i0;
-				indexlist[index++] = i1;
-				indexlist[index++]= i2;
+				m_UpdateIndexList[index++] = i0;
+				m_UpdateIndexList[index++] = i1;
+				m_UpdateIndexList[index++]= i2;
 				m_dwFace++;
 				break;
 			}
 		}
 	}
-	m_pImmediateContext->UpdateSubresource(
-		m_pIndexBuffer, 0, nullptr,
-		&indexlist.at(0), 0, 0);
+	m_pImmediateContext->UpdateSubresource(	m_pIndexBuffer, 0, nullptr,	&m_UpdateIndexList.at(0), 0, 0);
 	return true;
 }
-
-bool TMap::LoadHeightMap(ID3D11Device* pd3dDevice,// 디바이스 객체
-	ID3D11DeviceContext* pContext, W_STR loadTexture)
+bool TMap::LoadHeightMap(ID3D11Device* pd3dDevice,ID3D11DeviceContext* pContext, W_STR loadTexture)
 {
 
 	ComPtr<ID3D11Resource> pTexture;
@@ -199,7 +197,6 @@ bool TMap::LoadHeightMap(ID3D11Device* pd3dDevice,// 디바이스 객체
 	pTexture2D->Release();
 	return true;
 }
-
 void TMap::GenVertexNormal()
 {	
 	m_FaceNormals.resize(m_dwFace);
@@ -263,4 +260,12 @@ TVector3 TMap::ComputeFaceNormal(UINT i0, UINT i1, UINT i2)
 	D3DXVec3Cross(&vNormal, &e0, &e1);
 	D3DXVec3Normalize(&vNormal, &vNormal);
 	return vNormal;
+}
+bool TMap::Release()
+{	
+	m_FaceNormals.clear();
+	m_VertexInfo.clear();
+	m_UpdateIndexList.clear();
+	m_fHeightList.clear();
+	return TBaseObject::Release();
 }

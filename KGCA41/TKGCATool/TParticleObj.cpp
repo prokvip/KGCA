@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "TParticleObj.h"
+#include "TDxState.h"
 HRESULT TParticleObj::CreateVertexLayout()
 {
 	HRESULT hr;
@@ -91,30 +92,29 @@ bool TParticleObj::Frame()
 		m_VertexList[i].c = m_Paticles[i].vColor;
 		m_VertexList[i].t = { 0.0f, 0.0f };
 	}
-	m_pImmediateContext->UpdateSubresource(m_pVertexBuffer, 0, NULL,
-						&m_VertexList.at(0), 0, 0);
+	m_pImmediateContext->UpdateSubresource(m_pVertexBuffer, 0, NULL, &m_VertexList.at(0), 0, 0);
 	return true;
 }
 bool TParticleObj::Render(ID3D11DeviceContext* pContext)
 {
-	pContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_POINTLIST);
-	pContext->PSSetShaderResources(0, 1, &m_pTextureSRV);
-	pContext->IASetInputLayout(m_pVertexLayout);
-	pContext->VSSetShader(m_pVS, NULL, 0);
-	pContext->GSSetShader(m_pGS, NULL, 0);
-	pContext->PSSetShader(m_pPS, NULL, 0);
-	UINT stride = sizeof(PNCT_VERTEX); // 정점1개의 바이트용량
-	UINT offset = 0; // 정점버퍼에서 출발지점(바이트)
-	pContext->IASetVertexBuffers(0, 1,
-		&m_pVertexBuffer, &stride, &offset);
-	pContext->IASetIndexBuffer(m_pIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
-	pContext->VSSetConstantBuffers(0, 1, &m_pConstantBuffer);
-	pContext->GSSetConstantBuffers(0, 1, &m_pConstantBuffer);
-
-	if (m_pIndexBuffer == nullptr)
+	PreRender(pContext);
+		pContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_POINTLIST);
+		pContext->PSSetShaderResources(0, 1, &m_pTextureSRV);
+		pContext->IASetInputLayout(m_pVertexLayout);
+		pContext->VSSetShader(m_pVS, NULL, 0);
+		pContext->GSSetShader(m_pGS, NULL, 0);
+		pContext->PSSetShader(m_pPS, NULL, 0);
+		UINT stride = sizeof(PNCT_VERTEX); // 정점1개의 바이트용량
+		UINT offset = 0; // 정점버퍼에서 출발지점(바이트)
+		pContext->IASetVertexBuffers(0, 1,&m_pVertexBuffer, &stride, &offset);
+		pContext->IASetIndexBuffer(m_pIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
+		pContext->VSSetConstantBuffers(0, 1, &m_pConstantBuffer);
+		pContext->GSSetConstantBuffers(0, 1, &m_pConstantBuffer);
+	PostRender(pContext);
+	/*if (m_pIndexBuffer == nullptr)
 		pContext->Draw(m_VertexList.size(), 0);
 	else
-		pContext->DrawIndexed(m_dwFace * 3, 0, 0);
+		pContext->DrawIndexed(m_dwFace * 3, 0, 0);*/
 	return true;
 }
 bool TParticleObj::Release()
@@ -165,5 +165,14 @@ void TParticleObj::SetMatrix(TMatrix* matWorld, TMatrix* matView, TMatrix* matPr
 	m_vLook.x = m_matWorld._31;
 	m_vLook.y = m_matWorld._32;
 	m_vLook.z = m_matWorld._33;
+
+}
+
+TParticleObj::TParticleObj()
+{
+
+}
+TParticleObj::~TParticleObj()
+{
 
 }

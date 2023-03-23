@@ -77,23 +77,23 @@ namespace TDX
 		TMatrix		m_matProj;
 		DWORD		m_dwFace;
 	public:
-		ID3D11Device* m_pd3dDevice = nullptr;// 디바이스 객체
-		ID3D11DeviceContext* m_pImmediateContext = nullptr;
-		ID3D11Buffer* m_pVertexBuffer;
-		ID3D11Buffer* m_pIndexBuffer;
-		VS_CONSTANT_BUFFER  m_cbData;
-		ID3D11Buffer* m_pConstantBuffer;
-		ID3D11InputLayout* m_pVertexLayout;
-		TShader* m_pShader;
-		TTexture* m_pTexture;
+		ID3D11Device*			m_pd3dDevice = nullptr;// 디바이스 객체
+		ID3D11DeviceContext*	m_pImmediateContext = nullptr;
+		ID3D11Buffer*			m_pVertexBuffer=nullptr;
+		ID3D11Buffer*			m_pIndexBuffer = nullptr;
+		VS_CONSTANT_BUFFER		m_cbData;
+		ID3D11Buffer*			m_pConstantBuffer = nullptr;
+		ID3D11InputLayout*		m_pVertexLayout = nullptr;
+		TShader*				m_pShader = nullptr;
+		TTexture*				m_pTexture = nullptr;
 		std::wstring m_szShaderName;
 		std::wstring m_szTextureName;
-		ID3D11ShaderResourceView* m_pTextureSRV = nullptr;
-		std::vector<PNCT_VERTEX>    m_VertexList;
-		std::vector<PNCT_VERTEX>    m_InitVertexList;
-		std::vector<DWORD>			 m_IndexList;
-		TRect						 m_rtCollision;
-		T_BOX						 m_tBox;
+		ID3D11ShaderResourceView*		m_pTextureSRV = nullptr;
+		std::vector<PNCT_VERTEX>		m_VertexList;
+		std::vector<PNCT_VERTEX>		m_InitVertexList;
+		std::vector<DWORD>				m_IndexList;
+		TRect							m_rtCollision;
+		T_BOX							m_tBox;
 	public:
 		ID3D11VertexShader*		m_pVS = nullptr;
 		ID3D11PixelShader*		m_pPS = nullptr;
@@ -104,10 +104,9 @@ namespace TDX
 		ID3DBlob*				m_pVSCode = nullptr;
 		ID3DBlob*				m_pPSCode = nullptr;
 	public:
-		virtual bool		Create(
-			ID3D11Device* pd3dDevice,// 디바이스 객체
-			ID3D11DeviceContext* pImmediateContext,
-			std::wstring shadername, std::wstring texturename);
+		virtual bool		Create(	ID3D11Device* pd3dDevice,
+									ID3D11DeviceContext* pImmediateContext,
+									std::wstring shadername, std::wstring texturename);
 		virtual void		CreateVertexData();
 		virtual void		CreateIndexData();
 		virtual void		CreateConstantData();

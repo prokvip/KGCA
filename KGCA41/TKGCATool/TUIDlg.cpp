@@ -65,7 +65,7 @@ void TUIDlg::OnBnClickedButton1()
 	UpdateData(TRUE);
 	UINT iCnt = m_iParticleCounter;
 	CTKGCAToolApp* pApp = (CTKGCAToolApp*)AfxGetApp();
-	T_STR filepath = L"D:/00_KGCA41Leture/data/effect/";
+	T_STR filepath = L"../../data/effect/";
 	filepath += m_strSelectTexture;
 	pApp->m_Sample.NewEffect(m_iParticleCounter, filepath);
 
@@ -92,7 +92,7 @@ void TUIDlg::OnInitialUpdate()
 
 	UpdateData(FALSE);
 
-	Recurse(L"D:/00_KGCA41Leture/data/effect", L"/*.*", m_TextureNameList);
+	Recurse(L"../../data/effect", L"/*.*", m_TextureNameList);
 	for (T_STR data : m_TextureNameList)
 	{
 		CString str(data.c_str());

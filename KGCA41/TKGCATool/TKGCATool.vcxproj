@@ -100,7 +100,7 @@
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
-      <AdditionalLibraryDirectories>../../dxtk/lib;../../fmod/lib/x64;../../fbxsdk/lib/vs2019/x64/debug;</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>../../dxtk/lib;../../fmod/lib/x64;../../fbxsdk/lib/vs2019/x64/Debug</AdditionalLibraryDirectories>
       <AdditionalDependencies>Winmm.lib</AdditionalDependencies>
     </Link>
     <Midl>

@@ -104,7 +104,11 @@ bool TShapeLine::Render(ID3D11DeviceContext* pContext)
 {
 	pContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_LINELIST);
 	PreRender(pContext);
-	PostRender(pContext);
+	if (m_pIndexBuffer == nullptr)
+		pContext->Draw(m_VertexList.size(), 0);
+	else
+		pContext->DrawIndexed(m_IndexList.size(), 0, 0);
+
 	pContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	return true;
 }
@@ -139,4 +143,16 @@ void    TShapeDirectionLine::CreateIndexData()
 	m_IndexList[iIndex++] = 0; 	m_IndexList[iIndex++] = 1;
 	m_IndexList[iIndex++] = 2; 	m_IndexList[iIndex++] = 3;
 	m_IndexList[iIndex++] = 4; 	m_IndexList[iIndex++] = 5;
+}
+bool TShapeDirectionLine::Render(ID3D11DeviceContext* pContext)
+{
+	pContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_LINELIST);
+	PreRender(pContext);
+	if (m_pIndexBuffer == nullptr)
+		pContext->Draw(m_VertexList.size(), 0);
+	else
+		pContext->DrawIndexed(m_IndexList.size(), 0, 0);
+
+	pContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	return true;
 }

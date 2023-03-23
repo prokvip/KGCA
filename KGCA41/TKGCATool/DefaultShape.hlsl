@@ -2,13 +2,15 @@
 
 struct VS_IN
 {
-	float3 p : POSITION; 
-    float4 c : COLOR;
+	float3 p : POSITION;
+	float3 n : NORMAL;
+	float4 c : COLOR;
 	float2 t : TEXTURE;
 };
 struct VS_OUT
 {
 	float4 p : SV_POSITION;
+	float3 n : NORMAL;
 	float4 c : COLOR0;
 	float2 t : TEXCOORD0;
 };
@@ -27,6 +29,7 @@ VS_OUT VS(VS_IN input)
 	float4 vView = mul(vWorld, g_matView);
 	float4 vProj = mul(vView, g_matProj);	
 	output.p = vProj;
+	output.n = input.n;
 	output.c = input.c;
 	output.t = input.t;
 	return output;

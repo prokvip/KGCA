@@ -89,13 +89,8 @@ void Sample::PreDepthShadow(ID3D11DeviceContext* pContext)
 	
 	if (m_RT.Begin(pContext, vClearColor))
 	{		
-		//m_SlopeScaledDepthBiasDesc.DepthBias += (cos(g_fGameTimer) * 0.5f + 0.5f);
-		//m_SlopeScaledDepthBiasDesc.DepthBias = max(100, m_SlopeScaledDepthBiasDesc.DepthBias);
-		//m_SlopeScaledDepthBiasDesc.SlopeScaledDepthBias += (cos(g_fGameTimer)*0.5f+0.5f)*0.001f;
-		//m_SlopeScaledDepthBiasDesc.SlopeScaledDepthBias = max(1, m_SlopeScaledDepthBiasDesc.SlopeScaledDepthBias);
 		TDxState::SetRasterizerState(m_pd3dDevice.Get(), pContext, m_SlopeScaledDepthBiasDesc);
 		ApplyRS(pContext, TDxState::g_pRSEdit.Get());
-
 		ObjectShadow(pContext);
 		m_RT.End(pContext);
 	}
@@ -114,8 +109,7 @@ bool Sample::ObjectShadow(ID3D11DeviceContext* pContext)
 	D3DXVec3Normalize(&vSunLightDir, &-vSunLightDir);
 	TVector3 vLightPos(0, 50, 50);
 	TMatrix matRotation;
-	//D3DXMatrixRotationY(&matRotation, g_fGameTimer);
-	//vLight = vLight * matRotation;
+	D3DXMatrixRotationY(&matRotation, g_fGameTimer);	
 	D3DXVec3TransformCoord(&vLightPos, &vLightPos, &matRotation);
 	
 	TVector3 vLookat = TVector3(0, 0, 0);

@@ -42,5 +42,7 @@ public:
 	virtual void		CreateIndexData() override;
 	virtual HRESULT		CreateVertexLayout()override;
 	virtual bool		CreateShader(std::wstring filename) override;
+	TParticleObj();
+	virtual ~TParticleObj();
 };
 

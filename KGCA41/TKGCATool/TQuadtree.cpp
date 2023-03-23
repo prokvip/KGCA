@@ -187,9 +187,7 @@ void TQuadtree::BuildTree(TNode* pNode)
         m_pLeafNodeList.push_back(pNode);
         return;
     }
-    pNode->CreateChildNode(pNode, m_pMap,
-        m_pMap->m_iNumRows,
-        m_pMap->m_iNumCols);
+    pNode->CreateChildNode(pNode, m_pMap, m_pMap->m_iNumRows,   m_pMap->m_iNumCols);
 
     BuildTree(pNode->m_pChild[0]);
     BuildTree(pNode->m_pChild[1]);
@@ -317,9 +315,8 @@ bool TQuadtree::RenderShadow(ID3D11DeviceContext* pContext, TCamera* pShadowCame
 {
     TCamera* pSaveCamera = m_pCamera;
     m_pCamera = pShadowCamera;
-    Frame();
 
-    for (auto node : m_pDrawLeafNodeList)
+    for (auto node : m_pLeafNodeList)
     {
         pContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_3_CONTROL_POINT_PATCHLIST);
         m_pMap->PreRender(pContext);
@@ -359,6 +356,18 @@ bool TQuadtree::Release()
         delete m_pRootNode;
         m_pRootNode = nullptr;
     }
+    m_TexArray[0] = nullptr;
+    m_TexArray[1] = nullptr;
+    m_TexArray[2] = nullptr;
+    m_TexArray[3] = nullptr;
+    m_TexArray[4] = nullptr;
+    m_ObjectList.clear();
+    m_pLeafNodeList.clear();
+    m_pDrawLeafNodeList.clear();
+   
+    m_pShadowConstantBuffer.Reset();
+    m_pMaskAlphaTex.Reset();
+    m_pMaskAlphaTexSRV.Reset();
     return true;
 }
 TQuadtree::~TQuadtree()

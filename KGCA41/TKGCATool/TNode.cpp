@@ -2,6 +2,7 @@
 #include "TNode.h"
 void    TNode::CreateIndexData(TMap* pMap, DWORD dwNumCols, DWORD dwNumRows)
 {
+	m_IndexList.clear();
 	// 0  1   2   3   4
 	// 5  6   7   8   9
 	// 10 11  12  13  14
@@ -65,6 +66,8 @@ HRESULT TNode::CreateIndexBuffer(	TMap* pMap,
 {
 	HRESULT hr;
 	CreateIndexData(pMap, dwNumRows, dNumCols);
+	if (m_pIndexBuffer) m_pIndexBuffer->Release();
+
 	D3D11_BUFFER_DESC       bd;
 	ZeroMemory(&bd, sizeof(bd));
 	bd.ByteWidth = sizeof(DWORD) * m_IndexList.size(); // 바이트 용량
@@ -108,8 +111,7 @@ TNode::TNode(TNode* pParent, TMap* pMap,
 	
 	
 }
-void   TNode::CreateChildNode(TNode* pParent, TMap* pMap,
-	DWORD dwNumCols, DWORD dwNumRows )
+void   TNode::CreateChildNode(TNode* pParent, TMap* pMap,DWORD dwNumCols, DWORD dwNumRows )
 {
 	// 0  1   2   3   4
 	// 5  6   7   8   9
@@ -132,8 +134,12 @@ void   TNode::CreateChildNode(TNode* pParent, TMap* pMap,
 	m_pChild[3] = new TNode(pParent, pMap, dwCenter, dwRightCenter, dwBottomCenter, dwRB, dwNumCols, dwNumRows);
 }
 TNode::~TNode()
-{
+{	
 	if(m_pIndexBuffer)m_pIndexBuffer->Release();
+	m_IndexList.clear();
+	m_pStaticObjectlist.clear();
+	m_pDynamicObjectlist.clear();
+
 	delete m_pChild[0];
 	delete m_pChild[1];
 	delete m_pChild[2];
@@ -142,4 +148,5 @@ TNode::~TNode()
 	m_pChild[1] = nullptr;
 	m_pChild[2] = nullptr;
 	m_pChild[3] = nullptr;
+	m_pChild.clear();
 }
