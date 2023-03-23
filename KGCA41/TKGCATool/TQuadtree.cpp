@@ -49,7 +49,7 @@ void TQuadtree::Splatting(TVector3 vIntersection, UINT iSplattingTexIndex, float
             }
         }
     }
-    m_pMap->m_pImmediateContext->UpdateSubresource(m_pMaskAlphaTex.Get(), 0, nullptr, m_fAlphaData, RowPitch, DepthPitch);
+    m_pLandscape->m_pImmediateContext->UpdateSubresource(m_pMaskAlphaTex.Get(), 0, nullptr, m_fAlphaData, RowPitch, DepthPitch);
 
 }
 HRESULT TQuadtree::CreateAlphaTexture(ID3D11Device* pDevice, DWORD dwWidth, DWORD dwHeight)
@@ -99,9 +99,9 @@ HRESULT TQuadtree::CreateAlphaTexture(ID3D11Device* pDevice, DWORD dwWidth, DWOR
 bool TQuadtree::Create(TCamera* pMainCamera, TMap* pMap, int iMaxDepth)
 {    
     m_pCamera = pMainCamera;
-    m_pMap = pMap;
+    m_pLandscape = pMap;
     m_iMaxDepth = iMaxDepth;
-    m_pRootNode = new TNode(nullptr, m_pMap, 
+    m_pRootNode = new TNode(nullptr, m_pLandscape, 
         0, 
         pMap->m_iNumRows-1,
         pMap->m_iNumRows * (pMap->m_iNumCols - 1),
@@ -109,7 +109,7 @@ bool TQuadtree::Create(TCamera* pMainCamera, TMap* pMap, int iMaxDepth)
         pMap->m_iNumCols, pMap->m_iNumRows);
     BuildTree(m_pRootNode);
 
-    CreateAlphaTexture(this->m_pMap->m_pd3dDevice, 1024, 1024);
+    CreateAlphaTexture(this->m_pLandscape->m_pd3dDevice, 1024, 1024);
     return true;
 }
 TNode* TQuadtree::FindNode(TNode* pNode, T_BOX tBox)
@@ -179,15 +179,15 @@ void TQuadtree::BuildTree(TNode* pNode)
     if (pNode == nullptr) return;
     if (IsSubDivide(pNode) == false)
     {
-        //pNode->CreateIndexBuffer(   m_pMap->m_pd3dDevice,
-        //                            m_pMap->m_pImmediateContext,
-        //                            m_pMap->m_iNumRows,
-        //                            m_pMap->m_iNumCols);
+        //pNode->CreateIndexBuffer(   m_pLandscape->m_pd3dDevice,
+        //                            m_pLandscape->m_pImmediateContext,
+        //                            m_pLandscape->m_iNumRows,
+        //                            m_pLandscape->m_iNumCols);
         pNode->m_bLeaf = true;
         m_pLeafNodeList.push_back(pNode);
         return;
     }
-    pNode->CreateChildNode(pNode, m_pMap, m_pMap->m_iNumRows,   m_pMap->m_iNumCols);
+    pNode->CreateChildNode(pNode, m_pLandscape, m_pLandscape->m_iNumRows,   m_pLandscape->m_iNumCols);
 
     BuildTree(pNode->m_pChild[0]);
     BuildTree(pNode->m_pChild[1]);
@@ -246,7 +246,7 @@ void TQuadtree::RenderObject(ID3D11DeviceContext* pContext, TNode* pNode)
         T_POSITION dwRet = m_pCamera->m_vFrustum.ClassifyTBox(fbx->m_tBox);
         if (P_FRONT > 0)// 완전포함.
         {
-            fbx->SetMatrix(nullptr, &m_pMap->m_matView, &m_pMap->m_matProj);
+            fbx->SetMatrix(nullptr, &m_pLandscape->m_matView, &m_pLandscape->m_matProj);
             fbx->Render(pContext);
         }
     }
@@ -263,7 +263,7 @@ void TQuadtree::RenderShadowObject(ID3D11DeviceContext* pContext, TNode* pNode)
         T_POSITION dwRet = m_pCamera->m_vFrustum.ClassifyTBox(fbx->m_tBox);
         if (P_FRONT > 0)// 완전포함.
         {
-            fbx->SetMatrix(nullptr, &m_pMap->m_matView, &m_pMap->m_matProj);
+            fbx->SetMatrix(nullptr, &m_pLandscape->m_matView, &m_pLandscape->m_matProj);
             fbx->RenderShadow(pContext);
         }
     }
@@ -284,7 +284,7 @@ bool TQuadtree::Render(ID3D11DeviceContext* pContext)
         pContext->UpdateSubresource(m_pShadowConstantBuffer.Get(), 0, NULL, &m_cbShadow, 0, 0);
         pContext->HSSetConstantBuffers(3, 1, m_pShadowConstantBuffer.GetAddressOf());
 
-        m_pMap->PreRender(pContext);
+        m_pLandscape->PreRender(pContext);
         ID3D11ShaderResourceView* pSRV = nullptr;
         pContext->PSSetShaderResources(1, 1, m_pMaskAlphaTexSRV.GetAddressOf());
         pContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_3_CONTROL_POINT_PATCHLIST);
@@ -303,7 +303,7 @@ bool TQuadtree::Render(ID3D11DeviceContext* pContext)
 
         for (auto fbx : node->m_pDynamicObjectlist)
         {
-            fbx->SetMatrix(nullptr, &m_pMap->m_matView, &m_pMap->m_matProj);
+            fbx->SetMatrix(nullptr, &m_pLandscape->m_matView, &m_pLandscape->m_matProj);
             fbx->Render(pContext);
         }
     }
@@ -319,7 +319,7 @@ bool TQuadtree::RenderShadow(ID3D11DeviceContext* pContext, TCamera* pShadowCame
     for (auto node : m_pLeafNodeList)
     {
         pContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_3_CONTROL_POINT_PATCHLIST);
-        m_pMap->PreRender(pContext);
+        m_pLandscape->PreRender(pContext);
 
         TVector3 vCam = m_pCamera->m_vPos;
         TVector3 vNode = node->m_tBox.vCenter;
@@ -329,14 +329,14 @@ bool TQuadtree::RenderShadow(ID3D11DeviceContext* pContext, TCamera* pShadowCame
         pContext->UpdateSubresource(m_pShadowConstantBuffer.Get(), 0, NULL, &m_cbShadow, 0, 0);
         pContext->HSSetConstantBuffers(3, 1, m_pShadowConstantBuffer.GetAddressOf());
 
-        m_pMap->m_pImmediateContext->PSSetShader(NULL, NULL, 0);
-        m_pMap->m_pImmediateContext->IASetIndexBuffer(node->m_pIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
-        m_pMap->m_pImmediateContext->DrawIndexed(node->m_dwFace * 3, 0, 0);
+        m_pLandscape->m_pImmediateContext->PSSetShader(NULL, NULL, 0);
+        m_pLandscape->m_pImmediateContext->IASetIndexBuffer(node->m_pIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
+        m_pLandscape->m_pImmediateContext->DrawIndexed(node->m_dwFace * 3, 0, 0);
 
         pContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
         for (auto fbx : node->m_pDynamicObjectlist)
         {
-            fbx->SetMatrix(nullptr, &m_pMap->m_matView, &m_pMap->m_matProj);
+            fbx->SetMatrix(nullptr, &m_pLandscape->m_matView, &m_pLandscape->m_matProj);
             fbx->PreRender(pContext);
             pContext->PSSetShader(NULL, NULL, 0);
             fbx->PostRender(pContext);

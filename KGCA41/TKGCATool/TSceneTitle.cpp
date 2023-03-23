@@ -4,32 +4,44 @@
 #include "TDxState.h"
 bool TSceneTitle::DeletaMap()
 {
-	if (m_pMap)
+	if (m_pLandscape)
 	{
-		m_pMap->Release();
-		delete m_pMap;
-		m_pMap = nullptr;
-		
+		m_pLandscape->Release();
+		delete m_pLandscape;
+		m_pLandscape = nullptr;		
+	}
+	if (m_pWaterMap)
+	{
+		m_pWaterMap->Release();
+		delete m_pWaterMap;
+		m_pWaterMap = nullptr;
 	}
 	return true;
 }
 bool TSceneTitle::CreateMap(UINT iColumn, UINT iRows )
 {
-	m_pMap = new TMap;
+	m_pLandscape = new TMap;
 	// 2*n½Â+1
-	//m_pMap->LoadHeightMap(m_pd3dDevice, m_pImmediateContext, L"../../data/map/heightMap513.bmp");
-	m_pMap->Build(iColumn, iRows);
-	//m_pMap->Build(m_pMap->m_iNumCols, m_pMap->m_iNumRows);
-	//m_pMap->Create(m_pd3dDevice, m_pImmediateContext, L"DefaultMap.txt", L"../../data/map/003.jpg");
-	m_pMap->Create(m_pd3dDevice, m_pImmediateContext, L"TessellationMap.hlsl", L"../../data/map/Dirt_Diff.dds");
+	//m_pLandscape->LoadHeightMap(m_pd3dDevice, m_pImmediateContext, L"../../data/map/heightMap513.bmp");
+	m_pLandscape->Build(iColumn, iRows);
+	//m_pLandscape->Build(m_pLandscape->m_iNumCols, m_pLandscape->m_iNumRows);
+	//m_pLandscape->Create(m_pd3dDevice, m_pImmediateContext, L"DefaultMap.txt", L"../../data/map/003.jpg");
+	m_pLandscape->Create(m_pd3dDevice, m_pImmediateContext, L"TessellationMap.hlsl", L"../../data/map/Dirt_Diff.dds");
 
 	if (m_pUser)
 	{
 		TVector3 vCamera = m_pUser->m_vPos + TVector3(0, 10, -10);
-		vCamera.y = m_pMap->GetHeight(vCamera.x, vCamera.z),m_pMainCamera->CreateViewMatrix(vCamera, m_pUser->m_vPos, TVector3(0, 1, 0));
+		vCamera.y = m_pLandscape->GetHeight(vCamera.x, vCamera.z),m_pMainCamera->CreateViewMatrix(vCamera, m_pUser->m_vPos, TVector3(0, 1, 0));
 		m_pMainCamera->CreateProjMatrix(1.0f, 1000.0f, T_PI * 0.25f,(float)g_rtClient.right / (float)g_rtClient.bottom);
 		m_vBeforePos = m_pUser->m_vPos;
 	}
+	return true;
+}
+bool TSceneTitle::CreateWaterMap(UINT iColumn, UINT iRows, float fCellDistance, float fBaseHeight)
+{
+	m_pWaterMap = new TMap;
+	m_pWaterMap->Build(iColumn, iRows, fCellDistance, fBaseHeight);
+	m_pWaterMap->Create(m_pd3dDevice, m_pImmediateContext, L"WaterMap.hlsl", L"../../data/map/Tile29.jpg");
 	return true;
 }
 bool TSceneTitle::CreatePlayer()
@@ -38,14 +50,14 @@ bool TSceneTitle::CreatePlayer()
 	m_pUser->Create(m_pd3dDevice, m_pImmediateContext, L"DefaultObject.txt", L"../../data/object/20200428_185613.jpg");
 	D3DXMatrixTranslation(&m_pUser->m_matWorld,
 		0,
-		m_pMap->GetHeight(0, 0),
+		m_pLandscape->GetHeight(0, 0),
 		0);
 	m_pUser->m_vPos.x = m_pUser->m_matWorld._41;
 	m_pUser->m_vPos.y = m_pUser->m_matWorld._42;
 	m_pUser->m_vPos.z = m_pUser->m_matWorld._43;
 
 	TVector3 vCamera = m_pUser->m_vPos + TVector3(0, 10, -10);
-	vCamera.y = m_pMap->GetHeight(vCamera.x, vCamera.z),
+	vCamera.y = m_pLandscape->GetHeight(vCamera.x, vCamera.z),
 		m_pMainCamera->CreateViewMatrix(vCamera, m_pUser->m_vPos, TVector3(0, 1, 0));
 	m_pMainCamera->CreateProjMatrix(1.0f, 1000.0f, T_PI * 0.25f,
 		(float)g_rtClient.right / (float)g_rtClient.bottom);
@@ -95,11 +107,11 @@ bool TSceneTitle::Frame()
 	if (m_pUser)
 	{
 		m_pUser->m_vLook = x;
-		m_pUser->m_vPos.y = m_pMap->GetHeight(m_pUser->m_vPos.x, m_pUser->m_vPos.z);
+		m_pUser->m_vPos.y = m_pLandscape->GetHeight(m_pUser->m_vPos.x, m_pUser->m_vPos.z);
 		m_pUser->Frame();
 	
 		TVector3 vHeight;
-		vHeight.y = m_pMap->GetHeight(m_pMainCamera->m_vPos.x, m_pMainCamera->m_vPos.z);
+		vHeight.y = m_pLandscape->GetHeight(m_pMainCamera->m_vPos.x, m_pMainCamera->m_vPos.z);
 		m_pMainCamera->SetPos(m_pUser->m_vPos, vHeight);
 	}
 	m_pMainCamera->Frame();
@@ -128,10 +140,16 @@ bool TSceneTitle::Release()
 		m_pUser->Release();
 		delete m_pUser;
 	}
-	if (m_pMap)
+	if (m_pLandscape)
 	{
-		m_pMap->Release();
-		delete m_pMap;
+		m_pLandscape->Release();
+		delete m_pLandscape;
 	}	
+	if (m_pWaterMap)
+	{
+		m_pWaterMap->Release();
+		delete m_pWaterMap;
+	}
+
 	return true;
 }

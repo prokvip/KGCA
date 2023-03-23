@@ -467,5 +467,8 @@
     <FxCompile Include="TessellationMap.hlsl">
       <Filter>shader</Filter>
     </FxCompile>
+    <FxCompile Include="WaterMap.hlsl">
+      <Filter>shader</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

@@ -101,13 +101,13 @@ bool TSceneInGame::Init()
 	std::wstring mapshader = L"../../data/shader/DefaultShape.txt";
 	TTexture* pMaskTex = I_Tex.Load(L"../../data/bitmap2.bmp");
 
-	m_pMap = new TMapObject;
-	m_pMap->Create(m_pd3dDevice,
+	m_pLandscape = new TMapObject;
+	m_pLandscape->Create(m_pd3dDevice,
 		m_pImmediateContext,
 		mapshader,
 		L"../../data/kgcabk.bmp");//"L"../../data/gameHeight.png");
-	m_pMap->SetRect({ 0, 0,	2000.0f,2000.0f });
-	m_pMap->SetPosition({ 0.0f, 0.0f });
+	m_pLandscape->SetRect({ 0, 0,	2000.0f,2000.0f });
+	m_pLandscape->SetPosition({ 0.0f, 0.0f });
 
 	m_pUser = new TUser2D;
 	m_pUser->Create(m_pd3dDevice, m_pImmediateContext,
@@ -164,9 +164,9 @@ bool TSceneInGame::Frame()
 	m_pUser->SetCameraPos(m_vCamera);
 	m_pUser->SetPosition(m_pUser->m_vPos, m_vCamera);
 
-	m_pMap->SetCameraSize(vSize);
-	m_pMap->SetCameraPos(m_vCamera);
-	m_pMap->Frame();
+	m_pLandscape->SetCameraSize(vSize);
+	m_pLandscape->SetCameraPos(m_vCamera);
+	m_pLandscape->Frame();
 
 	for (auto iter = m_pNpcList.begin();
 		iter != m_pNpcList.end(); iter++)
@@ -274,7 +274,7 @@ bool TSceneInGame::Frame()
 }
 bool TSceneInGame::Render(ID3D11DeviceContext* pContext)
 {
-	m_pMap->Render(pContext);
+	m_pLandscape->Render(pContext);
 
 	for (auto data : m_pNpcList)
 	{
@@ -327,10 +327,10 @@ void TSceneInGame::DrawMiniMap(ID3D11DeviceContext* pContext, UINT x, UINT y, UI
 	m_pImmediateContext->RSSetViewports(1, &vp);
 	//TVector2 vCamera = { 0,0 };
 	TVector2 vSize = { 2000, 2000 };
-	m_pMap->SetCameraSize(vSize);
-	m_pMap->SetCameraPos(m_vCamera);
-	m_pMap->Frame();
-	m_pMap->Render(pContext);
+	m_pLandscape->SetCameraSize(vSize);
+	m_pLandscape->SetCameraPos(m_vCamera);
+	m_pLandscape->Frame();
+	m_pLandscape->Render(pContext);
 	for (auto npc : m_pNpcList)
 	{
 		npc->SetCameraSize(vSize);
@@ -342,11 +342,11 @@ void TSceneInGame::DrawMiniMap(ID3D11DeviceContext* pContext, UINT x, UINT y, UI
 }
 bool TSceneInGame::Release()
 {
-	if (m_pMap)
+	if (m_pLandscape)
 	{
-		m_pMap->Release();
-		delete m_pMap;
-		m_pMap = nullptr;
+		m_pLandscape->Release();
+		delete m_pLandscape;
+		m_pLandscape = nullptr;
 	}
 	if (m_pUser)
 	{

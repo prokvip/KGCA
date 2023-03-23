@@ -65,8 +65,10 @@ float TMap::Lerp(float fStart, float fEnd, float fTangent)
 {
 	return fStart - (fStart * fTangent) + (fEnd * fTangent);
 }
-bool  TMap::Build(UINT iWidth, UINT iHeight)
+bool  TMap::Build(UINT iWidth, UINT iHeight, float fCellDistance, float fBaseHeight)
 {
+	m_fCellDistance = fCellDistance;
+	m_fBaseHeight = fBaseHeight;
 	// 전체 셀 개수 = (iWidth-1)*(iHeigth-1)
 	// 전체 페이스 개수 = (iWidth-1)*(iHeigth-1)*2
 	// 전체 정점 개수 = iWidth * iHeight
@@ -88,9 +90,9 @@ bool  TMap::Build(UINT iWidth, UINT iHeight)
 				0.0f,//cosf(DegreeToRadian(iCol))*20.0f+ sinf(DegreeToRadian(iRow)) * 20.0f,
 				(float)(iHalfHeight- iRow)* m_fCellDistance };
 			if(m_fHeightList.size() > 0)
-				m_VertexList[iRow * iWidth + iCol].p.y = m_fHeightList[iRow*m_iNumCols+iCol]* m_fScaleHeight;
+				m_VertexList[iRow * iWidth + iCol].p.y = m_fBaseHeight+m_fHeightList[iRow*m_iNumCols+iCol]* m_fScaleHeight;
 			else
-				m_VertexList[iRow * iWidth + iCol].p.y = 0.0f;
+				m_VertexList[iRow * iWidth + iCol].p.y = m_fBaseHeight;
 			m_VertexList[iRow * iWidth + iCol].c =	{ 1,1,1,1 };
 			m_VertexList[iRow * iWidth + iCol].t =	{ ((float)iCol / (float)(iWidth-1)),
 													 ((float)iRow / (float)(iHeight - 1)) };

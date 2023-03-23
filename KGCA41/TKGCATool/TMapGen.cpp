@@ -134,9 +134,9 @@ void TMapGen::OnLbnSelchangeList1()
 	T_STR filepath = L"../../data/map/";
 	filepath += name.GetBuffer();
 	TTexture* pTex = I_Tex.Load(filepath);
-	if (pTex && pApp->m_Sample.m_pTitle && pApp->m_Sample.m_pTitle->m_pMap)
+	if (pTex && pApp->m_Sample.m_pTitle && pApp->m_Sample.m_pTitle->m_pLandscape)
 	{
-		pApp->m_Sample.m_pTitle->m_pMap->m_pTextureSRV = pTex->m_pTextureSRV;
+		pApp->m_Sample.m_pTitle->m_pLandscape->m_pTextureSRV = pTex->m_pTextureSRV;
 	}
 
 

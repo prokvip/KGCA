@@ -330,6 +330,7 @@ namespace TDX
         m_cbData.matView = m_matView.Transpose();
         m_cbData.matProj = m_matProj.Transpose();
         m_cbData.matWorldInverse = m_matWorld.Invert();
+        m_cbData.fTimer = g_fGameTimer;
         m_pImmediateContext->UpdateSubresource( m_pConstantBuffer, 0, nullptr,    &m_cbData, 0, 0);
     }
     void	TBaseObject::SetMatrix(TMatrix* matWorld, TMatrix* matView, TMatrix* matProj)

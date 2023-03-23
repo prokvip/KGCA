@@ -63,12 +63,14 @@ class TSceneTitle :   public TScene
 public:
 	TVector3        m_vBeforePos;
 	TBaseObject*	m_pBG;
-	TMap* m_pMap = nullptr;
+	TMap*			m_pLandscape = nullptr;
+	TMap*			m_pWaterMap = nullptr;
 	TUser*			m_pUser=nullptr;
 	std::shared_ptr<TCamera> m_pMapCamera=nullptr;
 	std::shared_ptr<TCamera> m_pDebugCamera = nullptr;
 public:
 	bool				CreateMap(UINT iColumn=257, UINT iRows=257);
+	bool				CreateWaterMap(UINT iColumn, UINT iRows, float fCellDistance, float fBaseHeight=0.0f);
 	bool				DeletaMap();
 	bool				CreatePlayer();
 public:

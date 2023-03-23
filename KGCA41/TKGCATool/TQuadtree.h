@@ -15,7 +15,7 @@ class TQuadtree
 public:
 	TNode* m_pRootNode;
 	int		m_iMaxDepth;
-	TMap* m_pMap = nullptr;
+	TMap* m_pLandscape = nullptr;
 	TCamera* m_pCamera = nullptr;
 	TTexture* m_TexArray[5];
 	std::vector<TWorldObject*>   m_ObjectList;
@@ -31,7 +31,7 @@ public:
 	HRESULT CreateAlphaTexture(ID3D11Device* pDevice, DWORD dwWidth, DWORD dwHeight);
 	void    Splatting(TVector3 vIntersection, UINT iSplattingTexIndex, float fSplattingRadius=5.0f);
 public:
-	bool	Create(TCamera* pMainCamera, TMap* m_pMap, int iMaxDepth = 3);
+	bool	Create(TCamera* pMainCamera, TMap* m_pLandscape, int iMaxDepth = 3);
 	bool	AddObject(TWorldObject* pObj);
 	void	BuildTree(TNode* pNode);
 	bool	IsSubDivide(TNode* pNode);

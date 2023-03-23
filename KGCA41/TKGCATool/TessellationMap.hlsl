@@ -1,8 +1,28 @@
 #include "Default.h"
-struct HS_CONSTANT_OUTPUT
+struct HS_CONSTANT_OUTPUT1
 {
 	float edges[3] : SV_TessFactor;
 	float inside : SV_InsideTessFactor;
+};
+struct HS_CONSTANT_OUTPUT
+{
+	// Tess factor for the FF HW block
+	float edges[3]    : SV_TessFactor;
+	float inside : SV_InsideTessFactor;
+
+	// Geometry cubic generated control points
+	float3 f3B210    : POSITION3;
+	float3 f3B120    : POSITION4;
+	float3 f3B021    : POSITION5;
+	float3 f3B012    : POSITION6;
+	float3 f3B102    : POSITION7;
+	float3 f3B201    : POSITION8;
+	float3 f3B111    : CENTER;
+
+	// Normal quadratic generated control points
+	float3 f3N110    : NORMAL3;
+	float3 f3N011    : NORMAL4;
+	float3 f3N101    : NORMAL5;
 };
 
 struct VS_IN
@@ -47,16 +67,58 @@ VS_OUT VS(VS_IN input)
 	output.t = input.t;
 	return output;
 }
-HS_CONSTANT_OUTPUT PatchConstantFunction(
-	InputPatch<VS_OUT, 3> inputPatch,
-	uint patchId : SV_PrimitiveID)
+//HS_CONSTANT_OUTPUT1 PatchConstantFunction1(
+//	InputPatch<VS_OUT, 3> inputPatch,
+//	uint patchId : SV_PrimitiveID)
+//{
+//	HS_CONSTANT_OUTPUT1 output;
+//	output.edges[0] = 3;
+//	output.edges[1] = 3;
+//	output.edges[2] = 3;
+//	output.inside = g_fTessellationAmount;
+//	return output;
+//}
+HS_CONSTANT_OUTPUT PatchConstantFunction(InputPatch<VS_OUT, 3> I)
 {
-	HS_CONSTANT_OUTPUT output;
-	output.edges[0] = 3;
-	output.edges[1] = 3;
-	output.edges[2] = 3;
-	output.inside = g_fTessellationAmount;
-	return output;
+	HS_CONSTANT_OUTPUT O = (HS_CONSTANT_OUTPUT)0;
+	O.edges[0] = 3;
+	O.edges[1] = 3;
+	O.edges[2] = 3;
+
+	// Assign Positions
+	float3 f3B003 = I[0].p;
+	float3 f3B030 = I[1].p;
+	float3 f3B300 = I[2].p;
+	// And Normals
+	float3 f3N002 = I[0].n;
+	float3 f3N020 = I[1].n;
+	float3 f3N200 = I[2].n;
+
+	// Compute the cubic geometry control points
+	// Edge control points
+	O.f3B210 = ((2.0f * f3B003) + f3B030 - (dot((f3B030 - f3B003), f3N002) * f3N002)) / 3.0f;
+	O.f3B120 = ((2.0f * f3B030) + f3B003 - (dot((f3B003 - f3B030), f3N020) * f3N020)) / 3.0f;
+	O.f3B021 = ((2.0f * f3B030) + f3B300 - (dot((f3B300 - f3B030), f3N020) * f3N020)) / 3.0f;
+	O.f3B012 = ((2.0f * f3B300) + f3B030 - (dot((f3B030 - f3B300), f3N200) * f3N200)) / 3.0f;
+	O.f3B102 = ((2.0f * f3B300) + f3B003 - (dot((f3B003 - f3B300), f3N200) * f3N200)) / 3.0f;
+	O.f3B201 = ((2.0f * f3B003) + f3B300 - (dot((f3B300 - f3B003), f3N002) * f3N002)) / 3.0f;
+	// Center control point
+	float3 f3E = (O.f3B210 + O.f3B120 + O.f3B021 + O.f3B012 + O.f3B102 + O.f3B201) / 6.0f;
+	float3 f3V = (f3B003 + f3B030 + f3B300) / 3.0f;
+	O.f3B111 = f3E + ((f3E - f3V) / 2.0f);
+
+	// Compute the quadratic normal control points, and rotate into world space
+	float fV12 = 2.0f * dot(f3B030 - f3B003, f3N002 + f3N020) / dot(f3B030 - f3B003, f3B030 - f3B003);
+	O.f3N110 = normalize(f3N002 + f3N020 - fV12 * (f3B030 - f3B003));
+	float fV23 = 2.0f * dot(f3B300 - f3B030, f3N020 + f3N200) / dot(f3B300 - f3B030, f3B300 - f3B030);
+	O.f3N011 = normalize(f3N020 + f3N200 - fV23 * (f3B300 - f3B030));
+	float fV31 = 2.0f * dot(f3B003 - f3B300, f3N200 + f3N002) / dot(f3B003 - f3B300, f3B003 - f3B300);
+	O.f3N101 = normalize(f3N200 + f3N002 - fV31 * (f3B003 - f3B300));
+
+	// Inside tess factor is just the average of the edge factors
+	O.inside = g_fTessellationAmount;// (O.edges[0] + O.edges[1] + O.edges[2]) / 3.0f;
+
+	return O;
 }
 [domain("tri")]
 [partitioning("integer")]
@@ -125,32 +187,87 @@ DS_OUT VertexWork(VS_IN input)
 	output.TexShadow = mul(vWorld, g_matShadow);
 	return output;
 }
+//[domain("tri")]
+//DS_OUT DS1(HS_CONSTANT_OUTPUT1 input,
+//	float3 BarycentricCoordinates : SV_DomainLocation,
+//	const OutputPatch<HS_OUT, 3> patch)
+//{
+//	float3 vertexPosition;
+//	VS_IN newVertex;
+//
+//	newVertex.p =	BarycentricCoordinates.x * patch[0].p +
+//					BarycentricCoordinates.y * patch[1].p +
+//					BarycentricCoordinates.z * patch[2].p;
+//
+//	newVertex.t =	BarycentricCoordinates.x * patch[0].t +
+//				BarycentricCoordinates.y * patch[1].t +
+//				BarycentricCoordinates.z * patch[2].t;
+//
+//	newVertex.c = BarycentricCoordinates.x * patch[0].c +
+//		BarycentricCoordinates.y * patch[1].c +
+//		BarycentricCoordinates.z * patch[2].c;
+//
+//	newVertex.n = BarycentricCoordinates.x * patch[0].n +
+//		BarycentricCoordinates.y * patch[1].n +
+//		BarycentricCoordinates.z * patch[2].n;
+//
+//	return VertexWork(newVertex);
+//}
+////////////////////////////////////////////////////////////////////////////////
+// Domain Shader
+////////////////////////////////////////////////////////////////////////////////
 [domain("tri")]
-DS_OUT DS(HS_CONSTANT_OUTPUT input,
-	float3 BarycentricCoordinates : SV_DomainLocation,
-	const OutputPatch<HS_OUT, 3> patch)
+DS_OUT DS(HS_CONSTANT_OUTPUT HSConstantData,
+	const OutputPatch<HS_OUT, 3> I,
+	float3 f3BarycentricCoords : SV_DomainLocation)
 {
-	float3 vertexPosition;
+	DS_OUT O = (DS_OUT)0;
 	VS_IN newVertex;
+	// The barycentric coordinates
+	float fU = f3BarycentricCoords.x;
+	float fV = f3BarycentricCoords.y;
+	float fW = f3BarycentricCoords.z;
 
-	newVertex.p =	BarycentricCoordinates.x * patch[0].p +
-					BarycentricCoordinates.y * patch[1].p +
-					BarycentricCoordinates.z * patch[2].p;
+	// Precompute squares and squares * 3 
+	float fUU = fU * fU;
+	float fVV = fV * fV;
+	float fWW = fW * fW;
+	float fUU3 = fUU * 3.0f;
+	float fVV3 = fVV * 3.0f;
+	float fWW3 = fWW * 3.0f;
 
-	newVertex.t =	BarycentricCoordinates.x * patch[0].t +
-				BarycentricCoordinates.y * patch[1].t +
-				BarycentricCoordinates.z * patch[2].t;
+	// Compute position from cubic control points and barycentric coords
+	newVertex.p = I[0].p * fWW * fW +
+		I[1].p * fUU * fU +
+		I[2].p * fVV * fV +
+		HSConstantData.f3B210 * fWW3 * fU +
+		HSConstantData.f3B120 * fW * fUU3 +
+		HSConstantData.f3B201 * fWW3 * fV +
+		HSConstantData.f3B021 * fUU3 * fV +
+		HSConstantData.f3B102 * fW * fVV3 +
+		HSConstantData.f3B012 * fU * fVV3 +
+		HSConstantData.f3B111 * 6.0f * fW * fU * fV;
 
-	newVertex.c = BarycentricCoordinates.x * patch[0].c +
-		BarycentricCoordinates.y * patch[1].c +
-		BarycentricCoordinates.z * patch[2].c;
+	// Compute normal from quadratic control points and barycentric coords
+	float3 f3Normal = I[0].n * fWW +
+		I[1].n * fUU +
+		I[2].n * fVV +
+		HSConstantData.f3N110 * fW * fU +
+		HSConstantData.f3N011 * fU * fV +
+		HSConstantData.f3N101 * fW * fV;
 
-	newVertex.n = BarycentricCoordinates.x * patch[0].n +
-		BarycentricCoordinates.y * patch[1].n +
-		BarycentricCoordinates.z * patch[2].n;
+	// Normalize the interpolated normal    
+	newVertex.n = normalize(f3Normal);
+
+	newVertex.c = f3BarycentricCoords.x * I[0].c +
+		f3BarycentricCoords.y * I[0].c +
+		f3BarycentricCoords.z * I[0].c;
+	newVertex.c.a = 1.0f;
+	newVertex.t = I[0].t * fW + I[1].t * fU + I[2].t * fV;
 
 	return VertexWork(newVertex);
 }
+
 float4 LoadTex1Color(float2 uv, float3 vWorld) 
 {
 	float4 vColor = 0;

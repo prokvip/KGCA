@@ -28,8 +28,9 @@ public:
 	float        m_fScaleHeight = 100.0f;
 	DWORD_VECTOR m_UpdateIndexList;
 	std::vector<float>   m_fHeightList;
+	float		m_fBaseHeight = 0.0f;
 public:
-	bool  Build(UINT iWidth, UINT iHeight);
+	bool  Build(UINT iWidth, UINT iHeight, float fCellDistance= 1.0f, float fBaseHeight=0.0f);
 	bool  UpdateBuffer(TCameraDebug* pMainCamera);
 	bool  LoadHeightMap(ID3D11Device* pd3dDevice,ID3D11DeviceContext* pImmediateContext, W_STR loadTexture);
 	void  GenVertexNormal();

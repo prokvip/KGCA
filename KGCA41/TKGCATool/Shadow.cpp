@@ -123,9 +123,9 @@ bool Sample::ObjectShadow(ID3D11DeviceContext* pContext)
 
 	m_pImmediateContext->OMSetDepthStencilState(TDxState::g_pDefaultDepthStencil, 0xff);
 
-	if (pScene->m_pMap)
+	if (pScene->m_pLandscape)
 	{
-		pScene->m_pMap->SetMatrix(nullptr,	&m_matShadowView,	&m_matShadowProj);		
+		pScene->m_pLandscape->SetMatrix(nullptr,	&m_matShadowView,	&m_matShadowProj);		
 		m_Quadtree.RenderShadow(pContext, m_pCurrentScene->m_pMainCamera);
 	}
 	pContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);

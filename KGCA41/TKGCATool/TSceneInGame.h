@@ -7,7 +7,7 @@ class TSceneInGame : public TScene
 {
 public:
 	TVector2		m_vCamera;
-	TMapObject*		m_pMap;
+	TMapObject*		m_pLandscape;
 	TUser2D*		m_pUser;
 	std::list<TEffect2D*>		m_pEffectList;
 	std::list<TNpc2D*>		m_pNpcList;

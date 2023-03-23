@@ -32,9 +32,9 @@ bool Sample::GetIntersection()
 				UINT i0 = node->m_IndexList[index + 0];
 				UINT i1 = node->m_IndexList[index + 1];
 				UINT i2 = node->m_IndexList[index + 2];
-				TVector3 v0 = m_Quadtree.m_pMap->m_VertexList[i0].p;
-				TVector3 v1 = m_Quadtree.m_pMap->m_VertexList[i1].p;
-				TVector3 v2 = m_Quadtree.m_pMap->m_VertexList[i2].p;
+				TVector3 v0 = m_Quadtree.m_pLandscape->m_VertexList[i0].p;
+				TVector3 v1 = m_Quadtree.m_pLandscape->m_VertexList[i1].p;
+				TVector3 v2 = m_Quadtree.m_pLandscape->m_VertexList[i2].p;
 				if (m_Select.ChkPick(v0, v1, v2))
 				{
 					return true;
@@ -56,13 +56,15 @@ bool Sample::CreateMapData(UINT iColumn, UINT iRows)
 		m_pTitle->CreateMap(iColumn, iRows);
 		m_Quadtree.Create(
 			((TSceneTitle*)m_pCurrentScene.get())->m_pMainCamera,
-			((TSceneTitle*)m_pCurrentScene.get())->m_pMap);
+			((TSceneTitle*)m_pCurrentScene.get())->m_pLandscape);
 		
 		m_Quadtree.m_TexArray[0] = 	I_Tex.Load(L"../../data/map/Dirt_Diff.dds");
 		m_Quadtree.m_TexArray[1] =	I_Tex.Load(L"../../data/map/017.bmp");
 		m_Quadtree.m_TexArray[2] = I_Tex.Load(L"../../data/map/037.bmp");
 		m_Quadtree.m_TexArray[3] = I_Tex.Load(L"../../data/map/036.bmp");
 		m_Quadtree.m_TexArray[4] = I_Tex.Load(L"../../data/map/026.jpg");
+				
+		m_pTitle->CreateWaterMap(129, 129, 10.0f, -5.0f);
 
 	}
 	return true;
@@ -127,7 +129,7 @@ bool Sample::Frame()
 	{
 		if (GetIntersection())
 		{
-			if (m_pTitle && m_pTitle->m_pMap)
+			if (m_pTitle && m_pTitle->m_pLandscape)
 			{
 				std::vector<TNode*> nodelist;
 				T_BOX box;
@@ -141,9 +143,9 @@ bool Sample::Frame()
 					float fWorkRadius = randstep(3.0f, 20.0f);
 					for (auto node : nodelist)
 					{
-						for (UINT iVertex = 0; iVertex < m_Quadtree.m_pMap->m_VertexList.size(); iVertex++)
+						for (UINT iVertex = 0; iVertex < m_Quadtree.m_pLandscape->m_VertexList.size(); iVertex++)
 						{
-							TVector3 v0 = m_Quadtree.m_pMap->m_VertexList[iVertex].p;
+							TVector3 v0 = m_Quadtree.m_pLandscape->m_VertexList[iVertex].p;
 							TVector3 v = v0 - m_Select.m_vIntersection;
 							float fDistance = D3DXVec3Length(&v);
 							
@@ -154,20 +156,20 @@ bool Sample::Frame()
 									float fValue = (fDistance / fWorkRadius) * 90.0f;
 									float fdot = cosf(DegreeToRadian(fValue));
 									if (m_bUpPicking)
-										m_Quadtree.m_pMap->m_VertexList[iVertex].p.y += fdot*g_fSecondPerFrame;
+										m_Quadtree.m_pLandscape->m_VertexList[iVertex].p.y += fdot*g_fSecondPerFrame;
 									if (m_bDownPicking)
-										m_Quadtree.m_pMap->m_VertexList[iVertex].p.y -= fdot * g_fSecondPerFrame;
+										m_Quadtree.m_pLandscape->m_VertexList[iVertex].p.y -= fdot * g_fSecondPerFrame;
 
-									if (node->m_tBox.vMin.y > m_Quadtree.m_pMap->m_VertexList[iVertex].p.y)
+									if (node->m_tBox.vMin.y > m_Quadtree.m_pLandscape->m_VertexList[iVertex].p.y)
 									{
-										node->m_tBox.vMin.y = m_Quadtree.m_pMap->m_VertexList[iVertex].p.y;
+										node->m_tBox.vMin.y = m_Quadtree.m_pLandscape->m_VertexList[iVertex].p.y;
 									}
-									if (node->m_tBox.vMax.y < m_Quadtree.m_pMap->m_VertexList[iVertex].p.y)
+									if (node->m_tBox.vMax.y < m_Quadtree.m_pLandscape->m_VertexList[iVertex].p.y)
 									{
-										node->m_tBox.vMax.y = m_Quadtree.m_pMap->m_VertexList[iVertex].p.y;
+										node->m_tBox.vMax.y = m_Quadtree.m_pLandscape->m_VertexList[iVertex].p.y;
 									}
 								}
-								m_Quadtree.m_pMap->ComputeVertexNormal(iVertex);
+								m_Quadtree.m_pLandscape->ComputeVertexNormal(iVertex);
 							}
 						}	
 						node->m_tBox.vCenter = (node->m_tBox.vMax + node->m_tBox.vMin) * 0.5f;
@@ -178,14 +180,14 @@ bool Sample::Frame()
 						node->m_tBox.fExtent[1] = node->m_tBox.vMax.y - node->m_tBox.vCenter.y;
 						node->m_tBox.fExtent[2] = node->m_tBox.vMax.z - node->m_tBox.vCenter.z;
 					}
-					m_Quadtree.m_pMap->UpdateVertexBuffer();
+					m_Quadtree.m_pLandscape->UpdateVertexBuffer();
 				}
 
 				for (auto npc : m_WorldObjectList)
 				{
 					TVector3 vPos = npc->m_vPos;
 					vPos.y = npc->m_matWorld._42 =
-						m_Quadtree.m_pMap->GetHeight(vPos.x, vPos.z);
+						m_Quadtree.m_pLandscape->GetHeight(vPos.x, vPos.z);
 					npc->SetPos(vPos);
 				}
 			}
@@ -196,7 +198,7 @@ bool Sample::Frame()
 	{
 		if (GetIntersection())
 		{
-			if (m_pTitle && m_pTitle->m_pMap)
+			if (m_pTitle && m_pTitle->m_pLandscape)
 			{
 				LoadFbx(m_szSelectFbxFile, m_Select.m_vIntersection);
 			};
@@ -210,7 +212,7 @@ bool Sample::Frame()
 		if (GetIntersection())
 		{
 			fStep = 0.0f;// g_fSecondPerFrame;
-			if (m_pTitle && m_pTitle->m_pMap)
+			if (m_pTitle && m_pTitle->m_pLandscape)
 			{
 				m_Quadtree.Splatting(m_Select.m_vIntersection, m_iSplattingTexIndex);
 			};			
@@ -284,31 +286,35 @@ bool Sample::ObjectRender(ID3D11DeviceContext* pContext)
 
 	TVector3 vLightPos = m_pShadowCamera->m_vPos;
 	TVector3 vLightDir = m_pShadowCamera->m_vLook;
-	if (pScene->m_pMap && m_Quadtree.m_pMap)
+	if (pScene->m_pLandscape && m_Quadtree.m_pLandscape)
 	{
-		pScene->m_pMap->m_cbData.vLightDir = TVector4(vLightDir.x, vLightDir.y, vLightDir.z, 300.0f);
-		pScene->m_pMap->m_cbData.vLightPos = TVector4(vLightPos.x, vLightPos.y, vLightPos.z, 30.0f);
-		pScene->m_pMap->m_cbData.vEyeDir =
+		pScene->m_pLandscape->m_cbData.vLightDir = TVector4(vLightDir.x, vLightDir.y, vLightDir.z, 300.0f);
+		pScene->m_pLandscape->m_cbData.vLightPos = TVector4(vLightPos.x, vLightPos.y, vLightPos.z, 30.0f);
+		pScene->m_pLandscape->m_cbData.vEyeDir =
 		{
 			pScene->m_pMainCamera->m_vLook.x,
 			pScene->m_pMainCamera->m_vLook.y,
 			pScene->m_pMainCamera->m_vLook.z,
 			0.90f
 		};
-		pScene->m_pMap->m_cbData.vEyePos = {
+		pScene->m_pLandscape->m_cbData.vEyePos = {
 			pScene->m_pMainCamera->m_vPos.x,
 			pScene->m_pMainCamera->m_vPos.y,
 			pScene->m_pMainCamera->m_vPos.z,
 			0.98f
 		};
-		pScene->m_pMap->SetMatrix(nullptr,&pScene->m_pMainCamera->m_matView,&pScene->m_pMainCamera->m_matProj);
+		pScene->m_pLandscape->SetMatrix(nullptr,&pScene->m_pMainCamera->m_matView,&pScene->m_pMainCamera->m_matProj);
 		pContext->PSSetShaderResources(6, 1, m_RT.m_pDsvSRV.GetAddressOf());
-		if (pScene->m_pMap->m_pHS!=nullptr && pScene->m_pMap->m_pDS != nullptr)
+		if (pScene->m_pLandscape->m_pHS!=nullptr && pScene->m_pLandscape->m_pDS != nullptr)
 		{
 			pContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_3_CONTROL_POINT_PATCHLIST);
 		}
 		
 		m_Quadtree.Render(pContext);
+
+
+		m_pTitle->m_pWaterMap->SetMatrix(nullptr, &pScene->m_pMainCamera->m_matView, &pScene->m_pMainCamera->m_matProj);
+		m_pTitle->m_pWaterMap->Render(pContext);
 	}
 
 	/*for (int iNpc = 0; iNpc < m_WorldObjectList.size(); iNpc++)
@@ -329,7 +335,7 @@ bool Sample::ObjectRender(ID3D11DeviceContext* pContext)
 		m_UserCharacter->Render(pContext);
 	}
 	
-	m_pCurrentScene->Render(pContext);
+	//m_pCurrentScene->Render(pContext);
 
 	// particle
 	pContext->OMSetBlendState(TDxState::g_pDualSourceBlend, 0, -1);
