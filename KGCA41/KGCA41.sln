@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.32602.291
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "00_DXSample", "00_DXSample", "{2AE2E050-FFD1-47A3-9D76-21173A599960}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "00_Sample", "00_Sample", "{2AE2E050-FFD1-47A3-9D76-21173A599960}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
