@@ -437,6 +437,7 @@
     <None Include="res\TKGCATool.rc2">
       <Filter>리소스 파일</Filter>
     </None>
+    <None Include="PBR.pptx" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="SpriteInfo.txt" />
@@ -470,5 +471,6 @@
     <FxCompile Include="WaterMap.hlsl">
       <Filter>shader</Filter>
     </FxCompile>
+    <FxCompile Include="PBR.hlsl" />
   </ItemGroup>
 </Project>

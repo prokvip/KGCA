@@ -1,11 +1,15 @@
 #define g_iNumLight 3
-Texture2D    g_txTex : register(t0);
-Texture2D    g_txMaskTex : register(t1);
-Texture2D    g_txTex2 : register(t2);
-Texture2D    g_txTex3 : register(t3);
-Texture2D    g_txTex4 : register(t4);
-Texture2D    g_txTex5 : register(t5);
+// pdf
+Texture2D    g_txAlbedoTex : register(t0);
+Texture2D    g_txNormalTex : register(t1);
+Texture2D    g_txMetalnessTex : register(t2);
+Texture2D    g_txRoughnessTex : register(t3);
+Texture2D    g_txEmisive : register(t4);
+//ibl
+TextureCube  g_txSpecularTex : register(t5); // 환경맵
 Texture2D    g_txDepthShadow : register(t6);
+TextureCube  g_txirradiance : register(t7);
+Texture2D    g_txSpecularBRDF_LUT : register(t8);// 환경맵에 대한 내적(x), 러브리스(y)
 //Texture2D    g_txTexArray[16] : register(t6);
 
 SamplerState g_SampleWrap : register(s0);
