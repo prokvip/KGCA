@@ -1,0 +1,465 @@
+/*
+Mesh - FbxMesh
+Level of detail (LOD) groups - FbxLodGroup
+Cameras (including stereo cameras for 3D) - FbxCamera
+Lights and gobos - FbxLight, FbxGobo
+NURBS - FbxNurbs, FbxNurbsCurve, FbxNurbsSur
+ace, FbxTrimNurbsSurface
+Texture mapping over a geometry - FbxTexture
+Material mapping over a geometry - FbxSurfaceMaterial
+Constraints - FbxConstraint
+Vertex cache animation on the control points of a geometry - FbxDeformer
+Scene settings that provide Up-Axis (X/Y/Z) and scene scaling (units) - FbxGlobalSettings, FbxAxisSystem
+Transformation data including position, rotation, scale, parent - FbxNode
+Markers - FbxMarker
+Lines - FbxLine
+Skeleton segments (root, limb, and limb node) - FbxSkeleton
+Animation curves - FbxAnimCurve
+Rest and bind poses for a list of nodes (bones and geometry) - FbxPose
+Parent page: Welcome to the FBX SDKMesh - FbxMesh
+Level of detail (LOD) groups - FbxLodGroup
+Cameras (including stereo cameras for 3D) - FbxCamera
+Lights and gobos - FbxLight, FbxGobo
+NURBS - FbxNurbs, FbxNurbsCurve, FbxNurbsSurface, FbxTrimNurbsSurface
+Texture mapping over a geometry - FbxTexture
+Material mapping over a geometry - FbxSurfaceMaterial
+Constraints - FbxConstraint
+Vertex cache animation on the control points of a geometry - FbxDeformer
+Scene settings that provide Up-Axis (X/Y/Z) and scene scaling (units) - FbxGlobalSettings, FbxAxisSystem
+Transformation data including position, rotation, scale, parent - FbxNode
+Markers - FbxMarker
+Lines - FbxLine
+Skeleton segments (root, limb, and limb node) - FbxSkeleton
+Animation curves - FbxAnimCurve
+Rest and bind poses for a list of nodes (bones and geometry) - FbxPose
+Parent page: Welcome to the FBX SDK
+*/
+#include <fbxsdk.h>
+#include <vector>
+#include <string>
+#include <map>
+#include <d3d11_1.h>
+#include <DirectXMath.h>
+#include "TextureLoader.h"
+
+using namespace DirectX;
+
+struct VERTEX
+{
+    XMFLOAT3 pos;
+    XMFLOAT2 tex;
+    XMFLOAT4 boneids;
+    XMFLOAT4 weights;
+
+    VERTEX()
+    {
+        boneids = { 0, 0, 0, 0 };
+        weights = { 0, 0, 0, 0 };
+    }
+};
+
+struct Keyframe {
+    FbxLongLong mFrameNum;
+    FbxAMatrix mGlobalTransform;
+    Keyframe* mNext;
+
+    Keyframe() : mNext(nullptr)
+    {}
+};
+
+struct TFbxJoint {
+int mParentIndex;
+const char* mName;
+FbxAMatrix mGlobalBindposeInverse;
+Keyframe* mAnimation;
+FbxNode *mNode;
+
+TFbxJoint() :
+    mNode(nullptr),
+    mAnimation(nullptr)
+{
+    mGlobalBindposeInverse.SetIdentity();
+    mParentIndex = -1;
+}
+
+~TFbxJoint()
+{
+    while (mAnimation)
+    {
+        Keyframe* temp = mAnimation->mNext;
+        delete mAnimation;
+        mAnimation = temp;
+    }
+}
+};
+
+struct TFbxSkeleton {
+std::vector<TFbxJoint> mJoints;
+};
+
+class Mesh
+{
+public:
+Mesh(ID3D11Device *dev, std::vector<VERTEX> vertices, ID3D11ShaderResourceView *texture)
+{
+    this->vertices = vertices;
+    this->texture = texture;
+
+    this->SetupMesh(dev);
+}
+
+void Draw(ID3D11DeviceContext *devcon)
+{
+    UINT stride = sizeof(VERTEX);
+    UINT offset = 0;
+
+    devcon->IASetVertexBuffers(0, 1, &vertexBuffer, &stride, &offset);
+
+    if (this->texture != nullptr)
+        devcon->PSSetShaderResources(0, 1, &texture);
+
+    devcon->Draw(vertices.size(), 0);
+}
+private:
+std::vector<VERTEX> vertices;
+ID3D11ShaderResourceView *texture = nullptr;
+ID3D11Buffer* vertexBuffer;
+
+bool SetupMesh(ID3D11Device *dev)
+{
+    HRESULT hr;
+
+    D3D11_BUFFER_DESC vbd;
+    vbd.Usage = D3D11_USAGE_IMMUTABLE;
+    vbd.ByteWidth = sizeof(VERTEX) * vertices.size();
+    vbd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+    vbd.CPUAccessFlags = 0;
+    vbd.MiscFlags = 0;
+
+    D3D11_SUBRESOURCE_DATA initData;
+    initData.pSysMem = &vertices[0];
+
+    hr = dev->CreateBuffer(&vbd, &initData, &vertexBuffer);
+    if (FAILED(hr))
+        return false;
+}
+};
+
+class FBXLoader
+{
+public:
+FBXLoader();
+~FBXLoader();
+
+void LoadFBX(HWND hwnd, ID3D11Device *dev, ID3D11DeviceContext *devcon, const char* filename);
+
+void Draw(ID3D11DeviceContext *devcon);
+
+XMMATRIX GetAnimatedMatrix(int index);
+
+TFbxSkeleton skeleton;
+
+private:
+FbxManager *fbxsdkManager = nullptr;
+FbxScene *fbxScene;
+std::map<int, int> controlpoints;
+std::vector<Mesh> meshes;
+HWND hwnd;
+
+void ProcessNode(ID3D11Device *dev, ID3D11DeviceContext *devcon, FbxNode *node, FbxGeometryConverter *gConverter);
+
+Mesh ProcessMesh(ID3D11Device* dev, ID3D11DeviceContext *devcon, FbxMesh *mesh);
+
+void ProcessSkeletonHeirarchy(FbxNode* rootnode);
+
+void ProcessSkeletonHeirarchyre(FbxNode* node, int depth, int index, int parentindex);
+
+unsigned int FindJointIndex(const T_STR& jointname);
+
+ID3D11ShaderResourceView *LoadTexture(ID3D11Device *dev, ID3D11DeviceContext *devcon, const char* texturefilename);
+};
+
+#include "FBXLoader.h"
+
+
+
+FBXLoader::FBXLoader()
+{
+}
+
+
+FBXLoader::~FBXLoader()
+{
+}
+
+void FBXLoader::LoadFBX(HWND hwnd, ID3D11Device * dev, ID3D11DeviceContext *devcon, const char * filename)
+{
+if (fbxsdkManager == nullptr)
+{
+    fbxsdkManager = FbxManager::Create();
+
+    FbxIOSettings* ioSettings = FbxIOSettings::Create(fbxsdkManager, IOSROOT);
+    fbxsdkManager->SetIOSettings(ioSettings);
+}
+
+FbxImporter *importer = FbxImporter::Create(fbxsdkManager, "");
+fbxScene = FbxScene::Create(fbxsdkManager, "");
+
+FbxGeometryConverter gConverter(fbxsdkManager);
+
+bool bSuccess = importer->Initialize(filename, -1, fbxsdkManager->GetIOSettings());
+
+bSuccess = importer->Import(fbxScene);
+
+importer->Destroy();
+
+FbxNode *fbxRootNode = fbxScene->GetRootNode();
+
+ProcessSkeletonHeirarchy(fbxRootNode);
+
+this->hwnd = hwnd;
+
+ProcessNode(dev, devcon, fbxRootNode, &gConverter);
+}
+
+void FBXLoader::Draw(ID3D11DeviceContext * devcon)
+{
+for (int i = 0; i < meshes.size(); i++)
+{
+    meshes[i].Draw(devcon);
+}
+}
+
+XMMATRIX FBXLoader::GetAnimatedMatrix(int index)
+{
+XMMATRIX bonematxm;
+FbxAMatrix bonemat = skeleton.mJoints[index].mGlobalBindposeInverse; //* skeleton.mJoints[0].mAnimation->mGlobalTransform;
+
+bonematxm = XMMatrixTranslation(bonemat.GetT().mData[0], bonemat.GetT().mData[1], bonemat.GetT().mData[2]);
+bonematxm *= XMMatrixRotationX(bonemat.GetR().mData[0]);
+bonematxm *= XMMatrixRotationY(bonemat.GetR().mData[1]);
+bonematxm *= XMMatrixRotationZ(bonemat.GetR().mData[2]);
+
+return bonematxm;
+}
+
+void FBXLoader::ProcessNode(ID3D11Device * dev, ID3D11DeviceContext *devcon, FbxNode * node, FbxGeometryConverter * gConverter)
+{
+if (node)
+{
+    if (node->GetNodeAttribute() != nullptr)
+    {
+        FbxNodeAttribute::EType AttributeType = node->GetNodeAttribute()->GetAttributeType();
+
+        if (AttributeType == FbxNodeAttribute::eMesh)
+        {
+            FbxMesh *mesh;
+
+            mesh = (FbxMesh*)gConverter->Triangulate(node->GetNodeAttribute(), true);
+
+            meshes.push_back(ProcessMesh(dev, devcon, mesh));
+        }
+    }
+
+    for (int i = 0; i < node->GetChildCount(); i++)
+    {
+        ProcessNode(dev, devcon, node->GetChild(i), gConverter);
+    }
+}
+}
+
+Mesh FBXLoader::ProcessMesh(ID3D11Device * dev, ID3D11DeviceContext *devcon, FbxMesh * mesh)
+{
+std::vector<VERTEX> meshvertices;
+ID3D11ShaderResourceView *meshtexture = nullptr;
+
+FbxVector4 *vertices = mesh->GetControlPoints();
+
+for (int j = 0; j < mesh->GetPolygonCount(); j++)
+{
+    int numVertices = mesh->GetPolygonSize(j);
+
+    FbxLayerElementArrayTemplate<FbxVector2> *uvVertices = 0;
+    mesh->GetTextureUV(&uvVertices, FbxLayerElement::eTextureDiffuse);
+
+    for (int k = 0; k < numVertices; k++)
+    {
+        int controlPointIndex = mesh->GetPolygonVertex(j, k);
+
+        VERTEX vertex;
+
+        vertex.pos.x = (float)vertices[controlPointIndex].mData[0];
+        vertex.pos.y = (float)vertices[controlPointIndex].mData[1];
+        vertex.pos.z = (float)vertices[controlPointIndex].mData[2];
+
+        vertex.tex.x = (float)uvVertices->GetAt(mesh->GetTextureUVIndex(j, k)).mData[0];
+        vertex.tex.y = 1.0f - (float)uvVertices->GetAt(mesh->GetTextureUVIndex(j, k)).mData[1];
+
+        controlpoints[controlPointIndex] = meshvertices.size();
+
+        meshvertices.push_back(vertex);
+    }
+}
+
+int materialcount = mesh->GetNode()->GetSrcObjectCount<FbxSurfaceMaterial>();
+
+for (int i = 0; i < materialcount; i++)
+{
+    FbxSurfaceMaterial *material = (FbxSurfaceMaterial*)mesh->GetNode()->GetSrcObject<FbxSurfaceMaterial>(i);
+
+    if (material)
+    {
+        FbxProperty prop = material->FindProperty(FbxSurfaceMaterial::sDiffuse);
+
+        const FbxTexture* texture = FbxCast<FbxTexture>(prop.GetSrcObject<FbxTexture>(0));
+        const FbxFileTexture* filetexture = FbxCast<FbxFileTexture>(texture);
+
+        ID3D11ShaderResourceView *meshctexture = LoadTexture(dev, devcon, filetexture->GetFileName());
+
+        meshtexture = meshctexture;
+    }
+}
+
+const FbxVector4 lT = mesh->GetNode()->GetGeometricTranslation(FbxNode::eSourcePivot);
+const FbxVector4 lR = mesh->GetNode()->GetGeometricRotation(FbxNode::eSourcePivot);
+const FbxVector4 lS = mesh->GetNode()->GetGeometricScaling(FbxNode::eSourcePivot);
+
+FbxAMatrix geometryTransform = FbxAMatrix(lT, lR, lS);
+
+for (unsigned int deformerIndex = 0; deformerIndex < mesh->GetDeformerCount(); ++deformerIndex)
+{
+    FbxSkin* skin = reinterpret_cast<FbxSkin*>(mesh->GetDeformer(deformerIndex, FbxDeformer::eSkin));
+    if (!skin)
+        continue;
+
+    for (unsigned int clusterIndex = 0; clusterIndex < skin->GetClusterCount(); ++clusterIndex)
+    {
+        FbxCluster* cluster = skin->GetCluster(clusterIndex);
+        T_STR jointname = cluster->GetLink()->GetName();
+        unsigned int jointIndex = FindJointIndex(jointname);
+        FbxAMatrix transformMatrix;
+        FbxAMatrix transformLinkMatrix;
+        FbxAMatrix globalBindposeInverseMatrix;
+
+        cluster->GetTransformMatrix(transformMatrix);
+        cluster->GetTransformLinkMatrix(transformLinkMatrix);
+        globalBindposeInverseMatrix = transformLinkMatrix.Inverse() * transformMatrix * geometryTransform;
+
+        skeleton.mJoints[jointIndex].mGlobalBindposeInverse = globalBindposeInverseMatrix;
+        skeleton.mJoints[jointIndex].mNode = cluster->GetLink();
+
+        for (unsigned int i = 0; i < cluster->GetControlPointIndicesCount(); ++i)
+        {
+            int vertexid = controlpoints[cluster->GetControlPointIndices()[i]];
+
+            if (meshvertices[vertexid].boneids.x == 0) meshvertices[vertexid].boneids.x = jointIndex;
+            if (meshvertices[vertexid].boneids.y == 0) meshvertices[vertexid].boneids.y = jointIndex;
+            if (meshvertices[vertexid].boneids.z == 0) meshvertices[vertexid].boneids.z = jointIndex;
+            if (meshvertices[vertexid].boneids.w == 0) meshvertices[vertexid].boneids.w = jointIndex;
+            if (meshvertices[vertexid].weights.x == 0) meshvertices[vertexid].weights.x = cluster->GetControlPointWeights()[i];
+            if (meshvertices[vertexid].weights.y == 0) meshvertices[vertexid].weights.y = cluster->GetControlPointWeights()[i];
+            if (meshvertices[vertexid].weights.z == 0) meshvertices[vertexid].weights.z = cluster->GetControlPointWeights()[i];
+            if (meshvertices[vertexid].weights.w == 0) meshvertices[vertexid].weights.w = cluster->GetControlPointWeights()[i];
+        }
+
+        FbxAnimStack* animstack = fbxScene->GetSrcObject<FbxAnimStack>(0);
+        FbxString animstackname = animstack->GetName();
+        FbxTakeInfo* takeinfo = fbxScene->GetTakeInfo(animstackname);
+        FbxTime start = takeinfo->mLocalTimeSpan.GetStart();
+        FbxTime end = takeinfo->mLocalTimeSpan.GetStop();
+        FbxLongLong animationlength = end.GetFrameCount(FbxTime::eFrames30) - start.GetFrameCount(FbxTime::eFrames30) + 1;
+        Keyframe** anim = &skeleton.mJoints[jointIndex].mAnimation;
+
+        for (FbxLongLong i = start.GetFrameCount(FbxTime::eFrames30); i <= end.GetFrameCount(FbxTime::eFrames30); ++i)
+        {
+            FbxTime time;
+            time.SetFrame(i, FbxTime::eFrames30);
+            *anim = new Keyframe();
+            (*anim)->mFrameNum = i;
+            FbxAMatrix transformoffset = mesh->GetNode()->EvaluateGlobalTransform(1.0f) * geometryTransform;
+            (*anim)->mGlobalTransform = transformoffset.Inverse() * cluster->GetLink()->EvaluateGlobalTransform(time);
+            anim = &((*anim)->mNext);
+        }
+    }
+}
+
+return Mesh(dev, meshvertices, meshtexture);
+}
+
+void FBXLoader::ProcessSkeletonHeirarchy(FbxNode * rootnode)
+{
+for (int childindex = 0; childindex < rootnode->GetChildCount(); ++childindex)
+{
+    FbxNode *node = rootnode->GetChild(childindex);
+    ProcessSkeletonHeirarchyre(node, 0, 0, -1);
+}
+}
+
+void FBXLoader::ProcessSkeletonHeirarchyre(FbxNode * node, int depth, int index, int parentindex)
+{
+if (node->GetNodeAttribute() && node->GetNodeAttribute()->GetAttributeType() && node->GetNodeAttribute()->GetAttributeType() == FbxNodeAttribute::eSkeleton)
+{
+    TFbxJoint joint;
+    joint.mParentIndex = parentindex;
+    joint.mName = node->GetName();
+    skeleton.mJoints.push_back(joint);
+}
+for (int i = 0; i < node->GetChildCount(); i++)
+{
+    ProcessSkeletonHeirarchyre(node->GetChild(i), depth + 1, skeleton.mJoints.size(), index);
+}
+}
+
+unsigned int FBXLoader::FindJointIndex(const T_STR & jointname)
+{
+for (unsigned int i = 0; i < skeleton.mJoints.size(); ++i)
+{
+    if (skeleton.mJoints[i].mName == jointname)
+    {
+        return i;
+    }
+}
+}
+
+ID3D11ShaderResourceView * FBXLoader::LoadTexture(ID3D11Device * dev, ID3D11DeviceContext * devcon, const char * texturefilename)
+{
+HRESULT hr;
+
+ID3D11ShaderResourceView *texture;
+
+T_STR filenamestr(texturefilename);
+T_STR sl = "/";
+size_t start_pos = filenamestr.find(sl);
+filenamestr.replace(start_pos, sl.length(), "\\");
+std::wstring filename = std::wstring(filenamestr.begin(), filenamestr.end());
+
+hr = CreateWICTextureFromFile(dev, devcon, filename.c_str(), nullptr, &texture);
+if (FAILED(hr))
+    return nullptr;
+
+return texture;
+}
+
+/*
+matrix bonetransform = mul(bones[boneids[0]], weights[0]);
+bonetransform += mul(bones[boneids[1]], weights[1]);
+bonetransform += mul(bones[boneids[2]], weights[2]);
+bonetransform += mul(bones[boneids[3]], weights[3]);
+
+float4 posl = mul(bonetransform, pos);
+
+output.pos = mul(posl, World);
+
+cb.mWorld = XMMatrixTranspose(m_World);
+cb.mView = XMMatrixTranspose(m_View);
+cb.mProjection = XMMatrixTranspose(m_Projection);
+for (int i = 0; i < jasper->skeleton.mJoints.size(); i++)
+    cb.bones[i] = XMMatrixTranspose(XMMatrixIdentity());
+devcon->UpdateSubresource(pConstantBuffer, 0, nullptr, &cb, 0, 0);
+
+devcon->VSSetShader(pVS, 0, 0);
+devcon->VSSetConstantBuffers(0, 1, &pConstantBuffer);
+devcon->PSSetShader(pPS, 0, 0);
+devcon->PSSetSamplers(0, 1, &TexSamplerState);
+model->Draw(devcon);
+*/

@@ -1,0 +1,75 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <FxCompile Include="Character.hlsl" />
+    <FxCompile Include="shader\downsample.hlsl">
+      <Filter>shader</Filter>
+    </FxCompile>
+    <FxCompile Include="shader\downsample_array.hlsl">
+      <Filter>shader</Filter>
+    </FxCompile>
+    <FxCompile Include="shader\equirect2cube.hlsl">
+      <Filter>shader</Filter>
+    </FxCompile>
+    <FxCompile Include="shader\irmap.hlsl">
+      <Filter>shader</Filter>
+    </FxCompile>
+    <FxCompile Include="shader\skybox.hlsl">
+      <Filter>shader</Filter>
+    </FxCompile>
+    <FxCompile Include="shader\spbrdf.hlsl">
+      <Filter>shader</Filter>
+    </FxCompile>
+    <FxCompile Include="shader\spmap.hlsl">
+      <Filter>shader</Filter>
+    </FxCompile>
+    <FxCompile Include="shader\tonemap.hlsl">
+      <Filter>shader</Filter>
+    </FxCompile>
+    <FxCompile Include="shader\optimized-ggx.hlsl">
+      <Filter>shader</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\data\model\SM_StreetLight_LightsOn\SM_StreetLight_LightsOn.hlsl">
+      <Filter>Material</Filter>
+    </FxCompile>
+    <FxCompile Include="CharacterPBR.hlsl">
+      <Filter>Material</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\data\model\SM_Barrel\SM_Barrel.hlsl">
+      <Filter>Material</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\data\model\cerberus\cerberus.hlsl">
+      <Filter>Material</Filter>
+    </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Renderer.cpp" />
+    <ClCompile Include="Sample.cpp" />
+    <ClCompile Include="utils.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Sample.h" />
+    <ClInclude Include="utils.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="DefaultShape.txt" />
+    <Text Include="DefaultShapeMask.txt" />
+    <Text Include="..\..\data\model\SM_StreetLight_LightsOn.txt">
+      <Filter>Material</Filter>
+    </Text>
+    <Text Include="..\..\data\model\cerberus.txt">
+      <Filter>Material</Filter>
+    </Text>
+    <Text Include="..\..\data\model\SM_Barrel.txt">
+      <Filter>Material</Filter>
+    </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="shader">
+      <UniqueIdentifier>{3bba30a7-2d1b-40c5-8915-dd7330c52a52}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Material">
+      <UniqueIdentifier>{1962f781-6330-45a4-816e-bcc2b2e8e14a}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
