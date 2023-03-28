@@ -1,0 +1,3 @@
+﻿  failed to open file: D:\01_KGCA41Sample\data\shader\Box.hlsl
+  compilation failed; no code produced
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Professional\MSBuild\Microsoft\VC\v160\Microsoft.CppCommon.targets(1759,5): error MSB6006: "fxc.exe"이(가) 종료되었습니다(코드: 1).
