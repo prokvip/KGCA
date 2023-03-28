@@ -1,0 +1,426 @@
+#include "/Engine/Public/Platform.ush"
+
+static const uint MAX_CLOTH_MESH = 16;
+static const uint MAX_SPHERE_COLLISION = 16;
+static const float SMALL_NUMBER = 0.0001f;
+
+// StructuredBuffer用の?造体は128bit（16Byte）単位でないとデバイスロストやおかしな挙動になるので注意すること
+struct FGridClothParameters
+{
+	uint NumIteration;
+	uint NumRow;
+	uint NumColumn;
+	uint VertexIndexOffset;
+	uint NumVertex;
+	float GridWidth;
+	float GridHeight;
+	float Stiffness;
+	float Damping;
+	float3 PreviousInertia;
+	float3 WindVelocity;
+	float FluidDensity;
+	float LiftCoefficient;
+	float DragCoefficient;
+	float IterDeltaTime;
+	float VertexRadius;
+	float3 AlignmentDummy;
+	uint NumSphereCollision;
+	// xyz : RelativeCenter, w : Radius;
+	float4 SphereCollisionParams[MAX_SPHERE_COLLISION];
+};
+
+StructuredBuffer<FGridClothParameters> Params;
+RWBuffer<float> WorkAccelerationMoveVertexBuffer;
+RWBuffer<float> WorkPrevPositionVertexBuffer;
+RWBuffer<float> WorkPositionVertexBuffer;
+
+groupshared FGridClothParameters ClothParam;
+
+float GetCurrentInvMass(uint VertIdx)
+{
+	return WorkPositionVertexBuffer[4 * (ClothParam.VertexIndexOffset + VertIdx) + 3];
+}
+
+float3 GetCurrentVBPosition(uint VertIdx)
+{
+	uint Idx = ClothParam.VertexIndexOffset + VertIdx;
+	return float3(WorkPositionVertexBuffer[4 * Idx + 0], WorkPositionVertexBuffer[4 * Idx + 1], WorkPositionVertexBuffer[4 * Idx + 2]);
+}
+
+float3 GetPreviousVBPosition(uint VertIdx)
+{
+	uint Idx = ClothParam.VertexIndexOffset + VertIdx;
+	return float3(WorkPrevPositionVertexBuffer[4 * Idx + 0], WorkPrevPositionVertexBuffer[4 * Idx + 1], WorkPrevPositionVertexBuffer[4 * Idx + 2]);
+}
+
+void SetCurrentVBPosition(uint VertIdx, float3 Pos)
+{
+	uint Idx = ClothParam.VertexIndexOffset + VertIdx;
+	WorkPositionVertexBuffer[4 * Idx + 0] = Pos.x;
+	WorkPositionVertexBuffer[4 * Idx + 1] = Pos.y;
+	WorkPositionVertexBuffer[4 * Idx + 2] = Pos.z;
+}
+
+void SetPreviousVBPosition(uint VertIdx, float3 Pos)
+{
+	uint Idx = ClothParam.VertexIndexOffset + VertIdx;
+	WorkPrevPositionVertexBuffer[4 * Idx + 0] = Pos.x;
+	WorkPrevPositionVertexBuffer[4 * Idx + 1] = Pos.y;
+	WorkPrevPositionVertexBuffer[4 * Idx + 2] = Pos.z;
+}
+
+static const uint NUM_THREAD_X = 32;
+
+void Integrate(uint ThreadId)
+{
+	for (uint VertIdx = ThreadId; VertIdx < ClothParam.NumVertex; VertIdx += NUM_THREAD_X)
+	{
+		float3 CurrPos = GetCurrentVBPosition(VertIdx);
+		float3 PrevPos = GetPreviousVBPosition(VertIdx);
+
+		float3 NextPos;
+
+		// 質量は変わらないという前提を置いている
+		float CurrInvMass = GetCurrentInvMass(VertIdx);
+		if (CurrInvMass < SMALL_NUMBER)
+		{
+			NextPos = CurrPos;
+			// CurrPosは変えない
+		}
+		else
+		{
+			uint Idx = ClothParam.VertexIndexOffset + VertIdx;
+			float3 Acceleration = float3(WorkAccelerationMoveVertexBuffer[4 * Idx + 0], WorkAccelerationMoveVertexBuffer[4 * Idx + 1], WorkAccelerationMoveVertexBuffer[4 * Idx + 2]);
+			NextPos = CurrPos + (CurrPos - PrevPos) * (1.0f - ClothParam.Damping) + Acceleration;
+			CurrPos = CurrPos + float3(ClothParam.PreviousInertia.x, ClothParam.PreviousInertia.y, ClothParam.PreviousInertia.z);
+		}
+
+		SetCurrentVBPosition(VertIdx, NextPos);
+		SetPreviousVBPosition(VertIdx, CurrPos);
+	}
+}
+
+void ApplyWind(uint ThreadId)
+{
+	// グリッドのトライアングル単位で処理するのでセルでル?プする
+
+#if 0
+	// TODO:若干?ル?スレッドをすると動きがくしゃくしゃなる兆候が見られたのでとりあえず?ル?スレッド対応は後回し
+	for (uint RowColumnIndex = ThreadId; RowColumnIndex < NumRow * NumColumn; RowColumnIndex += NUM_THREAD_X)
+#else
+	if (ThreadId > 0)
+	{
+		return;
+	}
+
+	for (uint RowColumnIndex = 0; RowColumnIndex < ClothParam.NumRow * ClothParam.NumColumn; RowColumnIndex++)
+#endif
+	{
+		uint RowIndex = RowColumnIndex / ClothParam.NumColumn;
+		uint ColumnIndex = RowColumnIndex % ClothParam.NumColumn;
+		uint LeftUpperVertIdx = RowIndex * (ClothParam.NumColumn + 1) + ColumnIndex;
+		uint RightUpperVertIdx = LeftUpperVertIdx + 1;
+		uint LeftLowerVertIdx = LeftUpperVertIdx + ClothParam.NumColumn + 1;
+		uint RightLowerVertIdx = LeftLowerVertIdx + 1;
+
+		float3 CurrLeftUpperVertPos = GetCurrentVBPosition(LeftUpperVertIdx);
+		float3 CurrRightUpperVertPos = GetCurrentVBPosition(RightUpperVertIdx);
+		float3 CurrLeftLowerVertPos = GetCurrentVBPosition(LeftLowerVertIdx);
+		float3 CurrRightLowerVertPos = GetCurrentVBPosition(RightLowerVertIdx);
+
+		float3 PrevLeftUpperVertPos = GetPreviousVBPosition(LeftUpperVertIdx);
+		float3 PrevRightUpperVertPos = GetPreviousVBPosition(RightUpperVertIdx);
+		float3 PrevLeftLowerVertPos = GetPreviousVBPosition(LeftLowerVertIdx);
+		float3 PrevRightLowerVertPos = GetPreviousVBPosition(RightLowerVertIdx);
+
+		float CurrLeftUpperVertInvMass = GetCurrentInvMass(LeftUpperVertIdx);
+		float CurrRightUpperVertInvMass = GetCurrentInvMass(RightUpperVertIdx);
+		float CurrLeftLowerVertInvMass = GetCurrentInvMass(LeftLowerVertIdx);
+		float CurrRightLowerVertInvMass = GetCurrentInvMass(RightLowerVertIdx);
+
+		// Right Upper Triangle
+		{
+			// CoGはCenterOfGravity。重心のこと。
+			float3 CurrCoG = (CurrLeftUpperVertPos + CurrRightUpperVertPos + CurrRightLowerVertPos) / 3.0f;
+			float3 PrevCoG = (PrevLeftUpperVertPos + PrevRightUpperVertPos + PrevRightLowerVertPos) / 3.0f;
+
+			float3 WindDelta = ClothParam.WindVelocity * ClothParam.IterDeltaTime;
+
+			// 環境の風および自分自身の移動で受ける空気抵抗の風を合わせたDeltaTimeでの移動量。
+			float3 Delta = -(CurrCoG - PrevCoG) + WindDelta;
+
+			// 正規化
+			float3 DeltaLength = length(Delta);
+			float3 DeltaDir = Delta / max(DeltaLength, SMALL_NUMBER);
+
+			float3 Normal = cross(CurrLeftUpperVertPos - CurrRightUpperVertPos, CurrRightLowerVertPos - CurrRightUpperVertPos);
+			float NormalLength = length(Normal);
+			// cross積の結果のベクトルの長さは平行四辺?の面積と同じになるので
+			float3 Area = NormalLength / 2;
+			Normal = Normal / NormalLength;
+
+			float Cos = dot(Normal, DeltaDir);
+			float Sin = sqrt(max(0.0f, 1.0f - Cos * Cos));
+			// Liftの係数にSin2Thetaを使うが、?文を見てもSinThetaを使っているし、そっちが計算式として妥当に感じる。
+			// しかしSin2Thetaの方が結果が今のところ?麗なのでそちらを使う。
+			// TODO:謎
+			float Sin2 = Cos * Sin * 0.5f;
+
+			// Delta方向と、Delta-Normal平面内でDeltaに垂直な方向の2つの力積を計算する。前者をDrag、後者をLiftと呼ぶ。
+
+			float3 LiftDir = cross(cross(DeltaDir, Normal), DeltaDir);
+
+			float3 LiftImplulse = ClothParam.LiftCoefficient * ClothParam.FluidDensity * Area * Sin2 * LiftDir * DeltaLength * DeltaLength / ClothParam.IterDeltaTime;
+			float3 DragImplulse = ClothParam.DragCoefficient * ClothParam.FluidDensity * Area * abs(Cos) * DeltaDir * DeltaLength * DeltaLength / ClothParam.IterDeltaTime;
+
+			float3 NextLeftUpperVertPos;
+
+			if (CurrLeftUpperVertInvMass < SMALL_NUMBER)
+			{
+				NextLeftUpperVertPos = CurrLeftUpperVertPos;
+				// CurrPosは変えない
+			}
+			else
+			{
+				NextLeftUpperVertPos = CurrLeftUpperVertPos + LiftImplulse + DragImplulse;
+			}
+
+			SetCurrentVBPosition(LeftUpperVertIdx, NextLeftUpperVertPos);
+
+			float3 NextRightUpperVertPos;
+
+			if (CurrRightUpperVertInvMass < SMALL_NUMBER)
+			{
+				NextRightUpperVertPos = CurrRightUpperVertPos;
+				// CurrPosは変えない
+			}
+			else
+			{
+				NextRightUpperVertPos = CurrRightUpperVertPos + LiftImplulse + DragImplulse;
+			}
+
+			SetCurrentVBPosition(RightUpperVertIdx, NextRightUpperVertPos);
+
+			float3 NextRightLowerVertPos;
+
+			if (CurrRightLowerVertInvMass < SMALL_NUMBER)
+			{
+				NextRightLowerVertPos = CurrRightLowerVertPos;
+				// CurrPosは変えない
+			}
+			else
+			{
+				NextRightLowerVertPos = CurrRightLowerVertPos + LiftImplulse + DragImplulse;
+			}
+
+			SetCurrentVBPosition(RightLowerVertIdx, NextRightLowerVertPos);
+		}
+
+		// Left Lower Triangle
+		{
+			// CoGはCenterOfGravity。重心のこと。
+			float3 CurrCoG = (CurrLeftUpperVertPos + CurrLeftLowerVertPos + CurrRightLowerVertPos) / 3.0f;
+			float3 PrevCoG = (PrevLeftUpperVertPos + PrevLeftLowerVertPos + PrevRightLowerVertPos) / 3.0f;
+
+			float3 WindDelta = ClothParam.WindVelocity * ClothParam.IterDeltaTime;
+
+			// 環境の風および自分自身の移動で受ける空気抵抗の風を合わせたDeltaTimeでの移動量。
+			float3 Delta = -(CurrCoG - PrevCoG) + WindDelta;
+
+			// 正規化
+			float3 DeltaLength = length(Delta);
+			float3 DeltaDir = Delta / max(DeltaLength, SMALL_NUMBER);
+
+			// Right Upperブロックと同じ方向になるように負の符号をつけている
+			float3 Normal = -cross(CurrLeftUpperVertPos - CurrLeftLowerVertPos, CurrRightLowerVertPos - CurrLeftLowerVertPos);
+			float NormalLength = length(Normal);
+			// cross積の結果のベクトルの長さは平行四辺?の面積と同じになるので
+			float3 Area = NormalLength / 2;
+			Normal = Normal / NormalLength;
+
+			float Cos = dot(Normal, DeltaDir);
+			float Sin = sqrt(max(0.0f, 1.0f - Cos * Cos));
+			// Liftの係数にSin2Thetaを使うが、?文を見てもSinThetaを使っているし、そっちが計算式として妥当に感じる。
+			// しかしSin2Thetaの方が結果が今のところ?麗なのでそちらを使う。
+			// TODO:謎
+			float Sin2 = Cos * Sin * 0.5f;
+
+			// Delta方向と、Delta-Normal平面内でDeltaに垂直な方向の2つの力積を計算する。前者をDrag、後者をLiftと呼ぶ。
+
+			float3 LiftDir = cross(cross(DeltaDir, Normal), DeltaDir);
+
+			float3 LiftImplulse = ClothParam.LiftCoefficient * ClothParam.FluidDensity * Area * Sin2 * LiftDir * DeltaLength * DeltaLength / ClothParam.IterDeltaTime;
+			float3 DragImplulse = ClothParam.DragCoefficient * ClothParam.FluidDensity * Area * abs(Cos) * DeltaDir * DeltaLength * DeltaLength / ClothParam.IterDeltaTime;
+
+			float3 NextLeftUpperVertPos;
+
+			if (CurrLeftUpperVertInvMass < SMALL_NUMBER)
+			{
+				NextLeftUpperVertPos = CurrLeftUpperVertPos;
+				// CurrPosは変えない
+			}
+			else
+			{
+				NextLeftUpperVertPos = CurrLeftUpperVertPos + LiftImplulse + DragImplulse;
+			}
+
+			SetCurrentVBPosition(LeftUpperVertIdx, NextLeftUpperVertPos);
+
+			float3 NextLeftLowerVertPos;
+
+			if (CurrLeftLowerVertInvMass < SMALL_NUMBER)
+			{
+				NextLeftLowerVertPos = CurrLeftLowerVertPos;
+				// CurrPosは変えない
+			}
+			else
+			{
+				NextLeftLowerVertPos = CurrLeftLowerVertPos + LiftImplulse + DragImplulse;
+			}
+
+			SetCurrentVBPosition(LeftLowerVertIdx, NextLeftLowerVertPos);
+
+			float3 NextRightLowerVertPos;
+
+			if (CurrRightLowerVertInvMass < SMALL_NUMBER)
+			{
+				NextRightLowerVertPos = CurrRightLowerVertPos;
+				// CurrPosは変えない
+			}
+			else
+			{
+				NextRightLowerVertPos = CurrRightLowerVertPos + LiftImplulse + DragImplulse;
+			}
+
+			SetCurrentVBPosition(RightLowerVertIdx, NextRightLowerVertPos);
+		}
+	}
+}
+
+void SolveDistanceConstraint(uint ThreadId)
+{
+#if 0
+	// TODO:?ル?スレッドをすると動きが壊れるとりあえず?ル?スレッド対応は後回し
+	for (uint VertIdx = ThreadId; VertIdx < NumVertex; VertIdx += NUM_THREAD_X)
+#else
+	if (ThreadId > 0)
+	{
+		return;
+	}
+
+	for (uint VertIdx = 0; VertIdx < ClothParam.NumVertex; VertIdx++)
+#endif
+	{
+		uint RowIndex = VertIdx / (ClothParam.NumColumn + 1);
+		uint ColumnIndex = VertIdx % (ClothParam.NumColumn + 1);
+
+		float3 CurrVertexPos = GetCurrentVBPosition(VertIdx);
+		float CurrVertexInvMass = GetCurrentInvMass(VertIdx);
+
+		// グリッドなので右方向の隣頂?と下方向の隣頂?との間のみ考慮するようにしていれば重複なくコンストレイントを処理できる
+
+		if (ColumnIndex < ClothParam.NumColumn)
+		{
+			uint RightVertIdx = VertIdx + 1;
+			float RightVertexInvMass = GetCurrentInvMass(RightVertIdx);
+			if (CurrVertexInvMass > SMALL_NUMBER || RightVertexInvMass > SMALL_NUMBER)
+			{
+				float3 RightVertexPos = GetCurrentVBPosition(RightVertIdx);
+
+				float RightEdgeLength = max(length(RightVertexPos - CurrVertexPos), SMALL_NUMBER); // to avoid 0 division
+				float Diff = RightEdgeLength - ClothParam.GridWidth;
+
+				float3 RightEdgeAxis = (RightVertexPos - CurrVertexPos) / RightEdgeLength;
+
+				CurrVertexPos += CurrVertexInvMass / (CurrVertexInvMass + RightVertexInvMass) * Diff * RightEdgeAxis * ClothParam.Stiffness;
+				RightVertexPos -= RightVertexInvMass / (CurrVertexInvMass + RightVertexInvMass) * Diff * RightEdgeAxis * ClothParam.Stiffness;
+
+				SetCurrentVBPosition(RightVertIdx, RightVertexPos);
+			}
+		}
+
+		if (RowIndex < ClothParam.NumRow)
+		{
+			uint LowerVertIdx = VertIdx + ClothParam.NumColumn + 1;
+			float LowerVertexInvMass = GetCurrentInvMass(LowerVertIdx);
+			if (CurrVertexInvMass > SMALL_NUMBER || LowerVertexInvMass > SMALL_NUMBER)
+			{
+				float3 LowerVertexPos = GetCurrentVBPosition(LowerVertIdx);
+
+				float LowerEdgeLength = max(length(LowerVertexPos - CurrVertexPos), SMALL_NUMBER); // to avoid 0 division
+				float Diff = LowerEdgeLength - ClothParam.GridHeight;
+
+				float3 LowerEdgeAxis = (LowerVertexPos - CurrVertexPos) / LowerEdgeLength;
+
+				CurrVertexPos += CurrVertexInvMass / (CurrVertexInvMass + LowerVertexInvMass) * Diff * LowerEdgeAxis * ClothParam.Stiffness;
+				LowerVertexPos -= LowerVertexInvMass / (CurrVertexInvMass + LowerVertexInvMass) * Diff * LowerEdgeAxis * ClothParam.Stiffness;
+
+				SetCurrentVBPosition(LowerVertIdx, LowerVertexPos);
+			}
+		}
+
+		SetCurrentVBPosition(VertIdx, CurrVertexPos);
+	}
+}
+
+void SolveCollision(uint ThreadId)
+{
+	const float SMALL_NUMBER = 0.0001f;
+
+	// TODO:複数のコリジョンが重なっていることによるめりこみ押し出しの競合についてはとりあえず考えない
+	for (uint VertIdx = ThreadId; VertIdx < ClothParam.NumVertex; VertIdx += NUM_THREAD_X)
+	{
+		float3 CurrVertexPos = GetCurrentVBPosition(VertIdx);
+
+		for (uint CollisionIdx = 0; CollisionIdx < ClothParam.NumSphereCollision; CollisionIdx++)
+		{
+			float4 SphereCenterAndRadius = ClothParam.SphereCollisionParams[CollisionIdx];
+			// 計算をシンプルにするために頂?の半径は0にしてコリジョン側の半径に頂?半径をプラスして扱う
+			float SphereRadius = SphereCenterAndRadius.w + ClothParam.VertexRadius;
+			if (SphereRadius < SMALL_NUMBER)
+			{
+				continue;
+			}
+
+			float SquareSphereRadius = SphereRadius * SphereRadius;
+			float3 SphereCenter = SphereCenterAndRadius.xyz;
+
+			// めりこんでいれば半径方向に押し出す
+			if (dot(CurrVertexPos - SphereCenter, CurrVertexPos - SphereCenter) < SquareSphereRadius)
+			{
+				CurrVertexPos = SphereCenter + normalize(CurrVertexPos - SphereCenter) * SphereRadius;
+			}
+		}
+
+		SetCurrentVBPosition(VertIdx, CurrVertexPos);
+	}
+}
+
+[numthreads(NUM_THREAD_X, 1, 1)]
+void Main(uint MeshIdx : SV_GroupID, uint ThreadId : SV_GroupThreadID)
+{
+	if (ThreadId == 0)
+	{
+		ClothParam = Params[MeshIdx];
+	}
+	GroupMemoryBarrierWithGroupSync();
+
+	for (uint IterCount = 0; IterCount < ClothParam.NumIteration; IterCount++)
+	{
+		Integrate(ThreadId);
+		GroupMemoryBarrierWithGroupSync();
+
+		if (ClothParam.FluidDensity > 0.0f)
+		{
+			ApplyWind(ThreadId);
+			GroupMemoryBarrierWithGroupSync();
+		}
+
+		SolveDistanceConstraint(ThreadId);
+		GroupMemoryBarrierWithGroupSync();
+
+		SolveCollision(ThreadId);
+		GroupMemoryBarrierWithGroupSync();
+	}
+}
+

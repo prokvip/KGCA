@@ -1,0 +1,8 @@
+ModelFile		../../data/model/cerberus/cerberus.fbx
+shaderFile	../../data/model/cerberus/cerberus.hlsl
+AlbedoMap	../../data/model/cerberus/cerberus_A.png
+normalMap	../../data/model/cerberus/cerberus_N.png
+roughnessMap	../../data/model/cerberus/cerberus_R.png
+metalnessMap	../../data/model/cerberus/cerberus_M.png
+EmissiveMap	nullptr
+metalness		1

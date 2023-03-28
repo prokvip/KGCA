@@ -1,0 +1,45 @@
+#include "/Engine/Public/Platform.ush"
+
+uint H0BufferWidth;
+uint MapWidth;
+uint MapHeight;
+
+float MeshWidth;
+float MeshHeight;
+float WaveLengthRow;
+float WaveLengthColumn;
+float Period;
+float Amplitude;
+float Time;
+
+StructuredBuffer<float2> H0Buffer;
+RWTexture2D<float4> DisplacementMap;
+
+[numthreads(8, 8, 1)]
+void OceanDebugH0(uint2 DispatchThreadId : SV_DispatchThreadID)
+{
+	uint2 PixelCoord = DispatchThreadId;
+	uint H0Index = PixelCoord.y * H0BufferWidth + DispatchThreadId.x;
+
+	const float SCALE = 100.0f; // デフォルトのパラメ??設定でおおよそ結果がきれいに見える値
+    DisplacementMap[PixelCoord] = float4(H0Buffer[H0Index].x * SCALE, H0Buffer[H0Index].y * SCALE, 0.0, 1.0);
+}
+
+[numthreads(8, 8, 1)]
+void SinWaveDisplacementMap(uint2 DispatchThreadId : SV_DispatchThreadID)
+{
+	const float SMALL_NUMBER = 0.0001;
+	const float PI = 3.1415159;
+
+	uint2 PixelCoord = DispatchThreadId;
+	uint2 XY = PixelCoord * float2(MeshWidth, MeshHeight) / uint2(MapWidth, MapHeight);
+
+	// Update Z only
+	float Z = Amplitude * sin(2.0 * PI *
+	(XY.x / max(WaveLengthRow, SMALL_NUMBER)
+	+ XY.y / max(WaveLengthColumn, SMALL_NUMBER)
+	+ Time / max(Period, SMALL_NUMBER))
+	);
+    DisplacementMap[PixelCoord] = float4(0.0, 0.0, Z, 1.0);
+}
+

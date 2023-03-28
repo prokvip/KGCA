@@ -1,0 +1,8 @@
+ModelFile		../../data/model/SM_Barrel/SM_Barrel.fbx
+shaderFile	../../data/model/SM_Barrel/SM_Barrel.hlsl
+AlbedoMap	../../data/model/SM_Barrel/T_Pack_01_D.dds
+normalMap	../../data/model/SM_Barrel/T_Detail_N.dds
+roughnessMap	../../data/model/SM_Barrel/T_Pack_01_RM.dds  
+metalnessMap	../../data/model/SM_Barrel/T_Pack_01_RM.dds  
+EmissiveMap	nullptr
+metalness		1

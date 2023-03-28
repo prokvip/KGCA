@@ -1,0 +1,101 @@
+// HLSL
+static const int g_iNumTexture = 6;
+Texture2D g_txDiffuse;// : register(t0);
+TextureCube g_txCube: register(t1);
+Texture2D g_txDiffuseArray[g_iNumTexture] : register(t2);
+SamplerState		g_Sample : register(s0);
+SamplerState        g_samPointClamp : register(s1);
+SamplerState        g_samLinearWrap : register(s2);
+
+#define g_iNumLight 3
+#define HALF_VECTOR
+
+cbuffer TDataCB : register(b0)
+{
+	float4x4  g_matWorld: packoffset(c0);
+	float4x4  g_matView: packoffset(c4);
+	float4x4  g_matProj: packoffset(c8);
+	float4 vColor : packoffset(c12.x);
+	float  fTime  : packoffset(c13.x);
+	float  fGameTime  : packoffset(c13.y);
+};
+//--------------------------------------------------------------------------------------
+//Lighting Variables
+//--------------------------------------------------------------------------------------
+cbuffer cb1: register(b1)
+{
+	float4				g_cAmbientMaterial[g_iNumLight];
+	float4				g_cDiffuseMaterial[g_iNumLight];
+	float4				g_cSpecularMaterial[g_iNumLight];
+	float4				g_cEmissionMaterial[g_iNumLight];
+
+	float4				g_cAmbientLightColor[g_iNumLight];
+	float4				g_cDiffuseLightColor[g_iNumLight];
+	float4				g_cSpecularLightColor[g_iNumLight];
+};
+//--------------------------------------------------------------------------------------
+//Lighting Variables
+//--------------------------------------------------------------------------------------
+cbuffer cb2: register(b2)
+{
+	matrix				g_matWorldInverse[g_iNumLight];
+	float4				g_vLightDir[g_iNumLight];	
+	float4				g_vLightPos[g_iNumLight];	
+	float4				g_vEyeDir[g_iNumLight];	
+	float4				g_vEyePos[g_iNumLight];	
+};
+//--------------------------------------------------------------------------------------
+//Lighting Variables
+//--------------------------------------------------------------------------------------
+cbuffer cb3: register(b3)
+{	
+	float4		g_vSpotInfo[g_iNumLight];
+	//float		g_fTheta[g_iNumLight] : packoffset(c0.x);		// 내부 콘의 각도 범위	
+	//float		g_fPhi[g_iNumLight] : packoffset(c0.y);			// 외부 콘의 각도 범위
+	//float		g_fFalloff[g_iNumLight] : packoffset(c0.z);		// 내부 콘과 외부 콘의 휘도( Luminance )	
+	//float     g_nNumLights[g_iNumLight] : packoffset(c0.w);	// 거리
+};
+struct VS_OUTPUT
+{
+	float4 p : SV_POSITION;
+	float3 n : NORMAL;
+	float4 c : COLOR0;
+	float2 t : TEXCOORD0;
+	float4 wp : TEXCOORD1;
+	float3 v : TEXCOORD2;
+	uint PrimitiveID : SV_PrimitiveID;
+};
+struct PS_OUTPUT
+{
+	float4 c : SV_TARGET;
+};
+
+PS_OUTPUT PS( VS_OUTPUT vIn)
+{
+	PS_OUTPUT vOut;
+	float4 vTexture = g_txCube.Sample( g_Sample, vIn.v);
+	vOut.c = vTexture;
+	return vOut;
+}
+
+float4 GetTextureColor(uint index, float2 uv)
+{
+	float4 fColor = float4(1,1,1,1);
+	switch (index)
+	{
+	case 0: fColor = g_txDiffuseArray[0].Sample(g_Sample, uv); break;
+	case 1: fColor = g_txDiffuseArray[1].Sample(g_Sample, uv); break;
+	case 2: fColor = g_txDiffuseArray[2].Sample(g_Sample, uv); break;
+	case 3: fColor = g_txDiffuseArray[3].Sample(g_Sample, uv); break;
+	case 4: fColor = g_txDiffuseArray[4].Sample(g_Sample, uv); break;
+	case 5: fColor = g_txDiffuseArray[5].Sample(g_Sample, uv); break;
+	}	
+	return fColor;
+}
+float4 PS_TextureIndex(VS_OUTPUT vIn) : SV_Target
+{
+	uint index = vIn.PrimitiveID / 2;
+	float4 fColor = float4(1, 1, 1, 1);
+	fColor = GetTextureColor(index, vIn.t);
+	return fColor;	
+}

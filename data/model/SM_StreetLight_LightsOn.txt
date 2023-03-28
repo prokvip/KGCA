@@ -1,0 +1,8 @@
+ModelFile		../../data/model/SM_StreetLight_LightsOn/SM_StreetLight_LightsOn.fbx
+shaderFile	../../data/model/SM_StreetLight_LightsOn/SM_StreetLight_LightsOn.hlsl
+AlbedoMap	../../data/model/SM_StreetLight_LightsOn/T_Pack_03_D.dds
+normalMap	../../data/model/SM_StreetLight_LightsOn/T_Pack_03_N.dds
+roughnessMap	../../data/model/SM_StreetLight_LightsOn/T_Pack_03_RM.dds  r
+metalnessMap	../../data/model/SM_StreetLight_LightsOn/T_Pack_03_RM.dds  g
+EmissiveMap	../../data/model/SM_StreetLight_LightsOn/T_Pack_03_E.dds
+metalness		1

@@ -1,0 +1,57 @@
+#include "/Engine/Public/Platform.ush"
+
+uint VertexIndexOffset;
+uint NumVertex;
+Buffer<float> AccelerationMoveVertexBuffer;
+RWBuffer<float> WorkAccelerationMoveBuffer;
+RWBuffer<float> PrevPositionVertexBuffer;
+RWBuffer<float> WorkPrevPositionBuffer;
+RWBuffer<float> PositionVertexBuffer;
+RWBuffer<float> WorkPositionBuffer;
+
+static const uint NUM_THREAD_X = 32;
+
+[numthreads(NUM_THREAD_X, 1, 1)]
+void CopyToWorkBuffer(uint ThreadId : SV_GroupThreadID)
+{
+	const float SMALL_NUMBER = 0.0001f;
+
+	for (uint VertIdx = ThreadId; VertIdx < NumVertex; VertIdx += NUM_THREAD_X)
+	{
+		uint Idx = VertexIndexOffset + VertIdx;
+
+		WorkAccelerationMoveBuffer[4 * Idx + 0] = AccelerationMoveVertexBuffer[3 * VertIdx + 0];
+		WorkAccelerationMoveBuffer[4 * Idx + 1] = AccelerationMoveVertexBuffer[3 * VertIdx + 1];
+		WorkAccelerationMoveBuffer[4 * Idx + 2] = AccelerationMoveVertexBuffer[3 * VertIdx + 2];
+
+		WorkPrevPositionBuffer[4 * Idx + 0] = PrevPositionVertexBuffer[4 * VertIdx + 0];
+		WorkPrevPositionBuffer[4 * Idx + 1] = PrevPositionVertexBuffer[4 * VertIdx + 1];
+		WorkPrevPositionBuffer[4 * Idx + 2] = PrevPositionVertexBuffer[4 * VertIdx + 2];
+		WorkPrevPositionBuffer[4 * Idx + 3] = PrevPositionVertexBuffer[4 * VertIdx + 3];
+
+		WorkPositionBuffer[4 * Idx + 0] = PositionVertexBuffer[4 * VertIdx + 0];
+		WorkPositionBuffer[4 * Idx + 1] = PositionVertexBuffer[4 * VertIdx + 1];
+		WorkPositionBuffer[4 * Idx + 2] = PositionVertexBuffer[4 * VertIdx + 2];
+		WorkPositionBuffer[4 * Idx + 3] = PositionVertexBuffer[4 * VertIdx + 3];
+	}
+}
+
+[numthreads(NUM_THREAD_X, 1, 1)]
+void CopyFromWorkBuffer(uint ThreadId : SV_GroupThreadID)
+{
+	for (uint VertIdx = ThreadId; VertIdx < NumVertex; VertIdx += NUM_THREAD_X)
+	{
+		uint Idx = VertexIndexOffset + VertIdx;
+		// ‰Á‘¬“x‚Í•Ï‚¦‚È‚¢‚Ì‚Å‘‚«–ß‚·•K—v‚Í‚È‚¢
+
+		PrevPositionVertexBuffer[4 * VertIdx + 0] = WorkPrevPositionBuffer[4 * Idx + 0];
+		PrevPositionVertexBuffer[4 * VertIdx + 1] = WorkPrevPositionBuffer[4 * Idx + 1];
+		PrevPositionVertexBuffer[4 * VertIdx + 2] = WorkPrevPositionBuffer[4 * Idx + 2];
+		PrevPositionVertexBuffer[4 * VertIdx + 3] = WorkPrevPositionBuffer[4 * Idx + 3];
+
+		PositionVertexBuffer[4 * VertIdx + 0] = WorkPositionBuffer[4 * Idx + 0];
+		PositionVertexBuffer[4 * VertIdx + 1] = WorkPositionBuffer[4 * Idx + 1];
+		PositionVertexBuffer[4 * VertIdx + 2] = WorkPositionBuffer[4 * Idx + 2];
+		PositionVertexBuffer[4 * VertIdx + 3] = WorkPositionBuffer[4 * Idx + 3];
+	}
+}

@@ -1,0 +1,48 @@
+// HLSL
+Texture2D g_txDiffuse;// : register(t0);
+SamplerState g_Sample;// : register(s0);
+TextureCube g_txCube: register(t1);
+cbuffer TDataCB
+{
+	float4x4  g_matWorld: packoffset(c0);
+	float4x4  g_matView: packoffset(c4);
+	float4x4  g_matProj: packoffset(c8);
+	float4 vColor : packoffset(c12); // light vector
+	float  fTime  : packoffset(c13.x);
+	float  fGameTime  : packoffset(c13.y);
+};
+struct VS_OUTPUT
+{
+	float4 p : SV_POSITION;
+	float3 n : NORMAL;
+	float4 c : COLOR0;
+	float2 t : TEXCOORD0;
+	float3 v : TEXCOORD1;
+};
+struct PS_OUTPUT
+{
+	float4 c : SV_TARGET;
+};
+PS_OUTPUT PS( VS_OUTPUT vIn)
+{
+	PS_OUTPUT vOut;
+	float4 vTexture = g_txDiffuse.Sample( g_Sample, vIn.t);
+	float4 vFinalColor;
+	vFinalColor = vTexture*vIn.c;
+	float3 vLight = normalize(vColor.xyz);
+	float c = dot( vIn.n, -vLight );
+	float4 vLightColor = float4(c,c,c,1);
+	float4 vAmbint = float4(0.3f,0.3f,0.3f,1.0f);
+	vTexture.a = 1.0f;
+	
+	float4 cube = g_txCube.Sample( g_Sample, vIn.v);
+	float4 a = vFinalColor * (vAmbint+vLightColor);
+	vOut.c =  lerp(cube,a, max(0, c*c));
+	return vOut;
+}
+PS_OUTPUT PSLine( VS_OUTPUT vIn)
+{
+	PS_OUTPUT vOut;
+	vOut.c = vIn.c;
+	return vOut;
+}
