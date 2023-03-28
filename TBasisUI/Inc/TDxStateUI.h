@@ -10,7 +10,7 @@ namespace TUI
 		static ID3D11RasterizerState* g_pUI_WireFrameRS;
 		static ID3D11RasterizerState* g_pUI_SolidRS;
 		static ID3D11BlendState* g_pUI_AlphaBlend;
-
+		
 		static  ID3D11DepthStencilState* g_pDSSDepthEnable;
 		static  ID3D11DepthStencilState* g_pDSSDepthDisable;
 		static  ID3D11DepthStencilState* g_pDSSDepthEnableNoWrite;
@@ -20,3 +20,4 @@ namespace TUI
 		static bool Release();
 	};
 };
+

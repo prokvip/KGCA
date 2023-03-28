@@ -176,6 +176,11 @@
     <Text Include="DefaultShape.txt" />
     <Text Include="DefaultShapeMask.txt" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\TBasisUI\TBasisUI.vcxproj">
+      <Project>{38f9851d-9dec-4e31-9019-bc64f8eba7d5}</Project>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

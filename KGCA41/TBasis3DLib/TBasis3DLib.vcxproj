@@ -186,10 +186,12 @@ copy ".\\shader\\*.*" "..\\..\\data\\Shader"</Command>
     <PostBuildEvent>
       <Command>copy "..\..\output\Release\TBasis3D_R.lib" "..\\..\\lib"
 md "..\\..\\include"
-md "..\\..\\include\\map""
+md "..\\..\\include\\map"
+md "..\\..\\include\\wic""
 copy "*.h" "..\\..\\include"
 copy ".\\map\\*.h" "..\\..\\include\\map"
-copy ".\\shader\\*.*" "..\\..\\data\\Shader"</Command>
+copy ".\\shader\\*.*" "..\\..\\data\\Shader"
+copy ".\\wic\\*.*" "..\\..\\include\\wic"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -454,6 +456,11 @@ copy ".\\shader\\*.*" "..\\..\\data\\Shader"</Command>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\TBasisUI\TBasisUI.vcxproj">
+      <Project>{38f9851d-9dec-4e31-9019-bc64f8eba7d5}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

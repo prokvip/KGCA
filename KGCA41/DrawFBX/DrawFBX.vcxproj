@@ -232,6 +232,11 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </Text>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\TBasisFBX\TBasisFBX.vcxproj">
+      <Project>{757938bd-e3be-4f99-8837-189a60c89a2d}</Project>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

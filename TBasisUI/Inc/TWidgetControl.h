@@ -154,8 +154,8 @@ namespace TUI
         virtual bool  Render() override;
         virtual bool  Release() override;
         virtual void  SetRect(TRect rt)override;
-        virtual bool  Push(TWidget* btn);
-        virtual bool  Push(std::wstring name);
+        virtual TWidget* Push(TWidget* btn);
+        virtual TWidget* Push(std::wstring name);
         virtual TRect GetNextRect();
         virtual void  Move(TVector2D vOffsetPos)override;
         virtual void  Move(TRect tRt)override;

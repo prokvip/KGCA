@@ -124,8 +124,8 @@ namespace TUI
         virtual void    SetSprite(TSprite* pSprite);
         virtual bool    SetDrawList(float fScaleX0, float fScaleX1, float fScaleY0, float fScaleY1, float fScaleU0, float fScaleU1, float fScaleV0, float fScaleV1);
         virtual bool    SetDrawList(float fScaleX0, float fScaleX1, float fScaleY0, float fScaleY1, TSprite* pSprite);
-        virtual bool    Push(TWidget* btn);
-        virtual bool    Push(std::wstring name);
+        virtual TWidget* Push(TWidget* btn);
+        virtual TWidget* Push(std::wstring name);
         virtual TRect   GetNextRect();
         virtual TVector4D GetSpriteOffsetUV();
         virtual void    SetPostDrawList();
