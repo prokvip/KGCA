@@ -1,6 +1,5 @@
 #include "TActor.h"
 
-
 bool TActor::Convert(ID3D11Device* pDevice) {
 	return true;
 };
