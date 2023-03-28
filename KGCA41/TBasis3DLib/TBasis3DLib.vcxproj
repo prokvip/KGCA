@@ -1,0 +1,461 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>15.0</VCProjectVersion>
+    <ProjectGuid>{B8FCA437-A73D-44B7-908D-421BD6B68197}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>TBasis3DLib</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>../../output/Debug/</OutDir>
+    <IntDir>../../output/Debug/TBasis3DLib/</IntDir>
+    <TargetName>TBasis3D_D</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>../../output/Release/</OutDir>
+    <IntDir>../../output/Release/TBasis3DLib</IntDir>
+    <TargetName>TBasis3D_R</TargetName>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>false</ConformanceMode>
+      <AdditionalIncludeDirectories>../../TBasisUI/inc;../../include;$(TBASIS_SAMPLES_DATA);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <SupportJustMyCode>true</SupportJustMyCode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+    <PostBuildEvent>
+      <Command>copy "..\..\output\Debug\TBasis3D_D.lib" "..\\..\\lib"
+md "..\\..\\include"
+md "..\\..\\include\\xtk"
+md "..\\..\\include\\map""
+md "..\\..\\include\\wic""
+copy "*.h" "..\\..\\include"
+copy ".\\map\\*.h" "..\\..\\include\\map"
+copy ".\\wic\\*.h" "..\\..\\include\\wic"
+copy ".\\shader\\*.*" "..\\..\\data\\Shader"</Command>
+    </PostBuildEvent>
+    <Lib>
+      <AdditionalDependencies>TBasisUI_d.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>../../TBasisUI/lib;</AdditionalLibraryDirectories>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>false</ConformanceMode>
+      <AdditionalIncludeDirectories>../../TBasisUI/inc;../../include;$(TBASIS_SAMPLES_DATA);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+    <Lib />
+    <Lib>
+      <AdditionalDependencies>TBasisUI_R.lib</AdditionalDependencies>
+    </Lib>
+    <Lib>
+      <AdditionalLibraryDirectories>../../TBasisUI/lib;</AdditionalLibraryDirectories>
+    </Lib>
+    <PostBuildEvent>
+      <Command>copy "..\..\output\Release\TBasis3D_R.lib" "..\\..\\lib"
+md "..\\..\\include"
+md "..\\..\\include\\map""
+copy "*.h" "..\\..\\include"
+copy ".\\map\\*.h" "..\\..\\include\\map"
+copy ".\\shader\\*.*" "..\\..\\data\\Shader"</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="map\TBspParser.h" />
+    <ClInclude Include="map\TBspRender.h" />
+    <ClInclude Include="map\TBspTree.h" />
+    <ClInclude Include="map\THeightMap.h" />
+    <ClInclude Include="map\TMap.h" />
+    <ClInclude Include="map\TMapLOD.h" />
+    <ClInclude Include="map\TMapObject.h" />
+    <ClInclude Include="map\TNode.h" />
+    <ClInclude Include="map\TNoise.h" />
+    <ClInclude Include="map\TNoiseMap.h" />
+    <ClInclude Include="map\TPolygonGen.h" />
+    <ClInclude Include="map\TQuadTree.h" />
+    <ClInclude Include="map\TQuadTreeIndex.h" />
+    <ClInclude Include="map\TSpaceDivision.h" />
+    <ClInclude Include="TAnimation.h" />
+    <ClInclude Include="TArcBall.h" />
+    <ClInclude Include="TAseObj.h" />
+    <ClInclude Include="TAseParser.h" />
+    <ClInclude Include="TBackViewCamera.h" />
+    <ClInclude Include="TBaseObj.h" />
+    <ClInclude Include="TBasisLib.h" />
+    <ClInclude Include="TBasisStd.h" />
+    <ClInclude Include="TBoneObj.h" />
+    <ClInclude Include="TBoxObj.h" />
+    <ClInclude Include="TCamera.h" />
+    <ClInclude Include="TCollision.h" />
+    <ClInclude Include="TDefine.h" />
+    <ClInclude Include="TDevice.h" />
+    <ClInclude Include="TDirectWrite.h" />
+    <ClInclude Include="TDxHelper.h" />
+    <ClInclude Include="TDxHelperEx.h" />
+    <ClInclude Include="TDxRT.h" />
+    <ClInclude Include="TDxShader.h" />
+    <ClInclude Include="TDxSO.h" />
+    <ClInclude Include="TDxState.h" />
+    <ClInclude Include="TEditer.h" />
+    <ClInclude Include="TExpMesh.h" />
+    <ClInclude Include="TFrustum.h" />
+    <ClInclude Include="TInput.h" />
+    <ClInclude Include="TLightObj.h" />
+    <ClInclude Include="TLoadMgr.h" />
+    <ClInclude Include="TLoadToken.h" />
+    <ClInclude Include="TLog.h" />
+    <ClInclude Include="TMath.h" />
+    <ClInclude Include="TMatrix.h" />
+    <ClInclude Include="TMesh.h" />
+    <ClInclude Include="TMiniMap.h" />
+    <ClInclude Include="TActor.h" />
+    <ClInclude Include="TModelViewCamera.h" />
+    <ClInclude Include="TNormalMap.h" />
+    <ClInclude Include="TPawn.h" />
+    <ClInclude Include="TObjMgr.h" />
+    <ClInclude Include="TObjStd.h" />
+    <ClInclude Include="TParser.h" />
+    <ClInclude Include="TRegistry.h" />
+    <ClInclude Include="TSelect.h" />
+    <ClInclude Include="TShape.h" />
+    <ClInclude Include="TSkinObj.h" />
+    <ClInclude Include="TSkyObj.h" />
+    <ClInclude Include="TSprite.h" />
+    <ClInclude Include="TSpriteMgr.h" />
+    <ClInclude Include="TTbsObj.h" />
+    <ClInclude Include="TTemplate.h" />
+    <ClInclude Include="TTextureMgr.h" />
+    <ClInclude Include="TTimer.h" />
+    <ClInclude Include="TUtils.h" />
+    <ClInclude Include="TVector.h" />
+    <ClInclude Include="TWindow.h" />
+    <ClInclude Include="WIC\DDS.h" />
+    <ClInclude Include="WIC\DDSTextureLoader.h" />
+    <ClInclude Include="WIC\DirectXHelpers.h" />
+    <ClInclude Include="WIC\LoaderHelpers.h" />
+    <ClInclude Include="WIC\PlatformHelpers.h" />
+    <ClInclude Include="WIC\ScreenGrab.h" />
+    <ClInclude Include="WIC\WICTextureLoader.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="map\TBspParser.cpp" />
+    <ClCompile Include="map\TBspRender.cpp" />
+    <ClCompile Include="map\TBspTree.cpp" />
+    <ClCompile Include="map\THeightMap.cpp" />
+    <ClCompile Include="map\TMap.cpp" />
+    <ClCompile Include="map\TMapLOD.cpp" />
+    <ClCompile Include="map\TMapObject.cpp" />
+    <ClCompile Include="map\TNode.cpp" />
+    <ClCompile Include="map\TNoise.cpp" />
+    <ClCompile Include="map\TNoiseMap.cpp" />
+    <ClCompile Include="map\TPolygonGen.cpp" />
+    <ClCompile Include="map\TQuadTree.cpp" />
+    <ClCompile Include="map\TQuadTreeIndex.cpp" />
+    <ClCompile Include="map\TSpaceDivision.cpp" />
+    <ClCompile Include="TAnimation.cpp" />
+    <ClCompile Include="TArcBall.cpp" />
+    <ClCompile Include="TAseObj.cpp" />
+    <ClCompile Include="TAseParser.cpp" />
+    <ClCompile Include="TBackViewCamera.cpp" />
+    <ClCompile Include="TBaseObj.cpp" />
+    <ClCompile Include="TBasisLib.cpp" />
+    <ClCompile Include="TBoneObj.cpp" />
+    <ClCompile Include="TBoxObj.cpp" />
+    <ClCompile Include="TCamera.cpp" />
+    <ClCompile Include="TCollision.cpp" />
+    <ClCompile Include="TDevice.cpp" />
+    <ClCompile Include="TDirectWrite.cpp" />
+    <ClCompile Include="TDxHelper.cpp" />
+    <ClCompile Include="TDxHelperEx.cpp" />
+    <ClCompile Include="TDxRT.cpp" />
+    <ClCompile Include="TDxShader.cpp" />
+    <ClCompile Include="TDxSO.cpp" />
+    <ClCompile Include="TDxState.cpp" />
+    <ClCompile Include="TEditer.cpp" />
+    <ClCompile Include="TExpMesh.cpp" />
+    <ClCompile Include="TFrustum.cpp" />
+    <ClCompile Include="TInput.cpp" />
+    <ClCompile Include="TLightObj.cpp" />
+    <ClCompile Include="TLoadToken.cpp" />
+    <ClCompile Include="TLog.cpp" />
+    <ClCompile Include="TMath.cpp" />
+    <ClCompile Include="TMatrix.cpp" />
+    <ClCompile Include="TMiniMap.cpp" />
+    <ClCompile Include="TActor.cpp" />
+    <ClCompile Include="TModelViewCamera.cpp" />
+    <ClCompile Include="TNormalMap.cpp" />
+    <ClCompile Include="TPawn.cpp" />
+    <ClCompile Include="TObjMgr.cpp" />
+    <ClCompile Include="TParser.cpp" />
+    <ClCompile Include="TRegistry.cpp" />
+    <ClCompile Include="TSelect.cpp" />
+    <ClCompile Include="TShape.cpp" />
+    <ClCompile Include="TSkinObj.cpp" />
+    <ClCompile Include="TSkyObj.cpp" />
+    <ClCompile Include="TSprite.cpp" />
+    <ClCompile Include="TSpriteMgr.cpp" />
+    <ClCompile Include="TTbsObj.cpp" />
+    <ClCompile Include="TTextureMgr.cpp" />
+    <ClCompile Include="TTimer.cpp" />
+    <ClCompile Include="TVector.cpp" />
+    <ClCompile Include="TWindow.cpp" />
+    <ClCompile Include="WIC\DDSTextureLoader.cpp" />
+    <ClCompile Include="WIC\ScreenGrab.cpp" />
+    <ClCompile Include="WIC\WICTextureLoader.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="..\..\data\shader\Box.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="..\..\data\shader\BoxObj.fx">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="..\..\data\shader\BoxSO.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="..\..\data\shader\Bsp_0.fx">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="..\..\data\shader\CharacterAnimation_1.fx">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="..\..\data\shader\CustomizeMap.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="..\..\data\shader\DiffuseLight.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="..\..\data\shader\DualSourceColor.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="..\..\data\shader\HeightMap.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="..\..\data\shader\Lighting.fx">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="..\..\data\shader\Line.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="..\..\data\shader\MatrixViewer.fx">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="..\..\data\shader\PixelShader.psh">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="..\..\data\shader\Plane.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="..\..\data\shader\QuadTree_2.fx">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="..\..\data\shader\RenderBox.fx">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="..\..\data\shader\Shape.fx">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="..\..\data\shader\Shape3.fx">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="..\..\data\shader\SkyObj.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="..\..\data\shader\SkyObject.fx">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="..\..\data\shader\SubMtrl.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="..\..\data\shader\uiShader.psh">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="..\..\data\shader\VertexShader.vsh">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\..\data\shader\objectPS.txt">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </Text>
+    <Text Include="..\..\data\shader\objectVS.txt">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </Text>
+    <Text Include="..\..\data\shader\PS.txt">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </Text>
+    <Text Include="..\..\data\shader\skyPS.txt">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </Text>
+    <Text Include="..\..\data\shader\skyVS.txt">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </Text>
+    <Text Include="..\..\data\shader\VS.txt">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </Text>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
