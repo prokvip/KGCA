@@ -17,7 +17,7 @@
 #include "Runtime/Engine/Public/EngineUtils.h"
 #include "SampleSocket_0GameMode.h"
 
-ASampleSocket_0Character* AGamePlayerController::GetCharacter()
+ATBaseCharacter* AGamePlayerController::GetCharacter()
 {
 	return m_pCharacter;
 }
@@ -107,7 +107,7 @@ TCharacter AGamePlayerController::GetCharacterInfo()
 void AGamePlayerController::OnPossess(APawn* aPawn)
 {
 	Super::OnPossess(aPawn);
-	m_pCharacter = Cast< ASampleSocket_0Character>(aPawn);
+	m_pCharacter = Cast< ATBaseCharacter>(aPawn);
 	if (m_pGameInstance==nullptr || m_pGameInstance->bIsConnected == false) return;
 	TCharacter tChar = GetCharacterInfo();
 	m_pTNet->SendRespawnPlayer(tChar);
@@ -151,8 +151,8 @@ void AGamePlayerController::RespawnCharacter(TCharacter tChar)
 			tGUID tGuid = tChar.GetGuid();
 			CopyMemory(&fGuid, &tGuid, sizeof(fGuid));
 			SpawnParams.Name = FName(*fGuid.ToString());
-			ASampleSocket_0Character* SpawnCharacter = 
-				GetWorld()->SpawnActor<ASampleSocket_0Character>(UserCharacterClass,
+			ATBaseCharacter* SpawnCharacter = 
+				GetWorld()->SpawnActor<ATBaseCharacter>(UserCharacterClass,
 				tChar.GetPos(),
 				tChar.GetRotation(),
 				SpawnParams);
@@ -190,7 +190,7 @@ void AGamePlayerController::BeginPlay()
 	}
 
 	// 캐릭터 등록
-	m_pCharacter = Cast<ASampleSocket_0Character>(UGameplayStatics::GetPlayerCharacter(this, 0));
+	m_pCharacter = Cast<ATBaseCharacter>(UGameplayStatics::GetPlayerCharacter(this, 0));
 	if (m_pCharacter == nullptr)
 	{
 		return;
@@ -206,7 +206,7 @@ AActor * AGamePlayerController::FindActorBySessionId(TArray<AActor*> ActorArray,
 {
 	for (const auto& Actor : ActorArray)
 	{
-		ASampleSocket_0Character * swc = Cast<ASampleSocket_0Character>(Actor);
+		ATBaseCharacter * swc = Cast<ATBaseCharacter>(Actor);
 		if (swc && swc->m_tGuidACharacter == m_tGuid)
 			return Actor;
 	}
@@ -231,9 +231,9 @@ void AGamePlayerController::RecvZoneEntry()
 		ATNpc* npc = (*npcIter);
 		npc->Destroy();
 	}
-	for (TActorIterator<ASampleSocket_0Character> ActorItr(GetWorld()); ActorItr; ++ActorItr)
+	for (TActorIterator<ATBaseCharacter> ActorItr(GetWorld()); ActorItr; ++ActorItr)
 	{
-		ASampleSocket_0Character* pc = (*ActorItr);
+		ATBaseCharacter* pc = (*ActorItr);
 		if (pc && pc->m_tGuidACharacter != m_tGuid)
 		{
 			pc->Destroy();
@@ -278,7 +278,7 @@ void AGamePlayerController::SpawnPCList()
 			CopyMemory(&fGuid, &tGuid, sizeof(fGuid));
 			SpawnParams.Name = FName(*fGuid.ToString());
 
-			ASampleSocket_0Character* SpawnCharacter = world->SpawnActor<ASampleSocket_0Character>(UserCharacterClass,
+			ATBaseCharacter* SpawnCharacter = world->SpawnActor<ATBaseCharacter>(UserCharacterClass,
 				player->second.GetPos(),
 				player->second.GetRotation(),
 				SpawnParams);
@@ -377,10 +377,10 @@ void AGamePlayerController::SendEnemyInfo()
 void AGamePlayerController::RecvPlayerLogout(tGUID tGuid)
 {
 	TArray<AActor*> SpawnedCharacters;
-	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ASampleSocket_0Character::StaticClass(), SpawnedCharacters);
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ATBaseCharacter::StaticClass(), SpawnedCharacters);
 	for (auto& Character : SpawnedCharacters)
 	{
-		ASampleSocket_0Character * Player = Cast<ASampleSocket_0Character>(Character);
+		ATBaseCharacter * Player = Cast<ATBaseCharacter>(Character);
 		if ( Player && Player->m_tGuidACharacter == tGuid)
 		{
 			UE_LOG(LogClass, Log, TEXT("Player Logout"));
@@ -398,15 +398,15 @@ bool AGamePlayerController::UpdateWorldInfo()
 	}
 	UpdatePlayerInfo(m_pTNet->GetPlayerList().tCharMap[m_tGuid]);
 	TArray<AActor*> SpawnedCharacters;
-	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ASampleSocket_0Character::StaticClass(), SpawnedCharacters);	
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ATBaseCharacter::StaticClass(), SpawnedCharacters);	
 	// 플레이어 케릭터는 제외한다.
 	check(m_pCharacter);
 	SpawnedCharacters.Remove(m_pCharacter);
 
-	ASampleSocket_0Character * userChar = nullptr;
+	ATBaseCharacter * userChar = nullptr;
 	for (auto& Character : SpawnedCharacters)
 	{
-		userChar = Cast<ASampleSocket_0Character>(Character);
+		userChar = Cast<ATBaseCharacter>(Character);
 		TCharacter * info = &m_pTNet->GetPlayerList().tCharMap[userChar->m_tGuidACharacter];
 		
 		if (info && info->GetAlive())
@@ -424,7 +424,7 @@ bool AGamePlayerController::UpdateWorldInfo()
 }
 void AGamePlayerController::UpdatePlayerInfo(const TCharacter & info)
 {
-	auto Player = Cast<ASampleSocket_0Character>(UGameplayStatics::GetPlayerPawn(this, 0));
+	auto Player = Cast<ATBaseCharacter>(UGameplayStatics::GetPlayerPawn(this, 0));
 	if (!Player || isDeadCharacter )
 	{
 		return;
@@ -446,7 +446,8 @@ void AGamePlayerController::OnUserCharacterKill()
 void AGamePlayerController::DestroyCharacter()
 {
 	ATGameMode * pGameMode = Cast<ATGameMode>(GetWorld()->GetAuthGameMode());
-	ASampleSocket_0Character* Player = Cast<ASampleSocket_0Character>(UGameplayStatics::GetPlayerPawn(this, 0));
+	ATBaseCharacter* Player = Cast<ATBaseCharacter>(UGameplayStatics::GetPlayerPawn(this, 0));
+	
 	//check(Player);
 	//Player->Destroy();
 	/*if (DefalultWidget != nullptr)
@@ -477,14 +478,14 @@ void AGamePlayerController::DeadCharacter(TCharacter tChar)
 		else
 		{
 			TArray<AActor*> SpawnedCharacters;
-			UGameplayStatics::GetAllActorsOfClass(GetWorld(), ASampleSocket_0Character::StaticClass(), SpawnedCharacters);
+			UGameplayStatics::GetAllActorsOfClass(GetWorld(), ATBaseCharacter::StaticClass(), SpawnedCharacters);
 			check(m_pCharacter);
 			SpawnedCharacters.Remove(m_pCharacter);
 
-			ASampleSocket_0Character * userChar = nullptr;
+			ATBaseCharacter * userChar = nullptr;
 			for (auto& Character : SpawnedCharacters)
 			{
-				userChar = Cast<ASampleSocket_0Character>(Character);
+				userChar = Cast<ATBaseCharacter>(Character);
 				//TCharacter * info = &m_pTNet->GetPlayerList().tCharMap[userChar->tGuid];
 				if (userChar->m_tGuidACharacter == tChar.GetGuid())
 				{
@@ -503,11 +504,11 @@ void AGamePlayerController::DamageCharacter(TCharacter tChar)
 	if (m_pTNet->GetPlayerList().tCharMap.size() > 0)
 	{
 		TArray<AActor*> SpawnedCharacters;
-		UGameplayStatics::GetAllActorsOfClass(GetWorld(), ASampleSocket_0Character::StaticClass(), SpawnedCharacters);
-		ASampleSocket_0Character * userChar = nullptr;
+		UGameplayStatics::GetAllActorsOfClass(GetWorld(), ATBaseCharacter::StaticClass(), SpawnedCharacters);
+		ATBaseCharacter * userChar = nullptr;
 		for (auto& Character : SpawnedCharacters)
 		{
-			userChar = Cast<ASampleSocket_0Character>(Character);
+			userChar = Cast<ATBaseCharacter>(Character);
 			if (userChar->m_tGuidACharacter == tChar.GetGuid())
 			{				
 				userChar->m_fHealth = tChar.GetHealth();
@@ -538,7 +539,7 @@ void AGamePlayerController::RecvZoneNewCharacter(TCharacter tCharacter)
 	SpawnParams.Name = FName(*fGuid.ToString());
 	//SpawnParams.Name = FName(*FString(to_string(NewPlayer->tGuid).c_str()));
 
-	ASampleSocket_0Character* SpawnCharacter = world->SpawnActor<ASampleSocket_0Character>(UserCharacterClass, 
+	ATBaseCharacter* SpawnCharacter = world->SpawnActor<ATBaseCharacter>(UserCharacterClass, 
 		tCharacter.GetPos(),
 		tCharacter.GetRotation(),
 		SpawnParams);
@@ -646,11 +647,11 @@ void AGamePlayerController::RecvMoveTo(TCharacter& srcChar, FVector& vTarget )
 	if (world)
 	{
 		TArray<AActor*> pcArray;
-		UGameplayStatics::GetAllActorsOfClass(GetWorld(), ASampleSocket_0Character::StaticClass(), pcArray);
-		ASampleSocket_0Character * tPC = nullptr;
+		UGameplayStatics::GetAllActorsOfClass(GetWorld(), ATBaseCharacter::StaticClass(), pcArray);
+		ATBaseCharacter * tPC = nullptr;
 		for (auto Actor : pcArray)
 		{
-			tPC = Cast<ASampleSocket_0Character>(Actor);
+			tPC = Cast<ATBaseCharacter>(Actor);
 			if (tPC && m_tGuid != srcChar.GetGuid()
 				&& tPC->m_tGuidACharacter == srcChar.GetGuid())
 			{

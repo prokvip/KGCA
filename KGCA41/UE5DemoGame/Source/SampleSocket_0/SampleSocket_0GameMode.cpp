@@ -1,7 +1,7 @@
-// Copyright 1998-2018 Epic Games, Inc. All Rights Reserved.
+﻿// Copyright 1998-2018 Epic Games, Inc. All Rights Reserved.
 
 #include "SampleSocket_0GameMode.h"
-#include "SampleSocket_0Character.h"
+#include "TBaseCharacter.h"
 #include "GamePlayerController.h"
 #include "UObject/ConstructorHelpers.h"
 #include "Blueprint/UserWidget.h"
@@ -51,24 +51,24 @@ void ASampleSocket_0GameMode::BeginPlay()
 }
 void ASampleSocket_0GameMode::OnCharacterReset()
 {	
-	ASampleSocket_0Character* pUserCharacter = Cast<ASampleSocket_0Character>(UGameplayStatics::GetPlayerPawn(this, 0));
+	ATBaseCharacter* pUserCharacter = Cast<ATBaseCharacter>(UGameplayStatics::GetPlayerPawn(this, 0));
 	check(pUserCharacter);
 	pUserCharacter->OnDestroyed.AddDynamic(this, &ASampleSocket_0GameMode::OnCharacterRespawn);
 }
 void ASampleSocket_0GameMode::OnUserCharacterKill()
 {
 	APlayerController* OurPlayerController = UGameplayStatics::GetPlayerController(this, 0);
-	ASampleSocket_0Character* pUserCharacter = Cast<ASampleSocket_0Character>(UGameplayStatics::GetPlayerPawn(this, 0));
+	ATBaseCharacter* pUserCharacter = Cast<ATBaseCharacter>(UGameplayStatics::GetPlayerPawn(this, 0));
 	check(pUserCharacter);
-	CameraAtDeathTransform = pUserCharacter->GetFollowCamera()->GetComponentToWorld();
-	if (pDeadCamera != nullptr) pDeadCamera->Destroy();
-	pDeadCamera = GetWorld()->SpawnActor<ACameraActor>(ACameraActor::StaticClass(), CameraAtDeathTransform);
-	if (pDeadCamera != nullptr)
-	{
-		UCameraComponent* pCameraComponect = pDeadCamera->GetCameraComponent();
-		pCameraComponect->SetConstraintAspectRatio(false);
-		OurPlayerController->SetViewTargetWithBlend(pDeadCamera, 0.75f);// , EViewTargetBlendFunction::VTBlend_Linear, 0.0f, true);
-	}	
+	//CameraAtDeathTransform = pUserCharacter->GetFollowCamera()->GetComponentToWorld();
+	//if (pDeadCamera != nullptr) pDeadCamera->Destroy();
+	//pDeadCamera = GetWorld()->SpawnActor<ACameraActor>(ACameraActor::StaticClass(), CameraAtDeathTransform);
+	//if (pDeadCamera != nullptr)
+	//{
+	//	UCameraComponent* pCameraComponect = pDeadCamera->GetCameraComponent();
+	//	pCameraComponect->SetConstraintAspectRatio(false);
+	//	OurPlayerController->SetViewTargetWithBlend(pDeadCamera, 0.75f);// , EViewTargetBlendFunction::VTBlend_Linear, 0.0f, true);
+	//}	
 }
 void ASampleSocket_0GameMode::OnCharacterRespawn(AActor* DestroyedActor)
 {
@@ -78,8 +78,7 @@ void ASampleSocket_0GameMode::OnCharacterRespawn(AActor* DestroyedActor)
 	SpawnParams.Name = FName("None");
 	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
 
-	ASampleSocket_0Character* SpawnCharacter = GetWorld()->SpawnActor<ASampleSocket_0Character>(DefaultPawnClass, 
-		InitSpawnTransform,	SpawnParams);
+	ATBaseCharacter* SpawnCharacter = GetWorld()->SpawnActor<ATBaseCharacter>(DefaultPawnClass,	InitSpawnTransform,	SpawnParams);
 	check(SpawnCharacter);
 	APlayerController* OurPlayerController = UGameplayStatics::GetPlayerController(this, 0);
 	OurPlayerController->Possess(SpawnCharacter);

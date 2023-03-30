@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
 #include "Blueprint/UserWidget.h"
-#include "SampleSocket_0Character.h"
+#include "TBaseCharacter.h"
 #include "TGameInstance.h"
 #include "GamePlayerController.generated.h"
 
@@ -89,7 +89,7 @@ private:
 	UTGameInstance*    m_pGameInstance;
 	UTNetworkManager*	m_pTNet;			
 	tGUID				m_tGuid;				
-	ASampleSocket_0Character* m_pCharacter;		
+	ATBaseCharacter* m_pCharacter;
 	FTimerHandle		SendPlayerInfoHandle;	
 	int					m_iNumPlayers;
 	int					m_iNumEnemy;	
@@ -97,7 +97,7 @@ private:
 	bool			    isDeadCharacter;
 	bool				m_bGameStart;
 public:
-	ASampleSocket_0Character* GetCharacter();
+	ATBaseCharacter* GetCharacter();
 public:
 	AGamePlayerController();
 	virtual ~AGamePlayerController();	

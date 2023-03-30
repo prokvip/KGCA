@@ -41,7 +41,7 @@ void ANpcAIController::OnRepeatTimer()
 	auto CurrentPawn = GetPawn();
 	UNavigationSystemV1* NavSystem = UNavigationSystemV1::GetNavigationSystem(GetWorld());
 	FNavLocation NextLocation;
-	if (NavSystem->GetRandomPointInNavigableRadius(FVector::ZeroVector, 500.0f, NextLocation))
+	if (NavSystem->GetRandomPointInNavigableRadius(FVector::ZeroVector, 100.0f, NextLocation))
 	{
 		UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, NextLocation);
 	}

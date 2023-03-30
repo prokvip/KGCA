@@ -1,29 +1,28 @@
-// Copyright 1998-2018 Epic Games, Inc. All Rights Reserved.
+// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "TGameInstance.h"
-#include "SampleSocket_0Character.generated.h"
+#include "TBaseCharacter.generated.h"
 
-
-UCLASS(config=Game)
-class ASampleSocket_0Character : public ACharacter
+UCLASS(config = Game)
+class SAMPLESOCKET_0_API ATBaseCharacter : public ACharacter
 {
 	GENERATED_BODY()
-public:
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-		class USpringArmComponent* CameraBoom;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-		class UCameraComponent* FollowCamera;
+		class USpringArmComponent* tCameraBoom;
 
-	ASampleSocket_0Character();
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+		class UCameraComponent* tFollowCamera;
+
+	ATBaseCharacter();
 public:
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
 		float BaseTurnRate;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
 		float BaseLookUpRate;
 public:
 	virtual void BeginPlay() override;
@@ -41,11 +40,11 @@ protected:
 protected:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 public:
-	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
-	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
+	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return tCameraBoom; }
+	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return tFollowCamera; }
 public:
 	// Health(EditAnywhere:blueprint 편집, VisibleAnywhere:보이기만 한다.)
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "KGCA", meta=(ClampMin="0.0", ClampMax="1.0", UIMin="0.0", UIMax="100.0"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "KGCA", meta = (ClampMin = "0.0", ClampMax = "1.0", UIMin = "0.0", UIMax = "100.0"))
 		float m_fHealth;
 	// Energy
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "KGCA", meta = (ClampMin = "0.0", ClampMax = "1.0", UIMin = "0.0", UIMax = "1.0"))
@@ -55,14 +54,14 @@ public:
 		void UpdateHealth(float HealthChange);
 	// Health
 	UFUNCTION(BlueprintPure, Category = "KGCA")
-		float GetHealth();	
+		float GetHealth();
 	// BlueprintNativeEvent = BlueprintImplementableEvent + BlueprintCallable
 	//                        C++에서는 함수이름 뒤에 _Implementation을 붙혀서 구현한다.
 	//                        블루프린트 구현이 없어도 C++ 구현 함수가 호출된다.
-	
+
 	// Damage: 블루프린트에서만 작성 가능함. : 
 	UFUNCTION(BlueprintImplementableEvent)
-		void DamageAnimation();	
+		void DamageAnimation();
 	// Damage: 블루프린트에서만 작성 가능함. : 
 	UFUNCTION(BlueprintImplementableEvent)
 		void DeadAnimation();
@@ -77,7 +76,7 @@ public:
 	void MoveToLocation(const FVector& dest);
 public:
 	//UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Properties")
-	tGUID		m_tGuidACharacter;		
+	tGUID		m_tGuidACharacter;
 	TCharacter  m_InitState;
 protected:
 	FTimerHandle HitTimerHandle;
@@ -86,5 +85,5 @@ protected:
 private:
 	// Jump
 	void Jump();
-};
 
+};

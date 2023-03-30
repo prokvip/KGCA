@@ -29,6 +29,7 @@ void TNpc::SendMove(TCharacter& pDesk)
 	data << *this;
 	data << pDesk;
 	I_Server.SendBroadcastPool(MakePacket(PACKET_NPC_TARGETMOVE, data));
+	T_LOG("PACKET_NPC_TARGETMOVE Send\r\n");
 }
 void TNpc::SendAttack(TCharacter& pDesk)
 {
