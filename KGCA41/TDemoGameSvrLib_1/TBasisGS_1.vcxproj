@@ -72,12 +72,18 @@
     <IntDir>../../output/TBasisGS_1\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutDir>../../../output/</OutDir>
-    <IntDir>../../../output/TBasisGS_1</IntDir>
+    <OutDir>../../output/Debug/</OutDir>
+    <IntDir>../../output/Debug/TBasisGS_1</IntDir>
+    <TargetName>TBasisGS_1_D</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
     <IntDir>$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>../../output/Release</OutDir>
+    <IntDir>../../output/Release/TBasisGS_1</IntDir>
+    <TargetName>TBasisGS_1_R</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -114,13 +120,14 @@ copy "*.h" "../../include/TBasisGS_1"
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
     <PostBuildEvent>
-      <Command>md "../../../include/TBasisGS_1"
-copy "*.lib" "..\\..\\..\\lib"
-copy "*.h" "../../../include/TBasisGS_1"
+      <Command>md "../../TBasisGS_1/inc"
+md "../../TBasisGS_1/lib"
+copy "..\\..\\output\\Debug\\TBasisGS_1_D.lib" "..\\..\\TBasisGS_1\\lib"
+copy "*.h" "..\\..\\TBasisGS_1\\inc"
 </Command>
     </PostBuildEvent>
     <Lib>
-      <OutputFile>TBasisGS_1_64_d.lib</OutputFile>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -147,6 +154,13 @@ copy "*.h" "../../../include/TBasisGS_1"
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
+    <PostBuildEvent>
+      <Command>md "../../TBasisGS_1/inc"
+md "../../TBasisGS_1/lib"
+copy "..\\..\\output\\Release\\TBasisGS_1_R.lib" "..\\..\\TBasisGS_1\\lib"
+copy "*.h" "..\\..\\TBasisGS_1\\inc"
+</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="TAcceptor.cpp" />

@@ -46,3 +46,6 @@
 /bin/release/TBasisUI_R.dll
 /bin/release/TBasisFBX_R.dll
 /KGCA41/UE5DemoGame/Content
+/KGCA41/TDemoGameSvrLib_1/x64/Release
+/TBasisGS_1/lib/TBasisGS_1_R.lib
+/TBasisGS_1/lib/TBasisGS_1_D.lib
