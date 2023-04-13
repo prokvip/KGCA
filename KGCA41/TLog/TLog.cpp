@@ -12,20 +12,21 @@ void	TLog::Run()
     if (ofs.fail())
     {
         return;
-    }
-
-    std::unique_lock<std::mutex> lock(m_hMutex);
+    }    
     m_bThreadstarted = true;
     m_hThreadStartEvent.notify_all();
 
+    
+    std::unique_lock<std::mutex> lock(m_hMutex);
     while (!m_bExit)
     {
-        m_hEvent.wait(lock);
-        
+        m_hEvent.wait(lock);        
         lock.unlock();
         while (1)
         {
             // 1개씩 처리하는 이유는 락을 너무 오래 점유해서 다른 스레드를 블록킹하지 않기 위함이다.
+            // lock() 되어 있어야 다음 이벤트 호출시에 m_hEvent.wait()가 대기 가능해 진다. 
+            // 그래서 m_szQueue.empty() 상태에서 unlock()하지 않았다.
             lock.lock();
             if (m_szQueue.empty())
             {                
