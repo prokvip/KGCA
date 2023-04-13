@@ -60,3 +60,11 @@
 /KGCA41/UE5DemoGame/Plugins/TNetCore/Binaries/Win64
 /KGCA41/UE5DemoGame/Plugins/TNetCore/Intermediate/Build/Win64/UnrealEditor
 /KGCA41/UE5DemoGame/Saved/Config
+/KGCA41/log
+/KGCA41/TLog/x64/Release
+/KGCA41/UE5DemoGame/Saved
+/KGCA41/UE5DemoGame/Build/Windows/FileOpenOrder
+/KGCA41/UE5DemoGame/Plugins/TNetCore/Intermediate/Build/Win64/UnrealGame
+/KGCA41/UE5DemoGame/Plugins/TBasisCore/Intermediate/Build/Win64/UnrealGame
+/KGCA41/TLog/TLog.vcxproj.user
+/KGCA41/TLog/TLog.vcxproj.filters

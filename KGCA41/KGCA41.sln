@@ -28,6 +28,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TBasisGameSvr_1", "TDemoGam
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TBasisGS_1", "TDemoGameSvrLib_1\TBasisGS_1.vcxproj", "{6B55D0E2-047A-4456-AFA8-EF241F71BD0D}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TLog", "TLog\TLog.vcxproj", "{99E06C1D-AE6C-45D5-B6C6-408292856FC0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|ARM = Debug|ARM
@@ -136,6 +138,18 @@ Global
 		{6B55D0E2-047A-4456-AFA8-EF241F71BD0D}.Release|x64.Build.0 = Release|x64
 		{6B55D0E2-047A-4456-AFA8-EF241F71BD0D}.Release|x86.ActiveCfg = Release|Win32
 		{6B55D0E2-047A-4456-AFA8-EF241F71BD0D}.Release|x86.Build.0 = Release|Win32
+		{99E06C1D-AE6C-45D5-B6C6-408292856FC0}.Debug|ARM.ActiveCfg = Debug|Win32
+		{99E06C1D-AE6C-45D5-B6C6-408292856FC0}.Debug|ARM64.ActiveCfg = Debug|Win32
+		{99E06C1D-AE6C-45D5-B6C6-408292856FC0}.Debug|x64.ActiveCfg = Debug|x64
+		{99E06C1D-AE6C-45D5-B6C6-408292856FC0}.Debug|x64.Build.0 = Debug|x64
+		{99E06C1D-AE6C-45D5-B6C6-408292856FC0}.Debug|x86.ActiveCfg = Debug|Win32
+		{99E06C1D-AE6C-45D5-B6C6-408292856FC0}.Debug|x86.Build.0 = Debug|Win32
+		{99E06C1D-AE6C-45D5-B6C6-408292856FC0}.Release|ARM.ActiveCfg = Release|Win32
+		{99E06C1D-AE6C-45D5-B6C6-408292856FC0}.Release|ARM64.ActiveCfg = Release|Win32
+		{99E06C1D-AE6C-45D5-B6C6-408292856FC0}.Release|x64.ActiveCfg = Release|x64
+		{99E06C1D-AE6C-45D5-B6C6-408292856FC0}.Release|x64.Build.0 = Release|x64
+		{99E06C1D-AE6C-45D5-B6C6-408292856FC0}.Release|x86.ActiveCfg = Release|Win32
+		{99E06C1D-AE6C-45D5-B6C6-408292856FC0}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
