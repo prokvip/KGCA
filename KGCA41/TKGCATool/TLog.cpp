@@ -1,4 +1,5 @@
-﻿#include "TLog.h"
+﻿#include "pch.h"
+#include "TLog.h"
 
 void    TLog::log(std::string data)
 {
@@ -18,8 +19,8 @@ void	TLog::Run()
 
     
     std::unique_lock<std::mutex> lock(m_hMutex);
-    while (1)
-    {        
+    while (!m_bExit)
+    {
         m_hEvent.wait(lock);        
         lock.unlock();
         while (1)
@@ -29,7 +30,7 @@ void	TLog::Run()
             // 그래서 m_szQueue.empty() 상태에서 unlock()하지 않았다.
             lock.lock();
             if (m_szQueue.empty())
-            {          
+            {                
                 break;
             }else
             {

@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "Sample.h"
-
+#include "TLog.h"
 void Sample::NewEffect(UINT iParticleCounter, T_STR tex)
 {
 	auto p = std::make_shared<TParticleObj>();	
@@ -17,6 +17,7 @@ void Sample::NewEffect(UINT iParticleCounter, T_STR tex)
 		p->m_matTranslate._42 = randstep(-10.0f, +10.0f);
 		p->m_matTranslate._43 = randstep(-10.0f, +10.0f);*/
 		m_ParticleList.push_back(p);
+		TLog::Get().log("NewEffect");
 	}
 }
 bool Sample::GetIntersection()
@@ -85,11 +86,14 @@ bool Sample::LoadFbx(T_STR filepath, TVector3 vPos)
 		pCharacter->m_ActionCurrent = pCharacter->m_ActionList.find(L"walk")->second;*/
 		m_WorldObjectList.push_back(pWObject);
 		m_Quadtree.AddObject(pWObject.get());
+
+		TLog::Get().log(wtm(pWObject->m_szName));
 	}
 	return true;
 }
 bool Sample::Init()
 {	
+	TLog::Get().log("Sample::Init()");
 	m_pShadowCamera = std::make_shared<TCamera>();
 	SetShadowProjectionDistance();
 

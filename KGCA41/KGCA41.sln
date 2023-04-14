@@ -30,6 +30,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TBasisGS_1", "TDemoGameSvrL
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TLog", "TLog\TLog.vcxproj", "{99E06C1D-AE6C-45D5-B6C6-408292856FC0}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TEventClass", "TEventClass\TEventClass.vcxproj", "{66F4ACFC-5F04-455C-AE09-895B5B7E59EE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|ARM = Debug|ARM
@@ -150,6 +152,18 @@ Global
 		{99E06C1D-AE6C-45D5-B6C6-408292856FC0}.Release|x64.Build.0 = Release|x64
 		{99E06C1D-AE6C-45D5-B6C6-408292856FC0}.Release|x86.ActiveCfg = Release|Win32
 		{99E06C1D-AE6C-45D5-B6C6-408292856FC0}.Release|x86.Build.0 = Release|Win32
+		{66F4ACFC-5F04-455C-AE09-895B5B7E59EE}.Debug|ARM.ActiveCfg = Debug|Win32
+		{66F4ACFC-5F04-455C-AE09-895B5B7E59EE}.Debug|ARM64.ActiveCfg = Debug|Win32
+		{66F4ACFC-5F04-455C-AE09-895B5B7E59EE}.Debug|x64.ActiveCfg = Debug|x64
+		{66F4ACFC-5F04-455C-AE09-895B5B7E59EE}.Debug|x64.Build.0 = Debug|x64
+		{66F4ACFC-5F04-455C-AE09-895B5B7E59EE}.Debug|x86.ActiveCfg = Debug|Win32
+		{66F4ACFC-5F04-455C-AE09-895B5B7E59EE}.Debug|x86.Build.0 = Debug|Win32
+		{66F4ACFC-5F04-455C-AE09-895B5B7E59EE}.Release|ARM.ActiveCfg = Release|Win32
+		{66F4ACFC-5F04-455C-AE09-895B5B7E59EE}.Release|ARM64.ActiveCfg = Release|Win32
+		{66F4ACFC-5F04-455C-AE09-895B5B7E59EE}.Release|x64.ActiveCfg = Release|x64
+		{66F4ACFC-5F04-455C-AE09-895B5B7E59EE}.Release|x64.Build.0 = Release|x64
+		{66F4ACFC-5F04-455C-AE09-895B5B7E59EE}.Release|x86.ActiveCfg = Release|Win32
+		{66F4ACFC-5F04-455C-AE09-895B5B7E59EE}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

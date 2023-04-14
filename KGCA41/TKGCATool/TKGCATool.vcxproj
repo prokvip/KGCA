@@ -242,6 +242,7 @@
     <ClInclude Include="TKGCATool.h" />
     <ClInclude Include="TKGCAToolDoc.h" />
     <ClInclude Include="TKGCAToolView.h" />
+    <ClInclude Include="TLog.h" />
     <ClInclude Include="TMap.h" />
     <ClInclude Include="TMapGen.h" />
     <ClInclude Include="TMatrix.h" />
@@ -312,6 +313,7 @@
     <ClCompile Include="TKGCATool.cpp" />
     <ClCompile Include="TKGCAToolDoc.cpp" />
     <ClCompile Include="TKGCAToolView.cpp" />
+    <ClCompile Include="TLog.cpp" />
     <ClCompile Include="TMap.cpp" />
     <ClCompile Include="TMapGen.cpp" />
     <ClCompile Include="TMatrix.cpp" />
