@@ -68,3 +68,6 @@
 /KGCA41/UE5DemoGame/Plugins/TBasisCore/Intermediate/Build/Win64/UnrealGame
 /KGCA41/TLog/TLog.vcxproj.user
 /KGCA41/TLog/TLog.vcxproj.filters
+/TBasisFBX/Inc
+/TBasisFBX/Lib/TBasisFBX_d.lib
+/TBasisFBX/Lib/TBasisFBX_d.dll

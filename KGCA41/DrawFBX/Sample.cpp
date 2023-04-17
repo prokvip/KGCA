@@ -1,5 +1,48 @@
 ﻿#include "Sample.h"
 #include "TParser.h"
+std::vector<int>			g_EventList;
+std::vector<std::thread>	g_ThreadList;
+int   g_iThreadInstanceData[MAX_THREAD] = { 0, };
+T::TEventHandler			g_Handler;
+
+
+
+Sample* g_pSample = nullptr;
+void PerSceneRenderDeferredProc(int& parameter)
+{
+	int iInstance = parameter;
+	ID3D11DeviceContext* pd3dDeferredContext = g_pSample->m_pd3dPerSceneDeferredContext[iInstance];
+	ID3D11CommandList*& pd3dComandList = g_pSample->m_pd3dPerSceneCommandList[iInstance];
+	while (1)
+	{
+		// Frame() 통지 대기
+		int iRet = g_Handler.WaitForSingleObject(iInstance, 1000);
+		if (iRet == 0)
+		{
+			std::cout << "Run! threadID=" << iInstance << std::endl;
+		}
+		else if (iRet == -1)
+		{
+			std::cout << "Timeout! threadID=" << iInstance << std::endl;
+			continue;
+		}
+		else
+		{
+			break; // error
+		}
+
+		//..계산.. commandlist 완성
+		g_pSample->m_FbxSelectObj.Frame(g_fSecPerFrame, g_fDurationTime);
+		g_pSample->DrawFbxObject(pd3dDeferredContext);
+		pd3dDeferredContext->FinishCommandList(true, &pd3dComandList);
+
+		g_Handler.ResetEvent(iInstance);
+
+		// Render() 이벤트 통지
+		g_Handler.SetEvent(MAX_THREAD + iInstance);
+	}
+}
+
 int Sample::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	if (m_pMainCamera != nullptr)
@@ -114,6 +157,20 @@ void Sample::CreateWidget()
 }
 bool Sample::Init()
 {
+	for (int iThread = 0; iThread < MAX_THREAD; iThread++)
+	{
+		g_iThreadInstanceData[iThread] = iThread;
+
+		m_pd3dDevice->CreateDeferredContext(0, &m_pd3dPerSceneDeferredContext[iThread]);
+
+		g_EventList.push_back(g_Handler.CreateEvent(std::to_string(iThread)));
+		g_ThreadList.emplace_back(PerSceneRenderDeferredProc,std::ref(g_iThreadInstanceData[iThread]));
+		g_ThreadList[g_ThreadList.size() - 1].detach();
+	}
+	g_EventList.push_back(g_Handler.CreateEvent("render_0"));
+	//g_EventList.push_back(g_Handler.CreateEvent("render_1"));
+	//g_EventList.push_back(g_Handler.CreateEvent("render_2"));
+
 	ID3D11UnorderedAccessView* const nullUAV[] = { nullptr };
 	ID3D11Buffer* const nullBuffer[] = { nullptr };
 
@@ -267,51 +324,12 @@ bool Sample::Frame()
 	D3DXVec3TransformCoord(&vLight, &vLight, &matRotation);
 	D3DXVec3Normalize(&m_vLightDir, &vLight);
 
-	m_FbxSelectObj.Frame(g_fSecPerFrame, g_fDurationTime);	
+	//m_FbxSelectObj.Frame(g_fSecPerFrame, g_fDurationTime);	
 	return true;
 }
 bool Sample::Render()
 {	
-	ApplyRS(m_pImmediateContext, TDxState::g_pRSScissorBackCullSolid);
-	const D3D11_RECT r = { m_DefaultRT.m_vp.TopLeftX, m_DefaultRT.m_vp.TopLeftY, m_DefaultRT.m_vp.Width,m_DefaultRT.m_vp.Height};
-	m_pImmediateContext->RSSetScissorRects(1, &r);
-
-	/*UINT oldNumScissorRects = D3D11_VIEWPORT_AND_SCISSORRECT_OBJECT_COUNT_PER_PIPELINE;
-	D3D11_RECT oldScissorRects[D3D11_VIEWPORT_AND_SCISSORRECT_OBJECT_COUNT_PER_PIPELINE];
-	m_pImmediateContext->RSGetScissorRects(&oldNumScissorRects, oldScissorRects);*/
-
-
-	ApplyDSS(m_pImmediateContext, TDxState::g_pDSSDepthEnable);
-	ApplyRS(m_pImmediateContext, TDxState::g_pRSBackCullSolid);
-	ApplyBS(m_pImmediateContext, TDxState::g_pAlphaBlend);
-	
-	TBasisFBX::TMatrix* matView = (TBasisFBX::TMatrix*)m_pMainCamera->GetViewMatrix();
-	TBasisFBX::TMatrix* matProj = (TBasisFBX::TMatrix*)m_pMainCamera->GetProjMatrix();	
-
-	m_pImmediateContext->PSSetShaderResources(1, 1, m_normalTexture->m_pSRV.GetAddressOf());
-	m_pImmediateContext->PSSetShaderResources(2, 1, m_metalnessTexture->m_pSRV.GetAddressOf());
-	m_pImmediateContext->PSSetShaderResources(3, 1, m_roughnessTexture->m_pSRV.GetAddressOf());
-	m_pImmediateContext->PSSetShaderResources(4, 1, m_emissiveTexture->m_pSRV.GetAddressOf());
-	//m_pImmediateContext->PSSetShaderResources(5, 1, m_envTexture.srv.GetAddressOf());
-	m_pImmediateContext->PSSetShaderResources(5, 1, m_envTexture->m_pSRV.GetAddressOf());
-	m_pImmediateContext->PSSetShaderResources(6, 1, m_irmapTexture.srv.GetAddressOf());
-	m_pImmediateContext->PSSetShaderResources(7, 1, m_spBRDF_LUT.srv.GetAddressOf());
-	m_pImmediateContext->PSSetSamplers(0, 1, m_defaultSampler.GetAddressOf());
-	m_pImmediateContext->PSSetSamplers(1, 1, m_spBRDF_Sampler.GetAddressOf());
-
-	m_FbxSelectObj.m_CameraInfo.m_vCamera = *((TBasisFBX::TVector3*)&m_pMainCamera->m_vCameraPos);
-	m_FbxSelectObj.m_CameraInfo.m_vLook = *((TBasisFBX::TVector3*)&m_pMainCamera->m_vLookVector); 
-
-	m_FbxSelectObj.SetMatrix(nullptr, matView, matProj);
-	//m_FbxSelectObj.PreRender();	
-	//m_FbxSelectObj.Draw();
-	for (int iObj = 0; iObj < m_FbxSelectObj.m_pMeshImp->m_DrawList.size(); iObj++)
-	{
-		TBasisFBX::TFbxModel* pFbxObj = m_FbxSelectObj.m_pMeshImp->m_DrawList[iObj];
-		pFbxObj->m_pColorTex = m_albedoTexture;
-	}	
-	//m_pImmediateContext->PSSetShaderResources(0, 1, m_albedoTexture->m_pSRV.GetAddressOf());
-	m_FbxSelectObj.Render();
+	MultiThreadRender();
 
 	while (!m_DrawWidgets.empty())
 	{
@@ -327,6 +345,18 @@ bool Sample::Render()
 }
 bool Sample::Release()
 {	
+	g_Handler.CloseAllHandles();
+
+	for (int iThread = 0; iThread < MAX_THREAD; iThread++)
+	{
+		m_pd3dPerSceneDeferredContext[iThread]->Release();
+		if (m_pd3dPerSceneCommandList[iThread])
+		{
+			m_pd3dPerSceneCommandList[iThread]->Release();
+		}
+	}
+	
+
 	for (auto widget : m_pWidgets)
 	{
 		widget->Release();
@@ -341,6 +371,87 @@ bool Sample::Release()
 	TBasisFBX::I_ShaderFBX.Release();
 	TBasisFBX::I_TextureFBX.Release();
 	return true;
+}
+void Sample::DrawFbxObject(ID3D11DeviceContext* pd3dDeferredContext)
+{
+	m_FbxSelectObj.SetDevice(m_pd3dDevice, pd3dDeferredContext);
+	for (int iDraw = 0; iDraw < m_FbxSelectObj.m_pMeshImp->m_DrawList.size(); iDraw++)
+	{
+		m_FbxSelectObj.m_pMeshImp->m_DrawList[iDraw]->m_pContext = pd3dDeferredContext;
+	}
+
+	pd3dDeferredContext->OMSetRenderTargets(1, GetRenderTargetViewAddress(), m_DefaultRT.m_pDepthStencilView.Get());
+	pd3dDeferredContext->RSSetViewports(1, &m_DefaultRT.m_vp);
+	DX::ApplyDSS(pd3dDeferredContext, DX::TDxState::g_pDSSDepthEnable);
+	DX::ApplyBS(pd3dDeferredContext, DX::TDxState::g_pAlphaBlend);
+	pd3dDeferredContext->IASetPrimitiveTopology((D3D11_PRIMITIVE_TOPOLOGY)m_iPrimitiveType);
+
+	//ApplyRS(m_pImmediateContext, TDxState::g_pRSScissorBackCullSolid);
+	//const D3D11_RECT r = { m_DefaultRT.m_vp.TopLeftX, m_DefaultRT.m_vp.TopLeftY, m_DefaultRT.m_vp.Width,m_DefaultRT.m_vp.Height };
+	//m_pImmediateContext->RSSetScissorRects(1, &r);
+
+	///*UINT oldNumScissorRects = D3D11_VIEWPORT_AND_SCISSORRECT_OBJECT_COUNT_PER_PIPELINE;
+	//D3D11_RECT oldScissorRects[D3D11_VIEWPORT_AND_SCISSORRECT_OBJECT_COUNT_PER_PIPELINE];
+	//m_pImmediateContext->RSGetScissorRects(&oldNumScissorRects, oldScissorRects);*/
+
+
+	
+
+	TBasisFBX::TMatrix* matView = (TBasisFBX::TMatrix*)m_pMainCamera->GetViewMatrix();
+	TBasisFBX::TMatrix* matProj = (TBasisFBX::TMatrix*)m_pMainCamera->GetProjMatrix();
+
+	pd3dDeferredContext->PSSetShaderResources(1, 1, m_normalTexture->m_pSRV.GetAddressOf());
+	pd3dDeferredContext->PSSetShaderResources(2, 1, m_metalnessTexture->m_pSRV.GetAddressOf());
+	pd3dDeferredContext->PSSetShaderResources(3, 1, m_roughnessTexture->m_pSRV.GetAddressOf());
+	pd3dDeferredContext->PSSetShaderResources(4, 1, m_emissiveTexture->m_pSRV.GetAddressOf());
+	//pd3dDeferredContext->PSSetShaderResources(5, 1, m_envTexture.srv.GetAddressOf());
+	pd3dDeferredContext->PSSetShaderResources(5, 1, m_envTexture->m_pSRV.GetAddressOf());
+	pd3dDeferredContext->PSSetShaderResources(6, 1, m_irmapTexture.srv.GetAddressOf());
+	pd3dDeferredContext->PSSetShaderResources(7, 1, m_spBRDF_LUT.srv.GetAddressOf());
+	pd3dDeferredContext->PSSetSamplers(0, 1, m_defaultSampler.GetAddressOf());
+	pd3dDeferredContext->PSSetSamplers(1, 1, m_spBRDF_Sampler.GetAddressOf());
+
+	m_FbxSelectObj.m_CameraInfo.m_vCamera = *((TBasisFBX::TVector3*)&m_pMainCamera->m_vCameraPos);
+	m_FbxSelectObj.m_CameraInfo.m_vLook = *((TBasisFBX::TVector3*)&m_pMainCamera->m_vLookVector);
+
+	m_FbxSelectObj.SetMatrix(nullptr, matView, matProj);
+	//m_FbxSelectObj.PreRender();	
+	//m_FbxSelectObj.Draw();
+	for (int iObj = 0; iObj < m_FbxSelectObj.m_pMeshImp->m_DrawList.size(); iObj++)
+	{
+		TBasisFBX::TFbxModel* pFbxObj = m_FbxSelectObj.m_pMeshImp->m_DrawList[iObj];
+		pFbxObj->m_pColorTex = m_albedoTexture;
+	}
+	//m_pImmediateContext->PSSetShaderResources(0, 1, m_albedoTexture->m_pSRV.GetAddressOf());
+	m_FbxSelectObj.Render();
+}
+void Sample::MultiThreadRender()
+{
+	// Frame
+	for (int iThread = 0; iThread < MAX_THREAD; iThread++)
+	{
+		//std::this_thread::sleep_for(std::chrono::seconds(1));
+		g_Handler.SetEvent(iThread);
+	}
+	//g_pSample->m_FbxSelectObj.Frame(g_fSecPerFrame, g_fDurationTime);
+	//g_pSample->DrawFbxObject();
+
+	// Render
+	int iEventArray[] = { MAX_THREAD + 0, };
+	int iReturn = g_Handler.WaitForMultipleObject(1, iEventArray, true);
+	iReturn -= MAX_THREAD;
+	
+	for (int iThread = 0; iThread < MAX_THREAD; iThread++)
+	{
+		// commendlist execute->Render
+		m_pImmediateContext->ExecuteCommandList(m_pd3dPerSceneCommandList[iThread], true);
+
+		m_pd3dPerSceneCommandList[iThread]->Release();
+		m_pd3dPerSceneCommandList[iThread] = nullptr;
+
+		std::cout << "Render! ID=" << iThread << std::endl;
+		g_Handler.ResetEvent(iEventArray[iThread]);
+	}
 }
 //--------------------------------------------------------------------------------------
 // 
@@ -360,6 +471,7 @@ HRESULT Sample::DeleteResource()
 }
 Sample::Sample(void)
 {
+	g_pSample = this;
 }
 Sample::~Sample(void)
 {

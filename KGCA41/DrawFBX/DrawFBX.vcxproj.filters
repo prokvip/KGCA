@@ -46,10 +46,12 @@
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="Sample.cpp" />
     <ClCompile Include="utils.cpp" />
+    <ClCompile Include="TRunnable.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Sample.h" />
     <ClInclude Include="utils.h" />
+    <ClInclude Include="TRunnable.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="DefaultShape.txt" />

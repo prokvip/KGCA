@@ -5,6 +5,10 @@
 #include "TBasisUI.h"
 #include "TEditBox.h"
 #include "utils.h"
+#include "TRunnable.h"
+
+#define  MAX_THREAD 1
+
 
 struct TWidgetCmp
 {
@@ -41,6 +45,10 @@ struct TModelScript
 
 class Sample : public TBasisLib
 {
+public:
+	ID3D11DeviceContext* m_pd3dPerSceneDeferredContext[MAX_THREAD];
+	ID3D11CommandList*   m_pd3dPerSceneCommandList[MAX_THREAD];
+
 	TBasisFBX::TTexture* m_pDefaultWhiteTexture = nullptr;
 	TBasisFBX::TTexture* m_pDefaultBlackTexture = nullptr;
 
@@ -90,6 +98,8 @@ public:
 	bool		Frame();
 	bool		Render();
 	bool		Release();
+	void		DrawFbxObject(ID3D11DeviceContext* pd3dDeferredContext);
+	void		MultiThreadRender();
 	//--------------------------------------------------------------------------------------
 	// 변경된 클라이언트 영역를 재설정을 위한 소멸 및 생성
 	//--------------------------------------------------------------------------------------
