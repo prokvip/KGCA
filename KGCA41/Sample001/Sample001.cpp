@@ -1,5 +1,6 @@
 ﻿/*
 *  후위 연결리스트 && 단방향 구현
+*  전위 연결리스트 && 단방향 구현
 */
 #include <iostream>
 struct TNode
