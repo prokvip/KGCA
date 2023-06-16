@@ -13,7 +13,8 @@ TNode* g_pEndNode = NULL;
 int   g_iCounter = 0;
 TNode* NewNode();
 void Push_Back(TNode* pNewNode);
-void ForwardPrint();
+void Push_Front(TNode* pNewNode);
+void Print();
 
 int main()
 {
@@ -24,7 +25,12 @@ int main()
         TNode* pNewNode = NewNode();
         Push_Back(pNewNode);
     }
-    ForwardPrint();
+    for (int iNode = 0; iNode < 10; iNode++)
+    {
+        TNode* pNewNode = NewNode();
+        Push_Front(pNewNode);
+    }
+    Print();
 
     TNode* pNode = g_pHead.pNext;
     while (pNode != NULL)
@@ -70,7 +76,7 @@ void Push_Back(TNode* pNewNode)
          g_pHead.pNext = pNewNode;
      }*/
 }
-void ForwardPrint()
+void Print()
 {
     // 순회
     for (TNode* pNode = g_pHead.pNext;
@@ -79,5 +85,21 @@ void ForwardPrint()
     {
         // 출력
         std::cout << pNode->iValue << " ";
+    }
+}
+
+void Push_Front(TNode* pNewNode)
+{
+    TNode* pNext = NULL;
+    if (g_pHead.pNext != NULL)
+    {
+        pNext = g_pHead.pNext;
+    }
+    g_pHead.pNext = pNewNode;
+    pNewNode->pNext = pNext;
+
+    if (g_pEndNode != NULL)
+    {
+        g_pEndNode = pNewNode;
     }
 }
