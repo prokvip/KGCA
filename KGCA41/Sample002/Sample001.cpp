@@ -19,8 +19,8 @@ void Push_Front(TNode* pNewNode);
 TNode* Find(int id);
 void ForwardPrint();
 void BackwardPrint();
-void ForwardPrint(TNode* pNode=NULL);
-void BackwardPrint(TNode* pNode = NULL);
+void ForwardPrint(TNode* pNode);
+void BackwardPrint(TNode* pNode);
 
 int main()
 {
@@ -39,7 +39,9 @@ int main()
         TNode* pNewNode = NewNode();
         Push_Back(pNewNode);
     }
-
+    BackwardPrint();
+    ForwardPrint();
+    // 검색 출력
     BackwardPrint(Find(10));
     ForwardPrint(Find(1879670));
 
