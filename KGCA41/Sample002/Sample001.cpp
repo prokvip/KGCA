@@ -149,8 +149,6 @@ void Push_Front(TNode* pNewNode)
         g_pEndNode = pNewNode;
     }
 }
-
-
 TNode* Find(int id)
 {
      TNode* pFindNode = NULL;
