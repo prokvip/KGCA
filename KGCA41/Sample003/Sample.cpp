@@ -25,43 +25,19 @@ int main()
         switch (iSelect)
         {
         case 0: {
-            FILE* fpWrite = fopen("demo.txt", "w");
-            if (fpWrite != NULL)
-            {
-                TNode* pFindNode = NULL;
-                for (TNode* pNode = g_pHead.pNext;
-                    pNode != NULL;
-                    pNode = pNode->pNext)
-                {
-                    fprintf(fpWrite, "%d %d\n", pNode->iID, pNode->iValue);
-                    //fwrite();
-                }                
-                fclose(fpWrite);
-            }
+            char filename[20] = { 0, };
+            printf("\n원하는 파일명을 입력하세여 =");
+            scanf("%s", filename);
+            Save(filename);
         }
               break;
         case 1: {
-            FILE* fpRead = fopen("demo.txt", "r");
-            if (fpRead != NULL)
-            {
-                //for (int i = 0; i < 10; i++)
-                while(1)
-                {                    
-                    if (feof(fpRead))
-                    {
-                        break;
-                    }
-                    TNode* pNewNode = NewNode();
-                    fscanf(fpRead, "%d %d\n", &pNewNode->iID, &pNewNode->iValue);
-                    //fread();
-                    Push_Front(pNewNode);
-                }
-                fclose(fpRead);
-            }
+            Load("demo.txt");
         }
               break;
         case 2: { 
             ForwardPrint(); 
+            break;
         case 3: {
             for (int iNode = 0; iNode < 10; iNode++)
             {

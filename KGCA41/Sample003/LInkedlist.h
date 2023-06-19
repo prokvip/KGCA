@@ -27,6 +27,42 @@ void ForwardPrint();
 void BackwardPrint();
 void ForwardPrint(TNode* pNode);
 void BackwardPrint(TNode* pNode);
+void Save(const char* filename)
+{
+    FILE* fpWrite = fopen(filename, "w");
+    if (fpWrite != NULL)
+    {
+        TNode* pFindNode = NULL;
+        for (TNode* pNode = g_pHead.pNext;
+            pNode != NULL;
+            pNode = pNode->pNext)
+        {
+            fprintf(fpWrite, "%d %d\n", pNode->iID, pNode->iValue);
+            //fwrite();
+        }
+        fclose(fpWrite);
+    }
+};
+void Load(const char * filename)
+{
+    FILE* fpRead = fopen(filename, "r");
+    if (fpRead != NULL)
+    {
+        //for (int i = 0; i < 10; i++)
+        while (1)
+        {
+            if (feof(fpRead))
+            {
+                break;
+            }
+            TNode* pNewNode = NewNode();
+            fscanf(fpRead, "%d %d\n", &pNewNode->iID, &pNewNode->iValue);
+            //fread();
+            Push_Front(pNewNode);
+        }
+        fclose(fpRead);
+    }
+}
 
 
 // 1개의 노드 생성 및 초기화
