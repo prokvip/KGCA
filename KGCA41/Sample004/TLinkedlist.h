@@ -32,8 +32,7 @@ public:
     void    BackwardPrint()const;
     void    ForwardPrint(TBox* pNode)const;
     void    BackwardPrint(TBox* pNode)const;
-    void    Save(const char* filename)const;
-    void    Load(const char* filename);
+
 public:
     bool    Init();
 };

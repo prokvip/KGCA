@@ -29,15 +29,3 @@ void TStudent::Read(FILE* fp)
         &m_iMat);
     //fread();
 }
-
-TStudent* TStudent::NewNode()
-{
-    // 데이터 생성
-    TStudent* node = new TStudent;
-    node->m_iID = m_iCounter++;
-    node->m_iKor = rand() % 100;
-    node->m_iEng = rand() % 100;
-    node->m_iMat = rand() % 100;
-    node->m_pNext = NULL;
-    return node;
-}

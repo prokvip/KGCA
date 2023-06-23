@@ -11,41 +11,6 @@ void  TLinkedlist::Set(const TLinkedlist* list)
     TLinkedlist* listTemp = const_cast<TLinkedlist*>(list);
     listTemp->m_pEndNode = NULL;
 }
-void TLinkedlist::Save(const char* filename)const
-{
-    FILE* fpWrite = fopen(filename, "w");
-    if (fpWrite != NULL)
-    {
-        TBox* pFindNode = NULL;
-        for (TBox* pNode = m_pHead.m_pNext;
-            pNode != NULL;
-            pNode = pNode->m_pNext)
-        {
-            pNode->m_pData->Save(fpWrite);
-        }
-        fclose(fpWrite);
-    }
-};
-void TLinkedlist::Load(const char* filename)
-{
-    FILE* fpRead = fopen(filename, "r");
-    if (fpRead != NULL)
-    {
-        //for (int i = 0; i < 10; i++)
-        while (1)
-        {
-            if (feof(fpRead))
-            {
-                break;
-            }
-            TBox* pNewNode = NewNode();
-            // todo
-            pNewNode->m_pData->Read(fpRead);
-            Push_Front(pNewNode);
-        }
-        fclose(fpRead);
-    }
-}
 bool TLinkedlist::Init()
 {
     m_pEndNode = &m_pHead;   
@@ -60,6 +25,7 @@ TBox* TLinkedlist::NewNode()
     TBox* node = new TBox;
     node->m_pData = NULL;
     node->m_pNext = NULL;
+    m_iCounter++;
     return node;
 }
 void TLinkedlist::Push_Back(TBox* pNewNode)
