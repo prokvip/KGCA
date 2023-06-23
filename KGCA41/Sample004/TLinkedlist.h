@@ -14,6 +14,11 @@ struct TBox
     TStudent* m_pData;
     TBox* m_pNext;
     TBox* m_pPrev;
+    virtual ~TBox()
+    {
+        delete m_pData;
+        m_pData = nullptr;
+    }
 };
 
 class TLinkedlist
@@ -35,4 +40,5 @@ public:
 
 public:
     bool    Init();
+    bool    Release();
 };

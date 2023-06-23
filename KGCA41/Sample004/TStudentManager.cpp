@@ -18,12 +18,13 @@ void TStudentManager::SaveFile(const char* filename)const
         {
             pNode->m_pData->Save(fpWrite);
         }
-        fclose(fpWrite);
+        fileIO.CloseFile();
     }
 };
 void TStudentManager::LoadFile(const char* filename)
 {
-    FILE* fpRead = fopen(filename, "r");
+    TFileIO fileIO;
+    FILE* fpRead = fileIO.CreateFile(filename, "r");
     if (fpRead != NULL)
     {      
         while (1)
@@ -38,7 +39,7 @@ void TStudentManager::LoadFile(const char* filename)
             pNewNode->m_pData->Read(fpRead);
             m_LinkedList.Push_Front(pNewNode);
         }
-        fclose(fpRead);
+        fileIO.CloseFile();
     }
 }
 
@@ -104,5 +105,5 @@ bool  TStudentManager::Run()
 
 void TStudentManager::Release()
 {
-    
+    m_LinkedList.Release();
 }

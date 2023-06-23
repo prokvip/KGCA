@@ -18,6 +18,18 @@ bool TLinkedlist::Init()
     m_pHead.m_pPrev = NULL;
     return true;
 }
+bool TLinkedlist::Release()
+{
+    TBox* pNode = m_pHead.m_pNext;
+    while (pNode != NULL)
+    {
+        TBox* pNext = pNode->m_pNext;       
+        delete pNode;
+        pNode = nullptr;
+        pNode = pNext;
+    }
+    return true;
+}
 // 1개의 노드 생성 및 초기화
 TBox* TLinkedlist::NewNode()
 {

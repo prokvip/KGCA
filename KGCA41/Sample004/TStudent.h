@@ -18,6 +18,7 @@ public:
     void    Print();
     void    Save(FILE* fp);
     void    Read(FILE* fp);
+    void    Release();
     TStudent* NewNode();
 };
 

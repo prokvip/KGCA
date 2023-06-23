@@ -29,3 +29,7 @@ void TStudent::Read(FILE* fp)
         &m_iMat);
     //fread();
 }
+
+void TStudent::Release()
+{
+}

@@ -9,7 +9,6 @@ enum work { Print = 0, Save, Load, Create, Find, Exit };
 class TStudentManager
 {
 	TLinkedlist   m_LinkedList;
-	TFileIO		  m_FileIO;	
 	static int    m_iTotalCounter;
 public:
 	bool    Init();
