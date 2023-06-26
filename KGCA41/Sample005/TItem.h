@@ -18,7 +18,14 @@ class TItem
 {
 public:
     int     m_iID;
-    char    m_szName[4];            
+    char    m_szName[4];
+    int     m_iKor;
+    int     m_iEng;
+    int     m_iMat;
+    int     m_iTotal;
+    int     m_iAverage;
+    TItem* m_pNext;
+    TItem* m_pPrev;
     static int    m_iCounter;
 public:
     void    Print();

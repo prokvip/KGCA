@@ -3,11 +3,11 @@
 int    TItem::m_iCounter = 0;
 void TItem::Print()
 {
-    printf("%d %d %d %d\n",
+   /* printf("%d %d %d %d\n",
         m_iID,
         m_iKor,
         m_iEng,
-        m_iMat);
+        m_iMat);*/
 }
 
 void TItem::Save(FILE* fp)
