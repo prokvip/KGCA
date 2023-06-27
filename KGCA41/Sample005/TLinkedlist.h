@@ -20,15 +20,19 @@ struct TNode
     {
         delete m_pData;
         m_pData = nullptr;
+        m_pNext = nullptr;
+        m_pPrev = nullptr;
     }
 };
 template<class T>
 class TLinkedlist
 {
 public:
-    TNode<T>  m_pHead;
-    TNode<T>* m_pEndNode = NULL;
-    static int    m_iCounter;
+    TNode<T>        m_pHead;
+    TNode<T>*       m_pEndNode = NULL;
+    static int      m_iCounter;
+    TNode<T>* operator [](int index);
+    friend std::ostream& operator<<(std::ostream& os, const TLinkedlist<T>& s);
 public:
      static void  Set(const TLinkedlist* list);
      TNode<T>*     NewNode();
@@ -39,13 +43,37 @@ public:
     void    BackwardPrint()const;
     void    ForwardPrint(TNode<T>* pNode)const;
     void    BackwardPrint(TNode<T>* pNode)const;
-
 public:
     bool    Init();
     bool    Release();
 };
 template<class T>
 int  TLinkedlist<T>::m_iCounter = 0;
+template<class T>
+TNode<T>*   TLinkedlist<T>::operator [](int index)
+{
+    // 7
+    int i = 1;
+    for (TNode<T>* pNode = m_pHead.m_pNext;
+        pNode != NULL;
+        pNode = pNode->m_pNext, i++)
+    {
+        if (i == index) return pNode;// ->m_pData;
+    }
+    return nullptr;
+}
+
+template<class T>
+std::ostream& operator << (std::ostream& os, TLinkedlist<T>& s)
+{
+    for (TNode<T>* pNode = s.m_pHead.m_pNext;
+        pNode != NULL;
+        pNode = pNode->m_pNext)
+    {
+        os << *pNode->m_pData;
+    }
+    return os;
+}
 
 template<class T>
 void  TLinkedlist<T>::Set(const TLinkedlist* list)
@@ -71,7 +99,11 @@ bool TLinkedlist<T>::Release()
         delete pNode;
         pNode = nullptr;
         pNode = pNext;
+        m_iCounter--;
     }
+    m_pHead.m_pNext = nullptr;
+    m_pHead.m_pPrev = nullptr;
+    m_iCounter = 0;
     return true;
 }
 template<class T>
@@ -80,9 +112,9 @@ TNode<T>* TLinkedlist<T>::NewNode()
 {
     // 데이터 생성
     TNode<T>* node = new TNode<T>;
+    _ASSERT(node);
     node->m_pData = NULL;
-    node->m_pNext = NULL;
-    m_iCounter++;
+    node->m_pNext = NULL;    
     return node;
 }
 template<class T>
@@ -92,7 +124,7 @@ void TLinkedlist<T>::Push_Back(TNode<T>* pNewNode)
     m_pEndNode->m_pNext = pNewNode;
     // newNode -> Head
     pNewNode->m_pPrev = m_pEndNode;
-
+    m_iCounter++;
     m_pEndNode = pNewNode;
 }
 template<class T>
@@ -107,13 +139,8 @@ void TLinkedlist<T>::ForwardPrint() const
         pNode != NULL;
         pNode = pNode->m_pNext)
     {
+        _ASSERT(pNode->m_pData);
         pNode->m_pData->Print();
-        //// 출력
-        //std::cout <<
-        //    pNode->m_iID << " " <<
-        //    pNode->m_iKor << " " <<
-        //    pNode->m_iEng << " " <<
-        //    pNode->m_iMat << std::endl;
     }
 }
 template<class T>
@@ -182,6 +209,7 @@ void TLinkedlist<T>::Push_Front(TNode<T>* pNewNode)
     {
         m_pEndNode = pNewNode;
     }
+    m_iCounter++;
 }
 template<class T>
 const TNode<T>* TLinkedlist<T>::Find(int id)

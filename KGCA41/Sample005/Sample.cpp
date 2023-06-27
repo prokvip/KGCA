@@ -1,5 +1,4 @@
 ﻿#include "TStudentManager.h"
-#include "TItemManager.h"
 // 함수템플릿, 
 // 클래스템플릿
 //void Fun1(int a = 9)
@@ -121,44 +120,7 @@ void Swap(const char* a, const char* b)
 }
 int main()
 {   
-    ///*int a = 7;
-    //int b = 5;
-    //Swap(a, b);
-    //float fa = 7;
-    //float fb = 5;
-    //Swap(fa, fb);
-    //char ca = 7;
-    //char cb = 5;
-    //Swap(ca, cb);
-    //short ca1 = 7;
-    //short cb1 = 5;
-    //Swap(ca1, cb1);*/
-    //char strA[] = "aaa";
-    //char strB[] = "bbb";
-    //Swap(strA, strB);
-    //char* pStrA = strA;
-    //char* pStrB = strB;
-    //Swap(pStrA, pStrB);
-    ////int b;
-    ////int* a=&b;
-    ////*a = 877;
-    ////Fun1(*a);
-
-    ////int a = 7;
-    ////int b = 5;
-    ////swap(a, b);
-    ////swap(&a, &b);
-
-    ////float fa = 7.0f;
-    ////float fb = 5.0f;
-    ////swap(fa, fb);
-    ////swap(&fa, &fb);
-
-   /* TItemManager mgr;
-    mgr.Init();
-    mgr.Run();*/
-
-    TStudentManager mgr;
+   TStudentManager mgr;
     mgr.Init();
     mgr.Run();
     printf("아무키나 누르시오!");

@@ -9,11 +9,13 @@
 
 using namespace std;
 template<class T>
-struct TNode
+class TNode
 {
+public:
     T m_pData;
     TNode* m_pNext;
-    TNode* m_pPrev;
+    TNode* m_pPrev;   
+
     TNode()
     {
         m_pNext = nullptr;

@@ -23,6 +23,8 @@ void TStudentManager::SaveFile(const char* filename)const
 };
 void TStudentManager::LoadFile(const char* filename)
 {
+    m_LinkedList.Release();
+
     TFileIO fileIO;
     FILE* fpRead = fileIO.CreateFile(filename, "r");
     if (fpRead != NULL)
@@ -33,10 +35,12 @@ void TStudentManager::LoadFile(const char* filename)
             {
                 break;
             }
-            TNode<TStudent>* pNewNode = m_LinkedList.NewNode();
+            TNode<TStudent>* pNewNode = m_LinkedList.NewNode();           
             // todo
             pNewNode->m_pData = new TStudent;
+            _ASSERT(pNewNode->m_pData);
             pNewNode->m_pData->Read(fpRead);
+            pNewNode->m_pData->Compute();
             m_LinkedList.Push_Front(pNewNode);
         }
         fileIO.CloseFile();
@@ -46,12 +50,8 @@ void TStudentManager::LoadFile(const char* filename)
 TStudent* TStudentManager::NewStudent()
 {
     // 데이터 생성
-    TStudent* node = new TStudent;
-    node->m_iID = m_iTotalCounter++;
-    node->m_iKor = rand() % 100;
-    node->m_iEng = rand() % 100;
-    node->m_iMat = rand() % 100;
-    node->m_pNext = NULL;
+    TStudent* node = new TStudent();
+    node->Set(m_iTotalCounter++);
     return node;
 }
 bool  TStudentManager::Run()
@@ -85,7 +85,8 @@ bool  TStudentManager::Run()
         }break;
         case Print:
         {
-            m_LinkedList.ForwardPrint();
+           // m_LinkedList.ForwardPrint();
+            std::cout << m_LinkedList;
         }break;
         case Create:
         {
@@ -95,6 +96,9 @@ bool  TStudentManager::Run()
                 pNewNode->m_pData = NewStudent();
                 m_LinkedList.Push_Front(pNewNode);
             }
+            /*std::cout << m_LinkedList;
+            TNode<TStudent>* ret = m_LinkedList[5];
+            std::cout << *(ret->m_pData);*/
         }break;
         }
     }

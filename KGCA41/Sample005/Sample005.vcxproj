@@ -83,6 +83,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
+    <OutDir>../../output/Release/</OutDir>
+    <IntDir>../../output/Release/Sample005</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -143,16 +145,11 @@
   <ItemGroup>
     <ClCompile Include="Sample.cpp" />
     <ClCompile Include="TFileIO.cpp" />
-    <ClCompile Include="TItem.cpp" />
-    <ClCompile Include="TItemManager.cpp" />
-    <ClCompile Include="TLinkedlist.cpp" />
     <ClCompile Include="TStudent.cpp" />
     <ClCompile Include="TStudentManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TFileIO.h" />
-    <ClInclude Include="TItem.h" />
-    <ClInclude Include="TItemManager.h" />
     <ClInclude Include="TLinkedlist.h" />
     <ClInclude Include="TStd.h" />
     <ClInclude Include="TStudent.h" />
