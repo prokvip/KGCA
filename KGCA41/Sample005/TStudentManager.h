@@ -5,6 +5,7 @@
 class TStudentManager
 {
 	TLinkedlist<TStudent>   m_LinkedList;
+	TLinkedlist<TLinkedlist<TLinkedlist<TStudent>>>   m_LinkedListAll;
 	static int    m_iTotalCounter;
 public:
 	bool    Init();
