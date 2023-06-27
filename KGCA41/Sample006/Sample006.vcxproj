@@ -144,7 +144,6 @@
     <ClCompile Include="Sample.cpp" />
     <ClCompile Include="TCharacterManager.cpp" />
     <ClCompile Include="TFileIO.cpp" />
-    <ClCompile Include="TLinkedlist.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TCharacterManager.h" />
