@@ -118,9 +118,54 @@ void Swap(const char* a, const char* b)
     //a = b;
     //b = temp;
 }
+TStudent Func()
+{
+    int a = 88;
+    TStudent s(a,"aaa");
+    return s;
+}
+//void Function(TStudent src)
+//{
+//    std::cout << src.m_iID;
+//}
+void Function(TStudent* src)
+{
+    std::cout << src->m_iID;
+}
+void Function(TStudent& src)
+{
+    std::cout << src.m_iID;
+}
+void Function(TStudent&& src)
+{
+    std::cout << src.m_iID;
+}
 int main()
-{   
-   TStudentManager mgr;
+{       
+    TStudent t1;
+    TStudent t2 = t1;
+    TStudent t5 = TStudent(7);    
+    TStudent&& t6 = TStudent(8);
+    TStudent t7 = Func();
+    TStudent t8 = std::move(TStudent(9));
+    TStudent&& t9 = std::move(TStudent(11));
+
+
+    TStudent t3,t4;
+    t3 = t4;
+    t3 = TStudent(1);
+
+    TStudent* p = new TStudent;
+    Function(*p);
+    Function(std::move(*p));
+    TStudent s;
+    Function(s);
+    int a = 4;
+    int& b = a;   
+    Function(TStudent());
+    int&& i = 3;
+
+    TStudentManager mgr;
     mgr.Init();
     mgr.Run();
     printf("아무키나 누르시오!");

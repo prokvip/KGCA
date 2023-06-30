@@ -18,12 +18,15 @@ class TStudent //: public THuman
 public: 
     int         m_iID;     
     char        m_szName[4];
+    char*       m_pData = nullptr;    
     int         m_iKor;
     int         m_iEng;
     int         m_iMat;
     int         m_iTotal;
     float       m_fAverage;  
     static int  m_iCounter;
+    void  operator = (TStudent& data);
+    void  operator = (TStudent&& data);
 public:
     bool  operator == ( TStudent& data) ;
     bool  operator != (const TStudent& data) ;
@@ -41,6 +44,10 @@ public:
     void    Reset();
 public:
     TStudent();
+    TStudent(int id, const char* m_szName=nullptr);
+    // 복사생성자
+    TStudent(const TStudent& data);
+    TStudent(TStudent&& data);
     ~TStudent();
 };
 

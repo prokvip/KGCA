@@ -3,6 +3,7 @@
 int    TStudent::m_iCounter = 0;
 void    TStudent::Reset()
 {
+    m_pData = new char[10];
     memset(m_szName, 0, sizeof(char) * 4);
     m_iKor = 0;
     m_iEng = 0;
@@ -119,11 +120,59 @@ void TStudent::Release()
 {
 }
 
+void  TStudent::operator = (TStudent& data)
+{
+    std::cout << "대입연산자 호출" << std::endl;
+}
+TStudent::TStudent(const TStudent& data)
+{
+    m_fAverage = data.m_fAverage;
+    m_iID = data.m_iID;
+    memcpy(m_szName, data.m_szName, _countof(data.m_szName));
+    
+    if (data.m_pData != nullptr)
+    {
+        int iSize = _msize(data.m_pData);
+        m_pData = new char[iSize];
+        memcpy(m_pData, data.m_pData, iSize);
+    }
+    m_iKor = data.m_iKor;
+    m_iEng = data.m_iEng;
+    m_iMat = data.m_iMat;
+    m_iTotal = data.m_iTotal;
+    m_fAverage = data.m_fAverage;
+    std::cout << "복사 생성자 호출" << std::endl;
+}
 TStudent::TStudent()
 {
     Reset();
+    std::cout << "생성자 호출" << std::endl;
+}
+TStudent::TStudent(int id, const char* szName)
+{
+    Reset();
+    this->m_iID = id;
+    this->m_pData = new char[10];
+    memset(m_pData, 0, sizeof(char) * 10);
+    if (szName != nullptr)
+    {
+        memcpy(m_pData, szName, sizeof(char) * 10);
+        memcpy(m_szName, szName, strlen(szName));
+    }
+    std::cout << "생성자 호출" << std::endl;
+};
+void  TStudent::operator = (TStudent&& data)
+{
+    std::cout << "이동 대입 연산자 호출" << std::endl;
+}
+TStudent::TStudent(TStudent&& data )
+{
+    m_iID = data.m_iID;
+    m_pData = data.m_pData;
+    data.m_pData = nullptr;
+    std::cout << "이동 생성자 호출" << std::endl;
 }
 TStudent::~TStudent()
 {
-    std::cout << "THuman";
+    std::cout << "해제자 호출" << std::endl;
 }
