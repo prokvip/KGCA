@@ -163,6 +163,9 @@ TStudent::TStudent(int id, const char* szName)
 };
 void  TStudent::operator = (TStudent&& data)
 {
+    m_iID = data.m_iID;
+    m_pData = data.m_pData;
+    data.m_pData = nullptr;
     std::cout << "이동 대입 연산자 호출" << std::endl;
 }
 TStudent::TStudent(TStudent&& data )

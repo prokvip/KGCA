@@ -8,6 +8,15 @@ struct TWidget
     int c;
     int d;
     int e;
+    TWidget()
+    {
+        m_iID = 0;
+        a = b = c = d = e = 999;
+    }
+    ~TWidget()
+    {
+        std::cout << "~TWidget";
+    }
     //friend std::ostream& operator << (  std::ostream& os, 
     //                                    const TWidget& s);
 };

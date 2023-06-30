@@ -121,7 +121,7 @@ void Swap(const char* a, const char* b)
 TStudent Func()
 {
     int a = 88;
-    TStudent s(a,"aaa");
+    TStudent s(a,"fff");
     return s;
 }
 //void Function(TStudent src)
@@ -144,11 +144,11 @@ int main()
 {       
     TStudent t1;
     TStudent t2 = t1;
-    TStudent t5 = TStudent(7);    
-    TStudent&& t6 = TStudent(8);
+    TStudent t5 = TStudent(7,"aaa");    // 일반 생성자 호출(t5)
+    TStudent&& t6 = TStudent(8, "bbb"); // 일반 생성자 호출(t6)
     TStudent t7 = Func();
-    TStudent t8 = std::move(TStudent(9));
-    TStudent&& t9 = std::move(TStudent(11));
+    TStudent t8 = std::move(TStudent(9, "ccc"));
+    TStudent&& t9 = std::move(TStudent(11, "ddd"));
 
 
     TStudent t3,t4;
