@@ -1,0 +1,39 @@
+title 己利包府橇肺弊伐(皋聪历 荤侩规过)
+
+note left of Main : TStudentManager mgr;
+end note
+
+Main->+TStudentManager: Init()
+TStudentManager->-Main: return
+Main->+TStudentManager: Run()
+TStudentManager->-Main: exit()
+
+
+class Sample->class TSpaceDivison:(1)按眉积己(new TQuadtree)
+class TSpaceDivison->class TQuadtree:BuildQuadtree
+class TQuadtree->class TNode: CreateRootNode
+class TNode->class TNode: CreateNode
+class TNode->class TNode: IsSubDivide
+class TNode->class TQuadtree: Max Depth
+class TQuadtree->class Sample: return Result
+
+class Sample->class TSpaceDivison:(2)Virtual AddObject
+class Sample->class TQuadtree:AddObject
+class TQuadtree->class TNode: FindNode
+class TNode->class TNode: AddNode
+class TNode->class TQuadtree: return
+class TQuadtree->class Sample: return Result
+
+class Sample->class TSpaceDivison:(3)virtual Frame(Camera Info)&Render
+class TSpaceDivison->class TQuadtree:Frame&Render
+class TQuadtree->class TNode: FindRenderNode
+class TNode->class TNode: AddRenderNode
+class TNode->class TQuadtree: return
+class TQuadtree->class Sample: return Result
+
+
+class Sample->class TSpaceDivison:(4)virtual Release
+class TSpaceDivison->class TQuadtree:Release
+class TQuadtree->class TNode: FindRenderNode
+class TNode->class TQuadtree: return
+class TQuadtree->class Sample: return Result
