@@ -24,13 +24,16 @@ struct TNode
         m_pPrev = nullptr;
     }
 };
+/* 템플릿 링크드리스트*/
 template<class T>
 class TLinkedlist
 {
 public:
-    
+    // 노드헤더 객체
     TNode<T>        m_pHead;
+    // 리프노드 포인트
     TNode<T>*       m_pEndNode = NULL;
+    // 전체 노드 개수
     static int      m_iCounter;
     TNode<T>* operator [](int index);
     friend std::ostream& operator<<(std::ostream& os, const TLinkedlist<T>& s);

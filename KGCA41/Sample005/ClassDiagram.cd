@@ -1,14 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
   <Class Name="TFileIO">
-    <Position X="7.75" Y="4.25" Width="1.5" />
+    <Position X="7" Y="2.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAQAAAAAAAABAAAAAAAAABAAABA=</HashCode>
       <FileName>TFileIO.h</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="TLinkedlist&lt;T&gt;">
-    <Position X="10.75" Y="2.25" Width="2.25" />
+    <Position X="3.75" Y="1.5" Width="2.25" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAgBQAAAAAEAAQACAEKAAAAEAgCABAAAAA=</HashCode>
       <FileName>TLinkedlist.h</FileName>
@@ -18,28 +18,18 @@
     </ShowAsAssociation>
   </Class>
   <Class Name="TStudent">
-    <Position X="3.25" Y="1" Width="2" />
+    <Position X="9.5" Y="1.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AEAAAMAAAAEQhBAAABAAAQAgAIEAAAAAEAowABAEEAA=</HashCode>
       <FileName>TStudent.h</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="TStudentManager">
-    <Position X="5.75" Y="1.25" Width="1.5" />
-    <AssociationLine Name="list" Type="std::vector&lt;_Ty, _Alloc&gt;" FixedFromPoint="true" FixedToPoint="true">
+    <Position X="1" Y="1.5" Width="1.5" />
+    <AssociationLine Name="m_LinkedList" Type="TLinkedlist&lt;T&gt;" FixedFromPoint="true">
       <Path>
-        <Point X="7.25" Y="1.937" />
-        <Point X="7.625" Y="1.937" />
-        <Point X="7.625" Y="1.531" />
-        <Point X="10.75" Y="1.531" />
-      </Path>
-    </AssociationLine>
-    <AssociationLine Name="m_LinkedList" Type="TLinkedlist&lt;T&gt;" FixedFromPoint="true" FixedToPoint="true">
-      <Path>
-        <Point X="7.25" Y="1.937" />
-        <Point X="7.625" Y="1.937" />
-        <Point X="7.625" Y="3.989" />
-        <Point X="10.75" Y="3.989" />
+        <Point X="2.5" Y="2.188" />
+        <Point X="3.75" Y="2.188" />
       </Path>
     </AssociationLine>
     <TypeIdentifier>
@@ -49,26 +39,16 @@
     <ShowAsAssociation>
       <Field Name="m_LinkedList" />
     </ShowAsAssociation>
-    <ShowAsCollectionAssociation>
-      <Field Name="list" />
-    </ShowAsCollectionAssociation>
   </Class>
-  <Class Name="std::vector&lt;_Ty, _Alloc&gt;" Collapsed="true">
-    <Position X="10.75" Y="1.25" Width="3.25" />
-    <TypeIdentifier>
-      <HashCode>A2AEk4EqCrBsCEBAAOMIIAAyEEUEQBIghQkwgkAFUko=</HashCode>
-      <FileName>C:\Program Files (x86)\Microsoft Visual Studio\2019\Professional\VC\Tools\MSVC\14.29.30133\include\vector</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Struct Name="TNode&lt;T&gt;">
-    <Position X="14" Y="3" Width="1.5" />
+  <Struct Name="TNode&lt;T&gt;" Collapsed="true">
+    <Position X="7" Y="1.5" Width="2.25" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAFgAAAAAIAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>TLinkedlist.h</FileName>
     </TypeIdentifier>
   </Struct>
   <Enum Name="work">
-    <Position X="5.75" Y="4.25" Width="1.5" />
+    <Position X="1" Y="4.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAgIAAAAAAAAAAAAAAAAAAAAAIAEAAIAAAAAAEAAA=</HashCode>
       <FileName>TStd.h</FileName>

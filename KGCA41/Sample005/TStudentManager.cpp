@@ -21,6 +21,7 @@ void TStudentManager::SaveFile(const char* filename)const
         fileIO.CloseFile();
     }
 };
+// 파일 불러오기
 void TStudentManager::LoadFile(const char* filename)
 {
     m_LinkedList.Release();

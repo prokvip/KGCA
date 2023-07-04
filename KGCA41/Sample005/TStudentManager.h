@@ -5,7 +5,8 @@
 class TStudentManager
 {
 	std::vector<TStudent> list;
-	TLinkedlist<TStudent>   m_LinkedList;
+	
+	TLinkedlist<TStudent>   m_LinkedList;//링크드 리스트
 	TLinkedlist<TLinkedlist<TLinkedlist<TStudent>>>   m_LinkedListAll;
 	static int    m_iTotalCounter;
 public:
