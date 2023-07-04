@@ -1,4 +1,5 @@
 ﻿#include <iostream>
+
 // 클레스 설계의 기본 원칙(SOLID) -> c++ 이미 원칙을 사용하고 있다.
 // 소프트웨어 공학(객체, Class)
 //1) 단일 책임(Single Responsibility) 원칙
