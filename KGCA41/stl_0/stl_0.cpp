@@ -50,7 +50,7 @@ public:
         std::cout << user.m_szName << "\n";
     }
 };
-std::vector<int> listInt;
+
 TUser Add()
 {
     TUser user;
@@ -74,7 +74,7 @@ static auto cmp = [](const int& a){  return 41 == a;};
 
 int main()
 {    
-    
+    std::vector<int> listInt;
     listInt.reserve(100);
     for (int i = 0; i < 5; i++)
     {        
@@ -103,6 +103,17 @@ int main()
         std::find_if(listInt.begin(), listInt.end(), 
             cmp
         );
+
+
+    auto ifind4 =
+        std::find_if(listInt.begin(), listInt.end(),
+            [&listInt](const int& a)
+            {
+                return 41 == a;
+            }
+        );
+    
+
     if (ifind1 != listInt.end())
     {
         listInt.erase(ifind1);
