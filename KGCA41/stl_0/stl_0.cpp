@@ -7,7 +7,7 @@ class TUser
 {
 public:
     int  m_id = 0;
-    char m_szName[30] = { 0, };
+    std::wstring  m_szName;
     TUser(const TUser& d)
     {
         m_id = d.m_id;
@@ -16,38 +16,38 @@ public:
     TUser& operator = (TUser& data) 
     {
         m_id = data.m_id;
-        std::cout << "operator =" << m_id << "\n";
+        std::wcout << L"operator =" << m_id << std::endl;
     }
     TUser& operator = (TUser&& data)
     {
         m_id = data.m_id;
-        std::cout << "operator = (TUser&& data" << m_id << "\n";
+        m_szName = data.m_szName;
+        std::wcout << L"operator = (TUser&& data" << m_id << std::endl;
         return *this;
     }
     TUser(TUser&& data) 
     {
         m_id = data.m_id;
-        std::cout << "TUser(TUser&& data)" << m_id << "\n";
+        m_szName = data.m_szName;
+        std::wcout << L"TUser(TUser&& data)" << m_id << std::endl;
     }
-    TUser(int id, const char* name, int iSize) : m_id(id)
+    TUser(int id, const wchar_t* name, int iSize) : m_id(id)
     {
-        memset(m_szName, 0, sizeof(char) * 30);       
-        memcpy(m_szName, name, sizeof(char) * iSize);
-        std::cout << "TUser" << m_id << "\n";
+        m_szName = name;
+        std::wcout << L"TUser" << m_id << std::endl;
     }
     TUser(int id) : m_id(id)
     {
-        memset(m_szName, 0, sizeof(char) * 30);
-        std::cout << "TUser" << m_id << "\n";
+        std::wcout << L"TUser" << m_id << std::endl;
     }
     TUser() = default;
     ~TUser()
     {
-        std::cout << "~TUser" << m_id << "\n";
+        std::wcout << L"~TUser" << m_id << "\n";
     }
     static void Print(TUser& user)
     {
-        std::cout << user.m_szName << "\n";
+        std::wcout << user.m_szName << "\n";
     }
 };
 
@@ -73,7 +73,36 @@ bool CompareInt(const int& a, const int &b)
 static auto cmp = [](const int& a){  return 41 == a;};
 
 int main()
-{    
+{   
+    setlocale(LC_ALL, "korean");
+    std::wstring b0 = L"a게임";
+    std::wcout << b0;
+
+    using StringArray = std::vector<std::wstring>;
+    std::vector<StringArray> listString;
+    std::vector<std::wstring> list0, list1;
+    list0.push_back(L"kgca");
+    list0.push_back(L"kgcar게임아카데미");
+    list0.push_back(L"kgcar게임아카데미게임아카데미게임아카데미게임아카데미");
+    list0.push_back(L"kgca");
+    list0.push_back(L"kgcar게임아카데미");
+    list0.push_back(L"kgcar게임아카데미게임아카데미게임아카데미게임아카데미");
+    
+    list1.emplace_back(L"kgca");
+    list1.emplace_back(L"kgcar게임아카데미");
+    list1.emplace_back(L"kgcar게임아카데미게임아카데미게임아카데미게임아카데미");
+    list1.emplace_back(L"kgca");
+    list1.emplace_back(L"kgcar게임아카데미");
+    list1.emplace_back(L"kgcar게임아카데미게임아카데미게임아카데미게임아카데미");
+
+   // listString.emplace_back(list0);
+    //listString.emplace_back(list1);
+
+    std::wstring s0 = list0[1];
+    //std::wstring s1 = listString[1][2];
+    std::wcout << s0 << std::endl;
+    std::wcout << list0[1] << std::endl;
+
     std::vector<int> listInt;
     listInt.reserve(100);
     for (int i = 0; i < 5; i++)
