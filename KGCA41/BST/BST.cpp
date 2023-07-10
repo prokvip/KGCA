@@ -133,6 +133,8 @@ int main()
     // L P R
     InOrder(g_pRootNode); std::cout << std::endl;
     // L R P
-    PostOrder(g_pRootNode);
+    PostOrder(g_pRootNode); std::cout << std::endl;
+    // Level Order
+    LevelOrder(g_pRootNode);
     std::cout << "Hello World!\n";
 }
