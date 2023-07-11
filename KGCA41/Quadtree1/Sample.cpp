@@ -18,11 +18,6 @@ int main()
 
 
     std::cout << std::endl;
-    //// P L R
-    //quadtree.PreOrder(quadtree.GetRootNode()); std::cout << std::endl;
-    //// L R P
-    //quadtree.PostOrder(quadtree.GetRootNode()); std::cout << std::endl;
-    //// Level Order
     std::cout << "Object inform!\n";
     quadtree.LevelOrder(quadtree.GetRootNode());
     std::cout << "Hello World!\n";
