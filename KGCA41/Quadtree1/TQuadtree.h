@@ -13,9 +13,16 @@ public:
         float y,
         float fWidth,
         float fHeight);
+
+    TNode* AddObject(TObject* obj);
+    TNode* FindNode(TNode* pNode, TObject* obj);
 public:
     void PreOrder(TNode* pNode);
     void PostOrder(TNode* pNode);
     void LevelOrder(TNode* pNode);
+    ~TQuadtree()
+    {
+        delete g_pRootNode;
+    }
 };
 

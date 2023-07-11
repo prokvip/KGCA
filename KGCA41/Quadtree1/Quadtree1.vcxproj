@@ -143,11 +143,16 @@
   <ItemGroup>
     <ClCompile Include="Sample.cpp" />
     <ClCompile Include="TNode.cpp" />
+    <ClCompile Include="TObject.cpp" />
     <ClCompile Include="TQuadtree.cpp" />
+    <ClCompile Include="TUtils.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="TCollision.h" />
     <ClInclude Include="TNode.h" />
+    <ClInclude Include="TObject.h" />
     <ClInclude Include="TQuadtree.h" />
+    <ClInclude Include="TUtils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
