@@ -1,9 +1,12 @@
 #pragma once
+#include <windows.h>
 #include <iostream>
 #include <vector>
 #include <string>
 #include <queue>
+#include <math.h>
 
+#define randstep(fmin, fmax) ((float)fmin+((float)fmax-(float)fmin)* rand() / RAND_MAX)
 struct TPoint
 {
     float x;
@@ -23,6 +26,22 @@ struct TPoint
     TPoint operator / (float fValue)
     {
         return TPoint(x / fValue, y / fValue);
+    }
+    TPoint& operator /= (float fValue)
+    {
+        x = x / fValue;
+        y = y / fValue;
+        return *this;
+    }
+    float GetDistance()
+    {
+        float fDistance = sqrt(x * x + y * y);
+        return fDistance;
+    }
+    static float GetDistance(TPoint& p)
+    {
+        float fDistance = sqrt(p.x * p.x + p.y * p.y);
+        return fDistance;
     }
     TPoint() {}
     TPoint(float fx, float fy) : x(fx), y(fy)

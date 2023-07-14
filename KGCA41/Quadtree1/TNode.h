@@ -7,7 +7,8 @@ public:
     int    m_iDepth = 0;
     TNode* m_pParent = nullptr;
     std::vector<TNode*> m_pChild;
-    std::vector<TObject*> m_ObjectList;
+    std::vector<TObject*> m_StaticObjectList;
+    std::vector<TObject*> m_DynamicObjectList;
 public:    
     void   SetParent(TNode* pParent);
     TNode(TNode* pParent, 

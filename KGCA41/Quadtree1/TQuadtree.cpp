@@ -27,7 +27,7 @@ TNode* TQuadtree::AddObject(TObject* obj)
     TNode* pFindNode = FindNode(g_pRootNode, obj);
     if (pFindNode != nullptr)
     {
-        pFindNode->m_ObjectList.push_back(obj);
+        pFindNode->m_StaticObjectList.push_back(obj);
         return pFindNode;
     }    
     return nullptr;
@@ -136,13 +136,13 @@ void TQuadtree::LevelOrder(TNode* pNode)
         << pNode->m_rt.m_fy << L","
         << pNode->m_rt.m_fWidth << L","
         << pNode->m_rt.m_fHeight << L","
-        << pNode->m_ObjectList.size() << std::endl;
-    for (int iobj = 0; iobj < pNode->m_ObjectList.size(); iobj++)
+        << pNode->m_StaticObjectList.size() << std::endl;
+    for (int iobj = 0; iobj < pNode->m_StaticObjectList.size(); iobj++)
     {
         std::wcout << L"      " << L"<" << iobj << L">"
-            << pNode->m_ObjectList[iobj]->m_csName << L","
-            << pNode->m_ObjectList[iobj]->m_Position.x << L","
-            << pNode->m_ObjectList[iobj]->m_Position.y 
+            << pNode->m_StaticObjectList[iobj]->m_csName << L","
+            << pNode->m_StaticObjectList[iobj]->m_Position.x << L","
+            << pNode->m_StaticObjectList[iobj]->m_Position.y 
             << std::endl;
     }
     for (int i = 0; i < pNode->m_pChild.size(); i++)
