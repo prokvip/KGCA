@@ -52,15 +52,7 @@ int main()
     while (timer.m_fGameTimer < 1000.0f)
     {
         timer.Frame();       
-        for (auto node : quadtree.g_DynamicObjectNodeList)
-        {
-            node->m_DynamicObjectList.clear();
-        }
-        //quadtree.PreOrder(quadtree.g_pRootNode);
-        /*for (int i=0; i < quadtree.g_DynamicNodeList.size() ; i++)
-        {
-            quadtree.g_DynamicNodeList[i]->m_DynamicObjectList.clear();
-        }*/
+        quadtree.PreFrame();
 
         for (int i = 0; i < DynamicObjectList.size(); i++)
         {
