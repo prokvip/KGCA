@@ -3,7 +3,30 @@ bool	TQuadtree::Init()
 {
     return true;
 }
+bool	TQuadtree::PreFrame()
+{
+    // 力1规过(std::set)
+    for (auto node : g_DynamicObjectNodeList)
+    {
+        node->m_DynamicObjectList.clear();
+    }
+    // 力2规过(犁蓖龋免 滚傈)
+    //quadtree.PreOrder(g_pRootNode);
+    
+    // 力3规过( 硅凯 滚傈)
+    /*for (int i=0; i < g_DynamicNodeList.size() ; i++)
+    {
+        g_DynamicNodeList[i]->m_DynamicObjectList.clear();
+    }*/
+
+    g_DynamicObjectNodeList.clear();
+    return true;
+}
 bool	TQuadtree::Frame()
+{
+    return true;
+}
+bool	TQuadtree::PostFrame()
 {
     return true;
 }

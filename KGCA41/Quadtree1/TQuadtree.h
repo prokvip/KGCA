@@ -27,7 +27,9 @@ public:
     void LevelOrder(TNode* pNode);
 public:
     bool	Init();		// 초기화 작업
+    bool	PreFrame();	// 실시간 계산
     bool	Frame();	// 실시간 계산
+    bool	PostFrame();	// 실시간 계산
     bool	Render();	// 실시간 랜더링, 드로우
     bool	Release();	// 객체의 소멸 작업
 public:
