@@ -1,4 +1,5 @@
 ﻿#include "TQuadtree.h"
+#include "TTimer.h"
 std::vector<TObject*> StaticObjectList;
 std::vector<TObject*> DynamicObjectList;
 
@@ -37,21 +38,25 @@ int main()
     SetStaticObject(quadtree);
     SetDynamicObject(quadtree);
 
-    int iMaxFrame = 30;   
-    while (--iMaxFrame > 0)
+    TTimer  timer;
+    timer.Init();
+    // 프레임 고정 100프레임    float fStep = 1.0f / 50.0f;
+    while (timer.m_fGameTimer < 10.0f)
     {
+        timer.Frame();       
         for (int i = 0; i < DynamicObjectList.size(); i++)
         {
             TObject* obj = DynamicObjectList[i];
-            obj->Move();
+            obj->Move(timer.m_fSecondPerFrame);
         }
         system("cls");
         std::cout << std::endl;
-        std::cout << "[" << iMaxFrame <<"]" << "Object inform!\n";
+        std::cout << "Object inform!\n";
         quadtree.LevelOrder(quadtree.GetRootNode());
-        std::cout << "Hello World!\n";
-        Sleep(1000); // tick 1000 => 1초
+        timer.Render();
+        //Sleep(1); // tick 1000 => 1초
     }
+    timer.Release();
 
     for (int i = 0; i < StaticObjectList.size(); i++)
     {
