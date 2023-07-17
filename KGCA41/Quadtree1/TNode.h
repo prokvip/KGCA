@@ -3,6 +3,7 @@
 class TNode
 {
 public:
+    int    m_iIndex;
     TRect  m_rt;
     int    m_iDepth = 0;
     TNode* m_pParent = nullptr;

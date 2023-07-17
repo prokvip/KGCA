@@ -1,4 +1,21 @@
 #include "TQuadtree.h"
+bool	TQuadtree::Init()
+{
+    return true;
+}
+bool	TQuadtree::Frame()
+{
+    return true;
+}
+bool	TQuadtree::Render()
+{
+    return true;
+}
+bool	TQuadtree::Release()
+{
+    return true;
+}
+
 TNode* TQuadtree::FindNode(TNode* pNode, TObject* obj)
 {
     if (pNode == nullptr) return nullptr;
@@ -22,7 +39,7 @@ TNode* TQuadtree::FindNode(TNode* pNode, TObject* obj)
     }while (pNode);
     return pNode;
 }
-TNode* TQuadtree::AddObject(TObject* obj)
+TNode* TQuadtree::StaticAddObject(TObject* obj)
 {
     TNode* pFindNode = FindNode(g_pRootNode, obj);
     if (pFindNode != nullptr)
@@ -30,6 +47,17 @@ TNode* TQuadtree::AddObject(TObject* obj)
         pFindNode->m_StaticObjectList.push_back(obj);
         return pFindNode;
     }    
+    return nullptr;
+}
+TNode* TQuadtree::DynamicAddObject(TObject* obj)
+{
+    TNode* pFindNode = FindNode(g_pRootNode, obj);
+    if (pFindNode != nullptr)
+    {
+        pFindNode->m_DynamicObjectList.push_back(obj);
+        g_DynamicObjectNodeList.insert(pFindNode);
+        return pFindNode;
+    }
     return nullptr;
 }
 TNode* TQuadtree::GetRootNode()
@@ -41,7 +69,10 @@ TNode* TQuadtree::CreateNode(TNode* pParent, float x,
     float fWidth,
     float fHeight)
 {
-    return new TNode(pParent,x,y,fWidth, fHeight);
+    TNode* pNode = new TNode(pParent, x, y, fWidth, fHeight);
+    pNode->m_iIndex = m_iNumNodeCounter++;
+    g_DynamicNodeList.push_back(pNode);
+    return pNode;
 }
 void TQuadtree::Buildtree(TNode* pNode)
 {
@@ -111,8 +142,8 @@ void TQuadtree::BuildQuadtree()
 
 void TQuadtree::PreOrder(TNode* pNode)
 {
-    if (pNode == nullptr) return;
-    //std::cout << pNode->m_iValue << " ";
+    if (pNode == nullptr) return;   
+    pNode->m_DynamicObjectList.clear();
     for (TNode* data : pNode->m_pChild)
     {
         PreOrder(data);
@@ -136,13 +167,14 @@ void TQuadtree::LevelOrder(TNode* pNode)
         << pNode->m_rt.m_fy << L","
         << pNode->m_rt.m_fWidth << L","
         << pNode->m_rt.m_fHeight << L","
-        << pNode->m_StaticObjectList.size() << std::endl;
-    for (int iobj = 0; iobj < pNode->m_StaticObjectList.size(); iobj++)
+        //<< pNode->m_StaticObjectList.size()
+        << pNode->m_DynamicObjectList.size() << std::endl;
+    for (int iobj = 0; iobj < pNode->m_DynamicObjectList.size(); iobj++)
     {
         std::wcout << L"      " << L"<" << iobj << L">"
-            << pNode->m_StaticObjectList[iobj]->m_csName << L","
-            << pNode->m_StaticObjectList[iobj]->m_Position.x << L","
-            << pNode->m_StaticObjectList[iobj]->m_Position.y 
+            << pNode->m_DynamicObjectList[iobj]->m_csName << L","
+            << pNode->m_DynamicObjectList[iobj]->m_Position.x << L","
+            << pNode->m_DynamicObjectList[iobj]->m_Position.y
             << std::endl;
     }
     for (int i = 0; i < pNode->m_pChild.size(); i++)

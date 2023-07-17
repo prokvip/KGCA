@@ -14,11 +14,40 @@ void			TDynamicObject::Move(float fSecond)
 
 	TPoint vDir = m_Target - m_Position;
 	float fD = vDir.GetDistance();
-	if (fD > 5.0f)
+	//	// 시간의 동기화
+	TPoint vVelocity = m_Direction * m_fSpeed * fSecond;
+	m_Position = m_Position + vVelocity;
+	// 
+	//if (fD > 5.0f)
+	//{
+	//	// 시간의 동기화
+	//	TPoint vVelocity = m_Direction * m_fSpeed * fSecond;
+	//	m_Position = m_Position + vVelocity;
+	//	m_Position.x = max(m_Position.x, 0.0f);
+	//	m_Position.y = max(m_Position.y, 0.0f);
+	//	m_Position.x = min(m_Position.x, 800.0f);
+	//	m_Position.y = min(m_Position.y, 600.0f);
+	//}
+	if (m_Position.x < 0.0f)
 	{
-		// 시간의 동기화
-		TPoint vVelocity = m_Direction * m_fSpeed * fSecond;
-		m_Position = m_Position + vVelocity;
+		m_Direction.x *= -1.0f;
+		m_Position.x = 0.0f;
+	}
+	if (m_Position.y < 0.0f)
+	{
+		m_Direction.y *= -1.0f;
+		m_Position.y = 0.0f;
+	}
+
+	if (m_Position.x > 800.0f)
+	{
+		m_Direction.x *= -1.0f;
+		m_Position.x = 800.0f;
+	}
+	if (m_Position.y > 600.0f)
+	{
+		m_Direction.y *= -1.0f;
+		m_Position.y = 600.0f;
 	}
 };
 TDynamicObject::TDynamicObject()

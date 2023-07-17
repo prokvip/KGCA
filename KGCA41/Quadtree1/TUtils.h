@@ -4,6 +4,7 @@
 #include <vector>
 #include <string>
 #include <queue>
+#include <set>
 #include <math.h>
 
 #define randstep(fmin, fmax) ((float)fmin+((float)fmax-(float)fmin)* rand() / RAND_MAX)
