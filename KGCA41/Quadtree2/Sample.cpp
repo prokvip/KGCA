@@ -43,12 +43,17 @@ int main()
 {    
     TRect rt1, rt2;    
     rt1.Set(TPoint(0,0), 100, 100);
-    rt2.Set(TPoint(50, 50), 100, 100);
+    rt2.Set(TPoint(150, 150), 100, 100);
     if (TCollision::RectToRect(rt1, rt2))
     {
         std::cout << " collision" << std::endl;    
     }
-    std::cout << "no collision" << std::endl;
+    TRect rt = rt1 - rt2;
+    if (rt.m_bEnable)
+    {
+        std::cout << "Collision" << std::endl;
+    }
+  
     //std::set<int> setList;
     //setList.insert(1);
     //setList.insert(5);

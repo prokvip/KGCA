@@ -10,8 +10,23 @@
 #define randstep(fmin, fmax) ((float)fmin+((float)fmax-(float)fmin)* rand() / RAND_MAX)
 struct TPoint
 {
-    float x;
-    float y;
+    float x = 0.0f;
+    float y = 0.0f;
+    bool operator == (TPoint& p)
+    {
+        if (fabs(x - p.x) > 0.0001f)
+        {
+            if (fabs(y - p.y) > 0.0001f)
+            {            
+                return true;                  
+            }
+        }
+        return false;
+    }
+    bool operator != (TPoint& p)
+    {
+        return !(*this == p);
+    }
     TPoint operator + (TPoint& p)
     {
         return TPoint(x + p.x, y + p.y);
@@ -63,8 +78,9 @@ struct TFloat2
 };
 struct TRect : TFloat2
 {
-    float m_fWidth;
-    float m_fHeight;
+    bool  m_bEnable = true;
+    float m_fWidth = 0.0f;
+    float m_fHeight = 0.0f;
     TPoint m_Point[4];
     TPoint m_Center;
     TPoint m_Half;
@@ -72,6 +88,31 @@ struct TRect : TFloat2
     TPoint m_Max;
     TPoint v;
     TPoint s;
+    bool Intersect(TRect& p, TRect& ret)
+    {
+        return false;
+    }
+    bool operator == (TRect& p)
+    {
+        if (fabs(m_fx - p.m_fx) > 0.0001f)
+        {
+            if (fabs(m_fy - p.m_fy) > 0.0001f)
+            {
+                if (fabs(m_fWidth - p.m_fWidth) > 0.0001f)
+                {
+                    if (fabs(m_fHeight - p.m_fHeight) > 0.0001f)
+                    {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+    bool operator != (TRect& p)
+    {        
+        return !(*this == p);        
+    }
     TRect operator + (TRect& p)
     {
         TRect rt;
@@ -83,18 +124,49 @@ struct TRect : TFloat2
         rt.Set(pos, fMaxX- fMinX, fMaxY - fMinY);
         return rt;
     }
-    /*TRect operator - (TPoint& p)
+    TRect operator - (TRect& p)
     {
-        return TRect(x - p.x, y - p.y);
+        TRect rt;
+        rt.m_bEnable = false;
+        if (ToRect(p))
+        {
+            //left, top          right
+            //      bottom
+            float fx = (m_Min.x > p.m_Min.x) ? m_Min.x : p.m_Min.x;
+            float fy = (m_Min.y > p.m_Min.y) ? m_Min.y : p.m_Min.y;
+            float right= (m_Max.x < p.m_Max.x) ? m_Max.x : p.m_Max.x;
+            float bottom = (m_Max.y < p.m_Max.y) ? m_Max.y : p.m_Max.y;
+            rt.Set(fx, fy, right-fx, bottom-fy);
+            rt.m_bEnable = true;
+        }
+        return rt;
+    }
+    TRect operator - (TPoint& p)
+    {
+        m_fx -= p.x;
+        m_fy -= p.y;
+        return TRect(m_fx, m_fy, m_fWidth, m_fHeight);
     }
     TRect operator * (float fValue)
-    {
-        return TRect(x * fValue, y * fValue);
+    {   
+        if (fValue <= 0.0f)
+        {            
+            return *this;
+        }
+        m_fWidth *= fValue;
+        m_fHeight *= fValue;   
+        return TRect(m_fx, m_fy, m_fWidth, m_fHeight);
     }
     TRect operator / (float fValue)
     {
-        return TRect(x / fValue, y / fValue);
-    }*/
+        if (fValue <= 0.0f)
+        {
+            return *this;
+        }
+        m_fWidth /= fValue;
+        m_fHeight /= fValue;
+        return TRect(m_fx, m_fy, m_fWidth, m_fHeight);
+    }
     void Set(TPoint p)
     {
         v = { p.x, p.y };
@@ -134,10 +206,34 @@ struct TRect : TFloat2
         Set(fw, fh);
     }
 
-    TRect() {}
+    bool ToRect(TRect& rt)
+    {
+        TRect sum = (*this) + rt;
+        float fX = m_fWidth + rt.m_fWidth;
+        float fY = m_fHeight + rt.m_fHeight;
+        if (sum.m_fWidth <= fX)
+        {
+            if (sum.m_fHeight <= fY)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+    bool ToPoint(TPoint& p)
+    {
+        if (m_Min.x <= p.x && m_Max.x >= p.x   &&
+            m_Min.y <= p.y && m_Max.y >= p.y)
+        {
+            return true;
+        }
+        return false;
+    }
+    TRect() : m_bEnable(true) {}
 
     TRect(float fx, float fy, float fw, float fh)         
     {
+        m_bEnable = true;
         Set(fx, fy, fw, fh);
     }
 };
