@@ -22,6 +22,13 @@ struct TNode
             m_pChild[i] = nullptr;
         }
     }
+    ~TNode()
+    {
+        for (int i = 0; i < m_pChild.size(); i++)
+        {
+            delete m_pChild[i];
+        }
+    }
 };
 int   g_iCounter = 0;
 TNode* g_pRootNode = nullptr;
@@ -97,4 +104,6 @@ int main()
     // Level Order
     LevelOrder(g_pRootNode);
     std::cout << "Hello World!\n";
+
+    delete g_pRootNode;
 }
