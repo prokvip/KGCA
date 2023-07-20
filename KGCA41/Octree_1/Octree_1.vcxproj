@@ -145,8 +145,12 @@
     <ClCompile Include="Sample.cpp" />
     <ClCompile Include="TNode.cpp" />
     <ClCompile Include="TObject.cpp" />
+    <ClCompile Include="TOctreeCreate.cpp" />
     <ClCompile Include="TOctree.cpp" />
+    <ClCompile Include="TOctreeObject.cpp" />
     <ClCompile Include="TQuadtree.cpp" />
+    <ClCompile Include="TQuadtreeCreate.cpp" />
+    <ClCompile Include="TQuadtreeObject.cpp" />
     <ClCompile Include="TTimer.cpp" />
     <ClCompile Include="TUtils.cpp" />
   </ItemGroup>

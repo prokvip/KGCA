@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="Sample.cpp" />
+    <ClCompile Include="TObject.cpp" />
+    <ClCompile Include="TTimer.cpp" />
+    <ClCompile Include="TUtils.cpp" />
+    <ClCompile Include="TQuadtreeCreate.cpp">
+      <Filter>Quadtree</Filter>
+    </ClCompile>
+    <ClCompile Include="TQuadtree.cpp">
+      <Filter>Quadtree</Filter>
+    </ClCompile>
+    <ClCompile Include="TQuadtreeObject.cpp">
+      <Filter>Quadtree</Filter>
+    </ClCompile>
+    <ClCompile Include="TNode.cpp">
+      <Filter>Quadtree</Filter>
+    </ClCompile>
+    <ClCompile Include="TOctree.cpp">
+      <Filter>Octree</Filter>
+    </ClCompile>
+    <ClCompile Include="TOctreeCreate.cpp">
+      <Filter>Octree</Filter>
+    </ClCompile>
+    <ClCompile Include="TOctreeObject.cpp">
+      <Filter>Octree</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="TCollision.h" />
+    <ClInclude Include="TObject.h" />
+    <ClInclude Include="TTimer.h" />
+    <ClInclude Include="TUtils.h" />
+    <ClInclude Include="TQuadtree.h">
+      <Filter>Quadtree</Filter>
+    </ClInclude>
+    <ClInclude Include="TNode.h">
+      <Filter>Quadtree</Filter>
+    </ClInclude>
+    <ClInclude Include="TOctree.h">
+      <Filter>Octree</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Quadtree">
+      <UniqueIdentifier>{3def57c4-6f60-4805-89d3-62292b7f17da}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Octree">
+      <UniqueIdentifier>{1de2ce75-e9cc-46ea-87dd-322f1a791d3c}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

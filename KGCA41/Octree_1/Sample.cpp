@@ -1,16 +1,22 @@
 ﻿#include "TQuadtree.h"
+#include "TOctree.h"
 #include "TTimer.h"
 std::vector<TObject*> StaticObjectList;
 std::vector<TObject*> DynamicObjectList;
 
-void SetStaticObject(TQuadtree& quadtree)
+void SetStaticObject(TOctree& quadtree)
 {    
+    if (quadtree.m_pRootNode == nullptr) return;
+
+    int iMaxWidth = quadtree.m_pRootNode->m_rt.m_fWidth;
+    int iMaxHeight = quadtree.m_pRootNode->m_rt.m_fHeight;
     for (int i = 0; i < 10; i++)
     {
         TObject* obj = new TStaticObject();
         obj->m_csName = L"StaticObj";
         obj->m_csName += std::to_wstring(i);
-        obj->m_Position = { (float)(rand() % 800), (float)(rand() % 600) };
+        obj->m_Position = { (float)(rand() % iMaxWidth),
+                            (float)(rand() % iMaxHeight) };
         obj->SetRect(obj->m_Position, 
                     (float)((rand() % 10) + 1.0f), 
                     (float)((rand() % 10) + 1.0f));
@@ -19,21 +25,25 @@ void SetStaticObject(TQuadtree& quadtree)
         StaticObjectList.push_back(obj);
     }
 }
-void SetDynamicObject(TQuadtree& quadtree)
+void SetDynamicObject(TOctree& quadtree)
 {
+    if (quadtree.m_pRootNode == nullptr) return;
+    int iMaxWidth = quadtree.m_pRootNode->m_rt.m_fWidth;
+    int iMaxHeight = quadtree.m_pRootNode->m_rt.m_fHeight;
+
     for (int i = 0; i < 10; i++)
     {
         TObject* obj = new TDynamicObject();
         
         obj->m_csName = L"DynamicObj";
         obj->m_csName += std::to_wstring(i);
-        obj->m_Position = { (float)(rand() % 800), (float)(rand() % 600) };
+        obj->m_Position = { (float)(rand() % iMaxWidth), (float)(rand() % iMaxHeight) };
         obj->SetRect(obj->m_Position,
             (float)((rand() % 10) + 1.0f),
             (float)((rand() % 10) + 1.0f));
 
-        TPoint d = {  (float)randstep(0, 800), 
-                     (float)randstep(0, 600) };
+        TPoint d = {  (float)randstep(0, iMaxWidth),
+                     (float)randstep(0, iMaxHeight) };
         obj->SetTarget(d);
         quadtree.DynamicAddObject(obj);
         DynamicObjectList.push_back(obj);
@@ -41,8 +51,8 @@ void SetDynamicObject(TQuadtree& quadtree)
 }
 int main()
 { 
-    TQuadtree quadtree;
-    quadtree.BuildQuadTree();   
+    TOctree quadtree;
+    quadtree.BuildOctTree(0,0,800,600);
     SetStaticObject(quadtree);
     SetDynamicObject(quadtree);
 
