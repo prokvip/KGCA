@@ -1,53 +1,85 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="Sample.cpp" />
-    <ClCompile Include="TObject.cpp" />
-    <ClCompile Include="TTimer.cpp" />
-    <ClCompile Include="TUtils.cpp" />
+    <ClCompile Include="Demo.cpp" />
     <ClCompile Include="TQuadtreeCreate.cpp">
-      <Filter>Quadtree</Filter>
+      <Filter>SpaceDivision\Quadtree</Filter>
     </ClCompile>
     <ClCompile Include="TQuadtree.cpp">
-      <Filter>Quadtree</Filter>
+      <Filter>SpaceDivision\Quadtree</Filter>
     </ClCompile>
     <ClCompile Include="TQuadtreeObject.cpp">
-      <Filter>Quadtree</Filter>
-    </ClCompile>
-    <ClCompile Include="TNode.cpp">
-      <Filter>Quadtree</Filter>
+      <Filter>SpaceDivision\Quadtree</Filter>
     </ClCompile>
     <ClCompile Include="TOctree.cpp">
-      <Filter>Octree</Filter>
+      <Filter>SpaceDivision\Octree</Filter>
     </ClCompile>
     <ClCompile Include="TOctreeCreate.cpp">
-      <Filter>Octree</Filter>
+      <Filter>SpaceDivision\Octree</Filter>
     </ClCompile>
     <ClCompile Include="TOctreeObject.cpp">
-      <Filter>Octree</Filter>
+      <Filter>SpaceDivision\Octree</Filter>
+    </ClCompile>
+    <ClCompile Include="TNode.cpp">
+      <Filter>SpaceDivision\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="TObject.cpp">
+      <Filter>Object</Filter>
+    </ClCompile>
+    <ClCompile Include="TUtils.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="TTimer.cpp">
+      <Filter>Core</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="TCollision.h" />
-    <ClInclude Include="TObject.h" />
-    <ClInclude Include="TTimer.h" />
-    <ClInclude Include="TUtils.h" />
     <ClInclude Include="TQuadtree.h">
-      <Filter>Quadtree</Filter>
-    </ClInclude>
-    <ClInclude Include="TNode.h">
-      <Filter>Quadtree</Filter>
+      <Filter>SpaceDivision\Quadtree</Filter>
     </ClInclude>
     <ClInclude Include="TOctree.h">
-      <Filter>Octree</Filter>
+      <Filter>SpaceDivision\Octree</Filter>
+    </ClInclude>
+    <ClInclude Include="TNode.h">
+      <Filter>SpaceDivision\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="TCollision.h">
+      <Filter>Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="TObject.h">
+      <Filter>Object</Filter>
+    </ClInclude>
+    <ClInclude Include="TUtils.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="TTimer.h">
+      <Filter>Core</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Filter Include="Quadtree">
+    <Filter Include="SpaceDivision">
+      <UniqueIdentifier>{9a124485-fda6-4d9b-b99f-a76b806e8ada}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SpaceDivision\Octree">
+      <UniqueIdentifier>{1de2ce75-e9cc-46ea-87dd-322f1a791d3c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SpaceDivision\Quadtree">
       <UniqueIdentifier>{3def57c4-6f60-4805-89d3-62292b7f17da}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Octree">
-      <UniqueIdentifier>{1de2ce75-e9cc-46ea-87dd-322f1a791d3c}</UniqueIdentifier>
+    <Filter Include="SpaceDivision\Common">
+      <UniqueIdentifier>{1be1bb23-9338-4ae7-9d59-12703fd1bd72}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object">
+      <UniqueIdentifier>{7b2f33f8-7674-405e-8148-13dcfae02ee7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Collision">
+      <UniqueIdentifier>{e0a9889f-8532-4244-8f85-6fd56fa9302c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common">
+      <UniqueIdentifier>{05e49b42-90c4-4e1f-8b1c-b400ba155e84}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core">
+      <UniqueIdentifier>{dfccbaf4-d6be-447e-b0ed-e6cffebf99cd}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
