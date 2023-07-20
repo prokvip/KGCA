@@ -40,30 +40,9 @@ void SetDynamicObject(TQuadtree& quadtree)
     }
 }
 int main()
-{    
-    TRect rt1, rt2;    
-    rt1.Set(TPoint(0,0), 100, 100);
-    rt2.Set(TPoint(50, 50), 100, 100);
-    if (TCollision::RectToRect(rt1, rt2))
-    {
-        std::cout << " collision" << std::endl;    
-    }
-    TRect rt = rt1 - rt2;
-    if (rt.m_bEnable)
-    {
-        std::cout << "Collision" << std::endl;
-    }
-  
-    //std::set<int> setList;
-    //setList.insert(1);
-    //setList.insert(5);
-    //setList.insert(1);
-    //setList.insert(4);
-    //setList.insert(7);
-    //setList.insert(5);
-
+{ 
     TQuadtree quadtree;
-    quadtree.BuildQuadtree();   
+    quadtree.BuildQuadTree();   
     SetStaticObject(quadtree);
     SetDynamicObject(quadtree);
 
@@ -88,7 +67,7 @@ int main()
         system("cls");
         std::cout << std::endl;
         std::cout << "Object inform!\n";
-        quadtree.LevelOrder(quadtree.GetRootNode());
+        quadtree.LevelOrder(quadtree.m_pRootNode);
         timer.Render();
         Sleep(100); // tick 1000 => 1초
     }

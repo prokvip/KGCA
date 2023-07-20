@@ -79,7 +79,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>../../output/</OutDir>
-    <IntDir>../../output/Octree_3</IntDir>
+    <IntDir>../../output/Octree_1</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -145,6 +145,7 @@
     <ClCompile Include="Sample.cpp" />
     <ClCompile Include="TNode.cpp" />
     <ClCompile Include="TObject.cpp" />
+    <ClCompile Include="TOctree.cpp" />
     <ClCompile Include="TQuadtree.cpp" />
     <ClCompile Include="TTimer.cpp" />
     <ClCompile Include="TUtils.cpp" />
@@ -153,6 +154,7 @@
     <ClInclude Include="TCollision.h" />
     <ClInclude Include="TNode.h" />
     <ClInclude Include="TObject.h" />
+    <ClInclude Include="TOctree.h" />
     <ClInclude Include="TQuadtree.h" />
     <ClInclude Include="TTimer.h" />
     <ClInclude Include="TUtils.h" />

@@ -1,35 +1,35 @@
 #pragma once
 #include "TObject.h"
+
+extern int   g_iCounter;
+
 class TNode
 {
 public:
-    int    m_iIndex;
-    TRect  m_rt;
+    int    m_iIndex = -1;
     int    m_iDepth = 0;
+    TRect  m_rt;
     TNode* m_pParent = nullptr;
     std::vector<TNode*> m_pChild;
     std::vector<TObject*> m_StaticObjectList;
     std::vector<TObject*> m_DynamicObjectList;
-public:    
-    void   SetParent(TNode* pParent);
-    TNode(TNode* pParent, 
-        float x,
-        float y, 
-        float fWidth,
-        float fHeight) : m_pParent(pParent)
+
+    virtual TNode* CreateNode()
     {
-        m_rt.Set(x, y, fWidth, fHeight);
-        SetParent(pParent);
-    }
-    ~TNode()
+        return new TNode(g_iCounter++);
+    };
+    virtual void   CreateChildNode()
     {
-        if (m_pChild.size() != 0)
-        {
-            delete m_pChild[0];
-            delete m_pChild[1];
-            delete m_pChild[2];
-            delete m_pChild[3];
-        }
+    };
+    virtual void   SetParent(TNode* pParent)
+    {
+        if (pParent == nullptr) return;
+        m_pParent = pParent;
+        m_iDepth = pParent->m_iDepth + 1;
     }
+    TNode(int id) : m_iIndex(id)    {    }
+    TNode() {}
+    TNode(TNode* pParent,float x,float y,float fWidth,float fHeight);
+    virtual ~TNode() {}
 };
 

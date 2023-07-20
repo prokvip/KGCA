@@ -1,14 +1,10 @@
 #include "TNode.h"
-void   TNode::SetParent(TNode* pParent)
+TNode::TNode(TNode* pParent,
+    float x,
+    float y,
+    float fWidth,
+    float fHeight) : m_pParent(pParent)
 {
-    if (pParent == nullptr) return;
-    m_pParent = pParent;
-    m_iDepth = pParent->m_iDepth + 1;
+    m_rt.Set(x, y, fWidth, fHeight);
+    SetParent(pParent);
 }
-//TNode::TNode(int i) : m_iValue(i)
-//{
-//    for (int i = 0; i < m_pChild.size(); i++)
-//    {
-//        m_pChild[i] = nullptr;
-//    }
-//}
