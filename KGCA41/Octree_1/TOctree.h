@@ -1,11 +1,12 @@
 #pragma once
 #include "TNode.h"
-class TOctree : public TNode
+
+class TOctreeNode : public TNode
 {
 public:
     virtual TNode* CreateNode()
     {
-        return new TOctree(g_iCounter++);
+        return new TOctreeNode(g_iCounter++);
     }
     virtual void  CreateChildNode()
     {
@@ -18,19 +19,37 @@ public:
         }
     }
 public:
-    TOctree(int id) : TNode(id)
+    TOctreeNode(int id) : TNode(id)
     {
         /*for (int i = 0; i < m_pChild.size(); i++)
         {
             m_pChild[i] = nullptr;
         }*/
     }
-    virtual ~TOctree()
+    virtual ~TOctreeNode()
     {
         for (int i = 0; i < m_pChild.size(); i++)
         {
             delete m_pChild[i];
         }
+    }
+};
+
+
+class TOctree 
+{
+public:
+    virtual TNode* CreateNode()
+    {
+        return new TOctreeNode(g_iCounter++);
+    }   
+public:
+    TOctree() 
+    {       
+    }
+    virtual ~TOctree()
+    {
+       
     }
 };
 
