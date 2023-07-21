@@ -1,6 +1,6 @@
 #include "TOctree.h"
 
-TNode* TOctree::FindNode(TNode* pNode, TObject* obj)
+TNode* TOctree::FindNode(TNode* pNode, TObject3D* obj)
 {
     if (pNode == nullptr) return nullptr;
     do
@@ -9,15 +9,16 @@ TNode* TOctree::FindNode(TNode* pNode, TObject* obj)
         {
             if (pNode->m_pChild[i] != nullptr)
             {
-                //if (TCollision::RectToPoint(pNode->m_pChild[i]->m_rt,
+                //if (TCollision::RectToPoint(pNode->m_pChild[i]->m_tRT,
                 //obj->m_Position))
-                if (TCollision::RectToRect(
-                    pNode->m_pChild[i]->m_rt,
-                    obj->m_rt))
+                //todo
+               /* if (TCollision::RectToRect(
+                    pNode->m_pChild[i]->m_tBox,
+                    obj->m_tBox))
                 {
                     g_Queue.push(pNode->m_pChild[i]);
                     break;
-                }
+                }*/
             }
         }
         if (g_Queue.empty()) break;
@@ -27,22 +28,22 @@ TNode* TOctree::FindNode(TNode* pNode, TObject* obj)
     while (pNode);
     return pNode;
 }
-TNode* TOctree::StaticAddObject(TObject* obj)
+TNode* TOctree::StaticAddObject(TObject3D* obj)
 {
     TNode* pFindNode = FindNode(m_pRootNode, obj);
     if (pFindNode != nullptr)
     {
-        pFindNode->m_StaticObjectList.push_back(obj);
+        pFindNode->m_StaticObjectList3D.push_back(obj);
         return pFindNode;
     }
     return nullptr;
 }
-TNode* TOctree::DynamicAddObject(TObject* obj)
+TNode* TOctree::DynamicAddObject(TObject3D* obj)
 {
     TNode* pFindNode = FindNode(m_pRootNode, obj);
     if (pFindNode != nullptr)
     {
-        pFindNode->m_DynamicObjectList.push_back(obj);
+        pFindNode->m_DynamicObjectList3D.push_back(obj);
         m_DynamicObjectNodeList.insert(pFindNode);
         return pFindNode;
     }

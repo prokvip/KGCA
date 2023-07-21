@@ -1,60 +1,76 @@
 ﻿#include "TQuadtree.h"
 #include "TOctree.h"
 #include "TTimer.h"
-std::vector<TObject*> StaticObjectList;
-std::vector<TObject*> DynamicObjectList;
+std::vector<TObject3D*> StaticObjectList;
+std::vector<TObject3D*> DynamicObjectList;
 
-void SetStaticObject(TOctree& quadtree)
+void SetStaticObject(TOctree& tree)
 {    
-    if (quadtree.m_pRootNode == nullptr) return;
+    if (tree.m_pRootNode == nullptr) return;
 
-    int iMaxWidth = quadtree.m_pRootNode->m_rt.m_fWidth;
-    int iMaxHeight = quadtree.m_pRootNode->m_rt.m_fHeight;
+    int iMaxWidth = tree.m_pRootNode->m_tBox.m_fWidth;
+    int iMaxHeight = tree.m_pRootNode->m_tBox.m_fHeight;
+    int iMaxDepth = tree.m_pRootNode->m_tBox.m_fDepth;
     for (int i = 0; i < 10; i++)
     {
-        TObject* obj = new TStaticObject();
+        TObject3D* obj = new TStaticObject3D();
         obj->m_csName = L"StaticObj";
         obj->m_csName += std::to_wstring(i);
         obj->m_Position = { (float)(rand() % iMaxWidth),
-                            (float)(rand() % iMaxHeight) };
-        obj->SetRect(obj->m_Position, 
+                            (float)(rand() % iMaxHeight),
+                            (float)(rand() % iMaxDepth) };
+        obj->SetBox(obj->m_Position, 
                     (float)((rand() % 10) + 1.0f), 
+                    (float)((rand() % 10) + 1.0f),
                     (float)((rand() % 10) + 1.0f));
         
-        quadtree.StaticAddObject(obj);
+        tree.StaticAddObject(obj);
         StaticObjectList.push_back(obj);
     }
 }
-void SetDynamicObject(TOctree& quadtree)
+void SetDynamicObject(TOctree& tree)
 {
-    if (quadtree.m_pRootNode == nullptr) return;
-    int iMaxWidth = quadtree.m_pRootNode->m_rt.m_fWidth;
-    int iMaxHeight = quadtree.m_pRootNode->m_rt.m_fHeight;
+    if (tree.m_pRootNode == nullptr) return;
+    int iMaxWidth = tree.m_pRootNode->m_tRT.m_fWidth;
+    int iMaxHeight = tree.m_pRootNode->m_tRT.m_fHeight;
+    int iMaxDepth = tree.m_pRootNode->m_tBox.m_fDepth;
 
     for (int i = 0; i < 10; i++)
     {
-        TObject* obj = new TDynamicObject();
+        TObject3D* obj = new TDynamicObject3D();
         
         obj->m_csName = L"DynamicObj";
         obj->m_csName += std::to_wstring(i);
-        obj->m_Position = { (float)(rand() % iMaxWidth), (float)(rand() % iMaxHeight) };
-        obj->SetRect(obj->m_Position,
+        obj->m_Position = {
+            (float)(rand() % iMaxWidth), 
+            (float)(rand() % iMaxHeight),
+            (float)(rand() % iMaxDepth) };
+        obj->SetBox(obj->m_Position,
+            (float)((rand() % 10) + 1.0f),
             (float)((rand() % 10) + 1.0f),
             (float)((rand() % 10) + 1.0f));
 
-        TPoint d = {  (float)randstep(0, iMaxWidth),
-                     (float)randstep(0, iMaxHeight) };
+        TPoint3 d = {   (float)randstep(0, iMaxWidth),
+                        (float)randstep(0, iMaxHeight),
+                        (float)randstep(0, iMaxDepth) };
         obj->SetTarget(d);
-        quadtree.DynamicAddObject(obj);
+        tree.DynamicAddObject(obj);
         DynamicObjectList.push_back(obj);
     }
 }
 int main()
 { 
-    TOctree quadtree;
-    quadtree.BuildOctTree(0,0,800,600);
-    SetStaticObject(quadtree);
-    SetDynamicObject(quadtree);
+    TOctree tree;
+    TSpaceData data;
+    data.p3 = { 0,0,0 };
+    data.w = 800;
+    data.h = 600;
+    data.z = 600;
+    
+    tree.BuildOctTree(data);
+
+    SetStaticObject(tree);
+    SetDynamicObject(tree);
 
     TTimer  timer;
     timer.Init();
@@ -62,22 +78,22 @@ int main()
     while (timer.m_fGameTimer < 1000.0f)
     {
         timer.Frame();       
-        quadtree.PreFrame();
+        tree.PreFrame();
 
         for (int i = 0; i < DynamicObjectList.size(); i++)
         {
-            TObject* obj = DynamicObjectList[i];
+            TObject3D* obj = DynamicObjectList[i];
             obj->Move(timer.m_fSecondPerFrame);
-            quadtree.DynamicAddObject(obj);
+            tree.DynamicAddObject(obj);
         }
         
-        quadtree.Frame();
-        quadtree.Render();
+        tree.Frame();
+        tree.Render();
 
         system("cls");
         std::cout << std::endl;
         std::cout << "Object inform!\n";
-        quadtree.LevelOrder(quadtree.m_pRootNode);
+        tree.LevelOrder(tree.m_pRootNode);
         timer.Render();
         Sleep(100); // tick 1000 => 1초
     }
@@ -94,6 +110,6 @@ int main()
     }
     DynamicObjectList.clear();
 
-    quadtree.Release();
+    tree.Release();
     
 }

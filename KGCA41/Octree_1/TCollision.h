@@ -18,7 +18,7 @@ public:
 		}
 		return false;
 	}
-	static bool RectToPoint(TRect& rt, TPoint& p)
+	static bool RectToPoint(TRect& rt, TPoint2& p)
 	{
 		if (rt.m_Min.x <= p.x && rt.m_Max.x >= p.x
 			&&

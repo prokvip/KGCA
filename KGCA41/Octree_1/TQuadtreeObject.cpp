@@ -1,6 +1,6 @@
 #include "TQuadtree.h"
 
-TNode* TQuadtree::FindNode(TNode* pNode, TObject* obj)
+TNode* TQuadtree::FindNode(TNode* pNode, TObject2D* obj)
 {
     if (pNode == nullptr) return nullptr;
     do
@@ -9,11 +9,11 @@ TNode* TQuadtree::FindNode(TNode* pNode, TObject* obj)
         {
             if (pNode->m_pChild[i] != nullptr)
             {
-                //if (TCollision::RectToPoint(pNode->m_pChild[i]->m_rt,
+                //if (TCollision::RectToPoint(pNode->m_pChild[i]->m_tRT,
                 //obj->m_Position))
                 if (TCollision::RectToRect(
-                    pNode->m_pChild[i]->m_rt,
-                    obj->m_rt))
+                    pNode->m_pChild[i]->m_tRT,
+                    obj->m_tRT))
                 {
                     g_Queue.push(pNode->m_pChild[i]);
                     break;
@@ -27,7 +27,7 @@ TNode* TQuadtree::FindNode(TNode* pNode, TObject* obj)
     while (pNode);
     return pNode;
 }
-TNode* TQuadtree::StaticAddObject(TObject* obj)
+TNode* TQuadtree::StaticAddObject(TObject2D* obj)
 {
     TNode* pFindNode = FindNode(m_pRootNode, obj);
     if (pFindNode != nullptr)
@@ -37,7 +37,7 @@ TNode* TQuadtree::StaticAddObject(TObject* obj)
     }
     return nullptr;
 }
-TNode* TQuadtree::DynamicAddObject(TObject* obj)
+TNode* TQuadtree::DynamicAddObject(TObject2D* obj)
 {
     TNode* pFindNode = FindNode(m_pRootNode, obj);
     if (pFindNode != nullptr)

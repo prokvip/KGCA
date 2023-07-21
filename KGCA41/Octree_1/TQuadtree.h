@@ -11,19 +11,20 @@ public:
 /// 공간을 분할 작업 
 /// </summary>
 public:
-    void            BuildQuadTree(float x, float y, float w, float h);
+    void            BuildQuadTree(TSpaceData data);
     void            BuildTree(TNode* pParent);
+    TNode*          CreateNode(  TNode* pParent, TSpaceData data);
     TNode*          CreateNode(  TNode* pParent, float x,
-                        float y,
-                        float fWidth,
-                        float fHeight);
+                                    float y,
+                                    float fWidth,
+                                    float fHeight);
 /// <summary>
 /// 객체를 공간에 추가하는 작업
 /// </summary>
 public:
-    TNode* StaticAddObject(TObject* obj);
-    TNode* DynamicAddObject(TObject* obj);
-    TNode* FindNode(TNode* pNode, TObject* obj);
+    TNode* StaticAddObject(TObject2D* obj);
+    TNode* DynamicAddObject(TObject2D* obj);
+    TNode* FindNode(TNode* pNode, TObject2D* obj);
 /// <summary>
 /// 분할 된 트리를 순회하는 작업
 /// </summary>

@@ -1,9 +1,9 @@
 #include "TObject.h"
-void   TObject::SetRect(TPoint& c, float w, float h)
+void   TObject2D::SetRect(TPoint2& c, float w, float h)
 {
-	m_rt.Set(c, w, h);
+	m_tRT.Set(c, w, h);
 }
-void	TDynamicObject::SetTarget(TPoint& t)
+void	TDynamicObject2D::SetTarget(TPoint2& t)
 {
 	m_Target = t;
 	// 방향 = 목적지 위치 - 현재 위치
@@ -13,18 +13,18 @@ void	TDynamicObject::SetTarget(TPoint& t)
 	// 정규화 작업
 	m_Direction /= fDistance;
 }
-void			TDynamicObject::Move(float fSecond)
+void			TDynamicObject2D::Move(float fSecond)
 {
-	TPoint vDir = m_Target - m_Position;
+	TPoint2 vDir = m_Target - m_Position;
 	float fD = vDir.GetDistance();
 	//	// 시간의 동기화
-	TPoint vVelocity = m_Direction * m_fSpeed * fSecond;
+	TPoint2 vVelocity = m_Direction * m_fSpeed * fSecond;
 	m_Position = m_Position + vVelocity;
-	m_rt.Set(m_Position, m_rt.m_fWidth, m_rt.m_fHeight);
+	m_tRT.Set(m_Position, m_tRT.m_fWidth, m_tRT.m_fHeight);
 	//if (fD > 5.0f)
 	//{
 	//	// 시간의 동기화
-	//	TPoint vVelocity = m_Direction * m_fSpeed * fSecond;
+	//	TPoint2 vVelocity = m_Direction * m_fSpeed * fSecond;
 	//	m_Position = m_Position + vVelocity;
 	//	m_Position.x = max(m_Position.x, 0.0f);
 	//	m_Position.y = max(m_Position.y, 0.0f);
@@ -53,8 +53,81 @@ void			TDynamicObject::Move(float fSecond)
 		m_Position.y = 600.0f;
 	}
 };
-TDynamicObject::TDynamicObject()
+TDynamicObject2D::TDynamicObject2D()
 {
 	m_Direction.x = 0.0f;
 	m_Direction.y = 0.0f;
+}
+
+
+void   TObject3D::SetBox(TPoint3& c, float w, float h, float z)
+{
+	m_tBox.Set(c, w, h, z);
+}
+void	TDynamicObject3D::SetTarget(TPoint3& t)
+{
+	m_Target = t;
+	// 방향 = 목적지 위치 - 현재 위치
+	m_Direction = t - m_Position;
+	// 단위벡터를 얻기 위해서 방향벡터의 크기를 얻는다.
+	float fDistance = m_Direction.GetDistance();
+	// 정규화 작업
+	m_Direction /= fDistance;
+}
+void			TDynamicObject3D::Move(float fSecond)
+{
+	TPoint3 vDir = m_Target - m_Position;
+	float fD = vDir.GetDistance();
+	//	// 시간의 동기화
+	TPoint3 vVelocity = m_Direction * m_fSpeed * fSecond;
+	m_Position = m_Position + vVelocity;
+	m_tBox.Set(m_Position, m_tBox.m_fWidth, m_tBox.m_fHeight, m_tBox.m_fDepth);
+	//if (fD > 5.0f)
+	//{
+	//	// 시간의 동기화
+	//	TPoint2 vVelocity = m_Direction * m_fSpeed * fSecond;
+	//	m_Position = m_Position + vVelocity;
+	//	m_Position.x = max(m_Position.x, 0.0f);
+	//	m_Position.y = max(m_Position.y, 0.0f);
+	//	m_Position.x = min(m_Position.x, 800.0f);
+	//	m_Position.y = min(m_Position.y, 600.0f);
+	//}
+	if (m_Position.x < 0.0f)
+	{
+		m_Direction.x *= -1.0f;
+		m_Position.x = 0.0f;
+	}
+	if (m_Position.y < 0.0f)
+	{
+		m_Direction.y *= -1.0f;
+		m_Position.y = 0.0f;
+	}
+	if (m_Position.z < 0.0f)
+	{
+		m_Direction.z *= -1.0f;
+		m_Position.z = 0.0f;
+	}
+
+	if (m_Position.x > 800.0f)
+	{
+		m_Direction.x *= -1.0f;
+		m_Position.x = 800.0f;
+	}
+	if (m_Position.y > 600.0f)
+	{
+		m_Direction.y *= -1.0f;
+		m_Position.y = 600.0f;
+	}
+	if (m_Position.z > 600.0f)
+	{
+		m_Direction.z *= -1.0f;
+		m_Position.z = 600.0f;
+	}
+
+};
+TDynamicObject3D::TDynamicObject3D()
+{
+	m_Direction.x = 0.0f;
+	m_Direction.y = 0.0f;
+	m_Direction.z = 0.0f;
 }
