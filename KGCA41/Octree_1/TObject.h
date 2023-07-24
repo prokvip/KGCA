@@ -31,6 +31,7 @@ public:
 class TObject3D
 {
 public:
+	int				m_iNodeIndex = -1;
 	std::wstring    m_csName;
 	TPoint3			m_Position;
 	TBox			m_tBox;

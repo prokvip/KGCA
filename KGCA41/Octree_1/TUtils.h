@@ -325,89 +325,105 @@ struct TBox : public TFloat3
     TPoint3 v;
     TPoint3 s;
 
-    //bool operator == (TRect& p)
-    //{
-    //    if (fabs(m_fx - p.m_fx) > 0.0001f)
-    //    {
-    //        if (fabs(m_fy - p.m_fy) > 0.0001f)
-    //        {
-    //            if (fabs(m_fWidth - p.m_fWidth) > 0.0001f)
-    //            {
-    //                if (fabs(m_fHeight - p.m_fHeight) > 0.0001f)
-    //                {
-    //                    return true;
-    //                }
-    //            }
-    //        }
-    //    }
-    //    return false;
-    //}
-    //bool operator != (TRect& p)
-    //{
-    //    return !(*this == p);
-    //}
-    //TRect operator + (TRect& p)
-    //{
-    //    TRect rt;
-    //    float fMinX = min(m_fx, p.m_fx);
-    //    float fMinY = min(m_fy, p.m_fy);
-    //    float fMaxX = max(m_Point[2].x, p.m_Point[2].x);
-    //    float fMaxY = max(m_Point[2].y, p.m_Point[2].y);
-    //    TPoint2 pos = { fMinX, fMinY };
-    //    rt.Set(pos, fMaxX - fMinX, fMaxY - fMinY);
-    //    return rt;
-    //}
-    //TRect operator - (TRect& p)
-    //{
-    //    TRect rt;
-    //    rt.m_bEnable = false;
-    //    if (ToRect(p))
-    //    {
-    //        //left, top          right
-    //        //      bottom
-    //        float fx = (m_Min.x > p.m_Min.x) ? m_Min.x : p.m_Min.x;
-    //        float fy = (m_Min.y > p.m_Min.y) ? m_Min.y : p.m_Min.y;
-    //        float right = (m_Max.x < p.m_Max.x) ? m_Max.x : p.m_Max.x;
-    //        float bottom = (m_Max.y < p.m_Max.y) ? m_Max.y : p.m_Max.y;
-    //        rt.Set(fx, fy, right - fx, bottom - fy);
-    //        rt.m_bEnable = true;
-    //    }
-    //    return rt;
-    //}
-    //TRect operator - (TPoint2& p)
-    //{
-    //    m_fx -= p.x;
-    //    m_fy -= p.y;
-    //    return TRect(m_fx, m_fy, m_fWidth, m_fHeight);
-    //}
-    //TRect operator * (float fValue)
-    //{
-    //    if (fValue <= 0.0f)
-    //    {
-    //        return *this;
-    //    }
-    //    m_fWidth *= fValue;
-    //    m_fHeight *= fValue;
-    //    return TRect(m_fx, m_fy, m_fWidth, m_fHeight);
-    //}
-    //TRect operator / (float fValue)
-    //{
-    //    if (fValue <= 0.0f)
-    //    {
-    //        return *this;
-    //    }
-    //    m_fWidth /= fValue;
-    //    m_fHeight /= fValue;
-    //    return TRect(m_fx, m_fy, m_fWidth, m_fHeight);
-    //}
-    //void Set(TPoint2 p)
-    //{
-    //    v = { p.x, p.y };
-    //    s = { m_fWidth, m_fHeight };
-    //    m_fx = m_fx;
-    //    m_fy = m_fy;
-    //    Set(m_fWidth, m_fHeight);
-    //}
+    bool operator == (TBox& p)
+    {
+        if (fabs(m_fx - p.m_fx) > 0.0001f)
+        {
+            if (fabs(m_fy - p.m_fy) > 0.0001f)
+            {
+                if (fabs(m_fz - p.m_fz) > 0.0001f)
+                {
+                    if (fabs(m_fWidth - p.m_fWidth) > 0.0001f)
+                    {
+                        if (fabs(m_fHeight - p.m_fHeight) > 0.0001f)
+                        {
+                            if(fabs(m_fDepth - p.m_fDepth) > 0.0001f)
+                            {
+                                return true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return false;
+    }
+    bool operator != (TBox& p)
+    {
+        return !(*this == p);
+    }
+    // union
+    TBox operator + (TBox& p)
+    {
+        TBox rt;
+        float fMinX = min(m_fx, p.m_fx);
+        float fMinY = min(m_fy, p.m_fy);
+        float fMinZ = min(m_fz, p.m_fz);
+        float fMaxX = max(m_Max.x, p.m_Max.x);
+        float fMaxY = max(m_Max.y, p.m_Max.y);
+        float fMaxZ = max(m_Max.z, p.m_Max.z);
+        TPoint3 pos = { fMinX, fMinY, fMinZ };
+        rt.Set(pos, fMaxX - fMinX, fMaxY - fMinY, fMaxZ - fMinZ);
+        return rt;
+    }
+    TBox operator - (TBox& p)
+    {
+        TBox rt;
+        rt.m_bEnable = false;
+        if (ToBox(p))
+        {
+            //left, top          right
+            //      bottom
+            float fx = (m_Min.x > p.m_Min.x) ? m_Min.x : p.m_Min.x;
+            float fy = (m_Min.y > p.m_Min.y) ? m_Min.y : p.m_Min.y;
+            float fz = (m_Min.z > p.m_Min.z) ? m_Min.z : p.m_Min.z;
+
+            float right = (m_Max.x < p.m_Max.x) ? m_Max.x : p.m_Max.x;
+            float bottom = (m_Max.y < p.m_Max.y) ? m_Max.y : p.m_Max.y;
+            float depth = (m_Max.z < p.m_Max.z) ? m_Max.z : p.m_Max.z;
+            rt.Set(fx, fy, fz,  right - fx, bottom - fy, depth-fz);
+            rt.m_bEnable = true;
+        }
+        return rt;
+    }
+    TBox operator - (TPoint3& p)
+    {
+        m_fx -= p.x;
+        m_fy -= p.y;
+        m_fz -= p.z;
+        return TBox(m_fx, m_fy, m_fz,  m_fWidth, m_fHeight, m_fDepth);
+    }
+    TBox operator * (float fValue)
+    {
+        if (fValue <= 0.0f)
+        {
+            return *this;
+        }
+        m_fWidth *= fValue;
+        m_fHeight *= fValue;
+        m_fDepth *= fValue;
+        return TBox(m_fx, m_fy, m_fz,  m_fWidth, m_fHeight, m_fDepth);
+    }
+    TBox operator / (float fValue)
+    {
+        if (fValue <= 0.0f)
+        {
+            return *this;
+        }
+        m_fWidth /= fValue;
+        m_fHeight /= fValue;
+        m_fDepth /= fValue;
+        return TBox(m_fx, m_fy, m_fz,  m_fWidth, m_fHeight, m_fDepth);
+    }
+    void Set(TPoint3 p)
+    {
+        v = { p.x, p.y, p.z };
+        s = { m_fWidth, m_fHeight, m_fDepth };
+        m_fx = m_fx;
+        m_fy = m_fy;
+        m_fz = m_fz;
+        Set(m_fWidth, m_fHeight, m_fDepth);
+    }
     void Set(float fSizeX, float fSizeY, float fSizeZ)
     {
         m_fWidth = fSizeX;
@@ -424,9 +440,9 @@ struct TBox : public TFloat3
         m_Point[6] = { m_fx + m_fWidth, m_fy + m_fHeight, m_fz + fSizeZ };
         m_Point[7] = { m_fx, m_fy + m_fHeight, m_fz + fSizeZ };
 
-        m_Center = (m_Point[0] + m_Point[6]) * 0.5f;
         m_Min = m_Point[0];
         m_Max = m_Point[6];
+        m_Center = (m_Max + m_Min) * 0.5f;       
     }
     void Set(TPoint3 p, float fw, float fh, float fz)
     {
@@ -448,29 +464,34 @@ struct TBox : public TFloat3
         Set(fw, fh, fd);
     }
 
-    //bool ToRect(TRect& rt)
-    //{
-    //    TRect sum = (*this) + rt;
-    //    float fX = m_fWidth + rt.m_fWidth;
-    //    float fY = m_fHeight + rt.m_fHeight;
-    //    if (sum.m_fWidth <= fX)
-    //    {
-    //        if (sum.m_fHeight <= fY)
-    //        {
-    //            return true;
-    //        }
-    //    }
-    //    return false;
-    //}
-    //bool ToPoint(TPoint2& p)
-    //{
-    //    if (m_Min.x <= p.x && m_Max.x >= p.x &&
-    //        m_Min.y <= p.y && m_Max.y >= p.y)
-    //    {
-    //        return true;
-    //    }
-    //    return false;
-    //}
+    bool ToBox(TBox& rt)
+    {
+        TBox sum = (*this) + rt;
+        float fX = m_fWidth + rt.m_fWidth;
+        float fY = m_fHeight + rt.m_fHeight;
+        float fZ = m_fDepth + rt.m_fDepth;
+        if (sum.m_fWidth <= fX)
+        {
+            if (sum.m_fHeight <= fY)
+            {
+                if (sum.m_fDepth <= fZ)
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    bool ToPoint(TPoint3& p)
+    {
+        if (m_Min.x <= p.x && m_Max.x >= p.x &&
+            m_Min.y <= p.y && m_Max.y >= p.y &&
+            m_Min.z <= p.z && m_Max.z >= p.z)
+        {
+            return true;
+        }
+        return false;
+    }
     TBox() : m_bEnable(true) {}
 
     TBox(float fx, float fy, float fz, 

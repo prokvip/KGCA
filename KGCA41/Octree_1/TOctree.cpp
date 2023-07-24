@@ -54,18 +54,21 @@ void TOctree::LevelOrder(TNode* pNode)
 {
     if (pNode == nullptr) return;
     std::wcout << L"[" << pNode->m_iDepth << L"]"
-        << pNode->m_tRT.m_fx << L","
-        << pNode->m_tRT.m_fy << L","
-        << pNode->m_tRT.m_fWidth << L","
-        << pNode->m_tRT.m_fHeight << L","
-        //<< pNode->m_StaticObjectList.size()
-        << pNode->m_DynamicObjectList.size() << std::endl;
-    for (int iobj = 0; iobj < pNode->m_DynamicObjectList.size(); iobj++)
+        << pNode->m_tBox.m_fx << L","
+        << pNode->m_tBox.m_fy << L","
+        << pNode->m_tBox.m_fz << L","
+        << pNode->m_tBox.m_fWidth << L","
+        << pNode->m_tBox.m_fHeight << L","
+        << pNode->m_tBox.m_fDepth << L","
+        << pNode->m_StaticObjectList3D.size() << L","
+        << pNode->m_DynamicObjectList3D.size() << std::endl;
+    for (int iobj = 0; iobj < pNode->m_DynamicObjectList3D.size(); iobj++)
     {
         std::wcout << L"      " << L"<" << iobj << L">"
-            << pNode->m_DynamicObjectList[iobj]->m_csName << L","
-            << pNode->m_DynamicObjectList[iobj]->m_Position.x << L","
-            << pNode->m_DynamicObjectList[iobj]->m_Position.y
+            << pNode->m_DynamicObjectList3D[iobj]->m_csName << L","
+            << pNode->m_DynamicObjectList3D[iobj]->m_Position.x << L","
+            << pNode->m_DynamicObjectList3D[iobj]->m_Position.y << L","
+            << pNode->m_DynamicObjectList3D[iobj]->m_Position.z
             << std::endl;
     }
     for (int i = 0; i < pNode->m_pChild.size(); i++)

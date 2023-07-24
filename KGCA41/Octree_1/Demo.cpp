@@ -31,8 +31,8 @@ void SetStaticObject(TOctree& tree)
 void SetDynamicObject(TOctree& tree)
 {
     if (tree.m_pRootNode == nullptr) return;
-    int iMaxWidth = tree.m_pRootNode->m_tRT.m_fWidth;
-    int iMaxHeight = tree.m_pRootNode->m_tRT.m_fHeight;
+    int iMaxWidth = tree.m_pRootNode->m_tBox.m_fWidth;
+    int iMaxHeight = tree.m_pRootNode->m_tBox.m_fHeight;
     int iMaxDepth = tree.m_pRootNode->m_tBox.m_fDepth;
 
     for (int i = 0; i < 10; i++)
@@ -93,7 +93,12 @@ int main()
         system("cls");
         std::cout << std::endl;
         std::cout << "Object inform!\n";
-        tree.LevelOrder(tree.m_pRootNode);
+        for (int iObj=0; iObj < DynamicObjectList.size(); iObj++ )
+        {
+            std::cout << "Object[" << iObj << "]" << 
+                DynamicObjectList[iObj]->m_iNodeIndex << std::endl;
+        }
+        //tree.LevelOrder(tree.m_pRootNode);
         timer.Render();
         Sleep(100); // tick 1000 => 1초
     }
