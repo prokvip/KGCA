@@ -70,8 +70,8 @@ void TQuadtree::BuildTree(TNode* pNode)
 
 
     std::cout << "[" << pNode->m_iDepth << "]"
-        << pNode->m_tRT.x << ","
-        << pNode->m_tRT.y << ","
+        << pNode->m_tRT.v.x << ","
+        << pNode->m_tRT.v.y << ","
         << pNode->m_tRT.m_fWidth << ","
         << pNode->m_tRT.m_fHeight << std::endl;
 

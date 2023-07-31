@@ -54,8 +54,8 @@ void TQuadtree::LevelOrder(TNode* pNode)
 {
     if (pNode == nullptr) return;
     std::wcout << L"[" << pNode->m_iDepth << L"]"
-        << pNode->m_tRT.x << L","
-        << pNode->m_tRT.y << L","
+        << pNode->m_tRT.v.x << L","
+        << pNode->m_tRT.v.y << L","
         << pNode->m_tRT.m_fWidth << L","
         << pNode->m_tRT.m_fHeight << L","
         //<< pNode->m_StaticObjectList.size()

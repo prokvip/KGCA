@@ -9,14 +9,14 @@ void	TDynamicObject2D::SetTarget(TVector2& t)
 	// 방향 = 목적지 위치 - 현재 위치
 	m_Direction = t - m_Position;
 	// 단위벡터를 얻기 위해서 방향벡터의 크기를 얻는다.
-	float fDistance = m_Direction.GetDistance();
+	float fDistance = m_Direction.Length();
 	// 정규화 작업
 	m_Direction /= fDistance;
 }
 void			TDynamicObject2D::Move(float fSecond)
 {
 	TVector2 vDir = m_Target - m_Position;
-	float fD = vDir.GetDistance();
+	float fD = vDir.Length();
 	//	// 시간의 동기화
 	TVector2 vVelocity = m_Direction * m_fSpeed * fSecond;
 	m_Position = m_Position + vVelocity;
@@ -70,14 +70,14 @@ void	TDynamicObject3D::SetTarget(TVector3& t)
 	// 방향 = 목적지 위치 - 현재 위치
 	m_Direction = t - m_Position;
 	// 단위벡터를 얻기 위해서 방향벡터의 크기를 얻는다.
-	float fDistance = m_Direction.GetDistance();
+	float fDistance = m_Direction.Length();
 	// 정규화 작업
 	m_Direction /= fDistance;
 }
 void			TDynamicObject3D::Move(float fSecond)
 {
 	TVector3 vDir = m_Target - m_Position;
-	float fD = vDir.GetDistance();
+	float fD = vDir.Length();
 	//	// 시간의 동기화
 	TVector3 vVelocity = m_Direction * m_fSpeed * fSecond;
 	m_Position = m_Position + vVelocity;

@@ -54,9 +54,9 @@ void TOctree::LevelOrder(TNode* pNode)
 {
     if (pNode == nullptr) return;
     std::wcout << L"[" << pNode->m_iDepth << L"]"
-        << pNode->m_tBox.x << L","
-        << pNode->m_tBox.y << L","
-        << pNode->m_tBox.z << L","
+        << pNode->m_tBox.v.x << L","
+        << pNode->m_tBox.v.y << L","
+        << pNode->m_tBox.v.z << L","
         << pNode->m_tBox.m_fWidth << L","
         << pNode->m_tBox.m_fHeight << L","
         << pNode->m_tBox.m_fDepth << L","

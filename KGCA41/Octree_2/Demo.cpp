@@ -60,11 +60,53 @@ void SetDynamicObject(TOctree& tree)
 }
 int main()
 { 
+    /// <summary>
+    /// 사이각 반환(180내의 작은값)
+    /// </summary>   
     TVector3  x(1, 0, 0);
     TVector3  z(0, 0, 1);
-    TVector3  y = (z ^ x);
+    TVector3  y = (z ^ x);// up
     float fDot1 = y | x;
     float fDot2 = y | z;
+    float fDegree = z.Angle(x);
+    /// <summary>
+    /// 직선과 한점의 거리 반환
+    /// </summary>
+    /// <returns></returns>
+    TRay ray;
+    ray.vPosition = { 0,0,0 };
+    ray.vDirection = { 10000,0,0 };
+    TVector3  p0(10, 0, -7);
+    float fDistance = ray.GetDistance(p0);
+    /// <summary>
+    /// 평면과 한점의 거리
+    /// </summary>
+    /// <returns></returns>
+    TPlane plane1(TVector3(10, -10, 0),   TVector3(1,0,0));
+    TPlane plane2(TVector3(0, -10, 0), TVector3(0, -10, 10), TVector3(10, -10, 0));
+    TVector3 p1(20, 30, 40);
+    float f0 = plane1.GetDistance(p1);
+    float f1 = plane2.GetDistance(p1);    
+    /// <summary>
+    /// 임의의 벡터를 기준으로 360로 반환한다.
+    /// </summary>
+    /// <returns></returns>
+    TVector3  v(10, 0, -10);
+    v.Normalize();
+    TVector3  up = (z ^ v);
+    up.Normalize();
+    float fDot3 = up | y;
+    float fDegree360 = 0.0f;
+    if (fDot3 > 0.0f)
+    {
+        fDegree360 = z.Angle(v);
+    }
+    else
+    {
+        fDegree360 = (180.0f - z.Angle(v)) + 180.0f;
+    }
+
+
 
     TOctree tree;
     TSpaceData data;

@@ -1,9 +1,9 @@
 #include "TMath.h"
 bool TVector2::operator == (TVector2& p)
 {
-    if (fabs(x - p.x) > 0.0001f)
+    if (fabs(x - p.x) > T_EPSILON)
     {
-        if (fabs(y - p.y) > 0.0001f)
+        if (fabs(y - p.y) > T_EPSILON)
         {
             return true;
         }
@@ -36,12 +36,12 @@ TVector2& TVector2::operator /= (float fValue)
     y = y / fValue;
     return *this;
 }
-float TVector2::GetDistance()
+float TVector2::Length()
 {
     float fDistance = sqrt(x * x + y * y);
     return fDistance;
 }
-static float GetDistance(TVector2& p)
+static float Length(TVector2& p)
 {
     float fDistance = sqrt(p.x * p.x + p.y * p.y);
     return fDistance;
@@ -64,11 +64,11 @@ TVector3 TVector3::operator ^ (TVector3 const& v)
 }
 bool TVector3::operator == (TVector3& p)
 {
-    if (fabs(x - p.x) > 0.0001f)
+    if (fabs(x - p.x) > T_EPSILON)
     {
-        if (fabs(y - p.y) > 0.0001f)
+        if (fabs(y - p.y) > T_EPSILON)
         {
-            if (fabs(z - p.z) > 0.0001f)
+            if (fabs(z - p.z) > T_EPSILON)
             {
                 return true;
             }
@@ -103,7 +103,7 @@ TVector3& TVector3::operator /= (float fValue)
     z = z / fValue;
     return *this;
 }
-float TVector3::GetDistance()
+float TVector3::Length()
 {
     float fDistance = sqrt(x * x + y * y + z * z);
     return fDistance;
@@ -119,4 +119,33 @@ TVector3::TVector3(float fx, float fy, float fz)
     x = fx;
     y = fy;
     z = fz;
+}
+void TVector3::Normalize()
+{
+    float fInvertLength = 1.0f / Length();
+    x = x * fInvertLength;
+    y = y * fInvertLength;
+    z = z * fInvertLength;
+}
+TVector3 TVector3::NormalVector()
+{
+    float fInvertLength = 1.0f / Length();    
+    return (*this) * fInvertLength;
+}
+float TVector3::Angle(TVector3& v)
+{
+    // ¡§±‘»≠
+    TVector3 a = NormalVector();
+    TVector3 b = v.NormalVector();
+    float fCosAngle = a | b;
+    float fRadian = acos(fCosAngle);
+    float fDegree = RadianToDegree(fRadian);
+    return fDegree;
+   /* float fLength1 = Length();
+    float fLength2 = v.Length();
+    float fDot = *this | v;
+    float fCosAngle = fDot / (fLength1 * fLength2);
+    float fRadian = acos(fCosAngle);
+    float fDegree = RadianToDegree(fRadian);
+    return fDegree;*/
 }
