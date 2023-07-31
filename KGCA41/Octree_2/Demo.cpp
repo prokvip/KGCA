@@ -60,6 +60,12 @@ void SetDynamicObject(TOctree& tree)
 }
 int main()
 { 
+    TVector3  x(1, 0, 0);
+    TVector3  z(0, 0, 1);
+    TVector3  y = (z ^ x);
+    float fDot1 = y | x;
+    float fDot2 = y | z;
+
     TOctree tree;
     TSpaceData data;
     data.p3 = { 0,0,0 };
