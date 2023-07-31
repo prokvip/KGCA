@@ -60,6 +60,7 @@ void SetDynamicObject(TOctree& tree)
 }
 int main()
 { 
+#pragma region ->사이각 반환(180내의 작은값)
     /// <summary>
     /// 사이각 반환(180내의 작은값)
     /// </summary>   
@@ -69,6 +70,8 @@ int main()
     float fDot1 = y | x;
     float fDot2 = y | z;
     float fDegree = z.Angle(x);
+#pragma endregion <-사이각 반환(180내의 작은값)
+#pragma region ->직선과 한점의 거리 반환
     /// <summary>
     /// 직선과 한점의 거리 반환
     /// </summary>
@@ -78,6 +81,8 @@ int main()
     ray.vDirection = { 10000,0,0 };
     TVector3  p0(10, 0, -7);
     float fDistance = ray.GetDistance(p0);
+#pragma endregion 
+#pragma region ->평면과 한점의 거리
     /// <summary>
     /// 평면과 한점의 거리
     /// </summary>
@@ -86,7 +91,9 @@ int main()
     TPlane plane2(TVector3(0, -10, 0), TVector3(0, -10, 10), TVector3(10, -10, 0));
     TVector3 p1(20, 30, 40);
     float f0 = plane1.GetDistance(p1);
-    float f1 = plane2.GetDistance(p1);    
+    float f1 = plane2.GetDistance(p1);   
+#pragma endregion 
+#pragma region ->임의의 벡터를 기준으로 360로 반환한다
     /// <summary>
     /// 임의의 벡터를 기준으로 360로 반환한다.
     /// </summary>
@@ -105,7 +112,7 @@ int main()
     {
         fDegree360 = (180.0f - z.Angle(v)) + 180.0f;
     }
-
+#pragma endregion 
 
 
     TOctree tree;
