@@ -58,8 +58,30 @@ void SetDynamicObject(TOctree& tree)
         DynamicObjectList.push_back(obj);
     }
 }
+struct TData
+{
+    TData* pNext;
+};
 int main()
 { 
+    TData* pa = new TData;
+    pa->pNext = nullptr;
+    TData* pb = new TData;
+    pb->pNext = nullptr;
+    TData* pc = new TData;
+    pc->pNext = nullptr;
+    pa->pNext = pb;
+    pb->pNext = pc;
+    for (TData* pData = pa;
+        pData != nullptr;
+        pData = pData->pNext)
+    {
+        std::cout << pData << std::endl;
+    }
+    delete pa;
+    delete pb;
+    delete pc;
+
 #pragma region ->사이각 반환(180내의 작은값)
     /// <summary>
     /// 사이각 반환(180내의 작은값)
