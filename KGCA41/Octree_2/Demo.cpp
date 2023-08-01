@@ -105,7 +105,9 @@ int main()
         qList1.pop();       
     }
     auto cmp = [](int a, int b)->bool { return a < b; };
-    std::priority_queue<int, std::vector<int>, std::greater<int>/*cmp2*/ > qList2;
+    //std::priority_queue<int, std::vector<int>, cmp2 > qList2;
+    //std::priority_queue<int, std::vector<int>, std::greater<int> > qList2;
+    std::priority_queue<int, std::vector<int>, decltype(cmp) > qList2(cmp);
     for (int n : {3, 6, 23, 6, 7, 23, 7, 32, 5, 3, 6, 23, 643, 6345, 3})
     {
         qList2.push(n);
@@ -113,11 +115,8 @@ int main()
 
     while (!qList2.empty())
     {
-        qList2.push(rand() % 1000);
         std::cout << qList2.top() << " ";
-        qList2.pop();
-        std::cout << qList2.top() << " ";
-        qList2.pop();
+        qList2.pop();        
     }
     /// <summary>
     /// 
