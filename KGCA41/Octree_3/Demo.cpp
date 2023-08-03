@@ -15,14 +15,14 @@ void SetStaticObject(TOctree& tree)
     int iMaxWidth = tree.m_pRootNode->m_tBox.m_fWidth;
     int iMaxHeight = tree.m_pRootNode->m_tBox.m_fHeight;
     int iMaxDepth = tree.m_pRootNode->m_tBox.m_fDepth;
-    for (int i = 0; i < 1000; i++)
+    for (int i = 0; i < 10; i++)
     {
         TObject3D* obj = new TStaticObject3D();
         obj->m_csName = L"StaticObj";
         obj->m_csName += std::to_wstring(i);
-        obj->m_Position = { (float)(rand() % iMaxWidth),
-                            (float)(rand() % iMaxHeight),
-                            (float)(rand() % iMaxDepth) };
+        obj->m_Position = { (float)(rand() % iMaxWidth)- (iMaxWidth/2.0f),
+                            (float)(rand() % iMaxHeight) - (iMaxHeight / 2.0f),
+                            (float)(rand() % iMaxDepth) - (iMaxDepth / 2.0f) };
         obj->SetBox(obj->m_Position, 
                     (float)((rand() % 10) + 1.0f), 
                     (float)((rand() % 10) + 1.0f),
@@ -39,24 +39,24 @@ void SetDynamicObject(TOctree& tree)
     int iMaxHeight = tree.m_pRootNode->m_tBox.m_fHeight;
     int iMaxDepth = tree.m_pRootNode->m_tBox.m_fDepth;
 
-    for (int i = 0; i < 100000; i++)
+    for (int i = 0; i < 10; i++)
     {
         TObject3D* obj = new TDynamicObject3D();
         
         obj->m_csName = L"DynamicObj";
         obj->m_csName += std::to_wstring(i);
-        obj->m_Position = {
-            (float)(rand() % iMaxWidth), 
-            (float)(rand() % iMaxHeight),
-            (float)(rand() % iMaxDepth) };
+        obj->m_Position = { (float)(rand() % iMaxWidth) - (iMaxWidth / 2.0f),
+                           (float)(rand() % iMaxHeight) - (iMaxHeight / 2.0f),
+                           (float)(rand() % iMaxDepth) - (iMaxDepth / 2.0f) };
+
         obj->SetBox(obj->m_Position,
             (float)((rand() % 10) + 1.0f),
             (float)((rand() % 10) + 1.0f),
             (float)((rand() % 10) + 1.0f));
 
-        TVector3 d = {   (float)randstep(0, iMaxWidth),
-                        (float)randstep(0, iMaxHeight),
-                        (float)randstep(0, iMaxDepth) };
+        TVector3 d = {   (float)randstep(-iMaxWidth/2.0f, iMaxWidth/2.0f),
+                        (float)randstep(-iMaxWidth / 2.0f, iMaxHeight / 2.0f),
+                        (float)randstep(-iMaxWidth / 2.0f, iMaxDepth / 2.0f) };
         obj->SetTarget(d);
         tree.DynamicAddObject(obj);
         DynamicObjectList.insert(std::make_pair(i, obj));        
@@ -67,10 +67,10 @@ int main()
 {   
     TOctree tree;
     TSpaceData data;
-    data.p3 = { 0,0,0 };
-    data.w = 800;
-    data.h = 600;
-    data.z = 600;
+    data.p3 = { 0.0f,0.0f, 0.0f };
+    data.w = 1000;
+    data.h = 1000;
+    data.z = 1000;
     
     tree.BuildOctTree(data);
 

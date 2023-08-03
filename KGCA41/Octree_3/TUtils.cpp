@@ -246,18 +246,24 @@ void TBox::Set(float fSizeX, float fSizeY, float fSizeZ)
     m_fHeight = fSizeY;
     m_fDepth = fSizeZ;
     m_Half = { m_fWidth * 0.5f,m_fHeight * 0.5f, m_fDepth * 0.5f };
-    m_Point[0] = { v.x, v.y, v.z };
-    m_Point[1] = { v.x + m_fWidth, v.y, v.z };
-    m_Point[2] = { v.x + m_fWidth, v.y + m_fHeight, v.z };
-    m_Point[3] = { v.x, v.y + m_fHeight, v.z };
+    m_Point[0] = { v.x - m_Half.x, v.y + m_Half.y, v.z - m_Half.z };
+    m_Point[1] = m_Point[0];
+    m_Point[1].x += m_fWidth;
+    m_Point[2] = m_Point[1];
+    m_Point[2].y -= m_fHeight;
+    m_Point[3] = m_Point[2];
+    m_Point[3].x = m_Point[0].x;
 
-    m_Point[4] = { v.x, v.y, v.z + fSizeZ };
-    m_Point[5] = { v.x + m_fWidth, v.y, v.z + fSizeZ };
-    m_Point[6] = { v.x + m_fWidth, v.y + m_fHeight, v.z + fSizeZ };
-    m_Point[7] = { v.x, v.y + m_fHeight, v.z + fSizeZ };
+    m_Point[4] = { v.x - m_Half.x, v.y + m_Half.y, v.z + m_Half.z };
+    m_Point[5] = m_Point[4];
+    m_Point[5].x += m_fWidth;
+    m_Point[6] = m_Point[5];
+    m_Point[6].y -= m_fHeight;
+    m_Point[7] = m_Point[6];
+    m_Point[7].x = m_Point[4].x;
 
-    m_Min = m_Point[0];
-    m_Max = m_Point[6];
+    m_Min = m_Point[3];
+    m_Max = m_Point[5];
     m_Center = (m_Max + m_Min) * 0.5f;
 }
 void TBox::Set(TVector3 p, float fw, float fh, float fz)

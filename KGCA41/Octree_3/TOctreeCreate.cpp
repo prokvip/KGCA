@@ -21,73 +21,24 @@ void TOctree::BuildTree(TNode* pNode)
     {
         return;
     }
-    // 0, 0, 0  600, 600 , 600
-    //  front z = 0
-    // v0-------vTC1-------v1
-    // |                  |
-    // |                  |
-    // vLC1      vC       vRC1
-    // |                  |
-    // |                  |
-    // v3       vBC1       v2
-    // 
-    // middle z= 300
-    // C_v0-------vTC2-------C_v1
-    // |                  |
-    // |                  |
-    // C_vLC2      vC       vRC2
-    // |                  |
-    // |                  |
-    // C_v3       vBC2       C_v2
-    
-    // back z= 600
-    // v4-------vTC3-------v5
-    // |                  |
-    // |                  |
-    // vLC3      vC       vRC3
-    // |                  |
-    // |                  |
-    // v7       vBC3      v6
-
-    TVector3 vTC1 = { pNode->m_tBox.m_Center.x, pNode->m_tBox.m_Point[0].y, 
-                     pNode->m_tBox.m_Min.z };
-    TVector3 vRC1 = { pNode->m_tBox.m_Point[1].x, pNode->m_tBox.m_Center.y,
-                    pNode->m_tBox.m_Min.z };
-    TVector3 vBC1 = { pNode->m_tBox.m_Center.x, pNode->m_tBox.m_Point[3].y,
-                    pNode->m_tBox.m_Min.z };
-    TVector3 vLC1 = { pNode->m_tBox.m_Point[0].x, pNode->m_tBox.m_Center.y,
-                    pNode->m_tBox.m_Min.z };
-
-    TVector3 vTC2 = { pNode->m_tBox.m_Center.x, pNode->m_tBox.m_Point[0].y,
-                    pNode->m_tBox.m_Center.z };
-    TVector3 vRC2 = { pNode->m_tBox.m_Point[1].x, pNode->m_tBox.m_Center.y,
-                    pNode->m_tBox.m_Center.z };
-    TVector3 vBC2 = { pNode->m_tBox.m_Center.x, pNode->m_tBox.m_Point[3].y,
-                    pNode->m_tBox.m_Center.z };
-    TVector3 vLC2 = { pNode->m_tBox.m_Point[0].x, pNode->m_tBox.m_Center.y,
-                    pNode->m_tBox.m_Center.z };
-
-    TVector3 vTC3 = { pNode->m_tBox.m_Center.x, pNode->m_tBox.m_Point[0].y,
-                    pNode->m_tBox.m_Max.z };
-    TVector3 vRC3 = { pNode->m_tBox.m_Point[1].x, pNode->m_tBox.m_Center.y,
-                    pNode->m_tBox.m_Max.z };
-    TVector3 vBC3 = { pNode->m_tBox.m_Center.x, pNode->m_tBox.m_Point[3].y,
-                    pNode->m_tBox.m_Max.z };
-    TVector3 vLC3 = { pNode->m_tBox.m_Point[0].x, pNode->m_tBox.m_Center.y,
-                    pNode->m_tBox.m_Max.z };
-    
-    
-
     // 0
+    TVector3 vHalf = pNode->m_tBox.m_Half;
+    vHalf = vHalf * 0.5f;    
     TNode* pNewNode = CreateNode(pNode,
-        pNode->m_tBox.m_Point[0].x, pNode->m_tBox.m_Point[0].y,  pNode->m_tBox.m_Point[0].z,
-        pNode->m_tBox.m_Half.x,   pNode->m_tBox.m_Half.y,   pNode->m_tBox.m_Half.z);
+        pNode->m_tBox.m_Center.x - vHalf.x ,
+        pNode->m_tBox.m_Center.y + vHalf.y,
+        pNode->m_tBox.m_Center.z - vHalf.z,
+        pNode->m_tBox.m_Half.x,   
+        pNode->m_tBox.m_Half.y,   
+        pNode->m_tBox.m_Half.z);
 
     pNode->m_pChild.push_back(pNewNode);
     m_NodeArrayList.push_back(pNode);
     // 1
     pNewNode = CreateNode(pNode,
-        vTC1.x,vTC1.y, vTC1.z,
+        pNode->m_tBox.m_Center.x + vHalf.x,
+        pNode->m_tBox.m_Center.y + vHalf.y,
+        pNode->m_tBox.m_Center.z - vHalf.z,
         pNode->m_tBox.m_Half.x,  
         pNode->m_tBox.m_Half.y,   
         pNode->m_tBox.m_Half.z);
@@ -95,9 +46,9 @@ void TOctree::BuildTree(TNode* pNode)
     m_NodeArrayList.push_back(pNode);
     //2
     pNewNode = CreateNode(pNode,
-        pNode->m_tBox.m_Center.x,
-        pNode->m_tBox.m_Center.y,
-        pNode->m_tBox.m_Min.z,
+        pNode->m_tBox.m_Center.x + vHalf.x,
+        pNode->m_tBox.m_Center.y - vHalf.y,
+        pNode->m_tBox.m_Center.z - vHalf.z,
         pNode->m_tBox.m_Half.x,
         pNode->m_tBox.m_Half.y,
         pNode->m_tBox.m_Half.z);
@@ -105,31 +56,35 @@ void TOctree::BuildTree(TNode* pNode)
     m_NodeArrayList.push_back(pNode);
     //3
     pNewNode = CreateNode(pNode,
-        vLC1.x, vLC1.y,vLC1.z,
+        pNode->m_tBox.m_Center.x - vHalf.x,
+        pNode->m_tBox.m_Center.y - vHalf.y,
+        pNode->m_tBox.m_Center.z - vHalf.z,
         pNode->m_tBox.m_Half.x,  pNode->m_tBox.m_Half.y,   pNode->m_tBox.m_Half.z);
     pNode->m_pChild.push_back(pNewNode);
     m_NodeArrayList.push_back(pNode);
 
     // 4
     pNewNode = CreateNode(pNode,
-        pNode->m_tBox.m_Point[0].x, 
-        pNode->m_tBox.m_Point[0].y, 
-        pNode->m_tBox.m_Center.z,
+        pNode->m_tBox.m_Center.x - vHalf.x,
+        pNode->m_tBox.m_Center.y + vHalf.y,
+        pNode->m_tBox.m_Center.z + vHalf.z,
         pNode->m_tBox.m_Half.x, pNode->m_tBox.m_Half.y, pNode->m_tBox.m_Half.z);
 
     pNode->m_pChild.push_back(pNewNode);
     m_NodeArrayList.push_back(pNode);
     // 5
     pNewNode = CreateNode(pNode,
-        vTC2.x, vTC2.y, vTC2.z,
+        pNode->m_tBox.m_Center.x + vHalf.x,
+        pNode->m_tBox.m_Center.y + vHalf.y,
+        pNode->m_tBox.m_Center.z + vHalf.z,
         pNode->m_tBox.m_Half.x, pNode->m_tBox.m_Half.y, pNode->m_tBox.m_Half.z);
     pNode->m_pChild.push_back(pNewNode);
     m_NodeArrayList.push_back(pNode);
     //6
     pNewNode = CreateNode(pNode,
-        pNode->m_tBox.m_Center.x,
-        pNode->m_tBox.m_Center.y,
-        pNode->m_tBox.m_Center.z,
+        pNode->m_tBox.m_Center.x + vHalf.x,
+        pNode->m_tBox.m_Center.y - vHalf.y,
+        pNode->m_tBox.m_Center.z + vHalf.z,
         pNode->m_tBox.m_Half.x,
         pNode->m_tBox.m_Half.y,
         pNode->m_tBox.m_Half.z);
@@ -137,7 +92,9 @@ void TOctree::BuildTree(TNode* pNode)
     m_NodeArrayList.push_back(pNode);
     //7
     pNewNode = CreateNode(pNode,
-        vLC2.x, vLC2.y, vLC2.z,
+        pNode->m_tBox.m_Center.x - vHalf.x,
+        pNode->m_tBox.m_Center.y - vHalf.y,
+        pNode->m_tBox.m_Center.z + vHalf.z,
         pNode->m_tBox.m_Half.x, pNode->m_tBox.m_Half.y, pNode->m_tBox.m_Half.z);
     pNode->m_pChild.push_back(pNewNode);
     m_NodeArrayList.push_back(pNode);
