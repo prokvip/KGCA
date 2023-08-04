@@ -31,27 +31,28 @@ void			TDynamicObject2D::Move(float fSecond)
 	//	m_Position.x = min(m_Position.x, 800.0f);
 	//	m_Position.y = min(m_Position.y, 600.0f);
 	//}
-	if (m_Position.x < 0.0f)
+	if (m_Position.x < -g_fMapSize*0.5f)
 	{
 		m_Direction.x *= -1.0f;
-		m_Position.x = 0.0f;
+		m_Position.x = -g_fMapSize * 0.5f;
 	}
-	if (m_Position.y < 0.0f)
+	if (m_Position.y < -g_fMapSize * 0.5f)
 	{
 		m_Direction.y *= -1.0f;
-		m_Position.y = 0.0f;
+		m_Position.y = -g_fMapSize * 0.5f;
 	}
 
-	if (m_Position.x > 800.0f)
+	if (m_Position.x > g_fMapSize * 0.5f)
 	{
 		m_Direction.x *= -1.0f;
-		m_Position.x = 800.0f;
+		m_Position.x = g_fMapSize * 0.5f;
 	}
-	if (m_Position.y > 600.0f)
+	if (m_Position.y > g_fMapSize * 0.5f)
 	{
 		m_Direction.y *= -1.0f;
-		m_Position.y = 600.0f;
+		m_Position.y = g_fMapSize * 0.5f;
 	}
+
 };
 TDynamicObject2D::TDynamicObject2D()
 {
@@ -102,28 +103,27 @@ void			TDynamicObject3D::Move(float fSecond)
 		m_Direction.y *= -1.0f;
 		m_Position.y = 0.0f;
 	}
-	if (m_Position.z < 0.0f)
+	if (m_Position.z < -g_fMapSize * 0.5f)
 	{
 		m_Direction.z *= -1.0f;
-		m_Position.z = 0.0f;
+		m_Position.z = -g_fMapSize * 0.5f;
 	}
 
-	if (m_Position.x > 800.0f)
+	if (m_Position.x > g_fMapSize * 0.5f)
 	{
 		m_Direction.x *= -1.0f;
-		m_Position.x = 800.0f;
+		m_Position.x = g_fMapSize * 0.5f;
 	}
-	if (m_Position.y > 600.0f)
+	if (m_Position.y > g_fMapSize * 0.5f)
 	{
 		m_Direction.y *= -1.0f;
-		m_Position.y = 600.0f;
+		m_Position.y = g_fMapSize * 0.5f;
 	}
-	if (m_Position.z > 600.0f)
+	if (m_Position.z > g_fMapSize * 0.5f)
 	{
 		m_Direction.z *= -1.0f;
-		m_Position.z = 600.0f;
+		m_Position.z = g_fMapSize * 0.5f;
 	}
-
 };
 TDynamicObject3D::TDynamicObject3D()
 {

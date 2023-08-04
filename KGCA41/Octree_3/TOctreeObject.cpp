@@ -10,9 +10,10 @@ TNode* TOctree::FindNode(TNode* pNode, TObject3D* obj)
             if (pNode->m_pChild[i] != nullptr)
             {
                 //todo
-                if (TCollision::BoxToBox(
-                    pNode->m_pChild[i]->m_tBox,
-                    obj->m_tBox))
+                CollisionType ret= TCollision::BoxToBox(
+                                    pNode->m_pChild[i]->m_tBox,
+                                    obj->m_tBox);
+                if (ret== A_DestBig)
                 {
                     g_Queue.push(pNode->m_pChild[i]);
                     break;

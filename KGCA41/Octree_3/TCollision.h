@@ -1,6 +1,30 @@
 #pragma once
 #include "TUtils.h"
-
+enum  class CollisionTypeA
+{
+	CT_NONE,
+	CT_OVERLAB,
+	CT_STAY,
+	CT_EXIT,	
+};
+enum  CollisionTypeB
+{
+	A_OUTSIDE = 0,
+	A_SPANNING = 1,
+	A_DestBig,
+	A_SrcBig,
+};
+enum  CollisionType
+{
+	CT_OUTSIDE = 0,
+	CT_SPANNING = 1,
+	//CT_INSIDE, 
+	CT_DestBig,
+	CT_SrcBig,
+	//CT_FRONT,
+	//CT_BACK,
+	//CT_ONPLANE,		
+};
 class TCollision
 {
 public:
@@ -28,7 +52,33 @@ public:
 		}
 		return false;
 	}
-	static bool BoxToBox(TBox& rt1, TBox& rt2)
+	static CollisionType BoxToBox(TBox& box1, TBox& box2)
+	{
+		CollisionType ret= CT_OUTSIDE;
+		TVector3 dir = box1.m_Center - box2.m_Center;
+		if (BoxInBox(box1, box2))
+		{
+			ret = CT_DestBig;
+			return ret;
+		}
+		if (BoxInBox(box2, box1))
+		{
+			ret = CT_SrcBig;
+			return ret;
+		}
+		if (dir.x <= (box1.m_Half.x + box2.m_Half.x))
+		{
+			if (dir.y <= (box1.m_Half.y + box2.m_Half.y))
+			{
+				if (dir.z <= (box1.m_Half.z + box2.m_Half.z))
+				{
+					ret = CT_SPANNING;
+				}
+			}
+		}		
+		return ret;
+	}
+	static bool BoxInBox(TBox& rt1, TBox& rt2)
 	{
 		if (rt1.m_Min.x <= rt2.m_Min.x && rt1.m_Max.x >= rt2.m_Max.x)
 		{

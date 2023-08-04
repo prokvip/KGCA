@@ -1,5 +1,7 @@
 #pragma once
 #include "TCollision.h"
+const float g_fMapSize = 1000.0f;
+
 class TObject2D
 {
 public:

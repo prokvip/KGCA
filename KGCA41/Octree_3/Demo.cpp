@@ -68,9 +68,9 @@ int main()
     TOctree tree;
     TSpaceData data;
     data.p3 = { 0.0f,0.0f, 0.0f };
-    data.w = 1000;
-    data.h = 1000;
-    data.z = 1000;
+    data.w = g_fMapSize;
+    data.h = g_fMapSize;
+    data.z = g_fMapSize;
     
     tree.BuildOctTree(data);
 
