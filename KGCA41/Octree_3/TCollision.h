@@ -104,4 +104,44 @@ public:
 		}
 		return false;
 	}
+	static bool SphereToPoint(TSphere& s, TVector3 v)
+	{
+		TVector3 d = v - s.vCenter;
+		float fDistance = d.Length();
+		if (fDistance <=  s.fRadius)
+		{
+			return true;
+		}
+		return false;
+	}
+	static bool CircleToPoint(TCircle& s, TVector2 v)
+	{
+		TVector2 d = v - s.vCenter;
+		float fDistance = d.Length();
+		if (fDistance <= s.fRadius)
+		{
+			return true;
+		}
+		return false;
+	}
+	static bool SphereToSphere(TSphere& s1, TSphere& s2)
+	{
+		TVector3 d = s1.vCenter - s2.vCenter;
+		float fDistance = d.Length();
+		if (fDistance <= (s1.fRadius + s2.fRadius))
+		{
+			return true;
+		}
+		return false;
+	}
+	static bool CircleToCircle(TCircle& s1, TCircle& s2)
+	{
+		TVector2 d = s1.vCenter - s2.vCenter;
+		float fDistance = d.Length();
+		if (fDistance <= (s1.fRadius + s2.fRadius))
+		{
+			return true;
+		}
+		return false;
+	}
 };

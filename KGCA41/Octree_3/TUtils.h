@@ -64,6 +64,17 @@ struct TBox
     TBox(float fx, float fy, float fz,
         float fw, float fh, float fd);
 };
+
+struct TSphere
+{
+    TVector3 vCenter;
+    float    fRadius;
+};
+struct TCircle
+{
+    TVector2 vCenter;
+    float    fRadius;
+};
 class TUtils
 {
 };
