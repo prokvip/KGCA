@@ -13,17 +13,32 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Engine">
+      <UniqueIdentifier>{99cff950-380f-423d-9230-c3a01934df2e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Sample.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="TWindow.cpp">
-      <Filter>소스 파일</Filter>
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="TCore.cpp">
+      <Filter>Engine</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Sample.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
     <ClInclude Include="TWindow.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="TCore.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="TStd.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

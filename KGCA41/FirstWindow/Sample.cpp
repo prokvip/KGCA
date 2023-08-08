@@ -1,12 +1,19 @@
-#include "TWindow.h"
-
-int APIENTRY wWinMain( HINSTANCE hInstance,  HINSTANCE hPrevInstance, LPWSTR    lpCmdLine,  int       nCmdShow)
-{
-    TWindow win;
-    win.SetRegisterClassWindow(hInstance);
-    win.SetWindow();
-    win.Init();
-        win.Run();
-    win.Release();
-    return 0;
+#include "Sample.h"
+bool  Sample::Init() 
+{ 
+    return true; 
 }
+bool  Sample::Frame() 
+{ 
+    return true; 
+}
+bool  Sample::Render() 
+{ 
+    return true; 
+}
+bool  Sample::Release()
+{ 
+    return true; 
+}
+
+TGAME(L"kgca", 300, 300)

@@ -28,41 +28,53 @@ bool TWindow::SetRegisterClassWindow(HINSTANCE hInstance)
     return true;
 }
 
-bool  TWindow::Init() { return true; }
-bool  TWindow::Frame() { return true; }
-bool  TWindow::Render() { return true; }
-bool  TWindow::Release() { return true; }
-
-
-bool TWindow::SetWindow()
+bool  TWindow::EngineInit()
 {
-    DWORD dwExStyle = 0;
-    DWORD dwStyle = WS_OVERLAPPEDWINDOW;
-    DWORD dwWindowPosX = 0;
-    DWORD dwWindowPosY = 0;
-    DWORD dwWindowWidth = 800;
-    DWORD dwWindowHeight = 600;
+    return true;
+}
+bool  TWindow::EngineFrame()
+{
+    return true;
+}
+bool  TWindow::EngineRender()
+{
+    return true;
+}
+bool  TWindow::EngineRelease()
+{
+    return true;
+}
 
+
+bool TWindow::SetWindow(const WCHAR* szTitle,//std::wstring szTitle,
+    DWORD       dwWindowWidth,
+    DWORD       dwWindowHeight)
+{   
+    m_dwWindowWidth = dwWindowWidth;
+    m_dwWindowHeight = dwWindowHeight;
 #ifndef _DEBUG
     dwExStyle = WS_EX_TOPMOST;
     dwStyle = WS_POPUPWINDOW;
 #else
-    dwExStyle = WS_EX_APPWINDOW;
+    m_dwExStyle = WS_EX_APPWINDOW;
 #endif
-    m_hWnd = CreateWindowEx(dwExStyle, L"KGCA윈도우",
-        L"샘플 타이틀", dwStyle,
-        dwWindowPosX, dwWindowPosY, dwWindowWidth, dwWindowHeight,
+    m_hWnd = CreateWindowEx(m_dwExStyle, L"KGCA윈도우", szTitle,
+        //szTitle.c_str(), 
+        m_dwStyle,
+        m_dwWindowPosX, m_dwWindowPosY, 
+        m_dwWindowWidth, m_dwWindowHeight,
         nullptr, nullptr, m_hInstance, nullptr);
     if (!m_hWnd)
     {
         return FALSE;
     }
     ShowWindow(m_hWnd, SW_SHOWNORMAL);
-
+    return true;
 }
 
 bool  TWindow::Run()
 {
+    EngineInit();
     MSG msg = { 0 };
     while (msg.message != WM_QUIT)
     {
@@ -74,9 +86,10 @@ bool  TWindow::Run()
         else
         {
             // 게임로직을 처리
-            Frame();
-            Render();
+            EngineFrame();
+            EngineRender();
         }
     }
+    EngineRelease();
     return true;
 }
