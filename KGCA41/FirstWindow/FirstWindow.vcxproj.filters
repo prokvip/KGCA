@@ -39,7 +39,7 @@
       <Filter>Engine</Filter>
     </ClInclude>
     <ClInclude Include="TStd.h">
-      <Filter>헤더 파일</Filter>
+      <Filter>Engine</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
