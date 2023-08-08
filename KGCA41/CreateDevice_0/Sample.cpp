@@ -18,7 +18,7 @@ bool  Sample::Init()
     UINT Flags = 0;
     D3D_FEATURE_LEVEL pFeatureLevels = D3D_FEATURE_LEVEL_11_0;
     // 1) 디바이스
-    D3D11CreateDeviceAndSwapChain(
+    HRESULT hr = D3D11CreateDeviceAndSwapChain(
         NULL,
         DriverType,
         NULL,
@@ -31,9 +31,25 @@ bool  Sample::Init()
         &m_pDevice,      // dx 인터페이스( 생성 )
         NULL,
         &m_pImmediateContext); // dx 인터페이스( 관리 )
+    if (FAILED(hr))
+    {
+        return false;
+    }
     // 2) 백버퍼 얻어서
-    // 3) 렌더타켓 지정하고
-    // 4) 시연 한다.
+    ID3D11Texture2D* pBackBuffer;
+    hr = m_pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&pBackBuffer);
+    if (SUCCEEDED(hr))
+    {
+        // 3) 렌더타켓 지정하고
+        hr = m_pDevice->CreateRenderTargetView(pBackBuffer, NULL, &m_pRenderTargetView);
+        if (FAILED(hr))
+        {
+            pBackBuffer->Release();
+            return false;
+        }  
+        m_pImmediateContext->OMSetRenderTargets(1, &m_pRenderTargetView, NULL);
+    }
+    pBackBuffer->Release();    
     return true; 
 }
 bool  Sample::Frame() 
@@ -42,14 +58,22 @@ bool  Sample::Frame()
 }
 bool  Sample::Render() 
 { 
+    float color[4] = { 0.343f,0.34522f,0.64333f,1 };
+    m_pImmediateContext->ClearRenderTargetView(m_pRenderTargetView, color);
+    // 지형, 케릭터, 오브젝트, 이펙트, 인터페이스
+    HRESULT hr = m_pSwapChain->Present(0, 0);
+    if (FAILED(hr))
+    {
+        return false;
+    }
     return true; 
 }
 bool  Sample::Release()
 { 
-    m_pSwapChain->Release();
-    m_pDevice->Release();
-    m_pImmediateContext->Release();
+    if(m_pSwapChain)m_pSwapChain->Release();
+    if (m_pDevice)m_pDevice->Release();
+    if (m_pImmediateContext)m_pImmediateContext->Release();
     return true; 
 }
 
-TGAME(L"kgca", 300, 300)
+TGAME(L"kgca", 800, 600)

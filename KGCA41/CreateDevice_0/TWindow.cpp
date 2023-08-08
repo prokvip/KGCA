@@ -86,8 +86,10 @@ bool  TWindow::Run()
         else
         {
             // 게임로직을 처리
-            EngineFrame();
-            EngineRender();
+            if (!EngineFrame() || !EngineRender())
+            {
+                break;
+            }
         }
     }
     EngineRelease();
