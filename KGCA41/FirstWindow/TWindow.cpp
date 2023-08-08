@@ -28,24 +28,6 @@ bool TWindow::SetRegisterClassWindow(HINSTANCE hInstance)
     return true;
 }
 
-bool  TWindow::EngineInit()
-{
-    return true;
-}
-bool  TWindow::EngineFrame()
-{
-    return true;
-}
-bool  TWindow::EngineRender()
-{
-    return true;
-}
-bool  TWindow::EngineRelease()
-{
-    return true;
-}
-
-
 bool TWindow::SetWindow(const WCHAR* szTitle,//std::wstring szTitle,
     DWORD       dwWindowWidth,
     DWORD       dwWindowHeight)
@@ -69,27 +51,5 @@ bool TWindow::SetWindow(const WCHAR* szTitle,//std::wstring szTitle,
         return FALSE;
     }
     ShowWindow(m_hWnd, SW_SHOWNORMAL);
-    return true;
-}
-
-bool  TWindow::Run()
-{
-    EngineInit();
-    MSG msg = { 0 };
-    while (msg.message != WM_QUIT)
-    {
-        if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
-        {
-            TranslateMessage(&msg);
-            DispatchMessage(&msg);
-        }
-        else
-        {
-            // 게임로직을 처리
-            EngineFrame();
-            EngineRender();
-        }
-    }
-    EngineRelease();
     return true;
 }

@@ -16,4 +16,4 @@ bool  Sample::Release()
     return true; 
 }
 
-TGAME(L"kgca", 300, 300)
+TGAME(L"kgca", 800, 600)

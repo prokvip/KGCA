@@ -7,10 +7,14 @@ public:
     virtual bool  Frame();
     virtual bool  Render();
     virtual bool  Release();
-public:
+    bool  Run();
+private:
     virtual bool  EngineInit();
     virtual bool  EngineFrame();
     virtual bool  EngineRender();
     virtual bool  EngineRelease();
+public:
+    TCore() {};
+    virtual ~TCore() {}
 };
 
