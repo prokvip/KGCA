@@ -64,6 +64,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Octree_2", "Octree_2\Octree
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Octree_3", "Octree_3\Octree_3.vcxproj", "{4C64F3BF-2FC3-4288-9912-1682F4F34538}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FirstWindow", "FirstWindow\FirstWindow.vcxproj", "{5075BB4C-AD31-4EFF-A232-F4358C604F5F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|ARM = Debug|ARM
@@ -352,6 +354,18 @@ Global
 		{4C64F3BF-2FC3-4288-9912-1682F4F34538}.Release|x64.Build.0 = Release|x64
 		{4C64F3BF-2FC3-4288-9912-1682F4F34538}.Release|x86.ActiveCfg = Release|Win32
 		{4C64F3BF-2FC3-4288-9912-1682F4F34538}.Release|x86.Build.0 = Release|Win32
+		{5075BB4C-AD31-4EFF-A232-F4358C604F5F}.Debug|ARM.ActiveCfg = Debug|Win32
+		{5075BB4C-AD31-4EFF-A232-F4358C604F5F}.Debug|ARM64.ActiveCfg = Debug|Win32
+		{5075BB4C-AD31-4EFF-A232-F4358C604F5F}.Debug|x64.ActiveCfg = Debug|x64
+		{5075BB4C-AD31-4EFF-A232-F4358C604F5F}.Debug|x64.Build.0 = Debug|x64
+		{5075BB4C-AD31-4EFF-A232-F4358C604F5F}.Debug|x86.ActiveCfg = Debug|Win32
+		{5075BB4C-AD31-4EFF-A232-F4358C604F5F}.Debug|x86.Build.0 = Debug|Win32
+		{5075BB4C-AD31-4EFF-A232-F4358C604F5F}.Release|ARM.ActiveCfg = Release|Win32
+		{5075BB4C-AD31-4EFF-A232-F4358C604F5F}.Release|ARM64.ActiveCfg = Release|Win32
+		{5075BB4C-AD31-4EFF-A232-F4358C604F5F}.Release|x64.ActiveCfg = Release|x64
+		{5075BB4C-AD31-4EFF-A232-F4358C604F5F}.Release|x64.Build.0 = Release|x64
+		{5075BB4C-AD31-4EFF-A232-F4358C604F5F}.Release|x86.ActiveCfg = Release|Win32
+		{5075BB4C-AD31-4EFF-A232-F4358C604F5F}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
