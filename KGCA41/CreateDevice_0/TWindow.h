@@ -12,16 +12,10 @@ public:
     DWORD       m_dwWindowWidth;
     DWORD       m_dwWindowHeight;
 public:
-    virtual bool  EngineInit();
-    virtual bool  EngineFrame();
-    virtual bool  EngineRender();
-    virtual bool  EngineRelease();
-public:
     bool  SetRegisterClassWindow(HINSTANCE hInstance);
     bool  SetWindow(const WCHAR* szTitle, //std::wstring szTitle, 
                     DWORD       dwWindowWidth =800,
                     DWORD       dwWindowHeight=600);
-    bool  Run();
 public:
     virtual ~TWindow() {}
 public:

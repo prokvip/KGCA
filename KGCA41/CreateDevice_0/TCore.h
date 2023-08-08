@@ -7,10 +7,12 @@ public:
     virtual bool  Frame();
     virtual bool  Render();
     virtual bool  Release();
-public:
+private:
     virtual bool  EngineInit();
     virtual bool  EngineFrame();
     virtual bool  EngineRender();
     virtual bool  EngineRelease();
+public:
+    bool  Run();
 };
 
