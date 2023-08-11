@@ -23,7 +23,7 @@ bool  TObject::LoadTextureFile(std::wstring filename)
     HRESULT hr = DirectX::GetMetadataFromDDSFile(filename.c_str(), DirectX::DDS_FLAGS_NONE, mdata);
     if (SUCCEEDED(hr))
     {
-        hr = DirectX::LoadFromWICFile(filename.c_str(), DirectX::WIC_FLAGS_NONE, &mdata, *imageobj);
+        hr = DirectX::LoadFromDDSFile(filename.c_str(), DirectX::DDS_FLAGS_NONE, &mdata, *imageobj);
         if (SUCCEEDED(hr))
         {
             hr = DirectX::CreateShaderResourceView(m_pDevice, imageobj->GetImages(), imageobj->GetImageCount(), mdata, &m_pTexSRV);
