@@ -18,18 +18,5 @@
     <ClInclude Include="TObject.h" />
     <ClInclude Include="TStd.h" />
     <ClInclude Include="TWindow.h" />
-    <ClInclude Include="inc\DirectXTex.h">
-      <Filter>tex</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <Filter Include="tex">
-      <UniqueIdentifier>{7029c721-7650-490f-8a14-ee06797651d4}</UniqueIdentifier>
-    </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="inc\DirectXTex.inl">
-      <Filter>tex</Filter>
-    </None>
   </ItemGroup>
 </Project>
