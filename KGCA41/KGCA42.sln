@@ -72,6 +72,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CreateDevice_1", "CreateDev
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CreateTexture_1", "CreateTextrue_1\CreateTexture_1.vcxproj", "{1A9A504D-B08E-400D-A76A-5161D2ECEBE2}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CreateTexture_2", "CreateTextrue_2\CreateTexture_2.vcxproj", "{9596A2A1-885C-4661-88F8-BF4F53FD511A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|ARM = Debug|ARM
@@ -408,6 +410,18 @@ Global
 		{1A9A504D-B08E-400D-A76A-5161D2ECEBE2}.Release|x64.Build.0 = Release|x64
 		{1A9A504D-B08E-400D-A76A-5161D2ECEBE2}.Release|x86.ActiveCfg = Release|Win32
 		{1A9A504D-B08E-400D-A76A-5161D2ECEBE2}.Release|x86.Build.0 = Release|Win32
+		{9596A2A1-885C-4661-88F8-BF4F53FD511A}.Debug|ARM.ActiveCfg = Debug|Win32
+		{9596A2A1-885C-4661-88F8-BF4F53FD511A}.Debug|ARM64.ActiveCfg = Debug|Win32
+		{9596A2A1-885C-4661-88F8-BF4F53FD511A}.Debug|x64.ActiveCfg = Debug|x64
+		{9596A2A1-885C-4661-88F8-BF4F53FD511A}.Debug|x64.Build.0 = Debug|x64
+		{9596A2A1-885C-4661-88F8-BF4F53FD511A}.Debug|x86.ActiveCfg = Debug|Win32
+		{9596A2A1-885C-4661-88F8-BF4F53FD511A}.Debug|x86.Build.0 = Debug|Win32
+		{9596A2A1-885C-4661-88F8-BF4F53FD511A}.Release|ARM.ActiveCfg = Release|Win32
+		{9596A2A1-885C-4661-88F8-BF4F53FD511A}.Release|ARM64.ActiveCfg = Release|Win32
+		{9596A2A1-885C-4661-88F8-BF4F53FD511A}.Release|x64.ActiveCfg = Release|x64
+		{9596A2A1-885C-4661-88F8-BF4F53FD511A}.Release|x64.Build.0 = Release|x64
+		{9596A2A1-885C-4661-88F8-BF4F53FD511A}.Release|x86.ActiveCfg = Release|Win32
+		{9596A2A1-885C-4661-88F8-BF4F53FD511A}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

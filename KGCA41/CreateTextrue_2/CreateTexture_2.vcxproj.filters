@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <FxCompile Include="PixelShader.psh" />
+    <FxCompile Include="VertexShader.vsh" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Sample.cpp" />
+    <ClCompile Include="TCore.cpp" />
+    <ClCompile Include="TDevice.cpp" />
+    <ClCompile Include="TObject.cpp" />
+    <ClCompile Include="TWindow.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Sample.h" />
+    <ClInclude Include="TCore.h" />
+    <ClInclude Include="TDevice.h" />
+    <ClInclude Include="TObject.h" />
+    <ClInclude Include="TStd.h" />
+    <ClInclude Include="TWindow.h" />
+    <ClInclude Include="inc\DirectXTex.h">
+      <Filter>tex</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="tex">
+      <UniqueIdentifier>{7029c721-7650-490f-8a14-ee06797651d4}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="inc\DirectXTex.inl">
+      <Filter>tex</Filter>
+    </None>
+  </ItemGroup>
+</Project>
