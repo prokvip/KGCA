@@ -14,6 +14,7 @@ public:
     ID3D11InputLayout*  m_pVertexLayout = nullptr;
     ID3D11VertexShader* m_pVS = nullptr;
     ID3D11PixelShader*  m_pPS = nullptr;
+    std::vector< P_Vertex>   m_VertexList;
 public:
     bool CreateVertexBuffer();
     //bool LoadShaderAndInputLayout();
