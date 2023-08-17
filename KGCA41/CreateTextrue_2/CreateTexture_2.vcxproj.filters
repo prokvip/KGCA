@@ -18,5 +18,6 @@
     <ClInclude Include="TObject.h" />
     <ClInclude Include="TStd.h" />
     <ClInclude Include="TWindow.h" />
+    <ClInclude Include="DirectXTex.h" />
   </ItemGroup>
 </Project>

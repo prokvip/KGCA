@@ -156,6 +156,7 @@
     <ClCompile Include="TWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="DirectXTex.h" />
     <ClInclude Include="Sample.h" />
     <ClInclude Include="TCore.h" />
     <ClInclude Include="TDevice.h" />
