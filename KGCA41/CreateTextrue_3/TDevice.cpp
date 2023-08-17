@@ -67,7 +67,8 @@ bool  TDevice::Frame()
 }
 bool  TDevice::PreRender()
 {
-    float color[4] = { 0.343f,0.34522f,0.64333f,1 };
+    float color[4] = { 1.0f,0.0f,0.0f,1 };
+    //float color[4] = { 0.343f,0.34522f,0.64333f,1 };
     m_pImmediateContext->ClearRenderTargetView(m_pRenderTargetView, color);   
     return true;
 }
