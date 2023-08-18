@@ -11,8 +11,7 @@ public:
 	{
 		pImmediateContext->PSSetShaderResources(iSlot, 1, &m_pTexSRV);
 	}
-	bool  Load(ID3D11Device* pDevice,
-							std::wstring filename);
+	bool  Load(ID3D11Device* pDevice,std::wstring filename);
 	bool  Release();
 };
 class TTextureMgr

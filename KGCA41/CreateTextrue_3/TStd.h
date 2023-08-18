@@ -13,6 +13,7 @@
 #include <dxgi.h>
 #include <d3dcompiler.h>			//D3DComplileFromFile
 #include "DirectXTex.h" // 기타
+#include "TUtils.h" // 기타
 #pragma comment (lib, "dxgi.lib") // d3d11.dll
 #pragma comment (lib, "d3d11.lib") // d3d11.dll
 #pragma comment (lib, "d3dcompiler.lib") // d3d11.dll
@@ -31,3 +32,7 @@
 #define TGAME_END return 0; };
 
 #define TGAME(s,w,h) TGAME_START;TGAME_REGISTER;TGAME_WINDOW(s,w,h);TGAME_RUN;TGAME_END;
+
+
+extern float   g_fGameTimer;
+extern float   g_fSecondPerFrame;

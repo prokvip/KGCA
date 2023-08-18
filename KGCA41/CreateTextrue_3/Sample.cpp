@@ -35,10 +35,18 @@ bool  Sample::Init()
         L"../../res/mapcontrol.png",
         L"../../res/103.tga"
     };
+
+    srand(time(NULL));
     for (int iObj = 0; iObj < 10; iObj++)
     {
-        TObject* pObj = new TObject;
+        TObject* pObj = new TPlaneObj;
         pObj->Set(m_pDevice, m_pImmediateContext);
+        pObj->SetPos(TVector3(randstep(-1.0f, +1.0f),
+                     randstep(-1.0f, +1.0f), 
+                     0));
+        pObj->m_vScale.x = randstep(0.1f, 0.2f);
+        pObj->m_vScale.y = randstep(0.1f, 0.2f); 
+        pObj->m_vScale.z = 1.0f; 
         pObj->Create( m_texMgr, texname[iObj % 4],
                       m_shaderMgr, L"Plane.hlsl");
         m_ObjList.push_back(pObj);
@@ -49,6 +57,23 @@ bool  Sample::Frame()
 { 
     for (auto obj : m_ObjList)
     {
+        //std::vector<PT_Vertex> vList;
+        //vList.resize(obj->m_VertexList.size());
+        //TMatrix matWorld,matScale, matRotation, matTranslate;
+        //matScale.Sclae(0.5f, 0.5f, 0.5f);
+        //matRotation.ZRotate( DegreeToRadian(g_fGameTimer*100.0f) );
+        //matTranslate.Translation(cosf(g_fGameTimer), 0, 0);
+        //matWorld = matScale * matRotation * matTranslate;
+        //for (int iVertex = 0; iVertex < obj->m_VertexList.size(); iVertex++)
+        //{
+        //    vList[iVertex].t = obj->m_VertexList[iVertex].t;
+        //    vList[iVertex].p = obj->m_VertexList[iVertex].p * matWorld;
+        //}
+        //// gpu Ã³¸®
+        //m_pImmediateContext->UpdateSubresource(
+        //    obj->m_pVertexBuffer,
+        //       0, nullptr, &vList.at(0), 0, 0);
+        //obj->SetPos(TVector3(cosf(g_fGameTimer), 0, 0));
         obj->Frame();
     }
     return true; 
@@ -58,6 +83,8 @@ bool  Sample::Render()
     m_pImmediateContext->OMSetBlendState(m_AlphaBlend, 0, -1);
     for (auto obj : m_ObjList)
     {
+        
+        obj->SetMatrix(nullptr, nullptr, nullptr);
         obj->Render();
     }
     return true; 

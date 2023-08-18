@@ -10,9 +10,9 @@ class TShader
 	ID3D11DomainShader*		m_pDS = nullptr;
 	ID3D11ComputeShader*	m_pCS = nullptr;
 	ID3D11GeometryShader*	m_pGS = nullptr;
-	
-public:
 	ID3DBlob* m_VertexShaderCode = nullptr;
+
+public:	
 	std::wstring   m_csName;
 	std::wstring   m_csPath;
 	LPVOID GetBufferPointer(void) const {

@@ -152,19 +152,28 @@
     <ClCompile Include="Sample.cpp" />
     <ClCompile Include="TCore.cpp" />
     <ClCompile Include="TDevice.cpp" />
+    <ClCompile Include="TMath.cpp" />
     <ClCompile Include="TObject.cpp" />
+    <ClCompile Include="TPlaneObj.cpp" />
     <ClCompile Include="TShaderMgr.cpp" />
     <ClCompile Include="TTextureMgr.cpp" />
+    <ClCompile Include="TTimer.cpp" />
+    <ClCompile Include="TUtils.cpp" />
     <ClCompile Include="TWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Sample.h" />
+    <ClInclude Include="TCollision.h" />
     <ClInclude Include="TCore.h" />
     <ClInclude Include="TDevice.h" />
+    <ClInclude Include="TMath.h" />
     <ClInclude Include="TObject.h" />
+    <ClInclude Include="TPlaneObj.h" />
     <ClInclude Include="TShaderMgr.h" />
     <ClInclude Include="TStd.h" />
     <ClInclude Include="TTextureMgr.h" />
+    <ClInclude Include="TTimer.h" />
+    <ClInclude Include="TUtils.h" />
     <ClInclude Include="TWindow.h" />
   </ItemGroup>
   <ItemGroup>

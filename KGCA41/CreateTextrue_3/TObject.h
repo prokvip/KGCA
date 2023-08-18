@@ -5,18 +5,33 @@
 
 struct PT_Vertex
 {
-    float x, y, z;
-    float u, v;
+    TVector3 p;
+    TVector2 t;
 };
-
+struct CB_Data
+{
+    TMatrix matWorld;
+    TMatrix matView;
+    TMatrix matProj;
+};
 
 class TObject
 {    
-    //TMatrix       m_matWorld;
+public:
+    TMatrix       m_matWorld;
+    TMatrix       m_matView;
+    TMatrix       m_matProj;
+    CB_Data       m_cbData;
     ID3D11Device* m_pDevice = nullptr;
     ID3D11DeviceContext* m_pImmediateContext = nullptr;
 public:
+    TVector3      m_vPos;
+    TVector3      m_vScale;
+    TVector3      m_vRotation;
+    void          SetPos(TVector3 p);
+public:
     ID3D11Buffer*           m_pVertexBuffer = nullptr;    
+    ID3D11Buffer*           m_pConstantBuffer = nullptr;
     ID3D11InputLayout*      m_pVertexLayout = nullptr;
 
     const TShader*          m_pShader = nullptr;
@@ -24,17 +39,19 @@ public:
     std::vector< PT_Vertex> m_VertexList;
 public:
     void Set(ID3D11Device* pDevice, ID3D11DeviceContext* pImmediateContext);
-    bool CreateVertexBuffer();
-    bool  LoadVertexShader();
-    bool  LoadPixelShader();
-    bool  CreateInputLayout();
-    bool  LoadTextureFile(std::wstring filename);
+    virtual bool  CreateVertexBuffer();
+    virtual bool  CreateConstantBuffer();
+    virtual bool  CreateInputLayout();
 public:
-    bool  Create(TTextureMgr& texMgr, std::wstring shaderFilename,
+    virtual bool  Create(TTextureMgr& texMgr, std::wstring shaderFilename,
                  TShaderMgr& shaderMgr, std::wstring texFilename);
-    bool  Init();
-    bool  Frame();
-    bool  Render();
-    bool  Release();
+    virtual bool  Init();
+    virtual bool  Frame();
+    virtual bool  Render();
+    virtual bool  Release();
+    virtual void  SetMatrix(TMatrix* matWorld, TMatrix* matView, TMatrix* matProj);
+public:
+    TObject();
+    virtual ~TObject() {}
 };
 
