@@ -40,7 +40,7 @@ public:
 	virtual bool    Frame()
 	{
 		TMatrix matScale, matRotation, matTranslate;
-		matScale.Sclae(m_vScale);
+		matScale.Scale(m_vScale);
 		matRotation.ZRotate(m_vRotation.z);
 		matTranslate.Translation(m_vPos);
 		m_matWorld = matScale * matRotation * matTranslate;

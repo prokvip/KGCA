@@ -2,11 +2,12 @@
 #include "TDevice.h"
 #include "TTimer.h"
 #include "TInput.h"
+#include "TCamera.h"
 class TCore : public TDevice
 {
 public:
-    TTimer          m_GameTimer;
-    TInput          m_GameInput;
+    TTimer          m_GameTimer;   
+    TCamera         m_MainCamera;
 public:
     virtual bool  Init();
     virtual bool  Frame();

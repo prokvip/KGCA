@@ -36,11 +36,24 @@ bool  Sample::Init()
         L"../../res/103.tga"
     };
 
+   
     srand(time(NULL));
     m_pMapObj = new TPlaneObj;
     m_pMapObj->Set(m_pDevice, m_pImmediateContext);
     m_pMapObj->SetScale(TVector3(1000.0f, 1000.0f, 1.0f));
     m_pMapObj->Create(m_texMgr, L"../../res/ground.png", m_shaderMgr, L"Plane.hlsl");
+    
+
+    m_pPlayer = new TPlayer;
+    m_pPlayer->Set(m_pDevice, m_pImmediateContext);
+    m_pPlayer->SetPos({0.0f,0.0f ,0.0f });
+    m_pPlayer->SetScale(TVector3(100.0f, 100.0f, 1.0f));
+    m_pPlayer->Create(  m_texMgr, L"../../res/blackhole2.png", 
+                        m_shaderMgr, L"Plane.hlsl");
+
+    m_MainCamera.Create(m_pPlayer->m_vPos,
+                       { (float)m_dwWindowWidth, (float)m_dwWindowHeight });
+
 
     for (int iObj = 0; iObj < 10; iObj++)
     {
@@ -57,28 +70,7 @@ bool  Sample::Init()
 }
 bool  Sample::Frame() 
 { 
-    if (m_GameInput.m_dwKeyState[VK_LBUTTON] == KEY_PUSH)
-    {
-        m_vCameraPos.x -= 500.0f * g_fSecondPerFrame;
-    }
-
-    if (m_GameInput.m_dwKeyState['A'] > KEY_UP)
-    {
-        m_vCameraPos.x -= 500.0f*g_fSecondPerFrame;
-    }
-    if (m_GameInput.m_dwKeyState['D'] > KEY_UP)
-    {
-        m_vCameraPos.x += 500.0f * g_fSecondPerFrame;
-    }
-    if (m_GameInput.m_dwKeyState['W'] > KEY_UP)
-    {
-        m_vCameraPos.y += 500.0f * g_fSecondPerFrame;
-    }
-    if (m_GameInput.m_dwKeyState['S'] > KEY_UP)
-    {
-        m_vCameraPos.y -= 500.0f * g_fSecondPerFrame;
-    }
-
+    m_pPlayer->Frame();
     m_pMapObj->Frame();
 
     for (auto obj : m_NpcList)
@@ -90,24 +82,23 @@ bool  Sample::Frame()
 }
 bool  Sample::Render() 
 {    
-    m_pImmediateContext->OMSetBlendState(m_AlphaBlend, 0, -1);
-    m_matView._41 = -m_vCameraPos.x;
-    m_matView._42 = -m_vCameraPos.y;
-    m_matView._43 = -m_vCameraPos.z;
-    m_matOrthoProjection._11 = 2.0f / ((float)m_dwWindowWidth);
-    m_matOrthoProjection._22 = 2.0f / ((float)m_dwWindowHeight);
-    // ¿ùµåÁÂÇ¥ ¹üÀ§(-10 ~ +10)  camera (0,0)
-    // -10 ~ +10 camera (-5,0)°¡ ¿øÁ¡ÀÌ µÈ´Ù.
-    // ºä ÁÂÇ¥ -> -5 ~ 15
-    // Åõ¿µÁÂÇ¥ -> 9 ~ 10 ~ 11
-    // Åõ¿µÁÂÇ¥ -> -1 ~ 0 ~ +1
-    m_pMapObj->SetMatrix(nullptr, &m_matView, &m_matOrthoProjection);
+    m_pImmediateContext->OMSetBlendState(m_AlphaBlend, 0, -1); 
+    
+    m_MainCamera.m_vCameraPos = m_pPlayer->m_vPos;
+    m_pMapObj->SetMatrix(nullptr, &m_MainCamera.m_matView, 
+                                  &m_MainCamera.m_matOrthoProjection);
     m_pMapObj->Render();
+
     for (auto obj : m_NpcList)
     {   
-        obj->SetMatrix(nullptr, &m_matView, &m_matOrthoProjection);
+        obj->SetMatrix(nullptr, &m_MainCamera.m_matView,
+                                &m_MainCamera.m_matOrthoProjection);
         obj->Render();
     }
+
+    m_pPlayer->SetMatrix(nullptr, &m_MainCamera.m_matView,
+                                  &m_MainCamera.m_matOrthoProjection);
+    m_pPlayer->Render();
     return true; 
 }
 bool  Sample::Release()
@@ -115,6 +106,10 @@ bool  Sample::Release()
     m_pMapObj->Release();
     delete m_pMapObj;
     m_pMapObj = nullptr;
+
+    m_pPlayer->Release();
+    delete m_pPlayer;
+    m_pPlayer = nullptr;
 
     for (auto obj : m_NpcList)
     {

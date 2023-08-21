@@ -12,10 +12,19 @@ class TInput
 public:
     POINT m_MousePos;
     DWORD m_dwKeyState[256];
+    static TInput& GetInstance()
+    {
+        static TInput input;
+        return input;
+    }
 public:
     bool  Init();
     bool  Frame();
     bool  Render();
     bool  Release();
+private:
+    TInput() {};
+public:
+    ~TInput() {}
 };
 

@@ -257,13 +257,13 @@ public:
         _43 = z;
     }
 
-    void Sclae(const TVector3& v)
+    void Scale(const TVector3& v)
     {
         _11 = v.x;
         _22 = v.y;
         _33 = v.z;
     }
-    void Sclae(float x, float y, float z)
+    void Scale(float x, float y, float z)
     {
         _11 = x;
         _22 = y;
