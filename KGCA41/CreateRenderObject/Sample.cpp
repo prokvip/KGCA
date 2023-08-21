@@ -42,16 +42,16 @@ bool  Sample::Init()
     srand(time(NULL));
     m_pMapObj = new TPlaneObj;
     m_pMapObj->Set(m_pDevice, m_pImmediateContext);
+    m_pMapObj->SetPos({ 0.0f,0.0f ,0.0f });
     m_pMapObj->SetScale(TVector3(g_fMapSizeX, g_fMapSizeY, 1.0f));
     m_pMapObj->Create(L"../../res/ground.png", L"Plane.hlsl");
     
 
     m_pPlayer = new TPlayer;
     m_pPlayer->Set(m_pDevice, m_pImmediateContext);
-    m_pPlayer->SetPos({0.0f,0.0f ,0.0f });
+    m_pPlayer->SetPos({-30000.0f,0.0f ,0.0f });
     m_pPlayer->SetScale(TVector3(50.0f, 50.0f, 1.0f));
-    m_pPlayer->Create(  L"../../res/blackhole2.png", 
-                        L"Plane.hlsl");
+    m_pPlayer->Create(  L"../../res/blackhole2.png", L"Plane.hlsl");
 
     m_MainCamera.Create(m_pPlayer->m_vPos,
                        { (float)m_dwWindowWidth, (float)m_dwWindowHeight });
@@ -64,8 +64,7 @@ bool  Sample::Init()
         pObj->SetPos(TVector3(randstep(-g_fMapSizeX, +g_fMapSizeX),
                      randstep(-g_fMapSizeY, +g_fMapSizeY), 0));
         pObj->SetScale(TVector3(50.0f, 50.0f, 1.0f));
-        pObj->Create( L"../../res/air.png",
-                      L"Plane.hlsl");
+        pObj->Create( L"../../res/air.png",L"Plane.hlsl");
         m_NpcList.push_back(pObj);
     }
     return true; 

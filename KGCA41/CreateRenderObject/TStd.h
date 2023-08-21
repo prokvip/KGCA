@@ -33,8 +33,8 @@
 
 #define TGAME(s,w,h) TGAME_START;TGAME_REGISTER;TGAME_WINDOW(s,w,h);TGAME_RUN;TGAME_END;
 
-static float g_fMapSizeX = 800.0f;
-static float g_fMapSizeY = 3800.0f;
+static float g_fMapSizeX = 3000.0f;
+static float g_fMapSizeY = 3000.0f;
 
 static void T_DebugString(const WCHAR* msg)
 {
