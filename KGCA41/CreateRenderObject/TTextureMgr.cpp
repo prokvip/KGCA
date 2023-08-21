@@ -95,16 +95,21 @@ bool TTextureMgr::Get(std::wstring key, TTexture& ret)
     ret = *(iter->second);
     return true;
 }
-TTextureMgr::TTextureMgr()
-{
-
-}
-TTextureMgr::~TTextureMgr()
+bool TTextureMgr::Release()
 {
     for (auto& data : m_list)
     {
         data.second->Release();
         delete data.second;
     }
-    m_list.clear();
+    m_list.clear();  
+    return true;
+}
+TTextureMgr::TTextureMgr()
+{
+
+}
+TTextureMgr::~TTextureMgr()
+{
+    Release();
 }

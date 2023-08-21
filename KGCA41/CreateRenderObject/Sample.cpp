@@ -1,11 +1,13 @@
 #include "Sample.h"
-bool  Sample::Init() 
-{   
+#include "TShaderMgr.h"
+#include "TTextureMgr.h"
+void  Sample::CreateBlendState()
+{
     // alpha blending
     D3D11_BLEND_DESC bsd;
     ZeroMemory(&bsd, sizeof(bsd));
     bsd.RenderTarget[0].BlendEnable = true;
-    bsd.RenderTarget[0].SrcBlend =  D3D11_BLEND_SRC_ALPHA;
+    bsd.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
     bsd.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
     bsd.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
     // 알파블랜딩 공식 - 소스(float4(0,1,0,0.5f)), 대상(1,0,0,1)
@@ -25,9 +27,10 @@ bool  Sample::Init()
 
     bsd.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
     m_pDevice->CreateBlendState(&bsd, &m_AlphaBlend);
-
-    m_texMgr.Set(m_pDevice, m_pImmediateContext);
-    m_shaderMgr.Set(m_pDevice, m_pImmediateContext);
+}
+bool  Sample::Init()
+{
+    CreateBlendState();  
 
     std::wstring texname[] = { 
         //L"../../res/ground.png", // path=../../res/, name = kgcabk.bmp
@@ -35,21 +38,20 @@ bool  Sample::Init()
         L"../../res/mapcontrol.png",
         L"../../res/103.tga"
     };
-
    
     srand(time(NULL));
     m_pMapObj = new TPlaneObj;
     m_pMapObj->Set(m_pDevice, m_pImmediateContext);
-    m_pMapObj->SetScale(TVector3(1000.0f, 1000.0f, 1.0f));
-    m_pMapObj->Create(m_texMgr, L"../../res/ground.png", m_shaderMgr, L"Plane.hlsl");
+    m_pMapObj->SetScale(TVector3(g_fMapSizeX, g_fMapSizeY, 1.0f));
+    m_pMapObj->Create(L"../../res/ground.png", L"Plane.hlsl");
     
 
     m_pPlayer = new TPlayer;
     m_pPlayer->Set(m_pDevice, m_pImmediateContext);
     m_pPlayer->SetPos({0.0f,0.0f ,0.0f });
-    m_pPlayer->SetScale(TVector3(100.0f, 100.0f, 1.0f));
-    m_pPlayer->Create(  m_texMgr, L"../../res/blackhole2.png", 
-                        m_shaderMgr, L"Plane.hlsl");
+    m_pPlayer->SetScale(TVector3(50.0f, 50.0f, 1.0f));
+    m_pPlayer->Create(  L"../../res/blackhole2.png", 
+                        L"Plane.hlsl");
 
     m_MainCamera.Create(m_pPlayer->m_vPos,
                        { (float)m_dwWindowWidth, (float)m_dwWindowHeight });
@@ -57,13 +59,13 @@ bool  Sample::Init()
 
     for (int iObj = 0; iObj < 10; iObj++)
     {
-        TObject* pObj = new TNpc;
+        TObject* pObj = new TNpcObj;
         pObj->Set(m_pDevice, m_pImmediateContext);
-        pObj->SetPos(TVector3(randstep(-1000.0f, +1000.0f),
-                     randstep(-1000.0f, +1000.0f), 0));
+        pObj->SetPos(TVector3(randstep(-g_fMapSizeX, +g_fMapSizeX),
+                     randstep(-g_fMapSizeY, +g_fMapSizeY), 0));
         pObj->SetScale(TVector3(50.0f, 50.0f, 1.0f));
-        pObj->Create( m_texMgr, L"../../res/air.png",
-                      m_shaderMgr, L"Plane.hlsl");
+        pObj->Create( L"../../res/air.png",
+                      L"Plane.hlsl");
         m_NpcList.push_back(pObj);
     }
     return true; 

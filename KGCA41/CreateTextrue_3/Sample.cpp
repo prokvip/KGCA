@@ -1,11 +1,11 @@
 #include "Sample.h"
-bool  Sample::Init() 
-{   
+void  Sample::CreateBlendState()
+{
     // alpha blending
     D3D11_BLEND_DESC bsd;
     ZeroMemory(&bsd, sizeof(bsd));
     bsd.RenderTarget[0].BlendEnable = true;
-    bsd.RenderTarget[0].SrcBlend =  D3D11_BLEND_SRC_ALPHA;
+    bsd.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
     bsd.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
     bsd.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
     // 알파블랜딩 공식 - 소스(float4(0,1,0,0.5f)), 대상(1,0,0,1)
@@ -25,7 +25,10 @@ bool  Sample::Init()
 
     bsd.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
     m_pDevice->CreateBlendState(&bsd, &m_AlphaBlend);
-
+}
+bool  Sample::Init() 
+{   
+    CreateBlendState();
     m_texMgr.Set(m_pDevice, m_pImmediateContext);
     m_shaderMgr.Set(m_pDevice, m_pImmediateContext);
 

@@ -149,11 +149,7 @@ bool TShaderMgr::Get(std::wstring key, TShader& ret)
     ret = *(iter->second);
     return true;
 }
-TShaderMgr::TShaderMgr()
-{
-
-}
-TShaderMgr::~TShaderMgr()
+bool TShaderMgr::Release()
 {
     for (auto& data : m_list)
     {
@@ -161,4 +157,13 @@ TShaderMgr::~TShaderMgr()
         delete data.second;
     }
     m_list.clear();
+    return true;
+}
+TShaderMgr::TShaderMgr()
+{
+
+}
+TShaderMgr::~TShaderMgr()
+{
+    Release();
 }

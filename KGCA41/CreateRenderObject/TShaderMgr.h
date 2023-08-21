@@ -42,15 +42,22 @@ class TShaderMgr
 	ID3D11DeviceContext* m_pImmediateContext = nullptr;
 	using tList = std::map<std::wstring, TShader*>;
 public:
+	static TShaderMgr& GetInstance()
+	{
+		static TShaderMgr input;
+		return input;
+	}
+public:
 	tList   m_list;
 public:
 	void Set(ID3D11Device* pDevice, ID3D11DeviceContext* pImmediateContext);
-
 	const TShader* Load(std::wstring szFilepath);
 	const TShader* GetPtr(std::wstring key);
 	bool	  Get(std::wstring key, TShader& ret);
-public:
+	bool	  Release();
+private:
 	TShaderMgr();
+public:
 	virtual ~TShaderMgr();
 };
-
+#define I_Shader TShaderMgr::GetInstance()

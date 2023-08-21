@@ -6,6 +6,9 @@ bool  TCore::Release() { return true; }
 bool  TCore::EngineInit()
 {
     TDevice::Init();
+    I_Tex.Set(m_pDevice, m_pImmediateContext);
+    I_Shader.Set(m_pDevice, m_pImmediateContext);
+
     m_GameTimer.Init();    
     TInput::GetInstance().Init();
     m_MainCamera.Init();

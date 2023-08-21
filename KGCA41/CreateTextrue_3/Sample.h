@@ -13,5 +13,7 @@ public:
     bool  Frame();
     bool  Render();
     bool  Release();
+public:
+    void  CreateBlendState();
 };
 

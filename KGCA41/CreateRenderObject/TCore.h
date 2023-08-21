@@ -3,6 +3,9 @@
 #include "TTimer.h"
 #include "TInput.h"
 #include "TCamera.h"
+#include "TShaderMgr.h"
+#include "TTextureMgr.h"
+
 class TCore : public TDevice
 {
 public:

@@ -19,6 +19,27 @@ bool TPlayer::Frame()
         m_vPos.y -= 500.0f * g_fSecondPerFrame;
     }
 
+    float fHalfWidth  = g_fMapSizeX / 2.0f;
+    float fHalfHeight = g_fMapSizeY / 2.0f;
+    float fSizeHalfWidth = m_vScale.x;
+    float fSizeHalfHeight = m_vScale.y;
+    if (m_vPos.x < -fHalfWidth + fSizeHalfWidth)
+    {
+        m_vPos.x = -fHalfWidth + fSizeHalfWidth;
+    }
+    if (m_vPos.y < -fHalfHeight+ fSizeHalfHeight)
+    {
+        m_vPos.y = -fHalfHeight + fSizeHalfHeight;
+    }
+    if (m_vPos.x > fHalfWidth - fSizeHalfWidth)
+    {
+        m_vPos.x = fHalfWidth - fSizeHalfWidth;
+    }
+    if (m_vPos.y > fHalfHeight - fSizeHalfHeight)
+    {
+        m_vPos.y = fHalfHeight - fSizeHalfHeight;
+    }
+
     TMatrix matScale, matRotation, matTranslate;
     matScale.Scale(m_vScale);
     matRotation.ZRotate(m_vRotation.z);

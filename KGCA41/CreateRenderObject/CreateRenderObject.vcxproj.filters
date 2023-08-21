@@ -1,0 +1,127 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="Sample.cpp" />
+    <ClCompile Include="TPlaneObj.cpp">
+      <Filter>Object</Filter>
+    </ClCompile>
+    <ClCompile Include="TObject.cpp">
+      <Filter>Object</Filter>
+    </ClCompile>
+    <ClCompile Include="TNpcObj.cpp">
+      <Filter>Object</Filter>
+    </ClCompile>
+    <ClCompile Include="TPlayer.cpp">
+      <Filter>Object</Filter>
+    </ClCompile>
+    <ClCompile Include="TShaderMgr.cpp">
+      <Filter>Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="TTextureMgr.cpp">
+      <Filter>Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="TCamera.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="TCore.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="TDevice.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="TInput.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="TTimer.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="TUtils.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="TWindow.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="TMath.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="TDxObject.cpp">
+      <Filter>Renderer</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Sample.h" />
+    <ClInclude Include="TPlaneObj.h">
+      <Filter>Object</Filter>
+    </ClInclude>
+    <ClInclude Include="TObject.h">
+      <Filter>Object</Filter>
+    </ClInclude>
+    <ClInclude Include="TNpcObj.h">
+      <Filter>Object</Filter>
+    </ClInclude>
+    <ClInclude Include="TPlayer.h">
+      <Filter>Object</Filter>
+    </ClInclude>
+    <ClInclude Include="TShaderMgr.h">
+      <Filter>Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="TTextureMgr.h">
+      <Filter>Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="TCamera.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="TCore.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="TDevice.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="TInput.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="TStd.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="TTimer.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="TUtils.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="TWindow.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="TMath.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="TCollision.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="TDxObject.h">
+      <Filter>Renderer</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Object">
+      <UniqueIdentifier>{20057220-633a-40dc-8d63-aedc15ff6280}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Manager">
+      <UniqueIdentifier>{69b9ef6c-0cf8-4ee6-bd57-67092ee551bc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core">
+      <UniqueIdentifier>{1781aaa5-f33f-4979-871e-717db0fc69f9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader">
+      <UniqueIdentifier>{5e0218a2-f917-4691-a79b-6b167603210f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Renderer">
+      <UniqueIdentifier>{e4eb751c-9759-4130-b53a-030d7e3db5fa}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Plane.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
+  </ItemGroup>
+</Project>
