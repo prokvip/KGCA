@@ -33,6 +33,12 @@
 
 #define TGAME(s,w,h) TGAME_START;TGAME_REGISTER;TGAME_WINDOW(s,w,h);TGAME_RUN;TGAME_END;
 
-
-extern float   g_fGameTimer;
-extern float   g_fSecondPerFrame;
+static void T_DebugString(const WCHAR* msg)
+{
+#ifdef _DEBUG
+	OutputDebugString(msg);
+#endif
+}
+extern HWND		g_hWnd;
+extern float	g_fGameTimer;
+extern float	g_fSecondPerFrame;

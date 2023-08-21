@@ -57,29 +57,24 @@ bool  Sample::Init()
 }
 bool  Sample::Frame() 
 { 
-    DWORD dwKeyState[256] = { 0, };
-    for (int ikey = 0; ikey < 256; ikey++)
+    if (m_GameInput.m_dwKeyState[VK_LBUTTON] == KEY_PUSH)
     {
-        SHORT s = GetAsyncKeyState(ikey);
-        if (s & 0x8000) // 1000 0000 0000 0000
-        {
-            dwKeyState[ikey] = 1;
-        }
+        m_vCameraPos.x -= 500.0f * g_fSecondPerFrame;
     }
 
-    if (dwKeyState['A'] == 1)
+    if (m_GameInput.m_dwKeyState['A'] > KEY_UP)
     {
         m_vCameraPos.x -= 500.0f*g_fSecondPerFrame;
     }
-    if (dwKeyState['D'] == 1)
+    if (m_GameInput.m_dwKeyState['D'] > KEY_UP)
     {
         m_vCameraPos.x += 500.0f * g_fSecondPerFrame;
     }
-    if (dwKeyState['W'] == 1)
+    if (m_GameInput.m_dwKeyState['W'] > KEY_UP)
     {
         m_vCameraPos.y += 500.0f * g_fSecondPerFrame;
     }
-    if (dwKeyState['S'] == 1)
+    if (m_GameInput.m_dwKeyState['S'] > KEY_UP)
     {
         m_vCameraPos.y -= 500.0f * g_fSecondPerFrame;
     }
