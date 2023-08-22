@@ -1,6 +1,7 @@
 #include "Sample.h"
 #include "TShaderMgr.h"
 #include "TTextureMgr.h"
+
 void  Sample::CreateBlendState()
 {
     // alpha blending
