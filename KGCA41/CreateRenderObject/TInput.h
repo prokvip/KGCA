@@ -28,3 +28,4 @@ public:
     ~TInput() {}
 };
 
+#define I_Input TInput::GetInstance()

@@ -97,6 +97,26 @@ bool  Sample::Frame()
         {
            obj->m_bDead = true;
         }
+
+        float fHalfWidth = m_dwWindowWidth / 2.0f;
+        float fHalfHeight = m_dwWindowHeight / 2.0f;
+
+        // client
+        TVector2 vMouse = { (float)I_Input.m_MousePos.x, (float)I_Input.m_MousePos.y };
+        // world
+        TVector2 vMouseWorldLT = { m_MainCamera.m_vCameraPos.x - fHalfWidth,
+                                   m_MainCamera.m_vCameraPos.y + fHalfHeight };
+        vMouse.x = vMouseWorldLT.x+ vMouse.x;
+        vMouse.y = vMouseWorldLT.y- vMouse.y;
+        std::wstring msg = std::to_wstring(vMouse.x);
+        msg += L",";
+        msg += std::to_wstring(vMouse.y);
+        msg += L"\n";
+        T_DebugString(msg.c_str());
+        if (obj->m_tRT.ToPoint(vMouse))
+        {
+            obj->m_bDead = true;
+        }
     }
     return true; 
 }
