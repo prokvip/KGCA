@@ -3,12 +3,16 @@
 class TObject : public TDxObject
 {     
 public:
-    TVector3      m_vPos;
-    TVector3      m_vScale;
-    TVector3      m_vRotation;
-    TMatrix       m_matWorld;
-    TMatrix       m_matView;
-    TMatrix       m_matProj;
+    bool            m_bDead=false;
+public:
+    TVector3        m_vPos;
+    TVector3        m_vScale;
+    TVector3        m_vRotation;
+    TMatrix         m_matWorld;
+    TMatrix         m_matView;
+    TMatrix         m_matProj;
+    TRect	        m_tRT;
+    virtual void    SetRect(TVector2& c, float w, float h);
 public:
     void          SetPos(TVector3 p);
     void          SetScale(TVector3 s);

@@ -12,7 +12,7 @@ struct TRect
     TVector2 m_Max;
     TVector2 v;
     TVector2 s;
-    bool Intersect(TRect& p, TRect& ret);
+
     bool operator == (TRect& p);
     bool operator != (TRect& p);
     TRect operator + (TRect& p);

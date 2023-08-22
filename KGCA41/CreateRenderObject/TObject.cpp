@@ -2,7 +2,10 @@
 #include "DirectXTex.h" // ±‚≈∏
 #include "TShaderMgr.h"
 #include "TTextureMgr.h"
-
+void   TObject::SetRect(TVector2& c, float w, float h)
+{
+    m_tRT.Set(c, w, h);
+}
 void  TObject::SetPos(TVector3 p)
 {
     m_vPos = p;

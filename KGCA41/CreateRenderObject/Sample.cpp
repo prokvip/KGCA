@@ -45,13 +45,16 @@ bool  Sample::Init()
     m_pMapObj->Set(m_pDevice, m_pImmediateContext);
     m_pMapObj->SetPos({ 0.0f,0.0f ,0.0f });
     m_pMapObj->SetScale(TVector3(g_fMapSizeX, g_fMapSizeY, 1.0f));
-    m_pMapObj->Create(L"../../res/ground.png", L"Plane.hlsl");
+    m_pMapObj->Create(L"../../res/topdownmap.jpg", L"Plane.hlsl");
     
 
     m_pPlayer = new TPlayer;
     m_pPlayer->Set(m_pDevice, m_pImmediateContext);
-    m_pPlayer->SetPos({-30000.0f,0.0f ,0.0f });
+    m_pPlayer->SetPos({-g_fMapSizeX,0.0f ,0.0f });
     m_pPlayer->SetScale(TVector3(50.0f, 50.0f, 1.0f));
+    TVector2 rt = { m_pPlayer->m_vPos.x, m_pPlayer->m_vPos.y };
+    m_pPlayer->SetRect(rt,
+                       m_pPlayer->m_vScale.x*2.0f, m_pPlayer->m_vScale.y*2.0f);
     m_pPlayer->Create(  L"../../res/blackhole2.png", L"Plane.hlsl");
 
     m_MainCamera.Create(m_pPlayer->m_vPos,
@@ -65,6 +68,10 @@ bool  Sample::Init()
         pObj->SetPos(TVector3(randstep(-g_fMapSizeX, +g_fMapSizeX),
                      randstep(-g_fMapSizeY, +g_fMapSizeY), 0));
         pObj->SetScale(TVector3(50.0f, 50.0f, 1.0f));
+        TVector2 rt = { pObj->m_vPos.x, pObj->m_vPos.y };
+        pObj->SetRect(rt,
+            pObj->m_vScale.x * 2.0f, pObj->m_vScale.y * 2.0f);
+
         pObj->Create( L"../../res/air.png",L"Plane.hlsl");
         m_NpcList.push_back(pObj);
     }
@@ -77,8 +84,19 @@ bool  Sample::Frame()
 
     for (auto obj : m_NpcList)
     {       
-        obj->Move(g_fSecondPerFrame);
-        obj->Frame();
+        if (obj->m_bDead == false)
+        {
+            obj->Move(g_fSecondPerFrame);
+            obj->Frame();
+        }
+    }
+
+    for (auto obj : m_NpcList)
+    {
+        if (m_pPlayer->m_tRT.ToRect(obj->m_tRT))
+        {
+           obj->m_bDead = true;
+        }
     }
     return true; 
 }
@@ -91,16 +109,26 @@ bool  Sample::Render()
                                   &m_MainCamera.m_matOrthoProjection);
     m_pMapObj->Render();
 
+    bool gamefinish = true;
     for (auto obj : m_NpcList)
     {   
-        obj->SetMatrix(nullptr, &m_MainCamera.m_matView,
-                                &m_MainCamera.m_matOrthoProjection);
-        obj->Render();
+        if (obj->m_bDead == false)
+        {
+            obj->SetMatrix(nullptr, &m_MainCamera.m_matView,
+                &m_MainCamera.m_matOrthoProjection);
+            obj->Render();
+            gamefinish = false;
+        }
     }
 
     m_pPlayer->SetMatrix(nullptr, &m_MainCamera.m_matView,
                                   &m_MainCamera.m_matOrthoProjection);
     m_pPlayer->Render();
+
+    if (gamefinish)
+    {
+        return false;
+    }
     return true; 
 }
 bool  Sample::Release()

@@ -1,8 +1,5 @@
 #include "TUtils.h"
-bool TRect::Intersect(TRect& p, TRect& ret)
-{
-    return false;
-}
+
 bool TRect::operator == (TRect& p)
 {
     if (fabs(v.x - p.v.x) > 0.0001f)
@@ -27,12 +24,12 @@ bool TRect::operator != (TRect& p)
 TRect TRect::operator + (TRect& p)
 {
     TRect rt;
-    float fMinX = min(v.x, p.v.x);
-    float fMinY = min(v.y, p.v.y);
-    float fMaxX = max(m_Point[2].x, p.m_Point[2].x);
-    float fMaxY = max(m_Point[2].y, p.m_Point[2].y);
-    TVector2 pos = { fMinX, fMinY };
-    rt.Set(pos, fMaxX - fMinX, fMaxY - fMinY);
+    float fMinX = min(m_Min.x, p.m_Min.x);
+    float fMinY = min(m_Min.y, p.m_Min.y);
+    float fMaxX = max(m_Max.x, p.m_Max.x);
+    float fMaxY = max(m_Max.y, p.m_Max.y);
+    TVector2 center = { (fMinX+ fMaxX)*0.5f, (fMinY+ fMaxY)*0.5f };
+    rt.Set(center, fMaxX - fMinX, fMaxY - fMinY);
     return rt;
 }
 TRect TRect::operator - (TRect& p)
@@ -47,7 +44,8 @@ TRect TRect::operator - (TRect& p)
         float fy = (m_Min.y > p.m_Min.y) ? m_Min.y : p.m_Min.y;
         float right = (m_Max.x < p.m_Max.x) ? m_Max.x : p.m_Max.x;
         float bottom = (m_Max.y < p.m_Max.y) ? m_Max.y : p.m_Max.y;
-        rt.Set(fx, fy, right - fx, bottom - fy);
+        TVector2 center = { (fx + right) * 0.5f, (fy + bottom) * 0.5f };
+        rt.Set(center, right - fx, bottom - fy);
         rt.m_bEnable = true;
     }
     return rt;
@@ -80,6 +78,7 @@ TRect TRect::operator / (float fValue)
 }
 void TRect::Set(TVector2 p)
 {
+    m_Center = p;
     v = { p.x, p.y };
     s = { m_fWidth, m_fHeight };
     Set(m_fWidth, m_fHeight);
@@ -91,22 +90,25 @@ void TRect::Set(float fw, float fh)
     m_Half = { m_fWidth * 0.5f,m_fHeight * 0.5f };
     m_Point[0] = { v.x, v.y };
     m_Point[1] = { v.x + m_fWidth, v.y };
-    m_Point[2] = { v.x + m_fWidth, v.y + m_fHeight };
-    m_Point[3] = { v.x, v.y + m_fHeight };
-    m_Center = (m_Point[0] + m_Point[2]) * 0.5f;
-    m_Min = m_Point[0];
-    m_Max = m_Point[2];
+    m_Point[2] = { v.x + m_fWidth, v.y - m_fHeight };
+    m_Point[3] = { v.x, v.y - m_fHeight };    
+    m_Max = m_Point[1];
+    m_Min = m_Point[3];
 }
 void TRect::Set(TVector2 p, float fw, float fh)
 {
-    v = p;
+    m_Center = p;
+    v = { p.x - fw / 2.0f, p.y + fh / 2.0f };
     s = { fw, fh };
     Set(fw, fh);
 }
 void TRect::Set(float fx, float fy, float fw, float fh)
 {
-    v = { fx, fy };
+    m_Center.x = fx;
+    m_Center.y = fy;
     s = { fw, fh };
+    v = { fx-fw/2.0f, fy+ fh/2.0f };
+    
     Set(fw, fh);
 }
 
