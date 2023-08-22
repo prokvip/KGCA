@@ -2,6 +2,9 @@
 #include "TShaderMgr.h"
 #include "TTextureMgr.h"
 
+float g_fMapHalfSizeX = 400.0f;
+float g_fMapHalfSizeY = 300.0f;
+
 void  Sample::CreateBlendState()
 {
     // alpha blending
@@ -44,13 +47,13 @@ bool  Sample::Init()
     m_pMapObj = new TPlaneObj;
     m_pMapObj->Set(m_pDevice, m_pImmediateContext);
     m_pMapObj->SetPos({ 0.0f,0.0f ,0.0f });
-    m_pMapObj->SetScale(TVector3(g_fMapSizeX, g_fMapSizeY, 1.0f));
+    m_pMapObj->SetScale(TVector3(g_fMapHalfSizeX, g_fMapHalfSizeY, 1.0f));
     m_pMapObj->Create(L"../../res/topdownmap.jpg", L"Plane.hlsl");
     
 
     m_pPlayer = new TPlayer;
     m_pPlayer->Set(m_pDevice, m_pImmediateContext);
-    m_pPlayer->SetPos({-g_fMapSizeX,0.0f ,0.0f });
+    m_pPlayer->SetPos({-g_fMapHalfSizeX,0.0f ,0.0f });
     m_pPlayer->SetScale(TVector3(50.0f, 50.0f, 1.0f));
     TVector2 rt = { m_pPlayer->m_vPos.x, m_pPlayer->m_vPos.y };
     m_pPlayer->SetRect(rt,
@@ -65,8 +68,8 @@ bool  Sample::Init()
     {
         TObject* pObj = new TNpcObj;
         pObj->Set(m_pDevice, m_pImmediateContext);
-        pObj->SetPos(TVector3(randstep(-g_fMapSizeX, +g_fMapSizeX),
-                     randstep(-g_fMapSizeY, +g_fMapSizeY), 0));
+        pObj->SetPos(TVector3(randstep(-g_fMapHalfSizeX, +g_fMapHalfSizeX),
+                     randstep(-g_fMapHalfSizeY, +g_fMapHalfSizeY), 0));
         pObj->SetScale(TVector3(50.0f, 50.0f, 1.0f));
         TVector2 rt = { pObj->m_vPos.x, pObj->m_vPos.y };
         pObj->SetRect(rt,

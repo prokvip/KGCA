@@ -21,21 +21,21 @@ bool TPlayer::Frame()
 
     float fSizeHalfWidth = m_vScale.x;
     float fSizeHalfHeight = m_vScale.y;
-    if (m_vPos.x < -g_fMapSizeX + fSizeHalfWidth)
+    if (m_vPos.x < -g_fMapHalfSizeX + fSizeHalfWidth)
     {
-        m_vPos.x = -g_fMapSizeX + fSizeHalfWidth;
+        m_vPos.x = -g_fMapHalfSizeX + fSizeHalfWidth;
     }
-    if (m_vPos.y < -g_fMapSizeY + fSizeHalfHeight)
+    if (m_vPos.y < -g_fMapHalfSizeY + fSizeHalfHeight)
     {
-        m_vPos.y = -g_fMapSizeY + fSizeHalfHeight;
+        m_vPos.y = -g_fMapHalfSizeY + fSizeHalfHeight;
     }
-    if (m_vPos.x > g_fMapSizeX - fSizeHalfWidth)
+    if (m_vPos.x > g_fMapHalfSizeX - fSizeHalfWidth)
     {
-        m_vPos.x = g_fMapSizeX - fSizeHalfWidth;
+        m_vPos.x = g_fMapHalfSizeX - fSizeHalfWidth;
     }
-    if (m_vPos.y > g_fMapSizeY - fSizeHalfHeight)
+    if (m_vPos.y > g_fMapHalfSizeY - fSizeHalfHeight)
     {
-        m_vPos.y = g_fMapSizeY - fSizeHalfHeight;
+        m_vPos.y = g_fMapHalfSizeY - fSizeHalfHeight;
     }
     // 충돌데이터 업데이트( 회전 처리 미반영 )
     TVector2 rt = { m_vPos.x, m_vPos.y };
