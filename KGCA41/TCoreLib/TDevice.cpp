@@ -15,7 +15,7 @@ bool  TDevice::Init()
     SwapChainDesc.Windowed = true;
 
     D3D_DRIVER_TYPE DriverType = D3D_DRIVER_TYPE_HARDWARE;
-    UINT Flags = 0;
+    UINT Flags = D3D11_CREATE_DEVICE_BGRA_SUPPORT;
     D3D_FEATURE_LEVEL pFeatureLevels = D3D_FEATURE_LEVEL_11_0;
     // 1) 디바이스
     HRESULT hr = D3D11CreateDeviceAndSwapChain(
