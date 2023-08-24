@@ -1,6 +1,7 @@
 #pragma once
 #include <Windows.h>
 #include <iostream>
+#include <string>
 #pragma comment(lib, "winmm.lib") //timeGetTime()
 class TTimer
 {

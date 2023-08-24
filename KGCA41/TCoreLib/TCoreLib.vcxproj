@@ -168,6 +168,7 @@ copy "..\\..\\output\\TCoreLib.lib" "..\\..\\TCoreLib\\lib"</Command>
     <ClInclude Include="TTimer.h" />
     <ClInclude Include="TUtils.h" />
     <ClInclude Include="TWindow.h" />
+    <ClInclude Include="TWriter.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="DirectXTex.inl" />
@@ -196,6 +197,7 @@ copy "..\\..\\output\\TCoreLib.lib" "..\\..\\TCoreLib\\lib"</Command>
     <ClCompile Include="TTimer.cpp" />
     <ClCompile Include="TUtils.cpp" />
     <ClCompile Include="TWindow.cpp" />
+    <ClCompile Include="TWriter.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

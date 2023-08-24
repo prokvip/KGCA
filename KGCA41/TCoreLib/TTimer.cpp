@@ -1,4 +1,5 @@
 #include "TTimer.h"
+#include "TWriter.h"
 float	g_fGameTimer = 0.0f;
 float   g_fSecondPerFrame = 0.0f;
 
@@ -35,7 +36,16 @@ int   TTimer::GetFPS()
 }
 bool	TTimer::Render()
 {
-	std::cout << "[FPS]" << GetFPS() << " [GT]" << m_fGameTimer << " [SPF]" << m_fSecondPerFrame << std::endl;
+	std::wstring msg = L"[FPS]";
+	msg += std::to_wstring(GetFPS());
+	msg += L"[GT]";
+	msg += std::to_wstring(m_fGameTimer);
+	msg += L"[SPF]";
+	msg += std::to_wstring(m_fSecondPerFrame);
+
+	I_Writer.AddText(
+		msg.c_str(), 0, 0,
+		{ 1.0f, 1.0f, 0.0f, 1.0f });	
 	return true;
 }
 bool	TTimer::Release()

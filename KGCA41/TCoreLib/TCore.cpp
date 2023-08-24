@@ -10,8 +10,22 @@ bool  TCore::EngineInit()
     I_Shader.Set(m_pDevice, m_pImmediateContext);
 
     m_GameTimer.Init();    
-    TInput::GetInstance().Init();
+    TInput::GetInstance().Init();   
     m_MainCamera.Init();
+
+    I_Writer.Init();    
+    if (m_pSwapChain)
+    {
+        IDXGISurface1* pBackBuffer;
+        HRESULT hr = m_pSwapChain->GetBuffer(0, __uuidof(IDXGISurface1),
+            (LPVOID*)&pBackBuffer);
+        if (SUCCEEDED(hr))
+        {
+            I_Writer.Create(pBackBuffer);
+        }
+        if (pBackBuffer) pBackBuffer->Release();
+    }
+
 	Init();    
 	return true;
 }
@@ -21,6 +35,7 @@ bool  TCore::EngineFrame()
     TInput::GetInstance().Frame();
     m_MainCamera.Frame();
     TDevice::Frame();
+    I_Writer.Frame();
 	Frame();
 	return true;
 }
@@ -32,6 +47,8 @@ bool  TCore::EngineRender()
     m_MainCamera.Render();
     m_GameTimer.Render();
     TInput::GetInstance().Render();
+
+    I_Writer.Render();
     TDevice::PostRender();
 	return true;
 }
@@ -41,6 +58,7 @@ bool  TCore::EngineRelease()
     m_GameTimer.Release();
     TInput::GetInstance().Release();
     m_MainCamera.Release();
+    I_Writer.Release();
     TDevice::Release();
 	return true;
 }

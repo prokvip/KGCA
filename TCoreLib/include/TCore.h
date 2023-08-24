@@ -3,6 +3,7 @@
 #include "TTimer.h"
 #include "TInput.h"
 #include "TCamera.h"
+#include "TWriter.h"
 #include "TShaderMgr.h"
 #include "TTextureMgr.h"
 
