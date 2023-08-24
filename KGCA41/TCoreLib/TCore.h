@@ -12,11 +12,13 @@ class TCore : public TDevice
 public:
     TTimer          m_GameTimer;   
     TCamera         m_MainCamera;
+    ID3D11BlendState* m_AlphaBlend = nullptr;
 public:
     virtual bool  Init();
     virtual bool  Frame();
     virtual bool  Render();
     virtual bool  Release();
+    void  CreateBlendState();
 private:
     virtual bool  EngineInit();
     virtual bool  EngineFrame();

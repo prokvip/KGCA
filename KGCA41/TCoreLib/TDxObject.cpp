@@ -111,7 +111,7 @@ bool  TDxObject::Frame()
 {
     return true;
 }
-bool  TDxObject::Render()
+bool  TDxObject::PreRender()
 {
     m_pImmediateContext->VSSetConstantBuffers(0, 1, &m_pConstantBuffer);
 
@@ -129,6 +129,17 @@ bool  TDxObject::Render()
     UINT offset = 0;
     m_pImmediateContext->IASetVertexBuffers(0, 1, &m_pVertexBuffer, &stride, &offset);
     m_pImmediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+    return true;
+}
+bool  TDxObject::Render()
+{
+    PreRender();
+    PostRender();
+    return true;
+}
+bool  TDxObject::PostRender()
+{
     m_pImmediateContext->Draw(m_VertexList.size(), 0);
     return true;
 }
