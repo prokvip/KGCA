@@ -1,0 +1,2 @@
+#include "Sample.h"
+TGAME(SampleTBasisLib_0»ç¿ë»ùÇÃ, 800, 600)
