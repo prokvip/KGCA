@@ -18,6 +18,11 @@ bool Sample::Init()
 		}
 		if (pBackBuffer) pBackBuffer->Release();
 	}	
+	
+	m_font.AddText(L"대한민국", 10, 100, {1.0f, 0.0f, 0.0f, 1.0f});
+	m_font.AddText(L"kgca2", 10, 150,{0.0f, 1.0f, 0.0f, 1.0f});
+	m_font.AddText(L"만세", 10, 200,{0.0f, 0.0f, 1.0f, 1.0f});
+
 	return true;
 }
 bool Sample::Frame()

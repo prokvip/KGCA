@@ -36,6 +36,8 @@
 
 extern float g_fMapHalfSizeX;
 extern float g_fMapHalfSizeY;
+extern DWORD g_dwWindowWidth;
+extern DWORD g_dwWindowHeight;
 
 static void T_Debug(const WCHAR* msg)
 {

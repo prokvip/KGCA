@@ -1,5 +1,7 @@
 #include "TWindow.h"
 HWND g_hWnd;
+DWORD g_dwWindowWidth;
+DWORD g_dwWindowHeight;
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message)
@@ -50,7 +52,11 @@ bool TWindow::SetWindow(const WCHAR* szTitle,//std::wstring szTitle,
     {
         return FALSE;
     }
+
     g_hWnd = m_hWnd;
+    g_dwWindowWidth = m_dwWindowWidth;
+    g_dwWindowHeight= m_dwWindowHeight;
+
     ShowWindow(m_hWnd, SW_SHOWNORMAL);
     return true;
 }

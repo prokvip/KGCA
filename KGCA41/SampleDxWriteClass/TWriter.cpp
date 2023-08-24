@@ -26,8 +26,8 @@ bool TWriter::CrateDXWriteRT(IDXGISurface1* pSurface)
 		return false;
 	}
 	hr = m_pRT->CreateSolidColorBrush(
-		D2D1::ColorF(D2D1::ColorF::Yellow),
-		&m_pBrush);
+		D2D1::ColorF(0,0,0,1),//D2D1::ColorF(D2D1::ColorF::Yellow),
+		&m_pDefaultBrush);
 	if (FAILED(hr))
 	{
 		return false;
@@ -48,14 +48,14 @@ bool TWriter::Create(IDXGISurface1* pBackBuffer)
 		if (SUCCEEDED(hr))
 		{
 			m_pDWriteFactory->CreateTextFormat(
-				L"°íµñ",
+				L"±Ã¼­",
 				nullptr,
 				DWRITE_FONT_WEIGHT_NORMAL,
 				DWRITE_FONT_STYLE_NORMAL,
 				DWRITE_FONT_STRETCH_NORMAL,
 				30,
 				L"ko-kr", // en-us
-				&m_pTextFormat);
+				&m_pDefaultTextFormat);
 		}
 	}
 
@@ -79,32 +79,62 @@ bool TWriter::Frame()
 {
 	return true;
 }
-bool TWriter::Render()
+bool TWriter::PreRender()
 {
 	if (m_pRT)
 	{
 		m_pRT->BeginDraw();
-		m_pRT->SetTransform(D2D1::IdentityMatrix());
-		std::wstring text = L"kgca";
-		D2D1_RECT_F layout = { 0.0f, 0.0f, 800.0f, 600.0f };
-		m_pRT->DrawText(text.c_str(), text.size(),
-			m_pTextFormat, &layout, m_pBrush);
+		m_pRT->SetTransform(D2D1::IdentityMatrix());		
+	}
+	return true;
+}
+bool TWriter::Render()
+{
+	if(PreRender())
+	{
+		m_pDefaultTextFormat->GetFontSize();
+		for (int iText = 0; iText < m_TextList.size(); iText++)
+		{
+			std::wstring text = m_TextList[iText].text;
+			D2D1_RECT_F layout = m_TextList[iText].layout;
+			m_pDefaultBrush->SetColor(m_TextList[iText].color);
+			m_pDefaultBrush->SetOpacity(1.0f);
+			m_pRT->DrawText(text.c_str(), text.size(),
+				m_pDefaultTextFormat, &layout, m_pDefaultBrush);
+		}
 
-		std::wstring text1 = L"game";
-		D2D1_RECT_F layout1 = { 0.0f, 30.0f, 800.0f, 600.0f };
-
-		m_pRT->DrawText(text1.c_str(), text1.size(),
-			m_pTextFormat, &layout1, m_pBrush);
+		PostRender();
+	}
+	return true;
+}
+bool TWriter::PostRender()
+{
+	if (m_pRT)
+	{		
 		m_pRT->EndDraw();
 	}
 	return true;
 }
 bool TWriter::Release()
 {
-	if (m_pBrush)m_pBrush->Release();
-	if (m_pTextFormat)m_pTextFormat->Release();
+	if (m_pDefaultBrush)m_pDefaultBrush->Release();
+	if (m_pDefaultTextFormat)m_pDefaultTextFormat->Release();
 	if (m_pRT)m_pRT->Release();
 	if (m_pDWriteFactory)m_pDWriteFactory->Release();
 	if (m_pD2DFactory)m_pD2DFactory->Release();
 	return true;
+}
+
+
+void TWriter::AddText(std::wstring text,
+	float x, float y,
+	D2D1::ColorF color)
+{
+	TTextData textdata;
+	textdata.text = text;
+	textdata.layout = { x, y,
+		(float)g_dwWindowWidth,
+		(float)g_dwWindowHeight };
+	textdata.color = color;
+	m_TextList.push_back(textdata);
 }
