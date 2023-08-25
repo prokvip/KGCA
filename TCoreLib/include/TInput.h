@@ -22,6 +22,7 @@ public:
     bool  Frame();
     bool  Render();
     bool  Release();
+    TVector3 GetWorldPos(TVector2 vWindow, TVector3 vCamera);
 private:
     TInput() {};
 public:

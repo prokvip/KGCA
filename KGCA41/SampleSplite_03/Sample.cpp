@@ -5,14 +5,15 @@ float g_fMapHalfSizeY = 300;
 
 bool Sample::Init()
 {
-	m_pMapObj = new TPlaneObj;
+	// 소유권(유일무일한 포인터를 들고 있다.), 참조레퍼런싱 X
+	m_pMapObj = std::make_unique<TPlaneObj>();	
 	m_pMapObj->Set(m_pDevice, m_pImmediateContext);
 	m_pMapObj->SetPos({ 0.0f,0.0f ,0.0f });
 	m_pMapObj->SetScale(TVector3(g_fMapHalfSizeX, g_fMapHalfSizeY, 1.0f));
-	m_pMapObj->Create(L"../../res/topdownmap.jpg",
-		L"../../res/shader/Plane.hlsl");
+	m_pMapObj->Create(L"../../res/topdownmap.jpg",L"../../res/shader/Plane.hlsl");
 
-	m_pSpriteTexObj = new TSpriteTexture;
+	// 참조레퍼런싱 
+	m_pSpriteTexObj = std::make_unique<TSpriteObj>();
 	TSpriteInfo info;
 	ZeroMemory(&info, sizeof(info));
 	info.p = { 0.0f,0.0f ,0.0f };
@@ -20,21 +21,19 @@ bool Sample::Init()
 	info.texFile = L"../../res/ui/0.png";
 	info.shaderFile = L"../../res/shader/Plane.hlsl";
 	m_pSpriteTexObj->Load(m_pDevice, m_pImmediateContext, info);
+	//m_SpriteList.insert(std::make_pair(1, m_pSpriteTexObj.get()));
 
-	m_SpriteList.insert(std::make_pair(0, m_pSpriteTexObj));
-
-	m_pSpriteUVObj = new TSpriteUV;
+	m_pSpriteUVObj = std::make_unique<TSpriteUV>();
 	ZeroMemory(&info, sizeof(info));
 	info.p = { 200.0f,0.0f ,0.0f };
 	info.s = TVector3(100, 100, 1.0f);
 	info.texFile = L"../../res/CanonBomb-01.tga";
 	info.shaderFile = L"../../res/shader/Plane.hlsl";
 	m_pSpriteUVObj->Load(m_pDevice, m_pImmediateContext, info);
+	m_SpriteList.insert(std::make_pair(0, m_pSpriteUVObj.get()));
 
-	m_SpriteList.insert(std::make_pair(1, m_pSpriteUVObj));
 
-
-	m_pSpriteAirObj = new TSpriteObj;
+	m_pSpriteAirObj = std::make_unique<TSpriteObj>(); 
 	ZeroMemory(&info, sizeof(info));
 	info.p = { -200.0f,0.0f ,0.0f };
 	info.s = TVector3(100, 100, 1.0f);
@@ -42,8 +41,7 @@ bool Sample::Init()
 	info.texAlphaFile = L"../../res/bitmap2.bmp";
 	info.shaderFile = L"../../res/shader/PlaneMask.hlsl";
 	m_pSpriteAirObj->Load(m_pDevice, m_pImmediateContext, info);
-	m_SpriteList.insert(std::make_pair(2, m_pSpriteAirObj));
-
+	//m_SpriteList.insert(std::make_pair(2, m_pSpriteAirObj.get()));
 
 	
 	m_MainCamera.Create({ 0.0f,0.0f, 0.0f }, { (float)m_dwWindowWidth, (float)m_dwWindowHeight });
@@ -52,28 +50,31 @@ bool Sample::Init()
 bool Sample::Frame()
 {
 	m_pMapObj->Frame();
-	if (I_Input.m_dwKeyState[VK_HOME] == KEY_PUSH)
+	if (I_Input.m_dwKeyState[VK_LBUTTON] == KEY_HOLD)
 	{
-		TEffectInfo info;
+		TVector3 mouse = I_Input.GetWorldPos(
+			{ (float)g_dwWindowWidth , (float)g_dwWindowHeight },
+			m_MainCamera.m_vCameraPos);
+		TParticle info;
 		ZeroMemory(&info, sizeof(info));
-		info.bLifeEnable = true;
-		info.index = rand() % m_SpriteList.size();
-		info.p = { randstep(-400.0f, +400.0f), randstep(-400.0f, +400.0f), 0 };
-		info.s = { 50.0f, 50.0f, 50.0f };
-		info.iMaxSize = m_SpriteList[info.index]->GetMaxSize();
-		info.m_fOffsetTime = 3.0f/ info.iMaxSize;
-		effectList.push_back(info);
+		info.m_bLife = true;
+		info.m_iID = rand() % m_SpriteList.size();
+		info.m_vPos = mouse;// { randstep(-400.0f, +400.0f), randstep(-400.0f, +400.0f), 0 };
+		info.m_vSclae = { 50.0f, 50.0f, 50.0f };
+		info.m_iMaxFrame = m_SpriteList[info.m_iID]->GetMaxSize();
+		info.m_fOffsetTime = 3.0f/ info.m_iMaxFrame;
+		m_ParticleList.push_back(info);
 	}	
 
-	for (std::list<TEffectInfo>::iterator iter = effectList.begin();
-		iter != effectList.end();
+	for (std::list<TParticle>::iterator iter = m_ParticleList.begin();
+		iter != m_ParticleList.end();
 		)
 	{
-		TEffectInfo& info = *iter;
+		TParticle& info = *iter;
 		info.Frame();
-		if (info.bLifeEnable == false)
+		if (info.m_bLife == false)
 		{
-			iter = effectList.erase(iter);
+			iter = m_ParticleList.erase(iter);
 		}
 		else
 		{
@@ -87,14 +88,14 @@ bool Sample::Render()
 	m_pMapObj->SetMatrix(nullptr, &m_MainCamera.m_matView, &m_MainCamera.m_matOrthoProjection);
 	m_pMapObj->Render();
 
-	for (std::list<TEffectInfo>::iterator iter = effectList.begin();
-		iter != effectList.end();
+	for (std::list<TParticle>::iterator iter = m_ParticleList.begin();
+		iter != m_ParticleList.end();
 		iter++)
 	{
-		TEffectInfo& info = *iter;
-		TSpriteObj* pBaseObj = m_SpriteList[info.index];
-		pBaseObj->SetPos(info.p);
-		pBaseObj->SetScale(info.s);		
+		TParticle& info = *iter;
+		TSpriteObj* pBaseObj = m_SpriteList[info.m_iID];
+		pBaseObj->SetPos(info.m_vPos);
+		pBaseObj->SetScale(info.m_vSclae);		
 		pBaseObj->Frame();
 		pBaseObj->m_iCurrentAnimIndex = info.m_iCurrentAnimIndex;
 		pBaseObj->SetMatrix(nullptr, &m_MainCamera.m_matView, &m_MainCamera.m_matOrthoProjection);
@@ -105,16 +106,9 @@ bool Sample::Render()
 bool Sample::Release()
 {
 	m_pMapObj->Release();
-	delete m_pMapObj;
-
 	m_pSpriteTexObj->Release();
-	delete m_pSpriteTexObj;
-
 	m_pSpriteUVObj->Release();
-	delete m_pSpriteUVObj;
-
 	m_pSpriteAirObj->Release();
-	delete m_pSpriteAirObj;
 	return true;
 }
 
