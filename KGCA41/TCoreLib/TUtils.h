@@ -1,5 +1,10 @@
 #pragma once
 #include "TMath.h"
+struct TUVRect
+{     
+    TVector2 m_Min;
+    TVector2 m_Max;
+};
 struct TRect 
 {
     bool  m_bEnable = true;

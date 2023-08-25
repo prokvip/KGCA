@@ -1,4 +1,16 @@
 #include "TPlaneObj.h"
+bool  TPlaneObj::Load(
+    ID3D11Device* pDevice,
+    ID3D11DeviceContext* pContext,
+    TVector3 p,
+    TVector3 s,
+    W_STR texFile, W_STR shaderFile)
+{
+    Set(pDevice, pContext);
+    SetPos(p);
+    SetScale(s);
+    return Create(texFile, shaderFile);
+}
 bool  TPlaneObj::CreateVertexBuffer()
 {
     m_VertexList.resize(6);

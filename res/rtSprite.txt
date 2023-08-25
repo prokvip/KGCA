@@ -1,0 +1,83 @@
+#SPRITE nullptr 4
+rtExplosion nullptr 12
+../../data/bitmap/bitmap1.bmp
+../../data/bitmap/bitmap2.bmp
+0	1	142 41 41 
+1	43 142 38 43 
+2	82 142 36 43 
+3	119 142 35 45
+4	155 142 34 46
+5	190 142 34 41
+6	225 142 33 38
+7	259 142 31 36
+8	291 142 29 32
+9	321 142 27 26
+10	349 142 24 24
+11	374 142 22 18	
+rtBomb nullptr 9 
+../../data/bitmap/bitmap1.bmp
+../../data/bitmap/bitmap2.bmp
+0	161 85 11 12
+1	173 85 22 20
+2	196 85 26 24
+3	223 85 28 24
+4	252 85 30 24
+5	283 85 29 22
+6	313 85 22 20
+7	336 85 16 15
+8	353 85 4 6
+rtClash nullptr 6
+../../data/bitmap/bitmap1.bmp
+../../data/bitmap/bitmap2.bmp
+0 161 62 12 11
+1 174 62 20 20
+2 195 62 22 21
+3 219 62 18 19
+4 238 62 14 13
+5 253 62 11 10
+rtProjectile nullptr 2
+../../data/bitmap/bitmap1.bmp
+../../data/bitmap/bitmap2.bmp
+0 269 1 5 23
+1 276 1 8 23
+Number0 nullptr 1 
+../../data/Number/fill0.bmp
+nullptr
+0	0	0 50 50
+Number1 nullptr 1 
+../../data/Number/fill1.bmp
+nullptr
+0	0	0 50 50
+Number2 nullptr 1 
+../../data/Number/fill2.bmp
+nullptr
+0	0	0 50 50
+Number3 nullptr 1 
+../../data/Number/fill3.bmp
+nullptr
+0	0	0 50 50
+Number4 nullptr 1 
+../../data/Number/fill4.bmp
+nullptr
+0	0	0 50 50
+Number5 nullptr  1 
+../../data/Number/fill5.bmp
+nullptr
+0	0	0 50 50
+Number6 nullptr 1 
+../../data/Number/fill6.bmp
+nullptr
+0	0	0 50 50
+Number7 nullptr 1 
+../../data/Number/fill7.bmp
+nullptr
+0	0	0 50 50
+Number8 nullptr 1 
+../../data/Number/fill8.bmp
+nullptr
+0	0	0 50 50
+Number9 nullptr 1 
+../../data/Number/fill1.bmp
+nullptr
+0	0	0 50 50
+END

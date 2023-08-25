@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <FxCompile Include="..\..\res\shader\PlaneMask.hlsl" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Sample.cpp" />
+    <ClCompile Include="TSpriteObj.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Sample.h" />
+    <ClInclude Include="TSpriteObj.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Script">
+      <UniqueIdentifier>{689b996c-ccd4-4d8b-90ed-f1db0cb0ade6}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\..\res\Sprite.txt">
+      <Filter>Script</Filter>
+    </Text>
+    <Text Include="..\..\res\rtSprite.txt">
+      <Filter>Script</Filter>
+    </Text>
+    <Text Include="..\..\res\ui.txt">
+      <Filter>Script</Filter>
+    </Text>
+  </ItemGroup>
+</Project>

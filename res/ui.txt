@@ -1,0 +1,11 @@
+#SPRITE 5  null null
+background 1 0 0 0 0 popup_normal_Alpha.bmp null
+0	0	0 196 124
+number0 1 0 0 0 0 Number/fill0.bmp null
+0	0	0 50 50
+number1 1 50 0 0 0 Number/fill1.bmp null
+0	0	0 50 50
+number2 1 100 0 0 0 Number/fill2.bmp null
+0	0	0 50 50
+number3 1 150 0 0 0 Number/fill3.bmp null
+0	0	0 50 50

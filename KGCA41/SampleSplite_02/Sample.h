@@ -1,12 +1,13 @@
 #pragma once
 #include "TCore.h"
-#include "TPlaneObj.h"
+#include "TSpriteObj.h"
+
 class Sample : public TCore
 {
-	TObject* m_pMapObj = nullptr;
-	TObject* m_pSpriteObj = nullptr;
-	std::vector<const TTexture*>  m_pTexList;
-	int  m_iTexIndex=0;
+	TObject* m_pMapObj = nullptr;	
+	TSpriteObj* m_pSpriteTexObj = nullptr;
+	TSpriteObj* m_pSpriteUVObj = nullptr;
+	TSpriteObj* m_pSpriteAirObj = nullptr;	
 public:
 	bool Init();
 	bool Frame();
