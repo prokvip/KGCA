@@ -6,7 +6,7 @@ float g_fMapHalfSizeY = 300;
 bool Sample::Init()
 {
 	// 소유권(유일무일한 포인터를 들고 있다.), 참조레퍼런싱 X
-	m_pMapObj = std::make_unique<TPlaneObj>();	
+	m_pMapObj = std::make_unique<TPlaneObj>();
 	m_pMapObj->Set(m_pDevice, m_pImmediateContext);
 	m_pMapObj->SetPos({ 0.0f,0.0f ,0.0f });
 	m_pMapObj->SetScale(TVector3(g_fMapHalfSizeX, g_fMapHalfSizeY, 1.0f));
