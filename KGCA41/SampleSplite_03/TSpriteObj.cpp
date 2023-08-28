@@ -19,6 +19,16 @@ bool  TSpriteObj::Load(
 	SetUVFrame(info.iNumRow, info.iNumColumn );
 	return Create(info.texFile, info.shaderFile);
 }
+bool TSpriteObj::Render()
+{
+	PreRender();
+	if (m_pAlphaTex)
+	{
+		m_pAlphaTex->Apply(m_pImmediateContext, 1);
+	}
+	PostRender();
+	return true;
+}
 bool   TSpriteTexture::LoadTexArray(T_STR_VECTOR& texList)
 {
 	for (auto& texname : texList)

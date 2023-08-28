@@ -42,6 +42,7 @@ public:
 	int		m_iNumSpriteY = 1;
 	TSpriteInfo m_InitSpriteInfo;
 public:
+	virtual bool   Render() override;
 	virtual int    GetMaxSize() { return 1; }
 	virtual bool  Load(
 		ID3D11Device* pDevice, 
