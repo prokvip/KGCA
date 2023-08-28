@@ -13,35 +13,51 @@ bool Sample::Init()
 	m_pMapObj->Create(L"../../res/topdownmap.jpg",L"../../res/shader/Plane.hlsl");
 
 	// 참조레퍼런싱 
-	m_pSpriteTexObj = std::make_unique<TSpriteObj>();
-	TSpriteInfo info;
-	ZeroMemory(&info, sizeof(info));
+	m_pSpriteTexObj = std::make_unique<TSpriteTexture>();
+	TSpriteInfo info;	
 	info.p = { 0.0f,0.0f ,0.0f };
 	info.s = TVector3(100, 100, 1.0f);
+	info.fAnimTimer = 10.0f;
 	info.texFile = L"../../res/ui/0.png";
+	info.texList.push_back(L"../../res/ui/0.png");
+	info.texList.push_back(L"../../res/ui/1.png");
+	info.texList.push_back(L"../../res/ui/2.png");
+	info.texList.push_back(L"../../res/ui/3.png");
+	info.texList.push_back(L"../../res/ui/4.png");
+	info.texList.push_back(L"../../res/ui/5.png");
+	info.texList.push_back(L"../../res/ui/6.png");
+	info.texList.push_back(L"../../res/ui/7.png");
+	info.texList.push_back(L"../../res/ui/8.png");
+	info.texList.push_back(L"../../res/ui/9.png");
+	
 	info.shaderFile = L"../../res/shader/Plane.hlsl";
 	m_pSpriteTexObj->Load(m_pDevice, m_pImmediateContext, info);
-	//m_SpriteList.insert(std::make_pair(1, m_pSpriteTexObj.get()));
+	m_SpriteList.insert(std::make_pair(m_iSpriteIndex++, m_pSpriteTexObj.get()));
 
-	m_pSpriteUVObj = std::make_unique<TSpriteUV>();
-	ZeroMemory(&info, sizeof(info));
+	info.Reset();
+	m_pSpriteUVObj = std::make_unique<TSpriteUV>();	
+	info.iNumRow = 4;
+	info.iNumColumn = 4;
+	info.fAnimTimer = 1.0f;
 	info.p = { 200.0f,0.0f ,0.0f };
 	info.s = TVector3(100, 100, 1.0f);
 	info.texFile = L"../../res/CanonBomb-01.tga";
 	info.shaderFile = L"../../res/shader/Plane.hlsl";
 	m_pSpriteUVObj->Load(m_pDevice, m_pImmediateContext, info);
-	m_SpriteList.insert(std::make_pair(0, m_pSpriteUVObj.get()));
+	m_SpriteList.insert(std::make_pair(m_iSpriteIndex++, m_pSpriteUVObj.get()));
 
 
+	info.Reset();
 	m_pSpriteAirObj = std::make_unique<TSpriteObj>(); 
 	ZeroMemory(&info, sizeof(info));
 	info.p = { -200.0f,0.0f ,0.0f };
 	info.s = TVector3(100, 100, 1.0f);
+	info.fAnimTimer = 1.0f;
 	info.texFile = L"../../res/bitmap1.bmp";
 	info.texAlphaFile = L"../../res/bitmap2.bmp";
 	info.shaderFile = L"../../res/shader/PlaneMask.hlsl";
 	m_pSpriteAirObj->Load(m_pDevice, m_pImmediateContext, info);
-	//m_SpriteList.insert(std::make_pair(2, m_pSpriteAirObj.get()));
+	m_SpriteList.insert(std::make_pair(m_iSpriteIndex++, m_pSpriteAirObj.get()));
 
 	
 	m_MainCamera.Create({ 0.0f,0.0f, 0.0f }, { (float)m_dwWindowWidth, (float)m_dwWindowHeight });
@@ -50,7 +66,7 @@ bool Sample::Init()
 bool Sample::Frame()
 {
 	m_pMapObj->Frame();
-	if (I_Input.m_dwKeyState[VK_LBUTTON] == KEY_HOLD)
+	if (I_Input.m_dwKeyState[VK_LBUTTON] == KEY_PUSH)
 	{
 		TVector3 mouse = I_Input.GetWorldPos(
 			{ (float)g_dwWindowWidth , (float)g_dwWindowHeight },
@@ -62,7 +78,8 @@ bool Sample::Frame()
 		info.m_vPos = mouse;// { randstep(-400.0f, +400.0f), randstep(-400.0f, +400.0f), 0 };
 		info.m_vSclae = { 50.0f, 50.0f, 50.0f };
 		info.m_iMaxFrame = m_SpriteList[info.m_iID]->GetMaxSize();
-		info.m_fOffsetTime = 3.0f/ info.m_iMaxFrame;
+		info.m_fOffsetTime = m_SpriteList[info.m_iID]->m_fAnimTimer/ info.m_iMaxFrame;
+		//info.m_fOffsetTime = randstep(0.1f, 1.0f);
 		m_ParticleList.push_back(info);
 	}	
 

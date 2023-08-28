@@ -4,6 +4,10 @@ bool  TSpriteObj::Load(
 	ID3D11DeviceContext* pContext,
 	TSpriteInfo info)
 {
+	m_InitSpriteInfo = info;
+	m_fAnimTimer = info.fAnimTimer;
+	m_iNumSpriteX = info.iNumRow;
+	m_iNumSpriteY = info.iNumColumn;
 	Set(pDevice, pContext);
 	SetPos(info.p);
 	SetScale(info.s);
@@ -11,50 +15,39 @@ bool  TSpriteObj::Load(
 	{
 		this->m_pAlphaTex = I_Tex.Load(info.texAlphaFile);
 	}
+	LoadTexArray(info.texList);
+	SetUVFrame(info.iNumRow, info.iNumColumn );
 	return Create(info.texFile, info.shaderFile);
+}
+bool   TSpriteTexture::LoadTexArray(T_STR_VECTOR& texList)
+{
+	for (auto& texname : texList)
+	{
+		const TTexture* pTex = I_Tex.Load(texname);
+		m_pTexList.push_back(pTex);
+	}
+	m_fOffsetTime = m_fAnimTimer / m_pTexList.size();
+	return true;
 }
 bool TSpriteTexture::Init()
 {
 	TPlaneObj::Init();
-
-	const TTexture* pTex = I_Tex.Load(L"../../res/ui/0.png");
-	m_pTexList.push_back(pTex);
-	pTex = I_Tex.Load(L"../../res/ui/1.png");
-	m_pTexList.push_back(pTex);
-	pTex = I_Tex.Load(L"../../res/ui/2.png");
-	m_pTexList.push_back(pTex);
-	pTex = I_Tex.Load(L"../../res/ui/3.png");
-	m_pTexList.push_back(pTex);
-	pTex = I_Tex.Load(L"../../res/ui/4.png");
-	m_pTexList.push_back(pTex);
-	pTex = I_Tex.Load(L"../../res/ui/5.png");
-	m_pTexList.push_back(pTex);
-	pTex = I_Tex.Load(L"../../res/ui/6.png");
-	m_pTexList.push_back(pTex);
-	pTex = I_Tex.Load(L"../../res/ui/7.png");
-	m_pTexList.push_back(pTex);
-	pTex = I_Tex.Load(L"../../res/ui/8.png");
-	m_pTexList.push_back(pTex);
-	pTex = I_Tex.Load(L"../../res/ui/9.png");
-	m_pTexList.push_back(pTex);
-
-	m_fOffsetTime = 3.0f / m_pTexList.size();
 	return true;
 }
 bool TSpriteTexture::Frame()
 {
 	TPlaneObj::Frame();	
-	m_fAnimTimer += g_fSecondPerFrame;
+	m_fElapsedTimer += g_fSecondPerFrame;
 	if (m_pTexList[m_iCurrentAnimIndex] != nullptr)
 	{
-		if (m_fAnimTimer >= m_fOffsetTime)
+		if (m_fElapsedTimer >= m_fOffsetTime)
 		{
 			m_iCurrentAnimIndex++;
 			if (m_iCurrentAnimIndex >= m_pTexList.size())
 			{
 				m_iCurrentAnimIndex = 0;
 			}
-			m_fAnimTimer -= m_fOffsetTime;
+			m_fElapsedTimer -= m_fOffsetTime;
 		}		
 	}
 	return true;
@@ -81,42 +74,45 @@ TSpriteTexture::~TSpriteTexture()
 	Release();
 }
 
-
-bool TSpriteUV::Init()
+void TSpriteUV::SetUVFrame(int iNumRow, int iNumColumn)
 {
-	TPlaneObj::Init();
 	TUVRect tRt;
 	TVector2 uv;
 
 	// 4x4
-	float fOffset = 1.0f / 4;
-	for (int i = 0; i < 4; i++)
+	float fOffsetX = 1.0f / iNumColumn;
+	float fOffsetY = 1.0f / iNumRow;
+	for (int row = 0; row < iNumRow; row++)
 	{
-		uv.x = fOffset * i;
-		for (int j = 0; j < 4; j++)
+		uv.y = fOffsetY * row;
+		for (int column = 0; column < iNumColumn; column++)
 		{
-			uv.y = fOffset * j;
+			uv.x = fOffsetX * column;
 			tRt.m_Min = uv;
-			tRt.m_Max.x = uv.x + fOffset;
-			tRt.m_Max.y = uv.y + fOffset;
+			tRt.m_Max.x = uv.x + fOffsetX;
+			tRt.m_Max.y = uv.y + fOffsetY;
 			m_pUVList.push_back(tRt);
 		}
-	}	
-	m_fOffsetTime = 3.0f / m_pUVList.size();
+	}
+	m_fOffsetTime = m_fAnimTimer / m_pUVList.size();
+}
+bool TSpriteUV::Init()
+{
+	TPlaneObj::Init();
 	return true;
 }
 bool TSpriteUV::Frame()
 {
 	TPlaneObj::Frame();
-	m_fAnimTimer += g_fSecondPerFrame;	
-	if (m_fAnimTimer >= m_fOffsetTime)
+	m_fElapsedTimer += g_fSecondPerFrame;
+	if (m_fElapsedTimer >= m_fOffsetTime)
 	{
 		m_iCurrentAnimIndex++;
 		if (m_iCurrentAnimIndex >= m_pUVList.size())
 		{
 			m_iCurrentAnimIndex = 0;
 		}
-		m_fAnimTimer -= m_fOffsetTime;
+		m_fElapsedTimer -= m_fOffsetTime;
 	}	
 	return true;
 }

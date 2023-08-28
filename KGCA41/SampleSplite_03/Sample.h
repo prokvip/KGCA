@@ -8,8 +8,9 @@ public:
 	TVector3 m_vPos;
 	TVector3 m_vSclae;
 	TVector3 m_vRotation;
+	float   m_fElapsedTimer = 0.0f;
 	float	m_fOffsetTime = 0.0f;
-	float	m_fAnimTimer = 0.0f;
+	float	m_fAnimTimer = 1.0f;
 	int		m_iCurrentAnimIndex = 0;
 	W_STR   m_szName;
 	int		m_iID;
@@ -17,8 +18,8 @@ public:
 	void Frame()
 	{
 		if (m_iMaxFrame <= 1 || !m_bLife) return;
-		m_fAnimTimer += g_fSecondPerFrame;		
-		if (m_fAnimTimer >= m_fOffsetTime)
+		m_fElapsedTimer += g_fSecondPerFrame;
+		if (m_fElapsedTimer >= m_fOffsetTime)
 		{
 			m_iCurrentAnimIndex++;
 			if (m_iCurrentAnimIndex >= m_iMaxFrame)
@@ -26,7 +27,7 @@ public:
 				m_iCurrentAnimIndex = 0;
 				m_bLife = false;
 			}
-			m_fAnimTimer -= m_fOffsetTime;
+			m_fElapsedTimer -= m_fOffsetTime;
 		}
 	}	
 };
@@ -42,6 +43,7 @@ class Sample : public TCore
 
 	std::map<int, TSpriteObj*>	m_SpriteList;
 	std::list<TParticle>		m_ParticleList;
+	int   m_iSpriteIndex = 0;
 public:
 	bool Init();
 	bool Frame();
