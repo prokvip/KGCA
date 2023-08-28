@@ -2,15 +2,15 @@
 #include "TPlaneObj.h"
 struct TSpriteInfo
 {
-	int   iNumRow;
-	int   iNumColumn;
-	TVector3 p;
-	TVector3 s; 
-	float fAnimTimer;
-	float fElapsedTimer; // 에니메이션 가동 시간
-	W_STR texFile;
-	W_STR texAlphaFile;
-	W_STR shaderFile;
+	int			iNumRow;
+	int			iNumColumn;
+	TVector3	p;
+	TVector3	s; 
+	float		fAnimTimer;
+	float		fElapsedTimer; // 에니메이션 가동 시간
+	W_STR		texFile;
+	W_STR		texAlphaFile;
+	W_STR		shaderFile;
 	T_STR_VECTOR texList;
 	void Reset()
 	{
