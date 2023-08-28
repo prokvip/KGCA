@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include <memory>
+#include <codecvt>
 
 #include <map> // key+value   bst
 #include <unordered_map> 
@@ -35,25 +36,38 @@
 #define TGAME(s,w,h) TGAME_START;TGAME_REGISTER;TGAME_WINDOW(s,w,h);TGAME_RUN;TGAME_END;
 
 
-	typedef std::basic_string<TCHAR>			T_STR;
-	typedef std::basic_string<wchar_t>			W_STR;
-	typedef std::basic_string<char>				C_STR;
-	typedef std::vector<T_STR>					T_STR_VECTOR;
-	typedef std::basic_string<TCHAR>::iterator		T_ITOR;
-	typedef std::basic_string<wchar_t>::iterator	W_ITOR;
-	typedef std::basic_string<char>::iterator	C_ITOR;
-	typedef std::vector<T_STR>				T_ARRAY_ITOR;
-	typedef std::vector<DWORD>				DWORD_VECTOR;
-	typedef	std::vector< DWORD >::iterator	DWORD_VECTOR_ITOR;
-	typedef std::list<DWORD>				DWORD_LIST;
-	typedef std::list<DWORD>::iterator		DWORD_LIST_ITOR;
-	typedef std::list< HANDLE >				HANDLE_LIST;
-	typedef	std::list< HANDLE >::iterator	HANDLE_LIST_ITOR;
+typedef std::basic_string<TCHAR>			T_STR;
+typedef std::basic_string<wchar_t>			W_STR;
+typedef std::basic_string<char>				C_STR;
+typedef std::vector<T_STR>					T_STR_VECTOR;
+typedef std::basic_string<TCHAR>::iterator		T_ITOR;
+typedef std::basic_string<wchar_t>::iterator	W_ITOR;
+typedef std::basic_string<char>::iterator	C_ITOR;
+typedef std::vector<T_STR>				T_ARRAY_ITOR;
+typedef std::vector<DWORD>				DWORD_VECTOR;
+typedef	std::vector< DWORD >::iterator	DWORD_VECTOR_ITOR;
+typedef std::list<DWORD>				DWORD_LIST;
+typedef std::list<DWORD>::iterator		DWORD_LIST_ITOR;
+typedef std::list< HANDLE >				HANDLE_LIST;
+typedef	std::list< HANDLE >::iterator	HANDLE_LIST_ITOR;
 
 extern float g_fMapHalfSizeX;
 extern float g_fMapHalfSizeY;
 extern DWORD g_dwWindowWidth;
 extern DWORD g_dwWindowHeight;
+
+
+static std::wstring mtw(std::string str)
+{
+	std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> conv;
+	return conv.from_bytes(str);
+}
+
+static std::string wtm(std::wstring str)
+{
+	std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> conv;
+	return conv.to_bytes(str);
+}
 
 static void T_Debug(const WCHAR* msg)
 {

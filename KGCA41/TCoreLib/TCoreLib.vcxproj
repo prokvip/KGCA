@@ -163,6 +163,7 @@ copy "..\\..\\output\\TCoreLib.lib" "..\\..\\TCoreLib\\lib"</Command>
     <ClInclude Include="TPlaneObj.h" />
     <ClInclude Include="TPlayer.h" />
     <ClInclude Include="TShaderMgr.h" />
+    <ClInclude Include="TSpriteObj.h" />
     <ClInclude Include="TStd.h" />
     <ClInclude Include="TTextureMgr.h" />
     <ClInclude Include="TTimer.h" />
@@ -193,6 +194,7 @@ copy "..\\..\\output\\TCoreLib.lib" "..\\..\\TCoreLib\\lib"</Command>
     <ClCompile Include="TPlaneObj.cpp" />
     <ClCompile Include="TPlayer.cpp" />
     <ClCompile Include="TShaderMgr.cpp" />
+    <ClCompile Include="TSpriteObj.cpp" />
     <ClCompile Include="TTextureMgr.cpp" />
     <ClCompile Include="TTimer.cpp" />
     <ClCompile Include="TUtils.cpp" />

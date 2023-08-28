@@ -18,7 +18,7 @@ class TWriter
 	std::vector< TTextData>   m_TextList;
 public:
 	void		AddText(std::wstring text,
-		float x, float y,
+		float x=0, float y=0,
 		D2D1::ColorF color = {0.0f, 0.0f, 0.0f,1.0f});
 public:
 	ID2D1Factory* m_pD2DFactory = nullptr;
