@@ -6,7 +6,11 @@ float g_fMapHalfSizeY = 300;
 bool Sample::Init()
 {	
 	m_pTitleScene = std::make_shared<TSceneTitle>();
+	m_pTitleScene->m_szBackround = L"../../res/KGCABK.bmp";
 	m_pScene= m_pTitleScene.get();
+
+	m_pTitleLobby = std::make_shared<TSceneTitle>();
+	m_pTitleLobby->m_szBackround = L"../../res/ground.png";
 
 	m_pMainCamera->Create({ 0.0f,0.0f, 0.0f }, { (float)m_dwWindowWidth, (float)m_dwWindowHeight });
 	m_pScene->Init();

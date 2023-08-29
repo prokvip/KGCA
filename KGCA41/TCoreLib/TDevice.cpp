@@ -16,7 +16,11 @@ bool  TDevice::Init()
 
     D3D_DRIVER_TYPE DriverType = D3D_DRIVER_TYPE_HARDWARE;
     UINT Flags = D3D11_CREATE_DEVICE_BGRA_SUPPORT;
+#ifdef _DEBUG
+    Flags |= D3D11_CREATE_DEVICE_DEBUG;
+#endif
     D3D_FEATURE_LEVEL pFeatureLevels = D3D_FEATURE_LEVEL_11_0;
+
     // 1) 디바이스
     HRESULT hr = D3D11CreateDeviceAndSwapChain(
         NULL,

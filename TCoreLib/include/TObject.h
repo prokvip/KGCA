@@ -4,6 +4,12 @@ class TObject : public TDxObject
 {     
 public:
     bool            m_bDead=false;
+    int             m_iCollisionID = -1;
+    int             m_iSelectID = -1;
+    virtual void    MouseOverlap(TVector2 pt, DWORD state)
+    {
+        int k = 0;
+    }
 public:
     TVector3        m_vPos;
     TVector3        m_vScale;
