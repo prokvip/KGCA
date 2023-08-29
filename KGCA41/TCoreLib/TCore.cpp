@@ -1,4 +1,6 @@
 #include "TCore.h"
+#include "ICoreStd.h"
+
 void  TCore::CreateBlendState()
 {
     // alpha blending
@@ -33,14 +35,21 @@ bool  TCore::Release() { return true; }
 bool  TCore::EngineInit()
 {
     TDevice::Init();
+
+    ICore::g_pDevice = m_pDevice;
+    ICore::g_pContext = m_pImmediateContext;
+
     CreateBlendState();
 
     I_Tex.Set(m_pDevice, m_pImmediateContext);
     I_Shader.Set(m_pDevice, m_pImmediateContext);
 
     m_GameTimer.Init();    
-    TInput::GetInstance().Init();   
-    m_MainCamera.Init();
+    TInput::GetInstance().Init();  
+
+    m_pMainCamera = std::make_shared<TCamera>();
+    m_pMainCamera->Init();
+    ICore::g_pMainCamera = m_pMainCamera.get();
 
     I_Writer.Init();    
     if (m_pSwapChain)
@@ -62,7 +71,7 @@ bool  TCore::EngineFrame()
 {
     m_GameTimer.Frame();
     TInput::GetInstance().Frame();
-    m_MainCamera.Frame();
+    m_pMainCamera->Frame();
     TDevice::Frame();
     I_Writer.Frame();
 	Frame();
@@ -75,7 +84,7 @@ bool  TCore::EngineRender()
 
 	Render();
 
-    m_MainCamera.Render();
+    m_pMainCamera->Render();
     m_GameTimer.Render();
     TInput::GetInstance().Render();
 
@@ -90,7 +99,7 @@ bool  TCore::EngineRelease()
     if (m_AlphaBlend)m_AlphaBlend->Release();
     m_GameTimer.Release();
     TInput::GetInstance().Release();
-    m_MainCamera.Release();
+    m_pMainCamera->Release();
     I_Writer.Release();
     TDevice::Release();
 	return true;
