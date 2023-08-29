@@ -53,7 +53,11 @@ bool TScene::Frame()
 		auto fnFunction = m_fnSelectExecute.find(pObj->m_iSelectID);
 		if (pObj->m_tRT.ToPoint(pt))
 		{			
-			
+			if (fnFunction != m_fnSelectExecute.end())
+			{
+				SelectFunction call = fnFunction->second;
+				call(pt, TSelectState::T_HOVER);
+			}
 			if (I_Input.m_dwKeyState[VK_LBUTTON] == KEY_PUSH)
 			{
 				SelectFunction call = fnFunction->second;
