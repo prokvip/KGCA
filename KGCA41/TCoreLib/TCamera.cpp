@@ -1,4 +1,38 @@
 #include "TCamera.h"
+TMatrix  TCamera::CreateLookAt(TVector3 vPosition, TVector3 vTarget, TVector3 vUp)
+{
+    TVector3 vDirection = vTarget - vPosition;
+    vDirection = vDirection.NormalVector();
+    float fDot = vUp | vDirection;
+    TVector3 vC = vDirection * fDot;
+    TVector3 vUpVector = vUp - vC;
+    vUpVector = vUpVector.NormalVector();
+    TVector3 vRightVector = vUpVector ^ vDirection;
+
+    m_matView._11 = vRightVector.x;	m_matView._12 = vUpVector.x;		m_matView._13 = vDirection.x;
+    m_matView._21 = vRightVector.y;	m_matView._22 = vUpVector.y;		m_matView._23 = vDirection.y;
+    m_matView._31 = vRightVector.z;	m_matView._32 = vUpVector.z;		m_matView._33 = vDirection.z;
+
+    m_matView._41 = -(vPosition.x * m_matView._11 + vPosition.y * m_matView._21 + vPosition.z * m_matView._31);
+    m_matView._42 = -(vPosition.x * m_matView._12 + vPosition.y * m_matView._22 + vPosition.z * m_matView._32);
+    m_matView._43 = -(vPosition.x * m_matView._13 + vPosition.y * m_matView._23 + vPosition.z * m_matView._33);
+    return m_matView;
+}
+TMatrix   TCamera::CreatePerspectiveFov(float fovy, float Aspect, float fNearPlane, float fFarPlane)
+{
+    float    h, w, Q;
+    h = 1 / tan(fovy * 0.5f);
+    w = h / Aspect;
+    Q = fFarPlane / (fFarPlane - fNearPlane);
+    m_matProj._44 = 0.0f;
+    m_matProj._11 = w;
+    m_matProj._22 = h;
+    m_matProj._33 = Q;
+    m_matProj._43 = -Q * fNearPlane;
+    m_matProj._34 = 1;
+    return m_matProj;
+}
+
 bool  TCamera::Create(TVector3 vPos, TVector2 size )
 {
     m_vCameraPos = vPos;

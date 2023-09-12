@@ -18,6 +18,8 @@ public:
     TMatrix         m_matView;
     TMatrix         m_matProj;
     TRect	        m_tRT;
+    W_STR           m_szName;
+    void            SetName(W_STR name) { m_szName = name; }
     virtual void    SetRect(TVector2& c, float w, float h);
 public:
     void          SetPos(TVector3 p);

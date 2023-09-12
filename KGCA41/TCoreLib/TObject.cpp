@@ -38,7 +38,10 @@ bool  TObject::Create(std::wstring texFilename,
                       std::wstring shaderFilename)
 {
     CreateConstantBuffer();
+    CreateVertexData();
+    CreateIndexData();
     CreateVertexBuffer();
+    CreateIndexBuffer();
     m_pShader = I_Shader.Load(shaderFilename);
     CreateInputLayout();
     m_pTex = I_Tex.Load(texFilename);  
