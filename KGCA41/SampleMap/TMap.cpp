@@ -18,9 +18,10 @@ bool TMap::CreateVertexData()
 			m_VertexList[iVertexIndex].p.x = (iCol - fHalfCols) * m_MapInfo.fDistance;
 			m_VertexList[iVertexIndex].p.z = -((iRow - fHalfRows) * m_MapInfo.fDistance);
 			m_VertexList[iVertexIndex].p.y = GetHeightOfVertex(iVertexIndex);
-			//m_VertexList[iVertexIndex].n = GetNormalOfVertex(iVertexIndex);
-			//m_VertexList[iVertexIndex].c = GetColorOfVertex(iVertexIndex);
-			m_VertexList[iVertexIndex].t = GetTextureOfVertex(iRow, iCol);
+			m_VertexList[iVertexIndex].n = GetNormalOfVertex(iVertexIndex);
+			m_VertexList[iVertexIndex].c = GetColorOfVertex(iVertexIndex);
+			m_VertexList[iVertexIndex].t = 
+				GetTextureOfVertex(iRow, iCol);
 		}
 	}
 	return true;
@@ -72,6 +73,6 @@ TVector4	TMap::GetColorOfVertex(UINT iVertexIndex)
 }
 TVector2	TMap::GetTextureOfVertex(UINT row, UINT col)
 {
-	return TVector2(col / (m_iNumCols - 1),
-					row / (m_iNumRows - 1));
+	return TVector2((float)col / (float)(m_iNumCols - 1),
+		(float)row / (float)(m_iNumRows - 1));
 }

@@ -8,13 +8,13 @@ bool Sample::Init()
 	TMapInfo info = {
 		9, 9, 1,
 		L"../../res/topdownmap.jpg",
-		L"../../res/shader/Plane.hlsl"
+		L"../../res/shader/DefaultObj.hlsl"
 	};
 	m_pMapObj = new TMap;
 	m_pMapObj->Set(m_pDevice, m_pImmediateContext);
 	m_pMapObj->Load(info);
 
-	m_pMainCamera->CreateLookAt({0,30,-10}, {0,0,0,});
+	m_pMainCamera->CreateLookAt({0,5,-1}, {0,0,0});
 	m_pMainCamera->CreatePerspectiveFov(T_PI*0.25, (float)g_dwWindowWidth/ (float)g_dwWindowHeight,
 		1.0f, 10000.0f);
 	return true;

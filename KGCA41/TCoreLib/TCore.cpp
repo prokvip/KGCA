@@ -1,6 +1,25 @@
 #include "TCore.h"
 #include "ICoreStd.h"
+void TCore::CreateSamplerState()
+{
+    D3D11_SAMPLER_DESC descSamp;
+    descSamp.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+    descSamp.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+    descSamp.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+    descSamp.MipLODBias = 0;
+    descSamp.MaxAnisotropy = 16;
 
+    descSamp.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+    descSamp.ComparisonFunc = D3D11_COMPARISON_NEVER;
+
+    descSamp.BorderColor[0] = 1.0f;
+    descSamp.BorderColor[1] = 0.0f;
+    descSamp.BorderColor[2] = 0.0f;
+    descSamp.BorderColor[3] = 1.0f;
+    descSamp.MinLOD = 0;
+    descSamp.MaxLOD = D3D11_FLOAT32_MAX;
+    m_pDevice->CreateSamplerState(&descSamp, m_pSamplerState.GetAddressOf());    
+}
 void  TCore::CreateBlendState()
 {
     // alpha blending
@@ -40,6 +59,7 @@ bool  TCore::EngineInit()
     ICore::g_pContext = m_pImmediateContext;
 
     CreateBlendState();
+    CreateSamplerState();
 
     I_Tex.Set(m_pDevice, m_pImmediateContext);
     I_Shader.Set(m_pDevice, m_pImmediateContext);
@@ -81,7 +101,8 @@ bool  TCore::EngineRender()
 {
     TDevice::PreRender();
     m_pImmediateContext->OMSetBlendState(m_AlphaBlend, 0, -1);
-
+    m_pImmediateContext->PSSetSamplers(0, 1, m_pSamplerState.GetAddressOf());
+    //m_pSamplerState.Get();
 	Render();
 
     m_pMainCamera->Render();
@@ -97,6 +118,7 @@ bool  TCore::EngineRelease()
 	Release();
 
     if (m_AlphaBlend)m_AlphaBlend->Release();
+   
     m_GameTimer.Release();
     TInput::GetInstance().Release();
     m_pMainCamera->Release();
