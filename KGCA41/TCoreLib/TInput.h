@@ -10,7 +10,9 @@ enum KeyState
 class TInput
 {
 public:
-    POINT m_MousePos;
+    TVector3  m_vOffset = { 0,0,0 };
+    POINT  m_MousePos;
+    POINT  m_BeforeMousePos;
     DWORD m_dwKeyState[256];
     static TInput& GetInstance()
     {
