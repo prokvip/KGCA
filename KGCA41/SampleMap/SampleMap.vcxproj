@@ -144,10 +144,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Sample.h" />
+    <ClInclude Include="TDebugCamera.h" />
     <ClInclude Include="TMap.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Sample.cpp" />
+    <ClCompile Include="TDebugCamera.cpp" />
     <ClCompile Include="TMap.cpp" />
   </ItemGroup>
   <ItemGroup>

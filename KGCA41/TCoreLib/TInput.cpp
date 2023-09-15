@@ -51,7 +51,7 @@ bool  TInput::Render()
     mousePos += L",";
     mousePos += std::to_wstring(m_MousePos.y);
     mousePos += L"\n";
-    T_Debug(mousePos.c_str());
+    //T_Debug(mousePos.c_str());
 #endif
     return true;
 }

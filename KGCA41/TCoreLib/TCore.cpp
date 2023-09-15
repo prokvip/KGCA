@@ -67,9 +67,16 @@ bool  TCore::EngineInit()
     m_GameTimer.Init();    
     TInput::GetInstance().Init();  
 
-    m_pMainCamera = std::make_shared<TCamera>();
-    m_pMainCamera->Init();
-    ICore::g_pMainCamera = m_pMainCamera.get();
+    m_pDefaultCamera = std::make_shared<TCamera>();
+    m_pDefaultCamera->Init();
+    TVector3 vPos = { 0,50,-1 };
+    TVector3 vUp = { 0,0,0 };
+    m_pDefaultCamera->CreateLookAt(vPos, vUp);
+    m_pDefaultCamera->CreatePerspectiveFov(
+        T_PI * 0.25, (float)g_dwWindowWidth / (float)g_dwWindowHeight,
+                      1.0f, 10000.0f);
+
+    ICore::g_pMainCamera = m_pDefaultCamera.get();
 
     I_Writer.Init();    
     if (m_pSwapChain)
@@ -91,7 +98,7 @@ bool  TCore::EngineFrame()
 {
     m_GameTimer.Frame();
     TInput::GetInstance().Frame();
-    //m_pMainCamera->Frame();
+    ICore::g_pMainCamera->Frame();
     TDevice::Frame();
     I_Writer.Frame();
 	Frame();
@@ -105,7 +112,7 @@ bool  TCore::EngineRender()
     //m_pSamplerState.Get();
 	Render();
 
-    m_pMainCamera->Render();
+    ICore::g_pMainCamera->Render();
     m_GameTimer.Render();
     TInput::GetInstance().Render();
 
@@ -121,7 +128,7 @@ bool  TCore::EngineRelease()
    
     m_GameTimer.Release();
     TInput::GetInstance().Release();
-    m_pMainCamera->Release();
+    m_pDefaultCamera->Release();
     I_Writer.Release();
     TDevice::Release();
 	return true;

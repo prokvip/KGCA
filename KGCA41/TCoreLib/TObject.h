@@ -14,9 +14,9 @@ public:
     TVector3        m_vPos;
     TVector3        m_vScale;
     TVector3        m_vRotation;
-    TMatrix         m_matWorld;
-    TMatrix         m_matView;
-    TMatrix         m_matProj;
+    TBASIS_EX::TMatrix         m_matWorld;
+    TBASIS_EX::TMatrix         m_matView;
+    TBASIS_EX::TMatrix         m_matProj;
     TRect	        m_tRT;
     W_STR           m_szName;
     void            SetName(W_STR name) { m_szName = name; }
@@ -32,7 +32,7 @@ public:
     virtual bool  Frame()override;
     virtual bool  Render()override;
     virtual bool  Release()override;
-    virtual void  SetMatrix(TMatrix* matWorld, TMatrix* matView, TMatrix* matProj);
+    virtual void  SetMatrix(TBASIS_EX::TMatrix* matWorld, TBASIS_EX::TMatrix* matView, TBASIS_EX::TMatrix* matProj);
     virtual void  Move(float fSecond) {};
 public:
     TObject();

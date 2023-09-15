@@ -48,6 +48,6 @@ struct PS_IN
 float4 PS(VS_OUTPUT vIn) : SV_Target
 {
     //            r,g,b,a(1)=불투명, a(0)=완전투명, a(0.0< 1.0f)= 반투명
-    return g_txDiffuse1.Sample(sample0, vIn.t);// *vIn.c;
+    return g_txDiffuse1.Sample(sample0, vIn.t) *vIn.c;
     //return vIn.c;
 }

@@ -36,7 +36,7 @@
     <ClInclude Include="TInput.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="TMath.h">
+    <ClInclude Include="TBaseMath.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="TNpcObj.h">
@@ -81,6 +81,9 @@
     <ClInclude Include="ICoreStd.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="TMath.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="DirectXTex.inl">
@@ -109,7 +112,7 @@
     <ClCompile Include="TInput.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="TMath.cpp">
+    <ClCompile Include="TBaseMath.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="TNpcObj.cpp">
@@ -149,6 +152,9 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="ICoreStd.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="TMath.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

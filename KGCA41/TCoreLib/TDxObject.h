@@ -4,9 +4,9 @@
 #include "TShaderMgr.h"
 struct CB_Data
 {
-    TMatrix matWorld;
-    TMatrix matView;
-    TMatrix matProj;
+    TBASIS_EX::TMatrix matWorld;
+    TBASIS_EX::TMatrix matView;
+    TBASIS_EX::TMatrix matProj;
 };
 struct PT_Vertex
 {

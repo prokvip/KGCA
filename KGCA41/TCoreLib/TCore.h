@@ -11,8 +11,8 @@ class TCore : public TDevice
 {
 public:
     TTimer          m_GameTimer;   
-    std::shared_ptr<TCamera>    m_pMainCamera=nullptr;
-    ID3D11BlendState* m_AlphaBlend = nullptr;
+    std::shared_ptr<TCamera>    m_pDefaultCamera=nullptr;
+    ID3D11BlendState*           m_AlphaBlend = nullptr;
     Microsoft::WRL::ComPtr<ID3D11SamplerState> m_pSamplerState;
 public:
     virtual bool  Init();

@@ -160,6 +160,7 @@ copy "..\\..\\FMOD\lib\\x64\\fmod.dll" "..\\..\\output\\Deubg"</Command>
     <ClInclude Include="TDevice.h" />
     <ClInclude Include="TDxObject.h" />
     <ClInclude Include="TInput.h" />
+    <ClInclude Include="TBaseMath.h" />
     <ClInclude Include="TMath.h" />
     <ClInclude Include="TNpcObj.h" />
     <ClInclude Include="TObject.h" />
@@ -193,6 +194,7 @@ copy "..\\..\\FMOD\lib\\x64\\fmod.dll" "..\\..\\output\\Deubg"</Command>
     <ClCompile Include="TDevice.cpp" />
     <ClCompile Include="TDxObject.cpp" />
     <ClCompile Include="TInput.cpp" />
+    <ClCompile Include="TBaseMath.cpp" />
     <ClCompile Include="TMath.cpp" />
     <ClCompile Include="TNpcObj.cpp" />
     <ClCompile Include="TObject.cpp" />
