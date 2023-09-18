@@ -7,7 +7,7 @@ public:
     ID3D11Device* m_pDevice = nullptr;
     ID3D11DeviceContext* m_pImmediateContext = nullptr;
     ID3D11RenderTargetView* m_pRenderTargetView = nullptr;
-
+    ComPtr<ID3D11DepthStencilView> m_pDepthStencilView = nullptr;
     D3D11_VIEWPORT			m_ViewPort;			// ºäÆ÷Æ®
 public:
     bool  Init();

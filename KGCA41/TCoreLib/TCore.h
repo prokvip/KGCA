@@ -12,8 +12,11 @@ class TCore : public TDevice
 public:
     TTimer          m_GameTimer;   
     std::shared_ptr<TCamera>    m_pDefaultCamera=nullptr;
+
     ID3D11BlendState*           m_AlphaBlend = nullptr;
-    Microsoft::WRL::ComPtr<ID3D11SamplerState> m_pSamplerState;
+    ComPtr<ID3D11SamplerState> m_pSamplerState;
+    ComPtr<ID3D11DepthStencilState> m_pDepthStencilState;
+    ComPtr<ID3D11DepthStencilState> m_pDepthStencilStateDisable;
 public:
     virtual bool  Init();
     virtual bool  Frame();
@@ -21,6 +24,7 @@ public:
     virtual bool  Release();
     void  CreateBlendState();
     void  CreateSamplerState();
+    void  CreateDepthStencilState();
 private:
     virtual bool  EngineInit();
     virtual bool  EngineFrame();

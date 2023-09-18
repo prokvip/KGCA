@@ -47,6 +47,45 @@ void  TCore::CreateBlendState()
     bsd.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
     m_pDevice->CreateBlendState(&bsd, &m_AlphaBlend);
 }
+void  TCore::CreateDepthStencilState()
+{
+    HRESULT hr;
+    // 깊이버퍼 상태값 세팅
+    D3D11_DEPTH_STENCIL_DESC dsDescDepth;
+    ZeroMemory(&dsDescDepth, sizeof(D3D11_DEPTH_STENCIL_DESC));
+    dsDescDepth.DepthEnable = TRUE;
+    dsDescDepth.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+    // 해당 픽셀의 깊이 연산을 하여 출력여부를 판단한다.
+    // 지형의 깊이 값 >=  깊이버퍼의 픽셀값(1.0f) 
+    dsDescDepth.DepthFunc = D3D11_COMPARISON_LESS_EQUAL;
+
+    //Stencil
+    dsDescDepth.StencilEnable = FALSE;
+    dsDescDepth.StencilReadMask = 1;
+    dsDescDepth.StencilWriteMask = 1;
+    dsDescDepth.FrontFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
+    dsDescDepth.FrontFace.StencilPassOp = D3D11_STENCIL_OP_INCR;
+    dsDescDepth.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+    dsDescDepth.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_KEEP;
+    // 디폴트 값
+    dsDescDepth.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
+    dsDescDepth.BackFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+    dsDescDepth.BackFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+    dsDescDepth.BackFace.StencilDepthFailOp = D3D11_STENCIL_OP_KEEP;
+
+    if (FAILED(hr = m_pDevice->CreateDepthStencilState(&dsDescDepth,
+        m_pDepthStencilState.GetAddressOf())))
+    {
+        return;
+    }
+    dsDescDepth.DepthEnable = FALSE;
+    if (FAILED(hr = m_pDevice->CreateDepthStencilState(&dsDescDepth,
+        m_pDepthStencilStateDisable.GetAddressOf())))
+    {
+        return;
+    }
+    return;
+}
 bool  TCore::Init() { return true; }
 bool  TCore::Frame() { return true; }
 bool  TCore::Render() { return true; }
@@ -60,6 +99,7 @@ bool  TCore::EngineInit()
 
     CreateBlendState();
     CreateSamplerState();
+    CreateDepthStencilState();
 
     I_Tex.Set(m_pDevice, m_pImmediateContext);
     I_Shader.Set(m_pDevice, m_pImmediateContext);
@@ -109,7 +149,8 @@ bool  TCore::EngineRender()
     TDevice::PreRender();
     m_pImmediateContext->OMSetBlendState(m_AlphaBlend, 0, -1);
     m_pImmediateContext->PSSetSamplers(0, 1, m_pSamplerState.GetAddressOf());
-    //m_pSamplerState.Get();
+    m_pImmediateContext->OMSetDepthStencilState(m_pDepthStencilState.Get(), 1);
+    
 	Render();
 
     ICore::g_pMainCamera->Render();
