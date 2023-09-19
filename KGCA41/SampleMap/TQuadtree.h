@@ -1,5 +1,6 @@
 #pragma once
 #include "TMap.h"
+
 class TNode
 {
 public:
@@ -9,6 +10,10 @@ public:
 	std::vector<DWORD>   m_Corner;
 	TNode* m_pParent;
 	std::vector<TNode*>  m_pChild;
+	virtual ~TNode()
+	{
+		m_Corner.clear();
+	}
 };
 class TQuadtree
 {

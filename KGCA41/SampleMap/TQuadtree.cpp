@@ -6,10 +6,10 @@ TVector2 TQuadtree::GetHeightFormNode(TNode* pNode)
 	DWORD dwBL = pNode->m_Corner[2];
 	DWORD dwBR = pNode->m_Corner[3];
 
-	DWORD dwStartCol = dwTL % m_pMap->m_iNumCellCols;
-	DWORD dwEndCol   = dwTR % m_pMap->m_iNumCellCols;
-	DWORD dwStartRow = dwTL / m_pMap->m_iNumCellCols;
-	DWORD dwEndRow   = dwBL / m_pMap->m_iNumCellCols;
+	DWORD dwStartCol = dwTL % m_pMap->m_iNumCols;
+	DWORD dwEndCol   = dwTR % m_pMap->m_iNumCols;
+	DWORD dwStartRow = dwTL / m_pMap->m_iNumCols;
+	DWORD dwEndRow   = dwBL / m_pMap->m_iNumCols;
 
 	TVector2 vHeight;
 	vHeight.x = -99999999.0f;
@@ -24,7 +24,7 @@ TVector2 TQuadtree::GetHeightFormNode(TNode* pNode)
 			{
 				vHeight.x = m_pMap->m_VertexList[dwCurrent].p.y;
 			}
-			if (m_pMap->m_VertexList[dwCurrent].p.y < vHeight.x)
+			if (m_pMap->m_VertexList[dwCurrent].p.y < vHeight.y)
 			{
 				vHeight.y = m_pMap->m_VertexList[dwCurrent].p.y;
 			}
@@ -55,14 +55,14 @@ TNode* TQuadtree::CreateNode(TNode* pParent,
 		DWORD dwTL, DWORD dwTR,
 		DWORD dwBL, DWORD dwBR )
 {
-	std::shared_ptr<TNode> pNode = std::make_shared<TNode>();
+	TNode* pNode = new TNode;
 	pNode->m_Corner.push_back(dwTL);
 	pNode->m_Corner.push_back(dwTR);
 	pNode->m_Corner.push_back(dwBL);
 	pNode->m_Corner.push_back(dwBR);
 
-	ComputeBoundingBox(pNode.get());
-	return nullptr;
+	ComputeBoundingBox(pNode);
+	return pNode;
 }
 bool   TQuadtree::Build(TMap* map)
 {

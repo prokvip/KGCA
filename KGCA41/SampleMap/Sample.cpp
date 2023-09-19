@@ -16,6 +16,9 @@ bool Sample::Init()
 	m_pMapObj->Set(m_pDevice, m_pImmediateContext);
 	m_pMapObj->Load(info);
 
+	m_Quadtree = std::make_shared<TQuadtree>();
+	m_Quadtree->Build(m_pMapObj);
+
 	m_pDebugCamera = std::make_shared<TDebugCamera>();
 	m_pDebugCamera->Init();
 
