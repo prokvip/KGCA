@@ -113,7 +113,7 @@ bool  TCore::EngineInit()
     TVector3 vUp = { 0,0,0 };
     m_pDefaultCamera->CreateLookAt(vPos, vUp);
     m_pDefaultCamera->CreatePerspectiveFov(
-        T_PI * 0.25, (float)g_dwWindowWidth / (float)g_dwWindowHeight,
+        T_PI * 0.25, (float)g_dwClientWidth / (float)g_dwClientHeight,
                       1.0f, 10000.0f);
 
     ICore::g_pMainCamera = m_pDefaultCamera.get();
@@ -195,5 +195,54 @@ bool TCore::Run()
         }
     }
     EngineRelease();
+    return true;
+}
+
+void TCore::ResizeDevice(UINT width, UINT height)
+{
+    HRESULT hr;
+    if (m_pDevice == nullptr) return;
+    DeleteDxResource();
+
+    // rendertarget    
+    m_pImmediateContext->OMSetRenderTargets(0, nullptr, nullptr);
+    m_pRenderTargetView->Release();
+    m_pDepthStencilView->Release();
+   
+    hr = m_pSwapChain->ResizeBuffers(m_SwapChainDesc.BufferCount, 
+        width, height, m_SwapChainDesc.BufferDesc.Format, m_SwapChainDesc.Flags);
+
+
+    m_pSwapChain->GetDesc(&m_SwapChainDesc);
+
+    SetRenderTargetView();
+    SetDepthStencilView();
+    SetViewPort();
+
+    GetClientRect(m_hWnd, &m_rcClient);
+    g_dwClientWidth = m_dwClientWidth = m_rcClient.right;
+    g_dwClientHeight = m_dwClientHeight = m_rcClient.bottom;
+
+    CreateDxResource();
+}
+
+bool  TCore::DeleteDxResource()
+{
+    I_Writer.DeleteDxResource();
+    return true;
+}
+bool  TCore::CreateDxResource()
+{
+    if (m_pSwapChain)
+    {
+        IDXGISurface1* pBackBuffer;
+        HRESULT hr = m_pSwapChain->GetBuffer(0, __uuidof(IDXGISurface1),
+            (LPVOID*)&pBackBuffer);
+        if (SUCCEEDED(hr))
+        {
+            I_Writer.CreateDxResource(pBackBuffer);
+        }
+        if (pBackBuffer) pBackBuffer->Release();
+    }
     return true;
 }

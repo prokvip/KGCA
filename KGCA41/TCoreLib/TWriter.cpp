@@ -1,5 +1,23 @@
 #include "TWriter.h"
 #include "TStd.h"
+// resize
+bool  TWriter::DeleteDxResource()
+{
+	m_pRT->Release();
+	m_pDefaultBrush->Release();
+	return true;
+}
+bool  TWriter::CreateDxResource(IDXGISurface1* pBackBuffer)
+{
+	if (pBackBuffer)
+	{
+		if (CrateDXWriteRT(pBackBuffer))
+		{
+			return true;
+		}		
+	}
+	return true;
+}
 bool TWriter::CrateDXWriteRT(IDXGISurface1* pSurface)
 {
 	FLOAT xDpi, yDpi;
@@ -25,6 +43,8 @@ bool TWriter::CrateDXWriteRT(IDXGISurface1* pSurface)
 	{
 		return false;
 	}
+	
+
 	hr = m_pRT->CreateSolidColorBrush(
 		D2D1::ColorF(0,0,0,1),//D2D1::ColorF(D2D1::ColorF::Yellow),
 		&m_pDefaultBrush);
@@ -38,13 +58,13 @@ bool TWriter::Create(IDXGISurface1* pBackBuffer)
 {
 	HRESULT hr =
 		D2D1CreateFactory(D2D1_FACTORY_TYPE_MULTI_THREADED,
-			&m_pD2DFactory);
+			m_pD2DFactory.ReleaseAndGetAddressOf());
 	if (SUCCEEDED(hr))
 	{
 		hr = DWriteCreateFactory(
 			DWRITE_FACTORY_TYPE_SHARED,
 			__uuidof(IDWriteFactory),
-			(IUnknown**)&m_pDWriteFactory);
+			(IUnknown**)m_pDWriteFactory.ReleaseAndGetAddressOf());
 		if (SUCCEEDED(hr))
 		{
 			m_pDWriteFactory->CreateTextFormat(
@@ -55,20 +75,11 @@ bool TWriter::Create(IDXGISurface1* pBackBuffer)
 				DWRITE_FONT_STRETCH_NORMAL,
 				30,
 				L"ko-kr", // en-us
-				&m_pDefaultTextFormat);
+				m_pDefaultTextFormat.ReleaseAndGetAddressOf());
 		}
 	}
 
-	if (pBackBuffer)
-	{
-		if (SUCCEEDED(hr))
-		{
-			if (CrateDXWriteRT(pBackBuffer))
-			{
-				return true;
-			}
-		}	
-	}
+	CreateDxResource(pBackBuffer);
 	return false;
 }
 bool TWriter::Init()
@@ -100,7 +111,7 @@ bool TWriter::Render()
 			m_pDefaultBrush->SetColor(m_TextList[iText].color);
 			m_pDefaultBrush->SetOpacity(1.0f);
 			m_pRT->DrawText(text.c_str(), text.size(),
-				m_pDefaultTextFormat, &layout, m_pDefaultBrush);
+				m_pDefaultTextFormat.Get(), &layout, m_pDefaultBrush);
 		}
 
 		PostRender();
@@ -118,11 +129,7 @@ bool TWriter::PostRender()
 }
 bool TWriter::Release()
 {
-	if (m_pDefaultBrush)m_pDefaultBrush->Release();
-	if (m_pDefaultTextFormat)m_pDefaultTextFormat->Release();
-	if (m_pRT)m_pRT->Release();
-	if (m_pDWriteFactory)m_pDWriteFactory->Release();
-	if (m_pD2DFactory)m_pD2DFactory->Release();
+	DeleteDxResource();
 	return true;
 }
 
@@ -134,8 +141,8 @@ void TWriter::AddText(std::wstring text,
 	TTextData textdata;
 	textdata.text = text;
 	textdata.layout = { x, y,
-		(float)g_dwWindowWidth,
-		(float)g_dwWindowHeight };
+		(float)g_dwClientWidth,
+		(float)g_dwClientHeight };
 	textdata.color = color;
 	m_TextList.push_back(textdata);
 }

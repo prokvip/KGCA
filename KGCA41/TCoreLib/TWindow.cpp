@@ -1,9 +1,13 @@
 #include "TWindow.h"
 HWND g_hWnd;
-DWORD g_dwWindowWidth;
-DWORD g_dwWindowHeight;
+DWORD g_dwClientWidth;
+DWORD g_dwClientHeight;
+TWindow* g_pWindow = nullptr;
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
+    LRESULT hr = g_pWindow->MsgProc(hWnd, message, wParam, lParam);
+    if (hr > 0) return 0;
+
     switch (message)
     {
     case WM_DESTROY:
@@ -14,7 +18,21 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     }
     return 0;
 }
-
+int TWindow::MsgProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+{
+    switch (message)
+    {
+    case WM_SIZE:
+        if (SIZE_MINIMIZED != wParam)
+        {
+            UINT width = LOWORD(lParam);
+            UINT height = HIWORD(lParam);
+            ResizeDevice(width, height);
+        }
+        break;
+    }
+    return -1;
+}
 bool TWindow::SetRegisterClassWindow(HINSTANCE hInstance)
 {
     m_hInstance = hInstance;
@@ -34,19 +52,20 @@ bool TWindow::SetWindow(const WCHAR* szTitle,//std::wstring szTitle,
     DWORD       dwWindowWidth,
     DWORD       dwWindowHeight)
 {   
-    m_dwWindowWidth = dwWindowWidth;
-    m_dwWindowHeight = dwWindowHeight;
+    
 #ifndef _DEBUG
     dwExStyle = WS_EX_TOPMOST;
     dwStyle = WS_POPUPWINDOW;
 #else
     m_dwExStyle = WS_EX_APPWINDOW;
 #endif
+    RECT rc = { 0,0, dwWindowWidth , dwWindowHeight };
+    AdjustWindowRect(&rc, m_dwStyle, FALSE);
     m_hWnd = CreateWindowEx(m_dwExStyle, L"KGCAÀ©µµ¿ì", szTitle,
         //szTitle.c_str(), 
         m_dwStyle,
-        m_dwWindowPosX, m_dwWindowPosY, 
-        m_dwWindowWidth, m_dwWindowHeight,
+        m_dwWindowPosX, m_dwWindowPosY,
+        rc.right-rc.left, rc.bottom-rc.top,
         nullptr, nullptr, m_hInstance, nullptr);
     if (!m_hWnd)
     {
@@ -54,9 +73,18 @@ bool TWindow::SetWindow(const WCHAR* szTitle,//std::wstring szTitle,
     }
 
     g_hWnd = m_hWnd;
-    g_dwWindowWidth = m_dwWindowWidth;
-    g_dwWindowHeight= m_dwWindowHeight;
+   
+    GetClientRect(m_hWnd, &m_rcClient);
+    g_dwClientWidth = m_dwClientWidth = m_rcClient.right;
+    g_dwClientHeight = m_dwClientHeight = m_rcClient.bottom;
 
     ShowWindow(m_hWnd, SW_SHOWNORMAL);
     return true;
+}
+
+
+
+TWindow::TWindow()
+{
+    g_pWindow = this;
 }

@@ -1,4 +1,5 @@
 #pragma once
+#include <wrl.h> 
 #include <d2d1.h>
 #include <d2d1helper.h>
 #include <dwrite.h>
@@ -6,6 +7,7 @@
 #include <string>
 #pragma comment(lib, "d2d1.lib")
 #pragma comment(lib, "dwrite.lib")
+using namespace Microsoft::WRL;
 
 struct TTextData
 {
@@ -21,9 +23,9 @@ public:
 		float x=0, float y=0,
 		D2D1::ColorF color = {0.0f, 0.0f, 0.0f,1.0f});
 public:
-	ID2D1Factory* m_pD2DFactory = nullptr;
-	IDWriteFactory* m_pDWriteFactory = nullptr;
-	IDWriteTextFormat* m_pDefaultTextFormat = nullptr;
+	ComPtr<ID2D1Factory> m_pD2DFactory = nullptr;	
+	ComPtr<IDWriteFactory> m_pDWriteFactory = nullptr;
+	ComPtr<IDWriteTextFormat> m_pDefaultTextFormat = nullptr;
 	ID2D1RenderTarget* m_pRT = nullptr;
 	ID2D1SolidColorBrush* m_pDefaultBrush = nullptr;
 public:
@@ -35,7 +37,10 @@ public:
 	bool PostRender();
 	bool Release();
 	bool CrateDXWriteRT(IDXGISurface1* pSurface);
-
+public:
+	// resize
+	virtual bool  DeleteDxResource();
+	virtual bool  CreateDxResource(IDXGISurface1* pBackBuffer);
 	static TWriter& GetInstance()
 	{
 		static TWriter input;

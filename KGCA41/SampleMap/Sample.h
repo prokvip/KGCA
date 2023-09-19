@@ -12,5 +12,8 @@ public:
 	bool Frame();
 	bool Render();
 	bool Release();
+public:
+	bool  DeleteDxResource() override;
+	bool  CreateDxResource() override;
 };
 

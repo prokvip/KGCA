@@ -3,6 +3,7 @@
 class TDevice : public TWindow
 {
 public:
+    DXGI_SWAP_CHAIN_DESC m_SwapChainDesc;
     IDXGISwapChain* m_pSwapChain = nullptr;
     ID3D11Device* m_pDevice = nullptr;
     ID3D11DeviceContext* m_pImmediateContext = nullptr;
@@ -15,6 +16,10 @@ public:
     bool  PreRender();
     bool  PostRender();
     bool  Render();
-    bool  Release();
+    bool  Release();    
+public:
+    bool SetRenderTargetView();
+    bool SetDepthStencilView();
+    bool SetViewPort();
 };
 

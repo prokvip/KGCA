@@ -25,11 +25,17 @@ public:
     void  CreateBlendState();
     void  CreateSamplerState();
     void  CreateDepthStencilState();
+    virtual void ResizeDevice(UINT width, UINT height) override;
 private:
     virtual bool  EngineInit();
     virtual bool  EngineFrame();
     virtual bool  EngineRender();
     virtual bool  EngineRelease();
+public:
+    // resize
+    virtual bool  DeleteDxResource();
+    virtual bool  CreateDxResource();
+  
 public:
     bool  Run();
 };

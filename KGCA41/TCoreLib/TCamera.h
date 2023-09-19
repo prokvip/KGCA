@@ -13,8 +13,8 @@ public:
     TBASIS_EX::TMatrix                 m_matProj;
     TVector3                m_vCameraPos;
     TVector3                m_vTargetPos;
-    DWORD                   m_dwWindowWidth;
-    DWORD                   m_dwWindowHeight;
+    DWORD                   m_dwClientWidth;
+    DWORD                   m_dwClientHeight;
 public:
     TBASIS_EX::TMatrix   CreateLookAt(TVector3 p, TVector3 t, TVector3 n = { 0,1,0 });
     TBASIS_EX::TMatrix   CreatePerspectiveFov(float fFov, float fAspect, float fNear, float fFar);
