@@ -74,8 +74,7 @@ public:
         m_xPlane[4].CreatePlane(m_vFrustum[0], m_vFrustum[2], m_vFrustum[1]);	// 근 평면(near)
         m_xPlane[5].CreatePlane(m_vFrustum[6], m_vFrustum[4], m_vFrustum[5]);	// 원 평면(far)
     }
-
-    void ExtractPlanesD3D(const TMatrix& comboMatrix)
+    void      ExtractPlanesD3D(const TMatrix& comboMatrix)
     {
         // Left clipping plane
         m_xPlane[0].fa = comboMatrix._14 + comboMatrix._11;
@@ -116,6 +115,38 @@ public:
         m_xPlane[4].Normalize();
         m_xPlane[5].Normalize();
     }
+    BOOL      CheckOBBInPlane(T_BOX& box)
+    {
+        float fDistance = 0.0f;
+        float fPlaneToCenter = 0.0f;
+        TVector3 vDir;
+        for (int iplane = 0; iplane < 6; iplane++)
+        {
+            vDir = box.vAxis[0] * box.fExtent[0];
+            fDistance = fabs(m_xPlane[iplane].fa * vDir.x +
+                        m_xPlane[iplane].fb * vDir.y +
+                        m_xPlane[iplane].fc * vDir.z);
+            vDir = box.vAxis[1] * box.fExtent[1];
+            fDistance += fabs(m_xPlane[iplane].fa * vDir.x +
+                m_xPlane[iplane].fb * vDir.y +
+                m_xPlane[iplane].fc * vDir.z);
+            vDir = box.vAxis[2] * box.fExtent[2];
+            fDistance += fabs(m_xPlane[iplane].fa * vDir.x +
+                m_xPlane[iplane].fb * vDir.y +
+                m_xPlane[iplane].fc * vDir.z);
+
+            fPlaneToCenter = m_xPlane[iplane].fa * box.vCenter.x +
+                            m_xPlane[iplane].fb * box.vCenter.y +
+                            m_xPlane[iplane].fc * box.vCenter.z +
+                            m_xPlane[iplane].fd;
+            if (fPlaneToCenter <= -fDistance)
+            {
+                return FALSE;
+            }           
+        }
+        return TRUE;
+    }
+    
 };
 class TCamera
 {

@@ -10,6 +10,7 @@ struct TMapInfo
 };
 class TMap : public TObject
 {
+public:
 	TMapInfo		m_MapInfo;
 	UINT m_iNumVertices;
 	UINT m_iNumFace;

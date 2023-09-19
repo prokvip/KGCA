@@ -35,6 +35,28 @@ struct TRect
     TRect();
     TRect(float fx, float fy, float fw, float fh);
 };
+struct T_AABB
+{
+    // AABB
+    TVector3   vMax;
+    TVector3   vMin;
+};
+struct T_OBB
+{
+    // AABB
+    TVector3   vCenter;
+    TVector3   vAxis[3];
+    float      fExtent[3];
+};
+struct T_BOX
+{
+    TVector3   vPos[8];
+    TVector3   vMax;
+    TVector3   vMin;
+    TVector3   vCenter;
+    TVector3   vAxis[3];
+    float      fExtent[3];
+};
 struct TBox 
 {
     bool  m_bEnable = true;
