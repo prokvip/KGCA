@@ -86,6 +86,17 @@ void  TCore::CreateDepthStencilState()
     }
     return;
 }
+void   TCore::CreateRasterizerState()
+{
+    HRESULT hr;
+    D3D11_RASTERIZER_DESC rd;
+    ZeroMemory(&rd, sizeof(rd));
+    rd.FillMode = D3D11_FILL_SOLID;
+    rd.CullMode= D3D11_CULL_NONE;
+    hr = m_pDevice->CreateRasterizerState(&rd, m_pRSSolid.GetAddressOf());    
+    rd.FillMode = D3D11_FILL_WIREFRAME;
+    hr = m_pDevice->CreateRasterizerState(&rd, m_pRSWireFrame.GetAddressOf());
+}
 bool  TCore::Init() { return true; }
 bool  TCore::Frame() { return true; }
 bool  TCore::Render() { return true; }
@@ -100,6 +111,7 @@ bool  TCore::EngineInit()
     CreateBlendState();
     CreateSamplerState();
     CreateDepthStencilState();
+    CreateRasterizerState();
 
     I_Tex.Set(m_pDevice, m_pImmediateContext);
     I_Shader.Set(m_pDevice, m_pImmediateContext);
@@ -150,7 +162,13 @@ bool  TCore::EngineRender()
     m_pImmediateContext->OMSetBlendState(m_AlphaBlend, 0, -1);
     m_pImmediateContext->PSSetSamplers(0, 1, m_pSamplerState.GetAddressOf());
     m_pImmediateContext->OMSetDepthStencilState(m_pDepthStencilState.Get(), 1);
-    
+    m_pImmediateContext->RSSetState(m_pRSSolid.Get());
+    // debug V
+    if (I_Input.GetKey('V') == KEY_HOLD)
+    {
+        m_pImmediateContext->RSSetState(m_pRSWireFrame.Get());
+    }
+
 	Render();
 
     ICore::g_pMainCamera->Render();
@@ -159,6 +177,8 @@ bool  TCore::EngineRender()
 
     I_Writer.Render();
     TDevice::PostRender();
+
+    
 	return true;
 }
 bool  TCore::EngineRelease()

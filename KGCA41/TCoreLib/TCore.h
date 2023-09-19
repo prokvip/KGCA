@@ -17,6 +17,8 @@ public:
     ComPtr<ID3D11SamplerState> m_pSamplerState;
     ComPtr<ID3D11DepthStencilState> m_pDepthStencilState;
     ComPtr<ID3D11DepthStencilState> m_pDepthStencilStateDisable;
+    ComPtr<ID3D11RasterizerState> m_pRSWireFrame;
+    ComPtr<ID3D11RasterizerState> m_pRSSolid;
 public:
     virtual bool  Init();
     virtual bool  Frame();
@@ -25,6 +27,7 @@ public:
     void  CreateBlendState();
     void  CreateSamplerState();
     void  CreateDepthStencilState();
+    void  CreateRasterizerState();
     virtual void ResizeDevice(UINT width, UINT height) override;
 private:
     virtual bool  EngineInit();

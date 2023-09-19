@@ -14,6 +14,10 @@ public:
     POINT  m_MousePos;
     POINT  m_BeforeMousePos;
     DWORD m_dwKeyState[256];
+    DWORD GetKey(DWORD key)
+    {
+        return m_dwKeyState[key];
+    }
     static TInput& GetInstance()
     {
         static TInput input;
