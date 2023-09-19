@@ -18,10 +18,13 @@ bool Sample::Init()
 
 	m_pDebugCamera = std::make_shared<TDebugCamera>();
 	m_pDebugCamera->Init();
-	m_pDebugCamera->CreateLookAt({ 0,100,-100 }, { 0,0,0 });
+
 	m_pDebugCamera->CreatePerspectiveFov(T_PI * 0.25, (float)
 		g_dwClientWidth / (float)g_dwClientHeight,
 		1.0f, 300.0f);
+
+	m_pDebugCamera->CreateLookAt({ 0,100,-1 }, { 0,0,0 });
+	
 
 	ICore::g_pMainCamera = m_pDebugCamera.get();
 

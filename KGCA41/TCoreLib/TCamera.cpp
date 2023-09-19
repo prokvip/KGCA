@@ -35,6 +35,8 @@ void   TCamera::UpdateVector()
     m_vSide.x = m_matView._11;
     m_vSide.y = m_matView._21;
     m_vSide.z = m_matView._31;
+
+    m_Frustum.Create(m_matView, m_matProj);
 }
 TBASIS_EX::TMatrix   TCamera::CreatePerspectiveFov(float fovy, float Aspect, float fNearPlane, float fFarPlane)
 {

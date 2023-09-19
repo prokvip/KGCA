@@ -121,12 +121,15 @@ bool  TCore::EngineInit()
 
     m_pDefaultCamera = std::make_shared<TCamera>();
     m_pDefaultCamera->Init();
-    TVector3 vPos = { 0,50,-1 };
+    TVector3 vPos = { 0,0,-10 };
     TVector3 vUp = { 0,0,0 };
-    m_pDefaultCamera->CreateLookAt(vPos, vUp);
+
     m_pDefaultCamera->CreatePerspectiveFov(
         T_PI * 0.25, (float)g_dwClientWidth / (float)g_dwClientHeight,
-                      1.0f, 10000.0f);
+        1.0f, 100.0f);
+
+    m_pDefaultCamera->CreateLookAt(vPos, vUp);
+    
 
     ICore::g_pMainCamera = m_pDefaultCamera.get();
 
