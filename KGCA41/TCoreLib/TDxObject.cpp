@@ -6,6 +6,7 @@ void  TDxObject::Set(ID3D11Device* pDevice, ID3D11DeviceContext* pImmediateConte
 }
 bool  TDxObject::CreateIndexBuffer()
 {
+    if (m_IndexList.size() == 0) return true;
     D3D11_BUFFER_DESC Desc;
     ZeroMemory(&Desc, sizeof(Desc));
     Desc.ByteWidth = sizeof(DWORD) * m_IndexList.size();
@@ -30,7 +31,7 @@ bool  TDxObject::CreateVertexBuffer()
 {   
     D3D11_BUFFER_DESC Desc;
     ZeroMemory(&Desc, sizeof(Desc));
-    Desc.ByteWidth = sizeof(PT_Vertex) * m_VertexList.size();
+    Desc.ByteWidth = sizeof(PNCT_Vertex) * m_VertexList.size();
     Desc.Usage = D3D11_USAGE_DEFAULT;
     Desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 
@@ -114,7 +115,7 @@ bool  TDxObject::PreRender()
         m_pShader->Apply(m_pImmediateContext, 0);
     }
 
-    UINT stride = sizeof(PT_Vertex);
+    UINT stride = sizeof(PNCT_Vertex);
     UINT offset = 0;
     m_pImmediateContext->IASetVertexBuffers(0, 1, &m_pVertexBuffer, &stride, &offset);
     m_pImmediateContext->IASetPrimitiveTopology(

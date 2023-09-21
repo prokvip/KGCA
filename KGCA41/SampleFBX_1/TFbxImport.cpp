@@ -6,7 +6,7 @@ void      TFbxImport::PreProcess(FbxNode* fbxNode)
 	FbxMesh* fbxMesh = fbxNode->GetMesh();
 	if (fbxMesh != nullptr)
 	{
-		m_pNodeList.push_back(fbxNode);
+		m_pNodeMeshList.push_back(fbxNode);
 	}
 	UINT iNumChild = fbxNode->GetChildCount();
 	for (int iChild = 0; iChild < iNumChild; iChild++)
@@ -29,17 +29,52 @@ bool      TFbxImport::Load(T_STR filename)
 		// tree 순회(Tree traverse)
 		PreProcess(m_FbxRootNode);
 	}
-	for (int iNode = 0; iNode < m_pNodeList.size(); iNode++)
+	for (int iNode = 0; iNode < m_pNodeMeshList.size(); iNode++)
 	{
-		LoadMesh(m_pNodeList[iNode]);
+		TFbxMesh tMesh;
+		LoadMesh(m_pNodeMeshList[iNode], tMesh);
+		m_tMeshList.push_back(tMesh);
 	}
+
 	return true;
 }
 // vb, ib, worldmatrix, texture
-void	  TFbxImport::LoadMesh(FbxNode* fbxNode)
+void	  TFbxImport::LoadMesh(FbxNode* fbxNode, TFbxMesh& tMesh)
 {
 	FbxMesh* fbxMesh = fbxNode->GetMesh();
 	UINT    iNumPolyCount = fbxMesh->GetPolygonCount();
+	FbxVector4* pVertexPositions = fbxMesh->GetControlPoints();
+
+	// 1) polygon -> face 2개 인 경우 -> 폴리곤사이즈 4개 정점으로 구성.
+	// 2) polygon -> face 1개 인 경우 -> 폴리곤사이즈 3개 정점으로 구성.
+	for (int iPoly = 0; iPoly<iNumPolyCount; iPoly++)
+	{
+		UINT iNumPolySize = fbxMesh->GetPolygonSize(iPoly);
+		UINT iNumTriangleCount = iNumPolySize - 2;
+		
+		UINT iCornerIndices[3];
+		for (int iTriangle = 0; iTriangle < iNumTriangleCount; iTriangle++)
+		{			
+			iCornerIndices[0] = fbxMesh->GetPolygonVertex(iPoly, 0);
+			iCornerIndices[1] = fbxMesh->GetPolygonVertex(iPoly, iTriangle+2);
+			iCornerIndices[2] = fbxMesh->GetPolygonVertex(iPoly, iTriangle+1);
+
+			for (int iVertex = 0; iVertex < 3; iVertex++)
+			{
+				
+				PNCT_Vertex pnct;
+				FbxVector4 v = pVertexPositions[iCornerIndices[iVertex]];
+				pnct.p.x = v.mData[0];
+				pnct.p.y = v.mData[2];
+				pnct.p.z = v.mData[1];
+
+				pnct.n = { 0,0,0 };
+				pnct.c = { 1,1,1,1 };
+				pnct.t = { 0,0, };
+				tMesh.m_TriangleList.push_back(pnct);
+			}
+		}
+	}
 }
 bool      TFbxImport::Init()
 {

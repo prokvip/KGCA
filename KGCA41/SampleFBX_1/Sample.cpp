@@ -14,6 +14,19 @@ bool Sample::Init()
 	// fbx 
 	m_pFbx.Init();
 	m_pFbx.Load(L"../../res/fbx/box.fbx");
+	//m_pFbx.Load(L"../../res/fbx/MultiCameras.FBX");	
+
+	m_BoxObj.Set(m_pDevice, m_pImmediateContext);
+	m_BoxObj.m_VertexList.resize(m_pFbx.m_tMeshList[0].m_TriangleList.size());
+	for (int v = 0; v < m_pFbx.m_tMeshList[0].m_TriangleList.size(); v++)
+	{
+		m_BoxObj.m_VertexList[v] = m_pFbx.m_tMeshList[0].m_TriangleList[v];
+	}
+
+	m_BoxObj.Create(L"../../res/topdownmap.jpg",
+					L"../../res/shader/DefaultObj.hlsl");
+
+
 
 	m_pTex = I_Tex.Load(L"../../res/000.jpg");
 
@@ -54,7 +67,7 @@ bool Sample::Render()
 	m_pMapObj->SetMatrix(&matWorld,
 		&ICore::g_pMainCamera->m_matView,
 		&ICore::g_pMainCamera->m_matProj);
-	m_pMapObj->Render();
+	//m_pMapObj->Render();
 
 	//m_pImmediateContext->OMSetDepthStencilState(m_pDepthStencilStateDisable.Get(), 1);
 	TMatrix matWorld2;
@@ -62,13 +75,20 @@ bool Sample::Render()
 	m_pMapObj->SetMatrix(&matWorld2,
 		&ICore::g_pMainCamera->m_matView,
 		&ICore::g_pMainCamera->m_matProj);
-	m_pMapObj->PreRender();
+	/*m_pMapObj->PreRender();
 	m_pTex->Apply(m_pImmediateContext, 0);
-	m_pMapObj->PostRender();
+	m_pMapObj->PostRender();*/
+
+	m_BoxObj.SetMatrix(nullptr,
+		&ICore::g_pMainCamera->m_matView,
+		&ICore::g_pMainCamera->m_matProj);
+	m_BoxObj.Render();
 	return true;
 }
 bool Sample::Release()
 {
+	m_pFbx.Release();
+	m_BoxObj.Release();
 	m_pDebugCamera->Release();
 	if(m_pMapObj) m_pMapObj->Release();
 	delete m_pMapObj;

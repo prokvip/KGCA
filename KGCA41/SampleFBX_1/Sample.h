@@ -4,8 +4,22 @@
 #include "TDebugCamera.h"
 #include "TQuadtree.h"
 #include "TFbxImport.h"
+
+class TMapObject : public TObject
+{
+public:
+	virtual bool  CreateVertexData()
+	{
+		return true;
+	}
+	virtual bool  CreateIndexData()
+	{
+		return true;
+	}
+};
 class Sample : public TCore
 {
+	TObject			m_BoxObj;
 	TFbxImport		m_pFbx;
 	const TTexture* m_pTex;
 	TMap* m_pMapObj = nullptr;

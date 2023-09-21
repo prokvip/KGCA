@@ -1,5 +1,5 @@
 #pragma once
-#include <tstd.h>
+#include <TObject.h>
 #include <fbxsdk.h>
 #pragma comment(lib, "libfbxsdk-md.lib")
 #pragma comment(lib, "libxml2-md.lib")

@@ -1,22 +1,29 @@
 #pragma once
-#include <tstd.h>
+#include <TObject.h>
 #include <fbxsdk.h>
 #pragma comment(lib, "libfbxsdk-md.lib")
 #pragma comment(lib, "libxml2-md.lib")
 #pragma comment(lib, "zlib-md.lib")
 
-class TFbxImport
+struct TFbxMesh
+{
+	std::vector<PNCT_Vertex> 		m_TriangleList;
+};
+
+class TFbxImport 
 {
 public:
 	FbxManager*		m_pSDKManager	= nullptr;	 // 메모리 관리 
 	FbxImporter*	m_pFbxImporter	= nullptr; // fbx파일을 로더
 	FbxScene*		m_pFbxScene		= nullptr;		 // 화면 랜더링 오브젝트들.
 	FbxNode*		m_FbxRootNode	= nullptr;
-	std::vector<FbxNode*>  m_pNodeList;
+	std::vector<FbxNode*>  m_pNodeMeshList;
+public:
+	std::vector<TFbxMesh>  m_tMeshList;	
 public:
 	bool      Load(W_STR filename);
 	void	  PreProcess(FbxNode* fbxNode);
-	void	  LoadMesh(FbxNode* node);
+	void	  LoadMesh(FbxNode* node, TFbxMesh& tMesh);
 	bool      Init();
 	bool      Release();
 };

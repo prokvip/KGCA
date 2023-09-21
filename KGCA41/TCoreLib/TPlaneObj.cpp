@@ -30,7 +30,7 @@ bool  TPlaneObj::CreateVertexBuffer()
 
     D3D11_BUFFER_DESC Desc;
     ZeroMemory(&Desc, sizeof(Desc));
-    Desc.ByteWidth = sizeof(PT_Vertex) * m_VertexList.size();
+    Desc.ByteWidth = sizeof(PNCT_Vertex) * m_VertexList.size();
     Desc.Usage = D3D11_USAGE_DEFAULT;
     Desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 

@@ -8,7 +8,7 @@ struct CB_Data
     TBASIS_EX::TMatrix matView;
     TBASIS_EX::TMatrix matProj;
 };
-struct PT_Vertex
+struct PNCT_Vertex
 {
     TVector3 p;
     TVector3 n;
@@ -28,7 +28,7 @@ public:
     const TShader*          m_pShader = nullptr;
     const TTexture*         m_pTex = nullptr;
     CB_Data                 m_cbData;
-    std::vector< PT_Vertex> m_VertexList;
+    std::vector< PNCT_Vertex> m_VertexList;
     std::vector< DWORD>     m_IndexList;
 public:
     void Set(ID3D11Device* pDevice, ID3D11DeviceContext* pImmediateContext);
