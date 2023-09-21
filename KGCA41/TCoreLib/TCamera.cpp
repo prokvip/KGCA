@@ -66,26 +66,7 @@ bool  TCamera::Create(TVector3 vPos, TVector2 size )
     return true;
 }
 bool  TCamera::Frame2D()
-{
-    float fHalfWidth = m_dwClientWidth / 2.0f;
-    float fHalfHeight = m_dwClientHeight / 2.0f;
-    if (m_vCameraPos.x < -(g_fMapHalfSizeX)+fHalfWidth)
-    {
-        m_vCameraPos.x = -(g_fMapHalfSizeX)+fHalfWidth;
-    }
-    if (m_vCameraPos.y < -(g_fMapHalfSizeY)+fHalfHeight)
-    {
-        m_vCameraPos.y = -(g_fMapHalfSizeY)+fHalfHeight;
-    }
-    if (m_vCameraPos.x > (g_fMapHalfSizeX) -fHalfWidth)
-    {
-        m_vCameraPos.x = (g_fMapHalfSizeX)-fHalfWidth;
-    }
-    if (m_vCameraPos.y > (g_fMapHalfSizeY)-fHalfHeight)
-    {
-        m_vCameraPos.y = (g_fMapHalfSizeY)-fHalfHeight;
-    }
-
+{   
     m_matView._41 = -m_vCameraPos.x;
     m_matView._42 = -m_vCameraPos.y;
     m_matView._43 = -m_vCameraPos.z;

@@ -1,30 +1,6 @@
 #include "TNpcObj.h"
 void			TNpcObj::Move(float fSecond)
 {
-	TVector3 vVelocity = m_vDirection * 500.0f * fSecond;
-	m_vPos = m_vPos + vVelocity;
-
-	if (m_vPos.x < -g_fMapHalfSizeX)
-	{
-		m_vDirection.x *= -1.0f;
-		m_vPos.x = -g_fMapHalfSizeX;
-	}
-	if (m_vPos.y < -g_fMapHalfSizeY)
-	{
-		m_vDirection.y *= -1.0f;
-		m_vPos.y = -g_fMapHalfSizeY;
-	}
-	if (m_vPos.x > g_fMapHalfSizeX)
-	{
-		m_vDirection.x *= -1.0f;
-		m_vPos.x = g_fMapHalfSizeX;
-	}
-	if (m_vPos.y > g_fMapHalfSizeY)
-	{
-		m_vDirection.y *= -1.0f;
-		m_vPos.y = g_fMapHalfSizeY;
-	}
-
 	TVector2 rt = { m_vPos.x, m_vPos.y };
 	SetRect(rt, m_vScale.x * 2.0f, m_vScale.y * 2.0f);
 };

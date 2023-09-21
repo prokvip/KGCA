@@ -56,8 +56,6 @@ typedef std::list<DWORD>::iterator		DWORD_LIST_ITOR;
 typedef std::list< HANDLE >				HANDLE_LIST;
 typedef	std::list< HANDLE >::iterator	HANDLE_LIST_ITOR;
 
-extern float g_fMapHalfSizeX;
-extern float g_fMapHalfSizeY;
 extern DWORD g_dwClientWidth;
 extern DWORD g_dwClientHeight;
 
