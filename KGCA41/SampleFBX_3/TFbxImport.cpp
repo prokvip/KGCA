@@ -1,4 +1,28 @@
 #include "TFbxImport.h"
+
+/*
+GetMappingMode() 요소가 표면에 매핑되는 방식을 결정한다.
+eNone			: 매핑이 결정되지 않았다.
+eByControlPoint : 각 표면(surface) 제어점/정점에 대해 하나의 매핑 좌표가 있다.
+eByPolygonVertex: 각 정점에 대해 하나의 매핑 좌표가 있으며, 그 일부가 되는 모든 다각형(polygon)에 대해 있다.
+				  즉, 정점은 자신이 속한 다각형 만큼 많은 매핑 좌표를 갖게된다.
+eByPolygon		: 전체 다각형(polygon)에 대해 하나의 매핑 좌표 만있을 수 있다.
+eByEdge			: 메시의 각 고유 가장자리에 대해 하나의 매핑 좌표가 있다.
+				  이것은 스무딩 레이어 요소와 함께 사용하기 위한 것이다.
+eAllSame		: 전체 표면(surface)에 대해 하나의 매핑 좌표 만있을 수 있다.
+*/
+/*
+GetReferenceMode() 매핑 정보가 좌표 배열에 저장되는 방식을 결정한다.
+eDirect			: n 번째 요소의 매핑 정보가 FbxLayerElementTemplate::mDirectArray의 n 번째 위치에 있음을 나타낸다.
+eIndex,			: 이 기호는 FBX v5.0 파일과의 하위 호환성을 위해 유지된다.
+				  FBX v6.0 이상에서는이 기호가 eIndexToDirect로 대체된다.
+eIndexToDirect	: 이것은 FbxLayerElementTemplate::mIndexArray에 n 번째 요소에 대해
+				  매핑 요소의 FbxLayerElementTemplate::mDirectArray 배열에 인덱스가 포함되어 있음을 나타낸다.
+				  eIndexToDirect는 일반적으로 eByPolygonVertex 매핑 모드 요소 좌표를 저장하는 데 유용하다.
+				  동일한 좌표는 일반적으로 여러 번 반복되기 때문에 좌표를 한 번만 저장하고 인덱스로 참조하여 공간을 절약한다.
+				  머티리얼과 텍스처도이 모드로 참조되며 실제 머티리얼 / 텍스처는 FbxLayerElementTemplate::mDirectArray를 통해 액세스 할 수 있다.
+*/
+
 int TFbxImport::GetSubMaterialIndex(UINT iPoly, FbxLayerElementMaterial*  mtrl)
 {
 	int iSubMtrl = 0;
