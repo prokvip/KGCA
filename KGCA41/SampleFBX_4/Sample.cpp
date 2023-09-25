@@ -149,8 +149,13 @@ bool Sample::Release()
 	auto deleteObj = [](NEW_FBX p) { p->Release(); };
 	std::for_each(begin(m_pFbxList), end(m_pFbxList), deleteObj);
 
-
+	for (int iSub = 0; iSub < m_BoxObj->m_pChild.size(); iSub++)
+	{
+		NEW_OBJECT obj = m_BoxObj->m_pChild[iSub];
+		obj->Release();
+	}
 	m_BoxObj->Release();
+
 	m_pDebugCamera->Release();
 	if(m_pMapObj) m_pMapObj->Release();
 	delete m_pMapObj;
