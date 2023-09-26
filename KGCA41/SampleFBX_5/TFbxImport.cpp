@@ -104,7 +104,7 @@ void      TFbxImport::PreProcess(FbxNode* fbxNode, TFbxModel* pParent)
 	FbxMesh* fbxMesh = fbxNode->GetMesh();
 	if (fbxMesh != nullptr)
 	{
-		m_pNodeMeshList.push_back(fbxNode);
+		m_pFbxNodeMeshList.push_back(fbxNode);
 	}
 	UINT iNumChild = fbxNode->GetChildCount();
 	for (int iChild = 0; iChild < iNumChild; iChild++)
@@ -123,11 +123,12 @@ void      TFbxImport::PreProcess(FbxNode* fbxNode, TFbxModel* pParent)
 
 	
 }
-bool      TFbxImport::Load(T_STR filename)
+bool      TFbxImport::Load(T_STR filename, TFbxObj* fbxobj)
 {
 	C_STR name = wtm(filename);
 	bool ret = m_pFbxImporter->Initialize(name.c_str());
 	ret = m_pFbxImporter->Import(m_pFbxScene);
+	m_pFbxImporter->Destroy();
 
 	FbxNode* m_FbxRootNode = m_pFbxScene->GetRootNode();
 	if (m_FbxRootNode)
@@ -136,19 +137,15 @@ bool      TFbxImport::Load(T_STR filename)
 		PreProcess(m_FbxRootNode, nullptr);
 	}
 	
-	std::shared_ptr<TFbxObj> fbxobj = std::make_shared<TFbxObj>();
-	fbxobj->m_tMeshList.resize(m_pNodeMeshList.size());
-	for (int iNode = 0; iNode < m_pNodeMeshList.size(); iNode++)
+	for (int iNode = 0; iNode < m_pFbxNodeMeshList.size(); iNode++)
 	{
-		auto& tMesh = fbxobj->m_tMeshList[iNode];
-		LoadMesh(m_pNodeMeshList[iNode], tMesh);
-		tMesh.m_csName = m_pNodeMeshList[iNode]->GetName();
-		tMesh.m_matWorld = ParseTransform(m_pNodeMeshList[iNode]);
+		std::shared_ptr<TFbxMesh> fbxMesh = std::make_shared<TFbxMesh>();
+		LoadMesh(m_pFbxNodeMeshList[iNode], *fbxMesh.get());
+		fbxMesh->m_csName = m_pFbxNodeMeshList[iNode]->GetName();
+		fbxMesh->m_matWorld = ParseTransform(m_pFbxNodeMeshList[iNode]);
+		fbxobj->m_tMeshList.push_back(fbxMesh);
 	}
-
-	GetAnimation();
-
-	TModelMgr::Get().m_tMeshList.push_back(fbxobj);
+	GetAnimation(fbxobj);
 	return true;
 }
 // vb, ib, worldmatrix, texture

@@ -7,6 +7,7 @@
 
 class TMapObject : public TObject
 {
+public:
 	TFbxObj* m_pFbxObject; // 모델매니저의 저장된 포인터 
 public:
 	float   m_fCurrentAnimTime = 0.0f;
@@ -17,7 +18,7 @@ public:
 public:
 	TFbxMesh* m_ptMesh;
 	std::vector<const TTexture*>			m_TexArray;
-	std::vector<std::shared_ptr<TMapObject>>m_pChild;
+	std::vector<std::shared_ptr<TMapObject>>m_pSubObject;
 public:
 	void     LoadTextureArray(W_STR filename)
 	{

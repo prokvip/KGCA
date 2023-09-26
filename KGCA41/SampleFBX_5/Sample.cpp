@@ -13,49 +13,31 @@
 bool Sample::Init()
 {
 	// fbx 
-	TModelMgr::Get().Load(L"../../res/fbx/MultiCameras.FBX");
-	TModelMgr::Get().Load(L"../../res/fbx/sphereBox.FBX");
-	TModelMgr::Get().Load(L"../../res/fbx/Turret_Deploy1.FBX");
-	TModelMgr::Get().Load(L"../../res/fbx/box.fbx");
-	TModelMgr::Get().Load(L"../../res/fbx/ship.FBX");
+	//TModelMgr::Get().Load(L"../../res/fbx/MultiCameras.FBX");
+	//TModelMgr::Get().Load(L"../../res/fbx/sphereBox.FBX");
+	TFbxObj* pFbxObj= TModelMgr::Get().Load(L"../../res/fbx/Turret_Deploy1.FBX");
+	//TModelMgr::Get().Load(L"../../res/fbx/box.fbx");
+	//TModelMgr::Get().Load(L"../../res/fbx/ship.FBX");
 
-	/*m_MapObj; = std::make_shared<TMapObject>();
-	m_MapObj;->Set(m_pDevice, m_pImmediateContext);
-	m_MapObj;->m_iStartFrame = m_pFbxImporter[0]->m_iStartFrame;
-	m_MapObj;->m_iEndFrame = m_pFbxImporter[0]->m_iEndFrame;
-	m_MapObj;->m_iFrameSpeed = m_pFbxImporter[0]->m_iFrameSpeed;
-	m_MapObj;->m_iTickForFrame = m_pFbxImporter[0]->m_iTickForFrame;
-	
-	for (int iSub = 0; iSub < m_pFbxImporter[0]->m_tMeshList.size(); iSub++)
+	m_MapObj = std::make_shared<TMapObject>();
+	m_MapObj->m_pFbxObject = pFbxObj;
+	m_MapObj->Set(m_pDevice, m_pImmediateContext);
+
+	auto tFbxMeshList = m_MapObj->m_pFbxObject->m_tMeshList;
+
+	for (int iSub = 0; iSub < tFbxMeshList.size(); iSub++)
 	{
-		TFbxMesh& fbxMesh = m_pFbxImporter[0]->m_tMeshList[iSub];
-
+		TFbxMesh* fbxMesh = tFbxMeshList[iSub].get();
 		NEW_OBJECT obj  = std::make_shared<TMapObject>();
-		m_MapObj;->m_pChild.push_back(obj);
-
-		obj->Set(m_pDevice, m_pImmediateContext);
-		obj->m_VertexList.resize(fbxMesh.m_iNumPolygon * 3);
-		obj->m_ptMesh = &fbxMesh;
-
-		UINT iNumSubMaterial =
-			fbxMesh.m_TriangleList.size();
-
-		UINT iSubVertexIndex = 0;
-		for (int iMtrl = 0; iMtrl < iNumSubMaterial; iMtrl++)
-		{
-			fbxMesh.m_TriangleOffsetList.push_back(iSubVertexIndex);
-			for (int v = 0; v < fbxMesh.m_TriangleList[iMtrl].size(); v++)
-			{
-				obj->m_VertexList[iSubVertexIndex + v] = fbxMesh.m_TriangleList[iMtrl][v];
-			}
-			iSubVertexIndex += fbxMesh.m_TriangleList[iMtrl].size();
-		}
+		m_MapObj->m_pSubObject.push_back(obj);
+		obj->Set(m_pDevice, m_pImmediateContext);		
+		obj->m_ptMesh = fbxMesh;	
 		
 		W_STR filename;
 		W_STR defaultPath = L"../../res/fbx/";
-		if (fbxMesh.m_szTextureFileName.size() > 1)
+		if (fbxMesh->m_szTextureFileName.size() > 1)
 		{
-			filename = fbxMesh.m_szTextureFileName[0];
+			filename = fbxMesh->m_szTextureFileName[0];
 			defaultPath += filename;
 			obj->Create(defaultPath, L"../../res/shader/DefaultObj.hlsl");
 		}
@@ -63,46 +45,24 @@ bool Sample::Init()
 		{
 			obj->Create(L"", L"../../res/shader/DefaultObj.hlsl");
 		}
-		
 
-		obj->m_matWorld = fbxMesh.m_matWorld;
+		obj->m_matWorld = fbxMesh->m_matWorld;
 
-		for (int isubMtrl = 0; isubMtrl < fbxMesh.m_szTextureFileName.size(); isubMtrl++)
+		for (int isubMtrl = 0; isubMtrl < fbxMesh->m_szTextureFileName.size(); isubMtrl++)
 		{
-			W_STR filename = fbxMesh.m_szTextureFileName[isubMtrl];
+			W_STR filename = fbxMesh->m_szTextureFileName[isubMtrl];
 			W_STR defaultPath = L"../../res/fbx/";
 			defaultPath += filename;
 			obj->LoadTextureArray(defaultPath);
 		}
-	}
-
-	auto deleteObj = [](NEW_FBX p) { p->Release(); };
-	std::for_each(begin(m_pFbxImporter), end(m_pFbxImporter), deleteObj);
-	m_pFbxImporter.clear();
-
-
-	TMapInfo info = {
-		129, 129, 1,
-		L"../../res/topdownmap.jpg",
-		L"../../res/shader/DefaultObj.hlsl"
-	};
-	m_pMapObj = new TMap;
-	m_pMapObj->Set(m_pDevice, m_pImmediateContext);
-	m_pMapObj->Load(info);
-
-	m_Quadtree = std::make_shared<TQuadtree>();
-	m_Quadtree->Build(m_pMapObj);*/
+	}	
 
 	m_pDebugCamera = std::make_shared<TDebugCamera>();
 	m_pDebugCamera->Init();
-
 	m_pDebugCamera->CreatePerspectiveFov(T_PI * 0.25, (float)
 		g_dwClientWidth / (float)g_dwClientHeight,
 		1.0f, 30000.0f);
-
 	m_pDebugCamera->CreateLookAt({ 0,0,-50 }, { 0,0,0 });
-	
-
 	ICore::g_pMainCamera = m_pDebugCamera.get();
 
 	return true;

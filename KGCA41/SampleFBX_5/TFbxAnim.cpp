@@ -1,5 +1,5 @@
 #include "TFbxImport.h"
-void		TFbxImport::GetAnimation()
+void		TFbxImport::GetAnimation(TFbxObj* fbxobj)
 {
 	// 에니메니션 정보 얻기
 	FbxTime::SetGlobalTimeMode(FbxTime::eFrames30);
@@ -24,12 +24,12 @@ void		TFbxImport::GetAnimation()
 	for (int t = startFrame; t < endFrame; t++)
 	{
 		time.SetFrame(t, TimeMode);
-		for (int iNode = 0; iNode < m_pNodeMeshList.size(); iNode++)
+		for (int iNode = 0; iNode < m_pFbxNodeMeshList.size(); iNode++)
 		{
-			TFbxMesh& tMesh = m_tMeshList[iNode];
+			TFbxMesh& tMesh = *(fbxobj->m_tMeshList[iNode].get());
 			std::vector< FbxAMatrix>  frameMatrix;
 
-			FbxAMatrix matFbx = m_pNodeMeshList[iNode]->EvaluateGlobalTransform(time);
+			FbxAMatrix matFbx = m_pFbxNodeMeshList[iNode]->EvaluateGlobalTransform(time);
 			TMatrix mat = ConvertAMatrix(matFbx);
 			mat = DxConvertMatrix(mat);
 			tMesh.m_MatrixArray.push_back(mat);
