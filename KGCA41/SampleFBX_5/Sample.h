@@ -23,17 +23,7 @@ public:
 	void     LoadTextureArray(W_STR filename)
 	{
 		m_TexArray.push_back(I_Tex.Load(filename));
-	}
-	bool   CreateVertexBuffer()
-	{
-		m_pVertexBuffer = m_pFbxObject->m_pVertexBuffer;
-		return true;
-	}
-	bool   CreateIndexBuffer()
-	{
-		m_pVertexBuffer = m_pFbxObject->m_pVertexBuffer;
-		return true;
-	}
+	}	
 	bool   PostRender()
 	{
 		for (int isubMtrl = 0; isubMtrl < m_ptMesh->m_TriangleList.size(); isubMtrl++)

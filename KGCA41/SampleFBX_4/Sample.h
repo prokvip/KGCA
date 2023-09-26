@@ -7,7 +7,6 @@
 
 
 class TModel;
-
 using NEW_OBJECT = std::shared_ptr<TModel>;
 using NEW_FBX = std::shared_ptr<TFbxImport>;
 

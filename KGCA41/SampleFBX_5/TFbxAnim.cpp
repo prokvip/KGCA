@@ -15,10 +15,10 @@ void		TFbxImport::GetAnimation(TFbxObj* fbxobj)
 	FbxLongLong startFrame = startTime.GetFrameCount(TimeMode);
 	FbxLongLong endFrame = endTime.GetFrameCount(TimeMode);
 
-	m_iStartFrame = startFrame;
-	m_iEndFrame = endFrame;
-	m_iFrameSpeed = 30;
-	m_iTickForFrame = 160;
+	fbxobj->m_iStartFrame = startFrame;
+	fbxobj->m_iEndFrame = endFrame;
+	fbxobj->m_iFrameSpeed = 30;
+	fbxobj->m_iTickForFrame = 160;
 
 	FbxTime time;
 	for (int t = startFrame; t < endFrame; t++)

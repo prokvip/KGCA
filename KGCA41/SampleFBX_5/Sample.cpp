@@ -13,16 +13,20 @@
 bool Sample::Init()
 {
 	// fbx 
-	//TModelMgr::Get().Load(L"../../res/fbx/MultiCameras.FBX");
-	//TModelMgr::Get().Load(L"../../res/fbx/sphereBox.FBX");
-	TFbxObj* pFbxObj= TModelMgr::Get().Load(L"../../res/fbx/Turret_Deploy1.FBX");
-	//TModelMgr::Get().Load(L"../../res/fbx/box.fbx");
-	//TModelMgr::Get().Load(L"../../res/fbx/ship.FBX");
+	TFbxObj* pFbxObj1 = TModelMgr::Get().Load(L"../../res/fbx/MultiCameras.FBX");
+	TFbxObj* pFbxObj2 = TModelMgr::Get().Load(L"../../res/fbx/sphereBox.FBX");
+	TFbxObj* pFbxObj3 = TModelMgr::Get().Load(L"../../res/fbx/Turret_Deploy1.FBX");
+	TFbxObj* pFbxObj4 = TModelMgr::Get().Load(L"../../res/fbx/box.fbx");
+	TFbxObj* pFbxObj5 = TModelMgr::Get().Load(L"../../res/fbx/ship.FBX");
+
 
 	m_MapObj = std::make_shared<TMapObject>();
-	m_MapObj->m_pFbxObject = pFbxObj;
+	m_MapObj->m_pFbxObject = TModelMgr::Get().GetPtr(L"Turret_Deploy1.FBX");
 	m_MapObj->Set(m_pDevice, m_pImmediateContext);
-
+	m_MapObj->m_iStartFrame = m_MapObj->m_pFbxObject->m_iStartFrame;
+	m_MapObj->m_iEndFrame = m_MapObj->m_pFbxObject->m_iEndFrame;
+	m_MapObj->m_iFrameSpeed = m_MapObj->m_pFbxObject->m_iFrameSpeed;
+	m_MapObj->m_iTickForFrame = m_MapObj->m_pFbxObject->m_iTickForFrame;
 	auto tFbxMeshList = m_MapObj->m_pFbxObject->m_tMeshList;
 
 	for (int iSub = 0; iSub < tFbxMeshList.size(); iSub++)
@@ -33,6 +37,21 @@ bool Sample::Init()
 		obj->Set(m_pDevice, m_pImmediateContext);		
 		obj->m_ptMesh = fbxMesh;	
 		
+		obj->Set(m_pDevice, m_pImmediateContext);
+		obj->m_VertexList.resize(fbxMesh->m_iNumPolygon * 3);
+		UINT iNumSubMaterial =fbxMesh->m_TriangleList.size();
+
+		UINT iSubVertexIndex = 0;
+		for (int iMtrl = 0; iMtrl < iNumSubMaterial; iMtrl++)
+		{
+			fbxMesh->m_TriangleOffsetList.push_back(iSubVertexIndex);
+			for (int v = 0; v < fbxMesh->m_TriangleList[iMtrl].size(); v++)
+			{
+				obj->m_VertexList[iSubVertexIndex + v] = fbxMesh->m_TriangleList[iMtrl][v];
+			}
+			iSubVertexIndex += fbxMesh->m_TriangleList[iMtrl].size();
+		}
+
 		W_STR filename;
 		W_STR defaultPath = L"../../res/fbx/";
 		if (fbxMesh->m_szTextureFileName.size() > 1)
@@ -68,66 +87,40 @@ bool Sample::Init()
 	return true;
 }
 bool Sample::Frame()
-{
-	/*m_pMapObj->Frame();
-
-	m_MapObj;->m_fCurrentAnimTime += m_MapObj;->m_iFrameSpeed *g_fSecondPerFrame;
-	if (m_MapObj;->m_fCurrentAnimTime >= m_MapObj;->m_iEndFrame)
+{	
+	m_MapObj->m_fCurrentAnimTime += m_MapObj->m_iFrameSpeed *g_fSecondPerFrame;
+	if (m_MapObj->m_fCurrentAnimTime >= m_MapObj->m_iEndFrame)
 	{
-		m_MapObj;->m_fCurrentAnimTime = m_MapObj;->m_iStartFrame;
+		m_MapObj->m_fCurrentAnimTime = m_MapObj->m_iStartFrame;
 	}
-	for (int iSub = 0; iSub < m_MapObj;->m_pChild.size(); iSub++)
+	for (int iSub = 0; iSub < m_MapObj->m_pSubObject.size(); iSub++)
 	{
-		NEW_OBJECT obj = m_MapObj;->m_pChild[iSub];
-		obj->m_matWorld = obj->m_ptMesh->m_MatrixArray[(int)m_MapObj;->m_fCurrentAnimTime];
-	}*/
-	
+		NEW_OBJECT obj = m_MapObj->m_pSubObject[iSub];
+		obj->m_matWorld = obj->m_ptMesh->m_MatrixArray[(int)m_MapObj->m_fCurrentAnimTime];
+	}	
 	return true;
 }
 bool Sample::Render()
 {	
-	//TMatrix matWorld;
-	//m_pMapObj->SetMatrix(&matWorld,
-	//	&ICore::g_pMainCamera->m_matView,
-	//	&ICore::g_pMainCamera->m_matProj);
-	////m_pMapObj->Render();
-
-	////m_pImmediateContext->OMSetDepthStencilState(m_pDepthStencilStateDisable.Get(), 1);
-	//TMatrix matWorld2;
-	//matWorld2._42 = -10.0f;	
-	//m_pMapObj->SetMatrix(&matWorld2,
-	//	&ICore::g_pMainCamera->m_matView,
-	//	&ICore::g_pMainCamera->m_matProj);
-	///*m_pMapObj->PreRender();
-	//m_pTex->Apply(m_pImmediateContext, 0);
-	//m_pMapObj->PostRender();*/
-
-	//for (int iSub = 0; iSub < m_MapObj;->m_pChild.size(); iSub++)
-	//{
-	//	NEW_OBJECT obj = m_MapObj;->m_pChild[iSub];
-	//	obj->SetMatrix(nullptr,
-	//		&ICore::g_pMainCamera->m_matView,
-	//		&ICore::g_pMainCamera->m_matProj);
-	//	obj->Render();
-	//}
-	
+	for (int iSub = 0; iSub < m_MapObj->m_pSubObject.size(); iSub++)
+	{
+		NEW_OBJECT obj = m_MapObj->m_pSubObject[iSub];
+		obj->SetMatrix(nullptr,
+			&ICore::g_pMainCamera->m_matView,
+			&ICore::g_pMainCamera->m_matProj);
+		obj->Render();
+	}	
 	return true;
 }
 bool Sample::Release()
 {
-	/*auto deleteObj = [](NEW_FBX p) { p->Release(); };
-	std::for_each(begin(m_pFbxImporter), end(m_pFbxImporter), deleteObj);
-
-	for (int iSub = 0; iSub < m_MapObj;->m_pChild.size(); iSub++)
+	for (int iSub = 0; iSub < m_MapObj->m_pSubObject.size(); iSub++)
 	{
-		NEW_OBJECT obj = m_MapObj;->m_pChild[iSub];
+		NEW_OBJECT obj = m_MapObj->m_pSubObject[iSub];
 		obj->Release();
 	}
-	m_MapObj;->Release();
-
+	m_MapObj->Release();
 	m_pDebugCamera->Release();
-	if(m_pMapObj) m_pMapObj->Release();
-	delete m_pMapObj;*/
 	return true;
 }
 bool  Sample::DeleteDxResource()

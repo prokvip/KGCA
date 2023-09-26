@@ -88,18 +88,11 @@ TMatrix TFbxImport::ConvertAMatrix(FbxAMatrix& m)
 	return mat;
 }
 
-void      TFbxImport::PreProcess(FbxNode* fbxNode, TFbxModel* pParent)
+void      TFbxImport::PreProcess(FbxNode* fbxNode)
 {
 	if (fbxNode == nullptr) return;
 	if ( fbxNode->GetCamera() ||
 		 fbxNode->GetLight() ) return;
-
-	FBX_MODEL fbx = std::make_shared<TFbxModel>();
-	fbx->m_csName =fbxNode->GetName();
-	fbx->m_pParent = pParent;
-	fbx->m_matWorld = ParseTransform(fbxNode);
-	m_pNodeList.push_back(fbxNode);
-	m_tModelList.push_back(fbx);
 
 	FbxMesh* fbxMesh = fbxNode->GetMesh();
 	if (fbxMesh != nullptr)
@@ -109,32 +102,22 @@ void      TFbxImport::PreProcess(FbxNode* fbxNode, TFbxModel* pParent)
 	UINT iNumChild = fbxNode->GetChildCount();
 	for (int iChild = 0; iChild < iNumChild; iChild++)
 	{
-		FbxNode* pChildNode = fbxNode->GetChild(iChild);
-		/*FbxNodeAttribute::EType attributeType = 
-			pChildNode->GetNodeAttribute()->GetAttributeType();
-		if (attributeType != FbxNodeAttribute::eMesh &&
-			attributeType != FbxNodeAttribute::eSkeleton &&
-			attributeType != FbxNodeAttribute::eNull)
-		{
-			continue;
-		}*/
-		PreProcess(pChildNode, fbx.get());
-	}
-
-	
+		FbxNode* pChildNode = fbxNode->GetChild(iChild);		
+		PreProcess(pChildNode);
+	}	
 }
+
 bool      TFbxImport::Load(T_STR filename, TFbxObj* fbxobj)
 {
 	C_STR name = wtm(filename);
 	bool ret = m_pFbxImporter->Initialize(name.c_str());
 	ret = m_pFbxImporter->Import(m_pFbxScene);
-	m_pFbxImporter->Destroy();
-
+	
 	FbxNode* m_FbxRootNode = m_pFbxScene->GetRootNode();
 	if (m_FbxRootNode)
 	{
 		// tree ¼øÈ¸(Tree traverse)
-		PreProcess(m_FbxRootNode, nullptr);
+		PreProcess(m_FbxRootNode);
 	}
 	
 	for (int iNode = 0; iNode < m_pFbxNodeMeshList.size(); iNode++)
@@ -324,6 +307,7 @@ void	  TFbxImport::LoadMesh(FbxNode* fbxNode, TFbxMesh& tMesh)
 }
 bool      TFbxImport::Init()
 {
+	m_pFbxNodeMeshList.clear();
 	m_pSDKManager = FbxManager::Create();
 	m_pFbxImporter = FbxImporter::Create(m_pSDKManager, IOSROOT);
 	m_pFbxScene = FbxScene::Create(m_pSDKManager, "");
