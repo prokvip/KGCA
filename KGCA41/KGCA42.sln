@@ -124,6 +124,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SampleFBX_3", "SampleFBX_3\
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SampleFBX_4", "SampleFBX_4\SampleFBX_4.vcxproj", "{55B64125-1E07-4028-B5FE-4D11CA0006EE}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SampleFBX_5", "SampleFBX_5\SampleFBX_5.vcxproj", "{D2B43761-32A2-4463-A7B5-B613A8248D28}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|ARM = Debug|ARM
@@ -760,6 +762,18 @@ Global
 		{55B64125-1E07-4028-B5FE-4D11CA0006EE}.Release|x64.Build.0 = Release|x64
 		{55B64125-1E07-4028-B5FE-4D11CA0006EE}.Release|x86.ActiveCfg = Release|Win32
 		{55B64125-1E07-4028-B5FE-4D11CA0006EE}.Release|x86.Build.0 = Release|Win32
+		{D2B43761-32A2-4463-A7B5-B613A8248D28}.Debug|ARM.ActiveCfg = Debug|Win32
+		{D2B43761-32A2-4463-A7B5-B613A8248D28}.Debug|ARM64.ActiveCfg = Debug|Win32
+		{D2B43761-32A2-4463-A7B5-B613A8248D28}.Debug|x64.ActiveCfg = Debug|x64
+		{D2B43761-32A2-4463-A7B5-B613A8248D28}.Debug|x64.Build.0 = Debug|x64
+		{D2B43761-32A2-4463-A7B5-B613A8248D28}.Debug|x86.ActiveCfg = Debug|Win32
+		{D2B43761-32A2-4463-A7B5-B613A8248D28}.Debug|x86.Build.0 = Debug|Win32
+		{D2B43761-32A2-4463-A7B5-B613A8248D28}.Release|ARM.ActiveCfg = Release|Win32
+		{D2B43761-32A2-4463-A7B5-B613A8248D28}.Release|ARM64.ActiveCfg = Release|Win32
+		{D2B43761-32A2-4463-A7B5-B613A8248D28}.Release|x64.ActiveCfg = Release|x64
+		{D2B43761-32A2-4463-A7B5-B613A8248D28}.Release|x64.Build.0 = Release|x64
+		{D2B43761-32A2-4463-A7B5-B613A8248D28}.Release|x86.ActiveCfg = Release|Win32
+		{D2B43761-32A2-4463-A7B5-B613A8248D28}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
