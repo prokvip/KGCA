@@ -9,7 +9,14 @@
 //#pragma comment(lib, "libfbxsdk-md.lib")
 //#pragma comment(lib, "libxml2-md.lib")
 //#pragma comment(lib, "zlib-md.lib")
-
+void  TMapObject::SetFbxObj(TFbxObj* pObject)
+{
+	m_pFbxObject = pObject;
+}
+TFbxObj* TMapObject::GetFbxObj()
+{
+	return  m_pFbxObject;
+}
 bool Sample::Init()
 {
 	// fbx 
@@ -21,13 +28,9 @@ bool Sample::Init()
 
 
 	m_MapObj = std::make_shared<TMapObject>();
-	m_MapObj->m_pFbxObject = TModelMgr::Get().GetPtr(L"Turret_Deploy1.FBX");
-	m_MapObj->Set(m_pDevice, m_pImmediateContext);
-	m_MapObj->m_iStartFrame = m_MapObj->m_pFbxObject->m_iStartFrame;
-	m_MapObj->m_iEndFrame = m_MapObj->m_pFbxObject->m_iEndFrame;
-	m_MapObj->m_iFrameSpeed = m_MapObj->m_pFbxObject->m_iFrameSpeed;
-	m_MapObj->m_iTickForFrame = m_MapObj->m_pFbxObject->m_iTickForFrame;
-	auto tFbxMeshList = m_MapObj->m_pFbxObject->m_tMeshList;
+	m_MapObj->SetFbxObj(TModelMgr::Get().GetPtr(L"Turret_Deploy1.FBX"));
+	m_MapObj->Set(m_pDevice, m_pImmediateContext);	
+	auto tFbxMeshList = m_MapObj->GetFbxObj()->m_tMeshList;
 
 	for (int iSub = 0; iSub < tFbxMeshList.size(); iSub++)
 	{
@@ -88,10 +91,11 @@ bool Sample::Init()
 }
 bool Sample::Frame()
 {	
-	m_MapObj->m_fCurrentAnimTime += m_MapObj->m_iFrameSpeed *g_fSecondPerFrame;
-	if (m_MapObj->m_fCurrentAnimTime >= m_MapObj->m_iEndFrame)
+	TFbxObj* pFbxObj = m_MapObj->GetFbxObj();
+	m_MapObj->m_fCurrentAnimTime += pFbxObj->GetFrameSpeed() *g_fSecondPerFrame;
+	if (m_MapObj->m_fCurrentAnimTime >= pFbxObj->GetEndFrame())
 	{
-		m_MapObj->m_fCurrentAnimTime = m_MapObj->m_iStartFrame;
+		m_MapObj->m_fCurrentAnimTime = pFbxObj->GetStartFrame();
 	}
 	for (int iSub = 0; iSub < m_MapObj->m_pSubObject.size(); iSub++)
 	{

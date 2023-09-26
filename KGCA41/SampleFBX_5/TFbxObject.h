@@ -14,14 +14,20 @@ struct TFbxMesh
 	std::vector<TMatrix>		    m_MatrixArray;
 	std::vector<TFbxMesh*>		    m_pChild;
 };
-struct TFbxObj : public TObject
-{
-	W_STR     m_csName;
+class TFbxObj : public TObject
+{	
 	UINT	m_iStartFrame = 0;
 	UINT	m_iEndFrame = 0;
 	UINT	m_iFrameSpeed = 30;
 	UINT	m_iTickForFrame = 160;
+public:
 	std::vector<std::shared_ptr<TFbxMesh>>		    m_tMeshList;
+
+	void	SetAnim(UINT startFrame, UINT endFrame, UINT frameSpeed = 30, UINT tickForFrame = 160);
+	UINT    GetStartFrame();
+	UINT    GetEndFrame();
+	UINT    GetFrameSpeed();
+	UINT    GetTickForFrame();
 };
 
 

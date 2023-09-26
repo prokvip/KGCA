@@ -7,14 +7,12 @@
 
 class TMapObject : public TObject
 {
-public:
 	TFbxObj* m_pFbxObject; // 모델매니저의 저장된 포인터 
+public:	
+	void		SetFbxObj(TFbxObj* pObject);
+	TFbxObj*	GetFbxObj();
 public:
 	float   m_fCurrentAnimTime = 0.0f;
-	UINT	m_iStartFrame = 0;
-	UINT	m_iEndFrame = 0;
-	UINT	m_iFrameSpeed = 30;
-	UINT	m_iTickForFrame = 160;
 public:
 	TFbxMesh* m_ptMesh;
 	std::vector<const TTexture*>			m_TexArray;
