@@ -142,6 +142,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Net_Client_thread", "Net_Cl
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Net_Server_thread", "Net_Server_thread\Net_Server_thread.vcxproj", "{28F43251-21FF-4C03-A1B2-89712264E1FC}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SampleFBX_6", "SampleFBX_6\SampleFBX_6.vcxproj", "{705209A1-4B8F-48D9-B286-B23F1456F9C6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|ARM = Debug|ARM
@@ -874,6 +876,18 @@ Global
 		{28F43251-21FF-4C03-A1B2-89712264E1FC}.Release|x64.Build.0 = Release|x64
 		{28F43251-21FF-4C03-A1B2-89712264E1FC}.Release|x86.ActiveCfg = Release|Win32
 		{28F43251-21FF-4C03-A1B2-89712264E1FC}.Release|x86.Build.0 = Release|Win32
+		{705209A1-4B8F-48D9-B286-B23F1456F9C6}.Debug|ARM.ActiveCfg = Debug|Win32
+		{705209A1-4B8F-48D9-B286-B23F1456F9C6}.Debug|ARM64.ActiveCfg = Debug|Win32
+		{705209A1-4B8F-48D9-B286-B23F1456F9C6}.Debug|x64.ActiveCfg = Debug|x64
+		{705209A1-4B8F-48D9-B286-B23F1456F9C6}.Debug|x64.Build.0 = Debug|x64
+		{705209A1-4B8F-48D9-B286-B23F1456F9C6}.Debug|x86.ActiveCfg = Debug|Win32
+		{705209A1-4B8F-48D9-B286-B23F1456F9C6}.Debug|x86.Build.0 = Debug|Win32
+		{705209A1-4B8F-48D9-B286-B23F1456F9C6}.Release|ARM.ActiveCfg = Release|Win32
+		{705209A1-4B8F-48D9-B286-B23F1456F9C6}.Release|ARM64.ActiveCfg = Release|Win32
+		{705209A1-4B8F-48D9-B286-B23F1456F9C6}.Release|x64.ActiveCfg = Release|x64
+		{705209A1-4B8F-48D9-B286-B23F1456F9C6}.Release|x64.Build.0 = Release|x64
+		{705209A1-4B8F-48D9-B286-B23F1456F9C6}.Release|x86.ActiveCfg = Release|Win32
+		{705209A1-4B8F-48D9-B286-B23F1456F9C6}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
