@@ -9,14 +9,7 @@
 //#pragma comment(lib, "libfbxsdk-md.lib")
 //#pragma comment(lib, "libxml2-md.lib")
 //#pragma comment(lib, "zlib-md.lib")
-void  TMapObject::SetFbxObj(TFbxObj* pObject)
-{
-	m_pFbxObject = pObject;
-}
-TFbxObj* TMapObject::GetFbxObj()
-{
-	return  m_pFbxObject;
-}
+
 bool Sample::Init()
 {
 	// fbx 
@@ -27,7 +20,7 @@ bool Sample::Init()
 	TFbxObj* pFbxObj5 = TModelMgr::Get().Load(L"../../res/fbx/ship.FBX");*/
 	TFbxObj* pFbxObj1 = TModelMgr::Get().Load(L"../../res/fbx/man.FBX");
 
-	m_MapObj = std::make_shared<TMapObject>();
+	m_MapObj = std::make_shared<TMapObj>();
 	m_MapObj->SetFbxObj(TModelMgr::Get().GetPtr(L"man.FBX"));
 	m_MapObj->Set(m_pDevice, m_pImmediateContext);	
 	auto tFbxMeshList = m_MapObj->GetFbxObj()->m_tMeshList;
@@ -35,7 +28,7 @@ bool Sample::Init()
 	for (int iSub = 0; iSub < tFbxMeshList.size(); iSub++)
 	{
 		TFbxMesh* fbxMesh = tFbxMeshList[iSub].get();
-		NEW_OBJECT obj  = std::make_shared<TMapObject>();
+		NEW_OBJECT obj  = std::make_shared<TMapObj>();
 		m_MapObj->m_pChildObjectList.push_back(obj);
 		obj->Set(m_pDevice, m_pImmediateContext);		
 		obj->m_ptMesh = fbxMesh;	

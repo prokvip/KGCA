@@ -148,6 +148,7 @@
     <ClInclude Include="TFbxImport.h" />
     <ClInclude Include="TFbxObject.h" />
     <ClInclude Include="TMap.h" />
+    <ClInclude Include="TMapObj.h" />
     <ClInclude Include="TModelMgr.h" />
     <ClInclude Include="TQuadtree.h" />
   </ItemGroup>
@@ -159,6 +160,7 @@
     <ClCompile Include="TFbxImport.cpp" />
     <ClCompile Include="TFbxObject.cpp" />
     <ClCompile Include="TMap.cpp" />
+    <ClCompile Include="TMapObj.cpp" />
     <ClCompile Include="TModelMgr.cpp" />
     <ClCompile Include="TQuadtree.cpp" />
     <ClCompile Include="TWeightInfo.cpp" />

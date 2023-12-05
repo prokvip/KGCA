@@ -1,5 +1,10 @@
 #pragma once
 #include "TObject.h"
+struct TBoneWorld
+{
+	TMatrix  matBoneWorld[255];
+};
+
 struct TVertexIW
 {
 	float  i[4];
@@ -67,21 +72,20 @@ class TFbxObj : public TObject
 	UINT	m_iFrameSpeed = 30;
 	UINT	m_iTickForFrame = 160;
 public:
-	std::vector<std::shared_ptr<TFbxMesh>>		    m_tMeshList;
-	std::map<std::wstring, TMatrix>		m_dxMatrixBindPoseMap;
-	
-
+	std::vector<std::shared_ptr<TFbxMesh>>	m_tMeshList;
+	std::map<std::wstring, TMatrix>			m_dxMatrixBindPoseMap;	
+	TBoneWorld								m_matBoneArray;
+	ID3D11Buffer*							m_pBoneCB = nullptr;
 	void	SetAnim(UINT startFrame, UINT endFrame, UINT frameSpeed = 30, UINT tickForFrame = 160);
 	UINT    GetStartFrame();
 	UINT    GetEndFrame();
 	UINT    GetFrameSpeed();
 	UINT    GetTickForFrame();
-//public:
+public:
+	bool	CreateConstantBuffer() override;
 //	bool	CreateInputLayout() override;
 //	bool	CreateVertexBuffer() override;
-//	std::vector<ID3D11Buffer*>   m_pVBWeightList;
 
-	
 };
 
 
