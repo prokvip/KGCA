@@ -94,11 +94,13 @@ void      TFbxImport::PreProcess(FbxNode* fbxNode)
 	if ( fbxNode->GetCamera() ||
 		 fbxNode->GetLight() ) return;
 
+	m_pFbxNodeMap.insert(std::make_pair(fbxNode, m_dwNodeIndex++));
+
 	FbxMesh* fbxMesh = fbxNode->GetMesh();
 	if (fbxMesh != nullptr)
 	{
 		m_pFbxNodeMeshList.push_back(fbxNode);
-		m_pFbxNodeMap.insert(std::make_pair(fbxNode, m_dwNodeIndex++));
+		
 	}
 	UINT iNumChild = fbxNode->GetChildCount();
 	for (int iChild = 0; iChild < iNumChild; iChild++)
@@ -342,7 +344,6 @@ void	  TFbxImport::LoadMesh(FbxNode* fbxNode, TFbxMesh& tMesh)
 					//iwVertex.i[0] = pObject->m_iIndex;
 					iwVertex.w[0] = 1.0f;
 				}
-				tMesh.m_TriangleList[iSubMtrl].push_back(pnct);
 				tMesh.m_pSubIWVertexList[iSubMtrl].push_back(iwVertex);
 			}
 		}
