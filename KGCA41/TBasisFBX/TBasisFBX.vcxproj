@@ -149,7 +149,7 @@ md "..\\..\\TBasisFBX\\Lib"</Command>
       <Command>copy "*.h" "..\..\TBasisFBX\inc"
 copy "..\..\output\Debug\TBasisFBX_d.lib" "..\..\TBasisFBX\lib\TBasisFBX_d.lib"
 copy "..\..\output\Debug\TBasisFBX_d.dll" "..\..\TBasisFBX\lib\TBasisFBX_d.dll"
-copy "..\..\output\Debug\TBasisFBX_d.dll" "..\..\bin\Debug\TBasisFBX_d.dll"
+
 
 </Command>
     </PostBuildEvent>
