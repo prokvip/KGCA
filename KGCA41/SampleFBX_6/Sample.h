@@ -17,9 +17,10 @@ public:
 	TFbxMesh* m_ptMesh;
 	std::vector<const TTexture*>			m_TexArray;
 	std::vector<std::shared_ptr<TMapObject>>m_pChildObjectList;
-	bool	CreateInputLayout() override;
-	bool	CreateVertexBuffer() override;
-	std::vector<ID3D11Buffer*>   m_pVBWeightList;
+
+	std::vector<ID3D11Buffer*>		m_pVBWeightList;
+	std::vector<TVertexIW>			m_pSubIWVertexList;
+
 public:
 	bool	CreateVertexBuffer()
 	{
@@ -45,6 +46,7 @@ public:
 		//		return false;
 		//	}
 		//}
+		return true;
 	}
 	bool	CreateInputLayout()
 	{

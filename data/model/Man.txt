@@ -1,0 +1,8 @@
+ModelFile		../../data/model/Man/Man.fbx
+shaderFile	../../data/model/Man/Man.hlsl
+AlbedoMap	../../data/model/Man/max.bmp
+normalMap	../../data/model/Man/maxnormal.bmp
+roughnessMap	nullptr  
+metalnessMap	nullptr  
+EmissiveMap	nullptr
+metalness		1

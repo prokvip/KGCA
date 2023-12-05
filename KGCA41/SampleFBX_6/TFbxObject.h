@@ -57,6 +57,8 @@ struct TFbxMesh
 	std::vector<TMatrix>		    m_MatrixArray;
 	std::vector<TFbxMesh*>		    m_pChild;
 
+	std::map<std::wstring, TMatrix>		m_dxMatrixBindPoseMap;
+
 };
 class TFbxObj : public TObject
 {	

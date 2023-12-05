@@ -30,9 +30,9 @@ bool	TFbxImport::ParseMeshSkinning(FbxMesh* pFbxMesh, TFbxMesh* pObject)
 			matInvBindPos = DxConvertMatrix(matInvBindPos);
 			matInvBindPos = matInvBindPos.Invert();
 
-			//iBoneIndex = m_pFbxNodeMap.find(pCluster->GetLink())->second;
-			//std::wstring name = to_mw(pCluster->GetLink()->GetName());// m_TreeList[iBoneIndex]->m_csName;
-			//pObject->m_dxMatrixBindPoseMap.insert(make_pair(name, matInvBindPos));
+			iBoneIndex = m_pFbxNodeMap.find(pCluster->GetLink())->second;
+			std::wstring name = mtw(pCluster->GetLink()->GetName());// m_TreeList[iBoneIndex]->m_csName;
+			pObject->m_dxMatrixBindPoseMap.insert(make_pair(name, matInvBindPos));
 
 			int  dwClusterSize = pCluster->GetControlPointIndicesCount();
 			// 영향을 받는 정점들의 인덱스

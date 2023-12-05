@@ -20,15 +20,15 @@ TFbxObj* TMapObject::GetFbxObj()
 bool Sample::Init()
 {
 	// fbx 
-	TFbxObj* pFbxObj1 = TModelMgr::Get().Load(L"../../res/fbx/MultiCameras.FBX");
+	/*TFbxObj* pFbxObj1 = TModelMgr::Get().Load(L"../../res/fbx/MultiCameras.FBX");
 	TFbxObj* pFbxObj2 = TModelMgr::Get().Load(L"../../res/fbx/sphereBox.FBX");
 	TFbxObj* pFbxObj3 = TModelMgr::Get().Load(L"../../res/fbx/Turret_Deploy1.FBX");
 	TFbxObj* pFbxObj4 = TModelMgr::Get().Load(L"../../res/fbx/box.fbx");
-	TFbxObj* pFbxObj5 = TModelMgr::Get().Load(L"../../res/fbx/ship.FBX");
-
+	TFbxObj* pFbxObj5 = TModelMgr::Get().Load(L"../../res/fbx/ship.FBX");*/
+	TFbxObj* pFbxObj1 = TModelMgr::Get().Load(L"../../res/fbx/man.FBX");
 
 	m_MapObj = std::make_shared<TMapObject>();
-	m_MapObj->SetFbxObj(TModelMgr::Get().GetPtr(L"Turret_Deploy1.FBX"));
+	m_MapObj->SetFbxObj(TModelMgr::Get().GetPtr(L"man.FBX"));
 	m_MapObj->Set(m_pDevice, m_pImmediateContext);	
 	auto tFbxMeshList = m_MapObj->GetFbxObj()->m_tMeshList;
 
@@ -42,6 +42,7 @@ bool Sample::Init()
 		
 		obj->Set(m_pDevice, m_pImmediateContext);
 		obj->m_VertexList.resize(fbxMesh->m_iNumPolygon * 3);
+		obj->m_pSubIWVertexList.resize(fbxMesh->m_iNumPolygon * 3);
 		UINT iNumSubMaterial =fbxMesh->m_TriangleList.size();
 
 		UINT iSubVertexIndex = 0;
@@ -51,6 +52,7 @@ bool Sample::Init()
 			for (int v = 0; v < fbxMesh->m_TriangleList[iMtrl].size(); v++)
 			{
 				obj->m_VertexList[iSubVertexIndex + v] = fbxMesh->m_TriangleList[iMtrl][v];
+				obj->m_pSubIWVertexList[iSubVertexIndex + v] = fbxMesh->m_pSubIWVertexList[iMtrl][v];
 			}
 			iSubVertexIndex += fbxMesh->m_TriangleList[iMtrl].size();
 		}

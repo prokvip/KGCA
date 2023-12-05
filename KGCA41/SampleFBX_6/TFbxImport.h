@@ -18,6 +18,9 @@ public:
 	FbxScene*		m_pFbxScene		= nullptr;		 // 화면 랜더링 오브젝트들.
 	FbxNode*		m_FbxRootNode	= nullptr;
 	std::vector<FbxNode*>		m_pFbxNodeMeshList;
+	std::map<FbxNode*, int>				m_pFbxNodeMap;
+	std::map<std::wstring, TFbxMesh*>	m_pFbxModelMap;
+	DWORD		m_dwNodeIndex = 0;
 public:
 	TMatrix   ConvertMatrix(FbxMatrix& m);
 	TMatrix   ConvertAMatrix(FbxAMatrix& m);

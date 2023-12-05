@@ -98,6 +98,7 @@ void      TFbxImport::PreProcess(FbxNode* fbxNode)
 	if (fbxMesh != nullptr)
 	{
 		m_pFbxNodeMeshList.push_back(fbxNode);
+		m_pFbxNodeMap.insert(std::make_pair(fbxNode, m_dwNodeIndex++));
 	}
 	UINT iNumChild = fbxNode->GetChildCount();
 	for (int iChild = 0; iChild < iNumChild; iChild++)
@@ -175,10 +176,12 @@ void	  TFbxImport::LoadMesh(FbxNode* fbxNode, TFbxMesh& tMesh)
 	if (iNumMtrl > 1)
 	{
 		tMesh.m_TriangleList.resize(iNumMtrl);
+		tMesh.m_pSubIWVertexList.resize(iNumMtrl);
 	}
 	else
 	{
 		tMesh.m_TriangleList.resize(1);
+		tMesh.m_pSubIWVertexList.resize(1);
 	}
 
 	for (int iMtrl = 0; iMtrl < iNumMtrl; iMtrl++)
@@ -199,7 +202,7 @@ void	  TFbxImport::LoadMesh(FbxNode* fbxNode, TFbxMesh& tMesh)
 			tMesh.m_szTextureFileName.push_back(mtw(texName));
 		}
 	}
-
+	
 
 
 

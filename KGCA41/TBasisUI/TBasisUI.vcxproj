@@ -138,7 +138,7 @@
       <Command>copy "*.h" "..\..\TBasisUI\inc"
 copy "..\..\output\Debug\TBasisUI_d.lib" "..\..\TBasisUI\lib\TBasisUI_d.lib"
 copy "..\..\output\Debug\TBasisUI_d.dll" "..\..\TBasisUI\lib\TBasisUI_d.dll"
-copy "..\..\output\Debug\TBasisUI_d.dll" "..\..\bin\Debug\TBasisUI_d.dll"
+
 
 </Command>
     </PostBuildEvent>
