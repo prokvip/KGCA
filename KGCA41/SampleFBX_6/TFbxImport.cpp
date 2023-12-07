@@ -88,25 +88,27 @@ TMatrix TFbxImport::ConvertAMatrix(FbxAMatrix& m)
 	return mat;
 }
 
-void      TFbxImport::PreProcess(FbxNode* fbxNode)
+void      TFbxImport::PreProcess(FbxNode* fbxNode, TFbxObj* fbxobj)
 {
 	if (fbxNode == nullptr) return;
 	if ( fbxNode->GetCamera() ||
 		 fbxNode->GetLight() ) return;
 
+	TFbxObj* tFbxObj = new TFbxObj;	
+	tFbxObj->m_szName = mtw(fbxNode->GetName());
+	fbxobj->m_TreeList.push_back(tFbxObj);
 	m_pFbxNodeMap.insert(std::make_pair(fbxNode, m_dwNodeIndex++));
 
 	FbxMesh* fbxMesh = fbxNode->GetMesh();
 	if (fbxMesh != nullptr)
 	{
-		m_pFbxNodeMeshList.push_back(fbxNode);
-		
+		m_pFbxNodeMeshList.push_back(fbxNode);		
 	}
 	UINT iNumChild = fbxNode->GetChildCount();
 	for (int iChild = 0; iChild < iNumChild; iChild++)
 	{
 		FbxNode* pChildNode = fbxNode->GetChild(iChild);		
-		PreProcess(pChildNode);
+		PreProcess(pChildNode, fbxobj);
 	}	
 }
 
@@ -118,29 +120,39 @@ bool      TFbxImport::Load(T_STR filename, TFbxObj* fbxobj)
 	
 	FbxNode* m_FbxRootNode = m_pFbxScene->GetRootNode();
 	if (m_FbxRootNode)
-	{
-		// tree 순회(Tree traverse)
-		PreProcess(m_FbxRootNode);
+	{		
+		PreProcess(m_FbxRootNode, fbxobj);
 	}
 	
 	for (int iNode = 0; iNode < m_pFbxNodeMeshList.size(); iNode++)
 	{
-		std::shared_ptr<TFbxMesh> fbxMesh = std::make_shared<TFbxMesh>();
-		LoadMesh(m_pFbxNodeMeshList[iNode], *fbxMesh.get());
-		fbxMesh->m_csName = m_pFbxNodeMeshList[iNode]->GetName();
-		fbxMesh->m_matWorld = ParseTransform(m_pFbxNodeMeshList[iNode]);
-		fbxobj->m_tMeshList.push_back(fbxMesh);
+		std::shared_ptr<TFbxObj> fbxMesh = std::make_shared<TFbxObj>();
+
+		auto iter = m_pFbxNodeMap.find(m_pFbxNodeMeshList[iNode]);
+		if (iter != m_pFbxNodeMap.end())
+		{
+			fbxMesh->m_iIndex = iter->second;
+			LoadMesh(m_pFbxNodeMeshList[iNode], *fbxMesh.get());
+			fbxMesh->m_szName = mtw(m_pFbxNodeMeshList[iNode]->GetName());
+			fbxMesh->m_matWorld = ParseTransform(m_pFbxNodeMeshList[iNode]);
+			fbxobj->m_tMeshList.push_back(fbxMesh);
+		}
+		else
+		{
+			//error
+		}
 	}
+
 	GetAnimation(fbxobj);
 	return true;
 }
 // vb, ib, worldmatrix, texture
-void	  TFbxImport::LoadMesh(FbxNode* fbxNode, TFbxMesh& tMesh)
+void	  TFbxImport::LoadMesh(FbxNode* fbxNode, TFbxObj& tMesh)
 {
 	FbxMesh* fbxMesh = fbxNode->GetMesh();
 	UINT    iNumPolyCount = fbxMesh->GetPolygonCount();
 
-	bool bSkinning = ParseMeshSkinning(fbxMesh, &tMesh);
+	tMesh.m_bSkinning = ParseMeshSkinning(fbxMesh, &tMesh);
 	
 	FbxVector4* pVertexPositions = fbxMesh->GetControlPoints();
 
@@ -328,8 +340,7 @@ void	  TFbxImport::LoadMesh(FbxNode* fbxNode, TFbxMesh& tMesh)
 				//}
 
 
-				//if (pObject->m_bSkinned)
-				if( bSkinning)
+				if(tMesh.m_bSkinning)
 				{
 					TWeight* weight = &tMesh.m_WeightList[iDCIndex];
 					for (int i = 0; i < 4; i++)
@@ -341,7 +352,7 @@ void	  TFbxImport::LoadMesh(FbxNode* fbxNode, TFbxMesh& tMesh)
 				else
 				{
 					// 일반오브젝트 에니메이션을 스키닝 케릭터 화 작업.
-					//iwVertex.i[0] = pObject->m_iIndex;
+					iwVertex.i[0] = tMesh.m_iIndex;
 					iwVertex.w[0] = 1.0f;
 				}
 				tMesh.m_pSubIWVertexList[iSubMtrl].push_back(iwVertex);

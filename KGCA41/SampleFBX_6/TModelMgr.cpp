@@ -27,9 +27,53 @@ TFbxObj* TModelMgr::Load(W_STR szPullfilePath)
 	std::shared_ptr<TFbxObj> loadobj = std::make_shared<TFbxObj>();
 	if (m_pFbxImporter.Load(szPullfilePath, loadobj.get()))
 	{
-		
+		loadobj->Set(m_pDevice, m_pContext);
+		for (int iSub = 0; iSub < loadobj->m_tMeshList.size(); iSub++)
+		{
+			TFbxObj* fbxMesh = loadobj->m_tMeshList[iSub].get();
+			fbxMesh->Set(m_pDevice, m_pContext);
+			fbxMesh->m_VertexList.resize(fbxMesh->m_iNumPolygon * 3);
+			fbxMesh->m_pVertexListIW.resize(fbxMesh->m_iNumPolygon * 3);
+			UINT iNumSubMaterial = fbxMesh->m_TriangleList.size();
+
+			UINT iSubVertexIndex = 0;
+			for (int iMtrl = 0; iMtrl < iNumSubMaterial; iMtrl++)
+			{
+				fbxMesh->m_TriangleOffsetList.push_back(iSubVertexIndex);
+				for (int v = 0; v < fbxMesh->m_TriangleList[iMtrl].size(); v++)
+				{
+					fbxMesh->m_VertexList[iSubVertexIndex + v] = fbxMesh->m_TriangleList[iMtrl][v];
+					fbxMesh->m_pVertexListIW[iSubVertexIndex + v] = fbxMesh->m_pSubIWVertexList[iMtrl][v];
+				}
+				iSubVertexIndex += fbxMesh->m_TriangleList[iMtrl].size();
+			}
+
+			W_STR filename;
+			W_STR defaultPath = L"../../res/fbx/";
+			if (fbxMesh->m_szTextureFileName.size() > 1)
+			{
+				filename = fbxMesh->m_szTextureFileName[0];
+				defaultPath += filename;
+				fbxMesh->Create(defaultPath, L"DefaultObj.hlsl");
+			}
+			else
+			{
+				fbxMesh->Create(L"", L"DefaultObj.hlsl");
+			}
+
+			fbxMesh->m_matWorld = fbxMesh->m_matWorld;
+
+			for (int isubMtrl = 0; isubMtrl < fbxMesh->m_szTextureFileName.size(); isubMtrl++)
+			{
+				W_STR filename = fbxMesh->m_szTextureFileName[isubMtrl];
+				W_STR defaultPath = L"../../res/fbx/";
+				defaultPath += filename;
+				fbxMesh->LoadTextureArray(defaultPath);
+			}
+		}
+
 		m_tFbxObjList.insert(std::make_pair(key, loadobj));
-		 ret = loadobj.get();
+		ret = loadobj.get();
 	}
 	//m_pFbxImporter.Write();
 	m_pFbxImporter.Release();

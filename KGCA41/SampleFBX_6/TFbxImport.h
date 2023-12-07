@@ -29,8 +29,8 @@ public:
 public:
 	void		GetAnimation(TFbxObj* fbxobj);
 	bool		Load(W_STR filename, TFbxObj* obj);
-	void		PreProcess(FbxNode* fbxNode);
-	void		LoadMesh(FbxNode* node, TFbxMesh& tMesh);
+	void		PreProcess(FbxNode* fbxNode, TFbxObj* fbxobj);
+	void		LoadMesh(FbxNode* node, TFbxObj& tMesh);
 	FbxVector2	ReadTextureCoord(FbxLayerElementUV* uvLayer, int iDxIndex, int uvIndex);
 	FbxColor	ReadColor(FbxLayerElementVertexColor*, int iVertexIndex, int iIndex);
 	FbxVector4  ReadNormal(FbxLayerElementNormal*, int iVertexIndex, int iIndex);
@@ -40,6 +40,6 @@ public:
 	bool      Release();
 
 
-	bool	ParseMeshSkinning(FbxMesh* pFbxMesh, TFbxMesh* pObject);
+	bool	ParseMeshSkinning(FbxMesh* pFbxMesh, TFbxObj* pObject);
 };
 

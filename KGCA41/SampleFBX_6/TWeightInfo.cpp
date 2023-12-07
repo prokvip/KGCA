@@ -1,5 +1,5 @@
 #include "TFbxImport.h"
-bool	TFbxImport::ParseMeshSkinning(FbxMesh* pFbxMesh, TFbxMesh* pObject)
+bool	TFbxImport::ParseMeshSkinning(FbxMesh* pFbxMesh, TFbxObj* pObject)
 {
 	int iDeformerCount = pFbxMesh->GetDeformerCount(FbxDeformer::eSkin);
 	if (iDeformerCount == 0)

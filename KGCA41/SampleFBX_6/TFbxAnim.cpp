@@ -23,7 +23,7 @@ void		TFbxImport::GetAnimation(TFbxObj* fbxObj)
 		time.SetFrame(t, TimeMode);
 		for (int iNode = 0; iNode < m_pFbxNodeMeshList.size(); iNode++)
 		{
-			TFbxMesh& tMesh = *(fbxObj->m_tMeshList[iNode].get());
+			TFbxObj& tMesh = *(fbxObj->m_tMeshList[iNode].get());
 			std::vector< FbxAMatrix>  frameMatrix;
 
 			FbxAMatrix matFbx = m_pFbxNodeMeshList[iNode]->EvaluateGlobalTransform(time);

@@ -47,7 +47,10 @@ struct TFbxMesh
 {
 	C_STR      m_csName;
 	TMatrix    m_matWorld;
-	TFbxMesh* m_pParent = nullptr;
+	TFbxMesh*  m_pParent = nullptr;
+
+	BOOL	   m_bSkinning=FALSE;
+	UINT       m_iIndex;
 
 	UINT  m_iNumPolygon = 0;
 	using SUBMATERIAL = std::vector<PNCT_Vertex>;
@@ -67,13 +70,39 @@ struct TFbxMesh
 };
 class TFbxObj : public TObject
 {	
+public:
+	std::vector<TVertexIW>		m_pVertexListIW;
+
+public:
 	UINT	m_iStartFrame = 0;
 	UINT	m_iEndFrame = 0;
 	UINT	m_iFrameSpeed = 30;
 	UINT	m_iTickForFrame = 160;
+
+	
+	TFbxObj*	m_pParent = nullptr;
+	BOOL	   m_bSkinning = FALSE;
+	UINT       m_iIndex;
+
+	UINT		m_iNumPolygon = 0;
+	using SUBMATERIAL = std::vector<PNCT_Vertex>;
+	using TSubVertexIW = std::vector<TVertexIW>;
+
+
+	std::vector<SUBMATERIAL> 		m_TriangleList;
+	std::vector<TSubVertexIW>		m_pSubIWVertexList;
+	std::vector<TWeight>			m_WeightList;
+
+	std::vector<UINT> 				m_TriangleOffsetList;
+	std::vector<W_STR>				m_szTextureFileName;
+	std::vector<TMatrix>		    m_MatrixArray;
+	std::vector<TFbxObj*>		    m_pChild;
+	std::map<std::wstring, TMatrix>		m_dxMatrixBindPoseMap;
+	std::vector<const TTexture*>			m_TexArray;
 public:
-	std::vector<std::shared_ptr<TFbxMesh>>	m_tMeshList;
-	std::map<std::wstring, TMatrix>			m_dxMatrixBindPoseMap;	
+	std::vector<TFbxObj*>					m_TreeList;
+	std::vector<std::shared_ptr<TFbxObj>>	m_tMeshList;
+	
 	TBoneWorld								m_matBoneArray;
 	ID3D11Buffer*							m_pBoneCB = nullptr;
 	void	SetAnim(UINT startFrame, UINT endFrame, UINT frameSpeed = 30, UINT tickForFrame = 160);
@@ -85,7 +114,7 @@ public:
 	bool	CreateConstantBuffer() override;
 //	bool	CreateInputLayout() override;
 //	bool	CreateVertexBuffer() override;
-
+	void    LoadTextureArray(W_STR filename);
 };
 
 

@@ -47,3 +47,8 @@ UINT    TFbxObj::GetTickForFrame()
 {
 	return m_iTickForFrame;
 }
+
+void     TFbxObj::LoadTextureArray(W_STR filename)
+{
+	m_TexArray.push_back(I_Tex.Load(filename));
+}
