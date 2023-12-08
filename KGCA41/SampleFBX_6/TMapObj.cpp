@@ -303,7 +303,7 @@ bool TMapObjSkinning::Render()
 }
 bool  TMapObjSkinning::Frame()
 {
-	m_fCurrentAnimTime += m_pModel->GetFrameSpeed() * g_fSecondPerFrame;// *0.0f;
+	m_fCurrentAnimTime += m_pModel->GetFrameSpeed() * g_fSecondPerFrame *0.0f;
 	if (m_fCurrentAnimTime >= m_pModel->GetEndFrame())
 	{
 		m_fCurrentAnimTime = m_pModel->GetStartFrame();
