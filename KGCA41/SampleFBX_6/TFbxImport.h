@@ -20,7 +20,7 @@ public:
 	std::vector<FbxNode*>								m_pFbxNodeList;
 	std::vector<std::shared_ptr<TFbxObj>>				m_pFbxNodeMeshList;
 	std::map<FbxNode*, int>								m_pFbxNodeMap;
-	//std::map<std::wstring, TFbxMesh*>	m_pFbxModelMap;
+	std::vector<std::wstring>							m_pFbxModeNameList;
 	DWORD		m_dwNodeIndex = 0;
 public:
 	TMatrix   ConvertMatrix(FbxMatrix& m);

@@ -4,7 +4,7 @@
 bool TMapObj::Render()
 {
 	
-	auto tFbxMeshList = m_pModel->m_tMeshList;
+	auto tFbxMeshList = m_pModel->m_DrawList;
 	for (int iSub = 0; iSub < tFbxMeshList.size(); iSub++)
 	{
 		TFbxObj* obj = tFbxMeshList[iSub].get();
@@ -255,48 +255,47 @@ bool	TMapObj::CreateBoneBuffer()
 
 
 bool TMapObjSkinning::Render()
-{
-	m_pModel->m_pImmediateContext->VSSetConstantBuffers(1, 1, &m_pModel->m_pBoneCB);
-
+{	
+	
 	TMatrix matWorld;
-	auto tFbxMeshList = m_pModel->m_tMeshList;
-
-	//for (int inode = 0; inode < m_pModel->m_TreeList.size(); inode++)
-	//{
-	//	TFbxObj* pFbxNode = m_pModel->m_TreeList[inode].get();
-	//	if (pFbxNode->m_pTex == nullptr) continue;
-	//	// pFbxObj->m_matBoneArray.matBoneWorld[inode] = InvBondMatrix * AnimationMatrix[time];
-	//	m_matBoneArray.matBoneWorld[inode] = m_pModel->m_MatrixArray[m_fCurrentAnimTime][inode];
-	//	/*D3DXMatrixTranspose(&m_matBoneArray.matBoneWorld[inode],
-	//		&m_matBoneArray.matBoneWorld[inode]);*/
-
-	//	pFbxNode->SetMatrix(&m_matBoneArray.matBoneWorld[inode],
-	//		&ICore::g_pMainCamera->m_matView,
-	//		&ICore::g_pMainCamera->m_matProj);
-
-	//	pFbxNode->PreRender();
-	//	pFbxNode->PostRender();
-	//}
-
+	auto tFbxMeshList = m_pModel->m_DrawList;
 	for (int iSub = 0; iSub < tFbxMeshList.size(); iSub++)
 	{
 		TFbxObj* obj = tFbxMeshList[iSub].get();
-		obj->SetMatrix(NULL,
+
+		//// 메쉬단위로 영향 행렬이 다르다. 50개
+		for (auto data : m_pModel->m_pFbxNodeMap )
+		{
+			auto model = obj->m_dxMatrixBindPoseMap.find(data.first);
+			if (model == obj->m_dxMatrixBindPoseMap.end())
+			{
+				continue;
+			}
+			TMatrix matBindPose = model->second;
+			int iIndex = data.second;
+			m_matBoneArray.matBoneWorld[iIndex] = matBindPose *
+				m_matBoneArray.matBoneWorld[iIndex];
+			D3DXMatrixTranspose(&m_matBoneArray.matBoneWorld[iIndex],
+				&m_matBoneArray.matBoneWorld[iIndex]);
+		}		
+		m_pModel->m_pImmediateContext->UpdateSubresource(m_pBoneCB, 0, NULL,
+			&m_matBoneArray, 0, 0);
+
+		m_pModel->m_pImmediateContext->VSSetConstantBuffers(1, 1, &m_pBoneCB);
+
+		obj->SetMatrix(&m_matControl,
 			&ICore::g_pMainCamera->m_matView,
 			&ICore::g_pMainCamera->m_matProj);
 
 		obj->PreRender();
 		
-	/*	UINT StartSlot;
+		UINT StartSlot;
 		UINT NumBuffers;
 		UINT Strides[2] = { sizeof(PNCT_Vertex), sizeof(TVertexIW) };
 		UINT Offsets[2] = { 0, };
 
-		ID3D11Buffer* buffer[2] = { m_pVertexBuffer, m_pVBWeightList };
-		m_pImmediateContext->IASetVertexBuffers(0, 2, buffer, Strides, Offsets);
-*/
-
-
+		ID3D11Buffer* buffer[2] = { obj->m_pVertexBuffer, obj->m_pVBWeightList };
+		obj->m_pImmediateContext->IASetVertexBuffers(0, 2, buffer, Strides, Offsets);
 		
 		obj->PostRender();
 	}
@@ -304,7 +303,7 @@ bool TMapObjSkinning::Render()
 }
 bool  TMapObjSkinning::Frame()
 {
-	m_fCurrentAnimTime += m_pModel->GetFrameSpeed() * g_fSecondPerFrame * 0.5f;
+	m_fCurrentAnimTime += m_pModel->GetFrameSpeed() * g_fSecondPerFrame;// *0.0f;
 	if (m_fCurrentAnimTime >= m_pModel->GetEndFrame())
 	{
 		m_fCurrentAnimTime = m_pModel->GetStartFrame();
@@ -316,14 +315,8 @@ bool  TMapObjSkinning::Frame()
 	for (int inode = 0; inode < m_pModel->m_TreeList.size(); inode++)
 	{
 		TFbxObj* pFbxNode = m_pModel->m_TreeList[inode].get();
-		TMatrix matBindpose;
-		m_matBoneArray.matBoneWorld[inode] = matBindpose * m_pModel->m_MatrixArray[m_fCurrentAnimTime][inode];
-		D3DXMatrixTranspose(&m_matBoneArray.matBoneWorld[inode],
-			&m_matBoneArray.matBoneWorld[inode]);
+		m_matBoneArray.matBoneWorld[inode] = m_pModel->m_MatrixArray[m_fCurrentAnimTime][inode];
 	}
-
-	m_pModel->m_pImmediateContext->UpdateSubresource(m_pBoneCB, 0, NULL, &m_matBoneArray, 0, 0);
-
 	return true;
 }
 bool	TMapObjSkinning::CreateBoneBuffer()
@@ -346,4 +339,23 @@ bool	TMapObjSkinning::CreateBoneBuffer()
 		return false;
 	}
 	return true;
+}
+
+void TMapObjSkinning::AllNodeRender()
+{
+	for (int inode = 0; inode < m_pModel->m_TreeList.size(); inode++)
+	{
+		TFbxObj* pFbxNode = m_pModel->m_TreeList[inode].get();
+		if (pFbxNode->m_pTex == nullptr) continue;
+		// pFbxObj->m_matBoneArray.matBoneWorld[inode] = InvBondMatrix * AnimationMatrix[time];
+		m_matBoneArray.matBoneWorld[inode] = m_pModel->m_MatrixArray[m_fCurrentAnimTime][inode];
+		D3DXMatrixTranspose(&m_matBoneArray.matBoneWorld[inode],
+			&m_matBoneArray.matBoneWorld[inode]);
+				pFbxNode->SetMatrix(&m_matBoneArray.matBoneWorld[inode],
+				&ICore::g_pMainCamera->m_matView,
+				&ICore::g_pMainCamera->m_matProj);
+
+		pFbxNode->PreRender();
+		pFbxNode->PostRender();
+	}
 }

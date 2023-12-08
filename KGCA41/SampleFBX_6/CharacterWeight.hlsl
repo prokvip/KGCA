@@ -57,7 +57,7 @@ VS_OUTPUT VS(VS_INPUT vIn)
         vNormal += mul(vIn.n, (float3x3)g_matBoneWorld[iBoneIndex]) * vIn.w[iBone];
     }
 
-    vWorld = mul(vLocal,g_matWorld);
+    vWorld = mul(vWorld,g_matWorld);
     float4 vView = mul(vWorld, g_matView);
     float4 vProj = mul(vView, g_matProj);
     vOut.p = vProj;
@@ -77,6 +77,6 @@ struct PS_IN
 float4 PS(VS_OUTPUT vIn) : SV_Target
 {
     //            r,g,b,a(1)=불투명, a(0)=완전투명, a(0.0< 1.0f)= 반투명
-    return g_txDiffuse1.Sample(sample0, vIn.t) *vIn.c;
-    //return vIn.c;
+    //return g_txDiffuse1.Sample(sample0, vIn.t) *vIn.c;
+    return vIn.c;
 }

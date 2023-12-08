@@ -96,15 +96,20 @@ void      TFbxImport::PreProcess(FbxNode* fbxNode, TFbxObj* fbxobj)
 
 	std::shared_ptr<TFbxObj> tFbxChildObj = std::make_shared<TFbxObj>();
 	tFbxChildObj->m_szName = mtw(fbxNode->GetName());
+	tFbxChildObj->m_iBone = TFbxObj::BONE_NODE;
 	tFbxChildObj->m_iBoneIndex = fbxobj->m_TreeList.size();
 	fbxobj->m_TreeList.push_back(tFbxChildObj);	
-	m_pFbxNodeList.push_back(fbxNode);
+	fbxobj->m_pFbxModeNameList.push_back(tFbxChildObj->m_szName);
+	fbxobj->m_pFbxNodeMap.insert(std::make_pair(tFbxChildObj->m_szName, m_dwNodeIndex));
 
-	m_pFbxNodeMap.insert(std::make_pair(fbxNode, m_dwNodeIndex++));
+	m_pFbxNodeList.push_back(fbxNode);
+	m_pFbxNodeMap.insert(std::make_pair(fbxNode, m_dwNodeIndex));	
+	m_dwNodeIndex++;
 
 	FbxMesh* fbxMesh = fbxNode->GetMesh();
 	if (fbxMesh != nullptr)
 	{
+		tFbxChildObj->m_iBone = TFbxObj::MESH_NODE;
 		m_pFbxNodeMeshList.push_back(tFbxChildObj);
 	}
 	UINT iNumChild = fbxNode->GetChildCount();
@@ -137,7 +142,7 @@ bool      TFbxImport::Load(T_STR filename, TFbxObj* fbxobj)
 			LoadMesh(m_pFbxNodeList[fbxMesh->m_iBoneIndex], *fbxMesh.get());
 			//fbxMesh->m_szName = mtw(m_pFbxNodeMeshList[iNode]->GetName());
 			//fbxMesh->m_matWorld = ParseTransform(m_pFbxNodeMeshList[iNode]);
-			fbxobj->m_tMeshList.push_back(fbxMesh);
+			fbxobj->m_DrawList.push_back(fbxMesh);
 		//}
 		//else
 		//{
@@ -155,7 +160,7 @@ void	  TFbxImport::LoadMesh(FbxNode* fbxNode, TFbxObj& tMesh)
 	UINT    iNumPolyCount = fbxMesh->GetPolygonCount();
 
 	tMesh.m_bSkinning = ParseMeshSkinning(fbxMesh, &tMesh);
-	
+	tMesh.m_iBone = TFbxObj::SKIN_NODE;
 	FbxVector4* pVertexPositions = fbxMesh->GetControlPoints();
 
 	UINT iNumLayerCount = fbxMesh->GetLayerCount();
@@ -366,6 +371,7 @@ void	  TFbxImport::LoadMesh(FbxNode* fbxNode, TFbxObj& tMesh)
 }
 bool      TFbxImport::Init()
 {
+	m_pFbxModeNameList.clear();
 	m_pFbxNodeMap.clear();
 	m_pFbxNodeList.clear();
 	m_pFbxNodeMeshList.clear();

@@ -20,18 +20,18 @@ bool Sample::Init()
 	//TFbxObj* pFbxObj3 = TModelMgr::Get().Load(L"../../res/fbx/ship.FBX", szShaderFile);
 	//TFbxObj* pFbxObj4 = TModelMgr::Get().Load(L"../../res/fbx/MultiCameras.FBX", szShaderFile);
 
-	TFbxObj* pFbxObj5 = TModelMgr::Get().Load(L"../../res/fbx/Turret_Deploy1.FBX", szShaderFile);
+	//TFbxObj* pFbxObj5 = TModelMgr::Get().Load(L"../../res/fbx/Turret_Deploy1.FBX", szShaderFile);
 	TFbxObj* pFbxObj6 = TModelMgr::Get().Load(L"../../res/fbx/man.FBX", L"CharacterWeight.hlsl");
 
-	auto obj = std::make_shared<TMapObj>();
-	obj->m_pModel = TModelMgr::Get().GetPtr(L"Turret_Deploy1.FBX");
-	obj->CreateBoneBuffer();
-	m_MapObj.push_back(obj);
+	//auto obj = std::make_shared<TMapObj>();
+	//obj->m_pModel = TModelMgr::Get().GetPtr(L"Turret_Deploy1.FBX");
+	//obj->CreateBoneBuffer();
+	//m_MapObj.push_back(obj);
 
-	//auto obj1 = std::make_shared<TMapObj>();
-	//obj1->m_pModel = TModelMgr::Get().GetPtr(L"Turret_Deploy1.FBX");
-	//obj1->CreateBoneBuffer();
-	//m_MapObj.push_back(obj1);
+	auto obj1 = std::make_shared<TMapObjSkinning>();
+	obj1->m_pModel = TModelMgr::Get().GetPtr(L"man.FBX");
+	obj1->CreateBoneBuffer();
+	m_MapObj.push_back(obj1);
 
 
 	/*auto obj2 = std::make_shared<TMapObj>();

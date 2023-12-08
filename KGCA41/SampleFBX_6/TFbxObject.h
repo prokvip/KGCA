@@ -69,16 +69,17 @@ struct TFbxMesh
 
 };
 class TFbxObj : public TObject
-{	
+{		
 public:
+	enum { BONE_NODE = 0, MESH_NODE, SKIN_NODE, };
 	std::vector<TVertexIW>		m_pVertexListIW;
-
+	ID3D11Buffer*				m_pVBWeightList;
 public:
 	UINT	m_iStartFrame = 0;
 	UINT	m_iEndFrame = 0;
 	UINT	m_iFrameSpeed = 30;
 	UINT	m_iTickForFrame = 160;
-
+	BOOL    m_iBone;
 	
 	TFbxObj*	m_pParent = nullptr;
 	BOOL	   m_bSkinning = FALSE;
@@ -96,12 +97,15 @@ public:
 	std::vector<UINT> 				m_TriangleOffsetList;
 	std::vector<W_STR>				m_szTextureFileName;
 	std::vector<std::vector<TMatrix>>		    m_MatrixArray;
-	std::vector<TFbxObj*>		    m_pChild;
-	std::map<std::wstring, TMatrix>		m_dxMatrixBindPoseMap;
-	std::vector<const TTexture*>			m_TexArray;
+	std::vector<TFbxObj*>						m_pChild;
+	std::map<std::wstring, TMatrix>				m_dxMatrixBindPoseMap;
+	std::map<std::wstring, int>					m_pFbxNodeMap;
+	std::vector<const TTexture*>				m_TexArray;
 public:
+	std::vector<std::wstring>				m_pFbxModeNameList;
 	std::vector<std::shared_ptr<TFbxObj>>	m_TreeList;
-	std::vector<std::shared_ptr<TFbxObj>>	m_tMeshList;
+	std::vector<std::shared_ptr<TFbxObj>>	m_DrawList;
+	
 	
 	TBoneWorld								m_matBoneArray;
 	ID3D11Buffer*							m_pBoneCB = nullptr;
@@ -112,8 +116,8 @@ public:
 	UINT    GetTickForFrame();
 public:	
 	bool	CreateConstantBuffer() override;
-//	bool	CreateInputLayout() override;
-//	bool	CreateVertexBuffer() override;
+	bool	CreateInputLayout() override;
+	bool	CreateVertexBuffer() override;
 	void    LoadTextureArray(W_STR filename);
 };
 

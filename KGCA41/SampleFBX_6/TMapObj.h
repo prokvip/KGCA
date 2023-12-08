@@ -5,6 +5,7 @@ class TMapObj
 {
 public:
 	TFbxObj*		m_pModel; // 모델매니저의 저장된 포인터 
+	TFbxObj*		m_pActionModel; // 모델매니저의 저장된 포인터 
 public:
 	float			m_fCurrentAnimTime = 0.0f;
 	TBoneWorld		m_matBoneArray;
@@ -27,4 +28,5 @@ public:
 	bool			Frame();
 	bool			Render();
 	bool			CreateBoneBuffer();
+	void			AllNodeRender();
 };

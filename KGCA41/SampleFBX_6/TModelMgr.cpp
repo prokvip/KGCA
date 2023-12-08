@@ -28,9 +28,9 @@ TFbxObj* TModelMgr::Load(W_STR szPullfilePath, W_STR szShaderFile)
 	if (m_pFbxImporter.Load(szPullfilePath, loadobj.get()))
 	{
 		loadobj->Set(m_pDevice, m_pContext);
-		for (int iSub = 0; iSub < loadobj->m_tMeshList.size(); iSub++)
+		for (int iSub = 0; iSub < loadobj->m_DrawList.size(); iSub++)
 		{
-			TFbxObj* fbxMesh = loadobj->m_tMeshList[iSub].get();
+			TFbxObj* fbxMesh = loadobj->m_DrawList[iSub].get();
 			fbxMesh->Set(m_pDevice, m_pContext);
 			fbxMesh->m_VertexList.resize(fbxMesh->m_iNumPolygon * 3);
 			fbxMesh->m_pVertexListIW.resize(fbxMesh->m_iNumPolygon * 3);
