@@ -262,8 +262,7 @@ bool TMapObjSkinning::Render()
 	for (int iSub = 0; iSub < tFbxMeshList.size(); iSub++)
 	{
 		TFbxObj* obj = tFbxMeshList[iSub].get();
-
-		//// 메쉬단위로 영향 행렬이 다르다. 50개
+		////// 메쉬단위로 영향 행렬이 다르다. 50개
 		for (auto data : m_pModel->m_pFbxNodeMap )
 		{
 			auto model = obj->m_dxMatrixBindPoseMap.find(data.first);
@@ -273,13 +272,16 @@ bool TMapObjSkinning::Render()
 			}
 			TMatrix matBindPose = model->second;
 			int iIndex = data.second;
-			m_matBoneArray.matBoneWorld[iIndex] = matBindPose *
-				m_matBoneArray.matBoneWorld[iIndex];
-			D3DXMatrixTranspose(&m_matBoneArray.matBoneWorld[iIndex],
-				&m_matBoneArray.matBoneWorld[iIndex]);
-		}		
+			m_matMeshBoneArray.matBoneWorld[iIndex] = matBindPose *
+				m_matBoneArray.matBoneWorld[iIndex];	
+
+			// 이전 메쉬의 전치 행렬을 다음 메쉬에서 사용하는 것이 문제였다.
+			D3DXMatrixTranspose(&m_matMeshBoneArray.matBoneWorld[iIndex],
+				&m_matMeshBoneArray.matBoneWorld[iIndex]);
+		}				
+
 		m_pModel->m_pImmediateContext->UpdateSubresource(m_pBoneCB, 0, NULL,
-			&m_matBoneArray, 0, 0);
+			&m_matMeshBoneArray, 0, 0);
 
 		m_pModel->m_pImmediateContext->VSSetConstantBuffers(1, 1, &m_pBoneCB);
 
@@ -303,7 +305,7 @@ bool TMapObjSkinning::Render()
 }
 bool  TMapObjSkinning::Frame()
 {
-	m_fCurrentAnimTime += m_pModel->GetFrameSpeed() * g_fSecondPerFrame *0.0f;
+	m_fCurrentAnimTime += m_pModel->GetFrameSpeed() * g_fSecondPerFrame *0.5f;
 	if (m_fCurrentAnimTime >= m_pModel->GetEndFrame())
 	{
 		m_fCurrentAnimTime = m_pModel->GetStartFrame();

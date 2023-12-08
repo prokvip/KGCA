@@ -9,6 +9,7 @@ public:
 public:
 	float			m_fCurrentAnimTime = 0.0f;
 	TBoneWorld		m_matBoneArray;
+	TBoneWorld		m_matMeshBoneArray;
 	ID3D11Buffer*	m_pBoneCB = nullptr;
 	TMatrix			m_matControl;
 public:
