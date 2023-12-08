@@ -1,32 +1,35 @@
 #include "TMapObj.h"
-void  TMapObj::SetFbxObj(TFbxObj* pObject)
+#include "ICoreStd.h"
+
+bool TMapObj::Render()
 {
-	m_pFbxObject = pObject;
+	
+	auto tFbxMeshList = m_pModel->m_tMeshList;
+	for (int iSub = 0; iSub < tFbxMeshList.size(); iSub++)
+	{
+		TFbxObj* obj = tFbxMeshList[iSub].get();
+		TMatrix matWorld = m_pModel->m_MatrixArray[m_fCurrentAnimTime][obj->m_iBoneIndex]* m_matControl;
+		obj->SetMatrix(&matWorld,
+			&ICore::g_pMainCamera->m_matView,
+			&ICore::g_pMainCamera->m_matProj);
+		obj->PreRender();
+		obj->PostRender();
+	}	
+	return true;
 }
-TFbxObj* TMapObj::GetFbxObj()
+bool  TMapObj::Frame()
 {
-	return  m_pFbxObject;
+	m_fCurrentAnimTime +=		m_pModel->GetFrameSpeed() * g_fSecondPerFrame * 0.5f;
+	if (m_fCurrentAnimTime >=	m_pModel->GetEndFrame())
+	{
+		m_fCurrentAnimTime =	m_pModel->GetStartFrame();
+	}
+	return true;
 }
-////bool	TMapObj::CreateVertexBuffer()
-////{
-////	TDxObject::CreateVertexBuffer();
-////
-////	D3D11_BUFFER_DESC bd;
-////	ZeroMemory(&bd, sizeof(D3D11_BUFFER_DESC));
-////	bd.ByteWidth = sizeof(TVertexIW) * m_pSubIWVertexList.size();
-////	bd.Usage = D3D11_USAGE_DEFAULT;
-////	bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-////
-////	D3D11_SUBRESOURCE_DATA sd;
-////	ZeroMemory(&sd, sizeof(D3D11_SUBRESOURCE_DATA));
-////	sd.pSysMem = &m_pSubIWVertexList.at(0);
-////
-////	if (FAILED(m_pDevice->CreateBuffer(&bd, &sd, &m_pVBWeightList)))
-////	{
-////		return false;
-////	}
-////	return true;
-////}
+bool	TMapObj::CreateBoneBuffer()
+{	
+	return true;
+}
 ////bool	TMapObj::CreateInputLayout()
 ////{
 ////	//TDxObject::CreateInputLayout();
@@ -64,9 +67,9 @@ TFbxObj* TMapObj::GetFbxObj()
 ////}
 //////bool  TMapObj::Render()
 //////{
-//////	m_pImmediateContext->UpdateSubresource(m_pFbxObject->m_pBoneCB, 0, NULL,
-//////		&m_pFbxObject->m_matBoneArray, 0, 0);
-//////	m_pImmediateContext->VSSetConstantBuffers(1, 1, &m_pFbxObject->m_pBoneCB);
+//////	m_pImmediateContext->UpdateSubresource(m_pModel->m_pBoneCB, 0, NULL,
+//////		&m_pModel->m_matBoneArray, 0, 0);
+//////	m_pImmediateContext->VSSetConstantBuffers(1, 1, &m_pModel->m_pBoneCB);
 //////	return true;
 //////}
 ////bool  TMapObj::PreRender()
@@ -116,9 +119,9 @@ TFbxObj* TMapObj::GetFbxObj()
 ////	ID3D11Buffer* buffer[2] = { m_pVertexBuffer, m_pVBWeightList };
 ////	m_pImmediateContext->IASetVertexBuffers(0, 2, buffer, Strides, Offsets);
 ////
-////	//m_pImmediateContext->UpdateSubresource(m_pFbxObject->m_pBoneCB, 0, NULL, 
-////	//	&m_pFbxObject->m_matBoneArray, 0, 0);
-////	//m_pImmediateContext->VSSetConstantBuffers(1, 1, &m_pFbxObject->m_pBoneCB);
+////	//m_pImmediateContext->UpdateSubresource(m_pModel->m_pBoneCB, 0, NULL, 
+////	//	&m_pModel->m_matBoneArray, 0, 0);
+////	//m_pImmediateContext->VSSetConstantBuffers(1, 1, &m_pModel->m_pBoneCB);
 ////
 ////	for (int iMtrl = 0; iMtrl < m_ptMesh->m_TriangleList.size(); iMtrl++)
 ////	{
@@ -196,7 +199,7 @@ TFbxObj* TMapObj::GetFbxObj()
 ////					{
 ////						continue;
 ////					}
-////					int iIndex = model->second->m_iIndex;
+////					int iIndex = model->second->m_iBoneIndex;
 ////					pFbxObj->m_matBoneArray.matBoneWorld[iIndex] = matBindPose * matAnimation.matBoneWorld[iIndex];
 ////					TBasisFBX::D3DXMatrixTranspose(&pFbxObj->m_matBoneArray.matBoneWorld[iIndex],
 ////						&pFbxObj->m_matBoneArray.matBoneWorld[iIndex]);
@@ -249,3 +252,98 @@ TFbxObj* TMapObj::GetFbxObj()
 //	//matAnim = pModel->m_AnimTrack[(int)fTime].matTrack;
 //	return matAnim;
 //}
+
+
+bool TMapObjSkinning::Render()
+{
+	m_pModel->m_pImmediateContext->VSSetConstantBuffers(1, 1, &m_pModel->m_pBoneCB);
+
+	TMatrix matWorld;
+	auto tFbxMeshList = m_pModel->m_tMeshList;
+
+	//for (int inode = 0; inode < m_pModel->m_TreeList.size(); inode++)
+	//{
+	//	TFbxObj* pFbxNode = m_pModel->m_TreeList[inode].get();
+	//	if (pFbxNode->m_pTex == nullptr) continue;
+	//	// pFbxObj->m_matBoneArray.matBoneWorld[inode] = InvBondMatrix * AnimationMatrix[time];
+	//	m_matBoneArray.matBoneWorld[inode] = m_pModel->m_MatrixArray[m_fCurrentAnimTime][inode];
+	//	/*D3DXMatrixTranspose(&m_matBoneArray.matBoneWorld[inode],
+	//		&m_matBoneArray.matBoneWorld[inode]);*/
+
+	//	pFbxNode->SetMatrix(&m_matBoneArray.matBoneWorld[inode],
+	//		&ICore::g_pMainCamera->m_matView,
+	//		&ICore::g_pMainCamera->m_matProj);
+
+	//	pFbxNode->PreRender();
+	//	pFbxNode->PostRender();
+	//}
+
+	for (int iSub = 0; iSub < tFbxMeshList.size(); iSub++)
+	{
+		TFbxObj* obj = tFbxMeshList[iSub].get();
+		obj->SetMatrix(NULL,
+			&ICore::g_pMainCamera->m_matView,
+			&ICore::g_pMainCamera->m_matProj);
+
+		obj->PreRender();
+		
+	/*	UINT StartSlot;
+		UINT NumBuffers;
+		UINT Strides[2] = { sizeof(PNCT_Vertex), sizeof(TVertexIW) };
+		UINT Offsets[2] = { 0, };
+
+		ID3D11Buffer* buffer[2] = { m_pVertexBuffer, m_pVBWeightList };
+		m_pImmediateContext->IASetVertexBuffers(0, 2, buffer, Strides, Offsets);
+*/
+
+
+		
+		obj->PostRender();
+	}
+	return true;
+}
+bool  TMapObjSkinning::Frame()
+{
+	m_fCurrentAnimTime += m_pModel->GetFrameSpeed() * g_fSecondPerFrame * 0.5f;
+	if (m_fCurrentAnimTime >= m_pModel->GetEndFrame())
+	{
+		m_fCurrentAnimTime = m_pModel->GetStartFrame();
+	}
+	//  0   b0 ~ b4
+	//  1   b0 ~ b4
+	// 스킨(메쉬)와 바인드포즈(에니메이션행렬)의 노드개수가 다른 수 있다.
+	TBoneWorld matAnimation;
+	for (int inode = 0; inode < m_pModel->m_TreeList.size(); inode++)
+	{
+		TFbxObj* pFbxNode = m_pModel->m_TreeList[inode].get();
+		TMatrix matBindpose;
+		m_matBoneArray.matBoneWorld[inode] = matBindpose * m_pModel->m_MatrixArray[m_fCurrentAnimTime][inode];
+		D3DXMatrixTranspose(&m_matBoneArray.matBoneWorld[inode],
+			&m_matBoneArray.matBoneWorld[inode]);
+	}
+
+	m_pModel->m_pImmediateContext->UpdateSubresource(m_pBoneCB, 0, NULL, &m_matBoneArray, 0, 0);
+
+	return true;
+}
+bool	TMapObjSkinning::CreateBoneBuffer()
+{
+	if (m_pModel == nullptr) return true;
+	HRESULT hr;
+	//gpu메모리에 버퍼 할당(원하는 할당 크기)
+	D3D11_BUFFER_DESC bd;
+	ZeroMemory(&bd, sizeof(D3D11_BUFFER_DESC));
+	bd.ByteWidth = sizeof(TBoneWorld);
+	bd.Usage = D3D11_USAGE_DEFAULT;
+	bd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+
+	D3D11_SUBRESOURCE_DATA sd;
+	ZeroMemory(&sd, sizeof(D3D11_SUBRESOURCE_DATA));
+	sd.pSysMem = &m_matBoneArray.matBoneWorld;
+
+	if (FAILED(hr = m_pModel->m_pDevice->CreateBuffer(&bd, NULL, &m_pBoneCB)))
+	{
+		return false;
+	}
+	return true;
+}

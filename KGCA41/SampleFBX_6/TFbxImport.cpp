@@ -94,15 +94,18 @@ void      TFbxImport::PreProcess(FbxNode* fbxNode, TFbxObj* fbxobj)
 	if ( fbxNode->GetCamera() ||
 		 fbxNode->GetLight() ) return;
 
-	TFbxObj* tFbxObj = new TFbxObj;	
-	tFbxObj->m_szName = mtw(fbxNode->GetName());
-	fbxobj->m_TreeList.push_back(tFbxObj);
+	std::shared_ptr<TFbxObj> tFbxChildObj = std::make_shared<TFbxObj>();
+	tFbxChildObj->m_szName = mtw(fbxNode->GetName());
+	tFbxChildObj->m_iBoneIndex = fbxobj->m_TreeList.size();
+	fbxobj->m_TreeList.push_back(tFbxChildObj);	
+	m_pFbxNodeList.push_back(fbxNode);
+
 	m_pFbxNodeMap.insert(std::make_pair(fbxNode, m_dwNodeIndex++));
 
 	FbxMesh* fbxMesh = fbxNode->GetMesh();
 	if (fbxMesh != nullptr)
 	{
-		m_pFbxNodeMeshList.push_back(fbxNode);		
+		m_pFbxNodeMeshList.push_back(tFbxChildObj);
 	}
 	UINT iNumChild = fbxNode->GetChildCount();
 	for (int iChild = 0; iChild < iNumChild; iChild++)
@@ -126,21 +129,20 @@ bool      TFbxImport::Load(T_STR filename, TFbxObj* fbxobj)
 	
 	for (int iNode = 0; iNode < m_pFbxNodeMeshList.size(); iNode++)
 	{
-		std::shared_ptr<TFbxObj> fbxMesh = std::make_shared<TFbxObj>();
+		std::shared_ptr<TFbxObj> fbxMesh = m_pFbxNodeMeshList[iNode];// std::make_shared<TFbxObj>();
 
-		auto iter = m_pFbxNodeMap.find(m_pFbxNodeMeshList[iNode]);
+		/*auto iter = m_pFbxNodeMap.find(m_pFbxNodeMeshList[iNode]);
 		if (iter != m_pFbxNodeMap.end())
-		{
-			fbxMesh->m_iIndex = iter->second;
-			LoadMesh(m_pFbxNodeMeshList[iNode], *fbxMesh.get());
-			fbxMesh->m_szName = mtw(m_pFbxNodeMeshList[iNode]->GetName());
-			fbxMesh->m_matWorld = ParseTransform(m_pFbxNodeMeshList[iNode]);
+		{*/
+			LoadMesh(m_pFbxNodeList[fbxMesh->m_iBoneIndex], *fbxMesh.get());
+			//fbxMesh->m_szName = mtw(m_pFbxNodeMeshList[iNode]->GetName());
+			//fbxMesh->m_matWorld = ParseTransform(m_pFbxNodeMeshList[iNode]);
 			fbxobj->m_tMeshList.push_back(fbxMesh);
-		}
-		else
-		{
-			//error
-		}
+		//}
+		//else
+		//{
+		//	//error
+		//}
 	}
 
 	GetAnimation(fbxobj);
@@ -352,7 +354,7 @@ void	  TFbxImport::LoadMesh(FbxNode* fbxNode, TFbxObj& tMesh)
 				else
 				{
 					// 일반오브젝트 에니메이션을 스키닝 케릭터 화 작업.
-					iwVertex.i[0] = tMesh.m_iIndex;
+					iwVertex.i[0] = tMesh.m_iBoneIndex;
 					iwVertex.w[0] = 1.0f;
 				}
 				tMesh.m_pSubIWVertexList[iSubMtrl].push_back(iwVertex);
@@ -364,6 +366,8 @@ void	  TFbxImport::LoadMesh(FbxNode* fbxNode, TFbxObj& tMesh)
 }
 bool      TFbxImport::Init()
 {
+	m_pFbxNodeMap.clear();
+	m_pFbxNodeList.clear();
 	m_pFbxNodeMeshList.clear();
 	m_pSDKManager = FbxManager::Create();
 	m_pFbxImporter = FbxImporter::Create(m_pSDKManager, IOSROOT);

@@ -17,19 +17,23 @@ void		TFbxImport::GetAnimation(TFbxObj* fbxObj)
 
 	fbxObj->SetAnim(startFrame, endFrame, 30, 160);
 
+	// frame 0 :  bone0 ~~~~~ bone60
+	// frame 1 :  bone0 ~~~~~ bone60
+	// frame 2 :  bone0 ~~~~~ bone60
+	// frame 3 :  bone0 ~~~~~ bone60
+	// frame 4 :  bone0 ~~~~~ bone60
 	FbxTime time;
 	for (int t = startFrame; t < endFrame; t++)
 	{
 		time.SetFrame(t, TimeMode);
-		for (int iNode = 0; iNode < m_pFbxNodeMeshList.size(); iNode++)
+		std::vector<TMatrix> matArray;
+		for (int iNode = 0; iNode < fbxObj->m_TreeList.size(); iNode++)
 		{
-			TFbxObj& tMesh = *(fbxObj->m_tMeshList[iNode].get());
-			std::vector< FbxAMatrix>  frameMatrix;
-
-			FbxAMatrix matFbx = m_pFbxNodeMeshList[iNode]->EvaluateGlobalTransform(time);
+			FbxAMatrix matFbx = m_pFbxNodeList[iNode]->EvaluateGlobalTransform(time);
 			TMatrix mat = ConvertAMatrix(matFbx);
 			mat = DxConvertMatrix(mat);
-			tMesh.m_MatrixArray.push_back(mat);
+			matArray.push_back(mat);			
 		}
+		fbxObj->m_MatrixArray.push_back(matArray);
 	}
 }

@@ -8,7 +8,8 @@
 class Sample : public TCore
 {
 	using NEW_OBJECT = std::shared_ptr<TMapObj>;
-	NEW_OBJECT		m_MapObj;
+	std::vector<NEW_OBJECT>		m_MapObj;
+
 	const TTexture* m_pTex;
 	std::shared_ptr<TDebugCamera>  m_pDebugCamera;	
 public:

@@ -12,18 +12,32 @@
 
 bool Sample::Init()
 {
+	std::wstring szShaderFile = L"DefaultObj.hlsl";
 	TModelMgr::Get().Set(m_pDevice, m_pImmediateContext);
 	// fbx 
-	TFbxObj* pFbxObj1 = TModelMgr::Get().Load(L"../../res/fbx/box.fbx");
-	TFbxObj* pFbxObj2 = TModelMgr::Get().Load(L"../../res/fbx/sphereBox.FBX");	
-	TFbxObj* pFbxObj4 = TModelMgr::Get().Load(L"../../res/fbx/Turret_Deploy1.FBX");
-	TFbxObj* pFbxObj5 = TModelMgr::Get().Load(L"../../res/fbx/ship.FBX");
-	TFbxObj* pFbxObj3 = TModelMgr::Get().Load(L"../../res/fbx/MultiCameras.FBX");
-	TFbxObj* pFbxObj6 = TModelMgr::Get().Load(L"../../res/fbx/man.FBX");
+	//TFbxObj* pFbxObj1 = TModelMgr::Get().Load(L"../../res/fbx/box.fbx", szShaderFile);
+	//TFbxObj* pFbxObj2 = TModelMgr::Get().Load(L"../../res/fbx/sphereBox.FBX", szShaderFile);
+	//TFbxObj* pFbxObj3 = TModelMgr::Get().Load(L"../../res/fbx/ship.FBX", szShaderFile);
+	//TFbxObj* pFbxObj4 = TModelMgr::Get().Load(L"../../res/fbx/MultiCameras.FBX", szShaderFile);
 
-	m_MapObj = std::make_shared<TMapObj>();
-	m_MapObj->SetFbxObj(TModelMgr::Get().GetPtr(L"man.FBX"));
-	
+	TFbxObj* pFbxObj5 = TModelMgr::Get().Load(L"../../res/fbx/Turret_Deploy1.FBX", szShaderFile);
+	TFbxObj* pFbxObj6 = TModelMgr::Get().Load(L"../../res/fbx/man.FBX", L"CharacterWeight.hlsl");
+
+	auto obj = std::make_shared<TMapObj>();
+	obj->m_pModel = TModelMgr::Get().GetPtr(L"Turret_Deploy1.FBX");
+	obj->CreateBoneBuffer();
+	m_MapObj.push_back(obj);
+
+	//auto obj1 = std::make_shared<TMapObj>();
+	//obj1->m_pModel = TModelMgr::Get().GetPtr(L"Turret_Deploy1.FBX");
+	//obj1->CreateBoneBuffer();
+	//m_MapObj.push_back(obj1);
+
+
+	/*auto obj2 = std::make_shared<TMapObj>();
+	obj2->m_pModel = TModelMgr::Get().GetPtr(L"man.FBX");
+	obj2->CreateBoneBuffer();
+	m_MapObj.push_back(obj2);*/
 
 	m_pDebugCamera = std::make_shared<TDebugCamera>();
 	m_pDebugCamera->Init();
@@ -37,61 +51,38 @@ bool Sample::Init()
 }
 bool Sample::Frame()
 {	
-	TFbxObj* pFbxObj = m_MapObj->GetFbxObj();
-	m_MapObj->m_fCurrentAnimTime += pFbxObj->GetFrameSpeed() *g_fSecondPerFrame;
-	if (m_MapObj->m_fCurrentAnimTime >= pFbxObj->GetEndFrame())
+	if (I_Input.GetKey(VK_HOME) == KEY_PUSH)
 	{
-		m_MapObj->m_fCurrentAnimTime = pFbxObj->GetStartFrame();
+		auto obj = std::make_shared<TMapObj>();
+		obj->m_pModel = TModelMgr::Get().GetPtr(L"Turret_Deploy1.FBX");
+		obj->CreateBoneBuffer();
+		m_MapObj.push_back(obj);
 	}
-
-	auto tFbxMeshList = m_MapObj->GetFbxObj()->m_tMeshList;
-	for (int iSub = 0; iSub < tFbxMeshList.size(); iSub++)
+	for (auto obj : m_MapObj)
 	{
-		TFbxObj* obj = tFbxMeshList[iSub].get();
-		TMatrix matWorld = obj->m_MatrixArray[(int)m_MapObj->m_fCurrentAnimTime];
-	}	
-
-	// 스킨(메쉬)와 바인드포즈(에니메이션행렬)의 노드개수가 다른 수 있다.
-	//TBoneWorld matAnimation;
-	//for (int inode = 0; inode < pFbxObj->m_TreeList.size(); inode++)
-	//{
-	//	TFbxObj* pMeshModel = pFbxObj->m_TreeList[inode];
-	//	// pFbxObj->m_matBoneArray.matBoneWorld[inode] = InvBondMatrix * AnimationMatrix[time];
-	//	pFbxObj->m_matBoneArray.matBoneWorld[inode] =  TMatrix();
-	//}
-
-
+		obj->Frame();
+	}
 	return true;
 }
 bool Sample::Render()
 {	
-	TMatrix matWorld;
-	for (int i=0; i < 10; i++)
+	int index = 0;
+	for (auto obj : m_MapObj)
 	{
-		matWorld.Translation(TVector3(i*100, 0, 0));
-		auto tObj = TModelMgr::Get().GetPtr(L"man.FBX");
-		//auto tFbxMeshList = m_MapObj->GetFbxObj()->m_tMeshList;
-		auto tFbxMeshList = tObj->m_tMeshList;
-		for (int iSub = 0; iSub < tFbxMeshList.size(); iSub++)
-		{
-			TFbxObj* obj = tFbxMeshList[iSub].get();
-			obj->SetMatrix(&matWorld,
-				&ICore::g_pMainCamera->m_matView,
-				&ICore::g_pMainCamera->m_matProj);
-			obj->PreRender();
-			obj->PostRender();
-		}
+		obj->m_matControl.Translation(TVector3(index *100.0f, 0, 0));
+		obj->Render();
+		index++;
 	}
+
 	return true;
 }
 bool Sample::Release()
 {
-	/*for (int iSub = 0; iSub < m_MapObj->m_pChildObjectList.size(); iSub++)
+	for (auto obj : m_MapObj)
 	{
-		NEW_OBJECT obj = m_MapObj->m_pChildObjectList[iSub];
 		obj->Release();
-	}*/
-	m_MapObj->Release();
+	}
+
 	m_pDebugCamera->Release();
 	return true;
 }

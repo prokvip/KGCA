@@ -50,7 +50,7 @@ struct TFbxMesh
 	TFbxMesh*  m_pParent = nullptr;
 
 	BOOL	   m_bSkinning=FALSE;
-	UINT       m_iIndex;
+	UINT       m_iBoneIndex;
 
 	UINT  m_iNumPolygon = 0;
 	using SUBMATERIAL = std::vector<PNCT_Vertex>;
@@ -82,7 +82,7 @@ public:
 	
 	TFbxObj*	m_pParent = nullptr;
 	BOOL	   m_bSkinning = FALSE;
-	UINT       m_iIndex;
+	UINT       m_iBoneIndex;
 
 	UINT		m_iNumPolygon = 0;
 	using SUBMATERIAL = std::vector<PNCT_Vertex>;
@@ -95,12 +95,12 @@ public:
 
 	std::vector<UINT> 				m_TriangleOffsetList;
 	std::vector<W_STR>				m_szTextureFileName;
-	std::vector<TMatrix>		    m_MatrixArray;
+	std::vector<std::vector<TMatrix>>		    m_MatrixArray;
 	std::vector<TFbxObj*>		    m_pChild;
 	std::map<std::wstring, TMatrix>		m_dxMatrixBindPoseMap;
 	std::vector<const TTexture*>			m_TexArray;
 public:
-	std::vector<TFbxObj*>					m_TreeList;
+	std::vector<std::shared_ptr<TFbxObj>>	m_TreeList;
 	std::vector<std::shared_ptr<TFbxObj>>	m_tMeshList;
 	
 	TBoneWorld								m_matBoneArray;
@@ -110,7 +110,7 @@ public:
 	UINT    GetEndFrame();
 	UINT    GetFrameSpeed();
 	UINT    GetTickForFrame();
-public:
+public:	
 	bool	CreateConstantBuffer() override;
 //	bool	CreateInputLayout() override;
 //	bool	CreateVertexBuffer() override;

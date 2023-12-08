@@ -17,7 +17,7 @@ public:
 		m_pContext = pContext;
 	}
 	TFbxImport	m_pFbxImporter;
-	TFbxObj* Load(W_STR filename);
+	TFbxObj* Load(W_STR filename, W_STR szShaderFile);
 public:
 	std::map<W_STR, std::shared_ptr<TFbxObj>>  m_tFbxObjList;
 	TFbxObj* GetPtr(W_STR key);

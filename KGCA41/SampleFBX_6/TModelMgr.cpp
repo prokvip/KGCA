@@ -12,7 +12,7 @@ TFbxObj* TModelMgr::GetPtr(W_STR key)
 	return iter->second.get();
 }
 
-TFbxObj* TModelMgr::Load(W_STR szPullfilePath)
+TFbxObj* TModelMgr::Load(W_STR szPullfilePath, W_STR szShaderFile)
 {
 	std::size_t found = szPullfilePath.find_last_of(L"/");
 	std::wstring path = szPullfilePath.substr(0, found + 1);
@@ -54,11 +54,11 @@ TFbxObj* TModelMgr::Load(W_STR szPullfilePath)
 			{
 				filename = fbxMesh->m_szTextureFileName[0];
 				defaultPath += filename;
-				fbxMesh->Create(defaultPath, L"DefaultObj.hlsl");
+				fbxMesh->Create(defaultPath, szShaderFile);
 			}
 			else
 			{
-				fbxMesh->Create(L"", L"DefaultObj.hlsl");
+				fbxMesh->Create(L"", szShaderFile);
 			}
 
 			fbxMesh->m_matWorld = fbxMesh->m_matWorld;
