@@ -13,7 +13,19 @@ bool TMapObj::Render()
 			&ICore::g_pMainCamera->m_matView,
 			&ICore::g_pMainCamera->m_matProj);
 		obj->PreRender();
-		obj->PostRender();
+		//obj->PostRender();
+		for (int isubMtrl = 0; isubMtrl < obj->m_TriangleList.size(); isubMtrl++)
+		{
+			if (obj->m_TexArray.size() && obj->m_TexArray[isubMtrl])
+			{
+				obj->m_TexArray[isubMtrl]->Apply(obj->m_pImmediateContext, 0);
+			}
+			if (obj->m_pIndexBuffer == nullptr)
+			{
+				obj->m_pImmediateContext->Draw(obj->m_TriangleList[isubMtrl].size(),
+					obj->m_TriangleOffsetList[isubMtrl]);
+			}
+		}
 	}	
 	return true;
 }
