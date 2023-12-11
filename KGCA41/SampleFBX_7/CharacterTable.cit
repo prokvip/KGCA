@@ -1,0 +1,120 @@
+*NUMCHARACTER		4
+//////////////////////////////////////////////////////////////////////////
+*CHARACTERNAME		TEST_CHAR0
+*SHADERFILENMAE		Character.hlsl
+*MATRIXFILENAME		../../data/Character/mob.mat    
+
+*SKIN_UPPER_BODY_COUNT	1
+*SKIN_UPPER_BODY	../../data/Character/body.skm null 
+*SKIN_LOWER_BODY_COUNT	0
+*SKIN_ARM_COUNT			0
+*SKIN_HAND_COUNT		0
+*SKIN_FOOT_COUNT		0
+*SKIN_FACE_COUNT		0
+*SKIN_HAIR_COUNT		0
+*SKIN_WEAPON_COUNT		2
+*SKIN_WEAPON	../../data/Character/left.skm null 
+*SKIN_WEAPON	../../data/Character/right.skm null 
+*SKIN_DEFENSE_COUNT		0	
+*SKIN_ETCETERA_COUNT	0
+//////////////////////////////////////////////////////////////////////////
+*CHARACTERNAME		TEST_CHAR1
+*SHADERFILENMAE		Character.hlsl
+*MATRIXFILENAME		../../data/Character/Man.Mat
+
+*SKIN_UPPER_BODY_COUNT	1
+*SKIN_UPPER_BODY	../../data/Character/ManBody.skm		null
+*SKIN_LOWER_BODY_COUNT	0
+*SKIN_ARM_COUNT			0
+*SKIN_HAND_COUNT		0
+*SKIN_FOOT_COUNT		0
+*SKIN_FACE_COUNT		0
+*SKIN_HAIR_COUNT		0
+*SKIN_WEAPON_COUNT		0
+*SKIN_DEFENSE_COUNT		0	
+*SKIN_ETCETERA_COUNT	1
+*SKIN_ETCETERA	../../data/Character/ManPack.skm		null
+
+
+
+//////////////////////////////////////////////////////////////////////////
+*CHARACTERNAME		TEST_CHAR2
+*SHADERFILENMAE		Character.hlsl
+*MATRIXFILENAME		../../data/Character/SwatRifle.Mat
+
+*SKIN_UPPER_BODY_COUNT	1
+*SKIN_UPPER_BODY	../../data/Character/SwatBody.skm		null
+*SKIN_LOWER_BODY_COUNT	0
+*SKIN_ARM_COUNT			0
+*SKIN_HAND_COUNT		0
+*SKIN_FOOT_COUNT		0
+*SKIN_FACE_COUNT		0
+*SKIN_HAIR_COUNT		0
+*SKIN_WEAPON_COUNT		0
+*SKIN_DEFENSE_COUNT		0	
+*SKIN_ETCETERA_COUNT	0
+//////////////////////////////////////////////////////////////////////////
+*CHARACTERNAME		TEST_CHAR3
+*SHADERFILENMAE		Character.hlsl
+*MATRIXFILENAME		../../data/Character/woman.Mat
+*SKIN_UPPER_BODY_COUNT	1
+*SKIN_UPPER_BODY	../../data/Character/char0.skm		null
+*SKIN_LOWER_BODY_COUNT	1
+*SKIN_LOWER_BODY	../../data/Character/char1.skm		null
+*SKIN_ARM_COUNT			0
+*SKIN_HAND_COUNT		1
+*SKIN_HAND			../../data/Character/char2.skm		null
+*SKIN_FOOT_COUNT		1
+*SKIN_FOOT			../../data/Character/char3.skm		null
+*SKIN_FACE_COUNT		1
+*SKIN_FACE			../../data/Character/char4.skm		null
+*SKIN_HAIR_COUNT		1
+*SKIN_HAIR			../../data/Character/char5.skm		null
+*SKIN_WEAPON_COUNT		1
+*SKIN_WEAPON		../../data/Character/char6.skm		null
+*SKIN_DEFENSE_COUNT		0	
+*SKIN_ETCETERA_COUNT	0
+*SKIN_ETCETERA			0	
+
+
+
+*SKIN_UPPER_BODY_COUNT	1
+*SKIN_UPPER_BODY	../../data/Character/char0.skm		null
+*SKIN_LOWER_BODY_COUNT	0
+*SKIN_ARM_COUNT			0
+*SKIN_HAND_COUNT		0
+*SKIN_FOOT_COUNT		0
+*SKIN_FACE_COUNT		0
+*SKIN_HAIR_COUNT		0
+*SKIN_WEAPON_COUNT		0
+*SKIN_DEFENSE_COUNT		0	
+*SKIN_ETCETERA_COUNT	0
+*SKIN_ETCETERA			0	
+
+
+
+	
+
+
+
+
+
+
+// 캐릭터이름   홍길동
+// 0=상체				=> SKIN_UPPER_BODY
+// 1=하체				=> SKIN_LOWER_BODY
+// 2=팔					=> SKIN_ARM
+// 3=손( 장갑 )			=> SKIM_HAND
+// 4=발( 장화 )			=> SKIN_FOOT
+// 5=얼굴( 마스크 )		=> SKIN_FACE
+// 6=헤어( 모자 )		=> SKIN_HAIR
+// 7=무기류				=> SKIN_SEAPON
+// 8=방어류				=> SKIN_DEFENSE
+// 9=기타				=> SKIN_ETCETERA
+//struct CharacterTable
+//{
+//	char strName[32];
+//  char strShader[64];
+//	char strMatrix[32];
+//	char strTable[10][32];
+//}

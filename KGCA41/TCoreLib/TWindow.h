@@ -1,8 +1,12 @@
 #pragma once
 #include "TStd.h"
+#include "TTimer.h"
+
 class TWindow
 {
 public:
+    TTimer          m_GameTimer;
+
     HINSTANCE   m_hInstance;
     HWND        m_hWnd;
     DWORD       m_dwExStyle = 0;

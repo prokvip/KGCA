@@ -200,6 +200,10 @@ bool  TCore::EngineRelease()
 bool TCore::Run()
 {
     EngineInit();
+
+    g_fSecondPerFrame = 0.0f;
+    m_GameTimer.m_dwBeforeTime = timeGetTime();
+
     MSG msg = { 0 };
     while (msg.message != WM_QUIT)
     {
