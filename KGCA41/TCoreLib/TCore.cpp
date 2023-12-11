@@ -101,6 +101,9 @@ bool  TCore::Init() { return true; }
 bool  TCore::Frame() { return true; }
 bool  TCore::Render() { return true; }
 bool  TCore::Release() { return true; }
+bool  TCore::ToolInit() { return EngineInit(); }
+bool  TCore::ToolRun() { EngineFrame(); EngineRender(); return true; }
+bool  TCore::ToolRelease() { return EngineRelease(); }
 bool  TCore::EngineInit()
 {
     TDevice::Init();

@@ -130,8 +130,8 @@
     <PostBuildEvent>
       <Command>copy "*.h" "..\\..\\TCoreLib\\include"
 copy "*.inl" "..\\..\\TCoreLib\\include"
-copy "..\\..\\output\\TCoreLib.lib" "..\\..\\TCoreLib\\lib"
-copy "..\\..\\FMOD\lib\\x64\\fmod.dll" "..\\..\\output\\Deubg"</Command>
+copy "..\\..\\output\\debug\\TCoreLib.lib" "..\\..\\TCoreLib\\lib"
+copy "..\\..\\FMOD\lib\\x64\\fmod.dll" "..\\..\\output\\Debug"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">

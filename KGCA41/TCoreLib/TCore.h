@@ -35,6 +35,10 @@ private:
     virtual bool  EngineRender();
     virtual bool  EngineRelease();
 public:
+    virtual bool ToolInit();
+    virtual bool ToolRun();
+    virtual bool ToolRelease();
+public:
     // resize
     virtual bool  DeleteDxResource();
     virtual bool  CreateDxResource();
