@@ -204,6 +204,12 @@
     <ClInclude Include="TBaseToolDoc.h" />
     <ClInclude Include="TBaseToolView.h" />
     <ClInclude Include="TDebugCamera.h" />
+    <ClInclude Include="TFbxImport.h" />
+    <ClInclude Include="TFbxObject.h" />
+    <ClInclude Include="TMap.h" />
+    <ClInclude Include="TMapObj.h" />
+    <ClInclude Include="TModelMgr.h" />
+    <ClInclude Include="TQuadtree.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MainFrm.cpp" />
@@ -220,6 +226,15 @@
     <ClCompile Include="TBaseToolDoc.cpp" />
     <ClCompile Include="TBaseToolView.cpp" />
     <ClCompile Include="TDebugCamera.cpp" />
+    <ClCompile Include="TFbxAnim.cpp" />
+    <ClCompile Include="TFbxGeom.cpp" />
+    <ClCompile Include="TFbxImport.cpp" />
+    <ClCompile Include="TFbxObject.cpp" />
+    <ClCompile Include="TMap.cpp" />
+    <ClCompile Include="TMapObj.cpp" />
+    <ClCompile Include="TModelMgr.cpp" />
+    <ClCompile Include="TQuadtree.cpp" />
+    <ClCompile Include="TWeightInfo.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="TBaseTool.rc" />
@@ -238,6 +253,7 @@
     <Image Include="res\userimages.bmp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="CharacterTable.cit" />
     <None Include="res\TBaseTool.rc2" />
   </ItemGroup>
   <ItemGroup>
@@ -247,6 +263,14 @@
     <ProjectReference Include="..\TCoreLib\TCoreLib.vcxproj">
       <Project>{53be47c5-7369-4ee9-a6f9-36d999ea52c9}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="CharacterWeight.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="DefaultObj.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </FxCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

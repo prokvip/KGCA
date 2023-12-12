@@ -54,6 +54,24 @@
     <ClInclude Include="Sample.h">
       <Filter>library</Filter>
     </ClInclude>
+    <ClInclude Include="TFbxImport.h">
+      <Filter>library</Filter>
+    </ClInclude>
+    <ClInclude Include="TFbxObject.h">
+      <Filter>library</Filter>
+    </ClInclude>
+    <ClInclude Include="TMap.h">
+      <Filter>library</Filter>
+    </ClInclude>
+    <ClInclude Include="TMapObj.h">
+      <Filter>library</Filter>
+    </ClInclude>
+    <ClInclude Include="TModelMgr.h">
+      <Filter>library</Filter>
+    </ClInclude>
+    <ClInclude Include="TQuadtree.h">
+      <Filter>library</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="TBaseTool.cpp">
@@ -81,6 +99,33 @@
       <Filter>library</Filter>
     </ClCompile>
     <ClCompile Include="Sample.cpp">
+      <Filter>library</Filter>
+    </ClCompile>
+    <ClCompile Include="TFbxAnim.cpp">
+      <Filter>library</Filter>
+    </ClCompile>
+    <ClCompile Include="TFbxGeom.cpp">
+      <Filter>library</Filter>
+    </ClCompile>
+    <ClCompile Include="TFbxImport.cpp">
+      <Filter>library</Filter>
+    </ClCompile>
+    <ClCompile Include="TFbxObject.cpp">
+      <Filter>library</Filter>
+    </ClCompile>
+    <ClCompile Include="TMap.cpp">
+      <Filter>library</Filter>
+    </ClCompile>
+    <ClCompile Include="TMapObj.cpp">
+      <Filter>library</Filter>
+    </ClCompile>
+    <ClCompile Include="TModelMgr.cpp">
+      <Filter>library</Filter>
+    </ClCompile>
+    <ClCompile Include="TQuadtree.cpp">
+      <Filter>library</Filter>
+    </ClCompile>
+    <ClCompile Include="TWeightInfo.cpp">
       <Filter>library</Filter>
     </ClCompile>
   </ItemGroup>
@@ -128,8 +173,19 @@
     <None Include="res\TBaseTool.rc2">
       <Filter>리소스 파일</Filter>
     </None>
+    <None Include="CharacterTable.cit">
+      <Filter>library</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Library Include="TCoreLib.lib" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="CharacterWeight.hlsl">
+      <Filter>library</Filter>
+    </FxCompile>
+    <FxCompile Include="DefaultObj.hlsl">
+      <Filter>library</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

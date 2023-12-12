@@ -29,6 +29,7 @@ BEGIN_MESSAGE_MAP(CTBaseToolView, CView)
 	ON_COMMAND(ID_FILE_PRINT_PREVIEW, &CTBaseToolView::OnFilePrintPreview)
 	ON_WM_CONTEXTMENU()
 	ON_WM_RBUTTONUP()
+	ON_WM_SIZE()
 END_MESSAGE_MAP()
 
 // CTBaseToolView 생성/소멸
@@ -126,3 +127,14 @@ CTBaseToolDoc* CTBaseToolView::GetDocument() const // 디버그되지 않은 버
 
 
 // CTBaseToolView 메시지 처리기
+
+
+void CTBaseToolView::OnSize(UINT nType, int cx, int cy)
+{
+	CView::OnSize(nType, cx, cy);
+
+	// TODO: 여기에 메시지 처리기 코드를 추가합니다.
+
+	CTBaseToolApp* pApp = (CTBaseToolApp*)AfxGetApp();
+	pApp->sample.ResizeDevice(cx,cy);
+}
