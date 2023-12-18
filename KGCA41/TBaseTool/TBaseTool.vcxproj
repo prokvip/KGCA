@@ -203,11 +203,15 @@
     <ClInclude Include="TBaseTool.h" />
     <ClInclude Include="TBaseToolDoc.h" />
     <ClInclude Include="TBaseToolView.h" />
+    <ClInclude Include="TCharacterToolForm.h" />
+    <ClInclude Include="TCharacterToolPane.h" />
     <ClInclude Include="TDebugCamera.h" />
     <ClInclude Include="TFbxImport.h" />
     <ClInclude Include="TFbxObject.h" />
     <ClInclude Include="TMap.h" />
     <ClInclude Include="TMapObj.h" />
+    <ClInclude Include="TMapToolForm.h" />
+    <ClInclude Include="TMapToolPane.h" />
     <ClInclude Include="TModelMgr.h" />
     <ClInclude Include="TQuadtree.h" />
   </ItemGroup>
@@ -225,6 +229,8 @@
     <ClCompile Include="TBaseTool.cpp" />
     <ClCompile Include="TBaseToolDoc.cpp" />
     <ClCompile Include="TBaseToolView.cpp" />
+    <ClCompile Include="TCharacterToolForm.cpp" />
+    <ClCompile Include="TCharacterToolPane.cpp" />
     <ClCompile Include="TDebugCamera.cpp" />
     <ClCompile Include="TFbxAnim.cpp" />
     <ClCompile Include="TFbxGeom.cpp" />
@@ -232,6 +238,8 @@
     <ClCompile Include="TFbxObject.cpp" />
     <ClCompile Include="TMap.cpp" />
     <ClCompile Include="TMapObj.cpp" />
+    <ClCompile Include="TMapToolForm.cpp" />
+    <ClCompile Include="TMapToolPane.cpp" />
     <ClCompile Include="TModelMgr.cpp" />
     <ClCompile Include="TQuadtree.cpp" />
     <ClCompile Include="TWeightInfo.cpp" />

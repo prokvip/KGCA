@@ -16,6 +16,9 @@
     <Filter Include="library">
       <UniqueIdentifier>{a24b90fe-f1eb-4091-84d6-c4e301d795fb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="MFCPane">
+      <UniqueIdentifier>{fa22705d-1049-42b4-85f1-4a8f0d96a85c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TBaseTool.h">
@@ -72,6 +75,18 @@
     <ClInclude Include="TQuadtree.h">
       <Filter>library</Filter>
     </ClInclude>
+    <ClInclude Include="TMapToolPane.h">
+      <Filter>MFCPane</Filter>
+    </ClInclude>
+    <ClInclude Include="TMapToolForm.h">
+      <Filter>MFCPane</Filter>
+    </ClInclude>
+    <ClInclude Include="TCharacterToolPane.h">
+      <Filter>MFCPane</Filter>
+    </ClInclude>
+    <ClInclude Include="TCharacterToolForm.h">
+      <Filter>MFCPane</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="TBaseTool.cpp">
@@ -127,6 +142,18 @@
     </ClCompile>
     <ClCompile Include="TWeightInfo.cpp">
       <Filter>library</Filter>
+    </ClCompile>
+    <ClCompile Include="TMapToolPane.cpp">
+      <Filter>MFCPane</Filter>
+    </ClCompile>
+    <ClCompile Include="TMapToolForm.cpp">
+      <Filter>MFCPane</Filter>
+    </ClCompile>
+    <ClCompile Include="TCharacterToolPane.cpp">
+      <Filter>MFCPane</Filter>
+    </ClCompile>
+    <ClCompile Include="TCharacterToolForm.cpp">
+      <Filter>MFCPane</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

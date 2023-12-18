@@ -5,7 +5,8 @@
 #pragma once
 #include "OutputWnd.h"
 #include "PropertiesWnd.h"
-
+#include "TMapToolPane.h"
+#include "TCharacterToolPane.h"
 class CMainFrame : public CFrameWndEx
 {
 	
@@ -39,7 +40,8 @@ protected:  // 컨트롤 모음이 포함된 멤버입니다.
 	CMFCToolBarImages m_UserImages;
 	COutputWnd        m_wndOutput;
 	CPropertiesWnd    m_wndProperties;
-
+	TMapToolPane	  m_wndToolPane;
+	TCharacterToolPane m_wndCharacterPane;
 // 생성된 메시지 맵 함수
 protected:
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);

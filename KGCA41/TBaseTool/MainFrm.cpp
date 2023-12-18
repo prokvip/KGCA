@@ -119,6 +119,23 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	m_wndProperties.EnableDocking(CBRS_ALIGN_ANY);
 	DockPane(&m_wndProperties);
 
+	// 사용자 페인윈도우 생성
+	DWORD dwStyle = WS_CHILD | WS_VISIBLE |
+		WS_CLIPSIBLINGS | WS_CLIPCHILDREN |
+		CBRS_LEFT | CBRS_FLOAT_MULTI;
+	m_wndToolPane.CreateEx(
+		NULL, L"MapTool", this, CRect(0, 0, 100, 100),
+		TRUE, 1234, dwStyle);
+	m_wndToolPane.EnableDocking(CBRS_ALIGN_ANY);
+	DockPane(&m_wndToolPane);
+
+	m_wndCharacterPane.CreateEx(
+		NULL, L"CharacterTool", this, CRect(0, 0, 100, 100),
+		TRUE, 4567, dwStyle);
+	m_wndCharacterPane.EnableDocking(CBRS_ALIGN_ANY);
+	DockPane(&m_wndCharacterPane);
+
+
 	// 보관된 값에 따라 비주얼 관리자 및 스타일을 설정합니다.
 	OnApplicationLook(theApp.m_nAppLook);
 
