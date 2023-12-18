@@ -1,8 +1,21 @@
 #include "TWindow.h"
+RECT rcClip;           
+RECT rcOldClip;        
+
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message)
     {
+    case WM_KILLFOCUS : 
+        {
+            ClipCursor(&rcOldClip);
+        }break;
+    case WM_SETFOCUS:// WM_ACTIVATE(APP) -> WM_NCACTIVATE -> WM_SETFOCUS
+    {
+           GetClipCursor(&rcOldClip);
+           GetWindowRect(hWnd, &rcClip);
+           BOOL bWork = ClipCursor(&rcClip);
+    }break;
     case WM_DESTROY:
         PostQuitMessage(0);
         break;
@@ -49,6 +62,7 @@ bool TWindow::SetWindow(const WCHAR* szTitle,//std::wstring szTitle,
     {
         return FALSE;
     }
+   
     ShowWindow(m_hWnd, SW_SHOWNORMAL);
     return true;
 }

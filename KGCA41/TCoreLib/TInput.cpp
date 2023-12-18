@@ -47,7 +47,28 @@ bool  TInput::Frame()
 bool  TInput::Init()
 {
     ZeroMemory(&m_dwKeyState, sizeof(m_dwKeyState));
-    
+    RECT rcClip;           // new area for ClipCursor
+    RECT rcOldClip;        // previous area for ClipCursor
+
+    // Record the area in which the cursor can move. 
+
+    GetClipCursor(&rcOldClip);
+
+    // Get the dimensions of the application's window. 
+
+    GetWindowRect(g_hWnd, &rcClip);
+
+    // Confine the cursor to the application's window. 
+
+    ClipCursor(&rcClip);
+
+    // 
+    // Process input from the confined cursor. 
+    // 
+
+ // Restore the cursor to its previous area. 
+
+    //ClipCursor(&rcOldClip);
     return true;
 }
 bool  TInput::Render()

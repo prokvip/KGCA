@@ -54,6 +54,7 @@ bool  Sample::Init()
 }
 bool  Sample::Frame() 
 { 
+    
     return true; 
 }
 bool  Sample::Render() 
