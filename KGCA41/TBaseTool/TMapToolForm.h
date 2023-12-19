@@ -31,6 +31,16 @@ protected:
 public:
 	afx_msg void OnBnCreateMap();
 	afx_msg void OnEnChangeEdit1();
+	afx_msg void OnBnClickedButton2();
+	afx_msg void OnBnClickedButton3();
+	afx_msg void OnBnClickedButton4();
+	afx_msg void OnBnClickedButton5();
+	CListBox m_ObjectList;
+	virtual void OnInitialUpdate();
+	afx_msg void OnLbnSelchangeObjectList();
+public:
+	void LoadTextureFile();
+	CString m_csSelectedfile;
 };
 
 

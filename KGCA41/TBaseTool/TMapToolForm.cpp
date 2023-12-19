@@ -19,6 +19,7 @@ TMapToolForm* TMapToolForm::CreateOne(CWnd* parent)
 }
 TMapToolForm::TMapToolForm()
 	: CFormView(IDD_TMapToolForm)
+	, m_csSelectedfile(_T(""))
 {
 
 }
@@ -30,11 +31,18 @@ TMapToolForm::~TMapToolForm()
 void TMapToolForm::DoDataExchange(CDataExchange* pDX)
 {
 	CFormView::DoDataExchange(pDX);
+	DDX_Control(pDX, IDC_OBJECT_LIST, m_ObjectList);
+	DDX_Text(pDX, IDC_EDIT4, m_csSelectedfile);
 }
 
 BEGIN_MESSAGE_MAP(TMapToolForm, CFormView)
 	ON_BN_CLICKED(IDC_BUTTON1, &TMapToolForm::OnBnCreateMap)
 	ON_EN_CHANGE(IDC_EDIT1, &TMapToolForm::OnEnChangeEdit1)
+	ON_BN_CLICKED(IDC_BUTTON2, &TMapToolForm::OnBnClickedButton2)
+	ON_BN_CLICKED(IDC_BUTTON3, &TMapToolForm::OnBnClickedButton3)
+	ON_BN_CLICKED(IDC_BUTTON4, &TMapToolForm::OnBnClickedButton4)
+	ON_BN_CLICKED(IDC_BUTTON5, &TMapToolForm::OnBnClickedButton5)
+	ON_LBN_SELCHANGE(IDC_OBJECT_LIST, &TMapToolForm::OnLbnSelchangeObjectList)
 END_MESSAGE_MAP()
 
 
@@ -83,4 +91,120 @@ void TMapToolForm::OnEnChangeEdit1()
 	CString data;
 	GetDlgItemText(IDC_EDIT1, data);
 	//AfxMessageBox(data);
+}
+
+
+void TMapToolForm::OnBnClickedButton2()
+{
+	CFileDialog dlg(TRUE, L"bmp", NULL,
+		OFN_FILEMUSTEXIST | OFN_PATHMUSTEXIST,
+		L"bmp Files(*.bmp)|*.bmp| All Files(*.*)|*.*|", this);
+	if (dlg.DoModal())
+	{
+		CString selfilepath = dlg.GetPathName();
+		CString selfilename = dlg.GetFileName();
+		CString selfileext = dlg.GetFileExt();
+		AfxMessageBox(selfilename);
+	}
+}
+
+
+void TMapToolForm::OnBnClickedButton3()
+{
+	CFileDialog dlg(FALSE, L"bmp", NULL,
+		OFN_FILEMUSTEXIST | OFN_PATHMUSTEXIST,
+		L"bmp Files(*.bmp)|*.bmp| All Files(*.*)|*.*|", this);
+	if (dlg.DoModal())
+	{
+		CString selfilepath = dlg.GetPathName();
+		CString selfilename = dlg.GetFileName();
+		CString selfileext = dlg.GetFileExt();
+		AfxMessageBox(selfilename);
+	}
+}
+
+
+void TMapToolForm::OnBnClickedButton4()
+{
+	CColorDialog dlg(RGB(0, 0, 0), CC_FULLOPEN);
+	if (dlg.DoModal())
+	{
+		COLORREF color = dlg.GetColor();
+		CString data;
+		data.Format(L"%u, %u %u", GetRValue(color),
+			GetGValue(color),
+			GetBValue(color));
+		AfxMessageBox(data);
+	}
+}
+
+
+void TMapToolForm::OnBnClickedButton5()
+{
+	CFontDialog dlg;
+	if (dlg.DoModal())
+	{
+		CString data = dlg.GetFaceName();		
+		AfxMessageBox(data);
+	}
+}
+
+
+void TMapToolForm::OnInitialUpdate()
+{
+	CFormView::OnInitialUpdate();
+	m_ObjectList.AddString(L"aaa");
+	m_ObjectList.AddString(L"bbb");
+	m_ObjectList.AddString(L"cc");
+	LoadTextureFile();
+	m_csSelectedfile = L"aaa";
+	UpdateData(FALSE);
+}
+
+
+void TMapToolForm::OnLbnSelchangeObjectList()
+{
+	CString data;
+	int iIndex = m_ObjectList.GetCurSel();
+	m_ObjectList.GetText(iIndex, data);
+	m_csSelectedfile = data;
+	UpdateData(FALSE);
+	//AfxMessageBox(data);
+}
+
+
+void TMapToolForm::LoadTextureFile()
+{
+	TCHAR path[MAX_PATH] = { 0, };
+	GetCurrentDirectory(MAX_PATH, path);
+	_tcscat_s(path, _T("\\..\\..\\res\\*.*"));
+	HANDLE hSearch = NULL;
+
+	WIN32_FIND_DATA  data;
+	hSearch = FindFirstFile(path, &data);
+
+	int iCnt = 0;
+	BOOL bFind = TRUE;
+	while (bFind)
+	{
+		if (data.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
+		{
+
+		}
+		else
+		{
+			m_ObjectList.AddString(data.cFileName);
+			//m_ObjectList.InsertItem(iCnt, data.cFileName, 0);
+			//SYSTEMTIME st;
+			////SystemTimeToFileTime(&st, &data.ftCreationTime);
+			//FileTimeToSystemTime(&data.ftCreationTime, &st);
+
+			//CString date;
+			//date.AppendFormat(_T("%ld년%ld월%ld일"), st.wYear,
+			//	st.wMonth, st.wDay);
+			//m_ObjList.SetItemText(iCnt++, 1, date);
+		}
+		bFind = FindNextFile(hSearch, &data);
+	}
+	FindClose(hSearch);
 }

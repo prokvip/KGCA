@@ -24,6 +24,7 @@ BEGIN_MESSAGE_MAP(TMapToolPane, CDockablePane)
 	ON_WM_CREATE()
 	ON_WM_SIZE()
 	ON_WM_MOUSEACTIVATE()
+	ON_BN_CLICKED(IDC_BUTTON2, &TMapToolPane::OnBnClickedButton2)
 END_MESSAGE_MAP()
 
 
@@ -77,4 +78,17 @@ int TMapToolPane::OnMouseActivate(CWnd* pDesktopWnd, UINT nHitTest, UINT message
 			pDesktopWnd, nHitTest, message	);
 	}
 	return MA_NOACTIVATE;
+}
+
+
+void TMapToolPane::OnBnClickedButton2()
+{
+	CFileDialog dlg(TRUE, L"bmp", NULL,
+		OFN_FILEMUSTEXIST | OFN_PATHMUSTEXIST,
+		L"bmp Files(*.bmp)|*.bmp| All Files(*.*)|*.*|", this);
+	if (dlg.DoModal())
+	{
+		CString selfilename = dlg.GetPathName();
+		AfxMessageBox(selfilename);
+	}
 }
